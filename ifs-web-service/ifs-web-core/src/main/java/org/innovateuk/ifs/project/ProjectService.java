@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.project;
 
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,4 +43,8 @@ public interface ProjectService {
     PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId);
 
     ServiceResult<ProjectResource> createProjectFromApplicationId(Long applicationId);
+
+    boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId);
+
+    Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException;
 }

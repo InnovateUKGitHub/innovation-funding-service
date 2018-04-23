@@ -1,14 +1,15 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -21,15 +22,13 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.application.builder.QuestionStatusBuilder.newQuestionStatus;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
@@ -59,13 +58,13 @@ public class QuestionReassignmentServiceImplTest {
     @Before
     public void setupLeadAndCollaboratorUserProcessRoles() {
         inviteProcessRoles = newProcessRole()
-                .withRole(newRole(COLLABORATOR))
+                .withRole(COLLABORATOR)
                 .withUser(newUser().build())
                 .withOrganisationId(1L)
                 .build(1);
 
         leadApplicantProcessRole = newProcessRole()
-                .withRole(newRole(LEADAPPLICANT))
+                .withRole(Role.LEADAPPLICANT)
                 .withUser(newUser().build())
                 .build();
     }
@@ -125,7 +124,7 @@ public class QuestionReassignmentServiceImplTest {
     }
 
     @Test
-    public void reassignCollaboratorResponsesAndQuestionStatuses_reassignsQuestionsToOtherOrganisationMemberWhenAnotherOrganisationMemberIsAssignable() throws Exception {
+    public void reassignCollaboratorResponsesAndQuestionStatuses_reassignsQuestionsToOtherOrganisationMemberWhenAnotherOrganisationMemberIsAssignable() {
         User inviteUser = inviteProcessRoles.get(0).getUser();
 
         List<ProcessRole> organisationProcessRoles = newArrayList(

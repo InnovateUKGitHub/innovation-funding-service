@@ -4,17 +4,21 @@ osStageRemote.tag = competitionMgtServiceVersion
 tagDockerLocal.tag = competitionMgtServiceVersion
 osStageLocal.tag = competitionMgtServiceVersion
 
-jar {
-    baseName = 'management'
+createContainer.hostName="competition-mgt-svc"
+createContainer.containerName="competition-mgt-svc"
+createContainer.containerId="competition-mgt-svc"
+createContainer.portBindings = ['9003:8000']
+
+def enabled = project.hasProperty('ifs.competition-mgt-service.enabled') ? project.property('ifs.competition-mgt-service.enabled').toBoolean() : true
+
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
 }
+
+ext.serverContext = '/management'
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
-
-    // weirdly, removing this line from this web module will cause the build to pull in version 2.1.2.RELEASE
-    // despite 3.0.1.RELEASE being specified explicitly in ifs-web-core's build.gradle
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.1.RELEASE"
-    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE"
 
     compile "commons-io:commons-io:2.5"
 
@@ -22,6 +26,7 @@ dependencies {
     testCompile project(":ifs-commons").sourceSets.test.output
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 
+    testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile "com.openpojo:openpojo:0.8.6"
     testCompile "org.skyscreamer:jsonassert:1.5.0"
     testCompile "net.sf.opencsv:opencsv:2.3"

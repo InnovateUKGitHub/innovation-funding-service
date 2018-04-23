@@ -15,15 +15,14 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
-import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -35,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
@@ -44,7 +44,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -265,10 +266,8 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return getAssessor(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
-                        .andOnSuccess(application -> getRole(UserRoleType.ASSESSOR)
-                                .andOnSuccess(role -> getAssessmentActivityState(AssessmentState.CREATED)
-                                        .andOnSuccess(activityState -> createAssessment(assessor, application, role, activityState))
-                                )
+                        .andOnSuccess(application -> getAssessmentActivityState(AssessmentState.CREATED)
+                                        .andOnSuccess(activityState -> createAssessment(assessor, application, ASSESSOR, activityState))
                         )
                 );
     }
@@ -286,7 +285,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, Role role) {
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(assessor.getId(), application.getId());
+        ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(assessor.getId(), singletonList(Role.ASSESSOR), application.getId());
 
         if (processRole == null) {
             processRole = new ProcessRole();
@@ -300,7 +299,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     private ServiceResult<User> getAssessor(Long assessorId) {
-        return find(userRepository.findByIdAndRolesName(assessorId, UserRoleType.ASSESSOR.getName()), notFoundError(User.class, UserRoleType.ASSESSOR, assessorId));
+        return find(userRepository.findByIdAndRoles(assessorId, ASSESSOR), notFoundError(User.class, ASSESSOR, assessorId));
     }
 
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {

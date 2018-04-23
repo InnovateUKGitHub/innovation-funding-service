@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks edit duration',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body>
+<th:block th:insert="fragments/modals :: modal-overlay" />
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.project.id})}" />
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your project details.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        <ul class="list-bullet" th:if="${#fields.hasErrors('${form}')}">
+            <li>please check your project duration</li>
+        </ul>
+    </div>
+
+  <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionName)} ? |${model.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionId} : ${model.competitionName}|">
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${competitionTitle},size='heading-xlarge'" />
+  </th:block>
+
+  <dl>
+    <dt>Project title</dt>
+    <dd th:text="${model.project.name}"></dd>
+    <dt>Start date</dt>
+    <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+  </dl>
+  <form th:action="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.competitionId},projectId=${model.project.id})}"
+        th:object="${form}"
+        method="post"
+        novalidate="novalidate">
+    <div class="form-group" th:classappend="${#fields.hasErrors('durationInMonths')} ? 'form-group-error'" >
+      <label for="durationInMonths">
+        <span class="form-label-bold">Duration</span>
+        <th:block th:if="${#fields.hasErrors('durationInMonths')}">
+              <span class="error-message" th:each="err : ${#fields.errors('durationInMonths')}" th:text="${err}"></span>
+        </th:block>
+      </label>
+      <input name="durationInMonths"
+             id="durationInMonths"
+             th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},data-pattern-errormessage=#{validation.field.non.decimal.format}"
+             type="text"
+             class="form-control width-small"
+             required="required"
+             pattern="^[0-9]*$"
+             maxlength="2"
+             data-prevent-input-regex="[^0-9]"
+             th:errorclass="form-control-error"
+             th:field="*{durationInMonths}" />
+      <span>months</span>
+    </div>
+    <button type="submit" class="button">Save and return to finances</button>
+  </form>
+
+  <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

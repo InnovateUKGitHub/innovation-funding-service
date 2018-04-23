@@ -12,7 +12,6 @@ import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewMod
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
  * This RestController exposes ways of fetching the current status of a competition projects in a view-friendly
@@ -63,7 +63,7 @@ public class CompetitionStatusController {
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
 
-        boolean isUserRoleProjectFinance = loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE);
+        boolean isUserRoleProjectFinance = loggedInUser.hasRole(PROJECT_FINANCE);
 
         model.addAttribute("model",
                 new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccess(),

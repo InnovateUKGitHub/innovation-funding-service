@@ -8,8 +8,8 @@ import org.innovateuk.ifs.user.resource.*;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class UserRegistrationResourceBuilder extends BaseBuilder<UserRegistrationResource, UserRegistrationResourceBuilder> {
 
@@ -71,7 +71,7 @@ public class UserRegistrationResourceBuilder extends BaseBuilder<UserRegistratio
         return withArray((email, userRegistrationResource) -> setField("email", email, userRegistrationResource), emails);
     }
 
-    public UserRegistrationResourceBuilder withRoles(List<RoleResource>... roles) {
+    public UserRegistrationResourceBuilder withRoles(List<Role>... roles) {
         return withArray((roleList, userRegistrationResource) -> setField("roles", roleList, userRegistrationResource), roles);
     }
 }

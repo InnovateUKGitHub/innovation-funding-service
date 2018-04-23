@@ -30,10 +30,6 @@ configurations {
     providedRuntime
 }
 
-jar {
-    baseName = 'ifs-registration-service'
-}
-
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 
@@ -65,3 +61,15 @@ tagDocker.tag = registrationServiceVersion
 osStageRemote.tag = registrationServiceVersion
 tagDockerLocal.tag = registrationServiceVersion
 osStageLocal.tag = registrationServiceVersion
+
+createContainer.hostName="registration-svc"
+createContainer.containerName="registration-svc"
+createContainer.containerId="registration-svc"
+
+
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+
+deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"

@@ -1,19 +1,16 @@
 package org.innovateuk.ifs.project.spendprofile.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileServiceImpl;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +24,8 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Mockito.*;
 
 public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<SpendProfileService> {
@@ -47,17 +43,17 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void testGenerateSpendProfile() {
 
-        asList(UserRoleType.values()).forEach(role -> {
-            RoleResource roleResource = newRoleResource().withType(role).build();
+        asList(Role.values()).forEach(role -> {
+            Role roleResource = Role.getByName(role.getName());
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
 
-            if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
+            if (role == PROJECT_FINANCE || role == COMP_ADMIN) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
                     classUnderTest.generateSpendProfile(123L);
-                    fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
+                    fail();
                 } catch (AccessDeniedException e) {
                     // expected behaviour
                 }
@@ -68,9 +64,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void testGenerateSpendProfileForPartnerOrganisation() {
 
-        asList(UserRoleType.values()).forEach(role -> {
-            RoleResource roleResource = newRoleResource().withType(role).build();
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+        asList(Role.values()).forEach(role -> {
+            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
             setLoggedInUser(userWithRole);
 
             if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
@@ -162,10 +157,10 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void testApproveOrRejectSpendProfile() {
 
-        List<UserRoleType> nonCompAdminRoles = getNonProjectFinanceUserRoles();
+        List<Role> nonCompAdminRoles = getNonProjectFinanceUserRoles();
         nonCompAdminRoles.forEach(role -> {
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.approveOrRejectSpendProfile(1L, ApprovalType.APPROVED);
                 Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
@@ -178,10 +173,10 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void testGetSpendProfileStatusByProjectId() {
 
-        List<UserRoleType> nonCompAdminRoles = getNonInternalAdminOrSupportUserRoles();
+        List<Role> nonCompAdminRoles = getNonInternalAdminOrSupportUserRoles();
         nonCompAdminRoles.forEach(role -> {
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.getSpendProfileStatusByProjectId(1L);
                 Assert.fail("Should not have been able to obtain status for spend profile with role " + role.getName());
@@ -232,80 +227,17 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Override
-    protected Class<TestSpendProfileService> getClassUnderTest() {
-        return TestSpendProfileService.class;
+    protected Class<? extends SpendProfileService> getClassUnderTest() {
+        return SpendProfileServiceImpl.class;
     }
 
-    public static class TestSpendProfileService implements SpendProfileService {
-
-        @Override
-        public ServiceResult<Void> generateSpendProfile(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApprovalType> getSpendProfileStatus(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-    }
-
-    private List<UserRoleType> getNonInternalAdminOrSupportUserRoles() {
-        return Arrays.stream(UserRoleType.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SUPPORT)
+    private List<Role> getNonInternalAdminOrSupportUserRoles() {
+        return Arrays.stream(Role.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SUPPORT)
                 .collect(toList());
     }
 
-    private List<UserRoleType> getNonProjectFinanceUserRoles() {
-        return Arrays.stream(UserRoleType.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN)
+    private List<Role> getNonProjectFinanceUserRoles() {
+        return Arrays.stream(Role.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN)
                 .collect(toList());
     }
 }

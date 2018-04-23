@@ -3,9 +3,8 @@ package org.innovateuk.ifs.commons.security;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.security.evaluator.*;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.MockitoAnnotations;
@@ -24,7 +23,6 @@ import java.util.Map.Entry;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.*;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -249,12 +247,11 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * Asserts that only the given Global Role(s) can perform the given action.  Any specified roles who cannot perform
      * the action will raise an error and vice versa any not specified who can will also raise an error
      */
-    protected void assertRolesCanPerform(Runnable actionFn, UserRoleType... supportedRoles) {
+    protected void assertRolesCanPerform(Runnable actionFn, Role... supportedRoles) {
 
-        asList(UserRoleType.values()).forEach(role -> {
+        asList(Role.values()).forEach(role -> {
 
-            RoleResource roleResource = newRoleResource().withType(role).build();
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
             setLoggedInUser(userWithRole);
 
             if (asList(supportedRoles).contains(role)) {

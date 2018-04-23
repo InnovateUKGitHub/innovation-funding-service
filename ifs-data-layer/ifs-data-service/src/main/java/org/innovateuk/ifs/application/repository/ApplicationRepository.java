@@ -56,6 +56,16 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     String SEARCH_BY_ID_LIKE = " SELECT a from Application a " +
                                " WHERE str(a.id) LIKE CONCAT('%', :searchString, '%') ";
 
+    String FIND_BY_ASSESSMENT = "SELECT app FROM Application app " +
+			"INNER JOIN Assessment ass ON ass.target.id = app.id " +
+			"WHERE ass.id = :assessmentId";
+
+	String FIND_BY_PROJECT = "SELECT app FROM Application app " +
+			"INNER JOIN Project p ON p.application = app " +
+			"WHERE p.id = :projectId";
+
+    Application findById(long applicationId);
+
     @Override
     List<Application> findAll();
     Page<Application> findByCompetitionId(long competitionId, Pageable pageable);
@@ -133,4 +143,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     Page<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId, Pageable pageable);
     @Query(SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL)
     List<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId);
+
+    @Query(FIND_BY_ASSESSMENT)
+	Application findByAssessmentId(@Param("assessmentId") long assessmentId);
+
+    @Query(FIND_BY_PROJECT)
+	Application findByProjectId(@Param("projectId") long projectId);
 }

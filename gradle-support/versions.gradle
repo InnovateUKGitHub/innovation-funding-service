@@ -20,3 +20,7 @@ ext.mailSinkVersion = project.properties['mail-sink.version'] ?: project.version
 ext.mysqlClientVersion = project.properties['mysql-client.version'] ?: project.version
 
 ext.silStubVersion = project.properties['sil-stub.version'] ?: project.version
+
+ext['hibernate.version'] = '5.2.7.Final'
+ext['thymeleaf-extras-springsecurity4.version'] = '3.0.1.RELEASE'
+ext['thymeleaf-extras-java8time.version'] = '3.0.0.RELEASE'

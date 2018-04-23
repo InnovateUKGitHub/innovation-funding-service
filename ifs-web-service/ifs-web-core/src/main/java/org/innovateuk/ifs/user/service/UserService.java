@@ -3,8 +3,8 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +20,9 @@ public interface UserService {
 
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
 
-    boolean existsAndHasRole(Long userId, UserRoleType role);
+    boolean existsAndHasRole(Long userId, Role role);
 
-    ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application);
+    ProcessRoleResource getLeadApplicantProcessRoleOrNull(Long applicationId);
 
     List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
 
@@ -54,7 +54,7 @@ public interface UserService {
 
     ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
 
-    List<UserResource> findUserByType(UserRoleType type);
+    List<UserResource> findUserByType(Role type);
 
     List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
 

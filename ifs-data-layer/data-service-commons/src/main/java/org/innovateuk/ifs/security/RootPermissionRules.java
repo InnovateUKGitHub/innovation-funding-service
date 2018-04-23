@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -16,9 +15,6 @@ public abstract class RootPermissionRules {
 
     @Autowired
     protected ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    protected RoleRepository roleRepository;
 
     @Autowired
     protected UserRepository userRepository;

@@ -1,14 +1,9 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
-import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.builder.ApplicationBuilder;
-import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,23 +12,19 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
-import org.innovateuk.ifs.user.builder.OrganisationBuilder;
-import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,12 +56,8 @@ import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.ne
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -94,8 +81,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Before
     public void setUp(){
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
-        User user = newUser().withId(userResource.getId()).withRoles(Sets.newLinkedHashSet(newRole().withType(COMP_ADMIN).build())).build();
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.COMP_ADMIN)).build();
         setLoggedInUser(userResource);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         MilestoneResource milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now()).build();
@@ -124,7 +111,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withUser(user)
                 .build(4);
 
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
         List<UserResource> result = service.findInnovationLeads(competitionId).getSuccess();
 
@@ -159,14 +146,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         savedCompetitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
         // Verify that the correct CompetitionParticipant is saved
-        verify(competitionParticipantRepositoryMock).save(savedCompetitionParticipant);
+        verify(assessmentParticipantRepositoryMock).save(savedCompetitionParticipant);
     }
 
     @Test
     public void removeInnovationLeadWhenCompetitionParticipantNotFound() throws Exception {
         Long innovationLeadUserId = 2L;
 
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .thenReturn(null);
         ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isFailure());
@@ -178,14 +165,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long innovationLeadUserId = 2L;
 
         AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .thenReturn(competitionParticipant);
 
         ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isSuccess());
 
         //Verify that the entity is deleted
-        verify(competitionParticipantRepositoryMock).delete(competitionParticipant);
+        verify(assessmentParticipantRepositoryMock).delete(competitionParticipant);
     }
 
     @Test
@@ -235,10 +222,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition comp2 = newCompetition().withName("Comp2").withId(competitionId).withCompetitionType(progcompetitionType).build();
         Competition comp3 = newCompetition().withName("Comp3").withId(competitionId).withCompetitionType(eoicompetitionType).build();
 
-        Application fundedAndInformedApplication1 = newApplication().withCompetition(comp1).withManageFundingEmailDate(ZonedDateTime.now()).withFundingDecision(FundingDecisionStatus.FUNDED).build();
-        comp1.setApplications(singletonList(fundedAndInformedApplication1));
-        Application fundedAndInformedApplication2 = newApplication().withCompetition(comp2).withManageFundingEmailDate(ZonedDateTime.now().plusHours(1L)).withFundingDecision(FundingDecisionStatus.FUNDED).build();
-        comp2.setApplications(singletonList(fundedAndInformedApplication2));
         List<Competition> expectedCompetitions = Lists.newArrayList(comp1, comp2);
         List<Competition> allCompetitions = Lists.newArrayList(comp1, comp2, comp3);
 
@@ -309,82 +292,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findUnsuccessfulApplicationsWhenNoneFound() throws Exception {
-
-        Long competitionId = 1L;
-
-        Page<Application> pagedResult = mock(Page.class);
-        when(pagedResult.getContent()).thenReturn(emptyList());
-        when(pagedResult.getTotalElements()).thenReturn(0L);
-        when(pagedResult.getTotalPages()).thenReturn(0);
-        when(pagedResult.getNumber()).thenReturn(0);
-        when(pagedResult.getSize()).thenReturn(0);
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
-
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
-        assertTrue(result.isSuccess());
-
-        ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccess();
-        assertTrue(unsuccessfulApplicationsPage.getContent().isEmpty());
-
-    }
-
-    @Test
-    public void findUnsuccessfulApplications() throws Exception {
-
-        Long competitionId = 1L;
-
-        Long leadOrganisationId = 7L;
-        String leadOrganisationName = "lead Organisation name";
-        Organisation leadOrganisation = OrganisationBuilder.newOrganisation()
-                .withId(leadOrganisationId)
-                .withName(leadOrganisationName)
-                .build();
-
-        ProcessRole leadProcessRole = ProcessRoleBuilder.newProcessRole()
-                .withRole(LEADAPPLICANT)
-                .withOrganisationId(leadOrganisationId)
-                .build();
-
-        Application application1 = ApplicationBuilder.newApplication()
-                .withId(11L)
-                .withProcessRoles(leadProcessRole)
-                .build();
-        Application application2 = ApplicationBuilder.newApplication()
-                .withId(12L)
-                .withProcessRoles(leadProcessRole)
-                .build();
-
-        List<Application> unsuccessfulApplications = new ArrayList<>();
-        unsuccessfulApplications.add(application1);
-        unsuccessfulApplications.add(application2);
-
-        ApplicationResource applicationResource1 = ApplicationResourceBuilder.newApplicationResource().build();
-        ApplicationResource applicationResource2 = ApplicationResourceBuilder.newApplicationResource().build();
-
-        Page<Application> pagedResult = mock(Page.class);
-        when(pagedResult.getContent()).thenReturn(unsuccessfulApplications);
-        when(pagedResult.getTotalElements()).thenReturn(2L);
-        when(pagedResult.getTotalPages()).thenReturn(1);
-        when(pagedResult.getNumber()).thenReturn(0);
-        when(pagedResult.getSize()).thenReturn(2);
-
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
-        when(applicationMapperMock.mapToResource(application1)).thenReturn(applicationResource1);
-        when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
-        when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
-
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
-        assertTrue(result.isSuccess());
-
-        ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccess();
-        assertTrue(unsuccessfulApplicationsPage.getSize() == 2);
-        assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
-        assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
-        assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
-    }
-
-    @Test
     public void countCompetitions() throws Exception {
         Long countLive = 1L;
         Long countProjectSetup = 2L;
@@ -404,13 +311,13 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         // Test for innovation lead user where only competitions they are assigned to should be counted
         // actual query tested in repository integration test, this is only testing correct repostiory method is called.
-        UserResource innovationLeadUser = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build(1)).build();
+        UserResource innovationLeadUser = newUserResource().withRolesGlobal(asList(Role.INNOVATION_LEAD)).build();
         setLoggedInUser(innovationLeadUser);
 
         when(competitionRepositoryMock.countLiveForInnovationLead(innovationLeadUser.getId())).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetupForInnovationLead(innovationLeadUser.getId())).thenReturn(countProjectSetup);
         when(competitionRepositoryMock.countFeedbackReleasedForInnovationLead(innovationLeadUser.getId())).thenReturn(countFeedbackReleased);
-        when(userRepositoryMock.findOne(innovationLeadUser.getId())).thenReturn(newUser().withId(innovationLeadUser.getId()).withRoles(asLinkedSet(newRole().withType(INNOVATION_LEAD).build())).build());
+        when(userRepositoryMock.findOne(innovationLeadUser.getId())).thenReturn(newUser().withId(innovationLeadUser.getId()).withRoles(singleton(Role.INNOVATION_LEAD)).build());
 
         response = service.countCompetitions().getSuccess();
         assertEquals(countLive, response.getLiveCount());
@@ -476,8 +383,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(INNOVATION_LEAD).build())).build();
-        User user = newUser().withId(userResource.getId()).withRoles(Sets.newLinkedHashSet(newRole().withType(INNOVATION_LEAD).build())).build();
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
+        User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.INNOVATION_LEAD)).build();
         setLoggedInUser(userResource);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
@@ -524,8 +431,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SUPPORT).build())).build();
-        User user = newUser().withId(userResource.getId()).withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build();
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
+        User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.SUPPORT)).build();
         setLoggedInUser(userResource);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
@@ -788,8 +695,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         List<CompetitionSearchResultItem> response = service.findLiveCompetitions().getSuccess();
         assertTopLevelFlagForNonSupportUser(competitions, response);
 
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SUPPORT).build())).build();
-        User user = newUser().withId(userResource.getId()).withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build();
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
+        User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.SUPPORT)).build();
         when(userRepositoryMock.findOne(userResource.getId())).thenReturn(user);
         setLoggedInUser(userResource);
         response = service.findLiveCompetitions().getSuccess();

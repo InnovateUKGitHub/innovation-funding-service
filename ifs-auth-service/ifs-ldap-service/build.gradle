@@ -1,4 +1,5 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+import com.bmuschko.gradle.docker.tasks.container.*
 
 def String ldapCertsVolume = 'src/main/docker/certs'
 
@@ -10,10 +11,11 @@ def String ldapPassword = project.properties['auth.ldap.password'] ?: "default"
 task prepareDockerFile {
     def inputDir = file("${project.buildDir}/docker")
 
-    def String ldapEncryptionKey = file(ldapEncryptionKeyFile).text.trim().replace('\n', '\\n')
-    def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
     doFirst {
+
+        def String ldapEncryptionKey = file(ldapEncryptionKeyFile).text.trim().replace('\n', '\\n')
+        def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
         copy {
             from 'src/main/docker/'
             into 'src/main/docker/'
@@ -40,3 +42,9 @@ tagDocker.tag = ldapVersion
 osStageRemote.tag = ldapVersion
 tagDockerLocal.tag = ldapVersion
 osStageLocal.tag = ldapVersion
+
+createContainer.containerName = "ldap"
+createContainer.containerId = "ldap"
+createContainer.env = ["LDAP_PORT=8389"]
+createContainer.portBindings = ['8389:8389']
+createContainer.hostName = "ldap"

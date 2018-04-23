@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsFo
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
@@ -24,10 +25,14 @@ public class ApplicationDetailsFormPopulator implements CompetitionSetupSubsecti
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 		ApplicationDetailsForm competitionSetupForm = new ApplicationDetailsForm();
 
-		competitionSetupForm.setUseResubmissionQuestion(competitionResource.isUseResubmissionQuestion());
+		competitionSetupForm.setMaxProjectDuration(convertIntegerToBigDecimal(competitionResource.getMaxProjectDuration()));
+		competitionSetupForm.setMinProjectDuration(convertIntegerToBigDecimal(competitionResource.getMinProjectDuration()));
+		competitionSetupForm.setUseResubmissionQuestion(competitionResource.getUseResubmissionQuestion());
 
 		return competitionSetupForm;
 	}
 
-
+	private BigDecimal convertIntegerToBigDecimal(Integer integer) {
+		return integer != null ? BigDecimal.valueOf(integer) : null; // Null safe conversion
+	}
 }

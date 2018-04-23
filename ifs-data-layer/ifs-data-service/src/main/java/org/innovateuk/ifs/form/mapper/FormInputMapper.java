@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.form.mapper;
 
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -22,7 +21,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
     config = GlobalMapperConfig.class,
     uses = {
         CompetitionMapper.class,
-        FormInputResponseMapper.class,
         FormValidatorMapper.class,
         QuestionMapper.class,
         GuidanceRowMapper.class
@@ -31,7 +29,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputResource, Long> {
 
     @Mappings({
-            @Mapping(target = "responses", ignore = true),
             @Mapping(target = "guidanceRows", ignore = true),
             @Mapping(target = "active", ignore = true)
     })

@@ -3,14 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant terms and conditions'" />
 </head>
-<body th:with="context='front-door'" class="grant-terms-conditions">
+<body class="grant-terms-conditions">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
     <th:block th:insert="fragments/layout :: page-title"
               th:with="pageTitle='Innovate UK terms and conditions of an Advanced Propulsion Centre competition grant award',size='heading-large'" />
 

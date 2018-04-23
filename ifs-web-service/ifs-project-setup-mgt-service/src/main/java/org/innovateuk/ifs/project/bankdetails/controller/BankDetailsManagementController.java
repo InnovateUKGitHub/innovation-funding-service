@@ -18,7 +18,6 @@ import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewMod
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +33,7 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_D
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 
 /**
  * This controller is for serving internal project finance user, allowing them to view and manage project bank account details.
@@ -62,7 +62,7 @@ public class BankDetailsManagementController {
             Model model,
             @P("projectId")@PathVariable("projectId") Long projectId,
             UserResource loggedInUser) {
-        model.addAttribute("isCompAdminUser", loggedInUser.hasRole(UserRoleType.COMP_ADMIN));
+        model.addAttribute("isCompAdminUser", loggedInUser.hasRole(COMP_ADMIN));
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
                 .getSuccess();
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
@@ -101,13 +101,13 @@ public class BankDetailsManagementController {
         }
         bankDetailsResource.setManualApproval(true);
 
-        Supplier<String> faliureView = () -> {
+        Supplier<String> failureView = () -> {
             bankDetailsResource.setManualApproval(false);
             return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form);
         };
 
         return validationHandler.performActionOrBindErrorsToField("",
-                faliureView,
+                failureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
                 () -> {
                     Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccess();

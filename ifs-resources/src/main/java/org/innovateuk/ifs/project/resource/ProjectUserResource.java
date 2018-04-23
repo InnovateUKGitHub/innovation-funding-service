@@ -3,10 +3,10 @@ package org.innovateuk.ifs.project.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 
 public class ProjectUserResource {
     private Long id;
@@ -25,7 +25,7 @@ public class ProjectUserResource {
     	// no-arg constructor
     }
 
-    public ProjectUserResource(Long id, UserResource user, ProjectResource project, RoleResource role, OrganisationResource organisation, InviteProjectResource invite) {
+    public ProjectUserResource(Long id, UserResource user, ProjectResource project, Role role, OrganisationResource organisation, InviteProjectResource invite) {
         this.id = id;
         this.user = user.getId();
         this.userName = user.getName();
@@ -94,7 +94,7 @@ public class ProjectUserResource {
 
     @JsonIgnore
     public boolean isFinanceContact() {
-        return FINANCE_CONTACT.getName().equals(getRoleName());
+        return role.equals(FINANCE_CONTACT.getId());
     }
 
     public String getEmail() {

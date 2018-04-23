@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -27,6 +28,8 @@ import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.ne
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -189,5 +192,24 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(get("/application/showApplicationTeam/{applicationId}/{userId}", applicationId, userId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
+    }
+
+
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+        final Long competitionId = 1L;
+        int pageIndex = 0;
+        int pageSize = 20;
+        String sortField = "id";
+
+        ApplicationPageResource applicationPage = new ApplicationPageResource();
+
+        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(applicationPage)));
+
+        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
     }
 }

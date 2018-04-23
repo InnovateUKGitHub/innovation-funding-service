@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
 <!-- =================== Comp setup section - Overview (1) ============================== -->
 
 <th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
@@ -20,7 +23,7 @@
                 </div>
                 <div th:if="${model.publicContentPublishedAndSectionIsContent(section)}"
                       th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
-                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, ' h:mma'))}"
+                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}"
                       th:text="${'Last published ' + publishDay + ' ' + publishTime}"
                       class="notification">Last published</div>
                 <div th:if="${model.sectionCompleteAndCompetitionNotLive(section)}" class="task-status-complete"><span>Complete</span></div>
@@ -108,11 +111,13 @@
         <h2 class="heading-medium no-margin">Complete competition setup</h2>
         <p>Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
         <hr />
-        <div>
-            <a th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}"
-               class="button">Done</a>
-            <button type="button" class="js-close buttonlink">Cancel</button>
-        </div>
+        <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
+              th:action="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}">
+            <div>
+                <button type="submit" class="button">Done</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -136,3 +141,5 @@
         </form>
     </div>
 </div>
+
+</html>

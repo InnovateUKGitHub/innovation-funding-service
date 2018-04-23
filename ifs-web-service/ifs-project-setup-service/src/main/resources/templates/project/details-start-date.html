@@ -4,12 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Target start date',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body th:with="context='project'" class="project-details start-date">
+    <body class="project-details start-date">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -48,8 +47,7 @@
 
                 <h2 class="heading-medium">Project duration</h2>
                 <p>
-                    Project duration stated in your application:<br />
-                    <strong th:text="|${model.projectDurationInMonths} months|">9 months</strong>
+                    <span th:text="|${model.projectDurationInMonths} months|">9 months</span>
                 </p>
 
                 <button type="submit" class="button">Save</button>
@@ -60,5 +58,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

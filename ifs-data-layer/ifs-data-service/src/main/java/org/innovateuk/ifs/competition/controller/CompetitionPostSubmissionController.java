@@ -2,7 +2,9 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -33,6 +35,9 @@ public class CompetitionPostSubmissionController {
     private AssessorService assessorService;
 
     @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
     private ApplicationNotificationService applicationNotificationService;
 
     @PutMapping("/{id}/notify-assessors")
@@ -59,13 +64,22 @@ public class CompetitionPostSubmissionController {
         return competitionService.closeAssessment(id).toPutResponse();
     }
 
+    /**
+     * TODO: Remove endpoint in ZDD cleanup
+     * @param competitionId
+     * @param pageIndex
+     * @param pageSize
+     * @param sortField
+     * @return
+     */
+    @ZeroDowntime(reference = "IFS-3016" ,description = "removal of endpoint")
     @GetMapping("/{competitionId}/unsuccessful-applications")
     public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                                                             @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
 
-        return competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
+        return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
     }
 
     @GetMapping("/{id}/queries/open")

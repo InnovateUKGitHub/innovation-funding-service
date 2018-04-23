@@ -91,6 +91,10 @@ the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
     the user marks the Application details section as complete    ${comp_type}
+    the user marks the Assessed questions as complete  ${growthTable}  ${comp_type}
+
+the user marks the Assessed questions as complete
+    [Arguments]  ${growthTable}  ${comp_type}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
@@ -104,7 +108,8 @@ the user marks the Application as done
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
     the user clicks the button/link   link=Application
-    Remove previous rows              jQuery=li:last-of-type button[type="submit"]:contains("Remove")
+    # Removing questions from the Assessed questions
+    Remove previous rows              jQuery=.no-margin-bottom li:last-of-type button[type="submit"]:contains("Remove")
     the user clicks the button/link   jQuery=li:contains("1.") a  # Click the last question left - which now will be first
     the user is able to configure the new question  How innovative is your project?
     the user clicks the button/link   css=button[name="createQuestion"]
@@ -231,49 +236,6 @@ the user fills in the Public content and publishes
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish content")
 
-The competitions date changes so it is now Open
-    [Arguments]  ${competition}
-    Connect to Database  @{database}
-    Change the open date of the Competition in the database to one day before  ${competition}
-    the user navigates to the page   ${CA_Live}
-    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
-
-Change the open date of the Competition in the database to one day before
-    [Arguments]  ${competition}
-    ${yesterday} =  get yesterday
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${yesterday}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
-
-Change the close date of the Competition in the database to tomorrow
-    [Arguments]  ${competition}
-    ${tomorrow} =  get tomorrow
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
-
-Change the close date of the Competition in the database to a fortnight
-    [Arguments]  ${competition}
-    ${fortnight} =  get fortnight
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fortnight}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
-
-Change the close date of the Competition in the database to fifteen days
-    [Arguments]  ${competition}
-    ${fifteen} =  get fifteen days
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fifteen}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
-
-
-Change the close date of the Competition in the database to thirteen days
-    [Arguments]  ${competition}
-    ${thirteen} =  get thirteen days
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${thirteen}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
-
-Change the open date of the Competition in the database to tomorrow
-    [Arguments]  ${competition}
-    ${tomorrow} =  get tomorrow
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
-
-Reset the open and close date of the Competition in the database
-    [Arguments]  ${competition}
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2018-02-24 11:00:00' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2018-03-16 11:00:00' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
-
 the internal user navigates to public content
     [Arguments]  ${comp}
     the user navigates to the page     ${CA_UpcomingComp}
@@ -369,8 +331,9 @@ the competition is open
 
 moving competition to Closed
     [Arguments]  ${compID}
+    ${yesterday} =  get yesterday
     Connect to Database  @{database}
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
 
 making the application a successful project
     [Arguments]  ${compID}  ${appTitle}

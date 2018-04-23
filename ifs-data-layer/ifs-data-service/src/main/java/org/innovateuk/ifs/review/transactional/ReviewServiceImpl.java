@@ -4,8 +4,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
-import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
+import org.innovateuk.ifs.review.domain.ReviewParticipant;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -19,8 +19,7 @@ import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -41,7 +40,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVI
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -66,9 +64,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     private ReviewRepository reviewRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -177,10 +172,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ServiceResult<Void> createAssessmentReview(ReviewParticipant assessor, Application application) {
         if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
-            final Role panelAssessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
             final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED);
 
-            Review review =  new Review(application, assessor, panelAssessorRole);
+            Review review =  new Review(application, assessor);
             review.setActivityState(createdActivityState);
             reviewRepository.save(review);
         }
@@ -215,7 +209,8 @@ public class ReviewServiceImpl implements ReviewService {
     private ServiceResult<Void> sendInviteNotification(String subject,
                                                        Review review,
                                                        Notifications notificationType) {
-        NotificationTarget recipient = new UserNotificationTarget(review.getParticipant().getUser());
+        User target  = review.getParticipant().getUser();
+        NotificationTarget recipient = new UserNotificationTarget(target.getName(), target.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,

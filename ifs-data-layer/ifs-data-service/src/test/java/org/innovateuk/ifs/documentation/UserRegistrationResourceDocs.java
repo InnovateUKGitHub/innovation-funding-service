@@ -5,19 +5,19 @@ import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import java.util.Collections;
+
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 /**
  * Helper for Spring REST Docs, specifically for user registration.
  */
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 public class UserRegistrationResourceDocs {
 
     public static final FieldDescriptor[] userRegistrationResourceFields = {
@@ -45,5 +45,5 @@ public class UserRegistrationResourceDocs {
             .withPassword("Passw0rd123")
             .withAddress(newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build())
             .withEmail("tom@poly.io")
-            .withRoles(asList(newRoleResource().withId(3L).withType(ASSESSOR).build()));
+            .withRoles(Collections.singletonList(ASSESSOR));
 }

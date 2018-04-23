@@ -11,7 +11,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -39,7 +39,6 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadState;
@@ -77,14 +76,15 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
-import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
+import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * This controller will handle requests related to finance checks for external users
@@ -154,7 +154,7 @@ public class ProjectFinanceChecksController {
     public String viewFinanceChecks(Model model, @P("projectId")@PathVariable("projectId") final Long projectId,
                                     UserResource loggedInUser) {
 
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
         model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, null, null));
 
@@ -170,7 +170,7 @@ public class ProjectFinanceChecksController {
                                   HttpServletResponse response,
                                   UserResource loggedInUser) {
 
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         attachments.forEach(financeCheckService::deleteFile);
@@ -193,7 +193,7 @@ public class ProjectFinanceChecksController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         Supplier<String> failureView = () -> {
@@ -249,7 +249,7 @@ public class ProjectFinanceChecksController {
                                             HttpServletRequest request,
                                             HttpServletResponse response,
                                             UserResource loggedInUser) {
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -283,7 +283,7 @@ public class ProjectFinanceChecksController {
                                                                  @PathVariable Long attachmentId,
                                                                  UserResource loggedInUser,
                                                                  HttpServletRequest request) {
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
 
         if (attachments.contains(attachmentId)) {
@@ -313,7 +313,7 @@ public class ProjectFinanceChecksController {
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -337,7 +337,7 @@ public class ProjectFinanceChecksController {
                                 HttpServletRequest request,
                                 HttpServletResponse response,
                                 UserResource loggedInUser) {
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         attachments.forEach((id -> financeCheckService.deleteFile(id)));
@@ -351,7 +351,7 @@ public class ProjectFinanceChecksController {
     @GetMapping("/eligibility")
     public String viewExternalEligibilityPage(@P("projectId")@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -366,7 +366,7 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility/changes")
     public String viewExternalEligibilityChanges(@P("projectId")@PathVariable("projectId") final Long projectId, Model model, UserResource loggedInUser) {
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
@@ -414,22 +414,17 @@ public class ProjectFinanceChecksController {
 
         ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
-        List<Long> projectUserIds =
-                removeDuplicates(simpleMap(projectService.getProjectUsersForProject(projectId), ProjectUserResource::getUser));
-
         return queriesResult.handleSuccessOrFailure(
 
                 failure -> emptyMap(),
                 success -> {
-                    List<ThreadViewModel> queryThreads = threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(), user ->
-                            projectUserIds.contains(user.getId()) ?
-                                    user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName() :
-                                    "Innovate UK - Finance team");
+                    List<ThreadViewModel> queryThreads =
+                            threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
+                            threadViewModelPopulator.anonymousProjectFinanceOrNamedExternalUser());
 
                     return queryThreads
                             .stream()
-                            .collect(groupingBy(ThreadViewModel::getState)
-                            );
+                            .collect(groupingBy(ThreadViewModel::getState));
                 });
     }
 

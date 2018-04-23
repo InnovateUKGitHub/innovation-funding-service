@@ -2,7 +2,8 @@ package org.innovateuk.ifs.assessment.feedback.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -224,5 +225,28 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(appendixDetails)
                 .append(researchCategories)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("assessmentId", assessmentId)
+                .append("daysLeft", daysLeft)
+                .append("daysLeftPercentage", daysLeftPercentage)
+                .append("applicationId", applicationId)
+                .append("applicationName", applicationName)
+                .append("questionId", questionId)
+                .append("questionNumber", questionNumber)
+                .append("questionShortName", questionShortName)
+                .append("questionName", questionName)
+                .append("maximumScore", maximumScore)
+                .append("applicantResponse", applicantResponse)
+                .append("assessmentFormInputs", assessmentFormInputs)
+                .append("scoreFormInputExists", scoreFormInputExists)
+                .append("scopeFormInputExists", scopeFormInputExists)
+                .append("appendixExists", appendixExists)
+                .append("appendixDetails", appendixDetails)
+                .append("researchCategories", researchCategories)
+                .toString();
     }
 }

@@ -158,13 +158,17 @@ include::competitionInvite.adoc[]
 == Competition Participant
 include::competitionParticipant.adoc[]
 
-[[competitionSetupQuestion]]
-== Competition Setup Question
-include::competitionSetupQuestion.adoc[]
+[[questionCompetitionSetup]]
+== Question Competition Setup
+include::questionCompetitionSetup.adoc[]
 
 [[competitionSetupFinance]]
 == Competition Setup Finance
 include::competitionSetupFinance.adoc[]
+
+[[costTotals]]
+== Cost Totals
+include::cost-totals.adoc[]
 
 [[inviteorganisation]]
 == Invite Organisation

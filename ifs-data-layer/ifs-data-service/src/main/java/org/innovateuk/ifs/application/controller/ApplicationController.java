@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +26,8 @@ public class ApplicationController {
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
     private static final String DEFAULT_PAGE_SIZE = "40";
+
+    private static final String DEFAULT_SORT_BY = "id";
 
     @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
@@ -94,7 +96,7 @@ public class ApplicationController {
     @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                                          @PathVariable("userId") final Long userId,
-                                                                                         @PathVariable("role") final UserRoleType role) {
+                                                                                         @PathVariable("role") final Role role) {
 
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
@@ -130,5 +132,18 @@ public class ApplicationController {
     public RestResult<Boolean> showApplicationTeam(@PathVariable("applicationId") final Long applicationId,
                                                    @PathVariable("userId") final Long userId) {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/unsuccessful-applications")
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
+        return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
+    }
+
+    @GetMapping("/getLatestEmailFundingDate/{competitionId}")
+    public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
+        return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
     }
 }

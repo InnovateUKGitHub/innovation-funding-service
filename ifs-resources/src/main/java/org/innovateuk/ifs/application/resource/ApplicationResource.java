@@ -3,59 +3,33 @@ package org.innovateuk.ifs.application.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Set;
 
-import static com.google.common.collect.Sets.immutableEnumSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
-@FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
-@FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
 public class ApplicationResource {
-    private static final int MIN_DURATION_IN_MONTHS = 1;
-
-    private static final int MAX_DURATION_IN_MONTHS = 36;
-
     private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
 
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
     private static final List<CompetitionStatus> SUBMITTABLE_COMPETITION_STATES = singletonList(OPEN);
 
-    private static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = immutableEnumSet(
-            ApplicationState.SUBMITTED,
-            ApplicationState.APPROVED,
-            ApplicationState.REJECTED,
-            ApplicationState.INELIGIBLE,
-            ApplicationState.INELIGIBLE_INFORMED
-    );
-
     private Long id;
 
-    @NotBlank(message ="{validation.project.name.must.not.be.empty}")
     private String name;
 
-    @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
 
     private ZonedDateTime submittedDate;
-    @Min(value=MIN_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
-    @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
-    @NotNull
+
     private Long durationInMonths;
 
     private ApplicationState applicationState;
@@ -64,15 +38,11 @@ public class ApplicationResource {
     private CompetitionStatus competitionStatus;
     private BigDecimal completion;
     private Boolean stateAidAgreed;
-    @NotNull(message="{validation.application.must.indicate.resubmission.or.not}")
     private Boolean resubmission;
 
     private String previousApplicationNumber;
     private String previousApplicationTitle;
-    @NotNull(message="{validation.application.research.category.required}")
     private ResearchCategoryResource researchCategory;
-
-    @NotNull(message="{validation.application.innovationarea.category.required}")
     private InnovationAreaResource innovationArea;
 
     private boolean noInnovationAreaApplicable;
@@ -247,7 +217,7 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean isSubmitted() {
-        return SUBMITTED_APPLICATION_STATES.contains(applicationState);
+        return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
 
     private boolean isInSubmittableCompetitionState() {

@@ -8,10 +8,10 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -21,16 +21,12 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
-import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -39,10 +35,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
@@ -50,8 +46,8 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -96,9 +92,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private UserMapper userMapper;
 
     @Autowired
-    private RoleMapper roleMapper;
-
-    @Autowired
     private AddressMapper addressMapper;
 
     @Autowired
@@ -112,9 +105,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private RoleInviteRepository roleInviteRepository;
-
-    @Autowired
-    private RoleService roleService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -134,12 +124,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
-        String applicantRoleName = APPLICANT.getName();
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource).
                 andOnSuccess(
                         () -> addUserToOrganisation(newUser, organisationId).
-                                andOnSuccess(user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, applicantRoleName) : ServiceResult.serviceSuccess(user))).
+                                andOnSuccess(user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, APPLICANT) : ServiceResult.serviceSuccess(user))).
                 andOnSuccess(
                         () -> createUserWithUid(newUser, userResource.getPassword(), null)
                 );
@@ -229,14 +218,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<User> addRoleToUser(User user, String roleName) {
-        return getRole(roleName).andOnSuccessReturn(role -> {
-            if (user.getRoles().stream().filter(r -> r.getId() == role.getId()).count() == 0) {
-                user.addRole(role);
-            }
-            return user;
-        });
-
+    private ServiceResult<User> addRoleToUser(User user, Role role) {
+        if (!user.hasRole(role)) {
+            user.addRole(role);
+        }
+        return serviceSuccess(user);
     }
 
     private ServiceResult<User> addUserToOrganisation(User user, Long organisationId) {
@@ -257,7 +243,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setGender(userResource.getGender());
         newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
         newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
-        newUser.setRoles(userResource.getRoles().stream().map( u -> roleMapper.mapToDomain(u)).collect(Collectors.toSet()));
+        newUser.setRoles(new HashSet<>(userResource.getRoles()));
 
         return newUser;
     }
@@ -279,7 +265,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private Notification getEmailVerificationNotification(final UserResource user, final Token token) {
-        final List<NotificationTarget> to = singletonList(new ExternalUserNotificationTarget(user.getName(), user.getEmail()));
+        final List<NotificationTarget> to = singletonList(new UserNotificationTarget(user.getName(), user.getEmail()));
         return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
     }
 
@@ -319,18 +305,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 }));
     }
 
-    private ServiceResult<List<RoleResource>> getInternalRoleResources(Role role) {
-        UserRoleType roleType = UserRoleType.fromName(role.getName());
-
-        return getInternalRoleResources(roleType);
-    }
-
-    private ServiceResult<List<RoleResource>> getInternalRoleResources(UserRoleType roleType) {
-
-        if(UserRoleType.IFS_ADMINISTRATOR.equals(roleType)){
-            return getIFSAdminRoles(roleType); // IFS Admin has multiple roles
+    private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
+        if (role == IFS_ADMINISTRATOR){
+            return getIFSAdminRoles(role); // IFS Admin has multiple roles
         } else {
-            return roleService.findByUserRoleType(roleType).andOnSuccess(roleResource -> serviceSuccess(singletonList(roleResource)));
+            return serviceSuccess(singletonList(role));
         }
     }
 
@@ -351,15 +330,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess();
     }
 
-    private ServiceResult<List<RoleResource>> getIFSAdminRoles(UserRoleType roleType) {
-        List<RoleResource> roleResources = new ArrayList<>();
-        return roleService.findByUserRoleType(roleType).andOnSuccess(adminResource -> {
-            roleResources.add(adminResource);
-            return roleService.findByUserRoleType(PROJECT_FINANCE).andOnSuccessReturn(finResource -> {
-                roleResources.add(finResource);
-                return serviceSuccess(roleResources);
-            }).getSuccess();
-        });
+    private ServiceResult<List<Role>> getIFSAdminRoles(Role roleType) {
+        return serviceSuccess( asList(roleType, Role.PROJECT_FINANCE) );
     }
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
@@ -381,13 +353,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> editInternalUser(UserResource userToEdit, UserRoleType userRoleType) {
+    public ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType) {
 
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findOne(userToEdit.getId()), notFoundError(User.class)))
                 .andOnSuccess(user -> getInternalRoleResources(userRoleType)
                     .andOnSuccess(roleResources -> {
-                        Set<Role> roleList = CollectionFunctions.simpleMapSet(roleResources, roleResource -> roleMapper.mapToDomain(roleResource));
+                        Set<Role> roleList = new HashSet<>(roleResources);
                         user.setFirstName(userToEdit.getFirstName());
                         user.setLastName(userToEdit.getLastName());
                         user.setRoles(roleList);
@@ -397,9 +369,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 );
     }
 
-    private ServiceResult<Void> validateInternalUserRole(UserRoleType userRoleType) {
+    private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
 
-        return UserRoleType.internalRoles().stream().anyMatch(internalRole -> internalRole.equals(userRoleType))?
+        return Role.internalRoles().contains(userRoleType) ?
                 serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
     }
 }

@@ -1,17 +1,16 @@
 package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.sync.service.AllFinanceTotalsSender;
+import org.innovateuk.ifs.finance.totals.service.AllFinanceTotalsSender;
+import org.innovateuk.ifs.finance.totals.service.AllFinanceTotalsSenderImpl;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 
 public class AllFinanceTotalsSenderSecurityTest extends BaseServiceSecurityTest<AllFinanceTotalsSender> {
     @Override
-    protected Class<AllFinanceTotalsSenderSecurityTest.TestAllFinanceTotalsSender> getClassUnderTest() {
-        return AllFinanceTotalsSenderSecurityTest.TestAllFinanceTotalsSender.class;
+    protected Class<? extends AllFinanceTotalsSender> getClassUnderTest() {
+        return AllFinanceTotalsSenderImpl.class;
     }
 
     @Test
@@ -19,13 +18,5 @@ public class AllFinanceTotalsSenderSecurityTest extends BaseServiceSecurityTest<
         testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
                 classUnderTest.sendAllFinanceTotals(), SYSTEM_MAINTAINER);
 
-    }
-
-    public static class TestAllFinanceTotalsSender implements AllFinanceTotalsSender {
-
-        @Override
-        public ServiceResult<Void> sendAllFinanceTotals() {
-            return serviceSuccess();
-        }
     }
 }

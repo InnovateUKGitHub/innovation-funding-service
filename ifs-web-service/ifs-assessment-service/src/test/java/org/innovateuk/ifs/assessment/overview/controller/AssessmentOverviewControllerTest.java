@@ -2,13 +2,26 @@ package org.innovateuk.ifs.assessment.overview.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
+import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.populator.section.YourProjectCostsSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
+import org.innovateuk.ifs.application.viewmodel.section.DefaultYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
+import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.overview.viewmodel.*;
@@ -18,8 +31,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -45,8 +57,12 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
@@ -59,14 +75,14 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -91,6 +107,15 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private AssessmentService assessmentService;
 
+    @Mock
+    private ApplicantRestService applicantRestService;
+
+    @Mock
+    private ApplicationNavigationPopulator navigationPopulator;
+
+    @Mock
+    private FormInputViewModelGenerator formInputViewModelGenerator;
+
     @Spy
     @InjectMocks
     private AssessmentOverviewModelPopulator assessmentOverviewModelPopulator;
@@ -98,6 +123,14 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Spy
     @InjectMocks
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private YourProjectCostsSectionPopulator yourProjectCostsSectionPopulator;
 
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
@@ -356,6 +389,150 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void getDetailedFinancesBusiness() throws Exception {
+        setupCompetition();
+        setupApplicationWithRoles();
+        ApplicationResource applicationResource = applications.get(0);
+        AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
+
+        SortedSet<OrganisationResource> orgSet = setupOrganisations();
+        OrganisationResource organisation = orgSet.first();
+        List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
+        OrganisationFinanceOverview organisationFinanceOverview = newOrganisationFinanceOverviewBuilder()
+                .withApplicationId(applicationResource.getId())
+                .withOrganisationFinances(appFinanceList)
+                .build();
+
+        ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
+        QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
+        ApplicantSectionResource costSection = newApplicantSectionResource()
+                .withApplicantQuestions(newApplicantQuestionResource().withQuestion(costQuestion).build(1))
+                .build();
+
+        ApplicantSectionResource section = newApplicantSectionResource()
+                .withApplication(applicationResource)
+                .withCompetition(competitionResource)
+                .withCurrentApplicant(applicant)
+                .withApplicants(asList(applicant))
+                .withSection(newSectionResource()
+                        .withType(SectionType.FINANCE).build())
+                .withApplicantQuestions(
+                        newApplicantQuestionResource()
+                                .withQuestion(newQuestionResource()
+                                        .withType(QuestionType.GENERAL).build())
+                                .build(1))
+                .withApplicantChildrenSections(asList(costSection))
+                .withCurrentUser(loggedInUser)
+                .build();
+
+        AssessmentDetailedFinancesViewModel expectedViewModel = new AssessmentDetailedFinancesViewModel(
+                assessmentResource.getId(), applicationResource.getId(), "Application name", "finance");
+
+        ApplicationForm form = new ApplicationForm();
+        AbstractFormInputViewModel formInputViewModel = mock(AbstractFormInputViewModel.class);
+        FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(processRoleService.getByApplicationId(assessmentResource.getApplication())).thenReturn(application1ProcessRoles);
+        when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
+        when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
+        when(formInputViewModelGenerator.fromSection(section, costSection, form, true)).thenReturn(asList(formInputViewModel));
+        when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
+
+        MvcResult result = mockMvc.perform(get("/{assessmentId}/detailed-finances/organisation/{organisationId}", assessmentResource.getId(), organisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("applicationOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getFinancesByOrganisation()))
+                .andExpect(view().name("assessment/application-detailed-finances"))
+                .andReturn();
+
+        DefaultYourProjectCostsSectionViewModel resultCostsViewModel = (DefaultYourProjectCostsSectionViewModel) result.getModelAndView().getModel().get("detailedCostings");
+        assertThat(resultCostsViewModel.isSection(), equalTo(true));
+        assertThat(resultCostsViewModel.isComplete(), equalTo(false));
+        assertThat(resultCostsViewModel.getDefaultProjectCostSections().size(), equalTo(1));
+        DefaultProjectCostSection costSectionViewModel = resultCostsViewModel.getDefaultProjectCostSections().get(0);
+        assertThat(costSectionViewModel.getApplicantResource(), equalTo(section));
+        assertThat(costSectionViewModel.getApplicantSection(), equalTo(costSection));
+        assertThat(costSectionViewModel.getCostViews(), equalTo(asList(formInputViewModel)));
+    }
+
+    @Test
+    public void getDetailedFinancesAcademic() throws Exception {
+        setupCompetition();
+        setupApplicationWithRoles();
+        ApplicationResource applicationResource = applications.get(0);
+        AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
+        FormInputResource fileUpload = newFormInputResource().withType(FormInputType.FINANCE_UPLOAD).build();
+
+        SortedSet<OrganisationResource> orgSet = setupOrganisations();
+        OrganisationResource organisation = orgSet.first();
+        List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
+        OrganisationFinanceOverview organisationFinanceOverview = newOrganisationFinanceOverviewBuilder()
+                .withApplicationId(applicationResource.getId())
+                .withOrganisationFinances(appFinanceList)
+                .build();
+
+        ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(1)).build();
+        QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
+        ApplicantQuestionResource costApplicantQuestion = newApplicantQuestionResource()
+                .withQuestion(costQuestion)
+                .withApplicantFormInputs(
+                        newApplicantFormInputResource()
+                                .withFormInput(fileUpload)
+                                .build(1))
+                .build();
+        ApplicantSectionResource costSection = newApplicantSectionResource()
+                .withApplicantQuestions(asList(costApplicantQuestion))
+                .build();
+
+        ApplicantSectionResource section = newApplicantSectionResource()
+                .withApplication(applicationResource)
+                .withCompetition(competitionResource)
+                .withCurrentApplicant(applicant)
+                .withApplicants(asList(applicant))
+                .withSection(newSectionResource()
+                        .withType(SectionType.FINANCE).build())
+                .withApplicantQuestions(newApplicantQuestionResource()
+                        .withQuestion(newQuestionResource()
+                                .withType(QuestionType.GENERAL)
+                                .build())
+                        .withApplicantFormInputs(Collections.emptyList())
+                        .build(1))
+                .withApplicantChildrenSections(asList(costSection))
+                .withCurrentUser(loggedInUser)
+                .build();
+
+        AssessmentDetailedFinancesViewModel expectedViewModel = new AssessmentDetailedFinancesViewModel(
+                assessmentResource.getId(), applicationResource.getId(), "Application name", "finance");
+
+        FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(processRoleService.getByApplicationId(assessmentResource.getApplication())).thenReturn(application1ProcessRoles);
+        when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
+        when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
+        when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
+
+        MvcResult result = mockMvc.perform(get("/{assessmentId}/detailed-finances/organisation/{organisationId}", assessmentResource.getId(), organisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("applicationOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getFinancesByOrganisation()))
+                .andExpect(view().name("assessment/application-detailed-finances"))
+                .andReturn();
+
+        JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) result.getModelAndView().getModel().get("detailedCostings");
+
+        assertThat(viewModel.isSection(), equalTo(true));
+        assertThat(viewModel.isComplete(), equalTo(false));
+        assertThat(viewModel.getFinanceUploadFormInput(), equalTo(fileUpload));
+        assertThat(viewModel.getFinanceUploadQuestion(), equalTo(costQuestion));
+    }
+
+    @Test
     public void rejectInvitation() throws Exception {
         Long assessmentId = 1L;
         Long competitionId = 2L;
@@ -559,16 +736,17 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         long applicationId = 2L;
         long formInputId = 3L;
 
-        ProcessRoleResource assessorRole = newProcessRoleResource().build();
+        loginDefaultUser();
+        UserResource assessor = getLoggedInUser();
+
+        ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
         ByteArrayResource fileContents = new ByteArrayResource("The returned file data".getBytes());
         FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/hello").withFilesizeBytes(1234L).build();
         FormInputResponseFileEntryResource formInputResponseFileEntry =
                 new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId());
 
-        loginDefaultUser();
-        UserResource assessor = getLoggedInUser();
 
-        when(processRoleService.findProcessRole(assessor.getId(), applicationId)).thenReturn(assessorRole);
+        when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(asList(assessorRole));
         when(formInputResponseRestService.getFile(formInputId,
                 applicationId,
                 assessorRole.getId()))
@@ -585,7 +763,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(header().string("Content-Type", "text/hello"))
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
 
-        verify(processRoleService).findProcessRole(assessor.getId(), applicationId);
+        verify(processRoleService).findProcessRolesByApplicationId(applicationId);
         verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId());
         verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId());
     }
@@ -614,5 +792,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         orgSet.add(org2);
 
         return orgSet;
+    }
+
+    private AssessmentResource setUpAssessmentResource(long applicationId) {
+        return newAssessmentResource()
+                .withApplication(applicationId)
+                .withApplicationName("Application name")
+                .withCompetition(competitionResource.getId())
+                .build();
     }
 }

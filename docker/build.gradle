@@ -1,16 +1,10 @@
-subprojects {
-    apply from: rootProject.file("gradle-support/openshift-build.gradle")
-}
+allprojects {
 
+    buildscript {
 
-    allprojects {
-
-        buildscript {
-
-            repositories {
-                mavenCentral()
-            }
+        repositories {
+            jcenter()
         }
-
     }
 
+}

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -25,7 +25,7 @@ import static javax.persistence.EnumType.STRING;
  */
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User extends AuditableEntity implements Serializable{
+public class User extends AuditableEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,10 +47,9 @@ public class User extends AuditableEntity implements Serializable{
     @Column(unique = true)
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    @CollectionTable(name = "user_role", joinColumns = {@JoinColumn(name="user_id")})
+    @ElementCollection(targetClass = Role.class)
+    @Column(name = "role_id", nullable = false)
     private Set<Role> roles = new HashSet<>();
 
     @Enumerated(STRING)
@@ -119,8 +118,8 @@ public class User extends AuditableEntity implements Serializable{
         roles.add(role);
     }
 
-    public boolean hasRole(UserRoleType type) {
-        return getRoles().stream().anyMatch(role -> role.getName().equals(type.getName()));
+    public boolean hasRole(Role type) {
+        return getRoles().contains(type);
     }
 
     public void setRoles(Set<Role> roles) {
@@ -136,7 +135,6 @@ public class User extends AuditableEntity implements Serializable{
         this.title = title;
     }
 
-    @JsonIgnore
     public String getName() {
         return Stream.of(this.getFirstName(), this.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
     }
@@ -260,5 +258,9 @@ public class User extends AuditableEntity implements Serializable{
 
     public void setAllowMarketingEmails(boolean allowMarketingEmails) {
         this.allowMarketingEmails = allowMarketingEmails;
+    }
+
+    public boolean isInternalUser() {
+        return CollectionUtils.containsAny(Role.internalRoles(), roles);
     }
 }

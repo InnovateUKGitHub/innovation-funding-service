@@ -1,20 +1,3 @@
-buildscript {
-
-
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-
-    dependencies {
-        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
-    }
-
-}
-
-// use fully qualified class name
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-
 //support tasks for dealing with Openshift
 if (project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
@@ -66,6 +49,18 @@ task dbAnonymisedDumpProduction(type: Exec) {
     args = [openshiftEnv, "production", project.version]
 }
 
+task dbBaselineProduction(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
+task financeDataSyncProduction(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
 // UAT tasks
 
 
@@ -84,6 +79,18 @@ task osUpgradeUat(type: Exec) {
 task dbResetUat(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task dbBaselineUat(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task financeDataSyncUat(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
@@ -114,6 +121,18 @@ task osUpgradeDemo(type: Exec) {
     args = [openshiftEnv, "demo", project.version]
 }
 
+task dbBaselineDemo(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
+task financeDataSyncDemo(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
 // Sysint tasks
 
 
@@ -132,6 +151,18 @@ task osUpgradeSysint(type: Exec) {
 task dbResetSysint(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
+task dbBaselineSysint(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
+task financeDataSyncSysint(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
@@ -162,6 +193,18 @@ task dbResetPerf(type: Exec) {
     args = [openshiftEnv, "perf", project.version]
 }
 
+task dbBaselinePerf(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
+
+task financeDataSyncPerf(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
+
 // Local tasks
 
 task osInitClusterLocal(type: Exec) {
@@ -184,6 +227,18 @@ task osUpgradeLocal(type: Exec) {
 task dbResetLocal(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task dbBaselineLocal(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task financeDataSyncLocal(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
@@ -245,6 +300,18 @@ task importAnonDataIntoRemote(type: Exec) {
 task dbResetRemote(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task dbBaselineRemote(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task financeDataSyncRemote(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 

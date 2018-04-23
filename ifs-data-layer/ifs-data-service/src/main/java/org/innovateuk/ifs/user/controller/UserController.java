@@ -9,17 +9,14 @@ import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.SearchCategory;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.CrmService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,7 +28,6 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -41,6 +37,11 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRol
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    public static final Sort DEFAULT_USER_SORT = new Sort(
+            new Sort.Order(Sort.Direction.ASC, "firstName"),
+            new Sort.Order(Sort.Direction.ASC, "lastName")
+    );
 
     private static final Log LOG = LogFactory.getLog(UserController.class);
 
@@ -74,20 +75,20 @@ public class UserController {
     }
 
     @GetMapping("/findByRole/{userRole}")
-    public RestResult<List<UserResource>> findByRole(@PathVariable("userRole") final UserRoleType userRole) {
+    public RestResult<List<UserResource>> findByRole(@PathVariable("userRole") final Role userRole) {
         return baseUserService.findByProcessRole(userRole).toGetResponse();
     }
 
     @GetMapping("/internal/active")
     public RestResult<UserPageResource> findActiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return userService.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
+                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return userService.findActiveByRoles(Role.internalRoles(), new PageRequest(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/internal/inactive")
     public RestResult<UserPageResource> findInactiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return userService.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
+        return userService.findInactiveByRoles(Role.internalRoles(), new PageRequest(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @PostMapping("/internal/create/{inviteHash}")
@@ -121,7 +122,7 @@ public class UserController {
     @GetMapping("/findExternalUsers")
     public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam(value = "searchString") final String searchString,
                                                                         @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
-        return userService.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory).toGetResponse();
+        return userService.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory).toGetResponse();
     }
 
     @GetMapping("/findByEmail/{email}/")
@@ -204,7 +205,6 @@ public class UserController {
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userService.updateDetails(userResource).andOnSuccessReturnVoid(() -> crmService.syncCrmContact(userResource.getId())).toPutResponse();
     }
-
 
     @GetMapping("/id/{id}/deactivate")
     public RestResult<Void> deactivateUser(@PathVariable("id") final Long id) {

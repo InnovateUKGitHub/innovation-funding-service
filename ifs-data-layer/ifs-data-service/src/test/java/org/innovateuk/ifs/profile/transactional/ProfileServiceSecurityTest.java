@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.profile.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
@@ -28,8 +27,6 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
     private UserPermissionRules rules;
     private UserLookupStrategies userLookupStrategies;
 
-    private static int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
-
     @Before
     public void lookupPermissionRules() {
         rules = getMockPermissionRulesBean(UserPermissionRules.class);
@@ -39,6 +36,9 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
     @Test
     public void getProfileSkills() {
         Long userId = 1L;
+
+        when(classUnderTestMock.getProfileSkills(userId))
+                .thenReturn(serviceSuccess(newProfileSkillsResource().build()));
 
         assertAccessDenied(
                 () -> classUnderTest.getProfileSkills(userId),
@@ -67,6 +67,9 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
     public void getProfileAgreement() {
         Long userId = 1L;
 
+        when(classUnderTestMock.getProfileAgreement(userId))
+                .thenReturn(serviceSuccess(newProfileAgreementResource().build()));
+
         assertAccessDenied(
                 () -> classUnderTest.getProfileAgreement(userId),
                 () -> {
@@ -93,8 +96,8 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
     public void getUserProfileDetails() {
         Long userId = 1L;
 
-        UserResource user = newUserResource().build();
-        when(userLookupStrategies.findById(userId)).thenReturn(user);
+        when(classUnderTestMock.getUserProfile(userId)).thenReturn(serviceSuccess(newUserProfileResource().build()));
+        when(userLookupStrategies.findById(userId)).thenReturn(newUserResource().build());
 
         assertAccessDenied(() -> classUnderTest.getUserProfile(userId), () -> {
             verify(rules).usersCanViewTheirOwnProfile(isA(UserProfileResource.class), eq(getLoggedInUser()));
@@ -107,8 +110,9 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
     public void getUserProfileStatus() {
         Long userId = 1L;
 
-        UserResource user = newUserResource().build();
-        when(userLookupStrategies.findById(userId)).thenReturn(user);
+        when(classUnderTestMock.getUserProfileStatus(userId))
+                .thenReturn(serviceSuccess(newUserProfileStatusResource().build()));
+        when(userLookupStrategies.findById(userId)).thenReturn(newUserResource().build());
 
         assertAccessDenied(() -> classUnderTest.getUserProfileStatus(userId), () -> {
             verify(rules).usersAndCompAdminCanViewProfileStatus(isA(UserProfileStatusResource.class), eq(getLoggedInUser()));
@@ -132,45 +136,7 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
 
     @Override
     protected Class<? extends ProfileService> getClassUnderTest() {
-        return org.innovateuk.ifs.profile.transactional.ProfileServiceSecurityTest.TestProfileService.class;
-    }
-
-    public static class TestProfileService implements ProfileService {
-
-        @Override
-        public ServiceResult<ProfileSkillsResource> getProfileSkills(long userId) {
-            return serviceSuccess(newProfileSkillsResource().build());
-        }
-
-        @Override
-        public ServiceResult<Void> updateProfileSkills(long userId, ProfileSkillsEditResource profileResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProfileAgreementResource> getProfileAgreement(long userId) {
-            return serviceSuccess(newProfileAgreementResource().build());
-        }
-
-        @Override
-        public ServiceResult<Void> updateProfileAgreement(long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
-            return serviceSuccess(newUserProfileResource().build());
-        }
-
-        @Override
-        public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId) {
-            return serviceSuccess(newUserProfileStatusResource().build());
-        }
+        return ProfileServiceImpl.class;
     }
 }
 

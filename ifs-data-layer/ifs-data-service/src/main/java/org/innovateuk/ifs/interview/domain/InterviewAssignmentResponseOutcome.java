@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.interview.domain;
 
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 /**
  * Process outcome for the @link InterviewAssignment}'s {@code RESPOND} event.
@@ -11,6 +11,10 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value = "assessment-interview-panel-response")
 public class InterviewAssignmentResponseOutcome extends ProcessOutcome<InterviewAssignment> {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="file_entry_id", referencedColumnName="id")
+    private FileEntry fileResponse;
 
     public void setAssessmentPanelApplicationInvite(InterviewAssignment interviewAssignment) {
         setProcess(interviewAssignment);
@@ -22,5 +26,13 @@ public class InterviewAssignmentResponseOutcome extends ProcessOutcome<Interview
 
     public void setResponse(String response) {
         this.comment = response;
+    }
+
+    public FileEntry getFileResponse() {
+        return fileResponse;
+    }
+
+    public void setFileResponse(FileEntry fileResponse) {
+        this.fileResponse = fileResponse;
     }
 }

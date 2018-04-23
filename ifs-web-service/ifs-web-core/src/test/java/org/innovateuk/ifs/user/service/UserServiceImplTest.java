@@ -4,9 +4,8 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -21,10 +20,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
@@ -89,9 +86,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         userTwo.setId(2L);
 
         List<UserResource> expected = new ArrayList<>(asList(userOne, userTwo));
-        when(userRestService.findByUserRoleType(UserRoleType.COMP_ADMIN)).thenReturn(restSuccess(expected));
+        when(userRestService.findByUserRole(COMP_ADMIN)).thenReturn(restSuccess(expected));
 
-        List<UserResource> found = service.findUserByType(UserRoleType.COMP_ADMIN);
+        List<UserResource> found = service.findUserByType(COMP_ADMIN);
         assertTrue(found.size() > 0);
     }
 
@@ -112,9 +109,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole() {
         Long userId = 1L;
-        RoleResource roleResource = newRoleResource()
-                .withType(COMP_ADMIN)
-                .build();
+        Role roleResource = COMP_ADMIN;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))
@@ -128,9 +123,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole_wrongRole() {
         Long userId = 1L;
-        RoleResource roleResource = newRoleResource()
-                .withType(FINANCE_CONTACT)
-                .build();
+        Role roleResource = Role.FINANCE_CONTACT;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))

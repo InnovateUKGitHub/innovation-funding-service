@@ -31,16 +31,18 @@ public class CompetitionManagementAssessorProfileController {
         APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors"),
         ASSESSOR_FIND("/competition/{competitionId}/assessors/find"),
         ASSESSOR_INVITE("/competition/{competitionId}/assessors/invite"),
-        ASSESSOR_OVERVIEW("/competition/{competitionId}/assessors/overview"),
+        ASSESSOR_OVERVIEW("/competition/{competitionId}/assessors/pending-and-declined"),
         ASSESSOR_ACCEPTED("/competition/{competitionId}/assessors/accepted"),
         MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
         ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
         PANEL_FIND("/assessment/panel/competition/{competitionId}/assessors/find"),
         PANEL_INVITE("/assessment/panel/competition/{competitionId}/assessors/invite"),
-        PANEL_OVERVIEW("/assessment/panel/competition/{competitionId}/assessors/overview"),
+        PANEL_OVERVIEW("/assessment/panel/competition/{competitionId}/assessors/pending-and-declined"),
         PANEL_ACCEPTED("/assessment/panel/competition/{competitionId}/assessors/accepted"),
         INTERVIEW_FIND("/assessment/interview/competition/{competitionId}/assessors/find"),
-        INTERVIEW_INVITE("/assessment/inteview/competition/{competitionId}/assessors/invite");
+        INTERVIEW_INVITE("/assessment/interview/competition/{competitionId}/assessors/invite"),
+        INTERVIEW_OVERVIEW("/assessment/interview/competition/{competitionId}/assessors/pending-and-declined"),
+        INTERVIEW_ACCEPTED("/assessment/interview/competition/{competitionId}/assessors/accepted");
 
         private String baseOriginUrl;
 

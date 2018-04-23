@@ -1,36 +1,29 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
 import org.innovateuk.ifs.application.security.FormInputResponseFileUploadRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.method.P;
-
-import java.io.InputStream;
-import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
-public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFormInputUploadService> {
+public class ApplicationFormInputUploadServiceSecurityTest extends
+        BaseServiceSecurityTest<ApplicationFormInputUploadService> {
 
     private FormInputResponseFileUploadRules fileUploadRules;
     private FormInputResponseFileUploadLookupStrategies fileUploadLookup;
 
-
-
     @Before
     public void lookupPermissionRules() {
         fileUploadRules = getMockPermissionRulesBean(FormInputResponseFileUploadRules.class);
-        fileUploadLookup = getMockPermissionEntityLookupStrategiesBean(FormInputResponseFileUploadLookupStrategies.class);
+        fileUploadLookup = getMockPermissionEntityLookupStrategiesBean(FormInputResponseFileUploadLookupStrategies
+                .class);
     }
 
     @Test
@@ -39,7 +32,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
-        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
+                (true);
 
         classUnderTest.createFormInputResponseFileUpload(file, () -> null);
 
@@ -52,7 +46,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
-        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
+                (false);
 
         try {
             classUnderTest.createFormInputResponseFileUpload(file, () -> null);
@@ -70,7 +65,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
-        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
+                (true);
 
         classUnderTest.updateFormInputResponseFileUpload(file, () -> null);
 
@@ -83,7 +79,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
-        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
+                (false);
 
         try {
             classUnderTest.updateFormInputResponseFileUpload(file, () -> null);
@@ -102,7 +99,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
-        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
+                (true);
 
         classUnderTest.deleteFormInputResponseFileUpload(file.getCompoundId());
 
@@ -116,7 +114,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
-        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
+                (false);
 
         try {
             classUnderTest.deleteFormInputResponseFileUpload(file.getCompoundId());
@@ -135,7 +134,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(null);
-        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
+        when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
+                (false);
 
         try {
             classUnderTest.deleteFormInputResponseFileUpload(file.getCompoundId());
@@ -154,7 +154,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
-        when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(true);
+        when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser()))
+                .thenReturn(true);
 
         classUnderTest.getFormInputResponseFileUpload(file.getCompoundId());
 
@@ -168,7 +169,8 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
-        when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn(false);
+        when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser()))
+                .thenReturn(false);
 
         try {
             classUnderTest.getFormInputResponseFileUpload(file.getCompoundId());
@@ -200,33 +202,6 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
 
     @Override
     protected Class<? extends ApplicationFormInputUploadService> getClassUnderTest() {
-        return TestApplicationFormInputUploadService.class;
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from methods, which is lost when using
-     * mocks)
-     */
-    public static class TestApplicationFormInputUploadService implements ApplicationFormInputUploadService {
-        @Override
-        public ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId) {
-            return null;
-        }
-
+        return ApplicationFormInputUploadServiceImpl.class;
     }
 }

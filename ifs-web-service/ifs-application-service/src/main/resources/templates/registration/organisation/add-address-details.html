@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
 </head>
-<body th:with="context='applicant'" class="create-application-organisation">
+<body class="create-application-organisation">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to ' + ${model.organisationTypeName} + ' organisation',linkClass='link-back',linkUrl='/organisation/create/find-organisation'" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisation address',subTitle='Create your account',size='heading-xlarge'" />
 
@@ -26,19 +25,24 @@
 
     <th:block th:insert="fragments/addresses :: organisation-details-minimal" />
 
-    <form th:action="@{/organisation/create/selected-organisation/{organisationId}/{postcode}/{selectedPostcode}(organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex})}" novalidate="novalidate" th:object="${organisationForm}" method="POST">
-        <input type="hidden" th:field="*{searchOrganisationId}" />
-        <h2 class="heading-medium no-margin-bottom">Operating address</h2>
-        <p>This is the address that your organisation works from</p>
-        <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
+    <th:block th:with="organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex}" th:object="${organisationForm}">
+        <th:block th:with="formURL=${#strings.isEmpty(postcode) && #strings.isEmpty(selectedPostcode)} ? |/organisation/create/selected-organisation/${organisationId}| : |/organisation/create/selected-organisation/${organisationId}/${postcode}/${selectedPostcode}|">
+            <form th:action="@{${formURL}}" novalidate="novalidate" method="POST">
+                <input type="hidden" th:field="*{searchOrganisationId}" />
+                <h2 class="heading-medium no-margin-bottom">Operating address</h2>
+                <p>This is the address that your organisation works from</p>
+                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
 
-        <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
-    </form>
+                <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
+            </form>
+        </th:block>
+    </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

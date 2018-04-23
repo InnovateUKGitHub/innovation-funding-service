@@ -109,7 +109,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.closedDate IS NULL " +
             "AND t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "AND TYPE(t) = Query " +
-            "AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
+            "AND NOT EXISTS (SELECT 1 FROM u.roles r WHERE r = org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE) " +
             "AND a.competition.id = :competitionId " +
             "AND (post.thread.id, post.createdOn) IN ( " +
             "    SELECT p.thread.id, MAX(p.createdOn) " +
@@ -285,14 +285,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(GET_OPEN_QUERIES)
     List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
-
-    Competition findByApplicationsId(long applicationId);
-
-    @Query("SELECT c FROM Competition c INNER JOIN Application a ON a.competition = c INNER JOIN Project p ON p.application = a WHERE p.id = :projectId")
-    Competition findByProjectId(@Param("projectId") long projectId);
-
-    @Query("SELECT c FROM Competition c INNER JOIN Application app ON app.competition = c INNER JOIN Assessment ass ON ass.target.id = app.id WHERE ass.id = :assessmentId")
-    Competition findByAssessmentId(@Param("assessmentId") long assessmentId);
 
     @Query(value = GET_PENDING_SPEND_PROFILES, nativeQuery = true)
     List<Object[]> getPendingSpendProfiles(@Param("competitionId") long competitionId);

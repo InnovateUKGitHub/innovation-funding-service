@@ -1,32 +1,66 @@
-def sqlVersion="5.6.29"
-apply from: rootProject.file("gradle-support/openshift-methods.gradle")
-buildDocker.tag = "innovateuk/ifs-mysql:" + sqlVersion
+subprojects {
 
-tagDocker.onlyIf{ !isNamedEnv() }
-tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
-tagDocker.imageId = "innovateuk/ifs-mysql:" + sqlVersion
-tagDocker.tag = sqlVersion
+    def sqlVersion = "5.6.29"
+    apply from: rootProject.file("gradle-support/openshift-build.gradle")
+    buildDocker.tag = "innovateuk/ifs-mysql:" + sqlVersion
+    buildDocker.inputDir = project.file("$project.parent.projectDir/docker/")
 
-tagDockerLocal.imageId = "innovateuk/ifs-mysql:" + sqlVersion
-tagDockerLocal.tag = sqlVersion
-tagDockerLocal {
-    doFirst {
-        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
-        tag = sqlVersion
+    tagDocker.onlyIf { !isNamedEnv() }
+    tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
+    tagDocker.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+    tagDocker.tag = sqlVersion
+
+    tagDockerLocal.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+    tagDockerLocal.tag = sqlVersion
+    tagDockerLocal {
+        doFirst {
+            repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
+            tag = sqlVersion
+        }
     }
+
+    osStageRemote.onlyIf { !isNamedEnv() }
+    osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
+    osStageRemote.tag = sqlVersion
+
+    osStageLocal.tag = sqlVersion
+    osStageLocal {
+        doFirst {
+            registryCredentials = getLocalOCCredentials()
+            imageName = registryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
+        }
+    }
+
+    def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+    [stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = enabled
+    }
+
+    task createTestSchema(type: Exec) {
+        doFirst {
+            commandLine 'docker', 'exec', '-d', sqlContainer, 'mysql', '-uroot', '-ppassword', '-e', 'create database if not exists ' + testSchema
+        }
+    }
+
+    task startMySql(dependsOn: deploy) {
+        doLast {
+            exec {
+                //wait for sql container to start.
+                workingDir '.'
+                commandLine 'sleep', '10'
+            }
+        }
+    }
+
+    task initDB {
+        createTestSchema.mustRunAfter startMySql
+        dependsOn startMySql
+        dependsOn createTestSchema
+    }
+
 }
 
-osStageRemote.onlyIf { !isNamedEnv() }
-osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
-osStageRemote.tag = sqlVersion
 
-osStageLocal.tag = sqlVersion
-osStageLocal {
-    doFirst {
-        registryCredentials = getLocalOCCredentials()
-        imageName = registryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
-    }
-}
 
 
 

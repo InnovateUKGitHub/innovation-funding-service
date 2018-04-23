@@ -125,7 +125,7 @@ The competition admin creates a EOI Comp
     the user fills in the Public content and publishes  ${extraKeyword}
     the user clicks the button/link   link=Return to setup overview
     the user clicks the button/link  jQuery=a:contains("Complete")
-    the user clicks the button/link  jQuery=a:contains("Done")
+    the user clicks the button/link  css=button[type="submit"]
     the user navigates to the page   ${CA_UpcomingComp}
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
@@ -138,7 +138,7 @@ the lead applicant fills all the questions and marks as complete(EOI comp type)
 Milestones are updated in database to move competition to assessment state
     ${competitionId} =  get comp id from comp title  ${comp_name}
     Set suite variable  ${competitionId}
-    the assessment start period changes in the db in the past   ${competitionId}
+    the submission date changes in the db in the past   ${competitionId}
 
 the assessor submits the assessment
     the assessor adds score and feedback for every question    5   # value 5: is the number of questions to loop through to submit feedback

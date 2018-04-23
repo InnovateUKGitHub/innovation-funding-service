@@ -9,11 +9,12 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.mapper.*;
+import org.innovateuk.ifs.user.mapper.AffiliationMapper;
+import org.innovateuk.ifs.user.mapper.EthnicityMapper;
+import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.EthnicityRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
-import org.innovateuk.ifs.user.transactional.RoleService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -29,19 +30,10 @@ public abstract class RootUnitTestMocksTest extends BaseTest {
     protected AffiliationMapper affiliationMapperMock;
 
     @Mock
-    protected RoleRepository roleRepositoryMock;
-
-    @Mock
-    protected RoleService roleServiceMock;
-
-    @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
 
     @Mock
     protected FileService fileServiceMock;
-
-    @Mock
-    protected RoleMapper roleMapperMock;
 
     @Mock
     protected ProcessRoleMapper processRoleMapperMock;

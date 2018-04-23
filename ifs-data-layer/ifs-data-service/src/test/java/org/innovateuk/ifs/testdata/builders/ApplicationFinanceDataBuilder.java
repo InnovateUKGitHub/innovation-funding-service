@@ -2,10 +2,10 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
-import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,6 +20,7 @@ import java.util.function.UnaryOperator;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.AcademicCostDataBuilder.newAcademicCostData;
 import static org.innovateuk.ifs.testdata.builders.IndustrialCostDataBuilder.newIndustrialCostData;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -111,13 +112,13 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
 
                 forEachWithIndex(questionsToComplete, (i, q) -> {
                     QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(q.getId(), data.getApplication().getId());
-                    Long processRoleId = processRoleRepository.findByUserIdAndApplicationId(data.getUser().getId(),
+                    Long processRoleId = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(data.getUser().getId(), applicantProcessRoles(),
                             data.getApplication().getId()).getId();
 
                     boolean lastElement = i == questions.size() - 1;
 
                     if (lastElement && updateApplicationCompleteStatus) {
-                        questionService.markAsComplete(questionKey, processRoleId).getSuccess();
+                        questionStatusService.markAsComplete(questionKey, processRoleId).getSuccess();
                     } else {
                         testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccess();
                     }

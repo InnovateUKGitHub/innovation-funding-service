@@ -4,7 +4,7 @@ import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singleton;
 import static java.util.Optional.of;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.*;
 
 public class QueryTest {
@@ -70,13 +72,13 @@ public class QueryTest {
 
     @Test
     public void testIsAwaitingResponsePositive() {
-        addPostWithUserHavingRole(UserRoleType.PROJECT_FINANCE);
+        addPostWithUserHavingRole(PROJECT_FINANCE);
         assertTrue(query.isAwaitingResponse());
     }
 
     @Test
     public void testIsAwaitingResponseNegative() {
-        addPostWithUserHavingRole(UserRoleType.FINANCE_CONTACT);
+        addPostWithUserHavingRole(FINANCE_CONTACT);
         assertFalse(query.isAwaitingResponse());
     }
 
@@ -94,8 +96,8 @@ public class QueryTest {
         assertTrue(closedDateWithTolerance.isAfter(now) && !closedDate.isAfter(now));
     }
 
-    private void addPostWithUserHavingRole(UserRoleType role) {
-        final User user = newUser().withRoles(newRole().withType(role).buildSet(1)).build();
+    private void addPostWithUserHavingRole(Role role) {
+        final User user = newUser().withRoles(singleton(role)).build();
         final Post p1 = new Post(33L, user, null, null, null);
         query.addPost(p1);
     }

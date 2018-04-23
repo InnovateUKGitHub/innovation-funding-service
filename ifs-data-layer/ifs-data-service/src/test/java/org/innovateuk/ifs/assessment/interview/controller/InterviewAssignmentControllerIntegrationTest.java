@@ -12,20 +12,18 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -39,24 +37,29 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.CREATED;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_INTERVIEW_PANEL;
 import static org.junit.Assert.*;
 
 public class InterviewAssignmentControllerIntegrationTest extends BaseControllerIntegrationTest<InterviewAssignmentController> {
 
     private List<Application> applications;
+
+    private List<ProcessRole> processRoles;
 
     private Competition competition;
 
@@ -82,9 +85,6 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
     @Autowired
     private InnovationAreaRepository innovationAreaRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -137,11 +137,9 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         felixWilson.setProfileId(profile.getId());
 
-        Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
-
-        List<ProcessRole> processRoles = newProcessRole()
+        processRoles = newProcessRole()
                 .withId()
-                .withRole(assessorRole)
+                .withRole(Role.ASSESSOR)
                 .withApplication(applications.get(0), applications.get(1))
                 .withUser(felixWilson, felixWilson)
                 .build(2);
@@ -154,11 +152,9 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         organisationRepository.save(organisations);
 
-        Role leadApplicantRole = roleRepository.findOneByName(LEADAPPLICANT.getName());
-
         processRoles.addAll(
                 newProcessRole()
-                        .withRole(leadApplicantRole)
+                        .withRole(Role.LEADAPPLICANT)
                         .withApplication(applications.get(0), applications.get(1))
                         .withUser(steveSmith)
                         .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId())
@@ -201,7 +197,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                InterviewAssignmentState.CREATED.getBackingState()
+                CREATED.getBackingState()
         );
 
         InterviewAssignment interviewPanel = newInterviewAssignment()
@@ -224,7 +220,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                InterviewAssignmentState.CREATED.getBackingState()
+                CREATED.getBackingState()
         );
 
         InterviewAssignment interviewAssignment = newInterviewAssignment()
@@ -249,7 +245,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                InterviewAssignmentState.CREATED.getBackingState()
+                CREATED.getBackingState()
         );
 
         InterviewAssignment interviewPanel = newInterviewAssignment()
@@ -266,5 +262,144 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationPageResource = interviewPanelStagedApplicationPageResourceRestResult.getSuccess();
 
         assertEquals(1, interviewAssignmentStagedApplicationPageResource.getTotalElements());
+    }
+
+    @Test
+    public void unstageApplication() {
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                InterviewAssignmentState.CREATED.getBackingState()
+        );
+
+        InterviewAssignment interviewPanel = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState)
+                .withTarget(applications.get(0))
+                .withParticipant(processRoles.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewPanel);
+
+        RestResult<Void> result = controller.unstageApplication(applications.get(0).getId());
+        assertTrue(result.isSuccess());
+
+        InterviewAssignment interview = interviewAssignmentRepository.findOneByTargetId(applications.get(0).getId());
+        assertThat(interview, is(nullValue()));
+    }
+
+    @Test
+    public void getAssignedApplications() {
+
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState()
+        );
+
+        InterviewAssignment interviewPanel = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState)
+                .withTarget(applications.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewPanel);
+
+        RestResult<InterviewAssignmentApplicationPageResource> interviewPanelApplicationPageResourceRestResult = controller.getAssignedApplications(competition.getId(), pageable);
+        assertTrue(interviewPanelApplicationPageResourceRestResult.isSuccess());
+
+        InterviewAssignmentApplicationPageResource interviewAssignmentApplicationPageResource = interviewPanelApplicationPageResourceRestResult.getSuccess();
+
+        assertEquals(1, interviewAssignmentApplicationPageResource.getTotalElements());
+    }
+
+    @Test
+    public void sendInvites() {
+        InterviewAssignment interviewPanel = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState(CREATED))
+                .withTarget(applications.get(0))
+                .withParticipant(processRoles.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewPanel);
+
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+
+        RestResult<Void> result = controller.sendInvites(competition.getId(), sendResource);
+        assertTrue(result.isSuccess());
+
+        List<InterviewAssignment> created = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), CREATED.getBackingState());
+        List<InterviewAssignment> awaitingFeedback = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
+
+        assertEquals(created.size(), 0);
+        assertEquals(awaitingFeedback.size(), 1);
+    }
+
+    @Test
+    public void getKeyStatistics() {
+        InterviewAssignment interviewAssignment = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE))
+                .withTarget(applications.get(0))
+                .withParticipant(processRoles.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewAssignment);
+
+        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = controller.getKeyStatistics(competition.getId()).getSuccess();
+
+        assertEquals(2, keyStatisticsResource.getApplicationsInCompetition());
+        assertEquals(1, keyStatisticsResource.getApplicationsAssigned());
+    }
+
+    private ActivityState activityState(InterviewAssignmentState interviewAssignmentState) {
+        return activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                interviewAssignmentState.getBackingState()
+        );
+    }
+
+    @Test
+    public void unstageApplications() {
+        List<InterviewAssignment> interviewPanels = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState(CREATED))
+                .withTarget(applications.get(0), applications.get(1))
+                .build(2);
+
+        interviewAssignmentRepository.save(interviewPanels);
+
+        RestResult<Void> result = controller.unstageApplications(applications.get(0).getCompetition().getId());
+        assertTrue(result.isSuccess());
+
+        InterviewAssignment interview1 = interviewAssignmentRepository.findOneByTargetId(applications.get(0).getId());
+        assertThat(interview1, is(nullValue()));
+
+        InterviewAssignment interview2 = interviewAssignmentRepository.findOneByTargetId(applications.get(1).getId());
+        assertThat(interview2, is(nullValue()));
+    }
+
+    @Test
+    public void isApplicationAssigned() {
+        loginSteveSmith();
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
+                ASSESSMENT_INTERVIEW_PANEL,
+                AWAITING_FEEDBACK_RESPONSE.getBackingState()
+        );
+
+        InterviewAssignment interviewPanel = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState)
+                .withTarget(applications.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewPanel);
+
+        RestResult<Boolean> result = controller.isApplicationAssigned(applications.get(0).getId());
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccess());
+
+        RestResult<Boolean> notFound = controller.isApplicationAssigned(99L);
+        assertTrue(notFound.isSuccess());
+        assertFalse(notFound.getSuccess());
     }
 }

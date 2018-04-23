@@ -15,8 +15,7 @@ import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
-import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
+import org.innovateuk.ifs.assessment.repository.*;
 import org.innovateuk.ifs.assessment.transactional.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -31,15 +30,18 @@ import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactional
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
+import org.innovateuk.ifs.competition.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
+import org.innovateuk.ifs.interview.mapper.InterviewParticipantMapper;
+import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionNumberOrderService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
@@ -51,19 +53,27 @@ import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.totals.service.AllFinanceTotalsSender;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.form.mapper.FormInputResponseMapper;
+import org.innovateuk.ifs.application.mapper.FormInputResponseMapper;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
+import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
+import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
 import org.innovateuk.ifs.invite.transactional.*;
@@ -110,9 +120,16 @@ import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
+import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
+import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
 import org.innovateuk.ifs.review.mapper.ReviewMapper;
+import org.innovateuk.ifs.review.mapper.ReviewParticipantMapper;
 import org.innovateuk.ifs.review.mapper.ReviewRejectOutcomeMapper;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
@@ -134,7 +151,7 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.innovateuk.ifs.validator.util.ValidationUtil;
+import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -214,10 +231,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InterviewParticipantRepository interviewParticipantRepositoryMock;
 
     @Mock
-    protected InterviewAssignmentInviteService interviewAssignmentInviteServiceMock;
+    protected InterviewAssignmentService interviewAssignmentServiceMock;
 
     @Mock
     protected InterviewInviteService interviewInviteServiceMock;
+
+    @Mock
+    protected InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
 
     @Mock
     protected InterviewAssignmentRepository interviewAssignmentRepositoryMock;
@@ -250,13 +270,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProfileRepository profileRepositoryMock;
 
     @Mock
-    protected RoleRepository roleRepositoryMock;
-
-    @Mock
     protected RoleInviteRepository roleInviteRepositoryMock;
-
-    @Mock
-    protected RoleService roleServiceMock;
 
     @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
@@ -269,9 +283,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionSetupService competitionSetupServiceMock;
-
-    @Mock
-    protected CompetitionSetupQuestionService competitionSetupQuestionServiceMock;
 
     @Mock
     protected CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
@@ -299,6 +310,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected SectionService sectionServiceMock;
+
+    @Mock
+    protected SectionStatusService sectionStatusServiceMock;
 
     @Mock
     protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
@@ -361,7 +375,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentInviteRepository assessmentInviteRepositoryMock;
 
     @Mock
-    protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
+    protected AssessmentParticipantRepository assessmentParticipantRepositoryMock;
 
     @Mock
     protected CompetitionParticipantService competitionParticipantServiceMock;
@@ -442,9 +456,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected IdentityProviderService idpServiceMock;
 
     @Mock
-    protected RoleMapper roleMapperMock;
-
-    @Mock
     protected ProcessRoleMapper processRoleMapperMock;
 
     @Mock
@@ -461,6 +472,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FormInputService formInputServiceMock;
+
+    @Mock
+    protected FormInputResponseService formInputResponseService;
 
     @Mock
     protected ApplicationFundingService applicationFundingServiceMock;
@@ -590,6 +604,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceFileEntryService financeFileEntryServiceMock;
+
+    @Mock
+    protected AllFinanceTotalsSender allFinanceTotalsSenderMock;
 
     @Mock
     protected ProjectFinanceRowService projectFinanceRowServiceMock;

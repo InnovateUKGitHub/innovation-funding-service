@@ -23,22 +23,24 @@ task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
     dependsOn getNewRelicAgent
 
-    def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
-    def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')
-    def String idpProxyCacertificate = file(idpProxyCacertificateFile).text.trim().replace('\n', '\\n')
 
-    def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
-
-    def String idpSigningKey = file(idpSigningKeyFile).text.trim().replace('\n', '\\n')
-    def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
-    def String idpEncryptionKey = file(idpEncryptionKeyFile).text.trim().replace('\n', '\\n')
-    def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
-
-    def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
     def inputDir = project.file("$project.buildDir/docker")
 
     doFirst {
+
+        def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
+        def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')
+        def String idpProxyCacertificate = file(idpProxyCacertificateFile).text.trim().replace('\n', '\\n')
+
+        def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
+
+        def String idpSigningKey = file(idpSigningKeyFile).text.trim().replace('\n', '\\n')
+        def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
+        def String idpEncryptionKey = file(idpEncryptionKeyFile).text.trim().replace('\n', '\\n')
+        def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
+
+        def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
         copy {
             from 'src/main/docker/'
             into inputDir
@@ -93,6 +95,7 @@ task prepareDockerFile {
             into inputDir
         }
     }
+
 }
 
 buildDocker.dependsOn prepareDockerFile
@@ -104,6 +107,11 @@ osStageRemote.tag = idpVersion
 osStageLocal.tag = idpVersion
 
 
-
-
+createContainer.containerName = "idp"
+createContainer.containerId = "idp"
+createContainer.env= ["SP_DOMAIN=ifs.local-dev","IDP_DOMAIN=auth.local-dev:9443","HTTPS_PORT=9443","HTTP_PORT=9080"]
+createContainer.networkAliases=["auth.local-dev","iuk-auth-localdev"]
+createContainer.portBindings = ['9443:9443']
+createContainer.hostName="idp"
+createContainer.workingDir="/usr/local/bin"
 

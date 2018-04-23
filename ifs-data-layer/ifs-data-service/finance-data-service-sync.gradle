@@ -1,0 +1,41 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.6"
+    }
+
+}
+
+
+// use fully qualified class name
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+task financeDataServiceSyncEnv {
+    dependsOn "build"
+    dependsOn ":docker:ifs-mysql-client:buildDocker"
+
+    def inputDir = project.file("$project.buildDir/docker-finance-data-service-sync")
+    doFirst {
+        copy {
+            from file('src/main/docker/financedataservicesync/Dockerfile-financedataservicesync')
+            rename 'Dockerfile-financedataservicesync', 'Dockerfile'
+            into inputDir
+        }
+        copy {
+            from file('src/main/docker/financedataservicesync/send-all-cost-totals.sh')
+            into inputDir
+        }
+    }
+}
+
+task financeDataServiceSync(type: DockerBuildImage) {
+    dependsOn "financeDataServiceSyncEnv"
+    tag = 'innovateuk/finance-data-service-sync'
+    inputDir = project.file("$project.buildDir/docker-finance-data-service-sync")
+}
+

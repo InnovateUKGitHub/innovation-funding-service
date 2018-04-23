@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -13,6 +14,10 @@ import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Set;
+
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.APPLICATION_DETAILS;
 
@@ -21,6 +26,9 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection
  */
 @Service
 public class ApplicationDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSubsectionSaver {
+
+    @Autowired
+	private Validator validator;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -41,8 +49,17 @@ public class ApplicationDetailsSectionSaver extends AbstractSectionSaver impleme
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		ApplicationDetailsForm form = (ApplicationDetailsForm) competitionSetupForm;
-		competition.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
-		return competitionSetupRestService.update(competition).toServiceResult();
+		Set<ConstraintViolation<CompetitionSetupForm>> violations = validator.validate(competitionSetupForm);
+
+		if(!violations.isEmpty()) {
+			return ServiceResult.serviceFailure(new ValidationMessages(violations).getErrors());
+		}
+		else {
+			competition.setUseResubmissionQuestion(form.getUseResubmissionQuestion());
+			competition.setMaxProjectDuration(Integer.valueOf(form.getMaxProjectDuration().intValue()));
+			competition.setMinProjectDuration(Integer.valueOf(form.getMinProjectDuration().intValue()));
+			return competitionSetupRestService.update(competition).toServiceResult();
+		}
 	}
 
 	@Override
