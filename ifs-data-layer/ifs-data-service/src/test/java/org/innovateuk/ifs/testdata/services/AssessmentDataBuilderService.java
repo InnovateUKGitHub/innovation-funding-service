@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
@@ -18,13 +22,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SUBMIT;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.testdata.builders.AssessorResponseDataBuilder.newAssessorResponseData;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate Assessment data.  While
@@ -61,16 +68,95 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
         applications.forEach(application -> {
 
-            List<AssessmentLine> assessmentLinesForCompetition = simpleFilter(assessmentLines, l ->
+            List<AssessmentLine> assessmentLinesForApplication = simpleFilter(assessmentLines, l ->
                     Objects.equals(l.applicationName, application.getApplication().getName()));
 
-            List<AssessorResponseLine> assessorResponsesForCompetition = simpleFilter(assessorResponseLines, l ->
-                    Objects.equals(l.applicationName, application.getApplication().getName()));
+            assessmentLinesForApplication.forEach(assessmentLine -> {
 
-            assessmentLinesForCompetition.forEach(this::createAssessment);
-            assessorResponsesForCompetition.forEach(this::createAssessorResponse);
-            assessmentLinesForCompetition.forEach(this::submitAssessment);
+                createAssessment(assessmentLine);
+
+                createAssessorResponses(assessmentLine, assessorResponseLines, application.getCompetition());
+
+                submitAssessment(assessmentLine);
+            });
+
         });
+    }
+
+    private void createAssessorResponses(AssessmentLine assessmentLine, List<AssessorResponseLine> assessorResponseLines, CompetitionResource competition) {
+
+        List<AssessorResponseLine> assessorResponsesForAssessment = simpleFilter(assessorResponseLines, l ->
+                Objects.equals(l.applicationName, assessmentLine.applicationName) &&
+                l.assessorEmail.equals(assessmentLine.assessorEmail));
+
+        if (!assessorResponsesForAssessment.isEmpty()) {
+
+            createAssessorResponsesFromCsvs(assessorResponsesForAssessment);
+
+        } else if (asList(READY_TO_SUBMIT, SUBMITTED).contains(assessmentLine.state)) {
+
+            createAssessorResponsesFromDefaults(assessmentLine, competition);
+        }
+    }
+
+    private void createAssessorResponsesFromDefaults(AssessmentLine assessmentLine, CompetitionResource competition) {
+
+        String competitionName = competition.getName();
+        String applicationName = assessmentLine.applicationName;
+        String assessorEmail = assessmentLine.assessorEmail;
+
+        List<QuestionResource> competitionQuestions = retrieveCachedQuestionsByCompetitionId(competition.getId());
+
+        List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions, question -> {
+
+            List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
+
+            return simpleAnyMatch(formInputs, fi -> FormInputScope.ASSESSMENT.equals(fi.getScope()));
+        });
+
+        questionsToAnswer.forEach(question -> {
+
+            List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
+
+            createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
+                    formInputs, "research category", "Feasibility studies");
+
+            createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
+                    formInputs, "scope", "true");
+
+            createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
+                    formInputs, "Feedback",
+                    "This is the " + question.getShortName().toLowerCase() + " feedback");
+
+            createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
+                    formInputs, "score", "7");
+        });
+    }
+
+    private void createAssessorResponseForFormInputIfPresent(String competitionName,
+                                                             String applicationName,
+                                                             String assessorEmail,
+                                                             QuestionResource question,
+                                                             List<FormInputResource> formInputs,
+                                                             String description,
+                                                             String value) {
+
+        Optional<FormInputResource> assessorFormInput = simpleFindFirst(formInputs, fi ->
+                fi.getDescription().contains(description));
+
+        assessorFormInput.ifPresent(r ->
+                createAssessorResponse(
+                        competitionName,
+                        applicationName,
+                        assessorEmail,
+                        question.getShortName(),
+                        description,
+                        description.equals("research category"),
+                        value));
+    }
+
+    private void createAssessorResponsesFromCsvs(List<AssessorResponseLine> assessorResponsesForAssessment) {
+        assessorResponsesForAssessment.forEach(this::createAssessorResponse);
     }
 
     public void createAssessors(List<CompetitionData> competitions, List<AssessorUserLine> assessorUserLines, List<InviteLine> assessorInviteLines) {
@@ -110,14 +196,30 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
     }
 
     private void createAssessorResponse(AssessorResponseLine line) {
-        assessorResponseBuilder.withAssessorResponseData(line.competitionName,
+        createAssessorResponse(line.competitionName,
                 line.applicationName,
                 line.assessorEmail,
                 line.shortName,
                 line.description,
                 line.isResearchCategory,
-                line.value)
-                .build();
+                line.value);
+    }
+
+    private void createAssessorResponse(String competitionName,
+                                        String applicationName,
+                                        String assessorEmail,
+                                        String shortName,
+                                        String description,
+                                        boolean isResearchCategory,
+                                        String value) {
+
+        assessorResponseBuilder.withAssessorResponseData(competitionName,
+                applicationName,
+                assessorEmail,
+                shortName,
+                description,
+                isResearchCategory,
+                value).build();
     }
 
     private void submitAssessment(AssessmentLine line) {

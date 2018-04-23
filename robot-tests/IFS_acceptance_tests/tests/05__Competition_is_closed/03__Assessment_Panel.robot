@@ -130,7 +130,7 @@ CompAdmin resend invites to multiple assessors
     [Setup]  the user clicks the button/link    link=Pending and declined
     Given the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
     When the user clicks the button/link        jQuery=tr:contains("${assessor_joel}") label
-    Then the compAdmin resends the invites for interview panel     ${assessor_ben}
+    Then the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_joel}
     And the user should see the element         jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user should see the element         jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
 
@@ -261,6 +261,7 @@ Assessors view of competition dashboard and applications in panel status
 Assessor can attend Panel and see applications he has not assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]
+    # assessor view of application summary when he has not assessed application at first place.
     Given the user clicks the button/link       link=${computer_vision_application_name}
     When the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
     And the user should see the element         jQuery=h1:contains("Application summary")
@@ -295,6 +296,7 @@ Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${today} =  get today short month
     set suite variable  ${today}
+    get the initial milestone value
 
 Custom Tear Down
     return back to original milestone  FUNDERS_PANEL  ${assessmentPanelDate}  ${CLOSED_COMPETITION}

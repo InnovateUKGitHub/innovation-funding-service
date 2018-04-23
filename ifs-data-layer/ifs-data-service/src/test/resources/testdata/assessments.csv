@@ -89,3 +89,7 @@ load-assessor5@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N
 load-assessor5@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N
 load-assessor5@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N
 load-assessor5@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N
+eoi-assessor-user1@example.com,Expression of Interest: Assistive technologies for caregivers - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+eoi-assessor-user2@example.com,Expression of Interest: Assistive technologies for caregivers - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+apc-assessor-user1@example.com,Smart monitoring in high-pressure engineering systems - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+apc-assessor-user2@example.com,Smart monitoring in high-pressure engineering systems - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"

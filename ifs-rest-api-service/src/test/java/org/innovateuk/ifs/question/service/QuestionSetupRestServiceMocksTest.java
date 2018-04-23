@@ -1,5 +1,5 @@
 
-package org.innovateuk.ifs.competition.service;
+package org.innovateuk.ifs.question.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -10,13 +10,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
-public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionSetupQuestionRestServiceImpl> {
+public class QuestionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionSetupCompetitionRestServiceImpl> {
 
-    private static final String competitionsRestURL = "/competition-setup-question";
+    private static final String questionRestURL = "/question-setup";
 
     @Override
-    protected CompetitionSetupQuestionRestServiceImpl registerRestServiceUnderTest() {
-        return new CompetitionSetupQuestionRestServiceImpl();
+    protected QuestionSetupCompetitionRestServiceImpl registerRestServiceUnderTest() {
+        return new QuestionSetupCompetitionRestServiceImpl();
     }
 
     @Test
@@ -24,7 +24,7 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
         long questionId = 1L;
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/getById/" + questionId, CompetitionSetupQuestionResource.class, expected);
+        setupGetWithRestResultExpectations(questionRestURL + "/getById/" + questionId, CompetitionSetupQuestionResource.class, expected);
 
         CompetitionSetupQuestionResource response = service.getByQuestionId(questionId).getSuccess();
 
@@ -38,7 +38,7 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
         CompetitionSetupQuestionResource toSave = new CompetitionSetupQuestionResource();
         toSave.setQuestionId(questionId);
 
-        setupPutWithRestResultExpectations(competitionsRestURL + "/save", toSave);
+        setupPutWithRestResultExpectations(questionRestURL + "/save", toSave);
 
         RestResult<Void> response = service.save(toSave);
 
@@ -47,8 +47,8 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
 
     @Test
     public void test_deleteById() {
-        final Long questionId = 1L;
-        setupDeleteWithRestResultExpectations(competitionsRestURL + "/deleteById/" + questionId);
+        long questionId = 1L;
+        setupDeleteWithRestResultExpectations(questionRestURL + "/deleteById/" + questionId);
 
         RestResult<Void> response = service.deleteById(questionId);
 
@@ -60,7 +60,7 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
         long competitionId = 1L;
 
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
-        setupPostWithRestResultExpectations(competitionsRestURL + "/addDefaultToCompetition/" + competitionId, CompetitionSetupQuestionResource.class, null, expected, CREATED);
+        setupPostWithRestResultExpectations(questionRestURL + "/addDefaultToCompetition/" + competitionId, CompetitionSetupQuestionResource.class, null, expected, CREATED);
 
         RestResult<CompetitionSetupQuestionResource> response = service.addDefaultToCompetition(competitionId);
 

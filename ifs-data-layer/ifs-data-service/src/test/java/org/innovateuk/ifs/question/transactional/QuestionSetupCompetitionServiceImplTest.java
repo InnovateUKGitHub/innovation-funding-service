@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competition.transactional;
+package org.innovateuk.ifs.question.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
@@ -40,13 +40,13 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests the CompetitionSetupQuestionServiceImpl with mocked repositories/mappers.
+ * Tests the QuestionCompetitionServiceImpl with mocked repositories/mappers.
  */
-public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest<CompetitionSetupQuestionServiceImpl> {
+public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest<QuestionSetupCompetitionServiceImpl> {
 
     @Override
-    protected CompetitionSetupQuestionServiceImpl supplyServiceUnderTest() {
-        return new CompetitionSetupQuestionServiceImpl();
+    protected QuestionSetupCompetitionServiceImpl supplyServiceUnderTest() {
+        return new QuestionSetupCompetitionServiceImpl();
     }
 
     private static String number = "number";
@@ -76,7 +76,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     private GuidanceRowRepository guidanceRowRepository;
 
     @Mock
-    private CompetitionSetupTemplateService competitionSetupTemplateService;
+    private QuestionSetupTemplateService questionSetupTemplateService;
 
     @Test
     public void test_getByQuestionId() {
@@ -410,7 +410,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     public void test_delete() {
         final Long questionId = 1L;
 
-        when(competitionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
         ServiceResult<Void> resultAssessedQuestion = service.delete(questionId);
         assertTrue(resultAssessedQuestion.isSuccess());
     }
@@ -422,7 +422,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         Competition competition = newCompetition().build();
         Question newlyCreatedQuestion = newQuestion().withId(questionId).build();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
+        when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
         when(questionRepository.findOne(questionId)).thenReturn(newlyCreatedQuestion);
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
@@ -447,7 +447,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         Long competitionId = 22L;
         Competition competition = newCompetition().build();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
+        when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isFailure());

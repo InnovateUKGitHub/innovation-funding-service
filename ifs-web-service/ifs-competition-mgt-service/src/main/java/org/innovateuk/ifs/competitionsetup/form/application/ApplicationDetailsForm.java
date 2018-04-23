@@ -37,7 +37,8 @@ public class ApplicationDetailsForm extends CompetitionSetupForm {
     @Digits(integer = MAX_DIGITS, fraction = 0, message = "{validation.standard.integer.non.decimal.format}")
     private BigDecimal maxProjectDuration;
 
-    private boolean useResubmissionQuestion;
+    @NotNull(message = "{validation.application.must.indicate.resubmission.or.not}")
+    private Boolean useResubmissionQuestion;
 
     public BigDecimal getMinProjectDuration() {
         return minProjectDuration;
@@ -55,11 +56,11 @@ public class ApplicationDetailsForm extends CompetitionSetupForm {
         this.maxProjectDuration = maxProjectDuration;
     }
 
-    public boolean isUseResubmissionQuestion() {
+    public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
 
-    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+    public void setUseResubmissionQuestion(Boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 

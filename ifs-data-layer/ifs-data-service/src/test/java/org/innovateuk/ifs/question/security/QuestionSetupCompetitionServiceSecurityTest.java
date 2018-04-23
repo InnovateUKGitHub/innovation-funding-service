@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.competition.security;
+package org.innovateuk.ifs.question.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionServiceImpl;
+import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,14 +22,14 @@ import static org.junit.Assert.fail;
  * individual rules that are called whenever an OrganisationService method is called.  They do not however test the logic
  * within those rules
  */
-public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupQuestionService> {
+public class QuestionSetupCompetitionServiceSecurityTest extends BaseServiceSecurityTest<QuestionSetupCompetitionService> {
 
     private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE));
     private static final long QUESTION_ID = 1L;
 
     @Override
-    protected Class<? extends CompetitionSetupQuestionService> getClassUnderTest() {
-        return CompetitionSetupQuestionServiceImpl.class;
+    protected Class<? extends QuestionSetupCompetitionService> getClassUnderTest() {
+        return QuestionSetupCompetitionService.class;
     }
 
     @Test
