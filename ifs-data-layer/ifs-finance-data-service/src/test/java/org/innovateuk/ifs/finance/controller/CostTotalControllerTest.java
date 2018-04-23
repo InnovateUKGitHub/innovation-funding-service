@@ -37,7 +37,7 @@ public class CostTotalControllerTest extends MockMvcTest<CostTotalController> {
         FinanceCostTotalResource financeCostTotalResource = new FinanceCostTotalResource(
                 FinanceType.APPLICATION,
                 FinanceRowType.LABOUR,
-                BigDecimal.valueOf(1000L),
+                new BigDecimal("999999999.999999"),
                 1L
         );
 
@@ -63,7 +63,7 @@ public class CostTotalControllerTest extends MockMvcTest<CostTotalController> {
                 .withFinanceType(FinanceType.APPLICATION)
                 .withFinanceRowType(FinanceRowType.LABOUR, FinanceRowType.MATERIALS)
                 .withFinanceId(1L, 2L)
-                .withTotal(BigDecimal.valueOf(1000L), BigDecimal.valueOf(2000L))
+                .withTotal(new BigDecimal("999.999999"), new BigDecimal("1999.999999"))
                 .build(2);
 
         Consumer<List<FinanceCostTotalResource>> matchesExpectedResources = (resources) -> {
