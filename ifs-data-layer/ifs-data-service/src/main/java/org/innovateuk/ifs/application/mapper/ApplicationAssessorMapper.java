@@ -23,6 +23,7 @@ import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Mapper(config = GlobalMapperConfig.class)
@@ -80,7 +81,7 @@ public abstract class ApplicationAssessorMapper {
     }
 
     private long countAssignedApplications(Long userId) {
-        return assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(of(REJECTED, WITHDRAWN, SUBMITTED)));
+        return assessmentRepository.countByParticipantUserIdAndActivityStateNotIn(userId, asLinkedSet(REJECTED, WITHDRAWN, SUBMITTED));
     }
 
     private long countAssignedApplicationsByCompetition(CompetitionParticipant competitionParticipant) {
@@ -92,8 +93,7 @@ public abstract class ApplicationAssessorMapper {
     }
 
     private long countAssessmentsByCompetitionParticipantInStates(CompetitionParticipant competitionParticipant, Set<AssessmentState> states) {
-        return assessmentRepository.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(competitionParticipant.getUser().getId(),
-                competitionParticipant.getProcess().getId(),
-                getBackingStates(states));
+        return assessmentRepository.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(competitionParticipant.getUser().getId(),
+                competitionParticipant.getProcess().getId(), states);
     }
 }

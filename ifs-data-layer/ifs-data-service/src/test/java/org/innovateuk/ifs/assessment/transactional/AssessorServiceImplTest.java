@@ -23,7 +23,6 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -315,7 +314,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         );
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
-        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId)).thenReturn(assessments);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
@@ -332,7 +331,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
-        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
         inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification1);
@@ -387,7 +386,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         );
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
-        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId)).thenReturn(assessments);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
@@ -400,7 +399,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
-        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
         inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification);
@@ -439,7 +438,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(2L, 3L)
                 .build(2);
 
-        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
+        when(assessmentRepositoryMock.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId))
                 .thenReturn(assessments);
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
@@ -449,7 +448,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
-        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
         inOrder.verifyNoMoreInteractions();
@@ -471,7 +470,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(2L, 3L)
                 .build(2);
 
-        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
+        when(assessmentRepositoryMock.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId))
                 .thenReturn(assessments);
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(false);
@@ -481,7 +480,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
-        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
         inOrder.verifyNoMoreInteractions();

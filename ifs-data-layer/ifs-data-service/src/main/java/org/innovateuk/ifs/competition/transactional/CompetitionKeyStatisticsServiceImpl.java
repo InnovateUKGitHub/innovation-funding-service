@@ -22,11 +22,11 @@ import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_AND_INELIGIBLE_STATES;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
-import static org.innovateuk.ifs.workflow.resource.State.*;
 
 @Service
 public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalService implements CompetitionKeyStatisticsService {
@@ -76,7 +76,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
                 .sum());
         competitionKeyStatisticsResource.setAssessorsWithoutApplications(assessmentParticipantRepository.getByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)
                 .stream()
-                .filter(cp -> assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(cp.getId(), of(REJECTED, WITHDRAWN)) == 0)
+                .filter(cp -> assessmentRepository.countByParticipantUserIdAndActivityStateNotIn(cp.getId(), of(REJECTED, WITHDRAWN)) == 0)
                 .mapToInt(e -> 1)
                 .sum());
         competitionKeyStatisticsResource.setAssignmentCount(applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
@@ -90,10 +90,10 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
     public ServiceResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatisticsByCompetition(long competitionId) {
         CompetitionInAssessmentKeyStatisticsResource competitionKeyStatisticsResource = new CompetitionInAssessmentKeyStatisticsResource();
         competitionKeyStatisticsResource.setAssignmentCount(applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
-        competitionKeyStatisticsResource.setAssignmentsWaiting(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(PENDING, competitionId));
-        competitionKeyStatisticsResource.setAssignmentsAccepted(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(ACCEPTED, competitionId));
-        competitionKeyStatisticsResource.setAssessmentsStarted(assessmentRepository.countByActivityStateStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId));
-        competitionKeyStatisticsResource.setAssessmentsSubmitted(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(SUBMITTED, competitionId));
+        competitionKeyStatisticsResource.setAssignmentsWaiting(assessmentRepository.countByActivityStateAndTargetCompetitionId(PENDING, competitionId));
+        competitionKeyStatisticsResource.setAssignmentsAccepted(assessmentRepository.countByActivityStateAndTargetCompetitionId(ACCEPTED, competitionId));
+        competitionKeyStatisticsResource.setAssessmentsStarted(assessmentRepository.countByActivityStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId));
+        competitionKeyStatisticsResource.setAssessmentsSubmitted(assessmentRepository.countByActivityStateAndTargetCompetitionId(SUBMITTED, competitionId));
         return serviceSuccess(competitionKeyStatisticsResource);
     }
 

@@ -22,17 +22,18 @@ import static java.util.Comparator.comparingLong;
 import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
 public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitionSummaryService {
 
-    public static final Set<State> INVALID_ASSESSMENT_STATES = AssessmentState.getBackingStates(EnumSet.of(
+    public static final Set<AssessmentState> INVALID_ASSESSMENT_STATES = asLinkedSet(
             AssessmentState.WITHDRAWN,
             AssessmentState.REJECTED
-    ));
+    );
 
-    public static final Set<State> VALID_ASSESSMENT_STATES = AssessmentState.getBackingStates(EnumSet.of(
+    public static final Set<AssessmentState> VALID_ASSESSMENT_STATES = asLinkedSet(
             AssessmentState.CREATED,
             AssessmentState.OPEN,
             AssessmentState.PENDING,
@@ -40,9 +41,9 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
             AssessmentState.DECIDE_IF_READY_TO_SUBMIT,
             AssessmentState.READY_TO_SUBMIT,
             AssessmentState.SUBMITTED
-    ));
+    );
 
-    public static final Set<State> ALL_ASSESSMENT_STATES = Sets.union(VALID_ASSESSMENT_STATES, INVALID_ASSESSMENT_STATES);
+    public static final Set<AssessmentState> ALL_ASSESSMENT_STATES = Sets.union(VALID_ASSESSMENT_STATES, INVALID_ASSESSMENT_STATES);
 
     @Autowired
     private AssessorService assessorService;
@@ -61,7 +62,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
     public ServiceResult<AssessorCompetitionSummaryResource> getAssessorSummary(long assessorId, long competitionId) {
         return assessorService.getAssessorProfile(assessorId).andOnSuccess(assessorProfile ->
                 competitionService.getCompetitionById(competitionId).andOnSuccess(competition -> {
-                    long allAssessmentCount = assessmentRepository.countByParticipantUserIdAndActivityStateStateIn(
+                    long allAssessmentCount = assessmentRepository.countByParticipantUserIdAndActivityStateIn(
                             assessorProfile.getUser().getId(),
                             VALID_ASSESSMENT_STATES
                     );

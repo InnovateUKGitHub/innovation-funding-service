@@ -8,7 +8,6 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -114,21 +113,21 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                 .withRejectComment("Member of board of directors")
                 .build();
 
-        when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(
+        when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateNotIn(
                 1L,
-                getBackingStates(assessmentStatesThatAreUnassigned)))
+                assessmentStatesThatAreUnassigned))
                 .thenReturn(unassignedCount);
 
-        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(
+        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(
                 1L,
                 competition.getId(),
-                getBackingStates(assessmentStatesThatAreAssigned)))
+                assessmentStatesThatAreAssigned))
                 .thenReturn(assignedCount);
 
-        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(
+        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(
                 1L,
                 competition.getId(),
-                getBackingStates(assessmentStatesThatAreSubmitted)))
+                assessmentStatesThatAreSubmitted))
                 .thenReturn(submittedCount);
 
 
@@ -144,11 +143,10 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
         profile.getInnovationAreas().forEach(
                 innovationArea -> inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea));
         inOrder.verify(assessmentRepositoryMock)
-                .countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(assessmentStatesThatAreUnassigned));
+                .countByParticipantUserIdAndActivityStateNotIn(userId, assessmentStatesThatAreUnassigned);
         inOrder.verify(assessmentRepositoryMock)
-                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(userId, competition.getId(), getBackingStates(assessmentStatesThatAreAssigned));
+                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(userId, competition.getId(), assessmentStatesThatAreAssigned);
         inOrder.verify(assessmentRepositoryMock)
-                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(userId, competition.getId(), getBackingStates(assessmentStatesThatAreSubmitted));
-
+                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(userId, competition.getId(), assessmentStatesThatAreSubmitted);
     }
 }

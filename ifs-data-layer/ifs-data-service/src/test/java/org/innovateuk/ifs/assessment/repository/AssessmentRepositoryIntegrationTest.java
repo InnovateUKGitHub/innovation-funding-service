@@ -15,7 +15,6 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.Process;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.of;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -40,6 +38,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.*;
 
 public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentRepository> {
@@ -155,10 +154,10 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findOne(1L);
         List<Assessment> assessments = setUpAssessments(user, application, numOfAssessmentsForEachState);
 
-        Set<State> statesNotToCount = AssessmentState.getBackingStates(of(CREATED, PENDING));
+        Set<AssessmentState> statesNotToCount = asLinkedSet(CREATED, PENDING);
 
         assertEquals(assessments.size() - statesNotToCount.size() * numOfAssessmentsForEachState, repository
-                .countByParticipantUserIdAndActivityStateStateNotIn(user.getId(), statesNotToCount));
+                .countByParticipantUserIdAndActivityStateNotIn(user.getId(), statesNotToCount));
     }
 
     @Test
@@ -170,11 +169,11 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         Application application = applicationRepository.findOne(1L);
         setUpAssessments(user, application, numOfAssessmentsForEachState);
-        Set<State> states = AssessmentState.getBackingStates(of(CREATED, PENDING));
+        Set<AssessmentState> states = asLinkedSet(CREATED, PENDING);
 
         assertEquals(
                 states.size() * numOfAssessmentsForEachState,
-                repository.countByParticipantUserIdAndActivityStateStateIn(user.getId(), states)
+                repository.countByParticipantUserIdAndActivityStateIn(user.getId(), states)
         );
     }
 
@@ -189,10 +188,10 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findOne(1L);
         setUpAssessments(user, application, numOfAssessmentsForEachState);
 
-        Set<State> statesToCount = AssessmentState.getBackingStates(of(CREATED, PENDING));
+        Set<AssessmentState> statesToCount = asLinkedSet(CREATED, PENDING);
 
         assertEquals(statesToCount.size() * numOfAssessmentsForEachState, repository
-                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(user.getId(), application.getCompetition().getId(), statesToCount));
+                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(user.getId(), application.getCompetition().getId(), statesToCount));
     }
 
     @Test
@@ -207,7 +206,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         setUpShuffledAssessments(user, application, numOfAssessmentsForEachState);
 
         List<Assessment> found = repository
-                .findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                .findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                         user.getId(),
                         application.getCompetition().getId());
 
@@ -228,14 +227,13 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void findByActivityStateStateAndTargetCompetitionId() {
-        State state = State.CREATED;
         Application application = applicationRepository.findOne(1L);
 
         List<Assessment> found = repository
-                .findByActivityStateStateAndTargetCompetitionId(state, application.getCompetition().getId());
+                .findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, application.getCompetition().getId());
 
         assertEquals(1, found.size());
-        assertEquals(state, found.get(0).getProcessState().getBackingState());
+        assertEquals(AssessmentState.CREATED, found.get(0).getProcessState());
         assertEquals(application.getCompetition().getId(), found.get(0).getTarget().getCompetition().getId());
     }
 
@@ -292,23 +290,22 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void countByActivityStateStateAndTargetCompetitionId() {
-        State state = State.CREATED;
         Application application = applicationRepository.findOne(1L);
 
         long found = repository
-                .countByActivityStateStateAndTargetCompetitionId(state, application.getCompetition().getId());
+                .countByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, application.getCompetition().getId());
 
         assertEquals(1L, found);
     }
 
     @Test
     public void countByActivityStateStateInAndTargetCompetitionId() {
-        Set<State> states = EnumSet.of(State.CREATED, State.OPEN);
+        Set<AssessmentState> states = EnumSet.of(AssessmentState.CREATED, AssessmentState.OPEN);
 
         Application application = applicationRepository.findOne(1L);
 
         long found = repository
-                .countByActivityStateStateInAndTargetCompetitionId(states, application.getCompetition().getId());
+                .countByActivityStateInAndTargetCompetitionId(states, application.getCompetition().getId());
 
         assertEquals(3L, found);
     }

@@ -2,9 +2,9 @@ package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -67,53 +67,51 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     @Override
     Assessment findOneByParticipantId(Long participantId);
 
-    List<Assessment> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
+    List<Assessment> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(Long userId, Long competitionId);
 
-    List<Assessment> findByParticipantUserIdAndActivityStateStateNotIn(long userId, Collection<State> states);
+    List<Assessment> findByParticipantUserIdAndActivityStateNotIn(long userId, Collection<AssessmentState> states);
 
     List<Assessment> findByParticipantUserIdAndTargetId(long userId, long applicationId);
 
     Optional<Assessment> findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(Long userId, Long applicationId);
 
-    long countByParticipantUserIdAndActivityStateStateIn(Long userId, Set<State> states);
+    long countByParticipantUserIdAndActivityStateIn(Long userId, Set<AssessmentState> states);
 
-    long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
+    long countByParticipantUserIdAndActivityStateNotIn(Long userId, Set<AssessmentState> states);
 
-    long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long competitionId, Set<State> states);
+    long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(Long userId, Long competitionId, Set<AssessmentState> states);
 
-    List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, long competitionId);
+    List<Assessment> findByActivityStateAndTargetCompetitionId(AssessmentState state, long competitionId);
 
     @Query("SELECT new org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount( " +
             "   assessment, " +
             "   application, " +
             "   CAST((SELECT COUNT(otherAssessment) " +
             "   FROM Assessment otherAssessment " +
-            "   JOIN otherAssessment.activityState otherActivityState " +
             "   WHERE otherAssessment.target.id = application.id " +
-            "       AND otherActivityState.state IN :validStates " +
+            "       AND otherAssessment.activityState IN :validStates " +
             "   GROUP BY otherAssessment.target " +
             "   ) as int)" +
             ") " +
             "FROM Assessment assessment " +
             "JOIN assessment.target application " +
             "JOIN assessment.target.competition competition " +
-            "JOIN assessment.activityState activityState " +
             "JOIN assessment.participant participant " +
             "WHERE competition.id = :competitionId " +
             "   AND participant.user.id = :assessorId " +
-            "   AND activityState.state IN :allStates " +
+            "   AND assessment.activityState IN :allStates " +
             "ORDER BY assessment.id DESC")
     List<AssessmentApplicationAssessorCount> getAssessorApplicationAssessmentCountsForStates(
             @Param("competitionId") long competitionId,
             @Param("assessorId") long assessorId,
-            @Param("validStates") Collection<State> validStates,
-            @Param("allStates") Collection<State> allStates
+            @Param("validStates") Collection<AssessmentState> validStates,
+            @Param("allStates") Collection<AssessmentState> allStates
     );
 
 
-    int countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+    int countByActivityStateAndTargetCompetitionId(AssessmentState state, Long competitionId);
 
-    int countByActivityStateStateInAndTargetCompetitionId(Collection<State> state, Long competitionId);
+    int countByActivityStateInAndTargetCompetitionId(Collection<AssessmentState> state, Long competitionId);
 
     @Query(FEEDBACK_COMPLETE)
     boolean isFeedbackComplete(@Param("id") Long id);
