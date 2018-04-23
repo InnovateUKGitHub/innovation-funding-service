@@ -1,11 +1,9 @@
 repositories {
     jcenter()
-    maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
-    maven { url "http://repo.spring.io/milestone" }
     maven { url "https://plugins.gradle.org/m2/" }
-
 }
 
 dependencies {
     compile "com.bmuschko:gradle-docker-plugin:3.2.6"
+    compile 'com.aries:docker-java-shaded:3.0.14'
 }
