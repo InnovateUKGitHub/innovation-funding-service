@@ -79,22 +79,22 @@ gulp.task('vendor', function () {
 })
 
 gulp.task('css', ['copy-govuk'], function () {
-	return gulp.src(filesExist(sassFiles))
+  return gulp.src(filesExist(sassFiles))
     .pipe(sassLint({
       files: {
         ignore: [
           '**/prototype.scss',
           '**/prototype/**/*.scss',
-	        nodeModulesRelativePath + '**/*.scss'
+          nodeModulesRelativePath + '**/*.scss'
         ]
       },
       config: '.sass-lint.yml'
     }))
     .pipe(sassLint.format())
     .pipe(sass({includePaths: [
-		  gdsFrontendToolkitPath + 'stylesheets',
+      gdsFrontendToolkitPath + 'stylesheets',
       gdsElementsPath + 'public/sass',
-		  gdsJinjaPath + 'assets/stylesheets'
+      gdsJinjaPath + 'assets/stylesheets'
     ],
       importer: compass,
       outputStyle: 'compressed'
