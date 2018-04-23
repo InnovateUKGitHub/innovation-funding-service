@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.transactional;
+package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;

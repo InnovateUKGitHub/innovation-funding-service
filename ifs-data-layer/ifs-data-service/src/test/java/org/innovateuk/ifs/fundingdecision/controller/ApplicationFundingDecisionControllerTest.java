@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.controller;
+package org.innovateuk.ifs.fundingdecision.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
