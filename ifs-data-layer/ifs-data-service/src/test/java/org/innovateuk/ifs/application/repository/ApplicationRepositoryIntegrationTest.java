@@ -45,9 +45,6 @@ import static org.junit.Assert.assertEquals;
 public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationRepository> {
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
@@ -70,16 +67,14 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByApplicationProcessActivityStateStateIn() {
-        Collection<State> states = simpleMap(submittedAndFinishedStates, ApplicationState::getBackingState);
-
         List<Application> applicationList = simpleMap(EnumSet.complementOf(EnumSet.of(ApplicationState.IN_PANEL)),
                 this::createApplicationByState);
 
-        long initial = repository.findByApplicationProcessActivityStateStateIn(states).count();
+        long initial = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates).count();
 
         repository.save(applicationList);
 
-        Stream<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
+        Stream<Application> applications = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates);
 
         assertEquals(initial + 5, applications.count());
     }

@@ -223,7 +223,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     @Override
     public ServiceResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
-        int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.SUBMITTED.getBackingState());
+        int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED);
         int applicationsAssigned = interviewAssignmentRepository.
                 countByTargetCompetitionIdAndActivityStateStateIn(competitionId,
                         simpleMapSet(asList(InterviewAssignmentState.ASSIGNED_STATES), InterviewAssignmentState::getBackingState)

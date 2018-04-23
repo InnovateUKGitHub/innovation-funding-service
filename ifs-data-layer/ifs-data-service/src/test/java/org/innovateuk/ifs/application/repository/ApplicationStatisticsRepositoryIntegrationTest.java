@@ -26,7 +26,6 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,10 +60,10 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class ApplicationStatisticsRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationStatisticsRepository> {
 
-    private static final Collection<State> SUBMITTED_STATUSES = simpleMap(asList(
+    private static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
-            ApplicationState.SUBMITTED), ApplicationState::getBackingState);
+            ApplicationState.SUBMITTED);
 
     @Autowired
     private AssessmentParticipantRepository assessmentParticipantRepository;
@@ -106,7 +105,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     public void findByCompetition() {
         Long competitionId = 1L;
 
-        List<ApplicationStatistics> statisticsList = repository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES);
+        List<ApplicationStatistics> statisticsList = repository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATUSES);
         assertEquals(5, statisticsList.size());
     }
 
@@ -116,7 +115,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(1, 3);
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES, "", pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATUSES, "", pageable);
         assertEquals(5, statisticsPage.getTotalElements());
         assertEquals(3, statisticsPage.getSize());
         assertEquals(1, statisticsPage.getNumber());
@@ -128,7 +127,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(0, 20);
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES,"4", pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATUSES,"4", pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());
@@ -166,7 +165,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "id"));
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());
@@ -205,7 +204,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "id"));
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());

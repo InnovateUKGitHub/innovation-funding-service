@@ -26,7 +26,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private Long id;
     private String event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "activity_state_id")
     protected StatesType activityState;
 
     @LastModifiedDate

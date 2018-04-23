@@ -83,9 +83,9 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(assessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(assessmentParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(competitionId, CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit)).thenReturn(keyStatisticsResource.getApplicationsPastHalf());
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES)).thenReturn(keyStatisticsResource.getApplicationsSubmitted());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId, CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit)).thenReturn(keyStatisticsResource.getApplicationsPastHalf());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES)).thenReturn(keyStatisticsResource.getApplicationsSubmitted());
 
         CompetitionOpenKeyStatisticsResource response = service.getOpenKeyStatisticsByCompetition(competitionId).getSuccess();
         assertEquals(keyStatisticsResource, response);
@@ -129,7 +129,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
         when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(competitionParticipants);
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applicationStatistics);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applicationStatistics);
         when(assessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(assessmentParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
 
@@ -162,7 +162,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .withAssessments(assessments, assessmentList)
                 .build(2);
 
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applicationStatistics);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applicationStatistics);
         when(assessmentRepositoryMock.countByActivityStateStateAndTargetCompetitionId(PENDING, competitionId)).thenReturn(keyStatisticsResource.getAssignmentsWaiting());
         when(assessmentRepositoryMock.countByActivityStateStateAndTargetCompetitionId(ACCEPTED, competitionId)).thenReturn(keyStatisticsResource.getAssignmentsAccepted());
         when(assessmentRepositoryMock.countByActivityStateStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId)).thenReturn(keyStatisticsResource.getAssessmentsStarted());
@@ -173,7 +173,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void getFundedKeyStatisticsByCompetition() throws Exception {
+    public void getFundedKeyStatisticsByCompetition() {
         long competitionId = 1L;
         int applicationsNotifiedOfDecision = 1;
         int applicationsAwaitingDecision = 2;
@@ -183,7 +183,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .withFundingDecision(FundingDecisionStatus.FUNDED, FundingDecisionStatus.UNFUNDED, FundingDecisionStatus.ON_HOLD)
                 .build(3);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applications);
         when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId)).thenReturn(applicationsNotifiedOfDecision);
         when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(competitionId)).thenReturn(applicationsAwaitingDecision);
 

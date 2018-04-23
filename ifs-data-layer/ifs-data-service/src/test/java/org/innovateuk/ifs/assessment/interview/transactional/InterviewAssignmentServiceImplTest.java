@@ -267,7 +267,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
                         .withApplicationsAssigned(applicationsAssigned)
                         .build();
 
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState()))
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityState(COMPETITION_ID, ApplicationState.SUBMITTED))
                 .thenReturn(applicationsInCompetition);
 
         when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
@@ -279,7 +279,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         assertEquals(expectedKeyStatisticsResource, keyStatisticsResource);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, interviewAssignmentRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState());
+        inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityState(COMPETITION_ID, ApplicationState.SUBMITTED);
         inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
                 simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState));
         inOrder.verifyNoMoreInteractions();

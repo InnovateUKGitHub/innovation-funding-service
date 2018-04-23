@@ -278,11 +278,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId,
                                                                                    Collection<ApplicationState> applicationStates) {
-        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
         List<Application> applicationResults =
-                applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(
+                applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(
                         competitionId,
-                        states
+                        applicationStates
                 );
         return serviceSuccess(applicationResults);
     }
@@ -298,15 +297,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                                                int pageSize,
                                                                                String sortField) {
 
-        Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
+        Set<ApplicationState> unsuccessfulStates = asLinkedSet(
                 INELIGIBLE,
                 INELIGIBLE_INFORMED,
-                REJECTED), ApplicationState::getBackingState);
+                REJECTED);
 
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
+        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, unsuccessfulStates, pageable);
         List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));

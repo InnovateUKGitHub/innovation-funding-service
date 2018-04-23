@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -49,18 +50,18 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                     "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
 
 
-    List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
+    List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
 
     @Query(APPLICATION_FILTER)
-    Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(@Param("compId") long competitionId,
-                                                                                           @Param("states") Collection<State> applicationStates,
+    Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(@Param("compId") long competitionId,
+                                                                                           @Param("states") Collection<ApplicationState> applicationStates,
                                                                                            @Param("filter") String filter,
                                                                                            Pageable pageable);
 
     @Query(INNOVATION_AREA_FILTER)
-    Page<ApplicationStatistics> findByCompetitionAndInnovationAreaProcessActivityStateStateIn(@Param("compId") long competitionId,
+    Page<ApplicationStatistics> findByCompetitionAndInnovationAreaProcessActivityStateIn(@Param("compId") long competitionId,
                                                                                            @Param("assessorId") long assessorId,
-                                                                                           @Param("states") Collection<State> applicationStates,
+                                                                                           @Param("states") Collection<ApplicationState> applicationStates,
                                                                                            @Param("filter") String filter,
                                                                                            @Param("innovationArea") Long innovationArea,
                                                                                            Pageable pageable);

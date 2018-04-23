@@ -2,6 +2,7 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
@@ -161,7 +162,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAvailableAssessors() throws Exception {
+    public void getAvailableAssessors() {
         long competitionId = 1L;
         int page = 1;
         int pageSize = 1;
@@ -239,7 +240,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAvailableAssessors_empty() throws Exception {
+    public void getAvailableAssessors_empty() {
         long competitionId = 1L;
         int page = 0;
         int pageSize = 20;
@@ -264,7 +265,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAvailableAssessorIds() throws Exception {
+    public void getAvailableAssessorIds() {
         long competitionId = 1L;
 
         InnovationArea innovationArea = newInnovationArea()
@@ -310,7 +311,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getCreatedInvites() throws Exception {
+    public void getCreatedInvites() {
         long competitionId = 1L;
 
         InnovationArea innovationArea = newInnovationArea().build();
@@ -416,7 +417,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void inviteUsers_existing() throws Exception {
+    public void inviteUsers_existing() {
         List<User> existingUsers = newUser()
                 .withEmailAddress("fred.smith@abc.com", "joe.brown@abc.com")
                 .withFirstName("fred", "joe")
@@ -451,7 +452,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void sendAllInvites() throws Exception {
+    public void sendAllInvites() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
@@ -522,7 +523,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAllInvitesToSend() throws Exception {
+    public void getAllInvitesToSend() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
@@ -576,7 +577,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAllInvitesToResend() throws Exception {
+    public void getAllInvitesToResend() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
         List<Long> inviteIds = asList(1L, 2L);
@@ -631,7 +632,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void resendInvites() throws Exception {
+    public void resendInvites() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
         List<Long> inviteIds = asList(1L, 2L);
@@ -709,7 +710,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getInvitationOverview() throws Exception {
+    public void getInvitationOverview() {
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
         List<ReviewParticipant> expectedParticipants = newReviewParticipant()
@@ -769,7 +770,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAllInvitesByUser() throws Exception {
+    public void getAllInvitesByUser() {
         User user = newUser()
                 .withId(1L)
                 .build();
@@ -822,7 +823,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAllInvitesByUser_invitesExpired() throws Exception {
+    public void getAllInvitesByUser_invitesExpired() {
         User user = newUser()
                 .withId(1L)
                 .build();
@@ -902,7 +903,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void deleteAllInvites() throws Exception {
+    public void deleteAllInvites() {
         long competitionId = 1L;
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(newCompetition().build());
@@ -913,7 +914,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void deleteAllInvites_noCompetition() throws Exception {
+    public void deleteAllInvites_noCompetition() {
         long competitionId = 1L;
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
@@ -924,7 +925,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void openInvite() throws Exception {
+    public void openInvite() {
         Milestone milestone = newMilestone()
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().plusDays(1))
@@ -948,7 +949,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void openInvite_inviteExpired() throws Exception {
+    public void openInvite_inviteExpired() {
         Milestone milestone = newMilestone()
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().minusDays(1))
@@ -979,7 +980,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .build();
 
         when(reviewParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(reviewParticipant);
-        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(emptyList());
+        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED)).thenReturn(emptyList());
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
                 .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
 
@@ -989,7 +990,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(openedInviteHash);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
         inOrder.verifyNoMoreInteractions();
     }
@@ -1007,7 +1008,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         State expectedAssessmentReviewState = State.PENDING;
 
         when(reviewParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(reviewParticipant);
-        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(applicationsOnPanel);
+        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED)).thenReturn(applicationsOnPanel);
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
                 .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState));
 
@@ -1017,7 +1018,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock, reviewRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(openedInviteHash);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState);
         inOrder.verify(reviewRepositoryMock, times(2)).save(any(Review.class));
 

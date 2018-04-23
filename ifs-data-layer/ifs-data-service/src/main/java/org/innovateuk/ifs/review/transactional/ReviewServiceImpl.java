@@ -2,6 +2,7 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.review.domain.ReviewParticipant;
@@ -169,7 +170,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private ServiceResult<Void> createAssessmentReview(ReviewParticipant assessor, Application application) {
-        if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
+        if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateNot(assessor.getUser(), application, ReviewState.WITHDRAWN)) {
             Review review =  new Review(application, assessor);
             review.setActivityState(ReviewState.CREATED);
             reviewRepository.save(review);
@@ -186,7 +187,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private List<Application> getAllApplicationsOnPanel(long competitionId) {
         return applicationRepository
-                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED);
     }
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.review.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.review.domain.Review;
+import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public interface ReviewRepository extends ProcessRepository<Review>, PagingAndSortingRepository<Review, Long> {
     List<Review> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
-    boolean existsByParticipantUserAndTargetAndActivityStateStateNot(User user, Application target, State state);
+    boolean existsByParticipantUserAndTargetAndActivityStateNot(User user, Application target, ReviewState state);
     boolean existsByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
 
     @Query("SELECT CASE WHEN count(a.id)>0 THEN TRUE ELSE FALSE END " +

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.resource;
 
 import org.innovateuk.ifs.util.enums.Identifiable;
+import org.innovateuk.ifs.util.enums.IdentifiableEnum;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  * This is also used to choose a template in the web-service. Depending on the FormInputType we
  * can also implement extra behaviour like form / input validation.
  */
-public enum FormInputType implements Identifiable {
+public enum FormInputType implements IdentifiableEnum<FormInputType> {
 
     TEXTINPUT(1),
     TEXTAREA(2),

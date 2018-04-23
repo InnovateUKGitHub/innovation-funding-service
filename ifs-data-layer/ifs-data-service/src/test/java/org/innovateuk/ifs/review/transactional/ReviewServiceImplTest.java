@@ -3,6 +3,7 @@ package org.innovateuk.ifs.review.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -153,10 +154,10 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
                 .thenReturn(reviewParticipants);
         when(applicationRepositoryMock
-                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED))
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED.SUBMITTED))
                 .thenReturn(applications);
 
-        when(reviewRepositoryMock.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, application, State.WITHDRAWN))
+        when(reviewRepositoryMock.existsByParticipantUserAndTargetAndActivityStateNot(assessor, application, ReviewState.WITHDRAWN))
                 .thenReturn(true);
 
         when(processRoleRepositoryMock.save(isA(ProcessRole.class))).thenReturn(processRoles.get(0));
@@ -187,9 +188,9 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         inOrder.verify(reviewParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
         inOrder.verify(applicationRepositoryMock)
-                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED);
         inOrder.verify(reviewRepositoryMock)
-                .existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, applications.get(0), (State.WITHDRAWN));
+                .existsByParticipantUserAndTargetAndActivityStateNot(assessor, applications.get(0), ReviewState.WITHDRAWN);
         inOrder.verify(reviewRepositoryMock)
                 .save(review);
         inOrder.verify(reviewRepositoryMock)

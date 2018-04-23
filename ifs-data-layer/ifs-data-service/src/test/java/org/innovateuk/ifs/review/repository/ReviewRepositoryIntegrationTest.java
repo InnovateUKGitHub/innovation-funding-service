@@ -10,6 +10,7 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.review.domain.Review;
+import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -97,7 +98,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
         review.setActivityState(CREATED);
         repository.save(review);
 
-        assertTrue(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application, State.WITHDRAWN)); // probably should be notExists if that's allowed
+        assertTrue(repository.existsByParticipantUserAndTargetAndActivityStateNot(user, application, ReviewState.WITHDRAWN)); // probably should be notExists if that's allowed
     }
 
     @Test
@@ -132,7 +133,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
         review.setActivityState(CREATED);
         repository.save(review);
 
-        assertFalse(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application2, State.WITHDRAWN));
+        assertFalse(repository.existsByParticipantUserAndTargetAndActivityStateNot(user, application2, ReviewState.WITHDRAWN));
     }
 
     @Test
