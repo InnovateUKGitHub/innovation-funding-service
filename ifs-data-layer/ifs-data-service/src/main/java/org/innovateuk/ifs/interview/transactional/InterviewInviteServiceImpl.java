@@ -451,7 +451,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     private void determineStatusOfPanelApplications(InterviewParticipantResource interviewParticipantResource) {
 
         List<Interview> reviews = interviewRepository.
-                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                         interviewParticipantResource.getUserId(),
                         interviewParticipantResource.getCompetitionId());
 

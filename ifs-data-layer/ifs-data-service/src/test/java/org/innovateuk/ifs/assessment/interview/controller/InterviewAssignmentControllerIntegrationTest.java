@@ -290,8 +290,8 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         RestResult<Void> result = controller.sendInvites(competition.getId(), sendResource);
         assertTrue(result.isSuccess());
 
-        List<InterviewAssignment> created = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), CREATED.getBackingState());
-        List<InterviewAssignment> awaitingFeedback = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
+        List<InterviewAssignment> created = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(competition.getId(), CREATED);
+        List<InterviewAssignment> awaitingFeedback = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(competition.getId(), InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE);
 
         assertEquals(created.size(), 0);
         assertEquals(awaitingFeedback.size(), 1);
