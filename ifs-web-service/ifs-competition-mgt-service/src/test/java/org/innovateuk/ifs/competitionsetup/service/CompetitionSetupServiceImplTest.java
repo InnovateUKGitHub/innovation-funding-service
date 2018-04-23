@@ -12,12 +12,12 @@ import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInf
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.viewmodel.EligibilityViewModel;
 import org.innovateuk.ifs.competitionsetup.fundinginformation.viewmodel.AdditionalModelViewModel;
-import org.innovateuk.ifs.competitionsetup.initaldetail.form.InitialDetailsForm;
+import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationDetailsForm;
-import org.innovateuk.ifs.competitionsetup.initaldetail.viewmodel.InitialDetailsViewModel;
+import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupSectionModelPopulator;
-import org.innovateuk.ifs.competitionsetup.initaldetail.populator.InitialDetailsModelPopulator;
+import org.innovateuk.ifs.competitionsetup.initialdetail.populator.InitialDetailsModelPopulator;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;

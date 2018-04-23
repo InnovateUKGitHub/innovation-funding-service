@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.initaldetail.viewmodel;
+package org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;

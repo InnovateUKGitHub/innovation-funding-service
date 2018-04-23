@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.initaldetail.viewmodel;
+package org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel;
 
 import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;

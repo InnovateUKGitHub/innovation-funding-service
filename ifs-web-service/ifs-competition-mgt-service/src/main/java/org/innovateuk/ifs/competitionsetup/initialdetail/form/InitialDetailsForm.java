@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.initaldetail.form;
+package org.innovateuk.ifs.competitionsetup.initialdetail.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;

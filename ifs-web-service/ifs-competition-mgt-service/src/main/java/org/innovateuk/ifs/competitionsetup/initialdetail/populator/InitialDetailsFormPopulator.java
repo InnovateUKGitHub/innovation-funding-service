@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.initaldetail.populator;
+package org.innovateuk.ifs.competitionsetup.initialdetail.populator;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.initaldetail.form.InitialDetailsForm;
+import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

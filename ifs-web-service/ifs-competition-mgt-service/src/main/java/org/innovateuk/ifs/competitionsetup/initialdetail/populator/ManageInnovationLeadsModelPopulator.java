@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.competitionsetup.initaldetail.populator;
+package org.innovateuk.ifs.competitionsetup.initialdetail.populator;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competitionsetup.initaldetail.viewmodel.ManageInnovationLeadsViewModel;
+import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

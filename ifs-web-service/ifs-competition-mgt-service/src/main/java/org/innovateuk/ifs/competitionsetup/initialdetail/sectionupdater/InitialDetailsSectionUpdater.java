@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.initaldetail.sectionupdater;
+package org.innovateuk.ifs.competitionsetup.initialdetail.sectionupdater;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
@@ -16,7 +16,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
-import org.innovateuk.ifs.competitionsetup.initaldetail.form.InitialDetailsForm;
+import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competitionsetup.initaldetail.populator.ManageInnovationLeadsModelPopulator;
-import org.innovateuk.ifs.competitionsetup.initaldetail.viewmodel.ManageInnovationLeadsViewModel;
+import org.innovateuk.ifs.competitionsetup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
+import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
