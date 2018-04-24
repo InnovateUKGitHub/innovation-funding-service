@@ -19,6 +19,8 @@ buildscript {
 task buildDocker(type: DockerBuildImage) {
     def arbitraryOutput = file("${project.buildDir}/buildDockerRan")
     outputs.file(arbitraryOutput)
+    inputs.dir("${project.buildDir}/docker/")
+
     tag = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
     inputDir = project.projectDir
 }
