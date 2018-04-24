@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.utils;
+package org.innovateuk.ifs.competitionsetup.common.util;
 
 /**
  * Utility class to keep common re-usable methods

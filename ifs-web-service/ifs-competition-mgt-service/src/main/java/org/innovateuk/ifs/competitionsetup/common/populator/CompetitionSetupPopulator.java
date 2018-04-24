@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competitionsetup.common.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionStateSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
 import org.springframework.beans.factory.annotation.Autowired;

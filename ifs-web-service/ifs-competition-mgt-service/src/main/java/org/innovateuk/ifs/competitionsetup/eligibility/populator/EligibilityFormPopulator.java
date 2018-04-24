@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupFormPopulator;
-import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
+import org.innovateuk.ifs.competitionsetup.common.util.CompetitionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

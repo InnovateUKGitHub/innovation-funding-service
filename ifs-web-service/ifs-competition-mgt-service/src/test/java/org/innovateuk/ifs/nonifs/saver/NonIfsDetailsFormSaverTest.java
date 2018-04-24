@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneOrEmptyRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;

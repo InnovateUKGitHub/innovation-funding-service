@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.utils;
+package org.innovateuk.ifs.competitionsetup.common.util;
 
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 

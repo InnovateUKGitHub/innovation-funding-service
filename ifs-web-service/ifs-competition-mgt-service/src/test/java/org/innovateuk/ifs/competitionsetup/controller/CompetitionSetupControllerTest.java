@@ -15,7 +15,7 @@ import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInf
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
 import org.junit.Before;

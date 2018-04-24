@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.service;
+package org.innovateuk.ifs.competitionsetup.common.service;
 
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;

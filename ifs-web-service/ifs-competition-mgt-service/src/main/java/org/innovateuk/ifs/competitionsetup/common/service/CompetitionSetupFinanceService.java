@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.service;
+package org.innovateuk.ifs.competitionsetup.common.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;

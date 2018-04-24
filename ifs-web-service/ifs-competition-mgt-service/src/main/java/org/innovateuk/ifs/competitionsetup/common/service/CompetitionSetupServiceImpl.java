@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.service;
+package org.innovateuk.ifs.competitionsetup.common.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

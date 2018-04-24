@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.service.CategoryFormatter;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupFormPopulator;
-import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
+import org.innovateuk.ifs.competitionsetup.common.util.CompetitionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.junit.Test;
 import org.junit.runner.RunWith;

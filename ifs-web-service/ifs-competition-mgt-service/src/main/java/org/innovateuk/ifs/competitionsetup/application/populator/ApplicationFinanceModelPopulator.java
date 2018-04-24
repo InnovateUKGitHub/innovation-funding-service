@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.application.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupSubsectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.competitionsetup.application.viewmodel.ApplicationFinanceViewModel;

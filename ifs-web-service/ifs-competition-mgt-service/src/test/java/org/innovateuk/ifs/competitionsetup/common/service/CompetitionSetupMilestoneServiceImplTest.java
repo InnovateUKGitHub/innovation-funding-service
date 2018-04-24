@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.service;
+package org.innovateuk.ifs.competitionsetup.common.service;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.error.Error;
@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupMilestoneServiceImpl;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;

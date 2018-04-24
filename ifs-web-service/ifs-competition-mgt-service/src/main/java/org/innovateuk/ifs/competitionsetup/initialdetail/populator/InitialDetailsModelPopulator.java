@@ -6,7 +6,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupSectionModelPopulator;
-import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
+import org.innovateuk.ifs.competitionsetup.common.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;

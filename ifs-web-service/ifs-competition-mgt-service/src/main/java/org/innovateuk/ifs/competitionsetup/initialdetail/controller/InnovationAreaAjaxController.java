@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competitionsetup.initialdetail.controller;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competitionsetup.utils.CompetitionSpecialSectors;
+import org.innovateuk.ifs.competitionsetup.common.util.CompetitionSpecialSectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

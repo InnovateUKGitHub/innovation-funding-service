@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.common.form.MilestoneTime;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.util.CollectionFunctions;

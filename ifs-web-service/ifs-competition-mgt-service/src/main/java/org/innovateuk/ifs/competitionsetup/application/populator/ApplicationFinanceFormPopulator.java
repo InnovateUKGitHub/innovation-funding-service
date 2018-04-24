@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationFinanceForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupSubsectionFormPopulator;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.springframework.beans.factory.annotation.Autowired;

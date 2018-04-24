@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.service;
+package org.innovateuk.ifs.competitionsetup.common.service;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.error.Error;

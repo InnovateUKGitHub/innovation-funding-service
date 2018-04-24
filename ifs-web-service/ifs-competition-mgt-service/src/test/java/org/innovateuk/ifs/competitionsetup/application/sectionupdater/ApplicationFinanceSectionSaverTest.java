@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.application.sectionupdater;
 
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.ApplicationFinanceSectionUpdater;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -12,7 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationFinanceForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Test;
 import org.junit.runner.RunWith;

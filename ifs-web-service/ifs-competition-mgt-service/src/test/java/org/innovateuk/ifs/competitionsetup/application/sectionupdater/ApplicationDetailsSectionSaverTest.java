@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationDetailsForm;
-import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application.ApplicationDetailsSectionUpdater;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

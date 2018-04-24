@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.competitionsetup.service;
+package org.innovateuk.ifs.competitionsetup.common.service;
 
 import org.innovateuk.ifs.commons.service.*;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupQuestionServiceImpl;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

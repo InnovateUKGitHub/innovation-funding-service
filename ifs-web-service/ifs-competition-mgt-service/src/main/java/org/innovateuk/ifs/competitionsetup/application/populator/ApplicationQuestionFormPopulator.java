@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
