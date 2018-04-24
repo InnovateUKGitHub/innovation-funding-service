@@ -145,13 +145,6 @@ The user navigates to the finance overview of the academic
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Finances overview
 
-The user marks the academic application finances as incomplete
-    the user navigates to Your-finances page  Academic robot test application
-    the user clicks the button/link    link=Your project costs
-    Focus    jQuery=button:contains("Edit")
-    the user clicks the button/link    jQuery=button:contains("Edit")
-    wait for autosave
-
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the user navigates to the page                             ${openCompetitionBusinessRTO_overview}

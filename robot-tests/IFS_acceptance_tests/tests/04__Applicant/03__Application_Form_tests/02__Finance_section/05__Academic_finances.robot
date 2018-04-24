@@ -133,7 +133,7 @@ User should not be able to edit or upload the form
     And the user should see correct grant percentage
     And the user clicks the button/link       link=Your project costs
     Then the user should not see the element  jQuery=button:contains("Remove")
-    And the user should see the element       css=#incurred-staff[readonly]
+    And the user should see the element       css=[name$="incurred_staff"][readonly]
 
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
@@ -142,14 +142,12 @@ File delete should not be allowed when marked as complete
     Then the user should not see the text in the page  Remove
 
 Academic finance overview
-    [Documentation]    INFUND-917
-    ...
-    ...    INFUND-2399
+    [Documentation]  INFUND-917 INFUND-2399
     [Tags]
     Given the user navigates to the finance overview of the academic
     Then the finance table should be correct
     Then the user should not see an error in the page
-    [Teardown]    The user marks the academic application finances as incomplete
+    [Teardown]  The user marks the academic application finances as incomplete
 
 
 *** Keywords ***
@@ -166,13 +164,13 @@ the academic partner uploads a file
     Choose File    css=.upload-section input    ${UPLOAD_FOLDER}/${file_name}
 
 the finance table should be correct
-    Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £9,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    3,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    0
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    3,000
+    Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)  £12,501,678
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)  12,473,387
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)  8,909
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)  4,244
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)  0
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)  4,243
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)  10,895
 
 Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}
@@ -214,3 +212,10 @@ Mark academic finances as complete
 the user should see correct grant percentage
     the user should see the text in the element   css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
     the user should see the text in the element   css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
+
+The user marks the academic application finances as incomplete
+    the user navigates to Your-finances page  Academic robot test application
+    the user clicks the button/link    link=Your project costs
+    Focus    jQuery=button:contains("Edit")
+    the user clicks the button/link    jQuery=button:contains("Edit")
+    wait for autosave
