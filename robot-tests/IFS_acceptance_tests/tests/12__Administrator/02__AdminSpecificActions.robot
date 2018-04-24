@@ -6,7 +6,6 @@ Force Tags      Administrator
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
 
-
 *** Test Cases ***
 Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50
@@ -16,7 +15,6 @@ Administrator is able to mark as successful an unsuccessful application
     When the user clicks the button/link  jQuery=td:contains("Cleaning Product packaging") ~ td a:contains("Mark as successful")
     And the user clicks the button/link   css=.button[name="mark-as-successful"]  # I'm sure button
     Then the user should no longer see the application in the unsuccessful list but in Project Setup
-
 
 *** Keywords ***
 The user should be allowed to only reinstate Unsuccessful applications
