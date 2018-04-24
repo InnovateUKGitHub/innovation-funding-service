@@ -30,7 +30,7 @@ fi
 
 docker build -t innovateuk/finance-data-service-sync -f Dockerfile-financedataservicesync .
 
-docker run --entrypoint ./send-all-cost-totals.sh --name innovationfundingservice_finance-data-service-sync_1 --net innovationfundingservice_ifs -d innovateuk/finance-data-service-sync $dbhost $db $dbuser $dbpass $dbport $financedbhost $financedb $financedbuser $financedbpass $financedbport $datahost $dataport
+docker run --entrypoint ./send-all-cost-totals.sh --name innovationfundingservice_finance-data-service-sync_1 --net ifs -d innovateuk/finance-data-service-sync $dbhost $db $dbuser $dbpass $dbport $financedbhost $financedb $financedbuser $financedbpass $financedbport $datahost $dataport
 
 sleep 3
 
