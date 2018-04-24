@@ -142,10 +142,8 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
+    Then the user check for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
-    Then the user should see the element     jQuery=.column-quarter:contains("4") small:contains("Invited")
-    And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Accepted")
-    And the user should see the element      jQuery=.column-quarter:contains("0") small:contains("Declined")
 
 *** Keywords ***
 Custom Suite Setup
@@ -191,13 +189,21 @@ the Competition Admin should see the assigned applications in the View status ta
     the user should see the element       jQuery=td:contains("${computer_vision_application}")
 
 the user checks for Key Statistics for submitted application
-    the user should see the element    jQuery=div span:contains("6") ~ small:contains("Applications in competition")
+    ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span
+    the user should see the element    jQuery=div span:contains("${Application_in_comp}") ~ small:contains("Applications in competition")
     the user should see the element    jQuery=div span:contains("0") ~ small:contains("Assigned to interview panel")
     Get the total number of submitted applications
-    ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${Application_in_comp}
 
 the user checks for Key Statistics for assigned to interview panel
     ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span
     ${Application_sent}=  Get Text  css=div:nth-child(7) > div>:nth-child(1)
     Should Be Equal As Integers    ${Assigned_applications}   ${Application_sent}
+
+the user check for the key statistics for invite assessors
+    ${Invited}=  Get Text  css=div:nth-child(1) > div > span
+    ${Accepted}=  Get Text  css=div:nth-child(2) > div > span
+    ${Declined}=  Get Text  css=div:nth-child(3) > div > span
+    the user should see the element     jQuery=.column-quarter:contains("${invited}") small:contains("Invited")
+    the user should see the element      jQuery=.column-quarter:contains("${accepted}") small:contains("Accepted")
+    the user should see the element      jQuery=.column-quarter:contains("${Declined}") small:contains("Declined")
