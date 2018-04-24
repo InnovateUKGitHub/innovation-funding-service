@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.invite.resource.*;
@@ -8,10 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
+
+import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
 
 /**
  * Controller for managing application assignments to Interview Panels.
@@ -88,5 +94,31 @@ public class InterviewAssignmentController {
     @GetMapping("/is-assigned/{applicationId}")
     public RestResult<Boolean> isApplicationAssigned(@PathVariable long applicationId) {
         return interviewAssignmentService.isApplicationAssigned(applicationId).toGetResponse();
+    }
+
+    @PostMapping(value = "/feedback/{applicationId}", produces = "application/json")
+    public RestResult<Void> uploadFeedback(@RequestHeader(value = "Content-Type", required = false) String contentType,
+                                    @RequestHeader(value = "Content-Length", required = false) String contentLength,
+                                    @RequestParam(value = "filename", required = false) String originalFilename,
+                                    @PathVariable("applicationId") Long applicationId,
+                                    HttpServletRequest request)
+    {
+        return interviewAssignmentService.uploadFeedback(contentType, contentLength, originalFilename, applicationId, request).toPostCreateResponse();
+    }
+
+    @DeleteMapping(value = "/feedback/{applicationId}", produces = "application/json")
+    public RestResult<Void> deleteFile(@PathVariable("applicationId") Long applicationId) {
+        return interviewAssignmentService.deleteFeedback(applicationId).toDeleteResponse();
+    }
+
+    @GetMapping(value = "/feedback/{applicationId}", produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Object> downloadFile(@PathVariable("applicationId") Long applicationId) throws IOException {
+        return handleFileDownload(() -> interviewAssignmentService.downloadFeedback(applicationId));
+    }
+
+    @GetMapping(value = "/feedback-details/{applicationId}", produces = "application/json")
+    public RestResult<FileEntryResource> findFile(@PathVariable("applicationId") Long applicationId) throws IOException {
+        return interviewAssignmentService.findFeedback(applicationId).toGetResponse();
     }
 }

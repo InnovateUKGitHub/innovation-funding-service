@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteRowViewModel;
+import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteSendRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
@@ -59,12 +59,13 @@ public class InterviewAssignmentApplicationsSendModelPopulator {
         );
     }
 
-    private InterviewAssignmentApplicationInviteRowViewModel getRowViewModel(InterviewAssignmentStagedApplicationResource interviewAssignmentStagedApplicationResource) {
-        return new InterviewAssignmentApplicationInviteRowViewModel(
+    private InterviewAssignmentApplicationInviteSendRowViewModel getRowViewModel(InterviewAssignmentStagedApplicationResource interviewAssignmentStagedApplicationResource) {
+        return new InterviewAssignmentApplicationInviteSendRowViewModel(
                 interviewAssignmentStagedApplicationResource.getId(),
                 interviewAssignmentStagedApplicationResource.getApplicationId(),
                 interviewAssignmentStagedApplicationResource.getApplicationName(),
-                interviewAssignmentStagedApplicationResource.getLeadOrganisationName()
+                interviewAssignmentStagedApplicationResource.getLeadOrganisationName(),
+                interviewAssignmentStagedApplicationResource.getFilename()
         );
     }
 }

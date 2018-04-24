@@ -10,19 +10,23 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
@@ -78,6 +82,36 @@ public class InterviewApplicationSendInviteController {
             return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
                     .failNowOrSucceedWith(failureView, () -> redirectToStatusTab(competitionId));
         });
+    }
+
+    @PostMapping(value = "/send", params = {"applicationId"})
+    public String uploadFeedback(Model model,
+                              @PathVariable("competitionId") long competitionId,
+                              @RequestParam MultiValueMap<String, String> queryParams,
+                              @ModelAttribute("form") SendInviteForm form,
+                              BindingResult bindingResult,
+                              ValidationHandler validationHandler) {
+
+        Supplier<String> failureView = () -> {
+            model.addAttribute("applicationInError", form.getApplicationId());
+            return getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult);
+        };
+
+        MultipartFile file = form.getFeedback();
+        RestResult<Void> sendResult = interviewAssignmentRestService
+                    .uploadFeedback(form.getApplicationId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+
+        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
+                .failNowOrSucceedWith(failureView, () -> getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult));
+    }
+
+    @GetMapping("/send/view-feedback/{applicationId}")
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
+                                   @PathVariable("competitionId") long competitionId,
+                                   @PathVariable("applicationId") long applicationId) {
+
+        return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
+                interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
     }
 
     private String redirectToStatusTab(long competitionId) {

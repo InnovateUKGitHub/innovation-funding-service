@@ -101,3 +101,53 @@ include::{snippets}/interview-panel/get-key-statistics/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/get-key-statistics/curl-request.adoc[]
+
+=== Upload feedback
+==== Request
+include::{snippets}/interview-panel/upload-feedback/http-request.adoc[]
+include::{snippets}/interview-panel/upload-feedback/request-parameters.adoc[]
+include::{snippets}/interview-panel/upload-feedback/path-parameters.adoc[]
+include::{snippets}/interview-panel/upload-feedback/request-headers.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/upload-feedback/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/upload-feedback/curl-request.adoc[]
+
+=== Delete feedback
+==== Request
+include::{snippets}/interview-panel/delete-feedback/http-request.adoc[]
+include::{snippets}/interview-panel/delete-feedback/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/delete-feedback/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/delete-feedback/curl-request.adoc[]
+
+=== Download feedback
+==== Request
+include::{snippets}/interview-panel/download-feedback/http-request.adoc[]
+include::{snippets}/interview-panel/download-feedback/request-headers.adoc[]
+include::{snippets}/interview-panel/download-feedback/request-headers.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/download-feedback/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/download-feedback/curl-request.adoc[]
+
+=== Find feedback
+==== Request
+include::{snippets}/interview-panel/find-feedback/http-request.adoc[]
+include::{snippets}/interview-panel/find-feedback/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/find-feedback/http-response.adoc[]
+include::{snippets}/interview-panel/find-feedback/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/find-feedback/curl-request.adoc[]
+
+

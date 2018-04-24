@@ -1,16 +1,26 @@
 package org.innovateuk.ifs.assessment.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
@@ -22,8 +32,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -195,4 +204,61 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
         verify(interviewAssignmentServiceMock, only()).isApplicationAssigned(applicationId);
     }
 
+    @Test
+    public void testUploadFeedback() throws Exception {
+        final Long applicationId = 77L;
+        when(interviewAssignmentServiceMock.uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+                eq(applicationId), any(HttpServletRequest.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/feedback/{applicationId}", applicationId)
+                .param("filename", "randomFile.pdf")
+                .headers(createFileUploadHeader("application/pdf", 1234)))
+                .andExpect(status().isCreated());
+
+        verify(interviewAssignmentServiceMock).uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+                eq(applicationId), any(HttpServletRequest.class));
+    }
+
+    @Test
+    public void testDeleteFeedback() throws Exception {
+        final Long applicationId = 22L;
+        when(interviewAssignmentServiceMock.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/interview-panel/feedback/{applicationId}", applicationId))
+                .andExpect(status().isNoContent());
+
+        verify(interviewAssignmentServiceMock).deleteFeedback(applicationId);
+    }
+
+    @Test
+    public void testDownloadFeedback() throws Exception {
+        final Long applicationId = 22L;
+
+        Function<InterviewAssignmentService, ServiceResult<FileAndContents>> serviceCallToDownload =
+                (service) -> service.downloadFeedback(applicationId);
+
+        assertGetFileContents("/interview-panel/feedback/{applicationId}", new Object[]{applicationId},
+                emptyMap(), interviewAssignmentServiceMock, serviceCallToDownload);
+    }
+
+    @Test
+    public void testFindFeedback() throws Exception {
+        final Long applicationId = 22L;
+        FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
+        when(interviewAssignmentServiceMock.findFeedback(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
+
+        mockMvc.perform(get("/interview-panel/feedback-details/{applicationId}", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(fileEntryResource)));
+
+        verify(interviewAssignmentServiceMock).findFeedback(applicationId);
+    }
+
+    protected HttpHeaders createFileUploadHeader(String contentType, long contentLength) {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        headers.setContentLength(contentLength);
+        headers.setAccept(singletonList(MediaType.parseMediaType("application/json")));
+        return headers;
+    }
 }

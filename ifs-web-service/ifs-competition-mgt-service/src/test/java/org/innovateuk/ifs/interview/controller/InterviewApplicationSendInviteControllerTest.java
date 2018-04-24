@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsSendModelPopulator;
-import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteRowViewModel;
+import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteSendRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
@@ -17,12 +18,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -31,12 +35,9 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilde
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -72,22 +73,10 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     @Test
     public void getInvitesToSend() throws Exception {
         long competitionId = 1L;
-        int page = 0;
 
-        List<InterviewAssignmentStagedApplicationResource> interviewAssignmentStagedApplicationResources = setUpApplicationCreatedInviteResources();
-        InterviewAssignmentStagedApplicationPageResource invites = newInterviewAssignmentStagedApplicationPageResource()
-                .withContent(interviewAssignmentStagedApplicationResources)
-                .build();
-
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(interviewAssignmentRestService.getStagedApplications(competitionId, page)).thenReturn(restSuccess(invites));
-        when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Some content")));
-        when(interviewAssignmentRestService.getKeyStatistics(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
-
-        SendInviteForm expectedForm = new SendInviteForm();
-        expectedForm.setSubject("Please attend an interview for an Innovate UK funding competition");
-
+        InterviewAssignmentStagedApplicationPageResource invites = setupMocksForGet(competitionId);
         InterviewAssignmentApplicationsSendViewModel expectedViewModel = expectedViewModel(invites);
+        SendInviteForm expectedForm = expectedForm();
 
         mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/invite/send", competitionId))
                 .andExpect(status().isOk())
@@ -120,14 +109,58 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         verifyNoMoreInteractions(interviewAssignmentRestService);
     }
 
+    @Test
+    public void uploadFeedback() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 2L;
+
+        when(interviewAssignmentRestService.uploadFeedback(applicationId,"application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
+                .thenReturn(restFailure(new Error("", HttpStatus.NOT_FOUND)));
+
+        MockMultipartFile file = new MockMultipartFile("feedback", "testFile.pdf", "application/pdf", "My content!".getBytes());
+
+        setupMocksForGet(competitionId);
+
+        mockMvc.perform(
+                fileUpload("/assessment/interview/competition/{competitionId}/applications/invite/send", competitionId)
+                        .file(file)
+                        .param("applicationId", "2"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("applicationInError", 2L))
+                .andExpect(view().name("assessors/interview/application-send-invites"));
+
+        verify(interviewAssignmentRestService).uploadFeedback(applicationId,"application/pdf", 11, "testFile.pdf", "My content!".getBytes());
+    }
+
+    private InterviewAssignmentStagedApplicationPageResource setupMocksForGet(long competitionId) {
+        List<InterviewAssignmentStagedApplicationResource> interviewAssignmentStagedApplicationResources = setUpApplicationCreatedInviteResources();
+        InterviewAssignmentStagedApplicationPageResource invites = newInterviewAssignmentStagedApplicationPageResource()
+                .withContent(interviewAssignmentStagedApplicationResources)
+                .build();
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(interviewAssignmentRestService.getStagedApplications(competitionId, 0)).thenReturn(restSuccess(invites));
+        when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Some content")));
+        when(interviewAssignmentRestService.getKeyStatistics(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
+
+        return invites;
+
+    }
+
+    private SendInviteForm expectedForm() {
+        SendInviteForm expected = new SendInviteForm();
+        expected.setSubject("Please attend an interview for an Innovate UK funding competition");
+        return expected;
+    }
+
     private InterviewAssignmentApplicationsSendViewModel expectedViewModel(InterviewAssignmentStagedApplicationPageResource invites) {
         return new InterviewAssignmentApplicationsSendViewModel(competition.getId(), "Technology inspired",
                 "Transport Systems, Urban living",  "Infrastructure systems",
                 asList(
-                        new InterviewAssignmentApplicationInviteRowViewModel(1L, 3L,
-                                "App 1", "Org 1"),
-                        new InterviewAssignmentApplicationInviteRowViewModel(2L, 4L,
-                                "App 2", "Org 2")),
+                        new InterviewAssignmentApplicationInviteSendRowViewModel(1L, 3L,
+                                "App 1", "Org 1", "file1"),
+                        new InterviewAssignmentApplicationInviteSendRowViewModel(2L, 4L,
+                                "App 2", "Org 2", "file2")),
                 newInterviewAssignmentKeyStatisticsResource().build(),  new PaginationViewModel(invites, ""),
                 "?origin=INTERVIEW_PANEL_SEND", "Some content"
         );
@@ -139,6 +172,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                 .withApplicationId(3L, 4L)
                 .withApplicationName("App 1", "App 2")
                 .withLeadOrganisationName("Org 1", "Org 2")
+                .withFilename("file1", "file2")
                 .build(2);
     }
 }

@@ -5,9 +5,12 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
@@ -25,26 +28,30 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentMessageOutcomeBuilder.newInterviewAssignmentMessageOutcome;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -283,6 +290,67 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
                 simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState));
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void findFeedback() throws Exception {
+        Long applicationId = 1L;
+        FileEntry fileEntry = newFileEntry().build();
+        InterviewAssignment interviewAssignment = newInterviewAssignment().
+                withMessage(newInterviewAssignmentMessageOutcome()
+                        .withFeedback(fileEntry)
+                        .build()
+                ).build();
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+        when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
+        when(fileEntryServiceMock.findOne(fileEntry.getId())).thenReturn(serviceSuccess(fileEntryResource));
+
+        FileEntryResource response = service.findFeedback(applicationId).getSuccess();
+
+        assertEquals(fileEntryResource, response);
+    }
+
+    @Test
+    public void downloadFeedback() throws Exception {
+        final Long applicationId = 1L;
+        final long fileId = 2L;
+        final FileEntry fileEntry = new FileEntry(fileId, "somefile.pdf", MediaType.APPLICATION_PDF, 1111L);
+        InterviewAssignment interviewAssignment = newInterviewAssignment().
+                withMessage(newInterviewAssignmentMessageOutcome()
+                        .withFeedback(fileEntry)
+                        .build()
+                ).build();
+        FileEntryResource fileEntryResource = new FileEntryResource();
+        fileEntryResource.setId(fileId);
+
+        when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
+        when(fileEntryServiceMock.findOne(fileId)).thenReturn(serviceSuccess(fileEntryResource));
+        final Supplier<InputStream> contentSupplier = () -> null;
+        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(ServiceResult.serviceSuccess(contentSupplier));
+
+        FileAndContents fileAndContents = service.downloadFeedback(applicationId).getSuccess();
+
+        assertEquals(fileAndContents.getContentsSupplier(), contentSupplier);
+        assertEquals(fileAndContents.getFileEntry(), fileEntryResource);
+    }
+
+    @Test
+    public void deleteFeedback() throws Exception {
+        final Long applicationId = 1L;
+        final Long fileId = 101L;
+        final FileEntry fileEntry = new FileEntry(fileId, "somefile.pdf", MediaType.APPLICATION_PDF, 1111L);
+        InterviewAssignment interviewAssignment = newInterviewAssignment().
+                withMessage(newInterviewAssignmentMessageOutcome()
+                        .withFeedback(fileEntry)
+                        .build()
+                ).build();
+
+        when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
+        when(fileServiceMock.deleteFileIgnoreNotFound(fileId)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+
+        ServiceResult<Void> response = service.deleteFeedback(applicationId);
+
+        assertTrue(response.isSuccess());
     }
 
     private static InterviewAssignment interviewPanelLambdaMatcher(Application application) {

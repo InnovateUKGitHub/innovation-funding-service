@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class SendInviteForm implements BindingResultTarget {
     private String content;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
+    private MultipartFile feedback;
+    private Long applicationId;
 
     public String getSubject() {
         return subject;
@@ -35,6 +38,22 @@ public class SendInviteForm implements BindingResultTarget {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public MultipartFile getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(MultipartFile feedback) {
+        this.feedback = feedback;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     @Override

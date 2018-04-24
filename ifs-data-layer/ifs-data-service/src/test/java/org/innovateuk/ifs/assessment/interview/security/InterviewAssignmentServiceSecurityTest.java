@@ -93,4 +93,37 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
                 APPLICANT
         );
     }
+
+    @Test
+    public void uploadFeedback() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.uploadFeedback("", "", "", 1L, null),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void downloadFeedback() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.downloadFeedback(1L),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void deleteFeedback() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.deleteFeedback(1L),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void findFeedback() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.findFeedback(1L),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
 }
