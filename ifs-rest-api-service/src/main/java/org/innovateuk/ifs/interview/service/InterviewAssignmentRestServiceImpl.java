@@ -86,6 +86,15 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
+    public RestResult<Boolean> isAssignedToInterview(long applicationId) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "is-assigned", applicationId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), Boolean.class);
+    }
+
+    @Override
     public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
         return getWithRestResult(format("%s/%s/%s", REST_URL, "key-statistics", competitionId), InterviewAssignmentKeyStatisticsResource.class);
     }

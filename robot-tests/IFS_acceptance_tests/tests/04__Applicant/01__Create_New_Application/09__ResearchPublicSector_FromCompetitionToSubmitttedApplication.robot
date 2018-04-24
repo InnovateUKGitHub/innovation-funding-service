@@ -106,7 +106,7 @@ The competition admin creates a competition for
     the user fills in the Public content and publishes  ${extraKeyword}
     the user clicks the button/link   link=Return to setup overview
     the user clicks the button/link  jQuery=a:contains("Complete")
-    the user clicks the button/link  jQuery=a:contains("Done")
+    the user clicks the button/link  css=button[type="submit"]
     the user navigates to the page   ${CA_UpcomingComp}
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 

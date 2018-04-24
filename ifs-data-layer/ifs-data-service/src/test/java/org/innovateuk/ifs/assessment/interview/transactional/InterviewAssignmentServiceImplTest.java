@@ -29,12 +29,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -239,6 +242,18 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         assertTrue(result.isSuccess());
         verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
         verify(interviewAssignmentWorkflowHandler).notifyInterviewPanel(interviewAssignments.get(0), outcome);
+    }
+
+    @Test
+    public void isApplicationAssigned() {
+        long applicationId = 1L;
+        when(interviewAssignmentRepositoryMock.existsByTargetIdAndActivityStateStateIn(applicationId,
+                asList(AWAITING_FEEDBACK_RESPONSE.getBackingState(), SUBMITTED_FEEDBACK_RESPONSE.getBackingState())))
+                .thenReturn(true);
+
+        ServiceResult<Boolean> result = service.isApplicationAssigned(applicationId);
+
+        assertTrue(result.getSuccess());
     }
 
     @Test

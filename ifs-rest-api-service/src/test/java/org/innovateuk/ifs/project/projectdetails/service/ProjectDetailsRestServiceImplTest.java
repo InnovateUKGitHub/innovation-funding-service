@@ -27,11 +27,11 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
         long projectId = 3L;
         long durationInMonths = 18L;
 
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/update-duration/" + durationInMonths, null, OK);
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/duration/" + durationInMonths, null, OK);
         RestResult<Void> result = service.updateProjectDuration(projectId, durationInMonths);
         assertTrue(result.isSuccess());
 
-        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/update-duration/" + durationInMonths, Void.class, null);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/duration/" + durationInMonths, Void.class, null);
     }
 
     @Test

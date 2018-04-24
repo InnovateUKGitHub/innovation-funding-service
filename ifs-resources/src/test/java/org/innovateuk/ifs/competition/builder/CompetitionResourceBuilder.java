@@ -39,6 +39,14 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setResearchCategories(categories));
     }
 
+    public CompetitionResourceBuilder withMinProjectDuraction(Integer minProjectDuration) {
+        return with(competition -> competition.setMinProjectDuration(minProjectDuration));
+    }
+
+    public CompetitionResourceBuilder withMaxProjectDuraction(Integer maxProjectDuration) {
+        return with(competition -> competition.setMaxProjectDuration(maxProjectDuration));
+    }
+
     public CompetitionResourceBuilder withResubmission(Boolean resubmission) {
         return with(competition -> competition.setResubmission(resubmission));
     }

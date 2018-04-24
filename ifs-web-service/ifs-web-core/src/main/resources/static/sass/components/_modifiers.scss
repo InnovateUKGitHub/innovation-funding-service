@@ -126,6 +126,13 @@ table {
 
   table{
     max-width: 100%;
+
+    td {
+      &:first-child input,
+      &:first-child textarea {
+        margin-left: 3px;
+      }
+    }
   }
 }
 

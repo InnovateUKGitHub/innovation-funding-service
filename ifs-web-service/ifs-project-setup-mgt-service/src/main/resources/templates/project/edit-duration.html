@@ -30,7 +30,7 @@
     <dt>Start date</dt>
     <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
   </dl>
-  <form th:action="@{/competition/{competitionId}/project/{projectId}/update-duration(competitionId=${model.competitionId},projectId=${model.project.id})}"
+  <form th:action="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.competitionId},projectId=${model.project.id})}"
         th:object="${form}"
         method="post"
         novalidate="novalidate">

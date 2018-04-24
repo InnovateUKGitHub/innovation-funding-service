@@ -4,6 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
+import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
+
 public class BankDetailsReviewViewModel {
     private Long projectId;
     private Long applicationId;
@@ -24,7 +27,24 @@ public class BankDetailsReviewViewModel {
     private Boolean approved;
     private Boolean approvedManually;
 
-    public BankDetailsReviewViewModel(Long projectId, Long applicationId, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, Long organisationId, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
+    public BankDetailsReviewViewModel(Long projectId,
+                                      Long applicationId,
+                                      String projectName,
+                                      String financeContactName,
+                                      String financeContactEmail,
+                                      String financeContactPhoneNumber,
+                                      Long organisationId,
+                                      String organisationName,
+                                      String registrationNumber,
+                                      String bankAccountNumber,
+                                      String sortCode,
+                                      String organisationAddress,
+                                      Boolean verified,
+                                      Short companyNameScore,
+                                      Boolean registrationNumberMatched,
+                                      Short addressScore,
+                                      Boolean approved,
+                                      Boolean approvedManually) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -182,11 +202,11 @@ public class BankDetailsReviewViewModel {
     }
 
     public boolean getCompanyNameVerified(){
-        return companyNameScore > 6;
+        return companyNameScore > EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
     }
 
     public boolean getAddressScoreVerified(){
-        return addressScore > 6;
+        return addressScore > EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
     }
 
     public Long getApplicationId() {

@@ -1,18 +1,18 @@
 Email,First name,Last name,Status,Organisation name,Phone number,Disability,Ethnicity,Gender,Competition name,Hash,Invite Status,Rejection reason,Rejection comment,Skill areas,Business Type,Innovation Areas,Principal employer,Role,Professional affiliations,Appointments,Financial interests,Family affiliations,Family financial interests,Agreement signed
-worth.email.test+jeremy.alufson@gmail.com,Jeremy,Alufson,ACTIVE,,32317431918,No,Black British,Male,Home and industrial efficiency programme,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,FALSE
-paul.plum@gmail.com,Paul,Plum,ACTIVE,,54106122665,Yes,Asian/Asian British,Prefer not to say,Sustainable living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+worth.email.test+jeremy.alufson@gmail.com,Jeremy,Alufson,ACTIVE,,032317431918,No,Black British,Male,Home and industrial efficiency programme,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,FALSE
+paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Yes,Asian/Asian British,Prefer not to say,Sustainable living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
 Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE
-felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,94073497201,,,,Sustainable living models for the future,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
+felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,094073497201,,,,Sustainable living models for the future,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
 Assembly / disassembly / joining",,,,,,,,TRUE
 jo.peters@ntag.example.com,Josephine,Peters,ACTIVE,,,Prefer not to say,White,Female,Sustainable living models for the future,,OPENED,Not available,I do not have the time sorry,Automation process streamlining,ACADEMIC,Assembly / disassembly / joining,University of Northumbria,Doctor,,,,,,TRUE
-will.smith@gmail.com,Will,Smith,ACTIVE,,28572565937,No,Black British,Male,Photonics for health,,OPENED,,,Solar energy research,BUSINESS,"Energy systems
+will.smith@gmail.com,Will,Smith,ACTIVE,,028572565937,No,Black British,Male,Photonics for health,,OPENED,,,Solar energy research,BUSINESS,"Energy systems
 Nanotechnology / nanomaterials
 Precision medicine",Smith Systems,CTO,,,,,,TRUE
-laura.weaver@gmail.com,Laura,Weaver,ACTIVE,,47682659263,No,White,Female,Photonics for health,,OPENED,,,Renewable energy analysis,BUSINESS,Offshore wind,Solar Wind Engineering,CEO,,,,,,FALSE
-sarah.chung@gmail.com,Sarah,Chung,ACTIVE,,47682659263,No,Asian/Asian British,Female,Photonics for health,,OPENED,,,Materials Science in cutting edge technologies,ACADEMIC,"Nanotechnology / nanomaterials
+laura.weaver@gmail.com,Laura,Weaver,ACTIVE,,047682659263,No,White,Female,Photonics for health,,OPENED,,,Renewable energy analysis,BUSINESS,Offshore wind,Solar Wind Engineering,CEO,,,,,,FALSE
+sarah.chung@gmail.com,Sarah,Chung,ACTIVE,,047682659263,No,Asian/Asian British,Female,Photonics for health,,OPENED,,,Materials Science in cutting edge technologies,ACADEMIC,"Nanotechnology / nanomaterials
 Emerging technology",University of Leeds,Professor,,,I have shares in multiple companies such as Advanced Thermoblastics Ltd and Future Polymers Ltd,,,TRUE
-matt.roberts@gmail.com,Matt,Roberts,ACTIVE,,47682659263,No,White,Male,Photonics for health,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
-jimmy.benson@gmail.com,Jimmy,Benson,ACTIVE,,63898252575,No,White,Male,Photonics for health,,OPENED,,,,,Assembly / disassembly / joining,,,,,,,,TRUE
+matt.roberts@gmail.com,Matt,Roberts,ACTIVE,,047682659263,No,White,Male,Photonics for health,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
+jimmy.benson@gmail.com,Jimmy,Benson,ACTIVE,,063898252575,No,White,Male,Photonics for health,,OPENED,,,,,Assembly / disassembly / joining,,,,,,,,TRUE
 evan.griffiths@gmail.com,Evan,Griffiths,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Digital manufacturing,,,,,,,,TRUE
 brandon.harper@gmail.com,Brandon,Harper,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Urban living,,,,,,,,TRUE
 callum.austin@gmail.com,Callum,Austin,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Urban living,,,,,,,,TRUE
@@ -54,8 +54,8 @@ addison.shannon@gmail.com,Addison,Shannon,ACTIVE,,,No,,Female,Photonics for heal
 bret.alvarez@gmail.com,Bret,Alvarez,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Creative industries,,,,,,,,TRUE
 angel.witt@gmail.com,Angel,Witt,ACTIVE,,,No,,Female,Photonics for health,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
 elliot.gordon@gmail.com,Elliot,Gordon,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Assembly / disassembly / joining,,,,,,,,TRUE
-sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,47682659263,No,White,Female,Sustainable living models for the future,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE
-myra.cole@gmail.com,Myra,Cole,ACTIVE,,63898252575,No,White,Female,Sustainable living models for the future,,OPENED,,,,,Creative industries,,,,,,,,TRUE
+sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,047682659263,No,White,Female,Sustainable living models for the future,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE
+myra.cole@gmail.com,Myra,Cole,ACTIVE,,063898252575,No,White,Female,Sustainable living models for the future,,OPENED,,,,,Creative industries,,,,,,,,TRUE
 jenna.diaz@gmail.com,Jenna,Diaz,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Digital manufacturing,,,,,,,,TRUE
 dominic.watkins@gmail.com,Dominic,Watkins,ACTIVE,,,No,,Male,Sustainable living models for the future,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
 shaun.bradley@gmail.com,Shaun,Bradley,ACTIVE,,,No,,Male,Sustainable living models for the future,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
@@ -102,14 +102,14 @@ joel.george@gmail.com,Joel,George,ACTIVE,,,No,,Male,Machine learning for transpo
 benjamin.nixon@gmail.com,Benjamin,Nixon,ACTIVE,,,No,,Male,Machine learning for transport infrastructure,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
 paige.godfrey@gmail.com,Paige,Godfrey,ACTIVE,,,No,,Female,Machine learning for transport infrastructure,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
 riley.butler@gmail.com,Riley,Butler,ACTIVE,,,No,,Female,Machine learning for transport infrastructure,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE
-load-assessor1@load.test,Load,assessor,ACTIVE,,47682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
-load-assessor2@load.test,Load,assessor,ACTIVE,,47682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
-load-assessor3@load.test,Load,assessor,ACTIVE,,47682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
-load-assessor4@load.test,Load,assessor,ACTIVE,,47682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
-load-assessor5@load.test,Load,assessor,ACTIVE,,47682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
-paul.plum@gmail.com,Paul,Plum,ACTIVE,,54106122665,Yes,Asian/Asian British,Prefer not to say,Machine learning for transport infrastructure,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+load-assessor1@load.test,Load,assessor,ACTIVE,,047682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
+load-assessor2@load.test,Load,assessor,ACTIVE,,047682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
+load-assessor3@load.test,Load,assessor,ACTIVE,,047682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
+load-assessor4@load.test,Load,assessor,ACTIVE,,047682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
+load-assessor5@load.test,Load,assessor,ACTIVE,,047682659263,No,White,Male,Assessments of load capabilities,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
+paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Yes,Asian/Asian British,Prefer not to say,Machine learning for transport infrastructure,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
 Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE
-felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,94073497201,,,,Machine learning for transport infrastructure,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
+felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,094073497201,,,,Machine learning for transport infrastructure,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
 Assembly / disassembly / joining",,,,,,,,TRUE
 sally.zimmerman@gmail.com,Sally,Zimmerman,ACTIVE,,,No,,Female,Machine learning for transport infrastructure,,OPENED,,,,,Creative industries,,,,,,,,TRUE
 mabel.robinson@gmail.com,Mabel,Robinson,ACTIVE,,,No,,Female,Machine learning for transport infrastructure,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE
@@ -119,3 +119,11 @@ louise.yates@example.com,Louise,Yates,ACTIVE,,,No,,Female,Connected digital addi
 patrice.rene@example.com,Patrice,Rene,ACTIVE,,,No,,Male,Integrated delivery programme - low carbon vehicles,,OPENED,,,,,Digital manufacturing,,,,,,,,
 rita.friedemann@example.com,Rita,Friedemann,ACTIVE,,,No,,Female,Integrated delivery programme - low carbon vehicles,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,
 owain.awstin@example.com,Owain,Austin,ACTIVE,,,No,,Male,Integrated delivery programme - low carbon vehicles,,OPENED,,,,,Assembly / disassembly / joining,,,,,,,,
+eoi-assessor-user1@example.com,Klaus,Baudelaire,ACTIVE,,47682659263,No,White,Male,Expression of Interest: Assistive technologies for caregivers,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+Smart infrastructure",University of Bristol,Professor,,,,,,
+eoi-assessor-user2@example.com,Ron,Weasley,ACTIVE,,47682659263,No,White,Male,Expression of Interest: Assistive technologies for caregivers,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+Smart infrastructure",University of Bristol,Professor,,,,,,
+apc-assessor-user1@example.com,Raoul,de Chagny,ACTIVE,,47682659263,No,White,Male,Smart monitoring in high-pressure engineering systems,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+Smart infrastructure",University of Bristol,Professor,,,,,,
+apc-assessor-user2@example.com,Ethan,Taylor,ACTIVE,,47682659263,No,White,Male,Smart monitoring in high-pressure engineering systems,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+Smart infrastructure",University of Bristol,Professor,,,,,,

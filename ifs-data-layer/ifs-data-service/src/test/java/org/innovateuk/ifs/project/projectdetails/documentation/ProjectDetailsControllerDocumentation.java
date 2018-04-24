@@ -76,7 +76,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/update-duration/{durationInMonths}", projectId, durationInMonths)
+        mockMvc.perform(post("/project/{projectId}/duration/{durationInMonths}", projectId, durationInMonths)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())

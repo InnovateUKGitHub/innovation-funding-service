@@ -181,4 +181,18 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
         verify(interviewAssignmentServiceMock, only()).sendInvites(competitionId, sendResource);
     }
+
+    @Test
+    public void isApplicationAssigned() throws Exception {
+        long applicationId = 1L;
+        when(interviewAssignmentServiceMock.isApplicationAssigned(applicationId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/interview-panel/is-assigned/{applicationId}", applicationId)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+
+        verify(interviewAssignmentServiceMock, only()).isApplicationAssigned(applicationId);
+    }
+
 }

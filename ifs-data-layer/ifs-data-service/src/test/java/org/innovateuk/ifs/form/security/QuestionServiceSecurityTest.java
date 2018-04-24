@@ -21,7 +21,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing how the secured methods in QuestionService interact with Spring Security
+ * Testing how the secured methods in QuestionSetupCompetitionService interact with Spring Security
  */
 public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<QuestionService> {
 

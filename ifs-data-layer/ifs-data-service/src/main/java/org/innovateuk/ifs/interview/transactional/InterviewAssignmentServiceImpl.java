@@ -33,13 +33,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.INTERVIEW_PANEL_INVITE_ALREADY_CREATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -190,6 +192,13 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
         return result;
     }
 
+    @Override
+    public ServiceResult<Boolean> isApplicationAssigned(long applicationId) {
+        return serviceSuccess(interviewAssignmentRepository.existsByTargetIdAndActivityStateStateIn(applicationId,
+                asList(AWAITING_FEEDBACK_RESPONSE.getBackingState(),
+                        SUBMITTED_FEEDBACK_RESPONSE.getBackingState())));
+    }
+
     private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment, ActivityState awaitingFeedbackActivityState) {
         User user = assignment.getParticipant().getUser();
         NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
@@ -273,7 +282,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     }
 
     private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application, ActivityState createdActivityState) {
-        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateState(application.getId(), InterviewAssignmentState.CREATED.getBackingState())) {
+        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateStateIn(application.getId(), singletonList(InterviewAssignmentState.CREATED.getBackingState()))) {
             final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
             final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);
 

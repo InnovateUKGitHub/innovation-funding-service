@@ -1,6 +1,10 @@
 import com.bmuschko.gradle.docker.tasks.image.*
 import com.bmuschko.gradle.docker.DockerRegistryCredentials
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.container.extras.*
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
+
 
 buildscript {
     repositories {
@@ -8,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.6"
     }
 }
 
@@ -22,6 +26,35 @@ task tagDocker(type: DockerTagImage) {
     imageId = buildDocker.getTag()
     repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
+}
+
+task stop(type: DockerStopContainer) {
+    targetContainerId { createContainer.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task removeContainer(type: DockerRemoveContainer, dependsOn: stop) {
+    targetContainerId { createContainer.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createContainer(type: DockerCreateContainer, dependsOn: [buildDocker, removeContainer]) {
+    targetImageId { buildDocker.getImageId() }
+    containerName = "${project.name.replaceAll(/ifs-/, "")}"
+    containerId = "${project.name.replaceAll(/ifs-/, "")}"
+    network="ifs"
+}
+
+task deploy(type: DockerStartContainer, dependsOn: createContainer) {
+    targetContainerId { createContainer.getContainerId() }
+}
+
+task wait(type: DockerWaitHealthyContainer) {
+    targetContainerId { createContainer.getContainerId() }
 }
 
 task osStageRemote(type: DockerPushImage) {

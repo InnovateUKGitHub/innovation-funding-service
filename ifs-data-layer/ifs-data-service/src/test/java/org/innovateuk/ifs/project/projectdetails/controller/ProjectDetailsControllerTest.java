@@ -39,7 +39,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/" + projectId + "/update-duration/" + durationInMonths)
+        mockMvc.perform(post("/project/" + projectId + "/duration/" + durationInMonths)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());

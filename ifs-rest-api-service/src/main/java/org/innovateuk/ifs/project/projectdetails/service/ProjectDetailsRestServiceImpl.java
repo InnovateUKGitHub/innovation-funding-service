@@ -30,7 +30,7 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
 
     @Override
     public RestResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/update-duration/" + durationInMonths, Void.class);
+        return postWithRestResult(projectRestURL + "/" + projectId + "/duration/" + durationInMonths, Void.class);
     }
 
     @Override
