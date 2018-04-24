@@ -118,9 +118,11 @@ function startSeleniumGrid() {
 
     echo "=> Suite count: ${suiteCount}"
 
-    docker-compose up -d --force-recreate --build
-    sleep 2
-    docker-compose scale chrome=${suiteCount}
+    cd ${rootDir}
+
+    ./gradlew deployHub deployChrome
+
+    cd ${scriptDir}
 
     unset suiteCount
     if [[ ${quickTest} -eq 1 ]]
@@ -133,8 +135,8 @@ function startSeleniumGrid() {
 function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
-    cd ${scriptDir}
-    docker-compose down -v --remove-orphans
+    cd ${rootDir}
+    ./gradlew removeHub removeChrome removeSeleniumNetwork
 }
 
 function startPybot() {

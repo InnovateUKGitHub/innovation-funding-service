@@ -62,7 +62,7 @@ task createHub(type: DockerCreateContainer, dependsOn: [pullHub, removeHub]) {
     containerId = "hub"
     portBindings = ['4444:4444','3000:3000']
     network = "selenium-network"
-    networkAliases = ["ifs"]
+    networkAliases = ["hub"]
     env = ["GRID_BROWSER_TIMEOUT=90000", "GRID_TIMEOUT=100000"]
 }
 
@@ -96,7 +96,7 @@ task createChrome(type: DockerCreateContainer, dependsOn: [pullChrome, removeChr
     hostName = "chrome"
     containerName = "chrome"
     containerId = "chrome"
-    portSpecs = ['5900']
+    portBindings = ['5900:5900']
     network = "ifs"
     volumes = ["/dev/shm:/dev/shm"]
     env = ["NODE_MAX_SESSION=20",
@@ -110,6 +110,6 @@ task createChrome(type: DockerCreateContainer, dependsOn: [pullChrome, removeChr
     links = ["hub:hub"]
 }
 
-task deployChrome(type: DockerStartContainer, dependsOn: createHub) {
+task deployChrome(type: DockerStartContainer, dependsOn: createChrome) {
     targetContainerId { createChrome.getContainerId() }
 }
