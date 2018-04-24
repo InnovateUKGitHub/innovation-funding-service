@@ -82,6 +82,20 @@ include::{snippets}/project/set-project-manager/curl-request.adoc[]
 include::{snippets}/project/set-project-manager-but-invalid-project-manager/http-request.adoc[]
 
 
+=== Invite Project Manager
+==== Success case
+
+===== Request
+include::{snippets}/project/invite-project-manager/http-request.adoc[]
+include::{snippets}/project/invite-project-manager/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/invite-project-manager/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/invite-project-manager/curl-request.adoc[]
+
+
 === Update Finance Contact for Organisation
 ==== Success
 ===== Request
@@ -100,6 +114,18 @@ include::{snippets}/project/update-finance-contact-but-user-is-not-on-project-fo
 
 ===== User is not a Partner on the Project
 include::{snippets}/project/update-finance-contact-but-user-is-not-partner-on-project-for-organisation/http-response.adoc[]
+
+=== Invite Finance Contact for Organisation
+==== Success
+===== Request
+include::{snippets}/project/invite-finance-contact/http-request.adoc[]
+include::{snippets}/project/invite-finance-contact/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/invite-finance-contact/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/invite-finance-contact/curl-request.adoc[]
 
 === Update project location for a partner
 ==== Request

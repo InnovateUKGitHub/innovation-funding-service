@@ -198,7 +198,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
+                                parameterWithName("projectId").description("Id of project that the project manager is being invited to")
                         )
                 ));
     }
@@ -214,7 +214,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
+                                parameterWithName("projectId").description("Id of project that the finance contact is being invited to")
                         )
                 ));
     }
