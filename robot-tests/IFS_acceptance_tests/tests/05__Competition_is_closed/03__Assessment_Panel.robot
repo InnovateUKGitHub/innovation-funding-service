@@ -110,7 +110,6 @@ Assessor recieves the invite to panel
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
     Then the user should see the element      jQuery=.column-quarter:contains("3") small:contains("Invited")
-    And the user should see the element       jQuery=.column-quarter:contains("3") small:contains("Assessors on invite list")
     And the user reads his email              ${assessor_ben_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
     And the user reads his email              ${assessor_joel_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
 
@@ -168,7 +167,6 @@ Comp Admin can see the rejected and accepted invitation
     When the user clicks the button/link       link=Accepted
     Then the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Materials, process and manufacturing design technologies")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
-    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Assessors on invite list")
     When the user clicks the button/link       link=Pending and declined
     Then the user should not see the element   jQuery=td:contains("${assessor_ben}")
 
@@ -296,6 +294,7 @@ Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${today} =  get today short month
     set suite variable  ${today}
+    get the initial milestone value
 
 Custom Tear Down
     return back to original milestone  FUNDERS_PANEL  ${assessmentPanelDate}  ${CLOSED_COMPETITION}

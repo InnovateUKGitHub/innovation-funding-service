@@ -1,5 +1,6 @@
-src/main/resources/static/css/ie7.css
-src/main/resources/static/css/ie8.css
-src/main/resources/static/css/ie9.css
-src/main/resources/static/css/screen.css
+src/main/resources/static/css/*
 src/main/resources/static/js/dest/*
+src/main/resources/static/images/*
+!src/main/resources/static/images/ifs-images
+!src/main/resources/static/images/ifs-images/*
+.DS_Store

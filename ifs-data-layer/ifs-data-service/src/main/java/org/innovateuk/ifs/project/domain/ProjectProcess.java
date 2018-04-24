@@ -25,8 +25,8 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
-    // for ORM use
-    ProjectProcess() {
+    public ProjectProcess() {
+        // no-arg constructor
     }
 
     public ProjectProcess(ProjectUser participant, Project target, ActivityState originalState) {
