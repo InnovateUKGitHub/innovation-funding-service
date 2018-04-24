@@ -35,6 +35,9 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private AssessmentRejectOutcome rejection;
 
+    @Column(name="activity_state_id")
+    private AssessmentState activityState;
+
     public Assessment() {
         super();
     }
@@ -43,6 +46,11 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.participant = processRole;
         this.target = application;
         this.activityState = AssessmentState.CREATED;
+    }
+
+    @Override
+    public void setActivityState(AssessmentState status) {
+        this.activityState=status;
     }
 
     public AssessmentFundingDecisionOutcome getFundingDecision() {

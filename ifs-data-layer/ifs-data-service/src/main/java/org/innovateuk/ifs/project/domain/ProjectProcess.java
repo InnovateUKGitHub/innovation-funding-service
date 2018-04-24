@@ -1,15 +1,11 @@
 package org.innovateuk.ifs.project.domain;
 
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * The process for Project Setup
@@ -25,6 +21,9 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
+    @Column(name="activity_state_id")
+    private ProjectState activityState;
+
     ProjectProcess() {
     }
 
@@ -32,6 +31,11 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
         this.participant = participant;
         this.target = target;
         this.setActivityState(originalState);
+    }
+
+    @Override
+    public void setActivityState(ProjectState status) {
+        this.activityState = status;
     }
 
     @Override

@@ -31,8 +31,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.PrioritySorting;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -166,6 +164,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(0))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(0), EligibilityState.APPROVED));
         when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(1))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(1), EligibilityState.REVIEW));
+        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(2))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(2), EligibilityState.REVIEW));
 
         when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(0))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(0), ViabilityState.APPROVED));
         when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(1))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(1), ViabilityState.NOT_APPLICABLE));

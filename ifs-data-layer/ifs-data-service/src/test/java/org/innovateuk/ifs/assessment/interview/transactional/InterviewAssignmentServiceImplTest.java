@@ -16,9 +16,6 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.springframework.data.domain.Page;
@@ -62,8 +59,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
                                     .build()
                     )
                     .build(TOTAL_APPLICATIONS);
-    private static final ActivityState CREATED_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
-    private static final ActivityState PENDING_FEEDBACK_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.PENDING);
 
     @Override
     protected InterviewAssignmentServiceImpl supplyServiceUnderTest() {
@@ -149,9 +144,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
                 .withCompetitionId(COMPETITION_ID)
                 .build(TOTAL_APPLICATIONS);
 
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState())).thenReturn(CREATED_ACTIVITY_STATE);
-
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
             when(applicationRepositoryMock.findOne(expectedApplication.getId()))
                     .thenReturn(expectedApplication);
@@ -165,8 +157,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
 
         InOrder inOrder = inOrder(applicationRepositoryMock, activityStateRepositoryMock,
                 interviewAssignmentRepositoryMock);
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
 
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
             inOrder.verify(applicationRepositoryMock).findOne(expectedApplication.getId());
@@ -231,8 +221,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
 
         when(interviewAssignmentRepositoryMock.findByTargetCompetitionIdAndActivityState(
                 COMPETITION_ID, InterviewAssignmentState.CREATED)).thenReturn(interviewAssignments);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState())).thenReturn(PENDING_FEEDBACK_ACTIVITY_STATE);
         when(notificationSenderMock.sendNotification(any(Notification.class))).thenReturn(serviceSuccess(null));
 
         ServiceResult<Void> result = service.sendInvites(COMPETITION_ID, sendResource);

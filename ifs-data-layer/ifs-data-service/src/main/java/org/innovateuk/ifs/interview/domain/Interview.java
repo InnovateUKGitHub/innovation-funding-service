@@ -7,10 +7,7 @@ import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * An invitation for an assessor to interview an application's applicants on an interview panel.
@@ -26,6 +23,9 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
+    @Column(name="activity_state_id")
+    private InterviewState activityState;
+
     public Interview() {
         super();
     }
@@ -33,6 +33,11 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
     public Interview(Application application, ProcessRole processRole) {
         this.participant = processRole;
         this.target = application;
+    }
+
+    @Override
+    public void setActivityState(InterviewState status) {
+        this.activityState = status;
     }
 
     @Override

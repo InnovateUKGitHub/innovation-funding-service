@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.repository.ApplicationStateConverter;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
@@ -29,6 +29,7 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     private List<IneligibleOutcome> ineligibleOutcomes = new ArrayList<>();
 
 
+    @Convert(converter = ApplicationStateConverter.class)
     @Column(name="activity_state_id")
     private ApplicationState activityState;
 
@@ -39,6 +40,11 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
         this.target = target;
         this.participant = participant;
         this.setActivityState(initialState);
+    }
+
+    @Override
+    public void setActivityState(ApplicationState status) {
+        this.activityState = status;
     }
 
     @Override

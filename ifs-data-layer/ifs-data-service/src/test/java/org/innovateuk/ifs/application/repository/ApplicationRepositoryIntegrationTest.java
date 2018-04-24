@@ -67,8 +67,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByApplicationProcessActivityStateStateIn() {
-        List<Application> applicationList = simpleMap(EnumSet.complementOf(EnumSet.of(ApplicationState.IN_PANEL)),
-                this::createApplicationByState);
+        List<Application> applicationList = simpleMap(ApplicationState.values(), this::createApplicationByState);
 
         long initial = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates).count();
 

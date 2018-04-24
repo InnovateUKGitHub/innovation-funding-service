@@ -8,9 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -26,17 +23,13 @@ import static org.mockito.Mockito.*;
 
 public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandlerIntegrationTest<ApplicationWorkflowHandler, ApplicationProcessRepository, TestableTransitionWorkflowAction> {
 
-    private static final ActivityType activityType = ActivityType.APPLICATION;
-
     @Autowired
     private ApplicationWorkflowHandler applicationWorkflowHandler;
 
-    private ActivityStateRepository activityStateRepositoryMock;
     private ApplicationProcessRepository applicationProcessRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         applicationProcessRepositoryMock = (ApplicationProcessRepository) mockSupplier.apply(ApplicationProcessRepository.class);
     }
 
@@ -110,15 +103,11 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
         ApplicationProcess applicationProcess = application.getApplicationProcess();
         when(applicationProcessRepositoryMock.findOneByTargetId(application.getId())).thenReturn(applicationProcess);
 
-        ActivityState expectedActivityState = new ActivityState(activityType, expectedApplicationState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(activityType, expectedApplicationState.getBackingState())).thenReturn(expectedActivityState);
-
         assertTrue(workflowHandlerMethod.apply(application));
 
         assertEquals(expectedApplicationState, applicationProcess.getProcessState());
 
         verify(applicationProcessRepositoryMock, times(2)).findOneByTargetId(application.getId());
-        verify(activityStateRepositoryMock).findOneByActivityTypeAndState(activityType, expectedApplicationState.getBackingState());
         verify(applicationProcessRepositoryMock).save(applicationProcess);
 
         if (additionalVerifications != null) {

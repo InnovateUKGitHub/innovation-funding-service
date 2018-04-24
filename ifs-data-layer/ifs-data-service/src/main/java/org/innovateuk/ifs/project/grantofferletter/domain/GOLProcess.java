@@ -6,13 +6,9 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * The process of submitting and approving Grant Offer Letter for Projects
@@ -28,6 +24,9 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
+    @Column(name="activity_state_id")
+    private GrantOfferLetterState activityState;
+
     GOLProcess() {
     }
 
@@ -41,6 +40,11 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
         this.internalParticipant = internalParticipant;
         this.target = target;
         this.setActivityState(originalState);
+    }
+
+    @Override
+    public void setActivityState(GrantOfferLetterState status) {
+        this.activityState = status;
     }
 
     @Override

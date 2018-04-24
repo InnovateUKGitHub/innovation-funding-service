@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.workflow.repository;
+package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.util.IdentifiableEnumConverter;
@@ -13,4 +13,13 @@ public class ApplicationStateConverter extends IdentifiableEnumConverter<Applica
         super(ApplicationState.class);
     }
 
+    @Override
+    public Long convertToDatabaseColumn(ApplicationState attribute) {
+        return super.convertToDatabaseColumn(attribute);
+    }
+
+    @Override
+    public ApplicationState convertToEntityAttribute(Long dbData) {
+        return super.convertToEntityAttribute(dbData);
+    }
 }

@@ -404,12 +404,15 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     private List<Assessment> buildAssessments(User user, Application application, int numOfAssessmentsForEachState) {
-        return EnumSet.allOf(AssessmentState.class).stream().flatMap(activityState -> newAssessment()
-                .with(id(null))
-                .withApplication(application)
-                .withParticipant(setUpParticipants(user, application, numOfAssessmentsForEachState))
-                .withActivityState(activityState)
-                .build(numOfAssessmentsForEachState).stream()).collect(toList());
+        return EnumSet.allOf(AssessmentState.class)
+                .stream()
+                .filter(assessmentState -> assessmentState != DECIDE_IF_READY_TO_SUBMIT)  // TODO we don't think this is a persistable state?
+                .flatMap(activityState -> newAssessment()
+                        .with(id(null))
+                        .withApplication(application)
+                        .withParticipant(setUpParticipants(user, application, numOfAssessmentsForEachState))
+                        .withActivityState(activityState)
+                        .build(numOfAssessmentsForEachState).stream()).collect(toList());
     }
 
     private ProcessRole[] setUpParticipants(User user, Application application, int count) {

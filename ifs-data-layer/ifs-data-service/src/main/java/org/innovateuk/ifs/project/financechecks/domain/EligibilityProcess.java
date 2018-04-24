@@ -6,13 +6,9 @@ import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * The process of approving Eligibility for Organisations
@@ -28,6 +24,9 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private PartnerOrganisation target;
 
+    @Column(name="activity_state_id")
+    private EligibilityState activityState;
+
     EligibilityProcess() {
     }
 
@@ -41,6 +40,11 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
         this.internalParticipant = internalParticipant;
         this.target = target;
         this.setActivityState(originalState);
+    }
+
+    @Override
+    public void setActivityState(EligibilityState status) {
+        this.activityState = status;
     }
 
     @Override

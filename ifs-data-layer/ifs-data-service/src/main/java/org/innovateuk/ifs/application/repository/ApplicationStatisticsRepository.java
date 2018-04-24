@@ -73,10 +73,10 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  user.id, " +
             "  concat(user.firstName, ' ', user.lastName), " +
             "  profile.skillsAreas, " +
-            "  sum(case when assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // total assigned
-            "  sum(case when assessmentParticipant.competition.id = :compId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
-            "  sum(case when assessmentParticipant.competition.id = :compId AND assessment.activityState NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
-            "  sum(case when assessmentParticipant.competition.id = :compId AND assessment.activityState     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
+            "  sum(case when application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // total assigned
+            "  sum(case when application.id IS NOT NULL AND assessmentParticipant.competition.id = :compId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
+            "  sum(case when application.id IS NOT NULL AND assessmentParticipant.competition.id = :compId AND assessment.activityState NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
+            "  sum(case when application.id IS NOT NULL AND assessmentParticipant.competition.id = :compId AND assessment.activityState     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
             ") " +
             "FROM User user " +
             "JOIN AssessmentParticipant assessmentParticipant ON assessmentParticipant.user.id = user.id " +
@@ -85,7 +85,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id " +
             "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id " +
             "LEFT JOIN Application application ON assessment.target.id = application.id AND application.competition.id = assessmentParticipant.competition.id  " +
-//            "LEFT JOIN ActivityState activityState ON application.id IS NOT NULL AND assessment.activityState.id = activityState.id " +
             "WHERE " +
             "  assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  assessmentParticipant.role = 'ASSESSOR' AND " +

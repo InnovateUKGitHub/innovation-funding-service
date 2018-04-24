@@ -3,7 +3,6 @@ package org.innovateuk.ifs.review.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.review.domain.ReviewParticipant;
@@ -32,9 +31,6 @@ import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -67,7 +63,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
@@ -104,7 +99,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
-    private Role assessorRole;
 
     @Mock
     private AvailableAssessorMapper availableAssessorMapperMock;
@@ -981,17 +975,14 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         when(reviewParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(reviewParticipant);
         when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED)).thenReturn(emptyList());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
-                .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
 
         service.acceptInvite(openedInviteHash).getSuccess();
 
         assertEquals(ParticipantStatus.ACCEPTED, reviewParticipant.getStatus());
 
-        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock);
+        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(openedInviteHash);
         inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1005,21 +996,17 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withCompetition(competition)
                 .build();
         List<Application> applicationsOnPanel = newApplication().build(2);
-        State expectedAssessmentReviewState = State.PENDING;
 
         when(reviewParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(reviewParticipant);
         when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED)).thenReturn(applicationsOnPanel);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
-                .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState));
 
         service.acceptInvite(openedInviteHash).getSuccess();
 
         assertEquals(ParticipantStatus.ACCEPTED, reviewParticipant.getStatus());
 
-        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock, reviewRepositoryMock);
+        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock, reviewRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(openedInviteHash);
         inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState);
         inOrder.verify(reviewRepositoryMock, times(2)).save(any(Review.class));
 
         inOrder.verifyNoMoreInteractions();
@@ -1029,15 +1016,6 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         assertNull(assessorInviteOverviewResource.getId());
         assertNull(assessorInviteOverviewResource.getBusinessType());
         assertFalse(assessorInviteOverviewResource.isCompliant());
-    }
-
-    private AssessmentInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
-        return newAssessmentInvite()
-                .withCompetition(competition)
-                .withHash(Invite.generateInviteHash())
-                .withStatus(status)
-                .withInnovationArea(innovationArea)
-                .build();
     }
 
     private ReviewInvite setUpAssessmentPanelInvite(Competition competition, InviteStatus status) {

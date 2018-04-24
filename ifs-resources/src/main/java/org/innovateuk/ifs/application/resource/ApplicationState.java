@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import org.innovateuk.ifs.util.enums.Identifiable;
+import org.innovateuk.ifs.util.enums.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -10,17 +10,16 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public enum ApplicationState implements ProcessState, Identifiable {
-    // TODO ids are probably wrong
+public enum ApplicationState implements ProcessState, IdentifiableEnum<ApplicationState> {
 
     CREATED(27, State.CREATED), // initial state
-    SUBMITTED(28,State.SUBMITTED),
-    INELIGIBLE(29, State.NOT_APPLICABLE),
-    INELIGIBLE_INFORMED(30, State.NOT_APPLICABLE_INFORMED),
-    APPROVED(31, State.ACCEPTED),
-    REJECTED(32, State.REJECTED),
-    OPEN(33, State.OPEN),
-    IN_PANEL(34, State.IN_PANEL);
+    OPEN(28, State.OPEN),
+    SUBMITTED(29,State.SUBMITTED),
+    INELIGIBLE(30, State.NOT_APPLICABLE),
+    INELIGIBLE_INFORMED(31, State.NOT_APPLICABLE_INFORMED),
+    APPROVED(32, State.ACCEPTED),
+    REJECTED(33, State.REJECTED);
+//    IN_PANEL(34, State.IN_PANEL);
 
     final long id;
     final State backingState;
@@ -62,6 +61,7 @@ public enum ApplicationState implements ProcessState, Identifiable {
         return backingState;
     }
 
+    @Override
     public long getId() {
         return id;
     }

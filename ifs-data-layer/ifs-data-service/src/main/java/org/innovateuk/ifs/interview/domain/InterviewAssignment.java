@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
@@ -33,7 +32,15 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private InterviewAssignmentResponseOutcome response;
 
+    @Column(name="activity_state_id")
+    private InterviewAssignmentState activityState;
+
     public InterviewAssignment() {
+    }
+
+    @Override
+    public void setActivityState(InterviewAssignmentState status) {
+        this.activityState = status;
     }
 
     public InterviewAssignment(Application application, ProcessRole participant) {

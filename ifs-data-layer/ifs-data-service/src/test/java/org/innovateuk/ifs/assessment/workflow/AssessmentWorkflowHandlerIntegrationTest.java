@@ -9,8 +9,6 @@ import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -32,7 +30,6 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValu
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,13 +40,11 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
-    private ActivityStateRepository activityStateRepositoryMock;
     private AssessmentRepository assessmentRepositoryMock;
     private ProcessRoleRepository processRoleRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         assessmentRepositoryMock = (AssessmentRepository) mockSupplier.apply(AssessmentRepository.class);
         processRoleRepositoryMock = (ProcessRoleRepository) mockSupplier.apply(ProcessRoleRepository.class);
     }
@@ -277,15 +272,11 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     private void assertWorkflowStateChange(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentState expectedState, Consumer<Assessment> additionalVerifications) {
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedState.getBackingState()))
-                .thenReturn(new ActivityState(APPLICATION_ASSESSMENT, expectedState.getBackingState()));
-
         Assessment assessment = assessmentSupplier.get();
 
         // now call the method under test
         assertTrue(handlerMethod.apply(assessment));
 
-        verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedState.getBackingState());
         verify(assessmentRepositoryMock).save(createAssessmentExpectations(assessment, expectedState));
 
         if (additionalVerifications != null) {

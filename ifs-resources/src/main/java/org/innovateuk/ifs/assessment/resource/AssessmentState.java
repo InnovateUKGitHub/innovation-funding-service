@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.resource;
 
+import org.innovateuk.ifs.util.enums.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -10,19 +11,21 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
-public enum AssessmentState implements ProcessState {
-    // All types of status
-    CREATED(State.CREATED),
-    PENDING(State.PENDING),
-    WITHDRAWN(State.WITHDRAWN),
-    REJECTED(State.REJECTED),
-    ACCEPTED(State.ACCEPTED),
-    OPEN(State.OPEN),
-    DECIDE_IF_READY_TO_SUBMIT(State.DECIDE_IF_READY_TO_SUBMIT),
-    READY_TO_SUBMIT(State.READY_TO_SUBMIT),
-    SUBMITTED(State.SUBMITTED);
+public enum AssessmentState implements ProcessState, IdentifiableEnum<AssessmentState> {
+    PENDING(State.PENDING, 1),
+    OPEN(State.OPEN, 2),
+    REJECTED(State.REJECTED, 3),
+    READY_TO_SUBMIT(State.READY_TO_SUBMIT, 4),
+    SUBMITTED(State.SUBMITTED, 5),
+    ACCEPTED(State.ACCEPTED, 12),
+    CREATED(State.CREATED, 19),
+    WITHDRAWN(State.WITHDRAWN, 20),
+
+    DECIDE_IF_READY_TO_SUBMIT(State.DECIDE_IF_READY_TO_SUBMIT, -1); // pseudo state?
 
     private State backingState;
+
+    private final long id;
 
     private static final Map<String, AssessmentState> assessmentStatesMap;
 
@@ -35,8 +38,9 @@ public enum AssessmentState implements ProcessState {
     }
 
     // creates the enum with the chosen type.
-    AssessmentState(State backingState) {
+    AssessmentState(State backingState, long id) {
         this.backingState = backingState;
+        this.id = id;
     }
 
     @Override
@@ -67,5 +71,10 @@ public enum AssessmentState implements ProcessState {
 
     public static Set<State> getBackingStates(List<AssessmentState> states) {
         return simpleMapSet(states, AssessmentState::getBackingState);
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 }

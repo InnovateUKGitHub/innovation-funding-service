@@ -27,6 +27,9 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private ReviewRejectOutcome rejection;
 
+    @Column(name="activity_state_id")
+    private ReviewState activityState;
+
     public Review() {
         super();
     }
@@ -43,6 +46,11 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
         }
         this.participant = processRole;
         this.target = application;
+    }
+
+    @Override
+    public void setActivityState(ReviewState status) {
+        this.activityState = status;
     }
 
     public ReviewRejectOutcome getRejection() {

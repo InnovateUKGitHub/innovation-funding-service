@@ -3,13 +3,9 @@ package org.innovateuk.ifs.project.projectdetails.domain;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class ProjectDetailsProcess extends Process<ProjectUser, Project, ProjectDetailsState> {
@@ -22,6 +18,9 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
+    @Column(name="activity_state_id")
+    private ProjectDetailsState activityState;
+
     ProjectDetailsProcess() {
     }
 
@@ -29,6 +28,11 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
         this.participant = participant;
         this.target = target;
         this.setActivityState(originalState);
+    }
+
+    @Override
+    public void setActivityState(ProjectDetailsState status) {
+        this.activityState = status;
     }
 
     @Override

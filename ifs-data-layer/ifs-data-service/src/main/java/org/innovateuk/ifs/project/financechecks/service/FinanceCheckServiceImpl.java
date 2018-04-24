@@ -504,6 +504,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(eligibilityResource);
     }
 
+    // TODO remove this + the Eligibility enum
     private Eligibility convertEligibilityState(EligibilityState eligibilityState) {
 
         Eligibility eligibility;

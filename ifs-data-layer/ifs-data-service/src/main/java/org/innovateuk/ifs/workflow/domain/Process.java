@@ -2,7 +2,6 @@ package org.innovateuk.ifs.workflow.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -26,9 +25,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private Long id;
     private String event;
 
-    @Column(name = "activity_state_id")
-    protected StatesType activityState;
-
     @LastModifiedDate
     private ZonedDateTime lastModified = ZonedDateTime.now();
 
@@ -51,7 +47,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
 
     protected Process(String event, StatesType activityState) {
         this.event = event;
-//        this.activityState = activityState;
+        setActivityState(activityState);
     }
 
     public Process(String event, StatesType activityState, LocalDate startDate, LocalDate endDate) {
@@ -92,10 +88,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return id;
     }
 
-    public void setActivityState(StatesType status) {
-        this.activityState = status;
-    }
-
+    public abstract void setActivityState(StatesType status);
 
     public String getProcessEvent() {
         return event;
@@ -125,10 +118,9 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         this.internalParticipant = internalParticipant;
     }
 
-    public boolean isInState(StatesType state) {
-        return state == activityState;
+    public final boolean isInState(StatesType state) {
+        return getProcessState() == state;
     }
-
 
     public abstract StatesType getProcessState();
 
