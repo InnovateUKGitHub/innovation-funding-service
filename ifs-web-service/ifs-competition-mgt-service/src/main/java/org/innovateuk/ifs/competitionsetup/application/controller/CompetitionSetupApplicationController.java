@@ -1,5 +1,5 @@
 
-package org.innovateuk.ifs.competitionsetup;
+package org.innovateuk.ifs.competitionsetup.application.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

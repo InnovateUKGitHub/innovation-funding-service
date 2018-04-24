@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup;
+package org.innovateuk.ifs.competitionsetup.initialdetail.controller;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;

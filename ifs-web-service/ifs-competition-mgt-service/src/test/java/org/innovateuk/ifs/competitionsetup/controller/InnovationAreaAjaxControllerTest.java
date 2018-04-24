@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competitionsetup.CompetitionSetupController;
-import org.innovateuk.ifs.competitionsetup.InnovationAreaAjaxController;
+import org.innovateuk.ifs.competitionsetup.initialdetail.controller.InnovationAreaAjaxController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

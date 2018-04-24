@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.CompetitionSetupApplicationController;
+import org.innovateuk.ifs.competitionsetup.application.controller.CompetitionSetupApplicationController;
 import org.innovateuk.ifs.competitionsetup.CompetitionSetupController;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationDetailsForm;

@@ -47,7 +47,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.competitionsetup.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
+import static org.innovateuk.ifs.competitionsetup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
