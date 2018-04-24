@@ -962,19 +962,19 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .build(2);
 
         when(assessmentInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
-        when(competitionParticipantRepositoryMock.getByInviteHash(invites.get(0).getHash())).thenReturn(assessmentParticipants.get(0));
-        when(competitionParticipantRepositoryMock.getByInviteHash(invites.get(1).getHash())).thenReturn(assessmentParticipants.get(1));
+        when(assessmentParticipantRepositoryMock.getByInviteHash(invites.get(0).getHash())).thenReturn(assessmentParticipants.get(0));
+        when(assessmentParticipantRepositoryMock.getByInviteHash(invites.get(1).getHash())).thenReturn(assessmentParticipants.get(1));
         when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
         when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
 
         ServiceResult<Void> serviceResult = service.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByIdIn(inviteIds);
-        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash(invites.get(0).getHash());
+        inOrder.verify(assessmentParticipantRepositoryMock).getByInviteHash(invites.get(0).getHash());
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
-        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash(invites.get(1).getHash());
+        inOrder.verify(assessmentParticipantRepositoryMock).getByInviteHash(invites.get(1).getHash());
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
         inOrder.verifyNoMoreInteractions();
     }

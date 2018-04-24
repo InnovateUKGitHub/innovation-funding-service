@@ -21,6 +21,8 @@ IFS.competitionManagement.multipageSelect = (function () {
       var multipageAjaxCall = jQuery.when({})
 
       jQuery('body').on('change', s.multipageCheckboxEl, function () {
+        jQuery(this).prop('disabled', 'disabled')
+        jQuery(s.submitEl).prop('disabled', 'disabled')
         multipageAjaxCall = multipageAjaxCall.then(IFS.competitionManagement.multipageSelect.processMultipageCheckbox(this))
       })
     },
@@ -41,6 +43,9 @@ IFS.competitionManagement.multipageSelect = (function () {
         var data = IFS.competitionManagement.multipageSelect.getData(checked, value, isSelectAll)
         var url = window.location.href
 
+        checkbox.prop('disabled', 'disabled')
+        jQuery(s.submitEl).prop('disabled', 'disabled')
+
         jQuery.ajaxProtected({
           type: 'POST',
           url: url,
@@ -48,6 +53,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           dataType: 'json',
           timeout: IFS.core.autoSave.settings.ajaxTimeOut
         }).done(function (result) {
+          checkbox.removeProp('disabled')
           if (isSelectAll) {
             IFS.competitionManagement.multipageSelect.changeAllCheckboxStates(checked)
           }
@@ -68,7 +74,6 @@ IFS.competitionManagement.multipageSelect = (function () {
         }).always(function () {
           defer.resolve()
         })
-
         return defer.promise()
       }
     },
