@@ -579,9 +579,9 @@
     <div class="modal-withdraw-project" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Withdraw project from competition</h2>
-        <p>Are you sure you want to withdraw the project '<th:block th:text="${model.project.name}"></th:block>' from the competition?</p>
+        <p>Are you sure you want to withdraw the project '<th:block th:text="${model.project.name}"></th:block>' from the competition '<th:block th:text="${model.competitionName}"></th:block>'&quest;</p>
         <p>The project will be marked as withdrawn and removed from project setup. You can still view the application in
-            previous competitions</p>
+            previous competitions.</p>
         <hr />
         <form th:action="@{/competition/{competitionId}/project/{projectId}/withdraw(competitionId=${model.competitionId},projectId=${model.project.id})}" method="post">
             <div>

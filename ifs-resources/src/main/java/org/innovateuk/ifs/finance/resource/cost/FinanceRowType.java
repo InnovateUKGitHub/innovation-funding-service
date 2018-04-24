@@ -82,7 +82,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return name;
     }
 
-    public static Optional<FinanceRowType> getByTypeName(String typeName) {
-        return asList(FinanceRowType.values()).stream().filter(frt -> frt.getType().equals(typeName)).findFirst();
+    public static Optional<FinanceRowType> getByName(String name) {
+        return asList(FinanceRowType.values()).stream().filter(frt -> frt.getName().equals(name)).findFirst();
     }
 }

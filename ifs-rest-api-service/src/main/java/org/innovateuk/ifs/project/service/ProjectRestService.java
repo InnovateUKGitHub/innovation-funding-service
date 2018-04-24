@@ -18,7 +18,7 @@ public interface ProjectRestService {
 
     RestResult<ProjectResource> getByApplicationId(Long applicationId);
 
-    RestResult<Void> withdrawProject(Long projectId);
+    RestResult<Void> withdrawProject(long projectId);
 
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 

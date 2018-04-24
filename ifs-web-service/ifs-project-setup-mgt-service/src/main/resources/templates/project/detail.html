@@ -90,6 +90,14 @@
                     </th:block>
                 </td>
             </tr>
+<<<<<<<<< Temporary merge branch 1
+        </tbody>
+    </table>
+        <!--<th:block th:if="${model.ifs_administrator}">-->
+            <a data-js-modal="modal-withdraw-project" class="buttonlink extra-margin">Withdraw project</a>
+                <th:block th:insert="fragments/modals :: modal-withdraw-project" />
+        <!--</th:block>-->
+=========
             </tbody>
         </table>
     </th:block>
@@ -109,23 +117,24 @@
             <tbody>
                 <tr th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
 
-                <td>
-                    <th:block th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></th:block>
-                    <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
-                </td>
-                <td>
-                  <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
-                  <th:block th:if="${organisationFinanceContact.value == null}">
-                        Not yet completed
-                  </th:block>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-        <!--<th:block th:if="${model.ifs_administrator}">-->
+                    <td>
+                        <th:block th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></th:block>
+                        <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
+                    </td>
+                    <td>
+                      <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
+                      <th:block th:if="${organisationFinanceContact.value == null}">
+                            Not yet completed
+                      </th:block>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+        <th:block th:if="${model.showWithdrawLink}">
             <a data-js-modal="modal-withdraw-project" class="buttonlink extra-margin">Withdraw project</a>
                 <th:block th:insert="fragments/modals :: modal-withdraw-project" />
-        <!--</th:block>-->
+        </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
