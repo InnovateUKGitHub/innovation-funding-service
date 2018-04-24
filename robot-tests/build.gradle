@@ -1,0 +1,115 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.container.extras.*
+import com.bmuschko.gradle.docker.tasks.network.*
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
+
+
+buildscript {
+
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.6"
+    }
+
+}
+
+
+repositories {
+    jcenter()
+}
+
+task removeSeleniumNetwork(type: DockerRemoveNetwork) {
+    networkId = "selenium-network"
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createSeleniumNetwork(type: DockerCreateNetwork, dependsOn: removeSeleniumNetwork) {
+    networkId = "selenium-network"
+}
+
+task pullHub(type: Exec) {
+    doFirst {
+        commandLine 'docker', 'pull', 'selenium/hub:3.0.1-dysprosium'
+    }
+}
+
+task stopHub(type: DockerStopContainer) {
+    targetContainerId { createHub.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task removeHub(type: DockerRemoveContainer, dependsOn: stopHub) {
+    targetContainerId { createHub.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createHub(type: DockerCreateContainer, dependsOn: [pullHub, removeHub]) {
+    imageId = "selenium/hub:3.0.1-dysprosium"
+    hostName = "hub"
+    containerName = "hub"
+    containerId = "hub"
+    portBindings = ['4444:4444','3000:3000']
+    network = "selenium-network"
+    networkAliases = ["ifs"]
+    env = ["GRID_BROWSER_TIMEOUT=90000", "GRID_TIMEOUT=100000"]
+}
+
+task deployHub(type: DockerStartContainer, dependsOn: [createHub, createSeleniumNetwork]) {
+    targetContainerId { createHub.getContainerId() }
+}
+
+
+task pullChrome(type: Exec) {
+    doFirst {
+        commandLine 'docker', 'pull', 'davidrums/node-chrome-debug-proxy:3.0.1-dysprosium'
+    }
+}
+
+task stopChrome(type: DockerStopContainer) {
+    targetContainerId { createChrome.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task removeChrome(type: DockerRemoveContainer, dependsOn: stopChrome) {
+    targetContainerId { createChrome.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createChrome(type: DockerCreateContainer, dependsOn: [pullChrome, removeChrome, createHub]) {
+    imageId = "davidrums/node-chrome-debug-proxy:3.0.1-dysprosium"
+    hostName = "chrome"
+    containerName = "chrome"
+    containerId = "chrome"
+    portSpecs = ['5900']
+    network = "ifs"
+    volumes = ["/dev/shm:/dev/shm"]
+    env = ["NODE_MAX_SESSION=20",
+           "NODE_MAX_INSTANCES=20",
+           "NODE_REGISTER_CYCLE=600",
+           "HUB_PORT_4444_TCP_ADDR=hub",
+           "HUB_PORT_4444_TCP_PORT=4444",
+           "DBUS_SESSION_BUS_ADDRESS=/dev/null",
+           "no_proxy=localhost",
+           "HUB_ENV_no_proxy=localhost"]
+    links = ["hub:hub"]
+}
+
+task deployChrome(type: DockerStartContainer, dependsOn: createHub) {
+    targetContainerId { createChrome.getContainerId() }
+}
