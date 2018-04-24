@@ -149,5 +149,3 @@ include::{snippets}/interview-panel/find-feedback/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/find-feedback/curl-request.adoc[]
-
-

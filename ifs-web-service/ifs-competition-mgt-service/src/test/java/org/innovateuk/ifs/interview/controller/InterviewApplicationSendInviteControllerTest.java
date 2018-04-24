@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsSendModelPopulator;
+import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteSendRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
@@ -48,7 +48,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
     @Spy
     @InjectMocks
-    private InterviewAssignmentApplicationsSendModelPopulator interviewAssignmentApplicationsSendModelPopulator;
+    private InterviewApplicationsSendModelPopulator interviewApplicationsSendModelPopulator;
 
     @Override
     protected InterviewApplicationSendInviteController supplyControllerUnderTest() {
@@ -141,10 +141,8 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(interviewAssignmentRestService.getStagedApplications(competitionId, 0)).thenReturn(restSuccess(invites));
         when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Some content")));
-        when(interviewAssignmentRestService.getKeyStatistics(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
-
+        when(competitionKeyStatisticsRestService.getInterviewKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
         return invites;
-
     }
 
     private SendInviteForm expectedForm() {

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,11 +63,6 @@ public class InterviewAssignmentController {
     @PostMapping("/assign-applications")
     public RestResult<Void> assignApplications(@Valid @RequestBody StagedApplicationListResource stagedApplicationListResource) {
         return interviewAssignmentService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
-    }
-
-    @GetMapping("key-statistics/{competitionId}")
-    public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(@PathVariable long competitionId) {
-        return interviewAssignmentService.getKeyStatistics(competitionId).toGetResponse();
     }
 
     @PostMapping("/unstage-application/{applicationId}")

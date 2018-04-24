@@ -38,8 +38,6 @@ import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageRe
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentKeyStatisticsResourceDocs.interviewAssignmentKeyStatisticsResourceFields;
-import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -267,22 +265,6 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                 ));
 
         verify(interviewAssignmentServiceMock, only()).isApplicationAssigned(applicationId);
-    }
-
-    @Test
-    public void getKeyStatistics() throws Exception {
-        when(interviewAssignmentServiceMock.getKeyStatistics(competitionId)).thenReturn(serviceSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
-
-        mockMvc.perform(get("/interview-panel/key-statistics/{competitionId}", competitionId))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        responseFields(interviewAssignmentKeyStatisticsResourceFields)
-                ));
-
-        verify(interviewAssignmentServiceMock, only()).getKeyStatistics(competitionId);
     }
 
     @Test

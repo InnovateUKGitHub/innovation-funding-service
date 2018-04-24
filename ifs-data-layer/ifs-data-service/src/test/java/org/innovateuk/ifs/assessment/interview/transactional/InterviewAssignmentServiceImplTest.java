@@ -52,6 +52,8 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

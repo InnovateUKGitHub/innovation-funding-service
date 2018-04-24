@@ -35,9 +35,6 @@ public interface InterviewAssignmentRestService {
 
     RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId);
 
-
-
-
     RestResult<Void> uploadFeedback(long applicationId, String contentType, long size, String originalFilename, byte[] multipartFileBytes);
 
     RestResult<Void> deleteFeedback(long applicationId);
@@ -45,6 +42,4 @@ public interface InterviewAssignmentRestService {
     RestResult<ByteArrayResource> downloadFeedback(long applicationId);
 
     RestResult<FileEntryResource> findFeedback(long applicationId);
-
-
 }
