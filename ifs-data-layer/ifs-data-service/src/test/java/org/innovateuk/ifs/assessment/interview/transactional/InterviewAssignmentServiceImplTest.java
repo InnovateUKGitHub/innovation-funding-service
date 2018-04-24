@@ -2,11 +2,9 @@ package org.innovateuk.ifs.assessment.interview.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentServiceImpl;
@@ -32,14 +30,14 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
-import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -240,35 +238,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         ServiceResult<Boolean> result = service.isApplicationAssigned(applicationId);
 
         assertTrue(result.getSuccess());
-    }
-
-    @Test
-    public void getKeyStatistics() {
-        int applicationsInCompetition = 7;
-        int applicationsAssigned = 11;
-
-        InterviewAssignmentKeyStatisticsResource expectedKeyStatisticsResource =
-                newInterviewAssignmentKeyStatisticsResource()
-                        .withApplicationsInCompetition(applicationsInCompetition)
-                        .withApplicationsAssigned(applicationsAssigned)
-                        .build();
-
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityState(COMPETITION_ID, ApplicationState.SUBMITTED))
-                .thenReturn(applicationsInCompetition);
-
-        when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
-                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES)))
-                .thenReturn(applicationsAssigned);
-
-        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = service.getKeyStatistics(COMPETITION_ID).getSuccess();
-
-        assertEquals(expectedKeyStatisticsResource, keyStatisticsResource);
-
-        InOrder inOrder = inOrder(applicationRepositoryMock, interviewAssignmentRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityState(COMPETITION_ID, ApplicationState.SUBMITTED);
-        inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
-                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
-        inOrder.verifyNoMoreInteractions();
     }
 
     private static InterviewAssignment interviewPanelLambdaMatcher(Application application) {

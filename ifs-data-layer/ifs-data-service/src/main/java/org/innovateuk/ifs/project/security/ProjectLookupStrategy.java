@@ -48,5 +48,4 @@ public class ProjectLookupStrategy {
         return ProjectCompositeId.id(projectId);
     }
 
-
 }

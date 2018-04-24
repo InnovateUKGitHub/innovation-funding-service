@@ -31,6 +31,6 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             value = "ASSIGN_MONITORING_OFFICER",
             description = "Internal users can assign Monitoring Officers on any Project")
     public boolean internalUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isInternal(user);
+        return isInternal(user) && isProjectInSetup(project.getId());
     }
 }

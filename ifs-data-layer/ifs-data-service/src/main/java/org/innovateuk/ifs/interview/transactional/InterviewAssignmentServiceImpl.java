@@ -2,12 +2,10 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.*;
@@ -39,7 +37,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -215,15 +212,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
             outcome.setSubject(assessorInviteSendResource.getSubject());
             interviewAssignmentWorkflowHandler.notifyInterviewPanel(assignment, outcome);
         });
-    }
-
-    @Override
-    public ServiceResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
-        int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED);
-        int applicationsAssigned = interviewAssignmentRepository.
-                countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
-
-        return serviceSuccess(new InterviewAssignmentKeyStatisticsResource(applicationsInCompetition, applicationsAssigned));
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {

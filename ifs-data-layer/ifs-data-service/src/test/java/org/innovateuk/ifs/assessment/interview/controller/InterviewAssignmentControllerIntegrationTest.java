@@ -13,7 +13,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -295,23 +294,6 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         assertEquals(created.size(), 0);
         assertEquals(awaitingFeedback.size(), 1);
-    }
-
-    @Test
-    public void getKeyStatistics() {
-        InterviewAssignment interviewAssignment = newInterviewAssignment()
-                .with(id(null))
-                .withState(AWAITING_FEEDBACK_RESPONSE)
-                .withTarget(applications.get(0))
-                .withParticipant(processRoles.get(0))
-                .build();
-
-        interviewAssignmentRepository.save(interviewAssignment);
-
-        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = controller.getKeyStatistics(competition.getId()).getSuccess();
-
-        assertEquals(2, keyStatisticsResource.getApplicationsInCompetition());
-        assertEquals(1, keyStatisticsResource.getApplicationsAssigned());
     }
 
     @Test

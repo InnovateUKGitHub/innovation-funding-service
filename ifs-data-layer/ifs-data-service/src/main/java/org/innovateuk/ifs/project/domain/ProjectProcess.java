@@ -24,7 +24,7 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     @Column(name="activity_state_id")
     private ProjectState activityState;
 
-    ProjectProcess() {
+    public ProjectProcess() {
     }
 
     public ProjectProcess(ProjectUser participant, Project target, ProjectState originalState) {
@@ -64,6 +64,11 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     }
 
     @Override
+    public ProjectState getActivityState() {
+        return activityState;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -85,10 +90,5 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
                 .append(participant)
                 .append(target)
                 .toHashCode();
-    }
-
-    @Override
-    public ProjectState getActivityState() {
-        return activityState;
     }
 }
