@@ -15,13 +15,13 @@ import static java.util.Collections.emptyList;
 public enum CompetitionSetupSection {
 	HOME(1L, "home", "Home Page", emptyList(), false),
 	INITIAL_DETAILS(2L, "initial", "Initial details", emptyList(), true),
-	ADDITIONAL_INFO(3L, "additional", "Funding information", emptyList(), true),
-	ELIGIBILITY(4L, "eligibility", "Eligibility", emptyList(), false),
-	MILESTONES(5L, "milestones", "Milestones", emptyList(), true),
-	APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),
-	ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
-	CONTENT(8L, "content", "Public content", emptyList(), true),
-	TERMS_AND_CONDITIONS(9L, "terms-and-conditions", "Grant terms and conditions", emptyList(), false);
+	TERMS_AND_CONDITIONS(3L, "terms-and-conditions", "Grant terms and conditions", emptyList(), false),
+	ADDITIONAL_INFO(4L, "additional", "Funding information", emptyList(), true),
+	ELIGIBILITY(5L, "eligibility", "Eligibility", emptyList(), false),
+	MILESTONES(6L, "milestones", "Milestones", emptyList(), true),
+	APPLICATION_FORM(7L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),
+	ASSESSORS(8L, "assessors", "Assessors", emptyList(), true),
+	CONTENT(9L, "content", "Public content", emptyList(), true);
 	
 	private Long id;
 	private String path;
