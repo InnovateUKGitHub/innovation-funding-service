@@ -14,8 +14,8 @@
 CREATE TABLE `cost_total` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `finance_id` bigint(20) NOT NULL,
-  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `total` decimal(15,6) DEFAULT '0.000000',
   PRIMARY KEY (`id`),
   UNIQUE KEY `finance_id` (`finance_id`,`type`,`name`)
