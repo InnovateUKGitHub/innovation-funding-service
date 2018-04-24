@@ -55,7 +55,7 @@ Large pdf upload not allowed
     And the user should see the text in the page  Attempt to upload a large file
     [Teardown]    the user goes back to the previous page
 
-Non pdf uploads not allow
+Non pdf uploads not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
     When the academic partner uploads a file  ${text_file}
