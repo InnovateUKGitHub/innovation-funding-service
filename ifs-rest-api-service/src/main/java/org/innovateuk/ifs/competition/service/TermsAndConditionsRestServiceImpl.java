@@ -1,0 +1,24 @@
+package org.innovateuk.ifs.competition.service;
+
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.termsAndConditionsResourceListType;
+
+/**
+ * MilestoneRestServiceImpl is a utility for CRUD operations on {@link TermsAndConditionsResource}.
+ * This class connects to the { org.innovateuk.ifs.competition.controller.MilestoneController}
+ * through a REST call.
+ */
+@Service
+public class TermsAndConditionsRestServiceImpl extends BaseRestService implements TermsAndConditionsRestService {
+
+    @Override
+    public RestResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions() {
+        return getWithRestResult("/terms-and-conditions/getLatest", termsAndConditionsResourceListType());
+    }
+}

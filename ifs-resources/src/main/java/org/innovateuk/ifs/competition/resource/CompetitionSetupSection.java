@@ -20,7 +20,8 @@ public enum CompetitionSetupSection {
 	MILESTONES(5L, "milestones", "Milestones", emptyList(), true),
 	APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),
 	ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
-	CONTENT(8L, "content", "Public content", emptyList(), true);
+	CONTENT(8L, "content", "Public content", emptyList(), true),
+	TERMS_AND_CONDITIONS(9L, "terms-and-conditions", "Grant terms and conditions", emptyList(), false);
 	
 	private Long id;
 	private String path;
