@@ -49,7 +49,7 @@ Academic finance calculations
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
-    Given the user clicks the button/link         link=Edit your project costs
+    Given the user clicks the button/link         jQuery=.buttonlink:contains("Edit your project costs")
     When the academic partner uploads a file      ${too_large_pdf}
     Then the user should get an error page        ${too_large_pdf_validation_error}
     And the user should see the text in the page  Attempt to upload a large file
