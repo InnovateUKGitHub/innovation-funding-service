@@ -142,7 +142,7 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
-    Then the user check for the key statistics for invite assessors
+    Then the user checks for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
 
 *** Keywords ***
@@ -200,7 +200,7 @@ the user checks for Key Statistics for assigned to interview panel
     ${Application_sent}=  Get Text  css=div:nth-child(7) > div>:nth-child(1)
     Should Be Equal As Integers    ${Assigned_applications}   ${Application_sent}
 
-the user check for the key statistics for invite assessors
+the user checks for the key statistics for invite assessors
     ${Invited}=  Get Text  css=div:nth-child(1) > div > span
     ${Accepted}=  Get Text  css=div:nth-child(2) > div > span
     ${Declined}=  Get Text  css=div:nth-child(3) > div > span
