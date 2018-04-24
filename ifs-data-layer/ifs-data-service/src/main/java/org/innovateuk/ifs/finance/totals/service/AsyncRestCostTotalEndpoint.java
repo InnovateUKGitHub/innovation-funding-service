@@ -46,18 +46,22 @@ public class AsyncRestCostTotalEndpoint {
         this.financeTotalsKey = financeTotalsKey;
     }
 
-    public ServiceResult<Void> sendCostTotals(List<FinanceCostTotalResource> financeCostTotalResources) {
-        sendCostTotalsCompletable(financeCostTotalResources);
+    public ServiceResult<Void> sendCostTotals(Long applicationId,
+                                              List<FinanceCostTotalResource> financeCostTotalResources) {
+        sendCostTotalsCompletable(applicationId, financeCostTotalResources);
         return ServiceResult.serviceSuccess();
     }
 
-    CompletableFuture<ResponseEntity<Void>> sendCostTotalsCompletable(List<FinanceCostTotalResource> financeCostTotalResources) {
+    CompletableFuture<ResponseEntity<Void>> sendCostTotalsCompletable(Long applicationId,
+                                                                      List<FinanceCostTotalResource> financeCostTotalResources) {
         return restTemplateAdaptor.restPostWithEntityAsync("/cost-totals", financeCostTotalResources,
                 createFinanceServiceAuthHeader(financeCostTotalResources), Void.class)
                 .whenComplete((response, exception) -> {
                     if (exception != null) {
                         LOG.error(
-                                "Could not send financeCostTotalResources to finance-data-service. Exception: {}",
+                                "Failed sending financeCostTotalResources to finance-data-service for applicationId: " +
+                                        "{}. Exception: {}",
+                                applicationId,
                                 exception.getMessage(),
                                 exception
                         );

@@ -2,6 +2,8 @@ package org.innovateuk.ifs.config.security;
 
 import org.apache.tika.io.IOUtils;
 import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class TokenAuthenticationService {
 
     private String secretKey;
     private HashBasedMacTokenHandler hashBasedMacTokenHandler;
+
+    private static final Logger LOG = LoggerFactory.getLogger(TokenAuthenticationService.class);
 
     @Autowired
     public TokenAuthenticationService(@Value("${ifs.finance-totals.authSecretKey}") String secretKey,
@@ -37,8 +41,13 @@ public class TokenAuthenticationService {
         String token = getTokenFromRequestHeader(request);
         if (token != null) {
             try {
-                return token.equals(
-                        hashBasedMacTokenHandler.calculateHash(secretKey, getContentAsString(request)));
+                String calculated = hashBasedMacTokenHandler.calculateHash(secretKey, getContentAsString(request));
+                boolean valid = token.equals(calculated);
+                if (!valid) {
+                    LOG.warn("Potential security threat. Invalid auth token found for request. Token: {}, calculated:" +
+                            " {}, content: {}", token, calculated, getContentAsString(request));
+                }
+                return valid;
             } catch (InvalidKeyException e) {
                 throw new IllegalStateException("Caught InvalidKeyException while trying to calculate hash", e);
             } catch (IOException e) {

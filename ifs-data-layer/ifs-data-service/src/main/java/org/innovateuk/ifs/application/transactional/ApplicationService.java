@@ -59,10 +59,6 @@ public interface ApplicationService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
 
-    @SecuredBySpring(value = "READ", description = "Only the system maintainer should be using this function")
-    @PreAuthorize("hasAuthority('system_maintainer')")
-    ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates);
-
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findAll();
 

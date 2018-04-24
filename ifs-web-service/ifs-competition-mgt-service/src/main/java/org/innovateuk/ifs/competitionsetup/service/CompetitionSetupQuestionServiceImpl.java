@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
+import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 @Service
 public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQuestionService {
 
-	@Autowired
-	private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
-
     @Autowired
     private QuestionService questionService;
 
@@ -41,25 +38,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     @Autowired
     private QuestionSetupRestService questionSetupRestService;
 
-    @Override
-    public ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId) {
-        return competitionSetupQuestionRestService.addDefaultToCompetition(competitionId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<CompetitionSetupQuestionResource> getQuestion(final Long questionId) {
-        return competitionSetupQuestionRestService.getByQuestionId(questionId).toServiceResult();
-    }
-
-    @Override
-	public ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        return competitionSetupQuestionRestService.save(competitionSetupQuestionResource).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> deleteQuestion(Long questionId) {
-        return competitionSetupQuestionRestService.deleteById(questionId).toServiceResult();
-    }
+    @Autowired
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
     @Override
     public ServiceResult<Void> validateApplicationQuestions(CompetitionResource competitionResource, LandingPageForm form, BindingResult bindingResult) {
@@ -71,6 +51,26 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         } else {
             return competitionSetupRestService.markSectionComplete(competitionResource.getId(), CompetitionSetupSection.APPLICATION_FORM).toServiceResult();
         }
+    }
+
+    @Override
+    public ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId) {
+        return questionSetupCompetitionRestService.addDefaultToCompetition(competitionId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<CompetitionSetupQuestionResource> getQuestion(final Long questionId) {
+        return questionSetupCompetitionRestService.getByQuestionId(questionId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        return questionSetupCompetitionRestService.save(competitionSetupQuestionResource).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> deleteQuestion(Long questionId) {
+        return questionSetupCompetitionRestService.deleteById(questionId).toServiceResult();
     }
 
     private boolean hasIncompleteSections(Long competitionId) {

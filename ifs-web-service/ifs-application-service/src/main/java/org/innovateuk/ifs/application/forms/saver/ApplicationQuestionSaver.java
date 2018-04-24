@@ -35,6 +35,8 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
     private static final Log LOG = LogFactory.getLog(ApplicationQuestionSaver.class);
     private static final String MARKED_AS_COMPLETE_INVALID_DATA_KEY = "mark.as.complete.invalid.data.exists";
+    private static final String RESUBMISSION_VALIDATION_KEY = "validation.application.must.indicate.resubmission.or.not";
+    private static final String RESUBMISSION_FIELD = "resubmission";
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -73,7 +75,9 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
             errors.addAll(saveQuestionResponses(request, questionList, userId, processRole.getId(), application.getId(), ignoreEmpty));
         }
 
-        detailsSaver.setApplicationDetails(application, form.getApplication());
+        ApplicationResource updatedApplication = form.getApplication();
+
+        detailsSaver.setApplicationDetails(application, updatedApplication);
 
         if (userService.isLeadApplicant(userId, application)) {
             applicationService.save(application);
@@ -82,6 +86,9 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         if ((markAsCompleteRequest.isPresent() && markAsCompleteRequest.get())
                 || (isMarkQuestionRequest(params) && !errors.hasErrors())) {
             errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), questionId, processRole.getId(), errors, request));
+            if (updatedApplication != null) {
+                errors.addAll(handleResubmissionRequest(updatedApplication));
+            }
         }
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
@@ -97,6 +104,17 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
             messages.addAll(detailsSaver.handleApplicationDetailsValidationMessages(applicationMessages));
         }
 
+        return messages;
+    }
+
+    private ValidationMessages handleResubmissionRequest(ApplicationResource updatedApplication) {
+        ValidationMessages messages = new ValidationMessages();
+
+        if(updatedApplication.getResubmission() == null) {
+            messages.addAll(
+                    new ValidationMessages(fieldError(RESUBMISSION_FIELD, "", RESUBMISSION_VALIDATION_KEY))
+            );
+        }
         return messages;
     }
 
