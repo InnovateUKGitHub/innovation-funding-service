@@ -22,14 +22,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Interview Panel Find view.
  */
 @Component
-public class InterviewAssignmentApplicationsFindModelPopulator {
+public class InterviewApplicationsFindModelPopulator extends InterviewApplicationsModelPopulator {
 
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    public InterviewAssignmentApplicationsFindModelPopulator(InterviewAssignmentRestService interviewAssignmentRestService,
-                                                             CompetitionRestService competitionRestService) {
+    public InterviewApplicationsFindModelPopulator(InterviewAssignmentRestService interviewAssignmentRestService,
+                                                   CompetitionRestService competitionRestService) {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.competitionRestService = competitionRestService;
     }
@@ -48,15 +48,13 @@ public class InterviewAssignmentApplicationsFindModelPopulator {
 
         List<InterviewAssignmentApplicationRowViewModel> applications = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
-        InterviewAssignmentKeyStatisticsResource keyStatistics = interviewAssignmentRestService.getKeyStatistics(competitionId).getSuccess();
-
         return new InterviewAssignmentApplicationsFindViewModel(
                 competitionId,
                 competition.getName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 competition.getInnovationSectorName(),
                 applications,
-                keyStatistics,
+                super.getKeyStatistics(competitionId),
                 new PaginationViewModel(pageResource, originQuery), originQuery, pageResource.getTotalElements() > SELECTION_LIMIT);
     }
 
