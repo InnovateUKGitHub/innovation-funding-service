@@ -156,16 +156,17 @@ Custom Suite Setup
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the subtotals should be correctly updated
-    Textfield Value Should Be  id=subtotal-directly-allocated  £12,348,694
-    Textfield Value Should Be  id=subtotal-exceptions  £131,346
+    Textfield Value Should Be  id=subtotal-directly-allocated  £3,047
+    Textfield Value Should Be  id=subtotal-exceptions  £8,013
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
     Choose File    css=.upload-section input    ${UPLOAD_FOLDER}/${file_name}
 
 the finance table should be correct
-    Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)  £12,501,678
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)  12,473,387
+    capture large screenshot
+    Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)  £32,698
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)  4,407
     Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)  8,909
     Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)  4,244
     Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)  0
