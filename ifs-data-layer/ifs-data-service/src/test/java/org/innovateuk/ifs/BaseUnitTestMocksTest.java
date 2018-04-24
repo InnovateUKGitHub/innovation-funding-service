@@ -109,6 +109,7 @@ import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsSer
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
@@ -685,6 +686,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
+
+    @Mock
+    protected ProjectProcessRepository projectProcessRepositoryMock;
 
     @Mock
     protected FinanceUtil financeUtilMock;
