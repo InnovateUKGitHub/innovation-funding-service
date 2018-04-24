@@ -38,17 +38,18 @@ Academic finance validations
     And the element should be disabled       id=mark-all-as-complete
     And Mark academic finances as complete
     And the user should see the element  css=.error-summary-list
-#    And the field should not contain the currency symbol
 
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
     [Tags]
     When the academic fills in the project costs
-    Then the calculations should be correct and the totals rounded to the second decimal
+    And the user clicks the button/link  link=Your project costs
+    Then the subtotals should be correctly updated
 
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
+    Given the user clicks the button/link         link=Edit your project costs
     When the academic partner uploads a file      ${too_large_pdf}
     Then the user should get an error page        ${too_large_pdf_validation_error}
     And the user should see the text in the page  Attempt to upload a large file
@@ -77,7 +78,6 @@ Academics upload
     When the academic partner uploads a file           ${valid_pdf}
     Then the user should not see the text in the page  No file currently uploaded
     And the user should see the element                link=testing.pdf (opens in a new window)
-    And the user waits for the file to be scanned by the anti virus software
 
 Academic partner can view the file on the finances
     [Documentation]    INFUND-917
@@ -150,20 +150,19 @@ Academic finance overview
     Then the user should not see an error in the page
     [Teardown]    The user marks the academic application finances as incomplete
 
+
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
-the calculations should be correct and the totals rounded to the second decimal
-    Textfield Value Should Be  id=subtotal-directly-allocated  £3,000
-    Textfield Value Should Be  id=subtotal-exceptions  £2,000
-    Textfield Value Should Be  id=total  £9,000
+the subtotals should be correctly updated
+    Textfield Value Should Be  id=subtotal-directly-allocated  £12,348,694
+    Textfield Value Should Be  id=subtotal-exceptions  £131,346
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
     Choose File    css=.upload-section input    ${UPLOAD_FOLDER}/${file_name}
-
 
 the finance table should be correct
     Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £9,000
@@ -181,13 +180,11 @@ Lead applicant marks the finances as complete
     the user navigates to Your-finances page  Academic robot test application
     the user marks the finances as complete          Academic robot test application  labour costs  n/a  no
 
-
 Lead applicant marks the finances as incomplete
     log in as a different user       &{lead_applicant_credentials}
     the user navigates to Your-finances page  Academic robot test application
     the user clicks the button/link  link=Your funding
     the user clicks the button/link  jQuery=button:contains("Edit")
-
 
 the user can see JeS details
     the user should see the element  link=Je-S website
@@ -209,16 +206,9 @@ the applicant enters invalid inputs
     the user should see a field error  This field can only accept whole numbers.
     the user should see a field error  This field cannot be left blank.
 
-the field should not contain the currency symbol
-    Textfield Value Should Be  css=[name$="incurred_staff"]  100
-
 Mark academic finances as complete
     the user selects the checkbox    termsAgreed
     the user clicks the button/link  id=mark-all-as-complete
-
-the user waits for the file to be scanned by the anti virus software
-    Sleep    5s
-    # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
 
 the user should see correct grant percentage
     the user should see the text in the element   css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant

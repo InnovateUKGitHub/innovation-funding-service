@@ -229,17 +229,17 @@ the academic user fills in his finances
     the academic fills in the project costs
 
 the academic fills in the project costs
-    The user enters text to a text field  css=[name$="incurred_staff"]  999.999
-    The user enters text to a text field  css=[name$="incurred_travel_subsistence"]  999.999
-    The user enters text to a text field  css=[name$="incurred_other_costs"]  999.999
-    The user enters text to a text field  css=[name$="allocated_investigators"]  999.999
-    The user enters text to a text field  css=[name$="allocated_estates_costs"]  999.999
-    The user enters text to a text field  css=[name$="allocated_other_costs"]  999.999
-    The user enters text to a text field  css=[name$="indirect_costs"]    999.999
-    The user enters text to a text field  css=[name$="exceptions_staff"]  999.999
-    The user enters text to a text field  css=[name$="exceptions_other_costs"]  999.999
+    The user enters text to a text field  css=[name$="incurred_staff"]  4242
+    The user enters text to a text field  css=[name$="incurred_travel_subsistence"]  4243
+    The user enters text to a text field  css=[name$="incurred_other_costs"]  4244
+    The user enters text to a text field  css=[name$="allocated_investigators"]  12345689
+    The user enters text to a text field  css=[name$="allocated_estates_costs"]  3000
+    The user enters text to a text field  css=[name$="allocated_other_costs"]  5
+    The user enters text to a text field  css=[name$="indirect_costs"]  8909
+    The user enters text to a text field  css=[name$="exceptions_staff"]  123456
+    The user enters text to a text field  css=[name$="exceptions_other_costs"]  7890
     The user enters text to a text field  css=input[name$="tsb_reference"]  L33t
-#    the user should see the element       css=#total[data-calculation-rawvalue^="8999"]  TODO
+    Textfield Value Should Be             id=total  £12,492,764
     the user uploads the file             css=.inputfile  ${valid_pdf}
     the user should see the element       link=testing.pdf (opens in a new window)
     the user selects the checkbox         termsAgreed
