@@ -202,7 +202,6 @@ the applicant enters invalid inputs
     The user enters text to a text field  css=[name$="exceptions_staff"]  999.999
     The user enters text to a text field  css=[name$="exceptions_other_costs"]  ${EMPTY}
     The user enters text to a text field  css=[name$="tsb_reference"]  ${EMPTY}
-    ##the user should see a field error  This field should be 0 or higher.  TODO
     the user should see a field error  This field can only accept whole numbers.
     the user should see a field error  This field cannot be left blank.
 
