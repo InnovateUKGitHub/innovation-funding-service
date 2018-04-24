@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,11 +66,6 @@ public interface InterviewAssignmentService {
     @SecuredBySpring(value = "IS_APPLICATION_ASSIGNED_TO_INTERVIEW",
             description = "The applicants can see if their application is assigned to interview")
     ServiceResult<Boolean> isApplicationAssigned(long applicationId);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",
-            description = "Competition Admins and Project Finance users can retrieve available applications by competition")
-    ServiceResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPLOAD_FEEDBACK",

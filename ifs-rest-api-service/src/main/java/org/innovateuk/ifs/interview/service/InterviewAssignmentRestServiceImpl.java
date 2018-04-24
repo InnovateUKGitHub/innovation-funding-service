@@ -3,7 +3,6 @@ package org.innovateuk.ifs.interview.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -94,11 +93,6 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
 
         return getWithRestResult(builder.toUriString(), Boolean.class);
-    }
-
-    @Override
-    public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", REST_URL, "key-statistics", competitionId), InterviewAssignmentKeyStatisticsResource.class);
     }
 
     @Override

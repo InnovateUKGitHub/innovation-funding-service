@@ -2,7 +2,6 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -32,8 +31,6 @@ public interface InterviewAssignmentRestService {
     RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
 
     RestResult<Boolean> isAssignedToInterview(long applicationId);
-
-    RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId);
 
     RestResult<Void> uploadFeedback(long applicationId, String contentType, long size, String originalFilename, byte[] multipartFileBytes);
 

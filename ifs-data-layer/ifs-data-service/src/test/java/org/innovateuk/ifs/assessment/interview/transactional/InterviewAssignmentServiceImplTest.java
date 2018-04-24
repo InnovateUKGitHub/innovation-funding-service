@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.interview.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -10,7 +9,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
@@ -43,7 +41,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
-import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentMessageOutcomeBuilder.newInterviewAssignmentMessageOutcome;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
@@ -51,7 +48,6 @@ import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
@@ -263,35 +259,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         ServiceResult<Boolean> result = service.isApplicationAssigned(applicationId);
 
         assertTrue(result.getSuccess());
-    }
-
-    @Test
-    public void getKeyStatistics() {
-        int applicationsInCompetition = 7;
-        int applicationsAssigned = 11;
-
-        InterviewAssignmentKeyStatisticsResource expectedKeyStatisticsResource =
-                newInterviewAssignmentKeyStatisticsResource()
-                        .withApplicationsInCompetition(applicationsInCompetition)
-                        .withApplicationsAssigned(applicationsAssigned)
-                        .build();
-
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState()))
-                .thenReturn(applicationsInCompetition);
-
-        when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
-                simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState)))
-                .thenReturn(applicationsAssigned);
-
-        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = service.getKeyStatistics(COMPETITION_ID).getSuccess();
-
-        assertEquals(expectedKeyStatisticsResource, keyStatisticsResource);
-
-        InOrder inOrder = inOrder(applicationRepositoryMock, interviewAssignmentRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState());
-        inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
-                simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState));
-        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
