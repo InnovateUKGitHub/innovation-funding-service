@@ -17,7 +17,7 @@ public class OtherDocumentsPermissionRules extends BasePermissionRules {
             value = "UPLOAD_OTHER_DOCUMENTS",
             description = "The lead partners can upload Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
     public boolean leadPartnersCanUploadOtherDocuments(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
+        return isLeadPartner(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
@@ -52,20 +52,20 @@ public class OtherDocumentsPermissionRules extends BasePermissionRules {
             value = "DELETE_OTHER_DOCUMENTS",
             description = "The lead partners can delete Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
     public boolean leadPartnersCanDeleteOtherDocuments(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
+        return isLeadPartner(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "SUBMIT_OTHER_DOCUMENTS",
             description = "Only a Project Manager can submit completed partner documents")
     public boolean onlyProjectManagerCanMarkDocumentsAsSubmit(ProjectResource project, UserResource user) {
-        return isProjectManager(project.getId(), user.getId());
+        return isProjectManager(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
             description = "Internal users can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
     public boolean internalUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
-        return isInternal(user);
+        return isInternal(user) && isProjectInSetup(project.getId());
     }
 }
