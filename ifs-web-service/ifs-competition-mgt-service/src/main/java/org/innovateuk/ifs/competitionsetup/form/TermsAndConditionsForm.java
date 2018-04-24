@@ -2,17 +2,15 @@ package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 
-import java.util.List;
-
 public class TermsAndConditionsForm extends CompetitionSetupForm {
 
-    private List<TermsAndConditionsResource> termsAndConditionsList;
+    private TermsAndConditionsResource termsAndConditions;
 
-    public List<TermsAndConditionsResource> getTermsAndConditionsList() {
-        return termsAndConditionsList;
+    public TermsAndConditionsResource getTermsAndConditions() {
+        return termsAndConditions;
     }
 
-    public void setTermsAndConditionsList(List<TermsAndConditionsResource> termsAndConditionsList) {
-        this.termsAndConditionsList = termsAndConditionsList;
+    public void setTermsAndConditions(TermsAndConditionsResource termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 }

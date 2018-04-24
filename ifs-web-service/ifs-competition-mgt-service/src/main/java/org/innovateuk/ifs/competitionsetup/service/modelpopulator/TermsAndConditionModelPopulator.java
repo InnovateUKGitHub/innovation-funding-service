@@ -2,16 +2,25 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.TermsAndConditionsViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Populates the model for the terms and condition competition setup section.
  */
 @Service
 public class TermsAndConditionModelPopulator implements CompetitionSetupSectionModelPopulator {
+
+    @Autowired
+    private TermsAndConditionsRestService termsAndConditionsRestService;
+
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
         return CompetitionSetupSection.TERMS_AND_CONDITIONS;
@@ -20,6 +29,7 @@ public class TermsAndConditionModelPopulator implements CompetitionSetupSectionM
     @Override
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel,
                                                    CompetitionResource competitionResource) {
-        return new TermsAndConditionsViewModel(generalViewModel);
+        List<TermsAndConditionsResource> termsAndConditionsList = termsAndConditionsRestService.getLatestTermsAndConditions().getSuccess();
+        return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList);
     }
 }
