@@ -232,14 +232,14 @@ the academic fills in the project costs
     The user enters text to a text field  css=[name$="incurred_staff"]  4242
     The user enters text to a text field  css=[name$="incurred_travel_subsistence"]  4243
     The user enters text to a text field  css=[name$="incurred_other_costs"]  4244
-    The user enters text to a text field  css=[name$="allocated_investigators"]  12345689
+    The user enters text to a text field  css=[name$="allocated_investigators"]  42
     The user enters text to a text field  css=[name$="allocated_estates_costs"]  3000
     The user enters text to a text field  css=[name$="allocated_other_costs"]  5
     The user enters text to a text field  css=[name$="indirect_costs"]  8909
-    The user enters text to a text field  css=[name$="exceptions_staff"]  123456
+    The user enters text to a text field  css=[name$="exceptions_staff"]  123
     The user enters text to a text field  css=[name$="exceptions_other_costs"]  7890
     The user enters text to a text field  css=input[name$="tsb_reference"]  L33t
-    Textfield Value Should Be             id=total  £12,492,764
+    Textfield Value Should Be             id=total  £23,784
     the user uploads the file             css=.inputfile  ${valid_pdf}
     the user should see the element       link=testing.pdf (opens in a new window)
     the user selects the checkbox         termsAgreed
