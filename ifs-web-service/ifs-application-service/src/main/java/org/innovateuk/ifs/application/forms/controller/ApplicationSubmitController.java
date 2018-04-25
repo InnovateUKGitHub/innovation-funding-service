@@ -46,50 +46,55 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidati
 @RequestMapping("/application")
 public class ApplicationSubmitController {
 
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
     private SectionService sectionService;
-
-    @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
     private ApplicationRestService applicationRestService;
-
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
-
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Autowired
     private FormInputResponseService formInputResponseService;
-
-    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
-    @Autowired
     private UserRestService userRestService;
-
-    @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-
-    @Autowired
     private AssessmentRestService assessmentRestService;
+    private ProjectService projectService;
 
     @Autowired
-    private ProjectService projectService;
+    public ApplicationSubmitController(QuestionService questionService,
+                                       ProcessRoleService processRoleService,
+                                       SectionService sectionService,
+                                       ApplicationService applicationService,
+                                       ApplicationRestService applicationRestService,
+                                       CompetitionService competitionService,
+                                       ApplicationModelPopulator applicationModelPopulator,
+                                       CookieFlashMessageFilter cookieFlashMessageFilter,
+                                       FormInputResponseService formInputResponseService,
+                                       FormInputResponseRestService formInputResponseRestService,
+                                       OrganisationDetailsModelPopulator organisationDetailsModelPopulator,
+                                       UserRestService userRestService,
+                                       AssessorFormInputResponseRestService assessorFormInputResponseRestService,
+                                       AssessmentRestService assessmentRestService,
+                                       ProjectService projectService) {
+        this.questionService = questionService;
+        this.processRoleService = processRoleService;
+        this.sectionService = sectionService;
+        this.applicationService = applicationService;
+        this.applicationRestService = applicationRestService;
+        this.competitionService = competitionService;
+        this.applicationModelPopulator = applicationModelPopulator;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+        this.formInputResponseService = formInputResponseService;
+        this.formInputResponseRestService = formInputResponseRestService;
+        this.organisationDetailsModelPopulator = organisationDetailsModelPopulator;
+        this.userRestService = userRestService;
+        this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
+        this.assessmentRestService = assessmentRestService;
+        this.projectService = projectService;
+    }
+
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
@@ -203,11 +208,49 @@ public class ApplicationSubmitController {
         return "application-track";
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, final Model model, final ApplicationForm form, List<ProcessRoleResource> userApplicationRoles, final Optional<Boolean> markAsCompleteEnabled) {
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'APPLICATION_FEEDBACK')")
+    @GetMapping("/{applicationId}/interview-feedback")
+    public String interviewFeedback(@ModelAttribute("form") ApplicationForm form,
+                                    Model model,
+                                    @PathVariable("applicationId") long applicationId,
+                                    UserResource user) {
+
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.of(Boolean.FALSE));
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
+
+        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
+        model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
+                .getSuccess()
+                .getFeedback()
+        );
+
+        return "application-interview-feedback";
+    }
+
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
+                                                                 final CompetitionResource competition,
+                                                                 final UserResource user, final Model model,
+                                                                 final ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles,
+                                                                 final Optional<Boolean> markAsCompleteEnabled) {
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form, List<ProcessRoleResource> userApplicationRoles, final Optional<Boolean> markAsCompleteEnabled) {
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
+                                                                 final CompetitionResource competition,
+                                                                 final UserResource user,
+                                                                 Optional<SectionResource> section,
+                                                                 Optional<Long> currentQuestionId,
+                                                                 final Model model,
+                                                                 final ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles,
+                                                                 final Optional<Boolean> markAsCompleteEnabled) {
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
         applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
     }

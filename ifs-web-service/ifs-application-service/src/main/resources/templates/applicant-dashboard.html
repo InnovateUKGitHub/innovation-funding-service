@@ -52,8 +52,7 @@
                         <li class="status-2-col" th:each="inProgressView : ${model.inProgress}" th:classappend="${inProgressView.assignedToMe ? 'assigned-to-me' : '' }">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:if="${inProgressView.assignedToInterview}" th:text="${inProgressView.title}"  th:href="@{/application/{applicationId}/interview-feedback(applicationId=${inProgressView.applicationNumber})}" aria-disabled="true" />
-                                    <a th:unless="${inProgressView.assignedToInterview}" th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" />
+                                    <a th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" />
                                 </h3>
                                 <ul class="application-details">
                                     <li>Application number: <span th:text="${inProgressView.applicationNumber}"></span></li>

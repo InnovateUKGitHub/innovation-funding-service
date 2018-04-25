@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.interview.security;
+package org.innovateuk.ifs.application.forms.security;
 
 import org.innovateuk.ifs.application.resource.ApplicationCompositeId;
 import org.innovateuk.ifs.commons.security.PermissionRule;
