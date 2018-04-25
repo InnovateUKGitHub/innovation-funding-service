@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.bankdetails.controller.CompetitionBankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.junit.Test;
 

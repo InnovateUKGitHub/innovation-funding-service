@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.spendprofile.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.user.domain.User;

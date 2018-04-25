@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.repository;
 
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;

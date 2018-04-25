@@ -16,7 +16,7 @@ import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.builder.SpendProfileBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;

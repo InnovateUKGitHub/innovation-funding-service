@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.workflow;
 
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
 import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
