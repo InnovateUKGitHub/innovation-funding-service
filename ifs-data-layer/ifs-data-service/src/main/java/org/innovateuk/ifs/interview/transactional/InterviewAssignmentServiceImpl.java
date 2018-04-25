@@ -285,7 +285,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     }
 
     @Override
-    public ServiceResult<FileEntryResource> findFeedback(Long applicationId) {
+    public ServiceResult<FileEntryResource> findFeedback(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
                 fileEntryService.findOne(interviewAssignment.getMessage().getFeedback().getId()));
     }

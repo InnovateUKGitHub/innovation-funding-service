@@ -94,25 +94,25 @@ public class InterviewAssignmentController {
     public RestResult<Void> uploadFeedback(@RequestHeader(value = "Content-Type", required = false) String contentType,
                                     @RequestHeader(value = "Content-Length", required = false) String contentLength,
                                     @RequestParam(value = "filename", required = false) String originalFilename,
-                                    @PathVariable("applicationId") Long applicationId,
+                                    @PathVariable("applicationId") long applicationId,
                                     HttpServletRequest request)
     {
         return interviewAssignmentService.uploadFeedback(contentType, contentLength, originalFilename, applicationId, request).toPostCreateResponse();
     }
 
     @DeleteMapping(value = "/feedback/{applicationId}", produces = "application/json")
-    public RestResult<Void> deleteFile(@PathVariable("applicationId") Long applicationId) {
+    public RestResult<Void> deleteFile(@PathVariable("applicationId") long applicationId) {
         return interviewAssignmentService.deleteFeedback(applicationId).toDeleteResponse();
     }
 
     @GetMapping(value = "/feedback/{applicationId}", produces = "application/json")
     public @ResponseBody
-    ResponseEntity<Object> downloadFile(@PathVariable("applicationId") Long applicationId) throws IOException {
+    ResponseEntity<Object> downloadFile(@PathVariable("applicationId") long applicationId) throws IOException {
         return handleFileDownload(() -> interviewAssignmentService.downloadFeedback(applicationId));
     }
 
     @GetMapping(value = "/feedback-details/{applicationId}", produces = "application/json")
-    public RestResult<FileEntryResource> findFile(@PathVariable("applicationId") Long applicationId) throws IOException {
+    public RestResult<FileEntryResource> findFile(@PathVariable("applicationId") long applicationId) throws IOException {
         return interviewAssignmentService.findFeedback(applicationId).toGetResponse();
     }
 }

@@ -184,7 +184,7 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         byte[] fileContent = fileContentString.getBytes();
         final String originalFilename = "testFile.pdf";
         final String contentType = "text/pdf";
-        final Long applicationId = 77L;
+        final long applicationId = 77L;
         setupFileUploadWithRestResultExpectations(format("%s/%s/%s?filename=%s", REST_URL, "feedback", applicationId, originalFilename),
                 fileContentString, contentType, fileContent.length, CREATED);
 
@@ -194,7 +194,7 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
 
     @Test
     public void deleteFeedback() throws Exception {
-        Long applicationId = 78L;
+        long applicationId = 78L;
         setupDeleteWithRestResultExpectations(format("%s/%s/%s", REST_URL, "feedback", applicationId));
         service.deleteFeedback(applicationId);
         setupDeleteWithRestResultVerifications(format("%s/%s/%s", REST_URL, "feedback", applicationId));
@@ -202,7 +202,7 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
 
     @Test
     public void downloadFeedback() throws Exception {
-        final Long applicationId= 912L;
+        final long applicationId= 912L;
         ByteArrayResource expected = new ByteArrayResource("1u6536748".getBytes());
         setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "feedback", applicationId), ByteArrayResource.class, expected, OK);
         final ByteArrayResource response = service.downloadFeedback(applicationId).getSuccess();

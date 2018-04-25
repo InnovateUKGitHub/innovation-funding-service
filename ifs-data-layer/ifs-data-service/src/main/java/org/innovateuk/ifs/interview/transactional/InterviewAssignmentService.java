@@ -86,5 +86,5 @@ public interface InterviewAssignmentService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "FIND_FEEDBACK",
             description = "Competition Admins and Project Finance users can find feedback")
-    ServiceResult<FileEntryResource> findFeedback(Long applicationId);
+    ServiceResult<FileEntryResource> findFeedback(long applicationId);
 }

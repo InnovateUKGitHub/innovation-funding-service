@@ -263,7 +263,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
 
     @Test
     public void findFeedback() throws Exception {
-        Long applicationId = 1L;
+        long applicationId = 1L;
         FileEntry fileEntry = newFileEntry().build();
         InterviewAssignment interviewAssignment = newInterviewAssignment().
                 withMessage(newInterviewAssignmentMessageOutcome()
@@ -281,7 +281,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
 
     @Test
     public void downloadFeedback() throws Exception {
-        final Long applicationId = 1L;
+        final long applicationId = 1L;
         final long fileId = 2L;
         final FileEntry fileEntry = new FileEntry(fileId, "somefile.pdf", MediaType.APPLICATION_PDF, 1111L);
         InterviewAssignment interviewAssignment = newInterviewAssignment().
@@ -305,8 +305,8 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
 
     @Test
     public void deleteFeedback() throws Exception {
-        final Long applicationId = 1L;
-        final Long fileId = 101L;
+        final long applicationId = 1L;
+        final long fileId = 101L;
         final FileEntry fileEntry = new FileEntry(fileId, "somefile.pdf", MediaType.APPLICATION_PDF, 1111L);
         InterviewAssignment interviewAssignment = newInterviewAssignment().
                 withMessage(newInterviewAssignmentMessageOutcome()
