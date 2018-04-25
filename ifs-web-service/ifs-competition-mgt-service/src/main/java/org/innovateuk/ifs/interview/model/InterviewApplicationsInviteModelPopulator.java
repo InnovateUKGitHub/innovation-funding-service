@@ -19,13 +19,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Interview Panel Invite view.
  */
 @Component
-public class InterviewAssignmentApplicationsInviteModelPopulator {
+public class InterviewApplicationsInviteModelPopulator extends InterviewApplicationsModelPopulator {
 
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    public InterviewAssignmentApplicationsInviteModelPopulator(
+    public InterviewApplicationsInviteModelPopulator(
             InterviewAssignmentRestService interviewAssignmentRestService,
             CompetitionRestService competitionRestService) {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
@@ -41,15 +41,13 @@ public class InterviewAssignmentApplicationsInviteModelPopulator {
                 .getStagedApplications(competition.getId(), page)
                 .getSuccess();
 
-        InterviewAssignmentKeyStatisticsResource keyStatistics = interviewAssignmentRestService.getKeyStatistics(competitionId).getSuccess();
-
         return new InterviewAssignmentApplicationsInviteViewModel(
                 competitionId,
                 competition.getName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 competition.getInnovationSectorName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
-                keyStatistics,
+                super.getKeyStatistics(competitionId),
                 new PaginationViewModel(pageResource, originQuery),
                 originQuery
         );

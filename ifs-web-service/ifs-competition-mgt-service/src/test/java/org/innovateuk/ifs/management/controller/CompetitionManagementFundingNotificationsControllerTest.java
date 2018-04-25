@@ -122,7 +122,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         when(applicationSummaryRestService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, of(filter), sendFilter, fundingFilter)).thenReturn(restSuccess(applicationSummaryPageResource));
 
         CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
-        when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
+        when(competitionKeyStatisticsRestService.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
         when(assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, COMPETITION_ID)).thenReturn(restSuccess(changesSinceLastNotify));
 
         // Expected values to match against

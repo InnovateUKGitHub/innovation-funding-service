@@ -254,7 +254,7 @@ public class BaseUnitTest {
     @Mock
     protected ApplicationSummaryRestService applicationSummaryRestService;
     @Mock
-    protected CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
+    protected CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
     @Mock
     protected AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     @Mock
