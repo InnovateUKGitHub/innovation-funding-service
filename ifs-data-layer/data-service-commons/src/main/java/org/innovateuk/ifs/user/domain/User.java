@@ -10,6 +10,7 @@ import org.innovateuk.ifs.user.resource.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -70,6 +71,10 @@ public class User extends AuditableEntity implements Serializable {
 
     @Column(unique = true)
     private Long profileId;
+
+    private Long siteTermsAndConditionsId;
+
+    private ZonedDateTime siteTermsAndConditionsAccepted;
 
     public User() {
         // no-arg constructor
@@ -262,5 +267,21 @@ public class User extends AuditableEntity implements Serializable {
 
     public boolean isInternalUser() {
         return CollectionUtils.containsAny(Role.internalRoles(), roles);
+    }
+
+    public Long getSiteTermsAndConditionsId() {
+        return siteTermsAndConditionsId;
+    }
+
+    public void setSiteTermsAndConditionsId(final Long siteTermsAndConditionsId) {
+        this.siteTermsAndConditionsId = siteTermsAndConditionsId;
+    }
+
+    public ZonedDateTime getSiteTermsAndConditionsAccepted() {
+        return siteTermsAndConditionsAccepted;
+    }
+
+    public void setSiteTermsAndConditionsAccepted(final ZonedDateTime siteTermsAndConditionsAccepted) {
+        this.siteTermsAndConditionsAccepted = siteTermsAndConditionsAccepted;
     }
 }

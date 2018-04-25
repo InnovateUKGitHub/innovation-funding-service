@@ -98,6 +98,16 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArraySetFieldByReflection("profileId", profileIds);
     }
 
+    public UserBuilder withSiteTermsAndConditionsId(Long... siteTermsAndConditionsIds) {
+        return withArray((siteTermsAndConditionsId, user) -> setField("siteTermsAndConditionsId",
+                siteTermsAndConditionsId, user), siteTermsAndConditionsIds);
+    }
+
+    public UserBuilder withSiteTermsAndConditionsAccepted(ZonedDateTime... siteTermsAndConditionsAcceptedDates) {
+        return withArray((siteTermsAndConditionsAccepted, user) -> setField("siteTermsAndConditionsAccepted",
+                siteTermsAndConditionsAccepted, user), siteTermsAndConditionsAcceptedDates);
+    }
+
     public UserBuilder withAffiliations(List<Affiliation>... affiliationsList) {
         return withArray((affiliations, user) -> setField("affiliations", affiliations, user), affiliationsList);
     }

@@ -59,4 +59,6 @@ public interface UserService {
     List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
 
     Long getUserOrganisationId(Long userId, Long applicationId);
+
+    ServiceResult<Void> agreeNewTermsAndConditions();
 }

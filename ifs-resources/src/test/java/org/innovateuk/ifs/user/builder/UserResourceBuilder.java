@@ -101,7 +101,8 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     }
 
     public UserResourceBuilder withAllowMarketingEmails(Boolean... allowMarketingEmails) {
-        return withArray((allowMarketingEmail, user) -> setField("allowMarketingEmails", allowMarketingEmail, user), allowMarketingEmails);
+        return withArray((allowMarketingEmail, user) ->
+                setField("allowMarketingEmails", allowMarketingEmail, user), allowMarketingEmails);
     }
 
     public UserResourceBuilder withCreatedOn(ZonedDateTime... createdOns) {
@@ -118,5 +119,15 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withModifiedBy(String... modifiedBys) {
         return withArray((modifiedBy, user) -> setField("modifiedBy", modifiedBy, user), modifiedBys);
+    }
+
+    public UserResourceBuilder withSiteTermsAndConditionsId(Long... siteTermsAndConditionsIds) {
+        return withArray((siteTermsAndConditionsId, user) -> setField("siteTermsAndConditionsId",
+                siteTermsAndConditionsId, user), siteTermsAndConditionsIds);
+    }
+
+    public UserResourceBuilder withSiteTermsAndConditionsAccepted(ZonedDateTime... siteTermsAndConditionsAcceptedDates) {
+        return withArray((siteTermsAndConditionsAccepted, user) -> setField("siteTermsAndConditionsAccepted",
+                siteTermsAndConditionsAccepted, user), siteTermsAndConditionsAcceptedDates);
     }
 }

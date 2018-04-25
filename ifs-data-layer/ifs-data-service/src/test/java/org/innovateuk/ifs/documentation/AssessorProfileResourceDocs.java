@@ -37,6 +37,10 @@ public class AssessorProfileResourceDocs {
             fieldWithPath("user.ethnicity").description("Ethnic group of the user"),
             fieldWithPath("user.profileId").description("Profile id of the user"),
             fieldWithPath("user.inviteName").description("Invite name of the user"),
+            fieldWithPath("user.siteTermsAndConditionsId").description("id of the site terms and conditions that the " +
+                    "user accepted"),
+            fieldWithPath("user.siteTermsAndConditionsAccepted").description("when the site terms and conditions were" +
+                    " accepted"),
             fieldWithPath("user.createdBy").description("User who created this user"),
             fieldWithPath("user.createdOn").description("When the user was created"),
             fieldWithPath("user.modifiedBy").description("User who modified this user"),

@@ -32,6 +32,8 @@ public class UserDocs {
             fieldWithPath("createdOn").description("when the user was created"),
             fieldWithPath("modifiedBy").description("user who modified this user"),
             fieldWithPath("modifiedOn").description("when the user was modified"),
+            fieldWithPath("siteTermsAndConditionsId").description("id of the site terms and conditions that the user accepted"),
+            fieldWithPath("siteTermsAndConditionsAccepted").description("when the site terms and conditions were accepted")
     };
 
     public static final FieldDescriptor[] internalUserRegistrationResourceFields = {

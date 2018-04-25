@@ -143,4 +143,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
     }
+
+    @Test
+    public void agreeNewTermsAndConditions() {
+        // TODO IFS-3093
+        assertTrue(service.agreeNewTermsAndConditions().isSuccess());
+    }
 }

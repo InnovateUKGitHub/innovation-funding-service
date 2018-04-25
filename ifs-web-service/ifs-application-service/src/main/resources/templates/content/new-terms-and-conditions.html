@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<ul th:if="${#fields.hasErrors('${form.*}')}">
+    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}">Error message</li>
+</ul>
+
+<form th:action="@{'/info/new-terms-and-conditions'}" method="post" th:object="${form}">
+    <p th:if="${#fields.hasErrors('agree')}" th:errors="*{agree}">You must agree</p>
+    <input type="checkbox" th:field="*{agree}" th:errorclass="fieldError"/>
+    <button type="submit">Continue</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+=== Find the latest site terms and conditions ===
+==== Request
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/http-request.adoc[]
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/http-response.adoc[]
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/curl-request.adoc[]

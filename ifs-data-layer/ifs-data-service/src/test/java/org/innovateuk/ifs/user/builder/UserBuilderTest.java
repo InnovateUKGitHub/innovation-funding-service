@@ -6,6 +6,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,8 +63,11 @@ public class UserBuilderTest {
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
         Ethnicity expectedEthnicity = newEthnicity().build();
-        Long expectedProfile = 1L;
-        List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2);
+        Long expectedProfileId = 1L;
+        Long expectedSiteTermsAndConditionsId = 1L;
+        ZonedDateTime expectedSiteTermsAndCondtionsAccepted = ZonedDateTime.now();
+        List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL)
+                .build(2);
 
         User user = newUser()
                 .withId(expectedId)
@@ -80,7 +84,9 @@ public class UserBuilderTest {
                 .withGender(expectedGender)
                 .withDisability(expectedDisability)
                 .withEthnicity(expectedEthnicity)
-                .withProfileId(expectedProfile)
+                .withProfileId(expectedProfileId)
+                .withSiteTermsAndConditionsId(expectedSiteTermsAndConditionsId)
+                .withSiteTermsAndConditionsAccepted(expectedSiteTermsAndCondtionsAccepted)
                 .withAffiliations(expectedAffiliations)
                 .build();
 
@@ -98,7 +104,9 @@ public class UserBuilderTest {
         assertEquals(expectedGender, user.getGender());
         assertEquals(expectedDisability, user.getDisability());
         assertEquals(expectedEthnicity, user.getEthnicity());
-        assertEquals(expectedProfile, user.getProfileId());
+        assertEquals(expectedProfileId, user.getProfileId());
+        assertEquals(expectedSiteTermsAndConditionsId, user.getSiteTermsAndConditionsId());
+        assertEquals(expectedSiteTermsAndCondtionsAccepted, user.getSiteTermsAndConditionsAccepted());
         assertEquals(expectedAffiliations, user.getAffiliations());
     }
 
@@ -114,11 +122,14 @@ public class UserBuilderTest {
         UserStatus[] expectedStatuss = {ACTIVE, INACTIVE};
         String[] expectedUids = {"Uid1", "Uid2"};
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
-        List<Set<Role>> expectedRoles = asList(new HashSet<>(asList(Role.LEADAPPLICANT, Role.PARTNER)), new HashSet<>(asList(Role.COLLABORATOR, Role.COMP_ADMIN)));
+        List<Set<Role>> expectedRoles = asList(new HashSet<>(asList(Role.LEADAPPLICANT, Role.PARTNER)), new HashSet<>
+                (asList(Role.COLLABORATOR, Role.COMP_ADMIN)));
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Ethnicity[] expectedEthnicities = newEthnicity().buildArray(2, Ethnicity.class);
-        Long[] expectedProfiles = {1L, 2L};
+        Long[] expectedProfileIds = {1L, 2L};
+        Long[] expectedSiteTermsAndConditionIds = {1L, 2L};
+        ZonedDateTime[] expectedSiteTermsAndConditionsAcceptedDates = {ZonedDateTime.now(), ZonedDateTime.now().minusHours(1)};
         List<Affiliation>[] expectedAffiliations = new List[]{
                 newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2),
                 newAffiliation().withAffiliationType(PERSONAL_FINANCIAL, FAMILY_FINANCIAL).build(2)
@@ -139,7 +150,9 @@ public class UserBuilderTest {
                 .withGender(expectedGenders)
                 .withDisability(expectedDisabilities)
                 .withEthnicity(expectedEthnicities)
-                .withProfileId(expectedProfiles)
+                .withProfileId(expectedProfileIds)
+                .withSiteTermsAndConditionsId(expectedSiteTermsAndConditionIds)
+                .withSiteTermsAndConditionsAccepted(expectedSiteTermsAndConditionsAcceptedDates)
                 .withAffiliations(expectedAffiliations)
                 .build(2);
 
@@ -160,7 +173,9 @@ public class UserBuilderTest {
         assertEquals(expectedGenders[0], first.getGender());
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
-        assertEquals(expectedProfiles[0], first.getProfileId());
+        assertEquals(expectedProfileIds[0], first.getProfileId());
+        assertEquals(expectedSiteTermsAndConditionIds[0], first.getSiteTermsAndConditionsId());
+        assertEquals(expectedSiteTermsAndConditionsAcceptedDates[0], first.getSiteTermsAndConditionsAccepted());
         assertEquals(expectedAffiliations[0], first.getAffiliations());
 
         User second = users.get(1);
@@ -179,7 +194,9 @@ public class UserBuilderTest {
         assertEquals(expectedGenders[1], second.getGender());
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
-        assertEquals(expectedProfiles[1], second.getProfileId());
+        assertEquals(expectedProfileIds[1], second.getProfileId());
+        assertEquals(expectedSiteTermsAndConditionIds[1], second.getSiteTermsAndConditionsId());
+        assertEquals(expectedSiteTermsAndConditionsAcceptedDates[1], second.getSiteTermsAndConditionsAccepted());
         assertEquals(expectedAffiliations[1], second.getAffiliations());
     }
 }
