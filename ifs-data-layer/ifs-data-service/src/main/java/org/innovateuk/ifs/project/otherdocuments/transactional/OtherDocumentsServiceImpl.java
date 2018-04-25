@@ -15,7 +15,7 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
-import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

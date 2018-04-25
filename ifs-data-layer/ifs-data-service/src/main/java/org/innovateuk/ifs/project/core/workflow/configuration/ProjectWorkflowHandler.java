@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.workflow.configuration;
+package org.innovateuk.ifs.project.core.workflow.configuration;
 
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;

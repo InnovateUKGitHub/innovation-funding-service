@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.workflow.configuration;
+package org.innovateuk.ifs.project.core.workflow.configuration;
 
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;

@@ -35,7 +35,7 @@ import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.EmailService;
-import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
