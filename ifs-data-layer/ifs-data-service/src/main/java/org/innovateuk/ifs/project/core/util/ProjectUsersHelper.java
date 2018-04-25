@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.users;
+package org.innovateuk.ifs.project.core.util;
 
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
