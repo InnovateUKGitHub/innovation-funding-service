@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.security;
+package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
