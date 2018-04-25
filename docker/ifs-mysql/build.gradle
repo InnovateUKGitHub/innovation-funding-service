@@ -34,7 +34,7 @@ subprojects {
     }
 
     def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-    [stop, removeContainer, createContainer, deploy].each { task ->
+    [stop, removeContainer, createContainer, deploy, wait].each { task ->
         task.enabled = enabled
     }
 
