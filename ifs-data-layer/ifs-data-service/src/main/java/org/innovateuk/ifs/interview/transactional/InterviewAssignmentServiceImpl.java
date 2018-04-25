@@ -12,6 +12,7 @@ import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentMessageOutcomeRepository;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
@@ -74,6 +75,9 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
+
+    @Autowired
+    private InterviewAssignmentMessageOutcomeRepository interviewAssignmentMessageOutcomeRepository;
 
     @Autowired
     private InterviewAssignmentRepository interviewAssignmentRepository;
@@ -272,9 +276,15 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     @Override
     @Transactional
     public ServiceResult<Void> deleteFeedback(long applicationId) {
-        return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
-            fileService.deleteFileIgnoreNotFound(interviewAssignment.getMessage().getFeedback().getId())
-                .andOnSuccessReturnVoid(() -> interviewAssignment.setMessage(null)));
+        return findAssignmentByApplicationId(applicationId).andOnSuccessReturnVoid(interviewAssignment -> {
+            long fileId = interviewAssignment.getMessage().getFeedback().getId();
+            long outcomeId = interviewAssignment.getMessage().getId();
+            interviewAssignment.getMessage().setFeedback(null);
+            interviewAssignmentMessageOutcomeRepository.save(interviewAssignment.getMessage());
+            interviewAssignment.setMessage(null);
+            interviewAssignmentMessageOutcomeRepository.delete(outcomeId);
+            fileService.deleteFileIgnoreNotFound(fileId);
+        });
     }
 
     @Override

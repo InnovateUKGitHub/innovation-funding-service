@@ -3,11 +3,11 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -50,7 +50,7 @@ public class InterviewApplicationSendInviteController {
                                    @PathVariable("competitionId") long competitionId,
                                    @RequestParam(defaultValue = "0") int page,
                                    @RequestParam MultiValueMap<String, String> queryParams,
-                                   @ModelAttribute(name = "form", binding = false) SendInviteForm form,
+                                   @ModelAttribute(name = "form", binding = false) InterviewApplicationSendForm form,
                                    BindingResult bindingResult) {
 
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_SEND, queryParams);
@@ -69,7 +69,7 @@ public class InterviewApplicationSendInviteController {
     public String sendInvites(Model model,
                               @PathVariable("competitionId") long competitionId,
                               @RequestParam MultiValueMap<String, String> queryParams,
-                              @ModelAttribute("form") @Valid SendInviteForm form,
+                              @ModelAttribute("form") @Valid InterviewApplicationSendForm form,
                               BindingResult bindingResult,
                               ValidationHandler validationHandler) {
 
@@ -84,26 +84,47 @@ public class InterviewApplicationSendInviteController {
         });
     }
 
-    @PostMapping(value = "/send", params = {"applicationId"})
+    @PostMapping(value = "/send", params = {"attachFeedbackApplicationId"})
     public String uploadFeedback(Model model,
                               @PathVariable("competitionId") long competitionId,
                               @RequestParam MultiValueMap<String, String> queryParams,
-                              @ModelAttribute("form") SendInviteForm form,
+                              @ModelAttribute("form") InterviewApplicationSendForm form,
                               BindingResult bindingResult,
                               ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> {
-            model.addAttribute("applicationInError", form.getApplicationId());
+            model.addAttribute("applicationInError", form.getAttachFeedbackApplicationId());
             return getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult);
         };
 
         MultipartFile file = form.getFeedback();
         RestResult<Void> sendResult = interviewAssignmentRestService
-                    .uploadFeedback(form.getApplicationId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+                    .uploadFeedback(form.getAttachFeedbackApplicationId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
 
         return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
                 .failNowOrSucceedWith(failureView, () -> getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult));
     }
+
+    @PostMapping(value = "/send", params = {"removeFeedbackApplicationId"})
+    public String removeFeedback(Model model,
+                                 @PathVariable("competitionId") long competitionId,
+                                 @RequestParam MultiValueMap<String, String> queryParams,
+                                 @ModelAttribute("form") InterviewApplicationSendForm form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler) {
+
+        Supplier<String> failureView = () -> {
+            model.addAttribute("applicationInError", form.getRemoveFeedbackApplicationId());
+            return getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult);
+        };
+
+        RestResult<Void> sendResult = interviewAssignmentRestService
+                .deleteFeedback(form.getRemoveFeedbackApplicationId());
+
+        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
+                .failNowOrSucceedWith(failureView, () -> getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult));
+    }
+
 
     @GetMapping("/send/view-feedback/{applicationId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
@@ -118,7 +139,7 @@ public class InterviewApplicationSendInviteController {
         return format("redirect:/assessment/interview/competition/%s/applications/view-status", competitionId);
     }
 
-    private void populateGroupInviteFormWithExistingValues(SendInviteForm form) {
+    private void populateGroupInviteFormWithExistingValues(InterviewApplicationSendForm form) {
         form.setSubject("Please attend an interview for an Innovate UK funding competition");
     }
 

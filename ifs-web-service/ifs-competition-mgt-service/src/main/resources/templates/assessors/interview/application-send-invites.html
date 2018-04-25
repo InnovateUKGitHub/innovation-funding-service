@@ -73,14 +73,21 @@
                                 <div class="upload-section">
                                     <input type="file" th:id="${'attachment-' + app.applicationId}" class="inputfile" name="feedback">
                                     <label th:for="${'attachment-' + app.applicationId}" class="button-secondary extra-margin">+ Upload</label>
-                                    <button name="applicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${'attachment-'+app.applicationId}" th:value="${app.applicationId}">Save</button>
+                                    <button name="attachFeedbackApplicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${'attachment-'+app.applicationId}" th:value="${app.applicationId}">Save</button>
                                 </div>
                             </th:block>
                             <th:block th:if="${app.hasAttachment()}">
-                                <a th:text="${app.filename}"
-                                   th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
-                                   target="_blank">Uploaded-file.pdf</a>
-                                <p class="form-hint">(opens in a new window)</p>
+                                <div class="grid-row">
+                                    <div class="column-two-thirds">
+                                        <a th:text="${app.filename}"
+                                           th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
+                                           target="_blank">Uploaded-file.pdf</a>
+                                        <p class="form-hint">(opens in a new window)</p>
+                                    </div>
+                                    <div class="column-third">
+                                        <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button button-clear">Remove</button>
+                                    </div>
+                                </div>
                             </th:block>
                         </div>
                     </td>
