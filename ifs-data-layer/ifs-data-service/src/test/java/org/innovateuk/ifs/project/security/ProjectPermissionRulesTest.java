@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.project.core.security.ProjectPermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;

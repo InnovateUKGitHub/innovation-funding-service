@@ -6,8 +6,8 @@ import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsSer
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.security.ProjectPermissionRules;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.core.security.ProjectPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
