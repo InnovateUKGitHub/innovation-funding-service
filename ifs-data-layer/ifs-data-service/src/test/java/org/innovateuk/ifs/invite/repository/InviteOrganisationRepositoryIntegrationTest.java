@@ -7,10 +7,6 @@ import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +28,6 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
 
     @Autowired
     private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     private Organisation organisation1;
     private Organisation organisation2;

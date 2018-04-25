@@ -29,9 +29,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -196,7 +193,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(applicationResource);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created =
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
@@ -355,7 +351,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccess();
         assertEquals(newApplication, created);

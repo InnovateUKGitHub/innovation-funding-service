@@ -15,10 +15,6 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,9 +55,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationWorkflowHandler applicationWorkflowHandler;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private ApplicationProgressService applicationProgressService;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP = new HashMap<String, Sort>() {{
@@ -96,11 +89,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
                                                                                                            User user,
                                                                                                            Competition competition) {
-        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(
-                ActivityType.APPLICATION,
-                State.CREATED
-        );
-
         Application application = new Application(applicationName);
         application.setStartDate(null);
 

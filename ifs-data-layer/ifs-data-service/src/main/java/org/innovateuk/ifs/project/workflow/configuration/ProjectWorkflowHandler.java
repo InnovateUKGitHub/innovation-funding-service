@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -61,11 +60,6 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
     @Override
     protected ProjectProcess createNewProcess(Project target, ProjectUser participant) {
         return new ProjectProcess(participant, target, null);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return ActivityType.PROJECT_SETUP;
     }
 
     @Override

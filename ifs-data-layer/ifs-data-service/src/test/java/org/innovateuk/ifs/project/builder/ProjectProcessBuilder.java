@@ -14,7 +14,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 /**
  * Builder for {@link ProjectProcess} entities.

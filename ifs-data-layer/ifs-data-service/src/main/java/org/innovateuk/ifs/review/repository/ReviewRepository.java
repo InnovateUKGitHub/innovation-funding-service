@@ -5,7 +5,6 @@ import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;

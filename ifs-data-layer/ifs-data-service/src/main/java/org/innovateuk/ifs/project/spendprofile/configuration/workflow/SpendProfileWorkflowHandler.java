@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -102,11 +101,6 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
     @Override
     protected SpendProfileProcess createNewProcess(Project target, ProjectUser participant) {
         return new SpendProfileProcess(participant, target, null);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return ActivityType.PROJECT_SETUP_SPEND_PROFILE;
     }
 
     @Override

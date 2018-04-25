@@ -4,14 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.domain.Process;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -30,12 +26,14 @@ import static org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction.testi
  * A superclass for workflow handlers that expose public handler methods for pushing Process subclasses through
  * workflows
  */
-public abstract class BaseWorkflowEventHandler<ProcessType extends Process<ParticipantType, TargetType, StateType>, StateType extends ProcessState, EventType extends ProcessEvent, TargetType extends ProcessActivity, ParticipantType> {
+public abstract class BaseWorkflowEventHandler<
+        ProcessType extends Process<ParticipantType, TargetType, StateType>,
+        StateType extends ProcessState,
+        EventType extends ProcessEvent,
+        TargetType extends ProcessActivity,
+        ParticipantType> {
 
     private static final Log LOG = LogFactory.getLog(BaseWorkflowEventHandler.class);
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     protected GenericPersistStateMachineHandler<StateType, EventType> stateHandler;
 
@@ -69,9 +67,6 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
             ProcessType processToUpdate = getOrCreateProcess(message);
             getParticipant(message).ifPresent(processToUpdate::setParticipant);
             getInternalParticipant(message).ifPresent(processToUpdate::setInternalParticipant);
-
-//            ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
-
 
             processToUpdate.setActivityState(state.getId());
             processToUpdate.setProcessEvent(message.getPayload().getType());
@@ -132,7 +127,7 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
 
     protected abstract ProcessType createNewProcess(TargetType target, ParticipantType participant);
 
-    protected abstract ActivityType getActivityType();
+//    protected abstract ActivityType getActivityType();
 
     protected abstract ProcessRepository<ProcessType> getProcessRepository();
 

@@ -12,8 +12,6 @@ import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWo
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -32,21 +30,15 @@ import static org.mockito.Mockito.when;
 
 @Transactional
 public class InterviewAssignmentWorkflowHandlerIntegrationTest
-        extends BaseWorkflowHandlerIntegrationTest<
-        InterviewAssignmentWorkflowHandler,
-        InterviewAssignmentRepository, TestableTransitionWorkflowAction> {
-
-    private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_INTERVIEW_PANEL;
+        extends BaseWorkflowHandlerIntegrationTest<InterviewAssignmentWorkflowHandler, InterviewAssignmentRepository, TestableTransitionWorkflowAction> {
 
     @Autowired
     private InterviewAssignmentWorkflowHandler workflowHandler;
 
-    private ActivityStateRepository activityStateRepositoryMock;
     private InterviewAssignmentRepository repositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         repositoryMock = (InterviewAssignmentRepository) mockSupplier.apply(InterviewAssignmentRepository.class);
     }
 

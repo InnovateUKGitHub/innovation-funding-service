@@ -10,8 +10,6 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEven
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

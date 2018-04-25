@@ -12,8 +12,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,7 +26,6 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
@@ -50,9 +47,6 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     @Override
@@ -100,11 +94,9 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     }
 
     @Test
-    public void testFindByAssessmentId() throws Exception {
-
+    public void testFindByAssessmentId() {
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
@@ -148,7 +140,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     }
 
     @Test
-    public void testFindByAssessmentIdAndFormInputQuestionId() throws Exception {
+    public void testFindByAssessmentIdAndFormInputQuestionId() {
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
@@ -192,7 +184,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     }
 
     @Test
-    public void testFindByAssessmentIdAndFormInputId() throws Exception {
+    public void testFindByAssessmentIdAndFormInputId() {
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);

@@ -11,8 +11,6 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -24,7 +22,6 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIGIBILITY;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,12 +31,10 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
 
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
-    private ActivityStateRepository activityStateRepositoryMock;
     private EligibilityProcessRepository eligibilityProcessRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         eligibilityProcessRepositoryMock = (EligibilityProcessRepository) mockSupplier.apply(EligibilityProcessRepository.class);
     }
 
@@ -47,10 +42,6 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     public void testProjectCreated() {
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectUser projectUser = newProjectUser().build();
-
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_ELIGIBILITY, EligibilityState.REVIEW.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_ELIGIBILITY, EligibilityState.REVIEW.getBackingState())).thenReturn(expectedActivityState);
-
 
         // Call the workflow here
         boolean result = eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
@@ -65,7 +56,6 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
         expectedEligibilityProcess.setProcessEvent(EligibilityEvent.PROJECT_CREATED.getType());
 
         verify(eligibilityProcessRepositoryMock).save(expectedEligibilityProcess);
-
     }
 
     @Test
@@ -99,8 +89,6 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
         when(eligibilityProcessRepositoryMock.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentEligibilityProcess);
 
         // Set the destination state which we expect when the event is fired
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_ELIGIBILITY, destinationEligibilityState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_ELIGIBILITY, destinationEligibilityState.getBackingState())).thenReturn(expectedActivityState);
 
         // Call the workflow here
         boolean result = workflowMethodToCall.apply(partnerOrganisation, internalUser);
@@ -136,7 +124,6 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     protected List<Class<? extends Repository>> getRepositoriesToMock() {
         List<Class<? extends Repository>> repositories = new ArrayList<>(super.getRepositoriesToMock());
         repositories.add(EligibilityProcessRepository.class);
-        repositories.add(ActivityStateRepository.class);
         return repositories;
     }
 }

@@ -11,8 +11,6 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -24,7 +22,6 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIABILITY;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,12 +32,10 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
-    private ActivityStateRepository activityStateRepositoryMock;
     private ViabilityProcessRepository viabilityProcessRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         viabilityProcessRepositoryMock = (ViabilityProcessRepository) mockSupplier.apply(ViabilityProcessRepository.class);
     }
 
@@ -48,10 +43,6 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     public void testProjectCreated() {
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectUser projectUser = newProjectUser().build();
-
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState())).thenReturn(expectedActivityState);
-
 
         // Call the workflow here
         boolean result = viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
@@ -98,10 +89,6 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
         ViabilityProcess currentViabilityProcess = new ViabilityProcess((User) null, partnerOrganisation, currentViabilityState);
         when(viabilityProcessRepositoryMock.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentViabilityProcess);
 
-        // Set the destination state which we expect when the event is fired
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_VIABILITY, destinationViabilityState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_VIABILITY, destinationViabilityState.getBackingState())).thenReturn(expectedActivityState);
-
         // Call the workflow here
         boolean result = workflowMethodToCall.apply(partnerOrganisation, internalUser);
 
@@ -136,7 +123,6 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     protected List<Class<? extends Repository>> getRepositoriesToMock() {
         List<Class<? extends Repository>> repositories = new ArrayList<>(super.getRepositoriesToMock());
         repositories.add(ViabilityProcessRepository.class);
-        repositories.add(ActivityStateRepository.class);
         return repositories;
     }
 }

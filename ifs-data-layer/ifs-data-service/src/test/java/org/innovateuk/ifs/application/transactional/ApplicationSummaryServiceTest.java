@@ -22,7 +22,6 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

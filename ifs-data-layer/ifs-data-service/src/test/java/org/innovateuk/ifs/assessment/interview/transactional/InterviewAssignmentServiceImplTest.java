@@ -153,7 +153,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
 
         service.assignApplications(stagedApplications).getSuccess();
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, activityStateRepositoryMock,
+        InOrder inOrder = inOrder(applicationRepositoryMock,
                 interviewAssignmentRepositoryMock);
 
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {

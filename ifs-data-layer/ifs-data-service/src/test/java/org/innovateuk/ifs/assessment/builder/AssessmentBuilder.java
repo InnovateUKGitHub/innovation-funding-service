@@ -7,7 +7,6 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;

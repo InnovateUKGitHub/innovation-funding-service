@@ -1,17 +1,14 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 
 public class ApplicationStatisticsTest {

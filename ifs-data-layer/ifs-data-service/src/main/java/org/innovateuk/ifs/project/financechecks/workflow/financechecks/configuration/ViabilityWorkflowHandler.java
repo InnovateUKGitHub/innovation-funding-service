@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +20,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIABILITY;
 
 /**
  * {@code ViabilityWorkflowService} is the entry point for triggering the workflow.
@@ -72,11 +70,6 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
     }
 
     @Override
-    protected ActivityType getActivityType() {
-        return PROJECT_SETUP_VIABILITY;
-    }
-
-    @Override
     protected ProcessRepository<ViabilityProcess> getProcessRepository() {
         return viabilityProcessRepository;
     }
@@ -116,4 +109,3 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
                 .setHeader("internalParticipant", internalUser);
     }
 }
-

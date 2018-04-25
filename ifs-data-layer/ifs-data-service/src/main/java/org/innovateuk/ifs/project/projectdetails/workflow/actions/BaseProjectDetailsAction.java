@@ -7,16 +7,11 @@ import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProces
 import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 
 import java.util.Optional;
-
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJECT_DETAILS;
 
 /**
  * A base class for Project-related workflow Actions
@@ -32,7 +27,6 @@ public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflo
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
         ProjectDetailsState newState = context.getTransition().getTarget().getId();
 
-//        ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, newState);
         doExecute(getProjectFromContext(context), getProjectDetailsFromContext(context), getProjectUserFromContext(context),
                 newState, Optional.ofNullable(updatedProcessOutcome));
     }

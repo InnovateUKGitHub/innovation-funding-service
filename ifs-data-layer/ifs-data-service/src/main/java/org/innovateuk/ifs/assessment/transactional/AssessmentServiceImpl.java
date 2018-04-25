@@ -16,9 +16,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,8 +59,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                  AssessmentMapper assessmentMapper,
                                  AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
                                  AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
-                                 AssessmentWorkflowHandler assessmentWorkflowHandler,
-                                 ActivityStateRepository activityStateRepository) {
+                                 AssessmentWorkflowHandler assessmentWorkflowHandler) {
         this.assessmentRepository = assessmentRepository;
         this.assessmentMapper = assessmentMapper;
         this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;

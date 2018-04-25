@@ -12,8 +12,6 @@ import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -27,7 +25,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -40,26 +37,19 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
 
     @Autowired
     private GrantOfferLetterWorkflowHandler golWorkflowHandler;
-    private ActivityStateRepository activityStateRepositoryMock;
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepositoryMock;
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         grantOfferLetterProcessRepositoryMock = (GrantOfferLetterProcessRepository) mockSupplier.apply(GrantOfferLetterProcessRepository.class);
         projectUserRepositoryMock = (ProjectUserRepository) mockSupplier.apply(ProjectUserRepository.class);
     }
 
     @Test
     public void testProjectCreated() {
-
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
-
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, GrantOfferLetterState.PENDING.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_GRANT_OFFER_LETTER, GrantOfferLetterState.PENDING.getBackingState())).thenReturn(expectedActivityState);
-
 
         // Call the workflow here
         boolean result = golWorkflowHandler.projectCreated(project, projectUser);
@@ -208,10 +198,6 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentGOLState);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
-        // Set the destination state which we expect when the event is fired
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState())).thenReturn(expectedActivityState);
-
         // Call the workflow here
         boolean result = workflowMethodToCall.apply(project, projectUser);
 
@@ -235,10 +221,6 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         // Set the current state in the GOL Process
         GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentGOLState);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
-
-        // Set the destination state which we expect when the event is fired
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState())).thenReturn(expectedActivityState);
 
         // Call the workflow here
         boolean result = workflowMethodToCall.apply(project, internalUser);
@@ -300,10 +282,6 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         currentGOLProcess.setParticipant(projectUser);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
-        // Set the destination state which we expect when the event is fired
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState())).thenReturn(expectedActivityState);
-
         // Call the workflow here
         boolean result = workflowMethodToCall.apply(project);
 
@@ -338,7 +316,6 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     protected List<Class<? extends Repository>> getRepositoriesToMock() {
         List<Class<? extends Repository>> repositories = new ArrayList<>(super.getRepositoriesToMock());
         repositories.add(GrantOfferLetterProcessRepository.class);
-        repositories.add(ActivityStateRepository.class);
         repositories.add(ProjectUserRepository.class);
         return repositories;
     }
