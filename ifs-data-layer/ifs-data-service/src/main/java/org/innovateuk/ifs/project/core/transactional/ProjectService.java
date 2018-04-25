@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.transactional;
+package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;

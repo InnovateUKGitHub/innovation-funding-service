@@ -115,8 +115,8 @@ import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfi
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
-import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
-import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
