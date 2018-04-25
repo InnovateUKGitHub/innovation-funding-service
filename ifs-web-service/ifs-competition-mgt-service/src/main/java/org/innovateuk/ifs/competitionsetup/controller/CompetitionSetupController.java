@@ -341,6 +341,14 @@ public class CompetitionSetupController {
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/setup/%d", competitionId));
     }
 
+    @GetMapping("/{competitionId}/section/terms-and-conditions/template")
+    public String loadTermsAndConditionsTemplate(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        CompetitionResource competition = competitionService.getById(competitionId);
+        TermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
+
+        return "redirect:/competition/info/" + termsAndConditions.getTemplate();
+    }
+
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/find")
     public String manageInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
