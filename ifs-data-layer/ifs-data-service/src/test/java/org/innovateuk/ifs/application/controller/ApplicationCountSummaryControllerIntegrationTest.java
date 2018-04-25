@@ -93,7 +93,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
                 .withCompetition(competitionRepository.findById(competitionId))
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
                 .build();
-        application.getApplicationProcess().setActivityState(ApplicationState.SUBMITTED);
+        application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
 

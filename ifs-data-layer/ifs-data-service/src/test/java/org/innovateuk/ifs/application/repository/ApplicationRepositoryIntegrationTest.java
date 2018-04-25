@@ -186,7 +186,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Assessment assessment = assessmentRepository.save(newAssessment()
                 .withApplication(application)
-                .withActivityState(AssessmentState.SUBMITTED)
+                .withProcessState(AssessmentState.SUBMITTED)
                 .build()
         );
 
@@ -200,7 +200,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withApplicationState(applicationState)
                 .build();
-        application.getApplicationProcess().setActivityState(applicationState);
+        application.getApplicationProcess().setProcessState(applicationState);
         return application;
     }
 }

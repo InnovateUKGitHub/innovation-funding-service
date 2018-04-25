@@ -126,7 +126,7 @@ public class ApplicationSummaryMapperTest {
 
     @Test
     public void testMapFundedBecauseOfStatus() {
-        source.getApplicationProcess().setActivityState(ApplicationState.APPROVED);
+        source.getApplicationProcess().setProcessState(ApplicationState.APPROVED);
         source.setFundingDecision(null);
 
         ApplicationSummaryResource result = mapper.mapToResource(source);
@@ -137,7 +137,7 @@ public class ApplicationSummaryMapperTest {
 
     @Test
     public void testMapFundedBecauseOfFundingDecision() {
-        source.getApplicationProcess().setActivityState(ApplicationState.OPEN);
+        source.getApplicationProcess().setProcessState(ApplicationState.OPEN);
         source.setFundingDecision(FundingDecisionStatus.FUNDED);
 
         ApplicationSummaryResource result = mapper.mapToResource(source);

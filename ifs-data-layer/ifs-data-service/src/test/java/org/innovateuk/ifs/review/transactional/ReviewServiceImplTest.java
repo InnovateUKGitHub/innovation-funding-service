@@ -30,6 +30,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -39,7 +40,6 @@ import static org.innovateuk.ifs.review.builder.ReviewParticipantBuilder.newRevi
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeBuilder.newReviewRejectOutcome;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
-import static org.innovateuk.ifs.review.resource.ReviewState.ACCEPTED;
 import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
 import static org.innovateuk.ifs.review.transactional.ReviewServiceImpl.INVITE_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -147,7 +147,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .build(1);
 
         Review review = new Review(applications.get(0), reviewParticipants.get(0));
-        review.setActivityState(ACCEPTED);
+        review.setProcessState(CREATED);
 
         when(reviewParticipantRepositoryMock
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
@@ -165,7 +165,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .findByTargetCompetitionIdAndActivityState(competitionId, CREATED))
                 .thenReturn(asList(review));
 
-        Notification expectedNotification = LambdaMatcher.createLambdaMatcher(n -> {
+        Notification expectedNotification = createLambdaMatcher(n -> {
             Map<String, Object> globalArguments = n.getGlobalArguments();
             assertEquals(assessor.getEmail(), n.getTo().get(0).getEmailAddress());
             assertEquals(globalArguments.get("subject"), "Applications ready for review");

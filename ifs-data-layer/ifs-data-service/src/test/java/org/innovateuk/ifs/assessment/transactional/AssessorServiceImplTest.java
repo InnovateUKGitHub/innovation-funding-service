@@ -268,7 +268,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2);
         List<Assessment> assessments = newAssessment()
                 .withId(2L, 3L)
-                .withActivityState(AssessmentState.CREATED)
+                .withProcessState(AssessmentState.CREATED)
                 .withApplication(
                         newApplication().withCompetition(competition).build(),
                         newApplication().withCompetition(competition).build()
@@ -358,7 +358,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         List<Assessment> assessments = newAssessment()
                 .withId(2L, 3L)
-                .withActivityState(AssessmentState.CREATED)
+                .withProcessState(AssessmentState.CREATED)
                 .withApplication(
                         newApplication().withCompetition(competition).build(),
                         newApplication().withCompetition(competition).build()
@@ -434,7 +434,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(competitionId)
                 .build();
         List<Assessment> assessments = newAssessment()
-                .withActivityState(AssessmentState.CREATED)
+                .withProcessState(AssessmentState.CREATED)
                 .withId(2L, 3L)
                 .build(2);
 
@@ -466,7 +466,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(competitionId)
                 .build();
         List<Assessment> assessments = newAssessment()
-                .withActivityState(AssessmentState.CREATED)
+                .withProcessState(AssessmentState.CREATED)
                 .withId(2L, 3L)
                 .build(2);
 

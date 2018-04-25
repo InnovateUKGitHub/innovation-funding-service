@@ -88,7 +88,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(participant1, participant2)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build(2);
 
         Set<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toSet());
@@ -114,7 +114,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(participant1, participant2)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build(2);
 
         List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(toList());
@@ -258,7 +258,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .withId()
                 .withApplication(application1)
                 .withParticipant(participant1, participant2)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build(2);
 
         assessments.add(
@@ -266,7 +266,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                         .withId()
                         .withApplication(application2)
                         .withParticipant(participant3)
-                        .withActivityState(OPEN)
+                        .withProcessState(OPEN)
                         .build()
         );
 
@@ -318,7 +318,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         // Feedback should be incomplete for a new assessment with no responses
         Assessment assessment = repository.save(newAssessment()
                 .with(id(null))
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .withApplication(application)
                 .build());
 
@@ -356,7 +356,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         Assessment assessment = repository.save(newAssessment()
                 .with(id(null))
-                .withActivityState(SUBMITTED)
+                .withProcessState(SUBMITTED)
                 .withApplication(application)
                 .build());
 
@@ -411,7 +411,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                         .with(id(null))
                         .withApplication(application)
                         .withParticipant(setUpParticipants(user, application, numOfAssessmentsForEachState))
-                        .withActivityState(activityState)
+                        .withProcessState(activityState)
                         .build(numOfAssessmentsForEachState).stream()).collect(toList());
     }
 

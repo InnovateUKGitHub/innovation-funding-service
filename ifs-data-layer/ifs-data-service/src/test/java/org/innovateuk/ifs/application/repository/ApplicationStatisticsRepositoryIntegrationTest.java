@@ -157,7 +157,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
                 .withProcessRoles(processRole)
                 .build();
-        application.getApplicationProcess().setActivityState(ApplicationState.SUBMITTED);
+        application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
 
@@ -196,7 +196,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
                 .withProcessRoles(processRole)
                 .build();
-        application.getApplicationProcess().setActivityState(ApplicationState.SUBMITTED);
+        application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
 
@@ -254,7 +254,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(AssessmentState.PENDING)
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -326,7 +326,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(AssessmentState.PENDING)
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -418,7 +418,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(AssessmentState.PENDING)
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -493,7 +493,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(AssessmentState.PENDING)
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -565,7 +565,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(AssessmentState.ACCEPTED)
+                .withProcessState(AssessmentState.ACCEPTED)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -648,7 +648,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(AssessmentState.ACCEPTED)
+                .withProcessState(AssessmentState.ACCEPTED)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -720,7 +720,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(AssessmentState.SUBMITTED)
+                .withProcessState(AssessmentState.SUBMITTED)
                 .build();
 
         assessmentRepository.save(assessment);

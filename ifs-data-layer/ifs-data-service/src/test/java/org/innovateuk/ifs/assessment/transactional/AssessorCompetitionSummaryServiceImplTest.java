@@ -180,7 +180,7 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
     private Assessment[] setUpAssessments(Application[] applications, AssessmentRejectOutcome rejectOutcome) {
         return newAssessment()
                 .withApplication(applications)
-                .withActivityState(ACCEPTED, SUBMITTED, REJECTED, WITHDRAWN)
+                .withProcessState(ACCEPTED, SUBMITTED, REJECTED, WITHDRAWN)
                 .withRejection(null, null, rejectOutcome, null)
                 .buildArray(4, Assessment.class);
     }

@@ -159,7 +159,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withId()
                 .withApplication(applications.get(0), applications.get(1), applications.get(2), applications.get(0), applications.get(1))
                 .withParticipant(processRoles.get(0), processRoles.get(1), processRoles.get(2), processRoles.get(3), processRoles.get(4))
-                .withActivityState(REJECTED, SUBMITTED, ACCEPTED, SUBMITTED, SUBMITTED)
+                .withProcessState(REJECTED, SUBMITTED, ACCEPTED, SUBMITTED, SUBMITTED)
                 .withRejection(rejectOutcome, null, null, null, null)
                 .build(5);
 

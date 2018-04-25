@@ -48,11 +48,6 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.activityState = AssessmentState.CREATED;
     }
 
-    @Override
-    public void setActivityState(AssessmentState status) {
-        this.activityState=status;
-    }
-
     public AssessmentFundingDecisionOutcome getFundingDecision() {
         return fundingDecision;
     }
@@ -103,13 +98,14 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.target = target;
     }
 
+    @Override
     public AssessmentState getProcessState() {
         return activityState;
     }
 
     @Override
-    public AssessmentState getActivityState() {
-        return activityState;
+    public void setProcessState(AssessmentState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -125,8 +121,6 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(responses, that.responses)
-                .append(fundingDecision, that.fundingDecision)
-                .append(rejection, that.rejection)
                 .append(activityState, that.activityState)
                 .isEquals();
     }
@@ -138,8 +132,6 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
                 .append(participant)
                 .append(target)
                 .append(responses)
-                .append(fundingDecision)
-                .append(rejection)
                 .append(activityState)
                 .toHashCode();
     }

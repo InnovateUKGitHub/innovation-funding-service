@@ -40,12 +40,7 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     public ApplicationProcess(Application target, ProcessRole participant, ApplicationState initialState) {
         this.target = target;
         this.participant = participant;
-        this.setActivityState(initialState);
-    }
-
-    @Override
-    public void setActivityState(ApplicationState status) {
-        this.activityState = status;
+        this.setProcessState(initialState);
     }
 
     @Override
@@ -74,7 +69,9 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     }
 
     @Override
-    public ApplicationState getActivityState() { return activityState; }
+    public void setProcessState(ApplicationState status) {
+        this.activityState = status;
+    }
 
     public List<IneligibleOutcome> getIneligibleOutcomes() {
         return ineligibleOutcomes;

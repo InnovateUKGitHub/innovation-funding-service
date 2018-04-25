@@ -48,7 +48,7 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
         ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
 
         if (process != null) {
-            resource.setProjectState(process.getActivityState());
+            resource.setProjectState(process.getProcessState());
         }
     }
 

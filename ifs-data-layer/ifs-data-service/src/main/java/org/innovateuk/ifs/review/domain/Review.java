@@ -48,11 +48,6 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
         this.target = application;
     }
 
-    @Override
-    public void setActivityState(ReviewState status) {
-        this.activityState = status;
-    }
-
     public ReviewRejectOutcome getRejection() {
         return rejection;
     }
@@ -90,8 +85,8 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
     }
 
     @Override
-    public ReviewState getActivityState() {
-        return activityState;
+    public void setProcessState(ReviewState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -106,7 +101,6 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
                 .appendSuper(super.equals(o))
                 .append(participant, review.participant)
                 .append(target, review.target)
-                .append(rejection, review.rejection)
                 .append(activityState, review.activityState)
                 .isEquals();
     }
@@ -117,7 +111,6 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
-                .append(rejection)
                 .append(activityState)
                 .toHashCode();
     }

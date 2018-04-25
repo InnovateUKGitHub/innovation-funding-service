@@ -36,11 +36,6 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
     }
 
     @Override
-    public void setActivityState(InterviewState status) {
-        this.activityState = status;
-    }
-
-    @Override
     public ProcessRole getParticipant() {
         return participant;
     }
@@ -66,8 +61,8 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
     }
 
     @Override
-    public InterviewState getActivityState() {
-        return null;
+    public void setProcessState(InterviewState status) {
+        this.activityState = status;
     }
 
     @Override

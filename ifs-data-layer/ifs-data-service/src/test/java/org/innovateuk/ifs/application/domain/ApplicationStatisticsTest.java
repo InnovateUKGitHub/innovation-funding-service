@@ -19,7 +19,7 @@ public class ApplicationStatisticsTest {
     public void setup() {
         applicationStatistics = newApplicationStatistics()
                 .withAssessments(
-                        newAssessment().withActivityState(AssessmentState.values())
+                        newAssessment().withProcessState(AssessmentState.values())
                                 .build(AssessmentState.values().length))
                 .build();
     }

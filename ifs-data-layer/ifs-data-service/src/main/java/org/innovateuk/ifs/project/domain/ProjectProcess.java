@@ -30,12 +30,7 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     public ProjectProcess(ProjectUser participant, Project target, ProjectState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
-    }
-
-    @Override
-    public void setActivityState(ProjectState status) {
-        this.activityState = status;
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -64,8 +59,8 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     }
 
     @Override
-    public ProjectState getActivityState() {
-        return activityState;
+    public void setProcessState(ProjectState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -77,7 +72,6 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
         ProjectProcess that = (ProjectProcess) o;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
@@ -87,7 +81,6 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
                 .append(activityState)

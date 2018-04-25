@@ -31,6 +31,6 @@ public class ProjectInSetupGuard implements Guard<ProjectState, ProjectEvent> {
 
     private boolean isProjectValid(Project project) {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(project.getId());
-        return projectProcess.getActivityState() != ProjectState.WITHDRAWN;
+        return projectProcess.getProcessState() != ProjectState.WITHDRAWN;
     }
 }

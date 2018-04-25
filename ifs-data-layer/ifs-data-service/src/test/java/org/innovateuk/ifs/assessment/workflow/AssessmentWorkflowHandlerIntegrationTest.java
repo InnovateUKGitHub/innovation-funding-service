@@ -296,14 +296,14 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     private Supplier<Assessment> setupIncompleteAssessment(AssessmentState initialState) {
         return () -> newAssessment()
-                .withActivityState(initialState)
+                .withProcessState(initialState)
                 .build();
     }
 
     private Supplier<Assessment> setupCompleteAssessment(AssessmentState initialState) {
         return () -> {
             Assessment assessment = newAssessment()
-                    .withActivityState(initialState)
+                    .withProcessState(initialState)
                     .withFundingDecision(newAssessmentFundingDecisionOutcome().build())
                     .build();
             when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(true);

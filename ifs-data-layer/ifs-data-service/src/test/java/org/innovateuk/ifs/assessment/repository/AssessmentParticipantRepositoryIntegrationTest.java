@@ -325,7 +325,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
             processRoleRepository.save(processRole);
 
             Assessment assessment = new Assessment(application, processRole);
-            assessment.setActivityState(AssessmentState.ACCEPTED);
+            assessment.setProcessState(AssessmentState.ACCEPTED);
             assessmentRepository.save(assessment);
         }
 
@@ -371,7 +371,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         processRoleRepository.save(processRole);
 
         Assessment assessment = new Assessment(application, processRole);
-        assessment.setActivityState(AssessmentState.ACCEPTED);
+        assessment.setProcessState(AssessmentState.ACCEPTED);
         assessmentRepository.save(assessment);
 
         flushAndClearSession();

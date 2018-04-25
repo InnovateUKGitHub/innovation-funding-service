@@ -65,8 +65,8 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((app, object) -> setField("target", app, object), application);
     }
 
-    public AssessmentBuilder withActivityState(AssessmentState... activityState) {
-        return withArray((state, object) -> object.setActivityState(state), activityState);
+    public AssessmentBuilder withProcessState(AssessmentState... activityState) {
+        return withArray((state, object) -> object.setProcessState(state), activityState);
     }
 
     public AssessmentBuilder withFundingDecision(AssessmentFundingDecisionOutcome... fundingDecision) {

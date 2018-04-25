@@ -33,18 +33,13 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
     public GOLProcess(ProjectUser participant, Project target, GrantOfferLetterState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     public GOLProcess(User internalParticipant, Project target, GrantOfferLetterState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
-        this.setActivityState(originalState);
-    }
-
-    @Override
-    public void setActivityState(GrantOfferLetterState status) {
-        this.activityState = status;
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -73,8 +68,8 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
     }
 
     @Override
-    public GrantOfferLetterState getActivityState() {
-        return activityState;
+    public void setProcessState(GrantOfferLetterState status) {
+        this.activityState = status;
     }
 
     @Override

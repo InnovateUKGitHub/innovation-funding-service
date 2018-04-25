@@ -168,7 +168,7 @@ public class ReviewServiceImpl implements ReviewService {
     private ServiceResult<Void> createAssessmentReview(ReviewParticipant assessor, Application application) {
         if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateNot(assessor.getUser(), application, ReviewState.WITHDRAWN)) {
             Review review =  new Review(application, assessor);
-            review.setActivityState(ReviewState.CREATED);
+            review.setProcessState(ReviewState.CREATED);
             reviewRepository.save(review);
         }
         return serviceSuccess();

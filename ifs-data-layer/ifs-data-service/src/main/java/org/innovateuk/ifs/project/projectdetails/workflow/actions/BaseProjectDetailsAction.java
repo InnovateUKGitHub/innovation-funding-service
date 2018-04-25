@@ -46,7 +46,7 @@ public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflo
     protected void doExecute(Project project, ProjectDetailsProcess projectDetails, ProjectUser projectUser,
                                       ProjectDetailsState newState, Optional<ProcessOutcome> processOutcome) {
 
-        projectDetails.setActivityState(newState);
+        projectDetails.setProcessState(newState);
         projectDetailsProcessRepository.save(projectDetails);
     }
 }

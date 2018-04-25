@@ -291,7 +291,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(ReviewState.CREATED);
+        review.setProcessState(ReviewState.CREATED);
         reviewRepository.save(review);
 
         flushAndClearSession();
@@ -361,7 +361,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(ReviewState.WITHDRAWN);
+        review.setProcessState(ReviewState.WITHDRAWN);
         reviewRepository.save(review);
 
         flushAndClearSession();
@@ -433,8 +433,8 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                         .withTarget(application)
                         .build(2);
 
-        assessmentReviews.get(0).setActivityState(ReviewState.ACCEPTED);
-        assessmentReviews.get(1).setActivityState(ReviewState.PENDING);
+        assessmentReviews.get(0).setProcessState(ReviewState.ACCEPTED);
+        assessmentReviews.get(1).setProcessState(ReviewState.PENDING);
         reviewRepository.save(assessmentReviews.get(0));
         reviewRepository.save(assessmentReviews.get(1));
 
@@ -477,7 +477,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        review.setActivityState(ReviewState.PENDING);
+        review.setProcessState(ReviewState.PENDING);
         reviewRepository.save(review);
 
         flushAndClearSession();
@@ -517,7 +517,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        review.setActivityState(ReviewState.REJECTED);
+        review.setProcessState(ReviewState.REJECTED);
         reviewRepository.save(review);
 
         flushAndClearSession();
@@ -557,7 +557,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        review.setActivityState(ReviewState.PENDING);
+        review.setProcessState(ReviewState.PENDING);
         reviewRepository.save(review);
 
         flushAndClearSession();

@@ -51,6 +51,6 @@ public class ReviewBuilder extends BaseBuilder<Review, ReviewBuilder> {
     }
 
     public ReviewBuilder withState(ReviewState... states) {
-        return withArray((state, invite) -> invite.setActivityState(state), states);
+        return withArray((state, invite) -> invite.setProcessState(state), states);
     }
 }

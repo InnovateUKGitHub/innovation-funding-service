@@ -90,7 +90,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
                 .build();
 
         List<Assessment> assessments = newAssessment()
-                .withActivityState(OPEN, SUBMITTED, PENDING)
+                .withProcessState(OPEN, SUBMITTED, PENDING)
                 .build(3);
 
         when(assessmentParticipantRepositoryMock.getByUserIdAndRole(userId, ASSESSOR)).thenReturn(competitionParticipants);

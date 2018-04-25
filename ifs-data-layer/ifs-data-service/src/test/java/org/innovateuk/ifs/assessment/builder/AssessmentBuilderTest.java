@@ -35,7 +35,7 @@ public class AssessmentBuilderTest {
 
         Assessment assessment = newAssessment()
                 .withId(expectedId)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .withLastModifiedDate(expectedLastModifiedDate)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
@@ -69,7 +69,7 @@ public class AssessmentBuilderTest {
 
         List<Assessment> assessments = newAssessment()
                 .withId(expectedIds)
-                .withActivityState(OPEN, READY_TO_SUBMIT)
+                .withProcessState(OPEN, READY_TO_SUBMIT)
                 .withLastModifiedDate(expectedLastModifiedDates)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)

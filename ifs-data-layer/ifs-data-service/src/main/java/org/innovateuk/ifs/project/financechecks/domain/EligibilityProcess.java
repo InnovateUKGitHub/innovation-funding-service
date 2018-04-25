@@ -33,18 +33,13 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
     public EligibilityProcess(ProjectUser participant, PartnerOrganisation target, EligibilityState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     public EligibilityProcess(User internalParticipant, PartnerOrganisation target, EligibilityState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
-        this.setActivityState(originalState);
-    }
-
-    @Override
-    public void setActivityState(EligibilityState status) {
-        this.activityState = status;
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -73,8 +68,8 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
     }
 
     @Override
-    public EligibilityState getActivityState() {
-        return activityState;
+    public void setProcessState(EligibilityState status) {
+        this.activityState = status;
     }
 
     @Override

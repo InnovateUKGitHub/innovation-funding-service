@@ -53,12 +53,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
 
         this.target = application;
         this.participant = participant;
-        setActivityState(InterviewAssignmentState.CREATED);
-    }
-
-    @Override
-    public void setActivityState(InterviewAssignmentState status) {
-        this.activityState = status;
+        setProcessState(InterviewAssignmentState.CREATED);
     }
 
     @Override
@@ -86,6 +81,11 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
         return activityState;
     }
 
+    @Override
+    public void setProcessState(InterviewAssignmentState status) {
+        this.activityState = status;
+    }
+
     public void setResponse(InterviewAssignmentResponseOutcome response) {
         this.response = response;
     }
@@ -96,11 +96,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
 
     public void setMessage(InterviewAssignmentMessageOutcome message) {
         this.message = message;
-    }
-
-    @Override
-    public InterviewAssignmentState getActivityState() {
-        return activityState;
     }
 
     public InterviewAssignmentMessageOutcome getMessage() {
@@ -119,8 +114,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
-                .append(message, that.message)
-                .append(response, that.response)
                 .append(activityState, that.activityState)
                 .isEquals();
     }
@@ -131,8 +124,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
-                .append(message)
-                .append(response)
                 .append(activityState)
                 .toHashCode();
     }

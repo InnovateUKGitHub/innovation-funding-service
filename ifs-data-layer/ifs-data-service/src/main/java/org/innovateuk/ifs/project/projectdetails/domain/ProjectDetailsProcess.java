@@ -29,12 +29,7 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
     public ProjectDetailsProcess(ProjectUser participant, Project target, ProjectDetailsState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
-    }
-
-    @Override
-    public void setActivityState(ProjectDetailsState status) {
-        this.activityState = status;
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -63,8 +58,8 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
     }
 
     @Override
-    public ProjectDetailsState getActivityState() {
-        return activityState;
+    public void setProcessState(ProjectDetailsState status) {
+        this.activityState = status;
     }
 
     @Override

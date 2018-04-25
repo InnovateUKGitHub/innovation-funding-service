@@ -33,18 +33,13 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
     public ViabilityProcess(ProjectUser participant, PartnerOrganisation target, ViabilityState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     public ViabilityProcess(User internalParticipant, PartnerOrganisation target, ViabilityState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
-        this.setActivityState(originalState);
-    }
-
-    @Override
-    public void setActivityState(ViabilityState status) {
-        this.activityState = status;
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -73,8 +68,8 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
     }
 
     @Override
-    public ViabilityState getActivityState() {
-        return activityState;
+    public void setProcessState(ViabilityState status) {
+        this.activityState = status;
     }
 
     @Override

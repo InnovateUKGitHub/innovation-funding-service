@@ -80,6 +80,6 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
 
     private boolean isProjectStateInSetup(long projectId){
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
-        return ProjectState.SETUP.equals(projectProcess.getActivityState());
+        return ProjectState.SETUP.equals(projectProcess.getProcessState());
     }
 }

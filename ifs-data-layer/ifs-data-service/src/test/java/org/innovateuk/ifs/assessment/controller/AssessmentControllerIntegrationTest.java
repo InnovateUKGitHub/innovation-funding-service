@@ -375,7 +375,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         return assessmentRepository.save(newAssessment()
                 .with(id(null))
-                .withActivityState(state)
+                .withProcessState(state)
                 .withParticipant(processRole)
                 .build());
     }

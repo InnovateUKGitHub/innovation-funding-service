@@ -32,18 +32,13 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
     public SpendProfileProcess(ProjectUser participant, Project target, SpendProfileState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     public SpendProfileProcess(User internalParticipant, Project target, SpendProfileState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
-        this.setActivityState(originalState);
-    }
-
-    @Override
-    public void setActivityState(SpendProfileState status) {
-        this.activityState = status;
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -72,8 +67,8 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
     }
 
     @Override
-    public SpendProfileState getActivityState() {
-        return activityState;
+    public void setProcessState(SpendProfileState status) {
+        this.activityState = status;
     }
 
     @Override

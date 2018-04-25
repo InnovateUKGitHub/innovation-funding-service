@@ -46,6 +46,6 @@ public class InterviewAssignmentBuilder extends BaseBuilder<InterviewAssignment,
     }
 
     public InterviewAssignmentBuilder withState(InterviewAssignmentState... states) {
-        return withArray((state, invite) -> invite.setActivityState(state), states);
+        return withArray((state, invite) -> invite.setProcessState(state), states);
     }
 }

@@ -245,7 +245,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
                                 application.getId(),
                                 application.getName(),
                                 leadOrganisation.getName(),
-                                panelInvite.getActivityState()
+                                panelInvite.getProcessState()
                         )
                 ).getSuccess();
     }

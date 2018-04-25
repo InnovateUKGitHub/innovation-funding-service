@@ -89,7 +89,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(CREATED);
+        review.setProcessState(CREATED);
         repository.save(review);
 
         assertTrue(repository.existsByParticipantUserAndTargetAndActivityStateNot(user, application, ReviewState.WITHDRAWN)); // probably should be notExists if that's allowed
@@ -124,7 +124,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(CREATED);
+        review.setProcessState(CREATED);
         repository.save(review);
 
         assertFalse(repository.existsByParticipantUserAndTargetAndActivityStateNot(user, application2, ReviewState.WITHDRAWN));
@@ -163,7 +163,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(CREATED);
+        review.setProcessState(CREATED);
         repository.save(review);
 
 
@@ -204,7 +204,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(CREATED);
+        review.setProcessState(CREATED);
         repository.save(review);
 
 
@@ -297,7 +297,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(CREATED);
+        review.setProcessState(CREATED);
 
         repository.save(review);
 
@@ -351,7 +351,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(WITHDRAWN);
+        review.setProcessState(WITHDRAWN);
 
         repository.save(review);
 

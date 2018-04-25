@@ -67,7 +67,6 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
                 .withName("Progressive machines")
                 .withApplicationState(CREATED)
                 .build();
-//        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED));
 
         applicationRepository.save(application);
 

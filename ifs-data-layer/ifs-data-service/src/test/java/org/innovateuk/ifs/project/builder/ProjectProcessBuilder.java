@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.project.domain.*;
 
 import java.util.List;
@@ -51,6 +50,6 @@ public class ProjectProcessBuilder extends BaseBuilder<ProjectProcess, ProjectPr
     }
 
     public ProjectProcessBuilder withActivityState(ProjectState... activityStates) {
-        return withArray((activityState, projectProcess) -> projectProcess.setActivityState(activityState), activityStates);
+        return withArray((activityState, projectProcess) -> projectProcess.setProcessState(activityState), activityStates);
     }
 }

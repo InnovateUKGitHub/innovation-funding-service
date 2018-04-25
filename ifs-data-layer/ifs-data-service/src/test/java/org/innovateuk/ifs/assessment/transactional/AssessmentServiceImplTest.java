@@ -73,7 +73,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
-                .withActivityState(PENDING)
+                .withProcessState(PENDING)
                 .build();
         AssessmentResource expected = newAssessmentResource()
                 .build();
@@ -96,7 +96,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
-                .withActivityState(WITHDRAWN)
+                .withProcessState(WITHDRAWN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -115,7 +115,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
-                .withActivityState(PENDING)
+                .withProcessState(PENDING)
                 .build();
         AssessmentResource expected = newAssessmentResource()
                 .build();
@@ -138,7 +138,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
-                .withActivityState(WITHDRAWN)
+                .withProcessState(WITHDRAWN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -192,7 +192,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build();
 
         AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome().build();
@@ -218,7 +218,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build();
 
         AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome().build();
@@ -271,7 +271,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build();
 
         AssessmentRejectOutcome assessmentRejectOutcome = newAssessmentRejectOutcome().build();
@@ -297,7 +297,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build();
 
         AssessmentRejectOutcome assessmentRejectOutcome = newAssessmentRejectOutcome().build();
@@ -321,7 +321,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void withdrawAssessment() {
         Assessment assessment = newAssessment()
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
@@ -339,7 +339,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void withdrawAssessment_eventNotAccepted() {
         Assessment assessment = newAssessment()
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
@@ -361,7 +361,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(OPEN)
+                .withProcessState(OPEN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -382,7 +382,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(PENDING)
+                .withProcessState(PENDING)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -405,7 +405,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
         List<Assessment> assessments = newAssessment()
                 .withId(1L, 2L)
-                .withActivityState(READY_TO_SUBMIT)
+                .withProcessState(READY_TO_SUBMIT)
                 .build(2);
 
         assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
@@ -413,11 +413,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(assessments);
 
         when(assessmentWorkflowHandlerMock.submit(assessments.get(0))).thenAnswer(invocation -> {
-            assessments.get(0).setActivityState(SUBMITTED);
+            assessments.get(0).setProcessState(SUBMITTED);
             return Boolean.TRUE;
         });
         when(assessmentWorkflowHandlerMock.submit(assessments.get(1))).thenAnswer(invocation -> {
-            assessments.get(1).setActivityState(SUBMITTED);
+            assessments.get(1).setProcessState(SUBMITTED);
             return Boolean.TRUE;
         });
 
@@ -442,7 +442,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(1L)
-                .withActivityState(PENDING)
+                .withProcessState(PENDING)
                 .with((resource) -> resource.setTarget(application))
                 .build();
 
@@ -491,7 +491,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(1L)
-                .withActivityState(PENDING)
+                .withProcessState(PENDING)
                 .with((resource) -> resource.setTarget(application))
                 .build();
 
@@ -534,13 +534,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment expectedAssessment = newAssessment()
                 .with(id(null))
                 .withApplication(application)
-                .withActivityState(CREATED)
+                .withProcessState(CREATED)
                 .withParticipant(savedProcessRole)
                 .build();
         Assessment savedAssessment = newAssessment()
                 .withId(5L)
                 .withApplication(application)
-                .withActivityState(CREATED)
+                .withProcessState(CREATED)
                 .withParticipant(savedProcessRole)
                 .build();
 
@@ -597,13 +597,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment expectedAssessment = newAssessment()
                 .with(id(null))
                 .withApplication(application)
-                .withActivityState(CREATED)
+                .withProcessState(CREATED)
                 .withParticipant(expectedProcessRole)
                 .build();
         Assessment savedAssessment = newAssessment()
                 .withId(5L)
                 .withApplication(application)
-                .withActivityState(CREATED)
+                .withProcessState(CREATED)
                 .withParticipant(expectedProcessRole)
                 .build();
 
@@ -650,7 +650,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Application application = newApplication().withId(applicationId).build();
 
         Assessment existingAssessment = newAssessment()
-                .withActivityState(WITHDRAWN)
+                .withProcessState(WITHDRAWN)
                 .build();
 
         ProcessRole expectedProcessRole = newProcessRole()
@@ -669,13 +669,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment expectedAssessment = newAssessment()
                 .with(id(null))
                 .withApplication(application)
-                .withActivityState(WITHDRAWN)
+                .withProcessState(CREATED)
                 .withParticipant(savedProcessRole)
                 .build();
         Assessment savedAssessment = newAssessment()
                 .withId(5L)
                 .withApplication(application)
-                .withActivityState(WITHDRAWN)
+                .withProcessState(CREATED)
                 .withParticipant(savedProcessRole)
                 .build();
 
@@ -768,7 +768,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Application application = newApplication().withId(applicationId).build();
 
         Assessment existingAssessment = newAssessment()
-                .withActivityState(PENDING)
+                .withProcessState(PENDING)
                 .build();
 
         when(userRepositoryMock.findByIdAndRoles(assessorId, ASSESSOR)).thenReturn(Optional.of(user));

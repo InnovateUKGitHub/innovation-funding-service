@@ -65,7 +65,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 newAssessment().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(AssessmentState.OPEN).
+                        withProcessState(AssessmentState.OPEN).
                         build());
 
         List<Question> questions = asList(new Question(), new Question()).stream().map(question -> questionRepository.save(question)).collect(toList());
@@ -103,7 +103,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                         withId().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(AssessmentState.OPEN).
+                        withProcessState(AssessmentState.OPEN).
                         build(2);
 
         List<Assessment> savedAssessments = simpleMap(assessments, assessment -> assessmentRepository.save(assessment));
@@ -150,7 +150,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                         withId().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(AssessmentState.OPEN).
+                        withProcessState(AssessmentState.OPEN).
                         build());
         // Save two questions
         List<Question> questions = asList(new Question(), new Question()).stream().map(question -> questionRepository.save(question)).collect(toList());
@@ -193,7 +193,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 newAssessment().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(AssessmentState.OPEN).
+                        withProcessState(AssessmentState.OPEN).
                         build(2);
 
         List<Assessment> savedAssessments = simpleMap(assessments, assessment -> assessmentRepository.save(assessment));
@@ -240,7 +240,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                         withId().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(AssessmentState.OPEN).
+                        withProcessState(AssessmentState.OPEN).
                         build(2);
 
         List<Assessment> savedAssessments = simpleMap(assessments, assessment -> assessmentRepository.save(assessment));
@@ -283,7 +283,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                         withId().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(AssessmentState.OPEN).
+                        withProcessState(AssessmentState.OPEN).
                         build(2);
 
         List<Assessment> savedAssessments = simpleMap(assessments, assessment -> assessmentRepository.save(assessment));

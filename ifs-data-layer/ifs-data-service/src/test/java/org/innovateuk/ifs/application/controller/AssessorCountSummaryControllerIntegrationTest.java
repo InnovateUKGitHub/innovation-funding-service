@@ -108,7 +108,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(AssessmentState.PENDING)
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);

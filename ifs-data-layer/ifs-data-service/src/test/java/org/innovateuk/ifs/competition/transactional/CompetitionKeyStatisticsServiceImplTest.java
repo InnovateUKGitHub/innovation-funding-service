@@ -107,11 +107,11 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .build();
 
         List<Assessment> assessments = newAssessment()
-                .withActivityState(AssessmentState.PENDING, REJECTED, AssessmentState.OPEN)
+                .withProcessState(AssessmentState.PENDING, REJECTED, AssessmentState.OPEN)
                 .build(3);
 
         List<Assessment> assessmentList = newAssessment()
-                .withActivityState(AssessmentState.SUBMITTED)
+                .withProcessState(AssessmentState.SUBMITTED)
                 .build(1);
 
         List<ApplicationStatistics> applicationStatistics = newApplicationStatistics()
@@ -149,11 +149,11 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .build();
 
         List<Assessment> assessments = newAssessment()
-                .withActivityState(AssessmentState.PENDING, REJECTED, AssessmentState.OPEN)
+                .withProcessState(AssessmentState.PENDING, REJECTED, AssessmentState.OPEN)
                 .build(3);
 
         List<Assessment> assessmentList = newAssessment()
-                .withActivityState(AssessmentState.SUBMITTED)
+                .withProcessState(AssessmentState.SUBMITTED)
                 .build(1);
 
         List<ApplicationStatistics> applicationStatistics = newApplicationStatistics()

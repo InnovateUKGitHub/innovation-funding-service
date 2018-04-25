@@ -66,7 +66,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                 .build();
 
         Assessment assessment = newAssessment()
-                .withActivityState(REJECTED)
+                .withProcessState(REJECTED)
                 .withRejection(newAssessmentRejectOutcome()
                         .withRejectReason(CONFLICT_OF_INTEREST)
                         .withRejectComment("Member of board of directors")

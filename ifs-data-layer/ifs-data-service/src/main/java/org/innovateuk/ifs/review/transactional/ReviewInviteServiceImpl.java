@@ -388,7 +388,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
         applicationsInPanel.forEach(application -> {
             Review review = new Review(application, participant);
-            review.setActivityState(ReviewState.PENDING);
+            review.setProcessState(ReviewState.PENDING);
             reviewRepository.save(review);
         });
         return serviceSuccess();

@@ -47,7 +47,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
 
     protected Process(String event, StatesType activityState) {
         this.event = event;
-        setActivityState(activityState);
+        setProcessState(activityState);
     }
 
     public Process(String event, StatesType activityState, LocalDate startDate, LocalDate endDate) {
@@ -88,8 +88,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return id;
     }
 
-    public abstract void setActivityState(StatesType status);
-
     public String getProcessEvent() {
         return event;
     }
@@ -124,6 +122,8 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
 
     public abstract StatesType getProcessState();
 
+    public abstract void setProcessState(StatesType status);
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -156,6 +156,4 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
                 .append(internalParticipant)
                 .toHashCode();
     }
-
-    public abstract StatesType getActivityState();
 }
