@@ -18,7 +18,7 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
-import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;

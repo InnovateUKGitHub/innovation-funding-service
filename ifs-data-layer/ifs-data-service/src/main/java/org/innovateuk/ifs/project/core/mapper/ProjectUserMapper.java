@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.mapper;
+package org.innovateuk.ifs.project.core.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
