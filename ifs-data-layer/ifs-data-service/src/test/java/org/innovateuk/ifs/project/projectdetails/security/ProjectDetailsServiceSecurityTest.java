@@ -7,13 +7,17 @@ import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsSer
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.security.ProjectPermissionRules;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.mockito.Mockito.*;
 
 /**
@@ -21,11 +25,13 @@ import static org.mockito.Mockito.*;
  */
 public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<ProjectDetailsService> {
 
+    private ProjectPermissionRules projectPermissionRules;
     private ProjectDetailsPermissionRules projectDetailsPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
+        projectPermissionRules = getMockPermissionRulesBean(ProjectPermissionRules.class);
         projectDetailsPermissionRules = getMockPermissionRulesBean(ProjectDetailsPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
@@ -81,6 +87,32 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
             verify(projectDetailsPermissionRules).partnersCanUpdateProjectLocationForTheirOwnOrganisation(projectOrganisationCompositeId, getLoggedInUser());
             verifyNoMoreInteractions(projectDetailsPermissionRules);
         });
+    }
+
+    @Test
+    public void testGetProjectManager() {
+        ProjectResource project = newProjectResource().build();
+
+        when(classUnderTestMock.getProjectManager(123L))
+                .thenReturn(serviceSuccess(
+                        newProjectUserResource()
+                                .withProject(123L)
+                                .withRoleName("project-manager")
+                                .build()
+                ));
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(
+                () -> classUnderTest.getProjectManager(123L),
+                () -> {
+                    verify(projectPermissionRules, times(1))
+                            .partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1))
+                            .internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(projectPermissionRules);
+                }
+        );
     }
 
     @Test

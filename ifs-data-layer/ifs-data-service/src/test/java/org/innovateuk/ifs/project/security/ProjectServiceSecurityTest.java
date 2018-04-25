@@ -160,32 +160,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectManager() {
-        ProjectResource project = newProjectResource().build();
-
-        when(classUnderTestMock.getProjectManager(123L))
-                .thenReturn(serviceSuccess(
-                        newProjectUserResource()
-                                .withProject(123L)
-                                .withRoleName("project-manager")
-                                .build()
-                ));
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(
-                () -> classUnderTest.getProjectManager(123L),
-                () -> {
-                    verify(projectPermissionRules, times(1))
-                            .partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
-                    verify(projectPermissionRules, times(1))
-                            .internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
-                    verifyNoMoreInteractions(projectPermissionRules);
-                }
-        );
-    }
-
-    @Test
     public void testWithdrawProject() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.withdrawProject(123L),

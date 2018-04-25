@@ -76,29 +76,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void testGetProjectManager() throws Exception {
-        Long project1Id = 1L;
-
-        ProjectUserResource projectManager = newProjectUserResource().withId(project1Id).build();
-
-        when(projectServiceMock.getProjectManager(project1Id)).thenReturn(serviceSuccess(projectManager));
-
-        mockMvc.perform(get("/project/{id}/project-manager", project1Id))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(projectManager)));
-    }
-
-    @Test
-    public void testGetProjectManagerNotFound() throws Exception {
-        Long project1Id = -1L;
-
-        when(projectServiceMock.getProjectManager(project1Id)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
-
-        mockMvc.perform(get("/project/{id}/project-manager", project1Id))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     public void testCreateProjectFromApplication() throws Exception {
         Long applicationId = 1L;
         ProjectResource expectedProject = newProjectResource().build();

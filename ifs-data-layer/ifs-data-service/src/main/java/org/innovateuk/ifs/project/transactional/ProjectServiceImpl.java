@@ -175,12 +175,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
-        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
-                notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
-    }
-
-    @Override
     public ServiceResult<List<ProjectResource>> findAll() {
         return serviceSuccess(projectsToResources(projectRepository.findAll()));
     }

@@ -51,9 +51,6 @@ public interface ProjectService {
             description = "The System Registration user can add a partner to a project")
     ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
-    ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
-
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to withdraw projects")
     ServiceResult<Void> withdrawProject(long projectId);

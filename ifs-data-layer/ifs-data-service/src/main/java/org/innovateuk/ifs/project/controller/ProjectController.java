@@ -51,11 +51,6 @@ public class ProjectController {
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
     }
 
-    @GetMapping("/{projectId}/project-manager")
-    public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
-        return projectService.getProjectManager(projectId).toGetResponse();
-    }
-
     @PostMapping("/create-project/application/{applicationId}")
     public RestResult<ProjectResource> createProjectFromApplication(@PathVariable("applicationId") final Long applicationId) {
         return projectService.createProjectFromApplication(applicationId).toPostWithBodyResponse();
