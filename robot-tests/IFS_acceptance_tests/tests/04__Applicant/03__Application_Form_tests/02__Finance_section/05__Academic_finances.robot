@@ -127,7 +127,7 @@ Mark all as complete
     When the user clicks the button/link           jQuery=button:contains("Mark as complete")
     Then the user should see the text in the page  Your finances
     And the user navigates to the finance overview of the academic
-    And the user should see the element            css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
+    And the user should see the element            css=.finance-summary tr:nth-of-type(2) img[src*="/images/ifs-images/icons/icon-tick"]
 
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437

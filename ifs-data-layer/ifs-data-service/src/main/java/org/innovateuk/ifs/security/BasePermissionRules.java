@@ -7,9 +7,12 @@ import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -50,6 +53,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     @Autowired
     private AssessmentParticipantRepository assessmentParticipantRepository;
 
+    @Autowired
+    private ProjectProcessRepository projectProcessRepository;
+
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
         return !partnerProjectUser.isEmpty();
@@ -76,8 +82,6 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return partnerProjectUser != null;
     }
 
-
-
     protected boolean isProjectManager(long projectId, long userId) {
         List<ProjectUser> projectManagerUsers = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_MANAGER);
         return projectManagerUsers != null && !projectManagerUsers.isEmpty();
@@ -87,8 +91,13 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return !projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_FINANCE_CONTACT).isEmpty();
     }
 
-    protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId){
+    protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId) {
         List<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
+    }
+
+    protected boolean isProjectInSetup(long projectId) {
+        ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
+        return ProjectState.SETUP.equals(projectProcess.getActivityState());
     }
 }
