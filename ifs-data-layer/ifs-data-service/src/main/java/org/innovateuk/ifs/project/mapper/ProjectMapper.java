@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.mapstruct.*;
