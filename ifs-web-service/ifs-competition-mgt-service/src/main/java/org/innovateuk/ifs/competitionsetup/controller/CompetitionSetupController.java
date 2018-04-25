@@ -327,6 +327,17 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, model);
     }
 
+    @PostMapping("/{competitionId}/section/terms-and-conditions")
+    public String submitTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm competitionSetupForm,
+                                                @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                                ValidationHandler validationHandler,
+                                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                Model model) {
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
+    }
+
     @PostMapping("/{competitionId}/ready-to-open")
     public String setAsReadyToOpen(Model model,
                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -339,14 +350,6 @@ public class CompetitionSetupController {
 
         return validationHandler.addAnyErrors(updateResult, asGlobalErrors())
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/setup/%d", competitionId));
-    }
-
-    @GetMapping("/{competitionId}/section/terms-and-conditions/template")
-    public String loadTermsAndConditionsTemplate(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-        TermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
-
-        return "redirect:/competition/info/" + termsAndConditions.getTemplate();
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")

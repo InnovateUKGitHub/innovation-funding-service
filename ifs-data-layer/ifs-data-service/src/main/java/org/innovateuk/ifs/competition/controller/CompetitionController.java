@@ -104,4 +104,10 @@ public class CompetitionController {
     public RestResult<CompetitionCountResource> count() {
         return competitionService.countCompetitions().toGetResponse();
     }
+
+    @PutMapping("{id}/updateTermsAndConditions/{tcId}")
+    public RestResult<Void> updateTermsAndConditionsForCompetition(@PathVariable("id") final Long competitionId,
+                                                                   @PathVariable("tcId") final Long termsAndConditionsId) {
+        return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
+    }
 }

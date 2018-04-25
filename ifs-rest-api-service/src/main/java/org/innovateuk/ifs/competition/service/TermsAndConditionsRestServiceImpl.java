@@ -17,8 +17,10 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ter
 @Service
 public class TermsAndConditionsRestServiceImpl extends BaseRestService implements TermsAndConditionsRestService {
 
+    private final String termsAndConditionsRestUrl = "/terms-and-conditions";
+
     @Override
     public RestResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions() {
-        return getWithRestResult("/terms-and-conditions/getLatest", termsAndConditionsResourceListType());
+        return getWithRestResult(termsAndConditionsRestUrl + "/getLatest", termsAndConditionsResourceListType());
     }
 }

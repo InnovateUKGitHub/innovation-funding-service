@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.mapper.TermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

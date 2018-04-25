@@ -5,10 +5,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +23,4 @@ public class TermsAndConditionsController {
     public RestResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions() {
         return termsAndConditionsService.getLatestTermsAndConditions().toGetResponse();
     }
-
 }

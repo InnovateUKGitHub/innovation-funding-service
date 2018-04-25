@@ -16,13 +16,15 @@
     </p>
 
     <form th:action="@{(${model.general.editable} ? '' : 'terms-and-conditions/edit')}"
-          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
-          th:attr="data-competition=${model.general.competition.id}" data-section="terms-and-conditions"
-          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+          th:attr="data-competition=${model.general.competition.id}"
+          th:object="${competitionSetupForm}"
+          data-section="terms-and-conditions"
+          method="post" novalidate="novalidate">
         <div th:if="${model.general.editable}" id="section-3-edit">
 
             <div class="form-group">
-                <select class="form-control" name="grantTermsAndConditions" id="grantTermsAndConditions">
+                <select class="form-control" name="grantTermsAndConditions" id="grantTermsAndConditions"
+                        th:field="${competitionSetupForm.termsAndConditions}">
                     <option th:each="termsAndConditions : ${model.termsAndConditionsList}"
                             th:value="${termsAndConditions}"
                             th:text="${termsAndConditions.name}"
@@ -31,8 +33,9 @@
                 </select>
             </div>
 
-            <button class="button extra-margin">Done</button>
+            <button class="button">Done</button>
         </div>
+
     </form>
 
     <ul class="pagination">

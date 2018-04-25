@@ -96,4 +96,9 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
         return getWithRestResult(competitionsTypesRestURL + "/findAll", competitionTypeResourceListType());
     }
+
+    @Override
+    public RestResult<Void> updateTermsAndConditionsForCompetition(Long competitionId, Long termsAndConditionsId) {
+        return putWithRestResult(competitionsTypesRestURL + "/" + competitionId + "/updateTermsAndConditions/" + termsAndConditionsId, Void.class);
+    }
 }
