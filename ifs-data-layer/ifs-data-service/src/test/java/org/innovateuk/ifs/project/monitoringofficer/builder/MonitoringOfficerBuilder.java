@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.builder;
+package org.innovateuk.ifs.project.monitoringofficer.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;

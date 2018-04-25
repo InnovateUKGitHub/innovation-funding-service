@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.monitoringofficer.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.builder.MonitoringOfficerBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
