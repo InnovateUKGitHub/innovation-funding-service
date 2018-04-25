@@ -108,14 +108,15 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+    public AssessmentState getActivityState() {
+        return activityState;
+    }
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
 
         Assessment that = (Assessment) o;
 
@@ -124,6 +125,9 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(responses, that.responses)
+                .append(fundingDecision, that.fundingDecision)
+                .append(rejection, that.rejection)
+                .append(activityState, that.activityState)
                 .isEquals();
     }
 
@@ -134,11 +138,9 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
                 .append(participant)
                 .append(target)
                 .append(responses)
+                .append(fundingDecision)
+                .append(rejection)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    @Override
-    public AssessmentState getActivityState() {
-        return activityState;
     }
 }

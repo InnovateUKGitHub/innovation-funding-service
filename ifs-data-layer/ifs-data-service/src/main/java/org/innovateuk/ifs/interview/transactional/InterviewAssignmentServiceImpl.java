@@ -75,7 +75,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     @Override
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
-
             final Page<Application> pagedResult =
                     applicationRepository.findSubmittedApplicationsNotOnInterviewPanel(competitionId, pageable);
 
@@ -135,9 +134,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     @Override
     public ServiceResult<Void> assignApplications(List<StagedApplicationResource> stagedInvites) {
-
-//        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
-
         stagedInvites.stream()
                 .distinct()
                 .map(invite -> getApplication(invite.getApplicationId()))
@@ -167,10 +163,8 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     @Override
     public ServiceResult<Void> sendInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-        List<InterviewAssignment> interviewAssignments = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(
-                competitionId, InterviewAssignmentState.CREATED);
-
-//        final ActivityState awaitingFeedbackActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
+        List<InterviewAssignment> interviewAssignments =
+                interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(competitionId, InterviewAssignmentState.CREATED);
 
         ServiceResult<Void> result = serviceSuccess();
         for (InterviewAssignment assignment : interviewAssignments) {

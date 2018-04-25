@@ -84,26 +84,30 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
         this.target = target;
     }
 
+    @Override
     public ReviewState getProcessState() {
         return activityState;
     }
 
     @Override
+    public ReviewState getActivityState() {
+        return activityState;
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Review that = (Review) o;
+        Review review = (Review) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(participant, that.participant)
-                .append(target, that.target)
+                .append(participant, review.participant)
+                .append(target, review.target)
+                .append(rejection, review.rejection)
+                .append(activityState, review.activityState)
                 .isEquals();
     }
 
@@ -113,11 +117,8 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(rejection)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    @Override
-    public ReviewState getActivityState() {
-        return activityState;
     }
 }

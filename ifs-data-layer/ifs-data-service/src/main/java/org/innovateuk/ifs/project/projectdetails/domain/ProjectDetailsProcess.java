@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
@@ -63,5 +65,31 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
     @Override
     public ProjectDetailsState getActivityState() {
         return activityState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectDetailsProcess that = (ProjectDetailsProcess) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(participant, that.participant)
+                .append(target, that.target)
+                .append(activityState, that.activityState)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(participant)
+                .append(target)
+                .append(activityState)
+                .toHashCode();
     }
 }

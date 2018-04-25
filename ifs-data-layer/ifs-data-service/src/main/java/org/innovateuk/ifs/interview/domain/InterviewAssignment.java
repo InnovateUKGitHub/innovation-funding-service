@@ -38,15 +38,9 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     public InterviewAssignment() {
     }
 
-    @Override
-    public void setActivityState(InterviewAssignmentState status) {
-        this.activityState = status;
-    }
-
     public InterviewAssignment(Application application, ProcessRole participant) {
         if (application == null) throw new NullPointerException("target cannot be null");
         if (participant == null) throw new NullPointerException("participant cannot be null");
-
 
         if (participant.getRole() != INTERVIEW_LEAD_APPLICANT)
             throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
@@ -60,6 +54,11 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
         this.target = application;
         this.participant = participant;
         setActivityState(InterviewAssignmentState.CREATED);
+    }
+
+    @Override
+    public void setActivityState(InterviewAssignmentState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -100,6 +99,15 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     }
 
     @Override
+    public InterviewAssignmentState getActivityState() {
+        return activityState;
+    }
+
+    public InterviewAssignmentMessageOutcome getMessage() {
+        return message;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -111,6 +119,9 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
+                .append(message, that.message)
+                .append(response, that.response)
+                .append(activityState, that.activityState)
                 .isEquals();
     }
 
@@ -120,16 +131,10 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(message)
+                .append(response)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    @Override
-    public InterviewAssignmentState getActivityState() {
-        return activityState;
-    }
-
-    public InterviewAssignmentMessageOutcome getMessage() {
-        return message;
     }
 
     @Override
@@ -140,8 +145,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .append("message", message)
                 .append("response", response)
                 .append("activityState", activityState)
-                .append("processOutcomes", processOutcomes)
-                .append("internalParticipant", internalParticipant)
                 .toString();
     }
 }

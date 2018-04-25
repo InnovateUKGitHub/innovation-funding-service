@@ -60,26 +60,29 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
         this.target = target;
     }
 
+    @Override
     public InterviewState getProcessState() {
         return activityState;
     }
 
     @Override
+    public InterviewState getActivityState() {
+        return null;
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Interview that = (Interview) o;
+        Interview interview = (Interview) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(participant, that.participant)
-                .append(target, that.target)
+                .append(participant, interview.participant)
+                .append(target, interview.target)
+                .append(activityState, interview.activityState)
                 .isEquals();
     }
 
@@ -89,11 +92,7 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    @Override
-    public InterviewState getActivityState() {
-        return null;
     }
 }

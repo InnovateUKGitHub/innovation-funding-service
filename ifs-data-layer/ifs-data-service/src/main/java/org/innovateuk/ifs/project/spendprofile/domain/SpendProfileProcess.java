@@ -72,6 +72,11 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
     }
 
     @Override
+    public SpendProfileState getActivityState() {
+        return activityState;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -80,23 +85,20 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
         SpendProfileProcess that = (SpendProfileProcess) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    @Override
-    public SpendProfileState getActivityState() {
-        return activityState;
     }
 }

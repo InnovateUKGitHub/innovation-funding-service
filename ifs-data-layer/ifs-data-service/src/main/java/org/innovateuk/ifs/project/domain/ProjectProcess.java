@@ -77,18 +77,20 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
         ProjectProcess that = (ProjectProcess) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
     }
 }

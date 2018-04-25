@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.repository.ApplicationStateConverter;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -27,7 +29,6 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     @JoinColumn(name="process_id")
     @OrderBy("id ASC")
     private List<IneligibleOutcome> ineligibleOutcomes = new ArrayList<>();
-
 
     @Convert(converter = ApplicationStateConverter.class)
     @Column(name="activity_state_id")
@@ -77,5 +78,33 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
 
     public List<IneligibleOutcome> getIneligibleOutcomes() {
         return ineligibleOutcomes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationProcess that = (ApplicationProcess) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(participant, that.participant)
+                .append(target, that.target)
+                .append(ineligibleOutcomes, that.ineligibleOutcomes)
+                .append(activityState, that.activityState)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(participant)
+                .append(target)
+                .append(ineligibleOutcomes)
+                .append(activityState)
+                .toHashCode();
     }
 }

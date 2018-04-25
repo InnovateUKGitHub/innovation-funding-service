@@ -30,11 +30,6 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
     ViabilityProcess() {
     }
 
-    @Override
-    public void setActivityState(ViabilityState status) {
-        this.activityState = status;
-    }
-
     public ViabilityProcess(ProjectUser participant, PartnerOrganisation target, ViabilityState originalState) {
         this.participant = participant;
         this.target = target;
@@ -45,6 +40,11 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
         this.internalParticipant = internalParticipant;
         this.target = target;
         this.setActivityState(originalState);
+    }
+
+    @Override
+    public void setActivityState(ViabilityState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -73,6 +73,11 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
     }
 
     @Override
+    public ViabilityState getActivityState() {
+        return activityState;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -81,24 +86,20 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
         ViabilityProcess that = (ViabilityProcess) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
-                .append(internalParticipant, that.internalParticipant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    @Override
-    public ViabilityState getActivityState() {
-        return activityState;
     }
 }

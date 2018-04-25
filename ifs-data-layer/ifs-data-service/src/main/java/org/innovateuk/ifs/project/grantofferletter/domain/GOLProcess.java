@@ -73,6 +73,11 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
     }
 
     @Override
+    public GrantOfferLetterState getActivityState() {
+        return activityState;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -81,23 +86,20 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
         GOLProcess that = (GOLProcess) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    @Override
-    public GrantOfferLetterState getActivityState() {
-        return activityState;
     }
 }

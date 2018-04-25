@@ -73,6 +73,11 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
     }
 
     @Override
+    public EligibilityState getActivityState() {
+        return activityState;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -81,24 +86,20 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
         EligibilityProcess that = (EligibilityProcess) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
-                .append(internalParticipant, that.internalParticipant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    @Override
-    public EligibilityState getActivityState() {
-        return activityState;
     }
 }
