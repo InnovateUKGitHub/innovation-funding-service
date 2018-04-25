@@ -57,8 +57,6 @@ springBoot {
 }
 
 bootRepackage {
-    def arbitraryOutput = file("${project.buildDir}/bootRepackageRan")
-    outputs.file(arbitraryOutput)
 
     mainClass = 'org.innovateuk.ifs.Application'
     //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
