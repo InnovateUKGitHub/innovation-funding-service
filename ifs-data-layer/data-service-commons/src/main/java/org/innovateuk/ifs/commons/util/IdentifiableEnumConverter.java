@@ -25,6 +25,7 @@ public abstract class IdentifiableEnumConverter<T extends Enum<T> & Identifiable
     private final Map<Long, T> idMap;
 
     protected IdentifiableEnumConverter(final Class<T> theEnum) {
+        // we can't use a method reference here due to an apparent JVM bug
         idMap = stream(theEnum.getEnumConstants()).collect(toMap(o -> o.getId(), identity()));
     }
 
