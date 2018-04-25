@@ -136,7 +136,7 @@ function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
     cd ${rootDir}
-    ./gradlew removeHub removeChrome removeSeleniumNetwork
+    ./gradlew removeHub removeChrome
 }
 
 function startPybot() {

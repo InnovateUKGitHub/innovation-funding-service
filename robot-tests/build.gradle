@@ -24,21 +24,23 @@ repositories {
     jcenter()
 }
 
-task removeSeleniumNetwork(type: DockerRemoveNetwork) {
-    networkId = "selenium-network"
-    onError {
-        //Deliberately ignore
-    }
-}
-
-task createSeleniumNetwork(type: DockerCreateNetwork, dependsOn: removeSeleniumNetwork) {
-    networkId = "selenium-network"
-}
 
 task pullHub(type: Exec) {
     doFirst {
         commandLine 'docker', 'pull', 'selenium/hub:3.0.1-dysprosium'
     }
+}
+
+task buildHubDocker(type: DockerBuildImage, dependsOn: pullHub) {
+    tag = "innovateuk/seleniumhub"
+    inputDir = project.file("$project.projectDir/hubDocker")
+}
+
+task tagHubDocker(type: DockerTagImage) {
+    dependsOn buildHubDocker
+    imageId = buildHubDocker.getTag()
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version
 }
 
 task stopHub(type: DockerStopContainer) {
@@ -55,18 +57,19 @@ task removeHub(type: DockerRemoveContainer, dependsOn: stopHub) {
     }
 }
 
-task createHub(type: DockerCreateContainer, dependsOn: [pullHub, removeHub]) {
-    imageId = "selenium/hub:3.0.1-dysprosium"
+task createHub(type: DockerCreateContainer, dependsOn: [buildHubDocker, removeHub]) {
+    targetImageId { buildHubDocker.getImageId() }
+    imageId = "innovateuk/seleniumhub"
     hostName = "hub"
     containerName = "hub"
     containerId = "hub"
     portBindings = ['4444:4444','3000:3000']
-    network = "selenium-network"
+    network = "ifs"
     networkAliases = ["hub"]
     env = ["GRID_BROWSER_TIMEOUT=90000", "GRID_TIMEOUT=100000"]
 }
 
-task deployHub(type: DockerStartContainer, dependsOn: [createHub, createSeleniumNetwork]) {
+task deployHub(type: DockerStartContainer, dependsOn: createHub) {
     targetContainerId { createHub.getContainerId() }
 }
 
