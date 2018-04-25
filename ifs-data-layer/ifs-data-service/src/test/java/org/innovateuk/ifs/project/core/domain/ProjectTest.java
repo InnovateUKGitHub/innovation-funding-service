@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.domain;
+package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
