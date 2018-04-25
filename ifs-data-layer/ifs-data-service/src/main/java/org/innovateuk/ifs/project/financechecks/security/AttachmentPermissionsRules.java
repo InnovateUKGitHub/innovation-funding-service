@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.financechecks.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Query;

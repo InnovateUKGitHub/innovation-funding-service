@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.users;
 
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;

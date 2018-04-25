@@ -19,7 +19,7 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;

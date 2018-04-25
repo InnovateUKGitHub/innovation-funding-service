@@ -24,7 +24,7 @@ import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficer
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;

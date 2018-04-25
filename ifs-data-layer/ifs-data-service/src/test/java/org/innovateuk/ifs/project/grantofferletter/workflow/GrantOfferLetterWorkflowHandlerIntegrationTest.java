@@ -8,7 +8,7 @@ import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterPr
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;

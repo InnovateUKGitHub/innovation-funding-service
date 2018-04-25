@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;

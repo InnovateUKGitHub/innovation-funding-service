@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
 import org.innovateuk.ifs.workflow.domain.ActivityType;

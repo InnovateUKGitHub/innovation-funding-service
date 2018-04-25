@@ -110,7 +110,7 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
