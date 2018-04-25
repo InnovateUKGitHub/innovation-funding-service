@@ -66,9 +66,9 @@ import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCateg
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
-import static org.innovateuk.ifs.project.builder.CostBuilder.newCost;
-import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
-import static org.innovateuk.ifs.project.builder.CostGroupBuilder.newCostGroup;
+import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
+import static org.innovateuk.ifs.project.financecheck.builder.CostGroupBuilder.newCostGroup;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
