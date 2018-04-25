@@ -108,7 +108,7 @@ import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsSer
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
-import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;

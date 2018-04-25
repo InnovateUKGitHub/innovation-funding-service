@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;

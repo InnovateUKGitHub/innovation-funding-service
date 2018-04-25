@@ -22,7 +22,7 @@ import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepositor
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
-import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
