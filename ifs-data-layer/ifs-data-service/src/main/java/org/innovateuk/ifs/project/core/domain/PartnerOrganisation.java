@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.project.domain;
+package org.innovateuk.ifs.project.core.domain;
 
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.Organisation;
 
