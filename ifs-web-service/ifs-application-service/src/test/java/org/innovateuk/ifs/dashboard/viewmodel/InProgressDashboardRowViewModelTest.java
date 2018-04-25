@@ -59,6 +59,6 @@ public class InProgressDashboardRowViewModelTest {
                 "Competition", true, ApplicationState.SUBMITTED, true,
                 ZonedDateTime.now().plusDays(12), 12, 100 , true);
 
-        assertThat(viewModel.getLinkUrl(), is(nullValue()));
+        assertThat(viewModel.getLinkUrl(), equalTo("/application/1/interview-feedback"));
     }
 }
