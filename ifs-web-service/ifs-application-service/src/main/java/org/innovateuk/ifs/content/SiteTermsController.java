@@ -43,16 +43,15 @@ public class SiteTermsController {
     }
 
     @GetMapping("new-terms-and-conditions")
-    public String newTermsAndConditions(@ModelAttribute(name = "form") NewSiteTermsAndConditionsForm form,
-                                        BindingResult bindingResult) {
+    public String newTermsAndConditions(@ModelAttribute(name = "form") NewSiteTermsAndConditionsForm form) {
         return "content/new-terms-and-conditions";
     }
 
     @PostMapping("new-terms-and-conditions")
     public String agreeNewTermsAndConditions(@Valid @ModelAttribute(name = "form") NewSiteTermsAndConditionsForm form,
-                                             BindingResult bindingResult,
+                                             @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> newTermsAndConditions(form, bindingResult);
+        Supplier<String> failureView = () -> newTermsAndConditions(form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 

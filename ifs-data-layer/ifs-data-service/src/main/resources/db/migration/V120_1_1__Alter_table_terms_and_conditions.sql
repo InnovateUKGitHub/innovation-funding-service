@@ -24,3 +24,7 @@ SET `type`      = 'GRANT',
   `created_on`  = NOW(),
   `modified_by` = @system_maintenance_user_id,
   `modified_on` = NOW();
+
+ALTER TABLE terms_and_conditions
+  ADD CONSTRAINT `terms_and_conditions_created_by_to_user_fk` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `terms_and_conditions_modified_by_to_user_fk` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`);
