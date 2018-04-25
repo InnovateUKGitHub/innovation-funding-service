@@ -37,7 +37,7 @@ import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
-import org.innovateuk.ifs.project.transactional.EmailService;
+import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;

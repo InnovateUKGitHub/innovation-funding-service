@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.security;
+package org.innovateuk.ifs.project.financecheck.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
