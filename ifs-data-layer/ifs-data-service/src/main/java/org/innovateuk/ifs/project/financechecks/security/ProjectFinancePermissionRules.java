@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.security;
+package org.innovateuk.ifs.project.financechecks.security;
 
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
