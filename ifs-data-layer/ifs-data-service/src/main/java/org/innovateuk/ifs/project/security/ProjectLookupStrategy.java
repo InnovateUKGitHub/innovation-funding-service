@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
-import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;

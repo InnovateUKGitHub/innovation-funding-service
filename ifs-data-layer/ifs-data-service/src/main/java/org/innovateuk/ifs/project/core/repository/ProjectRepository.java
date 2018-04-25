@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.repository;
+package org.innovateuk.ifs.project.core.repository;
 
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.springframework.data.repository.PagingAndSortingRepository;
