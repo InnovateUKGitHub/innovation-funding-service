@@ -23,6 +23,10 @@ public class BasePermissionRules {
         return loggedInUser.getId() == getLeadApplicantId(applicationId);
     }
 
+    public boolean isUserOnApplication(long applicationId, UserResource loggedInUser) {
+        return userService.isUserOnApplication(applicationId, loggedInUser.getId());
+    }
+
     private long getLeadApplicantId(Long applicationId) {
         return userService.getLeadApplicantProcessRoleOrNull(applicationId).getUser();
     }
