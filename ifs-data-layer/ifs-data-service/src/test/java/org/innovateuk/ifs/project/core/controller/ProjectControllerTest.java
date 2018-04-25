@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.core.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.core.controller.ProjectController;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;

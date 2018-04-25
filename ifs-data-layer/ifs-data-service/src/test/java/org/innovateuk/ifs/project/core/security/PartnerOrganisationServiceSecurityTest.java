@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.core.security.PartnerOrganisationPermissionRules;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationServiceImpl;
