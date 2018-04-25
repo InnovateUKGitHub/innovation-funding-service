@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteSendRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
@@ -10,7 +11,6 @@ import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
-import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +76,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
         InterviewAssignmentStagedApplicationPageResource invites = setupMocksForGet(competitionId);
         InterviewAssignmentApplicationsSendViewModel expectedViewModel = expectedViewModel(invites);
-        SendInviteForm expectedForm = expectedForm();
+        InterviewApplicationSendForm expectedForm = expectedForm();
 
         mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/invite/send", competitionId))
                 .andExpect(status().isOk())
@@ -124,12 +124,32 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         mockMvc.perform(
                 fileUpload("/assessment/interview/competition/{competitionId}/applications/invite/send", competitionId)
                         .file(file)
-                        .param("applicationId", "2"))
+                        .param("attachFeedbackApplicationId", "2"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("applicationInError", 2L))
                 .andExpect(view().name("assessors/interview/application-send-invites"));
 
         verify(interviewAssignmentRestService).uploadFeedback(applicationId,"application/pdf", 11, "testFile.pdf", "My content!".getBytes());
+    }
+
+
+    @Test
+    public void removeFeedback() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 2L;
+
+        when(interviewAssignmentRestService.deleteFeedback(applicationId))
+                .thenReturn(restFailure(new Error("", HttpStatus.NOT_FOUND)));
+        setupMocksForGet(competitionId);
+
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite/send", competitionId)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("removeFeedbackApplicationId", "2"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("applicationInError", 2L))
+                .andExpect(view().name("assessors/interview/application-send-invites"));
+
+        verify(interviewAssignmentRestService).deleteFeedback(applicationId);
     }
 
     private InterviewAssignmentStagedApplicationPageResource setupMocksForGet(long competitionId) {
@@ -145,8 +165,8 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         return invites;
     }
 
-    private SendInviteForm expectedForm() {
-        SendInviteForm expected = new SendInviteForm();
+    private InterviewApplicationSendForm expectedForm() {
+        InterviewApplicationSendForm expected = new InterviewApplicationSendForm();
         expected.setSubject("Please attend an interview for an Innovate UK funding competition");
         return expected;
     }

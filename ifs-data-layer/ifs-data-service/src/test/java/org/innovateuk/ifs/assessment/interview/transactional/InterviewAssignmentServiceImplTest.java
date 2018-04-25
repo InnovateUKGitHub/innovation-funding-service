@@ -308,11 +308,13 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         final long applicationId = 1L;
         final long fileId = 101L;
         final FileEntry fileEntry = new FileEntry(fileId, "somefile.pdf", MediaType.APPLICATION_PDF, 1111L);
-        InterviewAssignment interviewAssignment = newInterviewAssignment().
-                withMessage(newInterviewAssignmentMessageOutcome()
-                        .withFeedback(fileEntry)
-                        .build()
-                ).build();
+        InterviewAssignmentMessageOutcome messageOutcome = newInterviewAssignmentMessageOutcome()
+                .withId(2L)
+                .withFeedback(fileEntry)
+                .build();
+        InterviewAssignment interviewAssignment = newInterviewAssignment()
+                .withMessage(messageOutcome)
+                .build();
 
         when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
         when(fileServiceMock.deleteFileIgnoreNotFound(fileId)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
@@ -320,6 +322,9 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         ServiceResult<Void> response = service.deleteFeedback(applicationId);
 
         assertTrue(response.isSuccess());
+        verify(interviewAssignmentMessageOutcomeRepository).delete(messageOutcome.getId());
+        verify(fileServiceMock).deleteFileIgnoreNotFound(fileId);
+
     }
 
     private static InterviewAssignment interviewPanelLambdaMatcher(Application application) {
