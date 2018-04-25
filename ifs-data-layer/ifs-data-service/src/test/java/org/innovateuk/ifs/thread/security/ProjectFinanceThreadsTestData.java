@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
 

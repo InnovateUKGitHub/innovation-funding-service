@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.repository;
 
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;

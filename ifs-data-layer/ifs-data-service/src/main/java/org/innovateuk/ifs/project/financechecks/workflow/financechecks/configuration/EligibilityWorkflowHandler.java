@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration;
 
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;

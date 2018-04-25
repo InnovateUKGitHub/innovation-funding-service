@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;

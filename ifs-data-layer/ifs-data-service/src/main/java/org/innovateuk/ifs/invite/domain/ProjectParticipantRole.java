@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 /**
- * The role of {@link org.innovateuk.ifs.project.domain.ProjectUser}.
+ * The role of {@link ProjectUser}.
  */
 public enum ProjectParticipantRole implements ParticipantRole<Project> {
     PROJECT_PARTNER(10, "partner"),

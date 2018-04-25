@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;

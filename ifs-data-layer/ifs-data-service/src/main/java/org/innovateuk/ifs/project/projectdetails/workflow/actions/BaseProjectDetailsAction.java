@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.workflow.actions;
 
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
