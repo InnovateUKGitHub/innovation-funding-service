@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.builder;
+package org.innovateuk.ifs.project.core.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
