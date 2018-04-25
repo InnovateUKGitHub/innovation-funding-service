@@ -60,17 +60,29 @@ public class InviteProjectResource extends InviteResource {
         this.id = id;
     }
 
-    public Long getUser() { return user; }
+    public Long getUser() {
+        return user;
+    }
 
-    public void setUser(Long user) { this.user = user; }
+    public void setUser(Long user) {
+        this.user = user;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getNameConfirmed() { return nameConfirmed; }
+    public String getNameConfirmed() {
+        return nameConfirmed;
+    }
 
-    public void setNameConfirmed(String nameConfirmed) { this.nameConfirmed = nameConfirmed; }
+    public void setNameConfirmed(String nameConfirmed) {
+        this.nameConfirmed = nameConfirmed;
+    }
 
     public String getEmail() {
         return email;
