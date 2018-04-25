@@ -48,7 +48,7 @@
         <script src="$resourcesDomain/js/vendor/govuk/ie.js" type="text/javascript"></script>
       <![endif]-->
         <!-- Google Tag Manager -->
-        #set ($trackingID = "#springMessageText('ifs.webserver.googleanalytics.trackingid', '#')")
+        #set ($trackingID = "#springMessageText('ifs.webserver.googleanalytics.trackingid', '')")
         #if( "$!trackingID" != "" )
             <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
