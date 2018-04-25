@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.project.core.controller.ProjectController;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 

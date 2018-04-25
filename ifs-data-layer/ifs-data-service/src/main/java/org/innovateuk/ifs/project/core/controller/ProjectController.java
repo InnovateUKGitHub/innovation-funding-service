@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.controller;
+package org.innovateuk.ifs.project.core.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.resource.ProjectResource;
