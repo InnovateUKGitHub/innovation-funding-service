@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +15,6 @@ public class ApplicationFeedbackPermissionRules extends BasePermissionRules {
 
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
 
     @PermissionRule(value = "APPLICATION_FEEDBACK", description = "Only the applicant can see the feedback for their application" +
             "if the application has been assigned to an interview panel.")
@@ -31,8 +27,6 @@ public class ApplicationFeedbackPermissionRules extends BasePermissionRules {
     }
 
     private boolean isUserOnApplication(ApplicationCompositeId applicationCompositeId, UserResource loggedInUser){
-//        final boolean isLeadApplicant = isLeadApplicant(applicationCompositeId, loggedInUser);
-//        final boolean isCollaborator = isCollaborator(applicationCompositeId, loggedInUser);
         return isUserOnApplication(applicationCompositeId.id(), loggedInUser);
     }
 }

@@ -95,6 +95,9 @@ public class ApplicationSubmitController {
         this.projectService = projectService;
     }
 
+    public ApplicationSubmitController() {
+    }
+
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();

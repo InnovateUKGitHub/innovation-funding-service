@@ -136,7 +136,6 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
-        //
     }
 
     @Test
