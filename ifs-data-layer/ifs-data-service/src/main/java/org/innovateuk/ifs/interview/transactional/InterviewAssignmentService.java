@@ -64,9 +64,4 @@ public interface InterviewAssignmentService {
     @SecuredBySpring(value = "IS_APPLICATION_ASSIGNED_TO_INTERVIEW",
             description = "The applicants can see if their application is assigned to interview")
     ServiceResult<Boolean> isApplicationAssigned(long applicationId);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",
-            description = "Competition Admins and Project Finance users can retrieve available applications by competition")
-    ServiceResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId);
 }

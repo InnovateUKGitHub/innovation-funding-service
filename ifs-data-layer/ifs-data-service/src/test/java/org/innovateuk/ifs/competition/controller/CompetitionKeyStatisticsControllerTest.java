@@ -94,9 +94,9 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         final long competitionId = 1L;
 
         ReviewKeyStatisticsResource reviewKeyStatisticsResource = newReviewKeyStatisticsResource().build();
-        when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
+        when(reviewStatisticsServiceMock.getReviewPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/panel", competitionId))
+        mockMvc.perform(get("/competitionStatistics/{id}/review", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(reviewKeyStatisticsResource)));
     }
@@ -106,7 +106,7 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         final long competitionId = 1L;
 
         ReviewInviteStatisticsResource reviewInviteStatisticsResource = newReviewInviteStatisticsResource().build();
-        when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
+        when(reviewStatisticsServiceMock.getReviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
 
         mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
                 .andExpect(status().isOk())

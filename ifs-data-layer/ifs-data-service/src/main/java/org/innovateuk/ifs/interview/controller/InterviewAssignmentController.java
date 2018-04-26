@@ -60,11 +60,6 @@ public class InterviewAssignmentController {
         return interviewAssignmentService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
     }
 
-    @GetMapping("key-statistics/{competitionId}")
-    public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(@PathVariable long competitionId) {
-        return interviewAssignmentService.getKeyStatistics(competitionId).toGetResponse();
-    }
-
     @PostMapping("/unstage-application/{applicationId}")
     public RestResult<Void> unstageApplication(@PathVariable long applicationId) {
         return interviewAssignmentService.unstageApplication(applicationId).toPostWithBodyResponse();

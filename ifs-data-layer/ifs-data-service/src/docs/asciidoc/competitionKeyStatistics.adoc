@@ -1,54 +1,102 @@
 === Competition ready to open key statistics
 ==== Request
-include::{snippets}/competitionStatistics/get-ready-to-open-key-statistics/http-request.adoc[]
-include::{snippets}/competitionStatistics/get-ready-to-open-key-statistics/path-parameters.adoc[]
+include::{snippets}/competition-statistics/get-ready-to-open-key-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-ready-to-open-key-statistics/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competitionStatistics/get-ready-to-open-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-ready-to-open-key-statistics/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/competitionStatistics/get-ready-to-open-key-statistics/curl-request.adoc[]
+include::{snippets}/competition-statistics/get-ready-to-open-key-statistics/curl-request.adoc[]
 
 === Competition open key statistics
 ==== Request
-include::{snippets}/competitionStatistics/get-open-key-statistics/http-request.adoc[]
-include::{snippets}/competitionStatistics/get-open-key-statistics/path-parameters.adoc[]
+include::{snippets}/competition-statistics/get-open-key-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-open-key-statistics/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competitionStatistics/get-open-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-open-key-statistics/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/competitionStatistics/get-open-key-statistics/curl-request.adoc[]
+include::{snippets}/competition-statistics/get-open-key-statistics/curl-request.adoc[]
 
 === Competition closed key statistics
 ==== Request
-include::{snippets}/competitionStatistics/get-closed-key-statistics/http-request.adoc[]
-include::{snippets}/competitionStatistics/get-closed-key-statistics/path-parameters.adoc[]
+include::{snippets}/competition-statistics/get-closed-key-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-closed-key-statistics/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competitionStatistics/get-closed-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-closed-key-statistics/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/competitionStatistics/get-closed-key-statistics/curl-request.adoc[]
+include::{snippets}/competition-statistics/get-closed-key-statistics/curl-request.adoc[]
 
 === Competition in assessment key statistics
 ==== Request
-include::{snippets}/competitionStatistics/get-in-assessment-key-statistics/http-request.adoc[]
-include::{snippets}/competitionStatistics/get-in-assessment-key-statistics/path-parameters.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competitionStatistics/get-in-assessment-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/competitionStatistics/get-in-assessment-key-statistics/curl-request.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/curl-request.adoc[]
 
 === Assessment Panel Key Statistics
 ==== Request
-include::{snippets}/competitionStatistics/get-in-assessment-panel-key-statistics/http-request.adoc[]
-include::{snippets}/competitionStatistics/get-in-assessment-panel-key-statistics/path-parameters.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competitionStatistics/get-in-assessment-panel-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/competitionStatistics/get-in-assessment-panel-key-statistics/curl-request.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/curl-request.adoc[]
+
+=== Get review statistics
+==== Request
+include::{snippets}/competition-statistics/get-review-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-review-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-statistics/get-review-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-review-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-statistics/get-review-statistics/curl-request.adoc[]
+
+=== Get review invite statistics
+==== Request
+include::{snippets}/competition-statistics/get-review-invite-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-review-invite-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-statistics/get-review-invite-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-review-invite-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-statistics/get-review-invite-statistics/curl-request.adoc[]
+
+=== Get interview statistics
+==== Request
+include::{snippets}/competition-statistics/get-interview-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-interview-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-statistics/get-interview-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-interview-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-statistics/get-interview-statistics/curl-request.adoc[]
+
+=== Get interview invite statistics
+==== Request
+include::{snippets}/competition-statistics/get-interview-invite-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-interview-invite-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-statistics/get-interview-invite-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-interview-invite-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-statistics/get-interview-invite-statistics/curl-request.adoc[]
