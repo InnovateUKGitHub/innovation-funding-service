@@ -12,22 +12,21 @@ import java.util.Set;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 public enum AssessmentState implements ProcessState, IdentifiableEnum<AssessmentState> {
-    PENDING(State.PENDING, 1),
-    OPEN(State.OPEN, 2),
-    REJECTED(State.REJECTED, 3),
-    READY_TO_SUBMIT(State.READY_TO_SUBMIT, 4),
-    SUBMITTED(State.SUBMITTED, 5),
-    ACCEPTED(State.ACCEPTED, 12),
-    CREATED(State.CREATED, 19),
-    WITHDRAWN(State.WITHDRAWN, 20),
+    PENDING(1, State.PENDING),
+    OPEN(2, State.OPEN),
+    REJECTED(3, State.REJECTED),
+    READY_TO_SUBMIT(4, State.READY_TO_SUBMIT),
+    SUBMITTED(5, State.SUBMITTED),
+    ACCEPTED(12, State.ACCEPTED),
+    CREATED(19, State.CREATED),
+    WITHDRAWN(20, State.WITHDRAWN),
 
-    DECIDE_IF_READY_TO_SUBMIT(State.DECIDE_IF_READY_TO_SUBMIT, -1); // pseudo state?
-
-    private State backingState;
-
-    private final long id;
+    DECIDE_IF_READY_TO_SUBMIT(-1, State.DECIDE_IF_READY_TO_SUBMIT); // pseudo state?
 
     private static final Map<String, AssessmentState> assessmentStatesMap;
+
+    private final long id;
+    private final State backingState;
 
     static {
         assessmentStatesMap = new HashMap<>();
@@ -37,10 +36,9 @@ public enum AssessmentState implements ProcessState, IdentifiableEnum<Assessment
         }
     }
 
-    // creates the enum with the chosen type.
-    AssessmentState(State backingState, long id) {
-        this.backingState = backingState;
+    AssessmentState(long id, State backingState) {
         this.id = id;
+        this.backingState = backingState;
     }
 
     @Override
