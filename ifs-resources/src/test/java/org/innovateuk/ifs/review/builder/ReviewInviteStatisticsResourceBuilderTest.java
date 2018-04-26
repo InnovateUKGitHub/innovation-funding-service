@@ -15,7 +15,6 @@ public class ReviewInviteStatisticsResourceBuilderTest {
         int expectedAssessorInvites = 9;
         int expectedAssessorsAccepted = 2;
         int expectedAssessorsRejected = 3;
-        int expectedAssessorsPending = 4;
 
         ReviewInviteStatisticsResource inviteStatisticsResource = newReviewInviteStatisticsResource()
                 .withAssessorsInvited(expectedAssessorInvites)
@@ -26,7 +25,6 @@ public class ReviewInviteStatisticsResourceBuilderTest {
         assertEquals(expectedAssessorInvites, inviteStatisticsResource.getInvited());
         assertEquals(expectedAssessorsAccepted, inviteStatisticsResource.getAccepted());
         assertEquals(expectedAssessorsRejected, inviteStatisticsResource.getDeclined());
-        assertEquals(expectedAssessorsPending, inviteStatisticsResource.getPending());
     }
 
     @Test
@@ -34,7 +32,6 @@ public class ReviewInviteStatisticsResourceBuilderTest {
         Integer[] expectedAssessorInvites = {9, 39};
         Integer[] expectedAssessorsAccepted = {2, 12};
         Integer[] expectedAssessorsRejected = {3, 13};
-        Integer[] expectedAssessorsPending = {4, 14};
 
         List<ReviewInviteStatisticsResource> inviteStatisticsResources = newReviewInviteStatisticsResource()
                 .withAssessorsInvited(expectedAssessorInvites)
@@ -46,7 +43,6 @@ public class ReviewInviteStatisticsResourceBuilderTest {
             assertEquals((int) expectedAssessorInvites[i], inviteStatisticsResources.get(i).getInvited());
             assertEquals((int) expectedAssessorsAccepted[i], inviteStatisticsResources.get(i).getAccepted());
             assertEquals((int) expectedAssessorsRejected[i], inviteStatisticsResources.get(i).getDeclined());
-            assertEquals((int) expectedAssessorsPending[i], inviteStatisticsResources.get(i).getPending());
         }
     }
 }

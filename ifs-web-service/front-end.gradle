@@ -11,11 +11,6 @@ gulp_default.dependsOn 'npmInstall'
 // makes sure on each build that gulp is installed
 gulp_default.dependsOn 'installGulp'
 
-def srcDir = new File(projectDir, "src/main/resources/static")
-def targetDir = new File(project.buildDir, "resources/main/static")
-gulp_default.inputs.dir srcDir
-gulp_default.outputs.dir targetDir
-
 processResources.dependsOn gulp_default
 
 node {
@@ -54,6 +49,24 @@ npm_install {
     args = ['--loglevel', 'warn']
     description = "Install Node.js packages"
     outputs.upToDateWhen { false }
+}
+
+gulp_default {
+    inputs.dir file("${projectDir}/ifs-application-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-assessment-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-competition-mgt-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-front-door-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-project-setup-mgt-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-project-setup-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-web-core/src/main/resources/static")
+
+    outputs.dir file("${projectDir}/ifs-application-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-assessment-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-competition-mgt-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-front-door-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-project-setup-mgt-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-project-setup-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-web-core/build/resources/main/static")
 }
 
 gulp {
