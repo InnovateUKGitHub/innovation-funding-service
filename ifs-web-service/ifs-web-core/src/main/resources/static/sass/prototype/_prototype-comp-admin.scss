@@ -178,7 +178,8 @@ table.project-changes{
 
     &.action{
       //background: $red;
-      @extend  %icon-assigned-to-me;
+      background-image: url('../images/flag-icon.png');
+      background-repeat: no-repeat;
       background-position: 50% 50%;
     }
 
@@ -599,7 +600,8 @@ table.project-changes{
 
 .inline-nav{
   .marked-as-complete{
-    @extend %mark-done-right;
+    background-image: url('../images/field/field-done-right.png');
+    background-repeat: no-repeat;
     background-position: 100% 0%;
     background-size: 20px;
 	}

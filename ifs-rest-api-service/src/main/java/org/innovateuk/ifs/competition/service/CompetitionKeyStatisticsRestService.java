@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 
@@ -14,6 +16,8 @@ public interface CompetitionKeyStatisticsRestService {
     RestResult<CompetitionClosedKeyStatisticsResource> getClosedKeyStatisticsByCompetition(long competitionId);
     RestResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatisticsByCompetition(long competitionId);
     RestResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId);
-    RestResult<ReviewKeyStatisticsResource> getAssessmentPanelKeyStatisticsByCompetition(long competitionId);
-    RestResult<ReviewInviteStatisticsResource> getAssessmentPanelInviteStatisticsByCompetition(long competitionId);
+    RestResult<ReviewKeyStatisticsResource> getReviewKeyStatisticsByCompetition(long competitionId);
+    RestResult<ReviewInviteStatisticsResource> getReviewInviteStatisticsByCompetition(long competitionId);
+    RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewKeyStatisticsByCompetition(long competitionId);
+    RestResult<InterviewInviteStatisticsResource> getInterviewInviteStatisticsByCompetition(long competitionId);
 }

@@ -32,21 +32,22 @@
 
 .success-alert {
   @extend %alert-panel;
-  background-image: url('../images/icons/icon-messages/tick-icon.png');
+  background-image: url('../images/ifs-images/icons/icon-tick.png');
+  background-size: 20px 17px;
   color: $button-colour;
   border-color: $button-colour;
 }
 
 .fail-alert {
   @extend %alert-panel;
-  background-image: url('../images/icons/icon-messages/cross-icon.png');
+  background-image: url('../images/ifs-images/icons/icon-cross.png');
   color: $red;
   border-color: $red;
 }
 
 .warning-alert {
   @extend %alert-panel;
-  background-image: url('../images/icons/icon-messages/alert-icon.png');
+  background-image: url('../images/ifs-images/icons/icon-alert.png');
   color: $red;
   border-color: $red;
 }
@@ -54,13 +55,13 @@
 .message-alert,
 .icon-info {
   @extend %alert-panel;
-  background-image: url('../images/icons/icon-messages/info-icon.png');
+  background-image: url('../images/ifs-images/icons/icon-info.png');
   border-color: $link-colour;
 }
 
 .assign-alert {
   @extend %alert-panel;
-  background-image: url('../images/icons/icon-messages/edit-icon.png');
+  background-image: url('../images/ifs-images/icons/icon-edit.png');
   border-color: $text-colour;
 }
 
@@ -72,6 +73,6 @@
 
 .declare-alert {
   @extend %alert-panel;
-  background-image: url('../images/icons/icon-messages/declare-icon.png');
+  background-image: url('../images/ifs-images/icons/icon-declare.png');
   border-color: $text-colour;
 }

@@ -80,6 +80,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         QuestionResponseDataBuilder baseBuilder =
                 questionResponseDataBuilder.withApplication(applicationData.getApplication());
 
+        if (!applicationLine.createApplicationResponses) {
+            return emptyList();
+        }
+
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r ->
                         r.competitionName.equals(applicationLine.competitionName) &&
@@ -144,6 +148,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             ApplicationData applicationData,
             ApplicationLine applicationLine,
             List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines) {
+
+        if (!applicationLine.createFinanceResponses) {
+            return emptyList();
+        }
 
         List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 
