@@ -139,6 +139,48 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
+    public void testApplicationInterviewFeedback() throws Exception {
+        CompetitionResource competition = competitionResources.get(0);
+        competition.setCompetitionStatus(PROJECT_SETUP);
+
+        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
+                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
+
+        ApplicationResource app = applications.get(0);
+        app.setCompetition(competition.getId());
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
+
+        when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
+                .thenReturn(restSuccess(aggregateResource));
+
+        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
+                .withFeedback(asList("Feedback 1", "Feedback 2"))
+                .build();
+
+        when(assessmentRestService.getApplicationFeedback(app.getId())).thenReturn(restSuccess(expectedFeedback));
+
+        mockMvc.perform(get("/application/" + app.getId() + "/interview-feedback"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-interview-feedback"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
+                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
+                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
+                .andExpect(model().attribute("feedback", expectedFeedback.getFeedback()))
+                .andExpect(model().attribute("scores", aggregateResource));
+    }
+
+    @Test
     public void testApplicationSummaryWithProjectSetupStatus() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
