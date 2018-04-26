@@ -51,19 +51,17 @@
 
     <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
         <th:block th:if="${section.name.equals('Project details')}">
-            <ul class="list-overview extra-margin">
+            <ul class="list-overview">
                 <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.shortName.equals('Application details')}">
-                    <li class="section-status">
-                        <div class="grid-row">
-                            <div class="column-two-thirds">
-                                <h3 class="heading-small">
-                                    <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
-                                       th:text="${question.shortName}" >Project summary</a>
-                                </h3>
-                            </div>
-                            <div class="column-third">
-                                    <p class="form-hint no-margin">No feedback provided</p>
-                            </div>
+                    <li class="section-status grid-row">
+                        <div class="column-two-thirds">
+                            <h3 class="heading-small">
+                                <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                   th:text="${question.shortName}" >Project summary</a>
+                            </h3>
+                        </div>
+                        <div class="column-third">
+                                <p class="form-hint no-margin">No feedback provided</p>
                         </div>
                     </li>
                 </th:block>
@@ -74,17 +72,15 @@
             <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
 
             <ul class="list-overview">
-                <li class="section-status" th:each="question : ${sectionQuestions.get(section.id)}">
-                    <div class="grid-row">
-                        <div class="column-two-thirds">
-                            <h3 class="heading-small">
-                                <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
-                                   th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
-                            </h3>
-                        </div>
-                        <div>
-                            <div class="column-third" th:text="|Average score ${scores.scores.get(question.id)} / ${question.assessorMaximumScore}|">Average score 7 / 10</div>
-                        </div>
+                <li class="section-status grid-row" th:each="question : ${sectionQuestions.get(section.id)}">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                               th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
+                        </h3>
+                    </div>
+                    <div>
+                        <div class="column-third" th:text="|Average score ${scores.scores.get(question.id)} / ${question.assessorMaximumScore}|">Average score 7 / 10</div>
                     </div>
                 </li>
             </ul>
