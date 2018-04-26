@@ -17,7 +17,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder
+        .newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -267,7 +268,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     }
 
     @Test
-    public void testGetActiveInternalUsers(){
+    public void testGetActiveInternalUsers() {
         UserPageResource expected = new UserPageResource();
 
         setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/active", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
@@ -278,7 +279,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     }
 
     @Test
-    public void testGetInactiveInternalUsers(){
+    public void testGetInactiveInternalUsers() {
         UserPageResource expected = new UserPageResource();
 
         setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
@@ -289,7 +290,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     }
 
     @Test
-    public void testCreateInternalUser(){
+    public void testCreateInternalUser() {
         setLoggedInUser(null);
 
         List<Role> roleResources = singletonList(Role.PROJECT_FINANCE);
@@ -359,5 +360,13 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertTrue(result.isSuccess());
         assertEquals(OK, result.getStatusCode());
         assertEquals(userOrganisationResources, result.getSuccess());
+    }
+
+    @Test
+    public void agreeNewSiteTermsAndConditions() {
+        Long userId = 1L;
+        setupPostWithRestResultExpectations(format("%s/id/%s/agreeNewSiteTermsAndConditions", usersUrl, userId),
+                HttpStatus.OK);
+        assertTrue(service.agreeNewSiteTermsAndConditions(userId).isSuccess());
     }
 }

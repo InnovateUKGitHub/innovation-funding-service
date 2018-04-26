@@ -566,6 +566,13 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         verify(userOrganisationRepositoryMock).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
     }
 
+    @Test
+    public void agreeNewTermsAndConditions() {
+        // TODO IFS-3093
+        long userId = 1L;
+        assertTrue(service.agreeNewTermsAndConditions(userId).isSuccess());
+    }
+
     @Override
     protected UserService supplyServiceUnderTest() {
         UserServiceImpl spendProfileService = new UserServiceImpl();

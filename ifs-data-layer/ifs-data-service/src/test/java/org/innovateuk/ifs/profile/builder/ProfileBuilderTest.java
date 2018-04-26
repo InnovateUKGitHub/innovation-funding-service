@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.profile.builder;
 
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.competition.domain.SiteTermsAndConditions;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -10,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsBuilder.newSiteTermsAndConditions;
 import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
@@ -26,6 +28,8 @@ public class ProfileBuilderTest {
         BusinessType expectedBusinessType = BUSINESS;
         Agreement expectedAgreement = newAgreement().build();
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.now();
+        SiteTermsAndConditions expectedSiteTermsAndConditions = newSiteTermsAndConditions().build();
+        ZonedDateTime expectedSiteTermsAndConditionsAcceptedDate = ZonedDateTime.now();
         
         Profile profile = newProfile()
                 .withId(expectedId)
@@ -34,6 +38,8 @@ public class ProfileBuilderTest {
                 .withBusinessType(expectedBusinessType)
                 .withAgreement(expectedAgreement)
                 .withAgreementSignedDate(expectedAgreementSignedDate)
+                .withSiteTermsAndConditions(expectedSiteTermsAndConditions)
+                .withSiteTermsAndConditionsAcceptedDate(expectedSiteTermsAndConditionsAcceptedDate)
                 .build();
 
         assertEquals(expectedId, profile.getId());
@@ -42,6 +48,8 @@ public class ProfileBuilderTest {
         assertEquals(expectedBusinessType, profile.getBusinessType());
         assertEquals(expectedAgreement, profile.getAgreement());
         assertEquals(expectedAgreementSignedDate, profile.getAgreementSignedDate());
+        assertEquals(expectedSiteTermsAndConditions, profile.getSiteTermsAndConditions());
+        assertEquals(expectedSiteTermsAndConditionsAcceptedDate, profile.getSiteTermsAndConditionsAcceptedDate());
     }
 
     @Test
@@ -52,6 +60,9 @@ public class ProfileBuilderTest {
         BusinessType[] expectedBusinessTypes = {BUSINESS, ACADEMIC};
         Agreement[] expectedContracts = newAgreement().buildArray(2, Agreement.class);
         ZonedDateTime[] expectedAgreementSignedDates = {ZonedDateTime.now(), ZonedDateTime.now().plusDays(1L)};
+        SiteTermsAndConditions[] expectedSiteTermsAndConditions = newSiteTermsAndConditions().buildArray(2,
+                SiteTermsAndConditions.class);
+        ZonedDateTime[] expectedSiteTermsAndConditionsAcceptedDates = {ZonedDateTime.now(), ZonedDateTime.now().minusHours(1)};
 
         List<Profile> profiles = newProfile()
                 .withId(expectedIds)
@@ -60,6 +71,8 @@ public class ProfileBuilderTest {
                 .withBusinessType(expectedBusinessTypes)
                 .withAgreement(expectedContracts)
                 .withAgreementSignedDate(expectedAgreementSignedDates)
+                .withSiteTermsAndConditions(expectedSiteTermsAndConditions)
+                .withSiteTermsAndConditionsAcceptedDate(expectedSiteTermsAndConditionsAcceptedDates)
                 .build(2);
 
         Profile first = profiles.get(0);
@@ -70,6 +83,8 @@ public class ProfileBuilderTest {
         assertEquals(expectedBusinessTypes[0], first.getBusinessType());
         assertEquals(expectedContracts[0], first.getAgreement());
         assertEquals(expectedAgreementSignedDates[0], first.getAgreementSignedDate());
+        assertEquals(expectedSiteTermsAndConditions[0], first.getSiteTermsAndConditions());
+        assertEquals(expectedSiteTermsAndConditionsAcceptedDates[0], first.getSiteTermsAndConditionsAcceptedDate());
 
         Profile second = profiles.get(1);
 
@@ -79,5 +94,7 @@ public class ProfileBuilderTest {
         assertEquals(expectedBusinessTypes[1], second.getBusinessType());
         assertEquals(expectedContracts[1], second.getAgreement());
         assertEquals(expectedAgreementSignedDates[1], second.getAgreementSignedDate());
+        assertEquals(expectedSiteTermsAndConditions[1], second.getSiteTermsAndConditions());
+        assertEquals(expectedSiteTermsAndConditionsAcceptedDates[1], second.getSiteTermsAndConditionsAcceptedDate());
     }
 }

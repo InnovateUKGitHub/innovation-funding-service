@@ -17,7 +17,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 
 /**
@@ -180,8 +179,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<Void> agreeNewTermsAndConditions() {
-        // TODO IFS-3093 Mark the terms and conditions as agreed to
-        return serviceSuccess();
+    public ServiceResult<Void> agreeNewTermsAndConditions(Long userId) {
+        return userRestService.agreeNewSiteTermsAndConditions(userId).toServiceResult();
     }
 }

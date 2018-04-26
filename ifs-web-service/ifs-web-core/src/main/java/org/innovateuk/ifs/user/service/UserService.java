@@ -60,5 +60,5 @@ public interface UserService {
 
     Long getUserOrganisationId(Long userId, Long applicationId);
 
-    ServiceResult<Void> agreeNewTermsAndConditions();
+    ServiceResult<Void> agreeNewTermsAndConditions(Long userId);
 }

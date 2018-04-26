@@ -2,17 +2,16 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.user.resource.UserProfileResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 /**
  * Builder for {@link ProfileResource}.
@@ -45,6 +44,11 @@ public class ProfileResourceBuilder extends BaseBuilder<ProfileResource, Profile
 
     public ProfileResourceBuilder withAddress(AddressResource... addresses) {
         return withArraySetFieldByReflection("address", addresses);
+    }
+
+    public ProfileResourceBuilder withSiteTermsAndConditionsAccepted(Boolean... siteTermsAndConditionsAcceptedDates) {
+        return withArray((siteTermsAndConditionsAccepted, user) -> setField("siteTermsAndConditionsAccepted",
+                siteTermsAndConditionsAccepted, user), siteTermsAndConditionsAcceptedDates);
     }
 
     @Override

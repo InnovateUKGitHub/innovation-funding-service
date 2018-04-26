@@ -56,14 +56,16 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
 
     @Test
     public void agreeNewTermsAndConditions() throws Exception {
-        when(userService.agreeNewTermsAndConditions()).thenReturn(serviceSuccess());
+        Long userId = 1L;
+
+        when(userService.agreeNewTermsAndConditions(userId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/info/new-terms-and-conditions")
                 .param("agree", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/applicant/dashboard"));
 
-        verify(userService, only()).agreeNewTermsAndConditions();
+        verify(userService, only()).agreeNewTermsAndConditions(userId);
     }
 
     @Test

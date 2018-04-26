@@ -6,6 +6,7 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ProfileInnovationAreaLink;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.competition.domain.SiteTermsAndConditions;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -43,6 +44,12 @@ public class Profile extends AuditableEntity {
     private Agreement agreement;
 
     private ZonedDateTime agreementSignedDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "site_terms_and_conditions_id", referencedColumnName = "id")
+    private SiteTermsAndConditions siteTermsAndConditions;
+
+    private ZonedDateTime siteTermsAndConditionsAcceptedDate;
 
     public Profile() {
         // no-arg constructor
@@ -131,8 +138,28 @@ public class Profile extends AuditableEntity {
         return skillsComplete && affiliationsComplete && agreementComplete;
     }
 
+    public SiteTermsAndConditions getSiteTermsAndConditions() {
+        return siteTermsAndConditions;
+    }
+
+    public void setSiteTermsAndConditions(final SiteTermsAndConditions siteTermsAndConditions) {
+        this.siteTermsAndConditions = siteTermsAndConditions;
+    }
+
+    public ZonedDateTime getSiteTermsAndConditionsAcceptedDate() {
+        return siteTermsAndConditionsAcceptedDate;
+    }
+
+    public void setSiteTermsAndConditionsAcceptedDate(final ZonedDateTime siteTermsAndConditionsAcceptedDate) {
+        this.siteTermsAndConditionsAcceptedDate = siteTermsAndConditionsAcceptedDate;
+    }
+
+    public boolean isSiteTermsAndConditionsAccepted() {
+        return false;
+    }
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -141,7 +168,7 @@ public class Profile extends AuditableEntity {
             return false;
         }
 
-        Profile profile = (Profile) o;
+        final Profile profile = (Profile) o;
 
         return new EqualsBuilder()
                 .append(id, profile.id)
@@ -151,6 +178,8 @@ public class Profile extends AuditableEntity {
                 .append(businessType, profile.businessType)
                 .append(agreement, profile.agreement)
                 .append(agreementSignedDate, profile.agreementSignedDate)
+                .append(siteTermsAndConditions, profile.siteTermsAndConditions)
+                .append(siteTermsAndConditionsAcceptedDate, profile.siteTermsAndConditionsAcceptedDate)
                 .isEquals();
     }
 
@@ -164,6 +193,8 @@ public class Profile extends AuditableEntity {
                 .append(businessType)
                 .append(agreement)
                 .append(agreementSignedDate)
+                .append(siteTermsAndConditions)
+                .append(siteTermsAndConditionsAcceptedDate)
                 .toHashCode();
     }
 }

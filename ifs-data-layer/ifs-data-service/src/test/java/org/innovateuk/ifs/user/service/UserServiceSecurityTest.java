@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 
@@ -160,6 +161,17 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         verify(userRules, times(2))
                 .internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(userRules);
+    }
+
+    @Test
+    @Ignore("TODO IFS-3093")
+    public void testAgreeNewTermsAndConditions() {
+        UserResource user = newUserResource().build();
+
+        assertAccessDenied(() -> classUnderTest.agreeNewTermsAndConditions(user.getId()), () -> {
+            verify(userRules).usersCanAgreeSiteTermsAndConditions(user, getLoggedInUser());
+            verifyNoMoreInteractions(userRules);
+        });
     }
 
     @Override

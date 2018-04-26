@@ -208,6 +208,11 @@ public class UserPermissionRules {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
+    @PermissionRule(value = "AGREE_TERMS", description = "A user can accept the site terms and conditions")
+    public boolean usersCanAgreeSiteTermsAndConditions(UserResource userToUpdate, UserResource user) {
+        return userToUpdate.getId().equals(user.getId());
+    }
+
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
         return simpleMap(applicableProcessRoles, processRole -> applicationRepository.findOne(processRole.getApplicationId()));

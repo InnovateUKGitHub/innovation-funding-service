@@ -152,3 +152,15 @@ include::{snippets}/user/find-external-users/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/find-external-users/curl-request.adoc[]
+
+=== Agree new site terms and conditions ===
+==== Request
+include::{snippets}/user/agree-new-site-terms-and-conditions/http-request.adoc[]
+include::{snippets}/user/agree-new-site-terms-and-conditions/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/agree-new-site-terms-and-conditions/http-response.adoc[]
+include::{snippets}/user/agree-new-site-terms-and-conditions/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/user/agree-new-site-terms-and-conditions/curl-request.adoc[]

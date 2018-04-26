@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,14 +49,15 @@ public class SiteTermsController {
     }
 
     @PostMapping("new-terms-and-conditions")
-    public String agreeNewTermsAndConditions(@Valid @ModelAttribute(name = "form") NewSiteTermsAndConditionsForm form,
+    public String agreeNewTermsAndConditions(UserResource loggedInUser,
+                                             @Valid @ModelAttribute(name = "form") NewSiteTermsAndConditionsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> newTermsAndConditions(form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = userService.agreeNewTermsAndConditions();
+            ServiceResult<Void> updateResult = userService.agreeNewTermsAndConditions(loggedInUser.getId());
 
             // TODO IFS-3093 Where should the user be redirected to?
             String redirect = "redirect:/applicant/dashboard";

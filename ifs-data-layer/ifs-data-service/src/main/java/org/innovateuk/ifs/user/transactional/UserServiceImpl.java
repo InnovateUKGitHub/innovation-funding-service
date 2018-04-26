@@ -254,6 +254,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         });
     }
 
+    @Override
+    public ServiceResult<Void> agreeNewTermsAndConditions(long userId) {
+        // TODO IFS-3093
+        return serviceSuccess();
+    }
+
     private ServiceResult<Void> validateSearchString(String searchString) {
 
         searchString = StringUtils.trim(searchString);

@@ -146,7 +146,12 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void agreeNewTermsAndConditions() {
-        // TODO IFS-3093
-        assertTrue(service.agreeNewTermsAndConditions().isSuccess());
+        Long userId = 1L;
+
+        when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restSuccess());
+
+        assertTrue(service.agreeNewTermsAndConditions(userId).isSuccess());
+
+        verify(userRestService, only()).agreeNewSiteTermsAndConditions(userId);
     }
 }

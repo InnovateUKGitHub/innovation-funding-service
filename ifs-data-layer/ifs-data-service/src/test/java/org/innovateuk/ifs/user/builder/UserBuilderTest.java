@@ -64,8 +64,6 @@ public class UserBuilderTest {
         Disability expectedDisability = NOT_STATED;
         Ethnicity expectedEthnicity = newEthnicity().build();
         Long expectedProfileId = 1L;
-        Long expectedSiteTermsAndConditionsId = 1L;
-        ZonedDateTime expectedSiteTermsAndCondtionsAccepted = ZonedDateTime.now();
         List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL)
                 .build(2);
 
@@ -85,8 +83,6 @@ public class UserBuilderTest {
                 .withDisability(expectedDisability)
                 .withEthnicity(expectedEthnicity)
                 .withProfileId(expectedProfileId)
-                .withSiteTermsAndConditionsId(expectedSiteTermsAndConditionsId)
-                .withSiteTermsAndConditionsAccepted(expectedSiteTermsAndCondtionsAccepted)
                 .withAffiliations(expectedAffiliations)
                 .build();
 
@@ -105,8 +101,6 @@ public class UserBuilderTest {
         assertEquals(expectedDisability, user.getDisability());
         assertEquals(expectedEthnicity, user.getEthnicity());
         assertEquals(expectedProfileId, user.getProfileId());
-        assertEquals(expectedSiteTermsAndConditionsId, user.getSiteTermsAndConditionsId());
-        assertEquals(expectedSiteTermsAndCondtionsAccepted, user.getSiteTermsAndConditionsAccepted());
         assertEquals(expectedAffiliations, user.getAffiliations());
     }
 
@@ -128,8 +122,6 @@ public class UserBuilderTest {
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Ethnicity[] expectedEthnicities = newEthnicity().buildArray(2, Ethnicity.class);
         Long[] expectedProfileIds = {1L, 2L};
-        Long[] expectedSiteTermsAndConditionIds = {1L, 2L};
-        ZonedDateTime[] expectedSiteTermsAndConditionsAcceptedDates = {ZonedDateTime.now(), ZonedDateTime.now().minusHours(1)};
         List<Affiliation>[] expectedAffiliations = new List[]{
                 newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2),
                 newAffiliation().withAffiliationType(PERSONAL_FINANCIAL, FAMILY_FINANCIAL).build(2)
@@ -151,8 +143,6 @@ public class UserBuilderTest {
                 .withDisability(expectedDisabilities)
                 .withEthnicity(expectedEthnicities)
                 .withProfileId(expectedProfileIds)
-                .withSiteTermsAndConditionsId(expectedSiteTermsAndConditionIds)
-                .withSiteTermsAndConditionsAccepted(expectedSiteTermsAndConditionsAcceptedDates)
                 .withAffiliations(expectedAffiliations)
                 .build(2);
 
@@ -174,8 +164,6 @@ public class UserBuilderTest {
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
         assertEquals(expectedProfileIds[0], first.getProfileId());
-        assertEquals(expectedSiteTermsAndConditionIds[0], first.getSiteTermsAndConditionsId());
-        assertEquals(expectedSiteTermsAndConditionsAcceptedDates[0], first.getSiteTermsAndConditionsAccepted());
         assertEquals(expectedAffiliations[0], first.getAffiliations());
 
         User second = users.get(1);
@@ -195,8 +183,6 @@ public class UserBuilderTest {
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
         assertEquals(expectedProfileIds[1], second.getProfileId());
-        assertEquals(expectedSiteTermsAndConditionIds[1], second.getSiteTermsAndConditionsId());
-        assertEquals(expectedSiteTermsAndConditionsAcceptedDates[1], second.getSiteTermsAndConditionsAccepted());
         assertEquals(expectedAffiliations[1], second.getAffiliations());
     }
 }
