@@ -22,6 +22,7 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       var newRow
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children('.repeatable-row').length || 0
+      var rowId = jQuery(target).children('tr').length || 0
 
       if (jQuery(el).data('applicant-table') === 'update-org') {
         newRow = jQuery('<tr class="repeatable-row">' +
@@ -39,9 +40,9 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           'name="stagedInvite.email" value="" ' +
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
-          '<td><button class="button" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
+          '<td><button id="invite-collaborator-' + rowId + '" class="button" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
           '<td class="alignright">' +
-          '<button class="remove-another-row buttonlink" name="removeInvite" type="button" value="0">Remove</button>' +
+          '<button id="invite-collaborator-remove-' + rowId + '" class="remove-another-row buttonlink" name="removeInvite" type="button" value="0">Remove</button>' +
           '</td>' +
           '</tr>')
       } else {
