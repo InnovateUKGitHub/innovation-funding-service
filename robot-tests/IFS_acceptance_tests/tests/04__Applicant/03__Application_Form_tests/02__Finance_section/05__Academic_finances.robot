@@ -164,7 +164,6 @@ the academic partner uploads a file
     Choose File    css=.upload-section input    ${UPLOAD_FOLDER}/${file_name}
 
 the finance table should be correct
-    capture large screenshot
     Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)  £32,698
     Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)  4,407
     Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)  8,909
