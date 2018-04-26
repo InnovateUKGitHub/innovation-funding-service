@@ -27,12 +27,9 @@ Applicant can see maximum funding size available to them
 Funding level validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  60
-    And the user clicks the button/link        jQuery=button:contains("Mark as complete")
-    Then the user should see a field error     This field should be 50% or lower.
-    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  50
-    And the user moves focus to the element    css=button.extra-margin[type="submit"]
-    Then the user should see a field error     This field can only accept whole numbers.
+    When the user provides invalid value as percentage then he should see the error  This field should be 50% or lower.  60
+    When the user provides invalid value as percentage then he should see the error  This field should be 0% or higher.  -14
+    When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
     When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  24
     Then the user should not see an error in the page
@@ -122,6 +119,12 @@ Custom Suite Setup
     the user clicks the button/link  link=Application details
     the user fills in the Application details  Robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Complete the org size section
+
+the user provides invalid value as percentage then he should see the error
+    [Arguments]  ${error}  ${value}
+    the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  ${value}
+    the user moves focus to the element   css=button.button[type="submit"]
+    the user should see a field error     ${error}
 
 Complete the org size section
     the user navigates to the page    ${DASHBOARD_URL}
