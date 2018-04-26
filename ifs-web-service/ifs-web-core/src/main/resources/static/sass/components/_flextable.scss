@@ -24,6 +24,7 @@
   input {
     text-align:right;
     min-width:4em;
+    padding:3px;
 
     &[readonly]{
       background: transparent;
@@ -85,9 +86,11 @@
     tr {
       &.form-group-row {
         &.form-group-error {
-          th {
-            [scope="row"] {
+          > * {
+            &:first-child {
               margin-top:-1px;
+              border-bottom: none !important;
+              border-top: 3px solid #000;
             }
           }
         }
