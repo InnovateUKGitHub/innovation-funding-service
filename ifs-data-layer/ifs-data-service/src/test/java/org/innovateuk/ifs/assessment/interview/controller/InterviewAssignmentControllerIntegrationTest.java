@@ -4,6 +4,7 @@ import com.drew.lang.Iterables;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -114,7 +115,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(false)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(activityState(ApplicationState.SUBMITTED))
                 .build(2);
         applicationRepository.save(applications);
 
@@ -334,27 +335,17 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         assertEquals(awaitingFeedback.size(), 1);
     }
 
-    @Test
-    public void getKeyStatistics() {
-        InterviewAssignment interviewAssignment = newInterviewAssignment()
-                .with(id(null))
-                .withActivityState(activityState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE))
-                .withTarget(applications.get(0))
-                .withParticipant(processRoles.get(0))
-                .build();
-
-        interviewAssignmentRepository.save(interviewAssignment);
-
-        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = controller.getKeyStatistics(competition.getId()).getSuccess();
-
-        assertEquals(2, keyStatisticsResource.getApplicationsInCompetition());
-        assertEquals(1, keyStatisticsResource.getApplicationsAssigned());
-    }
-
     private ActivityState activityState(InterviewAssignmentState interviewAssignmentState) {
         return activityStateRepository.findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL,
                 interviewAssignmentState.getBackingState()
+        );
+    }
+
+    private ActivityState activityState(ApplicationState applicationState) {
+        return activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.APPLICATION,
+                applicationState.getBackingState()
         );
     }
 

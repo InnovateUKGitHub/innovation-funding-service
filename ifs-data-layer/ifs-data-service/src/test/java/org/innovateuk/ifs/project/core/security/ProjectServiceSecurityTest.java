@@ -1,9 +1,13 @@
-package org.innovateuk.ifs.project.core.security;
+package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
-import org.innovateuk.ifs.project.core.transactional.ProjectServiceImpl;
+import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.transactional.ProjectServiceImpl;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
@@ -11,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 
@@ -19,9 +24,14 @@ import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -139,9 +149,24 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
     @Test
     public void testAddPartnerAllowedIfSystemRegistrar() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(SYSTEM_REGISTRATION_USER)).build());
-        classUnderTest.addPartner(1L, 2L, 3L);
-        // There should be no exception thrown
+        Project project = newProject()
+                .withId(1L)
+                .build();
+
+        ProjectResource projectResource = newProjectResource()
+                .withProjectState(ProjectState.SETUP)
+                .build();
+
+        when(projectLookupStrategy.getProjectResource(project.getId())).thenReturn(projectResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.addPartner(project.getId(), 1L, 1L),
+                () -> {
+                    verify(projectPermissionRules, times(1))
+                            .systemRegistrarCanAddPartnersToProject(isA(ProjectResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(projectPermissionRules);
+                }
+        );
     }
 
     @Test
@@ -156,6 +181,32 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                 // expected behaviour
             }
         });
+    }
+
+    @Test
+    public void testGetProjectManager() {
+        ProjectResource project = newProjectResource().build();
+
+        when(classUnderTestMock.getProjectManager(123L))
+                .thenReturn(serviceSuccess(
+                        newProjectUserResource()
+                                .withProject(123L)
+                                .withRoleName("project-manager")
+                                .build()
+                ));
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(
+                () -> classUnderTest.getProjectManager(123L),
+                () -> {
+                    verify(projectPermissionRules, times(1))
+                            .partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1))
+                            .internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(projectPermissionRules);
+                }
+        );
     }
 
     @Test

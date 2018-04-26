@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.core.domain;
+package org.innovateuk.ifs.project.domain;
 
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -25,8 +25,8 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
-    // for ORM use
-    ProjectProcess() {
+    public ProjectProcess() {
+        // no-arg constructor
     }
 
     public ProjectProcess(ProjectUser participant, Project target, ActivityState originalState) {

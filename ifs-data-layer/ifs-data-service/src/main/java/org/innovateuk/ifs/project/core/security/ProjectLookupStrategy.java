@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.project.core.security;
+package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.mapper.ProjectMapper;
+import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +47,5 @@ public class ProjectLookupStrategy {
     public ProjectCompositeId getProjectCompositeId(Long projectId) {
         return ProjectCompositeId.id(projectId);
     }
-
 
 }

@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.project.core.transactional;
+package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -46,10 +46,11 @@ public interface ProjectService {
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "ADD_PARTNER",
-            description = "The System Registration user can add a partner to a project")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ADD_PARTNER')")
     ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
+    ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to withdraw projects")

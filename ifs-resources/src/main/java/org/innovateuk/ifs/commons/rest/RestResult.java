@@ -397,7 +397,6 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
             return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
-        } else {
         }
         return RestResult.<T>restFailure(new org.innovateuk.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
     }

@@ -2,29 +2,43 @@ package org.innovateuk.ifs.project.projectdetails.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectProcess;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<ProjectDetailsPermissionRules> {
+    private ProjectProcess projectProcess;
+    private ProjectResource project;
+
+    @Before
+    public void setUp() throws Exception {
+        projectProcess = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState())).build();
+        project = newProjectResource().withProjectState(ProjectState.SETUP).build();
+    }
 
     @Override
     protected ProjectDetailsPermissionRules supplyPermissionRulesUnderTest() {
@@ -33,12 +47,11 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void testLeadPartnersCanUpdateTheBasicProjectDetails() {
-
-        ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
         setupUserAsLeadPartner(project, user);
 
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
     }
 
@@ -46,7 +59,6 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
     public void testLeadPartnersCanUpdateTheBasicProjectDetailsButUserNotLeadPartner() {
 
         Application originalApplication = newApplication().build();
-        ProjectResource project = newProjectResource().build();
         Project projectEntity = newProject().withApplication(originalApplication).build();
         UserResource user = newUserResource().build();
         Organisation leadOrganisation = newOrganisation().build();
@@ -66,21 +78,19 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void testPartnersCanUpdateTheirOwnOrganisationsFinanceContacts() {
-
-        ProjectResource project = newProjectResource().build();
         Organisation organisation = newOrganisation().build();
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
+
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(new ProjectUser());
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         assertTrue(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
     }
 
     @Test
     public void testPartnersCanUpdateTheirOwnOrganisationsFinanceContactsButUserNotPartner() {
-
-        ProjectResource project = newProjectResource().build();
         Organisation organisation = newOrganisation().build();
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
         UserResource user = newUserResource().build();
@@ -92,14 +102,13 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void testPartnersCanUpdateTheirOwnOrganisationsFinanceContactsButUserNotMemberOfOrganisation() {
-
-        ProjectResource project = newProjectResource().build();
         Organisation organisation = newOrganisation().build();
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
 
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(null);
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
     }

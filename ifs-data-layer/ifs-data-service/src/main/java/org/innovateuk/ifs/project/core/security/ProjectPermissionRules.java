@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.core.security;
+package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -21,5 +21,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Internal users can see project resources")
     public boolean internalUsersCanViewProjects(final ProjectResource project, final UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "ADD_PARTNER", description = "The System Registration user can add a partner to a project")
+    public boolean systemRegistrarCanAddPartnersToProject(final ProjectResource project, final UserResource user) {
+        return isSystemRegistrationUser(user)
+                && isProjectInSetup(project.getId());
     }
 }

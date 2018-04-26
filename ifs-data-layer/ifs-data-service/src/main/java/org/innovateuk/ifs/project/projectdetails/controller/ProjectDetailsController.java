@@ -53,13 +53,6 @@ public class ProjectDetailsController {
         return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-3323", description = "Enable both end points to support ZDD. This will be removed in the next release")
-    @PostMapping("/{projectId}/update-duration/{durationInMonths}")
-    public RestResult<Void> updateProjectDurationZDD(@PathVariable("projectId") final long projectId,
-                                                  @PathVariable("durationInMonths") final long durationInMonths) {
-        return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
-    }
-
     @PostMapping("/{projectId}/address")
     public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
                                                  @RequestParam("leadOrganisationId") final Long leadOrganisationId,
