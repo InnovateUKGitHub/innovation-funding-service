@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.review.AssessmentReviewController;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewModelPopulator;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;

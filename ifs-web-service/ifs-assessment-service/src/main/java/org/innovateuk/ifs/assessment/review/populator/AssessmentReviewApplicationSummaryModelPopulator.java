@@ -121,8 +121,9 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
 
             if(!allAssessorResponses.isEmpty()) {
 
-                List<AssessmentResource> feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(),
-                        applicationId).getSuccess();
+                List<AssessmentResource> feedbackSummary = assessmentRestService
+                        .getByUserAndApplication(user.getId(), applicationId)
+                        .getSuccess();
 
                 long assessmentId = feedbackSummary.get(0).getId();
 
