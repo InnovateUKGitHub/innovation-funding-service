@@ -11,34 +11,33 @@ public class ReviewInviteStatisticsResource {
     private int accepted;
     private int declined;
 
-    public int getInvited() {
-        return invited;
+    public ReviewInviteStatisticsResource() {
     }
 
-    public void setInvited(int invited) {
+    public ReviewInviteStatisticsResource(int invited, int accepted, int declined) {
         this.invited = invited;
+        this.accepted = accepted;
+        this.declined = declined;
+    }
+
+    public int getInvited() {
+        return invited;
     }
 
     public int getAccepted() {
         return accepted;
     }
 
-    public void setAccepted(int accepted) {
-        this.accepted = accepted;
-    }
-
     public int getDeclined() {
         return declined;
     }
 
-    public void setDeclined(int declined) {
-        this.declined = declined;
-    }
 
+    // TODO IFS-3308 remove in S24
+    @Deprecated
     public int getPending() {
         return invited - (accepted + declined);
     }
-
 
     @Override
     public boolean equals(Object o) {

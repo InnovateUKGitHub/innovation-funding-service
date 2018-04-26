@@ -1,6 +1,6 @@
 /*----- Action required icon ----*/
 %action-required {
-    background-image: url('../images/icons/icon-pencil.png');
+    background-image: url('../images/ifs-images/icons/icon-edit.png');
     background-repeat: no-repeat;
     background-size: 14px;
     background-position: 0 4px;
@@ -69,13 +69,15 @@ table {
 .textarea-wrapped {
     &.assigned-to-me {
         .textarea-header {
-            @extend %mark-assigned-left;
+            background-image: url('../images/field/field-assigned.png');
+            background-repeat: no-repeat;
         }
     }
 
     &.marked-as-complete {
         .textarea-header {
-            @extend %mark-done-left;
+            background-image: url('../images/field/field-done.png');
+            background-repeat: no-repeat;
         }
     }
 }
@@ -139,7 +141,8 @@ span.no {
 }
 
 span.action {
-    @extend %icon-assigned-to-me;
+    background-image: url('../images/flag-icon.png');
+    background-repeat: no-repeat;
 
     padding-left: 28px;
 }

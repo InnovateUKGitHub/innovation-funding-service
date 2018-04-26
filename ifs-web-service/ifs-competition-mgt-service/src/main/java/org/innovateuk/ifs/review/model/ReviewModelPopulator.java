@@ -28,7 +28,7 @@ public class ReviewModelPopulator {
     public ReviewViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
         ReviewKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService
-                .getAssessmentPanelKeyStatisticsByCompetition(competitionId)
+                .getReviewKeyStatisticsByCompetition(competitionId)
                 .getSuccess();
 
         boolean pendingReviewNotifications = reviewRestService
