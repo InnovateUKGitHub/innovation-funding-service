@@ -180,4 +180,13 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertNotNull(responses);
         Assert.assertEquals(returnedResponse, responses);
     }
+
+    @Test
+    public void updateTermsAndConditionsForCompetition() {
+        setupPutWithRestResultExpectations(competitionsRestURL + "/123" + "/updateTermsAndConditions" + "/234", HttpStatus.OK);
+
+        RestResult<Void> response = service.updateTermsAndConditionsForCompetition(123L, 234L);
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }

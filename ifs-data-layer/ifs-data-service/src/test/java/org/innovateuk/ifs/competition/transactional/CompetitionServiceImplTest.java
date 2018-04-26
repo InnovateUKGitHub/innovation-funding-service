@@ -764,4 +764,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertTrue(result.isSuccess());
         assertEquals(Long.valueOf(pendingSpendProfileCount.longValue()), result.getSuccess());
     }
+
+    @Test
+    public void updateTermsAndConditionsForCompetition() throws Exception {
+
+    }
 }

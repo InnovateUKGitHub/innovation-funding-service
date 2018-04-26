@@ -24,7 +24,7 @@
 
             <div class="form-group">
                 <select class="form-control" name="grantTermsAndConditions" id="grantTermsAndConditions"
-                        th:field="${competitionSetupForm.termsAndConditions}">
+                th:field="${competitionSetupForm.termsAndConditions}">
                     <option th:each="termsAndConditions : ${model.termsAndConditionsList}"
                             th:value="${termsAndConditions}"
                             th:text="${termsAndConditions.name}"

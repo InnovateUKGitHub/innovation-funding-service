@@ -106,5 +106,5 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value="UPDATE_TERMS_AND_CONDITIONS", securedType=CompetitionResource.class,
             description = "Only Comp Admins are able to update grant terms and conditions for the given competitions")
-    ServiceResult<Void> updateTermsAndConditionsForCompetition(Long competitionId, Long termsAndConditionsId);
+    ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 }

@@ -98,7 +98,7 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     }
 
     @Override
-    public RestResult<Void> updateTermsAndConditionsForCompetition(Long competitionId, Long termsAndConditionsId) {
+    public RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
         return putWithRestResult(competitionsTypesRestURL + "/" + competitionId + "/updateTermsAndConditions/" + termsAndConditionsId, Void.class);
     }
 }

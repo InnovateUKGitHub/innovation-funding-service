@@ -16,7 +16,7 @@ import java.util.List;
  * Populates the model for the terms and condition competition setup section.
  */
 @Service
-public class TermsAndConditionModelPopulator implements CompetitionSetupSectionModelPopulator {
+public class TermsAndConditionsModelPopulator implements CompetitionSetupSectionModelPopulator {
 
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
