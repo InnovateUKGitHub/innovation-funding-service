@@ -19,7 +19,6 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum<Applicati
     INELIGIBLE_INFORMED(31, State.NOT_APPLICABLE_INFORMED),
     APPROVED(32, State.ACCEPTED),
     REJECTED(33, State.REJECTED);
-//    IN_PANEL(34, State.IN_PANEL);
 
     final long id;
     final State backingState;

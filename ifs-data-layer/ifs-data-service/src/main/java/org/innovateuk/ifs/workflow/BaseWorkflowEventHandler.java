@@ -127,8 +127,6 @@ public abstract class BaseWorkflowEventHandler<
 
     protected abstract ProcessType createNewProcess(TargetType target, ParticipantType participant);
 
-//    protected abstract ActivityType getActivityType();
-
     protected abstract ProcessRepository<ProcessType> getProcessRepository();
 
     protected abstract CrudRepository<TargetType, Long> getTargetRepository();

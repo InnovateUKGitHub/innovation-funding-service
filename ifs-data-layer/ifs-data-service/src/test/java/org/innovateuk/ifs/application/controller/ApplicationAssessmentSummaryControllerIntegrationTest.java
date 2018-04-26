@@ -70,7 +70,6 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
         applicationRepository.save(application);
 
-
         flushAndClearSession();
 
         loginCompAdmin();

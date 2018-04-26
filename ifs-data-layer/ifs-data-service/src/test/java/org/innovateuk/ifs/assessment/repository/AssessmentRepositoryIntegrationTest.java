@@ -406,7 +406,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     private List<Assessment> buildAssessments(User user, Application application, int numOfAssessmentsForEachState) {
         return EnumSet.allOf(AssessmentState.class)
                 .stream()
-                .filter(assessmentState -> assessmentState != DECIDE_IF_READY_TO_SUBMIT)  // TODO we don't think this is a persistable state?
+                .filter(assessmentState -> assessmentState != DECIDE_IF_READY_TO_SUBMIT)
                 .flatMap(activityState -> newAssessment()
                         .with(id(null))
                         .withApplication(application)
