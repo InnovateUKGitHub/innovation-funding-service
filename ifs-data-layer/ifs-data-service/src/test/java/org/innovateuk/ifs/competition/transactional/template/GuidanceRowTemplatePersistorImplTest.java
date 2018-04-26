@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.domain.GuidanceRow;
-import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
+import org.innovateuk.ifs.form.domain.GuidanceRow;
+import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -12,7 +12,7 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static org.innovateuk.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
+import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;

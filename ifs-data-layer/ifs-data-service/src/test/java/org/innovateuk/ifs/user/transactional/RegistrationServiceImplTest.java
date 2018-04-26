@@ -9,10 +9,10 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationSource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -22,7 +22,6 @@ import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
@@ -35,7 +34,10 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singleton;
@@ -349,7 +351,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
 
         final NotificationSource from = systemNotificationSourceMock;
-        final NotificationTarget to = new ExternalUserNotificationTarget(userResource.getName(), userResource.getEmail());
+        final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
 
         final Notification notification = new Notification(from, singletonList(to), RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(token);
@@ -385,7 +387,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
 
         final NotificationSource from = systemNotificationSourceMock;
-        final NotificationTarget to = new ExternalUserNotificationTarget(userResource.getName(), userResource.getEmail());
+        final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
 
         final Notification notification = new Notification(from, singletonList(to), RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(of(existingToken));
@@ -432,7 +434,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
-        ServiceResult<Void> result = service.editInternalUser(userToEdit, UserRoleType.COLLABORATOR);
+        ServiceResult<Void> result = service.editInternalUser(userToEdit, Role.COLLABORATOR);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
@@ -446,7 +448,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceFailure(notFoundError(User.class, userToEdit.getId())));
 
-        ServiceResult<Void> result = service.editInternalUser(userToEdit, UserRoleType.SUPPORT);
+        ServiceResult<Void> result = service.editInternalUser(userToEdit, Role.SUPPORT);
 
         assertTrue(result.isFailure());
         assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
@@ -458,7 +460,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        UserRoleType newRole = UserRoleType.SUPPORT;
+        Role newRole = Role.SUPPORT;
         
         when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
         when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);

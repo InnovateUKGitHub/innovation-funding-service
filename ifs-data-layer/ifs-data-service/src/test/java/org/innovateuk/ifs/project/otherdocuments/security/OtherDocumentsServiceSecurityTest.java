@@ -1,23 +1,15 @@
 package org.innovateuk.ifs.project.otherdocuments.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.InputStream;
-import java.time.ZonedDateTime;
-import java.util.function.Supplier;
-
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in ProjectOtherDocumentsService interact with Spring Security
@@ -155,76 +147,8 @@ public class OtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<O
     }
 
     @Override
-    protected Class<TestProjectService> getClassUnderTest() {
-        return TestProjectService.class;
-    }
-
-    public static class TestProjectService implements OtherDocumentsService {
-
-        @Override
-        public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getExploitationPlanFileContents(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
-            return null;
-        }
+    protected Class<? extends OtherDocumentsService> getClassUnderTest() {
+        return OtherDocumentsServiceImpl.class;
     }
 }
 

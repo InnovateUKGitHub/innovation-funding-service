@@ -5,7 +5,6 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.FreemarkerNotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
-import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,8 +23,8 @@ public class ApplicationFundingTemplateRenderTest extends BaseIntegrationTest {
                 "<p><em>I am italic.</em></p>";
 
         String renderedTemplate = renderer.renderTemplate(
-                new UserNotificationSource(new User()),
-                new UserNotificationTarget(new User()),
+                new UserNotificationSource("", ""),
+                new UserNotificationTarget("", ""),
                 getTemplatePath("application_funding_text_html.html"),
                 asMap("message", htmlMessage)
         )

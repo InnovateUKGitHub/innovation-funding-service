@@ -7,21 +7,22 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
@@ -53,10 +54,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -141,7 +139,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId());
 
@@ -233,7 +231,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId());
 
@@ -347,7 +345,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
                                                                   "applicationName", "App1");
@@ -495,7 +493,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
                 "applicationName", "App1");

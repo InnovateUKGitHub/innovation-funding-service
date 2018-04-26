@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Terms and Conditions'" />
 </head>
-<body th:with="context='applicant'" class="app-terms-and-conditions">
+<body class="app-terms-and-conditions">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and Conditions of the Offer',size='heading-xlarge'" />
 
     <div class="grid-row">
@@ -265,6 +264,7 @@ then the Lead Participant must inform Innovate UK through the assigned MO prompt
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

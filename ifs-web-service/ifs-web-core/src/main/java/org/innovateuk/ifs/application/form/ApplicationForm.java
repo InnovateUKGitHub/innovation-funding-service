@@ -5,15 +5,12 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.springframework.validation.FieldError;
 
-import javax.validation.Valid;
-
 /**
  * This class is used to setup and submit the form input values. On submit the values are converted into an Form object.
  * http://stackoverflow.com/a/4511716
  */
 public class ApplicationForm extends Form {
 
-    @Valid
     private ApplicationResource application;
 
     private boolean adminMode = false;

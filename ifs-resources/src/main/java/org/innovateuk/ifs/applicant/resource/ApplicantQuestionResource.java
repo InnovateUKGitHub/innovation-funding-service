@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.applicant.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
 import java.util.stream.Stream;

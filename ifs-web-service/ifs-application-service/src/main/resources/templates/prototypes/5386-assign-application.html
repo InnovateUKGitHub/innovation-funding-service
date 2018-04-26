@@ -18,7 +18,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Allocate applications'}, ${'/prototypes/5385-application-allocation'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->

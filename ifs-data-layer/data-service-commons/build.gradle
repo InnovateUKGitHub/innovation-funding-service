@@ -3,11 +3,6 @@ if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile
 }
 
-jar {
-    baseName = 'data-service-commons'
-    dependsOn processResources
-}
-
 bootRepackage {
     enabled = false
 }
@@ -21,6 +16,7 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.14"
+    compile "org.apache.httpcomponents:httpasyncclient"
     compile "org.mapstruct:mapstruct:1.0.0.Final"
     mapstruct "org.mapstruct:mapstruct-processor:1.0.0.Final"
 
@@ -29,7 +25,7 @@ dependencies {
     testCompile project(':ifs-resources')
     testCompile project(":ifs-commons")
     testCompile "com.h2database:h2:1.4.196"
-
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 sourceSets {

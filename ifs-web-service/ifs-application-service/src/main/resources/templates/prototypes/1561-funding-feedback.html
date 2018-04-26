@@ -12,7 +12,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Invite assessor'}, ${(param.version != null and param.version[0] == 'v2' ? '/prototypes/5062-manage-assessors?tab=invite' : '/prototypes/4607-manage-assessors?tab=invite')} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} )" />
 
 

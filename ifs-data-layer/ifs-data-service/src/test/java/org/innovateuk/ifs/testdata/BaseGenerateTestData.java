@@ -16,7 +16,6 @@ import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
-import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
@@ -55,7 +54,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
@@ -117,7 +115,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    @Value("${ifs.generate.test.data.competition.filter:ALL_COMPETITIONS}")
+    @Value("${ifs.generate.test.data.competition.filter:BY_NAME}")
     private CompetitionFilter competitionFilter;
 
     @Value("${flyway.url}")
@@ -192,7 +190,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Generic innovation}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Biosciences round three: plastic recovery in the industrial sector}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }

@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.form.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.junit.Assert.assertEquals;
 
 public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {

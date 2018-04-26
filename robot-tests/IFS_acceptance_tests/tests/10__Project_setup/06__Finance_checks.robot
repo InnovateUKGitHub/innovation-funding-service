@@ -78,6 +78,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-654 Project Finance user has approved viability but date stamp is incorrect
 ...
 ...               IFS-1904 Only 1 row is saved on adding multiple new rows in eligibility > finances as internal user
+...
+...               IFS-2313 Project Setup: Ability to edit project duration
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -92,13 +94,29 @@ Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718
     [Tags]  HappyPath
     [Setup]    Log in as a different user        &{internal_finance_credentials}
-    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element          css=table.table-progress
-    And the user should see the element          jQuery=h2:contains("Finance checks")
-    And the user should see the text in the page  Overview
-    And the user should see the text in the page    ${funders_panel_application_1_title}
+    Given the user navigates to the page         ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the element         css=table.table-progress
+    And the user should see the element          jQuery=h1:contains("Finance checks")
+    And the user should see the element          jQuery=dd:contains("${funders_panel_application_1_title}")
     And the table row has expected values
-    And the user should see the element    link=Projects in setup
+    And the user should see the element          link=Projects in setup
+
+Validation on duration of Project
+    [Documentation]  IFS-2313
+    [Tags]
+    Given the user clicks the button/link               link=Edit
+    And the user moves focus to the element             id=durationInMonths
+    And the user should see an error                    This field cannot be left blank.
+    When the user clicks the button/link                jQuery=button:contains("Save and return to finances")
+    Then the user should see a field and summary error  This field cannot be left blank.
+
+
+Project Finance can edit the duration of the Project
+    [Documentation]  IFS-2313
+    [Tags]
+    Given the user enters text to a text field     id=durationInMonths  4
+    And the user clicks the button/link            jQuery=button:contains("Save and return to finances")
+    Then the user should see the element           jQuery=dd:contains("4 months")
 
 Project finance user cannot view viability section if this is not applicable for the org in question
     [Documentation]    INFUND-9517
@@ -108,11 +126,11 @@ Project finance user cannot view viability section if this is not applicable for
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then The user should see the text in the page    Viability
-    And The user should see the text in the page    Queries raised
-    And The user should see the text in the page    Notes
-    When the user should see the element    link=Review
+    Given the user navigates to the page                     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then The user should see the element                     jQuery=.table-progress th:contains("Viability")
+    And The user should see the element                      jQuery=.table-progress th:contains("Queries raised")
+    And The user should see the element                      jQuery=.table-progress th:contains("Notes")
+    When the user should see the element                     link=Review
     Then the user should see that the element is disabled    css=.generate-spend-profile-main-button
 
 # Leaving this query test here as it has to be done before finance contacts and bank details are filled in
@@ -134,7 +152,7 @@ Project Finance user can view academic Jes form
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    css=a.eligibility-1
     Then the user should see the text in the page    Download Je-S form
-    When the user opens the link in new window   jes-form121.pdf
+    When the user opens the link in new window   jes-form104.pdf
     Then the user goes back to the previous tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
@@ -142,8 +160,8 @@ Project Finance user can view academic Jes form
 Project finance can see the within limit research participation level
     [Documentation]    INFUND-7580
     [Tags]
-    When the user clicks the button/link  link=Project finance overview
-    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    When the user clicks the button/link  link=View finances
+    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)    Maximum research participation
     And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    100 %
     And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
     And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    0.25 %
@@ -154,20 +172,20 @@ Project finance can see the within limit research participation level
 Proj finance can see the maximum research participation level
     [Documentation]    INFUND-7579
     [Tags]
-    When the user navigates to the page                ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT}/finance-check
+    When the user navigates to the page    ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT}/finance-check
     #TODO IFS-1134:    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
     #TODO IFS-1134:    And the user should see the text in the page       Maximum research participation exceeded
-    When the user clicks the button/link               link=Project finance overview
+    When the user clicks the button/link    link=View finances
     #TODO IFS-1134:    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
     #TODO IFS-1134:    And the user should see the text in the page       Maximum research participation exceeded
     #TODO IFS-1134:    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
-    When the user clicks the button/link               link=Finance checks
+    When the user clicks the button/link    link=Finance checks
     #TODO IFS-1134:    And the user should see the text in the page        Maximum research participation exceeded
 
 Timestamp approval verification for viability and eligibility
@@ -207,10 +225,10 @@ Project finance user can view finance overview for the consortium
     [Tags]
     log in as a different user              &{internal_finance_credentials}
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    link=Project finance overview
+    When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    3 months    £402,797    116,596    4,936    29%
+    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    116,596    4,936    29%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -234,7 +252,7 @@ Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
     [Tags]
     Given the user navigates to the page                      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link                      link=Project finance overview
+    When the user clicks the button/link                      link=View finances
     #Check finances summary for lead partner
     Then the user should see the text in the element          css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
@@ -327,11 +345,11 @@ Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(1)    £200,903
-    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    30%
-    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)    140,632
-    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    57,803
-    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(5)    2,468
+    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(1)    £200,903  # Total costs
+    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    30%       # Grant %
+    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)    140,632   # Total project cost
+    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    57,803    # Grant applied for (£)
+    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(5)    2,468     # Other public sector funding (£)
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
@@ -467,14 +485,14 @@ Project finance user can see the lead partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(4)    60,271
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    138,164
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months  # Project duration
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903  # Total costs
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%       # Grant %
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(4)    60,271    # Funding sought (£)
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468     # Other public sector funding (£)
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    138,164   # Contribution to project (£)
 
-Finance checks eligibility validations
+Finance checks eligibility
     [Documentation]    INFUND-4833
     [Tags]
     When the user expands the section                Labour
@@ -585,7 +603,7 @@ RAG choices update on the finance checks page for eligibility
     [Tags]
     When the rag rating updates on the finance check page for lead for eligibility   Green
     And the rag rating updates on the finance check page for lead for eligibility    Amber
-    And the rag rating updates on the finance check page for lead for eligibility   Red
+    And the rag rating updates on the finance check page for lead for eligibility    Red
     When the user selects the option from the drop-down menu    --    id=rag-rating
     Then the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
 
@@ -618,7 +636,7 @@ Confirming eligibility should update on the finance checks page
 Proj Finance is able to see the Finances amended
     [Documentation]  INFUND-8501
     [Tags]
-    Given log in as a different user    &{internal_finance_credentials}
+    Given log in as a different user      &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
     Then the user clicks the button/link  link=View changes to finances
     When the user should see the element  css=#project-finance-changes-total
@@ -630,10 +648,10 @@ Proj Finance is able to see the Finances amended
 Project finance user can see updated finance overview after lead changes to eligibility
     [Documentation]    INFUND-5508
     [Tags]
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)    £379,678
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    109,660
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(6)    29%
+    When the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the text in the element    css=.standard-definition-list dd:nth-child(2)    £379,678  # Total project cost
+    And the user should see the text in the element     css=.standard-definition-list dd:nth-child(4)    109,660   # Grant applied for
+    And the user should see the text in the element     css=.standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
 
 Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
@@ -647,21 +665,21 @@ Project finance user can see the partner's zero funding request
     [Documentation]    INFUND-9269
     [Tags]
     When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
-    Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £200,903   # Total costs
+    Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £200,903    # Total costs
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
+    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)     0           # Funding sought
     [Teardown]    the user navigates to the page        ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
 
 Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(4)    60,271
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    138,164
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months   # Project duration
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903   # Total costs
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%        # Grant %
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(4)    60,271     # Funding sought (£)
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468      # Other public sector funding (£)
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    138,164    # Contribution to project (£)
 
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
@@ -775,14 +793,14 @@ Project finance user can see updated finance overview after partner changes to e
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
-    Then the user should see the text in the element   css=.table-overview tr:nth-child(1) td:nth-child(3)    £356,559
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    102,725
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(6)    29%
+    Then the user should see the text in the element   css=.standard-definition-list dd:nth-child(2)    £356,559  #Total project cost
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-child(4)    102,725   #Grant applied for
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-child(8)    29%       #Total percentage grant
 
 Project finance can see updated finance breakdown for different categories
     [Documentation]    INFUND-4846
     [Tags]
-    When the user clicks the button/link   link=Project finance overview
+    When the user clicks the button/link   link=View finances
     #check breakdown for lead partner
     Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are in this order    Total 	      Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
@@ -814,10 +832,10 @@ Project finance can approve academic eligibility
 Project finance user can view Updated finance overview for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    When the user clicks the button/link    link=Project finance overview
+    When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £356,559   102,725    4,936     29%
+    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,559   102,725    4,936     29%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -1116,11 +1134,10 @@ Custom suite setup
     Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the table row has expected values
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(2)    3 months
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(3)    £402,797
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(4)    116,596
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(5)    4,936
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(6)    29%
+    the user sees the text in the element    css=.standard-definition-list dd:nth-child(2)    £402,797  # Total project cost
+    the user sees the text in the element    css=.standard-definition-list dd:nth-child(4)    116,596   # Grant applied for
+    the user sees the text in the element    css=.standard-definition-list dd:nth-child(6)    4,936     # Other public sector funding
+    the user sees the text in the element    css=.standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
 
 the user fills in project costs
     Input Text    name=costs[0].value    £8,000

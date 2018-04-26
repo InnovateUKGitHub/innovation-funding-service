@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
-import org.innovateuk.ifs.application.transactional.QuestionServiceImpl;
+import org.innovateuk.ifs.application.transactional.QuestionStatusServiceImpl;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.context.annotation.Lazy;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Service("testQuestionService")
 @Lazy
-public class TestQuestionService extends QuestionServiceImpl {
+public class TestQuestionService extends QuestionStatusServiceImpl {
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     @Transactional

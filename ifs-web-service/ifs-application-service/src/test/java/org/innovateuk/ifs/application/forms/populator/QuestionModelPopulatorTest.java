@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,11 +23,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -48,7 +48,7 @@ public class QuestionModelPopulatorTest extends BaseUnitTest {
                 .withApplication(newApplicationResource().withApplicationState(ApplicationState.OPEN).build())
                 .withCurrentApplicant(newApplicantResource()
                         .withOrganisation(newOrganisationResource().build())
-                        .withProcessRole(newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build())
+                        .withProcessRole(newProcessRoleResource().withRole(LEADAPPLICANT).build())
                         .build())
                 .withCurrentUser(newUserResource().build())
                 .build();

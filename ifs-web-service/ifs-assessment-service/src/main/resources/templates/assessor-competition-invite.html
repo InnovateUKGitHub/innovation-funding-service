@@ -4,13 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body th:with="context='assessment'" class="app-dashboard">
+    <body class="app-dashboard">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
-
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
                 <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
@@ -32,7 +30,7 @@
             <section>
                 <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
 
-                <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief</a></p>
+                <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief (opens in a new window)</a></p>
 
                 <h3 class="heading-small">You should reject this invitation if:</h3>
                 <ul class="list list-bullet">
@@ -86,7 +84,7 @@
                                             value="1">Not available</option>
                                 </select>
                             </div>
-                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
+                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
                                 <label class="form-label" th:for="${#ids.next('rejectComment')}">
                                     Use this space to provide more information
                                     <th:block th:if="${#fields.hasErrors('rejectComment')}">
@@ -118,5 +116,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

@@ -3,12 +3,11 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project setup status'" />
 </head>
-<body th:with="context='project'" class="project-overview">
+<body class="project-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='heading-xlarge'" />
 
@@ -203,6 +202,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

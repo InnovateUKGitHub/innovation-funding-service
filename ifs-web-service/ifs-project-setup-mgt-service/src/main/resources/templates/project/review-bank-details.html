@@ -10,8 +10,6 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/review-all-bank-details(projectId=${model.projectId})}" />
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(form)" />

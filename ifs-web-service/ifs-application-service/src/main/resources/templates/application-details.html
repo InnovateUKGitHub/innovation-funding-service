@@ -3,14 +3,13 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application overview'" />
 </head>
-<body th:with="context='applicant'" class="app-details">
+<body class="app-details">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.currentCompetition}"></th:block>
 
     <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
@@ -103,6 +102,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

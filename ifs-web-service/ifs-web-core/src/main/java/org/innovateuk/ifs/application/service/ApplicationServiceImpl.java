@@ -54,8 +54,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public OrganisationResource getLeadOrganisation(Long applicationId) {
-        ApplicationResource application = getById(applicationId);
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationId);
         return organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
     }
 

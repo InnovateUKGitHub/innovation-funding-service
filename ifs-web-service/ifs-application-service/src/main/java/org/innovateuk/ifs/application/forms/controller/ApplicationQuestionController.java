@@ -31,7 +31,6 @@ import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,7 +99,6 @@ public class ApplicationQuestionController {
                         user.getId(),
                         request,
                         response,
-                        bindingResult.hasErrors(),
                         Optional.of(Boolean.TRUE)
                 );
                 validationHandler.addAnyErrors(errors);
@@ -114,7 +112,7 @@ public class ApplicationQuestionController {
 
     @PostMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String questionFormSubmit(
-            @Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
+            @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
             BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
@@ -146,7 +144,6 @@ public class ApplicationQuestionController {
                         user.getId(),
                         request,
                         response,
-                        bindingResult.hasErrors(),
                         Optional.empty()
                 );
             }

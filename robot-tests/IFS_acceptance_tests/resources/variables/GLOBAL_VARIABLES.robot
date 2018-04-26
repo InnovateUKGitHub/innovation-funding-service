@@ -30,12 +30,15 @@ ${manageExternalUsers}  ${server}/management/admin/external/users
 #Competitions and Applications Variables
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
+${openCompetitionRTOCloseDate}       ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
+
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
 
 ${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
+${openCompetitionBusinessRTOCloseDate}  ${getSimpleMilestoneDate(${openCompetitionBusinessRTO}, "SUBMISSION_DATE")}
 
 ${openCompetitionPublicSector_name}  Photonics for Public
 ${openCompetitionPublicSector}       ${competition_ids['${openCompetitionPublicSector_name}']}
@@ -63,8 +66,16 @@ ${OPEN_COMPETITION_APPLICATION_5_NUMBER}  ${application_ids['${OPEN_COMPETITION_
 ${CLOSED_COMPETITION_APPLICATION_NAME}         A new innovative solution
 ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPETITION_APPLICATION_NAME}']}
 
+${createApplicationOpenCompetition}             Home and industrial efficiency programme
+${createApplicationOpenCompetitionId}           ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
+${createApplicationOpenCompetitionCloseDate}    ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "SUBMISSION_DATE")}
+${createApplicationOpenCompetitionAssessorAcceptsDayMonth}    ${getPrettyMilestoneDayMonth(${createApplicationOpenCompetitionId}, "ASSESSOR_ACCEPTS")}
+${createApplicationOpenCompetitionAssessorDeadlineDayMonth}    ${getPrettyMilestoneDayMonth(${createApplicationOpenCompetitionId}, "ASSESSOR_DEADLINE")}
+
 ${READY_TO_OPEN_COMPETITION_NAME}         Photonics for health
 ${READY_TO_OPEN_COMPETITION}              ${competition_ids['${READY_TO_OPEN_COMPETITION_NAME}']}
+${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}    ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
 ${COMP_SETUP_COMPETITION}                 ${competition_ids['none']}
 ${NOT_EDITABLE_COMPETITION_NAME}          Integrated delivery programme - low carbon vehicles
 ${NOT_EDITABLE_COMPETITION}               ${competition_ids['${NOT_EDITABLE_COMPETITION_NAME}']}
@@ -77,6 +88,9 @@ ${FUNDERS_PANEL_APPLICATION_2_NUMBER}     ${application_ids['${FUNDERS_PANEL_APP
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}  ${getPrettyLongMilestoneTimeDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_PRETTY_DATE}  ${getPrettyMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}  ${getPrettyMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
 ${IN_ASSESSMENT_APPLICATION_1_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_3_TITLE}      Intelligent Building
@@ -166,12 +180,19 @@ ${database_user}    root
 ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
+
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${CLOSED_COMPETITION}  ${competition_ids['${CLOSED_COMPETITION_NAME}']}
 ${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight train routing
 ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${competition_ids['${UPCOMING_COMPETITION_TO_ASSESS_NAME}']}
+${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE}  ${getPrettyLongMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "OPEN_DATE")}
+${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE_TIME}  ${getPrettyMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "OPEN_DATE")}
+${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME}  ${getPrettyMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "SUBMISSION_DATE")}
+${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME_LONG}  ${getPrettyLongMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "SUBMISSION_DATE")}
+${UPCOMING_COMPETITION_TO_ASSESS_NOTIFICATION_DATE}  ${getPrettyMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "NOTIFICATIONS")}
+${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}  ${getSimpleMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "ASSESSOR_DEADLINE")}
 ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables

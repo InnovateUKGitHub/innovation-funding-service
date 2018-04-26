@@ -3,11 +3,10 @@
 <head>
     <th:block th:include="fragments/layout :: head" th:with="pageTitle='Innovation competitions'" />
 </head>
-<body th:with="context='front-door'" class="public-content">
+<body class="public-content">
     <th:block th:include="fragments/layout :: body-start" />
     <th:block th:include="fragments/layout :: global-header" />
     <main tabindex="-1" id="content">
-        <th:block th:include="fragments/layout :: main-content-start" />
         <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Innovate UK',linkClass='link-back',linkUrl=@{https://www.gov.uk/government/organisations/innovate-uk}"></th:block>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation competitions',size='heading-large'" />

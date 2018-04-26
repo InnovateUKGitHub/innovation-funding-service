@@ -14,6 +14,7 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Test Cases ***
 Competition dashboard
@@ -47,20 +48,17 @@ Invite Assessors
     ...    INFUND-7362
     [Tags]
     When the user clicks the button/Link    link=Invite assessors to assess the competition
-    Then The user should see the element    link=Pending and rejected
+    Then The user should see the element    link=Pending and declined
     And the user should see the element    link=Find
     And the user should see the element    link=Invite
     [Teardown]    The user clicks the button/link    link=Competition
 
 Notify Assessors
-    [Documentation]    INFUND-6458
-    ...
-    ...    INFUND-7362
+    [Documentation]  INFUND-6458 INFUND-7362
     [Tags]
     When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
     Then the user should see the text in the page    In assessment
-    [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=${competition_ids['${CLOSED_COMPETITION_NAME}']};
+    [Teardown]  Reset competition's milestone
 
 *** Keywords ***
 Get The expected values from the invite page
@@ -72,8 +70,7 @@ Get The expected values from the invite page
     The user clicks the button/link    link=Competition
     The user clicks the button/link    link=Manage assessments
     The user clicks the button/link    jQuery=a:contains("Allocate applications")
-    ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    //div[2]/table/tbody/tr
-    Set Test Variable    ${NUMBER_OF_APPLICATIONS}
+    Get the total number of submitted applications
     The user clicks the button/link    link=Manage assessments
     The user clicks the button/link    link=Competition
 
@@ -89,3 +86,6 @@ the counts of the key statistics of the closed competition should be correct
     ${Assessor_without_app}=    Get text     css=ul:nth-child(3)> li:nth-child(3) > div > span
     Should Be Equal As Integers    ${Assessor_without_app}   10
 
+Reset competition's milestone
+    Connect to Database  @{database}
+    Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `competition_id`='${competition_ids['${CLOSED_COMPETITION_NAME}']}' and `type`='ASSESSORS_NOTIFIED';

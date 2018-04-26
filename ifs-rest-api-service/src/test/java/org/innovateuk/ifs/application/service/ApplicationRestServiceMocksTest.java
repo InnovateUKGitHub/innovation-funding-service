@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -193,5 +194,32 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
         setupPostWithRestResultExpectations(applicationRestURL + "/informIneligible/" + applicationId, Void.class, applicationIneligibleSendResource, null, OK);
         service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccess();
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() {
+        int pageNumber = 0;
+        int pageSize = 20;
+        String sortField = "id";
+
+        ApplicationPageResource applicationPage = new ApplicationPageResource();
+
+        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
+
+        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccess();
+        assertNotNull(result);
+        Assert.assertEquals(applicationPage, result);
+    }
+
+    @Test
+    public void getLatestEmailFundingDate() {
+        long competitionId = 1L;
+        ZonedDateTime returnedDate = ZonedDateTime.now();
+        String expectedUrl = applicationRestURL + "/getLatestEmailFundingDate/" + competitionId;
+
+        setupGetWithRestResultExpectations(expectedUrl, ZonedDateTime.class, returnedDate);
+
+        ZonedDateTime date = service.getLatestEmailFundingDate(competitionId).getSuccess();
+        assertEquals(returnedDate, date);
     }
 }

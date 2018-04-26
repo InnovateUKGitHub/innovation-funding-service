@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
-import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;

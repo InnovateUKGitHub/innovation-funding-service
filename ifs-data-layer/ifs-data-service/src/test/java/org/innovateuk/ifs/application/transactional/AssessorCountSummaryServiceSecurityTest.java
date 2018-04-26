@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -36,14 +33,6 @@ public class AssessorCountSummaryServiceSecurityTest extends BaseServiceSecurity
 
     @Override
     protected Class<? extends AssessorCountSummaryService> getClassUnderTest() {
-        return TestAssessorCountSummaryService.class;
-    }
-
-    public static class TestAssessorCountSummaryService implements AssessorCountSummaryService {
-
-        @Override
-        public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, Optional<Long> innovationSector, Optional<BusinessType> businessType, int pageIndex, int pageSize) {
-            return null;
-        }
+        return AssessorCountSummaryServiceImpl.class;
     }
 }

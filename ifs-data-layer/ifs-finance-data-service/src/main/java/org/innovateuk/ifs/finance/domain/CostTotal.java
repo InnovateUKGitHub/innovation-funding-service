@@ -23,7 +23,7 @@ public class CostTotal {
     @NotNull
     private String type;
 
-    @Column(precision = 14, scale = 2)
+    @Column(precision = 15, scale = 6)
     private BigDecimal total;
 
     public CostTotal() {

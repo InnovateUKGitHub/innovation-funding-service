@@ -3,7 +3,6 @@ package org.innovateuk.ifs.user.builder;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;

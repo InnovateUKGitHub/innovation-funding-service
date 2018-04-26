@@ -9,6 +9,18 @@ include::{snippets}/interview-panel/assign-application/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/interview-panel/assign-application/curl-request.adoc[]
 
+=== View applications assigned to an interview panel
+==== Request
+include::{snippets}/interview-panel/get-assigned-applications/http-request.adoc[]
+include::{snippets}/interview-panel/get-assigned-applications/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-assigned-applications/http-response.adoc[]
+include::{snippets}/interview-panel/get-assigned-applications/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-assigned-applications/curl-request.adoc[]
+
 === Get available applications for interview panel
 ==== Request
 include::{snippets}/interview-panel/get-available-applications/http-request.adoc[]
@@ -33,7 +45,7 @@ include::{snippets}/interview-panel/get-available-application-ids/response-field
 ==== Curl Example
 include::{snippets}/interview-panel/get-available-application-ids/curl-request.adoc[]
 
-=== Get stages application
+=== Get staged applications
 ==== Request
 include::{snippets}/interview-panel/get-staged-applications/http-request.adoc[]
 include::{snippets}/interview-panel/get-staged-applications/path-parameters.adoc[]
@@ -44,3 +56,36 @@ include::{snippets}/interview-panel/get-staged-applications/response-fields.adoc
 
 ==== Curl Example
 include::{snippets}/interview-panel/get-staged-applications/curl-request.adoc[]
+
+=== Remove staged application
+==== Request
+include::{snippets}/interview-panel/unstage-application/http-request.adoc[]
+include::{snippets}/interview-panel/unstage-application/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/unstage-application/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/unstage-application/curl-request.adoc[]
+
+=== Remove staged applications
+==== Request
+include::{snippets}/interview-panel/unstage-applications/http-request.adoc[]
+include::{snippets}/interview-panel/unstage-applications/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/unstage-applications/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/unstage-applications/curl-request.adoc[]
+
+=== Is application assigned
+==== Request
+include::{snippets}/interview-panel/is-application-assigned/http-request.adoc[]
+include::{snippets}/interview-panel/is-application-assigned/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/is-application-assigned/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/is-application-assigned/curl-request.adoc[]

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.primitives.Longs.asList;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;

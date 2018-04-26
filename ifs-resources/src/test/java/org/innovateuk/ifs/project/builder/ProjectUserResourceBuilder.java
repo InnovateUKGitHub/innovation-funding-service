@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -45,8 +45,14 @@ public class ProjectUserResourceBuilder extends BaseBuilder<ProjectUserResource,
         return withArray((name, projectUser) -> projectUser.setRoleName(name), roleName);
     }
 
-    public ProjectUserResourceBuilder withRoleName(UserRoleType... roleName) {
-        return withArray((name, projectUser) -> projectUser.setRoleName(name.getName()), roleName);
+    public ProjectUserResourceBuilder withRole(Role... roles) {
+        return withArray(
+                (role, projectUser) -> {
+                    projectUser.setRole(role.getId());
+                    projectUser.setRoleName(role.getName());
+                    },
+                roles
+        );
     }
 
     public ProjectUserResourceBuilder withProject(Long... project) {

@@ -39,8 +39,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

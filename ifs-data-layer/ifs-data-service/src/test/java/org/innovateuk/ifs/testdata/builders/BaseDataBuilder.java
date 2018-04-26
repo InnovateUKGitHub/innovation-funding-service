@@ -8,15 +8,15 @@ import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
-import org.innovateuk.ifs.application.repository.SectionRepository;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
-import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -34,12 +34,14 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.repository.AssessmentInviteRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
@@ -64,7 +66,10 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.*;
+import org.innovateuk.ifs.user.repository.EthnicityRepository;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -79,7 +84,7 @@ import java.util.function.Supplier;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -123,8 +128,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationService applicationService;
     protected ApplicationNotificationService applicationNotificationService;
     protected QuestionService questionService;
+    protected QuestionStatusService questionStatusService;
     protected TestQuestionService testQuestionService;
     protected FormInputService formInputService;
+    protected FormInputResponseService formInputResponseService;
     protected FormInputResponseRepository formInputResponseRepository;
     protected ApplicationRepository applicationRepository;
     protected ApplicationFundingService applicationFundingService;
@@ -133,6 +140,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected MonitoringOfficerService monitoringOfficerService;
     protected FinanceRowCostsService financeRowCostsService;
     protected SectionService sectionService;
+    protected SectionStatusService sectionStatusService;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
     protected EthnicityRepository ethnicityRepository;
@@ -140,7 +148,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionRepository competitionRepository;
     protected CompetitionFunderRepository competitionFunderRepository;
     protected AssessorService assessorService;
-    protected CompetitionParticipantRepository competitionParticipantRepository;
+    protected AssessmentParticipantRepository assessmentParticipantRepository;
     protected AssessmentInviteService assessmentInviteService;
     protected TestService testService;
     protected AssessmentRepository assessmentRepository;
@@ -205,8 +213,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationService = serviceLocator.getBean(ApplicationService.class);
         applicationNotificationService = serviceLocator.getBean(ApplicationNotificationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);
+        questionStatusService = serviceLocator.getBean(QuestionStatusService.class);
         testQuestionService = serviceLocator.getBean(TestQuestionService.class);
         formInputService = serviceLocator.getBean(FormInputService.class);
+        formInputResponseService = serviceLocator.getBean(FormInputResponseService.class);
         formInputResponseRepository = serviceLocator.getBean(FormInputResponseRepository.class);
         applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
         applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
@@ -216,13 +226,14 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         financeRowCostsService = serviceLocator.getBean(FinanceRowCostsService.class);
         financeService = serviceLocator.getBean(FinanceService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
+        sectionStatusService = serviceLocator.getBean(SectionStatusService.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
         ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
         assessmentInviteRepository = serviceLocator.getBean(AssessmentInviteRepository.class);
         competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
         assessorService = serviceLocator.getBean(AssessorService.class);
-        competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
+        assessmentParticipantRepository = serviceLocator.getBean(AssessmentParticipantRepository.class);
         assessmentInviteService = serviceLocator.getBean(AssessmentInviteService.class);
         testService = serviceLocator.getBean(TestService.class);
         assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);
@@ -263,7 +274,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource compAdmin() {
-        return retrieveUserByEmailInternal(compAdminEmail, UserRoleType.COMP_ADMIN);
+        return retrieveUserByEmailInternal(compAdminEmail, COMP_ADMIN);
     }
 
     protected UserResource systemRegistrar() {
@@ -301,7 +312,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return fromCache(applicationId, leadApplicantsByApplicationId, () ->
                 doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                        getSuccess(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get()));
+                        getSuccess(), pr -> pr.getRole() == LEADAPPLICANT.getId()).get()));
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
@@ -342,7 +353,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             return processRoleRepository.findByUserAndApplicationId(userRepository.findOne(user.getId()),
                     application.getId())
                     .stream()
-                    .filter(x -> x.getRole().getName().equals(ASSESSOR.getName()))
+                    .filter(x -> x.getRole() == ASSESSOR)
                     .findFirst()
                     .get();
         });
@@ -374,11 +385,11 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return with(data -> doAs(compAdmin(), () -> action.accept(data)));
     }
 
-    protected UserResource retrieveUserByEmailInternal(String email, UserRoleType role) {
+    protected UserResource retrieveUserByEmailInternal(String email, Role role) {
         return fromCache(email, usersByEmailAddressInternal, () -> {
             User user = userRepository.findByEmail(email).get();
             return newUserResource().
-                    withRolesGlobal(asList(Role.getByName(role.getName()))).
+                    withRolesGlobal(asList(role)).
                     withId(user.getId()).
                     build();
         });

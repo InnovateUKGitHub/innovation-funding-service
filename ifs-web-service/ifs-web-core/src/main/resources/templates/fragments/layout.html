@@ -15,11 +15,11 @@
       (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
     </script>
 
-    <!--[if gt IE 9]><!--><link href="/css/screen.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/screen.css')}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
-    <!--[if IE 7]><link href="/css/ie7.css" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if IE 8]><link href="/css/ie8.css" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if IE 9]><link href="/css/ie9.css" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if IE 8]><link href="/css/fonts-ie8.css" media="all" rel="stylesheet" /><![endif]-->
+    <!--[if gt IE 9]><!--><link href="/css/screen.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/screen.css')}}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
+    <!--[if IE 7]><link href="/css/ie7.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/ie7.css')}}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 8]><link href="/css/ie8.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/ie8.css')}}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 9]><link href="/css/ie9.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/ie9.css')}}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 8]><link href="/css/fonts-ie8.css" th:href="@{${@mvcResourceUrlProvider.getForLookupPath('/css/fonts-ie8.css')}}" media="all" rel="stylesheet" /><![endif]-->
 
     <!--[if gte IE 9]><!-->
         <script type="text/javascript">
@@ -30,10 +30,10 @@
     <!--<![endif]-->
 
     <!--[if lt IE 9]>
-      <script src="/js/vendor/govuk/ie.js" type="text/javascript"></script>
+        <script src="/js/vendor/govuk/ie.js" th:src="@{${@mvcResourceUrlProvider.getForLookupPath('/js/vendor/govuk/ie.js')}}" type="text/javascript"></script>
     <![endif]-->
 
-    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/images/favicon.ico" th:href="${@mvcResourceUrlProvider.getForLookupPath('/images/favicon.ico')}" type="image/x-icon" />
 
     <!-- Size for iPad and iPad mini (high resolution) -->
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/images/apple-touch-icon-152x152.png" th:href="${@mvcResourceUrlProvider.getForLookupPath('/images/apple-touch-icon-152x152.png')}"/>
@@ -70,7 +70,7 @@
     <!--/* Changes body class from no-js to js when js is enabled */-->
     <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe th:src="'https://www.googletagmanager.com/ns.html?id='+${GoogleAnalyticsTrackingID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript th:if="${GoogleAnalyticsTrackingID}"><iframe th:src="'https://www.googletagmanager.com/ns.html?id='+${GoogleAnalyticsTrackingID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <th:block th:insert="fragments/elements :: skiplink-container" />
     <th:block th:insert="fragments/elements :: global-cookie-message" />
@@ -81,25 +81,8 @@
 <!-- ===========================Place: <body> end =========================== -->
 
 <th:block th:fragment="body-end">
-
-    <script src="/js/dest/vendor.min.js" th:src="${@mvcResourceUrlProvider.getForLookupPath('/js/dest/vendor.min.js')}" type="text/javascript"></script>
-    <script src="/js/dest/ifs.min.js" th:src="${@mvcResourceUrlProvider.getForLookupPath('/js/dest/ifs.min.js')}" type="text/javascript"></script>
-
-    <!--/* switch for having javascript that only gets loaded in a specific java sub-module */-->
-    <th:block th:switch="${context}">
-        <th:block th:case="'applicant'">
-            <script th:src="${@mvcResourceUrlProvider.getForLookupPath('/js/dest/application.min.js')}" type="text/javascript"></script>
-        </th:block>
-        <th:block th:case="'assessment'">
-            <script th:src="'/assessment'+${@mvcResourceUrlProvider.getForLookupPath('/js/dest/assessment.min.js')}" type="text/javascript"></script>
-        </th:block>
-        <th:block th:case="'comp-management'">
-            <script th:src="'/management'+${@mvcResourceUrlProvider.getForLookupPath('/js/dest/comp-management.min.js')}" type="text/javascript"></script>
-        </th:block>
-        <th:block th:case="'project'">
-            <script th:src="'/project-setup'+${@mvcResourceUrlProvider.getForLookupPath('/js/dest/project-setup.min.js')}" type="text/javascript"></script>
-        </th:block>
-    </th:block>
+    <script src="/js/dest/vendor.min.js" th:src="@{${@mvcResourceUrlProvider.getForLookupPath('/js/dest/vendor.min.js')}}" type="text/javascript"></script>
+    <script src="/js/dest/ifs.min.js" th:src="@{${@mvcResourceUrlProvider.getForLookupPath('/js/dest/ifs.min.js')}}" type="text/javascript"></script>
 </th:block>
 
 <!-- ===========================Place: main <header>  =========================== -->
@@ -129,11 +112,6 @@
         <span>This is a new service – your <a target="_blank" href="https://www.surveymonkey.co.uk/r/innovationfundingservicefeedback">feedback</a> will help us to improve it.</span>
       </p>
     </div>
-</th:block>
-<!-- ===========================Place: <main> content-start =========================== -->
-
-<th:block th:fragment="main-content-start">
-
 </th:block>
 
 <!-- ===========================Place: <main> content-end =========================== -->

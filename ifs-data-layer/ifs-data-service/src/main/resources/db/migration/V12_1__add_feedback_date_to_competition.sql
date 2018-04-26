@@ -1,1 +1,0 @@
-ALTER TABLE competition ADD COLUMN `assessor_feedback_date` DATETIME NULL DEFAULT NULL;

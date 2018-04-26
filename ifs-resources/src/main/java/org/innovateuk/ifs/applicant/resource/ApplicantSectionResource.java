@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.applicant.resource;
 
-import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
 
 import java.util.ArrayList;
 import java.util.List;

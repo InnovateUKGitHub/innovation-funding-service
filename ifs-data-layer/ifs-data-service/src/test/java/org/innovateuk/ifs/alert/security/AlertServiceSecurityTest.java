@@ -2,14 +2,11 @@ package org.innovateuk.ifs.alert.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.transactional.AlertService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.alert.transactional.AlertServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.mockito.Matchers.isA;
@@ -23,7 +20,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
 
     @Override
     protected Class<? extends AlertService> getClassUnderTest() {
-        return TestAlertService.class;
+        return AlertServiceImpl.class;
     }
 
     @Before
@@ -54,37 +51,5 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
                 () -> {
                     verify(alertPermissionRules).systemMaintenanceUserCanDeleteAlerts(isA(AlertResource.class), isA(UserResource.class));
                 });
-    }
-
-    public static class TestAlertService implements AlertService {
-        @Override
-        public ServiceResult<List<AlertResource>> findAllVisible() {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<AlertResource>> findAllVisibleByType(final AlertType type) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AlertResource> findById(final Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AlertResource> create(final AlertResource alertResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> delete(final Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteAllByType(final AlertType type) {
-            return null;
-        }
     }
 }

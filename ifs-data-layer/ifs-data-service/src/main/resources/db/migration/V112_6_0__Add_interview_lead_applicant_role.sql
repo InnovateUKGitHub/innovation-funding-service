@@ -1,1 +1,0 @@
-INSERT INTO role (name) VALUES ('interview_lead_applicant');

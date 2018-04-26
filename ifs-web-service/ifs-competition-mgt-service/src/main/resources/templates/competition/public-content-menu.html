@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body th:with="context='comp-management'" class="competition-management competition-setup">
+<body class="competition-management competition-setup">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
         <!-- Link back -->
         <th:block th:unless="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
@@ -41,21 +40,11 @@
                 <div th:if="${model.isSectionComplete(section)}" class="task-status-complete"><span>Complete</span></div>
             </li>
         </ul>
-        <div class="extra-margin">
-            <p th:if="${model.hasBeenPublished()}"
-                th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
-                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, ' h:mma'))}">
-                <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
-            <div class="grid-row">
-                <div class="column-half">
-                    <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>
-                    <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to non-IFS competition details</a>
-                </div>
-                <div class="column-half alignright">
-                    <button th:unless="${model.hasBeenPublished()}" class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
-                </div>
-            </div>
-        </div>
+        <p th:if="${model.hasBeenPublished()}"
+            th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
+                     publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}">
+            <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
+        <button th:unless="${model.hasBeenPublished()}" class="button" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
     </form>
 
     <ul class="pagination" th:unless="${model.competition.nonIfs}">
@@ -67,11 +56,17 @@
         </li>
     </ul>
 
+    <div class="extra-margin">
+        <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to setup overview</a>
+        <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to non-IFS competition details</a>
+    </div>
+
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

@@ -44,9 +44,9 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     private User recipientUser1 = newUser().withFirstName("Recipient").withLastName("1").withEmailAddress("recipient1@email.com").build();
     private User recipientUser2 = newUser().withFirstName("Recipient").withLastName("2").withEmailAddress("recipient2@email.com").build();
 
-    private UserNotificationSource sender = new UserNotificationSource(senderUser);
-    private UserNotificationTarget recipient1 = new UserNotificationTarget(recipientUser1);
-    private UserNotificationTarget recipient2 = new UserNotificationTarget(recipientUser2);
+    private UserNotificationSource sender = new UserNotificationSource(senderUser.getName(), senderUser.getEmail());
+    private UserNotificationTarget recipient1 = new UserNotificationTarget(recipientUser1.getName(), recipientUser1.getEmail());
+    private UserNotificationTarget recipient2 = new UserNotificationTarget(recipientUser2.getName(), recipientUser2.getEmail());
 
     private EmailAddress senderEmail = EmailAddressResolver.fromNotificationSource(sender);
     private EmailAddress recipient1Email = EmailAddressResolver.fromNotificationTarget(recipient1);

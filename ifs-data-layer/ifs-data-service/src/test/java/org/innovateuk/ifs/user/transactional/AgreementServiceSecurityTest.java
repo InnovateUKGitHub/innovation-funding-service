@@ -14,7 +14,7 @@ public class AgreementServiceSecurityTest extends BaseServiceSecurityTest<Agreem
 
     @Override
     protected Class<? extends AgreementService> getClassUnderTest() {
-        return TestAgreementService.class;
+        return AgreementServiceImpl.class;
     }
 
     @Test
@@ -27,14 +27,5 @@ public class AgreementServiceSecurityTest extends BaseServiceSecurityTest<Agreem
     public void getCurrent_notAnAssessor() {
         setLoggedInUser(newUserResource().build());
         classUnderTest.getCurrent();
-    }
-
-    public static class TestAgreementService implements AgreementService {
-
-        @Override
-        public ServiceResult<AgreementResource> getCurrent() {
-            return null;
-        }
-
     }
 }

@@ -1,95 +1,78 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.math.BigDecimal;
-
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.fail;
 
-public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummarisationService> {
+public class ApplicationSummarisationServiceSecurityTest extends
+        BaseServiceSecurityTest<ApplicationSummarisationService> {
 
-	@Test
-	public void testTotalProjectCostAllowedIfGlobalCompAdminRole() {
+    @Test
+    public void testTotalProjectCostAllowedIfGlobalCompAdminRole() {
 
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
-		classUnderTest.getTotalProjectCost(null);
-	}
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        classUnderTest.getTotalProjectCost(null);
+    }
 
-	@Test
-	public void testTotalProjectCostDeniedIfNotLoggedIn() {
+    @Test
+    public void testTotalProjectCostDeniedIfNotLoggedIn() {
 
-		setLoggedInUser(null);
-		try {
-			classUnderTest.getTotalProjectCost(null);
-			fail("Should not have been able to get total project cost without first logging in");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
+        setLoggedInUser(null);
+        try {
+            classUnderTest.getTotalProjectCost(null);
+            fail("Should not have been able to get total project cost without first logging in");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+    }
 
-	@Test
-	public void testTotalCostDeniedIfNoGlobalRolesAtAll() {
+    @Test
+    public void testTotalCostDeniedIfNoGlobalRolesAtAll() {
 
-		try {
-			classUnderTest.getTotalProjectCost(null);
-			fail("Should not have been able to get total project cost without the global comp admin role");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
-	
-	@Test
-	public void testFundingSoughtAllowedIfGlobalCompAdminRole() {
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
-		classUnderTest.getFundingSought(null);
-	}
+        try {
+            classUnderTest.getTotalProjectCost(null);
+            fail("Should not have been able to get total project cost without the global comp admin role");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+    }
 
-	@Test
-	public void testFundingSoughtDeniedIfNotLoggedIn() {
+    @Test
+    public void testFundingSoughtAllowedIfGlobalCompAdminRole() {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        classUnderTest.getFundingSought(null);
+    }
 
-		setLoggedInUser(null);
-		try {
-			classUnderTest.getFundingSought(null);
-			fail("Should not have been able to get funding sought without first logging in");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
+    @Test
+    public void testFundingSoughtDeniedIfNotLoggedIn() {
 
-	@Test
-	public void testFundingSoughtDeniedIfNoGlobalRolesAtAll() {
+        setLoggedInUser(null);
+        try {
+            classUnderTest.getFundingSought(null);
+            fail("Should not have been able to get funding sought without first logging in");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+    }
 
-		try {
-			classUnderTest.getFundingSought(null);
-			fail("Should not have been able to get funding sought without the global comp admin role");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
+    @Test
+    public void testFundingSoughtDeniedIfNoGlobalRolesAtAll() {
 
-	@Override
-	protected Class<? extends ApplicationSummarisationService> getClassUnderTest() {
-		return TestApplicationSummarisationService.class;
-	}
+        try {
+            classUnderTest.getFundingSought(null);
+            fail("Should not have been able to get funding sought without the global comp admin role");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+    }
 
-	public static class TestApplicationSummarisationService implements ApplicationSummarisationService {
-
-		@Override
-		public ServiceResult<BigDecimal> getTotalProjectCost(Application application) {
-			return null;
-		}
-
-		@Override
-		public ServiceResult<BigDecimal> getFundingSought(Application application) {
-			return null;
-		}
-	}
+    @Override
+    protected Class<? extends ApplicationSummarisationService> getClassUnderTest() {
+        return ApplicationSummarisationServiceImpl.class;
+    }
 }

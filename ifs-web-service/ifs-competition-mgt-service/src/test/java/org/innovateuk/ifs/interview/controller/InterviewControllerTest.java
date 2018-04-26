@@ -44,7 +44,7 @@ public class InterviewControllerTest extends BaseControllerMockMVCTest<Interview
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
 
-        MvcResult result = mockMvc.perform(get("/interview/panel/competition/{competitionId}", competitionId))
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-interview-panel"))
                 .andReturn();

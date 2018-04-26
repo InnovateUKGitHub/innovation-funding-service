@@ -4,8 +4,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompetitionSummaryServiceImpl extends BaseTransactionalService implements CompetitionSummaryService {
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Override
     public ServiceResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId) {
@@ -55,7 +55,7 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
                 applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.APPROVED.getBackingState())
         );
         competitionSummaryResource.setAssessorsInvited(
-                competitionParticipantRepository.countByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.ASSESSOR)
+                assessmentParticipantRepository.countByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.ASSESSOR)
         );
         competitionSummaryResource.setAssessorDeadline(competition.getAssessorDeadlineDate());
 

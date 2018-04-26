@@ -8,40 +8,43 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
 
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 /**
  * Transactional and secured service focused around the processing of Applications.
@@ -60,6 +63,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ApplicationProgressService applicationProgressService;
+
+    private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP = new HashMap<String, Sort>() {{
+        put("id", new Sort(ASC, "id"));
+        put("name", new Sort(ASC, "name", "id"));
+    }};
 
     @Override
     @Transactional
@@ -161,7 +169,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id,
                                                                      final ApplicationState state) {
         if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(id)) {
-                return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
+            return serviceFailure(APPLICATION_NOT_READY_TO_BE_SUBMITTED);
         }
 
         return find(application(id)).andOnSuccess((application) -> {
@@ -173,12 +181,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles,
                                                        final Long userId,
-                                                       UserRoleType role) {
+                                                       Role role) {
         boolean contains = false;
         int i = 0;
         while (!contains && i < roles.size()) {
             contains = roles.get(i).getUser().getId().equals(userId)
-                    && roles.get(i).getRole().getName().equals(role.getName());
+                    && roles.get(i).getRole() == role;
             i++;
         }
 
@@ -202,8 +210,18 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
                                                       Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
-                .andOnSuccess((user) ->
-                        serviceSuccess(org.innovateuk.ifs.security.SecurityRuleUtil.isInternal(user)));
+                .andOnSuccessReturn(User::isInternalUser);
+    }
+
+    @Override
+    public ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id) {
+        List<Application> applicationsForId = applicationRepository.findByCompetitionId(id);
+
+        // Only competitions with at least one funded and informed application can be considered as in project setup
+        return serviceSuccess(applicationsForId.stream()
+                .filter(application -> application.getManageFundingEmailDate() != null)
+                .max(Comparator.comparing(Application::getManageFundingEmailDate))
+                .get().getManageFundingEmailDate());
     }
 
     @Override
@@ -224,10 +242,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<ApplicationResource>> findByUserId(final Long userId) {
         return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
-            List<Application> applications = simpleMap(roles, processRole -> {
-                Long appId = processRole.getApplicationId();
-                return appId != null ? applicationRepository.findOne(appId) : null;
-            });
+            Set<Long> applicationIds = simpleMapSet(roles, ProcessRole::getApplicationId);
+            List<Application> applications = simpleMap(applicationIds, appId -> appId != null ? applicationRepository.findOne(appId) : null);
             return simpleMap(applications, applicationMapper::mapToResource);
         });
     }
@@ -243,7 +259,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                             final Long userId,
-                                                                                            final UserRoleType role) {
+                                                                                            final Role role) {
         List<Application> allApps = applicationRepository.findAll();
         List<Application> filtered = simpleFilter(allApps, app -> app.getCompetition().getId().equals(competitionId) &&
                 applicationContainsUserRole(app.getProcessRoles(), userId, role));
@@ -272,14 +288,40 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
-        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-        Stream<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
-        return serviceSuccess(applicationResults);
+    public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
+        return getApplication(id).andOnSuccessReturn(applicationMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
-        return getApplication(id).andOnSuccessReturn(applicationMapper::mapToResource);
+    public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
+                                                                               int pageIndex,
+                                                                               int pageSize,
+                                                                               String sortField) {
+
+        Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
+                INELIGIBLE,
+                INELIGIBLE_INFORMED,
+                REJECTED), ApplicationState::getBackingState);
+
+        Sort sort = getApplicationSortField(sortField);
+        Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+
+        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
+        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
+
+        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private Sort getApplicationSortField(String sortBy) {
+        Sort result = APPLICATION_SORT_FIELD_MAP.get(sortBy);
+        return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
+    }
+
+    private ApplicationResource convertToApplicationResource(Application application) {
+
+        ApplicationResource applicationResource = applicationMapper.mapToResource(application);
+        Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
+        applicationResource.setLeadOrganisationName(leadOrganisation.getName());
+        return applicationResource;
     }
 }

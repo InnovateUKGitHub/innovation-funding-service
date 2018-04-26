@@ -4,12 +4,9 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.mockito.Matchers.isA;
@@ -52,23 +49,6 @@ public class ApplicationProgressServiceSecurityTest extends BaseServiceSecurityT
 
     @Override
     protected Class<? extends ApplicationProgressService> getClassUnderTest() {
-        return ApplicationProgressServiceSecurityTest.TestApplicationProgressService.class;
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
-     * methods, which is lost when using mocks)
-     */
-    public static class TestApplicationProgressService implements ApplicationProgressService {
-        @Override
-        public boolean applicationReadyForSubmit(Long id) {
-            return false;
-        }
-
-        @Override
-        public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
-            return  null;
-        }
-
+        return ApplicationProgressServiceImpl.class;
     }
 }

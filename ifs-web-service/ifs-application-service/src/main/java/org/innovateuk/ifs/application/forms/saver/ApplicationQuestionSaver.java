@@ -4,7 +4,7 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -35,6 +35,8 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
     private static final Log LOG = LogFactory.getLog(ApplicationQuestionSaver.class);
     private static final String MARKED_AS_COMPLETE_INVALID_DATA_KEY = "mark.as.complete.invalid.data.exists";
+    private static final String RESUBMISSION_VALIDATION_KEY = "validation.application.must.indicate.resubmission.or.not";
+    private static final String RESUBMISSION_FIELD = "resubmission";
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -60,7 +62,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
                                                   Long userId,
                                                   HttpServletRequest request,
                                                   HttpServletResponse response,
-                                                  Boolean hasErrorsInBindingResult,
                                                   Optional<Boolean> markAsCompleteRequest) {
         final ApplicationResource application = applicationService.getById(applicationId);
         final List<QuestionResource> questionList = singletonList(questionService.getById(questionId));
@@ -74,15 +75,20 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
             errors.addAll(saveQuestionResponses(request, questionList, userId, processRole.getId(), application.getId(), ignoreEmpty));
         }
 
-        detailsSaver.setApplicationDetails(application, form.getApplication());
+        ApplicationResource updatedApplication = form.getApplication();
+
+        detailsSaver.setApplicationDetails(application, updatedApplication);
 
         if (userService.isLeadApplicant(userId, application)) {
             applicationService.save(application);
         }
 
         if ((markAsCompleteRequest.isPresent() && markAsCompleteRequest.get())
-                || (isMarkQuestionRequest(params) && hasNoErrors(errors, hasErrorsInBindingResult))) {
+                || (isMarkQuestionRequest(params) && !errors.hasErrors())) {
             errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), questionId, processRole.getId(), errors, request));
+            if (updatedApplication != null) {
+                errors.addAll(handleResubmissionRequest(updatedApplication));
+            }
         }
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
@@ -101,10 +107,16 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         return messages;
     }
 
-    private boolean hasNoErrors(ValidationMessages errorsSoFar, Boolean hasErrorsInBindingResult) {
-        return !errorsSoFar.hasErrors() && !hasErrorsInBindingResult;
-    }
+    private ValidationMessages handleResubmissionRequest(ApplicationResource updatedApplication) {
+        ValidationMessages messages = new ValidationMessages();
 
+        if(updatedApplication.getResubmission() == null) {
+            messages.addAll(
+                    new ValidationMessages(fieldError(RESUBMISSION_FIELD, "", RESUBMISSION_VALIDATION_KEY))
+            );
+        }
+        return messages;
+    }
 
     private List<ValidationMessages> markApplicationQuestions(Long applicationId, Long questionId, Long processRoleId, ValidationMessages errorsSoFar, HttpServletRequest request) {
 

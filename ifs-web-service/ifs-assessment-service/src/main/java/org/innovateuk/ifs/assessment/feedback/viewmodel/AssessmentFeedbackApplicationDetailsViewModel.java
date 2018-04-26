@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.feedback.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.LocalDate;
 
@@ -96,5 +97,18 @@ public class AssessmentFeedbackApplicationDetailsViewModel extends BaseAssessmen
                 .append(daysLeftPercentage)
                 .append(questionShortName)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("applicationId", applicationId)
+                .append("applicationName", applicationName)
+                .append("applicationStartDate", applicationStartDate)
+                .append("applicationDurationInMonths", applicationDurationInMonths)
+                .append("daysLeft", daysLeft)
+                .append("daysLeftPercentage", daysLeftPercentage)
+                .append("questionShortName", questionShortName)
+                .toString();
     }
 }

@@ -8,25 +8,26 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.FinanceServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.service.FinanceRowCostsServiceSecurityTest.TestFinanceRowCostsService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceService> {
+
+    private static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
     private FinanceRowMetaFieldPermissionsRules financeRowMetaFieldPermissionsRules;
     private ApplicationFinanceRowPermissionRules costPermissionsRules;
@@ -58,6 +59,10 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
     public void testFindApplicationFinanceByApplicationIdAndOrganisation() {
         final Long applicationId = 1L;
         final Long organisationId = 2L;
+
+        when(classUnderTestMock.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId))
+                .thenReturn(serviceSuccess(newApplicationFinanceResource().build()));
+
         assertAccessDenied(
                 () -> classUnderTest.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId),
                 () -> verifyApplicationFinanceResourceReadRulesCalled()
@@ -67,7 +72,12 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
     @Test
     public void testFindApplicationFinanceByApplication() {
         final Long applicationId = 1L;
-        ServiceResult<List<ApplicationFinanceResource>> applicationFinanceByApplication = classUnderTest.findApplicationFinanceByApplication(applicationId);
+
+        when(classUnderTestMock.findApplicationFinanceByApplication(applicationId))
+                .thenReturn(serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
+
+        ServiceResult<List<ApplicationFinanceResource>> applicationFinanceByApplication =
+                classUnderTest.findApplicationFinanceByApplication(applicationId);
         assertTrue(applicationFinanceByApplication.getSuccess().isEmpty());
         verifyApplicationFinanceResourceReadRulesCalled(ARRAY_SIZE_FOR_POST_FILTER_TESTS);
     }
@@ -76,6 +86,10 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
     @Test
     public void testGetApplicationFinanceById() {
         final Long applicationId = 1L;
+
+        when(classUnderTestMock.getApplicationFinanceById(applicationId))
+                .thenReturn(serviceSuccess(newApplicationFinanceResource().build()));
+
         assertAccessDenied(
                 () -> classUnderTest.getApplicationFinanceById(applicationId),
                 () -> verifyApplicationFinanceResourceReadRulesCalled()
@@ -86,6 +100,10 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
     public void testFinanceDetails() {
         final Long applicationId = 1L;
         final Long organisationId = 1L;
+
+        when(classUnderTestMock.financeDetails(applicationId, organisationId))
+                .thenReturn(serviceSuccess(newApplicationFinanceResource().build()));
+
         assertAccessDenied(
                 () -> classUnderTest.financeDetails(applicationId, organisationId),
                 () -> verifyApplicationFinanceResourceReadRulesCalled()
@@ -96,12 +114,16 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
     public void testFinanceTotals() {
         final Long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
+
         assertAccessDenied(
                 () -> classUnderTest.financeTotals(applicationId),
                 () -> {
-                    verify(applicationRules).internalUserCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
-                    verify(applicationRules).consortiumCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
-                    verify(applicationRules).assessorCanSeeTheApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules)
+                            .internalUserCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules)
+                            .consortiumCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules)
+                            .assessorCanSeeTheApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
                 });
     }
 
@@ -112,9 +134,12 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
         assertAccessDenied(
                 () -> classUnderTest.getResearchParticipationPercentage(applicationId),
                 () -> {
-                    verify(applicationRules).assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(isA(ApplicationResource.class), isA(UserResource.class));
-                    verify(applicationRules).internalUsersCanSeeTheResearchParticipantPercentageInApplications(isA(ApplicationResource.class), isA(UserResource.class));
-                    verify(applicationRules).consortiumCanSeeTheResearchParticipantPercentage(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules)
+                            .assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules)
+                            .internalUsersCanSeeTheResearchParticipantPercentageInApplications(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules)
+                            .consortiumCanSeeTheResearchParticipantPercentage(isA(ApplicationResource.class), isA(UserResource.class));
                 });
     }
 
@@ -139,61 +164,16 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
     }
 
     private void verifyApplicationFinanceResourceReadRulesCalled(int nTimes) {
-        verify(applicationFinanceRules, times(nTimes)).consortiumCanSeeTheApplicationFinancesForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-        verify(applicationFinanceRules, times(nTimes)).assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-        verify(applicationFinanceRules, times(nTimes)).internalUserCanSeeApplicationFinancesForOrganisations(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+        verify(applicationFinanceRules, times(nTimes))
+                .consortiumCanSeeTheApplicationFinancesForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+        verify(applicationFinanceRules, times(nTimes))
+                .assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+        verify(applicationFinanceRules, times(nTimes))
+                .internalUserCanSeeApplicationFinancesForOrganisations(isA(ApplicationFinanceResource.class), isA(UserResource.class));
     }
 
     @Override
-    protected Class<TestFinanceService> getClassUnderTest() {
-        return TestFinanceService.class;
-    }
-
-    public static class TestFinanceService implements FinanceService {
-
-        @Override
-        public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, Long organisationId) {
-            return serviceSuccess(newApplicationFinanceResource().build());
-        }
-
-        @Override
-        public ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId) {
-            return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<Double> getResearchParticipationPercentage(Long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Double> getResearchParticipationPercentageFromProject(@P("projectId") Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
-            return serviceSuccess(newApplicationFinanceResource().build());
-        }
-
-        @Override
-        public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
-            return serviceSuccess(newApplicationFinanceResource().build());
-        }
-
-        @Override
-        public ServiceResult<List<ApplicationFinanceResource>> financeDetails(Long applicationId) {
-            return serviceSuccess(newApplicationFinanceResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
-            return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
-            return null;
-        }
+    protected Class<? extends FinanceService> getClassUnderTest() {
+        return FinanceServiceImpl.class;
     }
 }

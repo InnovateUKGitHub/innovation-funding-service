@@ -6,11 +6,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
+
+import static org.innovateuk.ifs.user.resource.Role.INTERVIEW_LEAD_APPLICANT;
 
 /**
  * An invitation for an application to participate on an interview panel.
@@ -42,7 +43,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
 
         if (createdState.getState() != InterviewAssignmentState.CREATED.getBackingState())
             throw new IllegalArgumentException("createdState must be CREATED");
-        if (!participant.getRole().isOfType(UserRoleType.INTERVIEW_LEAD_APPLICANT))
+        if (participant.getRole() != INTERVIEW_LEAD_APPLICANT)
             throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
         if (!participant.getApplicationId().equals(application.getId()))
             throw new IllegalArgumentException("participant application must match the application");
@@ -105,8 +106,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
-                .append(message, that.message)
-                .append(response, that.response)
                 .isEquals();
     }
 
@@ -116,8 +115,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
-                .append(message)
-                .append(response)
                 .toHashCode();
     }
 

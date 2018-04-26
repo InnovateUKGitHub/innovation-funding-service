@@ -14,8 +14,6 @@
 
 
     <main id="content">
-        <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-
         <th:block th:unless="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" />
         <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Your dashboard'}, ${'/prototypes/675-dashboard'})" />
 

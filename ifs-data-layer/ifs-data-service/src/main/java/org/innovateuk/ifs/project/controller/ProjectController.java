@@ -60,4 +60,9 @@ public class ProjectController {
     public RestResult<ProjectResource> createProjectFromApplication(@PathVariable("applicationId") final Long applicationId) {
         return projectService.createProjectFromApplication(applicationId).toPostWithBodyResponse();
     }
+
+    @PostMapping("/{projectId}/withdraw")
+    public RestResult<Void> withdrawProject(@PathVariable("projectId") final long projectId) {
+        return projectService.withdrawProject(projectId).toPostWithBodyResponse();
+    }
 }

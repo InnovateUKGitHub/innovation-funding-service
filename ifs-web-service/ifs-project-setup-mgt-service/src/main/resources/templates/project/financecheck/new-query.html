@@ -10,8 +10,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Queries',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId})},currentCompetition=null" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to post a query.</h2>
@@ -34,7 +33,7 @@
 
     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
           th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
-            <h2 class="heading-medium">Post new query</h2>
+            <h2 class="heading-medium">Post a new query</h2>
             <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'form-group-error'">
                 <label for="queryTitle">
                     <span class="form-label-bold">Title</span>

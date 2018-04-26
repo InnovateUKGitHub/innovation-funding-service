@@ -2,7 +2,7 @@ package org.innovateuk.ifs.interview.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
+import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;

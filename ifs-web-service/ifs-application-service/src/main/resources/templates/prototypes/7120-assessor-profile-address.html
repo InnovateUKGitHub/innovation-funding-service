@@ -12,7 +12,7 @@
 
 
 <main id="content">
-	<th:block th:insert="fragments/layout :: main-content-start" />
+
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${param.status != null and param.status[0] == 'edit' ? 'Your address' : 'Assessor dashboard'}, ${param.status != null and param.status[0] == 'edit' ? '?' : '/prototypes/865-assessor-dashboard-invites'})" />
 
 

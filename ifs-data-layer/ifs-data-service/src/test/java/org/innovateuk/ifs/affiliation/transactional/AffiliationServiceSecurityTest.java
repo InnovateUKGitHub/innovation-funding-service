@@ -39,8 +39,12 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
     public void getUserAffiliations() {
         Long userId = 1L;
 
+        when(classUnderTestMock.getUserAffiliations(userId))
+                .thenReturn(serviceSuccess(newAffiliationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
+
         classUnderTest.getUserAffiliations(userId);
-        verify(rules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).usersCanViewTheirOwnAffiliations(isA(AffiliationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+                .usersCanViewTheirOwnAffiliations(isA(AffiliationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(rules);
     }
 
@@ -60,20 +64,7 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
 
     @Override
     protected Class<? extends AffiliationService> getClassUnderTest() {
-        return org.innovateuk.ifs.affiliation.transactional.AffiliationServiceSecurityTest.TestAffiliationService.class;
-    }
-
-    public static class TestAffiliationService implements AffiliationService {
-
-        @Override
-        public ServiceResult<List<AffiliationResource>> getUserAffiliations(long userId) {
-            return serviceSuccess(newAffiliationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<Void> updateUserAffiliations(long userId, List<AffiliationResource> userProfile) {
-            return null;
-        }
+        return AffiliationServiceImpl.class;
     }
 }
 

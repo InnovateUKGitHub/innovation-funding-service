@@ -12,7 +12,7 @@
 
 
 <main id="content">
-  <th:block th:insert="fragments/layout :: main-content-start" />
+
 
   <th:block th:unless="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assign applications to interview panel'}, ${'/prototypes/IFS-2246-assign-applications?tab=invite'})" />
   <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assign applications to interview panel'}, ${'/prototypes/IFS-2246-assign-applications?tab=view'})" />

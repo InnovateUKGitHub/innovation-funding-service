@@ -9,14 +9,16 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.builder.SpendProfileBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -24,12 +26,13 @@ import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -37,25 +40,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
@@ -65,17 +66,11 @@ import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganis
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDetailsService> {
 
@@ -322,6 +317,56 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
+    public void testUpdateProjectDurationWhenDurationLessThanAMonth() {
+
+        long projectId = 123L;
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 0L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH));
+
+        ServiceResult<Void> updateResult2 = service.updateProjectDuration(projectId, -3L);
+        assertTrue(updateResult2.isFailure());
+        assertTrue(updateResult2.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH));
+    }
+
+    @Test
+    public void testUpdateProjectDurationWhenSpendProfileAlreadyGenerated() {
+
+        long projectId = 123L;
+
+        List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
+        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfiles);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
+    }
+
+    @Test
+    public void testUpdateProjectDurationWhenProjectDoesNotExist() {
+
+        long projectId = 123L;
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+    }
+
+    @Test
+    public void testUpdateProjectDurationSuccess() {
+
+        long projectId = 123L;
+        long durationInMonths = 36L;
+        Project existingProject = newProject().build();
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, durationInMonths);
+        assertTrue(updateResult.isSuccess());
+        assertEquals(durationInMonths, (long) existingProject.getDurationInMonths());
+    }
+
+    @Test
     public void testUpdateFinanceContact() {
 
         Project project = newProject().withId(123L).build();
@@ -442,6 +487,111 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
+    public void testUpdatePartnerProjectLocationWhenPostCodeIsNullOrEmpty() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = null;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
+
+        postCode = "";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
+
+        postCode = "    ";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
+
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationWhenPostCodeEnteredExceedsMaxLength() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "SOME LONG POSTCODE";
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POST_CODE_LENGTH), HttpStatus.BAD_REQUEST)));
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationWhenMonitoringOfficerAssigned() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "TW14 9QG";
+
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(new MonitoringOfficer());
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationWhenPartnerOrganisationDoesNotExist() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "TW14 9QG";
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(PartnerOrganisation.class, projectId, organisationId)));
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationEnsureLowerCasePostCodeIsSavedAsUpperCase() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "tw14 9qg";
+
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isSuccess());
+
+        assertEquals(postCode.toUpperCase(), partnerOrganisationInDb.getPostCode());
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationSuccess() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "UB7 8QF";
+
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isSuccess());
+
+        assertEquals(postCode, partnerOrganisationInDb.getPostCode());
+    }
+
+    @Test
     public void testInviteProjectManagerWhenProjectNotInDB() {
 
         Long projectId = 1L;
@@ -524,7 +674,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
-        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("projectName", "Project 1");
         globalArgs.put("leadOrganisation", organisation.getName());
@@ -566,7 +716,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
-        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("projectName", "Project 1");
         globalArgs.put("leadOrganisation", organisation.getName());
@@ -627,7 +777,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withApplication(application)
                 .build();
 
-        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
@@ -721,7 +871,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Project project = newProject().withId(projectId).withName("Project 1").withApplication(a).build();
 
-        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);

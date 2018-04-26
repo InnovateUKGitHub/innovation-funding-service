@@ -4,7 +4,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 

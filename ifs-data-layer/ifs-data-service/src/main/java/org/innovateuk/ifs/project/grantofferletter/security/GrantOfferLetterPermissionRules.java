@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
@@ -79,45 +78,44 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "UPLOAD_SIGNED_GRANT_OFFER",
             description = "Project manager or Lead partner can upload signed grant offer letter")
     public boolean leadPartnerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
+        return isLeadPartner(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "UPLOAD_SIGNED_GRANT_OFFER",
             description = "Project manager or Lead partner can upload signed grant offer letter")
     public boolean projectManagerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isProjectManager(project.getId(), user.getId());
+        return isProjectManager(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "DELETE_SIGNED_GRANT_OFFER",
             description = "Lead partner can delete signed grant offer letter")
     public boolean leadPartnerCanDeleteSignedGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
+        return isLeadPartner(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "SUBMIT_GRANT_OFFER_LETTER",
             description = "Project manager can submit the grant offer letter")
     public boolean projectManagerSubmitGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectManager(projectCompositeId.id(), user.getId());
+        return isProjectManager(projectCompositeId.id(), user.getId()) && isProjectInSetup(projectCompositeId.id());
     }
 
     @PermissionRule(
             value = "SEND_GRANT_OFFER_LETTER",
             description = "Internal users can send the Grant Offer Letter notification")
     public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternal(user);
+        return isInternal(user) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "APPROVE_SIGNED_GRANT_OFFER_LETTER",
             description = "Internal users can approve the signed Grant Offer Letter")
     public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternal(user);
+        return isInternal(user) && isProjectInSetup(project.getId());
     }
 
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     @PermissionRule(
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
             description = "Internal users can view the send status of Grant Offer Letter for a project")
@@ -125,7 +123,6 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
         return isInternalAdmin(user);
     }
 
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     @PermissionRule(
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
             description = "Support users can view the send status of Grant Offer Letter for a project")
@@ -133,7 +130,6 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
         return isSupport(user);
     }
 
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     @PermissionRule(
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
             description = "Innovation lead users can view the send status of Grant Offer Letter for a project from competition assigned to them")
@@ -142,36 +138,10 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     @PermissionRule(
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
             description = "Partners can view the send status of Grant Offer Letter for a project")
     public boolean externalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "A user can view signed grant offer letter approval status that they are partners on")
-    public boolean partnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(ProjectResource project, UserResource user) {
-        return project != null && isPartner(project.getId(), user.getId());
-    }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "Internal users can view signed grant offer letter approval status")
-    public boolean internalUsersCanViewSignedGrantOfferLetterApprovedStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_REJECTED_STATUS", description = "Internal users can view signed grant offer letter rejection status")
-    public boolean internalUsersCanViewSignedGrantOfferLetterRejectedStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_REJECTED_STATUS", description = "Project manager can view signed grant offer letter rejection status")
-    public boolean projectManagerCanViewSignedGrantOfferLetterRejectedStatus(ProjectResource project, UserResource user) {
-        return project != null && isProjectManager(project.getId(), user.getId());
-    }
-
 }

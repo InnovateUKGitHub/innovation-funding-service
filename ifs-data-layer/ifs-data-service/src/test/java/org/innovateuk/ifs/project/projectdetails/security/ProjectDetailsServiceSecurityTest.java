@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.project.projectdetails.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
@@ -16,9 +14,7 @@ import java.time.LocalDate;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in ProjectDetailsService interact with Spring Security
@@ -75,6 +71,19 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
+    public void testUpdatePartnerProjectLocation() {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.updatePartnerProjectLocation(projectOrganisationCompositeId, "TW14 9QG"), () -> {
+            verify(projectDetailsPermissionRules).partnersCanUpdateProjectLocationForTheirOwnOrganisation(projectOrganisationCompositeId, getLoggedInUser());
+            verifyNoMoreInteractions(projectDetailsPermissionRules);
+        });
+    }
+
+    @Test
     public void testSetProjectManager() {
 
         ProjectResource project = newProjectResource().build();
@@ -88,41 +97,8 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Override
-    protected Class<TestProjectService> getClassUnderTest() {
-        return TestProjectService.class;
-    }
-
-    public static class TestProjectService implements ProjectDetailsService {
-
-        @Override
-        public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource projectAddress) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-            return null;
-        }
+    protected Class<? extends ProjectDetailsService> getClassUnderTest() {
+        return ProjectDetailsServiceImpl.class;
     }
 }
 

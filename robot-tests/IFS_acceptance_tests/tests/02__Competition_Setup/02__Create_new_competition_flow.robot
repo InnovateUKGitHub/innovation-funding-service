@@ -63,6 +63,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2192 As a Portfolio manager I am able to create an EOI competition
 ...
 ...               IFS-2285 APC Competition template: BEIS Value for Money: Pro-forma Spreadsheet
+...
+...               IFS-2776 As an Portfolio manager I am able to set the min/max project duration for a competition
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -377,40 +379,51 @@ Application - Application process Page
     And the user should see the element   jQuery=.buttonlink:contains("Add question")
     And the user should see the element   link=Finances
 
-Application: Need or challenge
-    [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
-    [Tags]  HappyPath
-    Given the user should not see the element  jQuery=li:contains("${amendedQuestion}") .task-status-complete
-    When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
-    And the user clicks the button/link     css=button[type="submit"]
-    And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
-    Then the user should see the element    jQuery=dt:contains("Question heading") + dd:contains("${amendedQuestion}")
-    # The above steps verify that when the question is not completed and you click it, you land on the edit mode
-    # If question is completed and you click it, you should land on the read only mode.
-    When the user clicks the button/link    link=Edit this question
-    And the user edits the assessed question information
-    And The user clicks the button/link     css=button[type="submit"]
-    When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
-    Then the user sees the correct read only view of the question
-    When the user clicks the button/link    link=Edit this question
-    And the user selects the radio button   question.writtenFeedback  0
-    And the user selects the radio button   question.scored  0
-    And the user should not be able to edit the assessed question feedback
-    And the user clicks the button/link     jQuery=button[type="submit"]
-    And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
-    Then the user should not see the assessed question feedback
-    [Teardown]  The user clicks the button/link  link=Application
+Application: Application details validations
+    [Documentation]  IFS-2776
+    [Tags]
+    Given the user clicks the button/link      link=Application details
+    And the user enters text to a text field   id=minProjectDuration  ${empty}
+    And the user enters text to a text field   id=maxProjectDuration  ${empty}
+    # And the user unchecks the resubmission radio button
+    # TODO IFS-3188
+
+    When the user selects the radio button     useResubmissionQuestion  true
+    Then the user should see the element       jQuery=[for="minProjectDuration"] .error-message:contains("This field cannot be left blank.")
+    And the user should see the element        jQuery=[for="maxProjectDuration"] .error-message:contains("This field cannot be left blank.")
+    When the user clicks the button/link       css=button[type="submit"]
+    Then the user should see the element       css=.error-summary-list
+
+    When the user enters text to a text field  id=minProjectDuration  -2
+    And the user enters text to a text field   id=maxProjectDuration  -3
+    Then the user should see a field error     This field should be 1 or higher.
+    And the user should see a field error      The maximum must be larger than the minimum.
+
+    When the user enters text to a text field  id=minProjectDuration  66
+    And the user enters text to a text field   id=maxProjectDuration  65
+    Then the user should see a field error     The minimum must be smaller than the maximum.
+    And the user should see a field error      This field should be 60 or lower.
+
+    When the user enters text to a text field  id=minProjectDuration  59
+    And the user clicks the button/link        css=button[type="submit"]
+    Then the user should see a summary error   This field should be 60 or lower
+    [Teardown]  the user clicks the button/link  link=Application
+
 
 Application: Application details
-    [Documentation]    INFUND-5633
+    [Documentation]  INFUND-5633 IFS-2776
     [Tags]  HappyPath
     Given the user clicks the button/link         link=Application details
     And the user should see the element           jQuery=h1:contains("Application details")
-    And the user should see the text in the page  These are the default questions included in the application details section.
     When the user selects the radio button        useResubmissionQuestion  false
+    Then the user enters text to a text field     id=minProjectDuration  2
+    And the user enters text to a text field      id=maxProjectDuration  60
     And The user clicks the button/link           css=button[type="submit"]
-    And the user clicks the button/link           link=Application details
-    Then the user should see the element          jQuery=dt:contains("Resubmission") + dd:contains("No")
+    And the user should see the element           jQuery=li:contains("Application details") .task-status-complete
+    When the user clicks the button/link          link=Application details
+    Then the user should see the element          jQuery=dt:contains("resubmission") + dd:contains("No")
+    And the user should see the element           jQuery=dt:contains("Minimum") + dd:contains("2")
+    And the user should see the element           jQuery=dt:contains("Maximum") + dd:contains("60")
     [Teardown]  The user clicks the button/link   link=Application
 
 Application: Scope
@@ -453,6 +466,30 @@ Application: Project Summary
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
+    [Teardown]  The user clicks the button/link  link=Application
+
+Application: Need or challenge
+    [Documentation]  INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283 IFS-2776
+    [Tags]  HappyPath
+    Given the user should not see the element  jQuery=li:contains("${amendedQuestion}") .task-status-complete
+    When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
+    And the user clicks the button/link     css=button[type="submit"]
+    And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
+    Then the user should see the element    jQuery=dt:contains("Question heading") + dd:contains("${amendedQuestion}")
+    # The above steps verify that when the question is not completed and you click it, you land on the edit mode
+    # If question is completed and you click it, you should land on the read only mode.
+    When the user clicks the button/link    link=Edit this question
+    And the user edits the assessed question information
+    And The user clicks the button/link     css=button[type="submit"]
+    When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
+    Then the user sees the correct read only view of the question
+    When the user clicks the button/link    link=Edit this question
+    And the user selects the radio button   question.writtenFeedback  0
+    And the user selects the radio button   question.scored  0
+    And the user should not be able to edit the assessed question feedback
+    And the user clicks the button/link     jQuery=button[type="submit"]
+    When the user clicks the button/link      jQuery=h4 a:contains("${amendedQuestion}")
+    Then the user should not see the element  jQuery=dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
 Application: marking questions as complete
     [Documentation]  IFS-743
@@ -610,7 +647,7 @@ Assessor: Contain the correct options
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641 IFS-380
      [Tags]    HappyPath
-    When the user selects the checkbox         assessors-62
+    When the user selects the radio button     assessorCount   5
     Then the user enters text to a text field  id=assessorPay  100
     When the user clicks the button/link       jQuery=button:contains("Done")
     Then the user should see the element       jQuery=dt:contains("How many assessors") + dd:contains("5")
@@ -804,12 +841,6 @@ the user should not be able to edit the assessed question feedback
     the user should not see the element    jQuery=Button:contains("+Add guidance row")
     the user should not see the element    id=question.scoreTotal
 
-the user should not see the assessed question feedback
-    the user should not see the text in the page    Out of
-    the user should not see the text in the page    Guidance for assessing business opportunity
-    the user should not see the text in the page    Your score should be based upon the following:
-    the user should not see the text in the page    There is little or no business drive to the project.
-
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
@@ -836,3 +867,6 @@ the user marks question as complete
     the user clicks the button/link      jQuery=a:contains("${question_link}")
     the user clicks the button/link      css=button[type="submit"]
     the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
+
+the user unchecks the resubmission radio button
+    Run Keyword And Ignore Error Without Screenshots  Execute Javascript  jQuery('#use-resubmission-question-yes').get(0).removeAttribute('checked');

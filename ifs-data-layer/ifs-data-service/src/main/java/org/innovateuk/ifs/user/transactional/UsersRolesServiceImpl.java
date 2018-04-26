@@ -16,8 +16,9 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -48,7 +49,7 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Override
     public ServiceResult<ProcessRoleResource> getProcessRoleByUserIdAndApplicationId(Long userId, Long applicationId) {
-        return find(processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId))
+        return find(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId))
                 .andOnSuccessReturn(processRoleMapper::mapToResource);
     }
 
@@ -62,8 +63,8 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
         List<ProcessRole> processRoles = processRoleRepository.findByApplicationId(applicationId);
 
         Set<ProcessRoleResource> assignableProcessRoleResources = processRoles.stream()
-                .filter(r -> LEADAPPLICANT.getName().equals(r.getRole().getName()) ||
-                        COLLABORATOR.getName().equals(r.getRole().getName()))
+                .filter(r -> LEADAPPLICANT == r.getRole() ||
+                        COLLABORATOR == r.getRole())
                 .map(processRoleMapper::mapToResource)
                 .collect(Collectors.toSet());
 

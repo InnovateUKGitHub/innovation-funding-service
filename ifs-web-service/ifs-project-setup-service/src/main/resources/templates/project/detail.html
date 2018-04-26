@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Details'" />
 </head>
-<body th:with="context='project'" class="project-detail">
+<body class="project-detail">
 
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-project-details" />
@@ -12,11 +12,10 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
 
-    <p th:if="${model.userLeadPartner and !model.projectDetailsCompleteAndAllFinanceContactsAssigned}">Please supply the following details for your project and the team. We need these to set up your project.</p>
+    <p th:if="${model.userLeadPartner and !model.allProjectDetailsFinanceContactsAndProjectLocationsAssigned}">Please supply the following details for your project and the team. We need these to set up your project.</p>
     <p th:if="${!model.userLeadPartner}">Please provide a finance contact. The lead applicant will provide your project information.</p>
 
 <h2 class="heading-medium">Project information</h2>
@@ -27,7 +26,7 @@
         <thead>
             <tr>
                 <th scope="col" class="larger-cols">Question</th>
-                <th scope="col" class="larger-cols">Answer</th>
+                <th scope="col">Answer</th>
                 <th scope="col" class="smaller-col">Complete</th>
             </tr>
         </thead>
@@ -76,19 +75,94 @@
         </tbody>
     </table>
 
-    <h2 class="heading-medium">Finance contacts</h2>
-    <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
+    <!--/* If project setup location is enabled */-->
+    <th:block th:if="${model.competition.locationPerPartner}">
+        <h2 class="heading-medium">Partner details</h2>
+        <p>Each partner must provide a finance contact and a project location. We will contact the assigned person with any finance queries and assign the Monitoring Officer based on the location.</p>
 
-    <table id="project-details-finance">
-        <thead>
+        <table id="project-details-finance">
+            <thead>
+                <tr>
+                    <th scope="col" class="larger-cols">Partner</th>
+                    <th scope="col">Finance contact</th>
+                    <th scope="col">Project location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="organisation: ${model.organisations}">
+                    <td>
+                        <th:block th:text="${organisation.name}">organisation name</th:block>
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    </td>
+                    <td>
+                        <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
+                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                                <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}"
+                                th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}">finance contact name</a>
+                            </th:block>
+
+                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                               <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}" />
+                            </th:block>
+
+                        </th:block>
+
+                        <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
+
+                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                                <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}">Select finance contact</a>
+                            </th:block>
+
+                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
+                                <span>-</span>
+                            </th:block>
+
+                        </th:block>
+                    </td>
+                    <td>
+                        <th:block th:unless="${model.getPostCodeForPartnerOrganisation(organisation.id) == null}">
+                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
+                                   th:text="${model.getPostCodeForPartnerOrganisation(organisation.id)}">post code</a>
+                            </th:block>
+
+                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                <span th:text="${model.getPostCodeForPartnerOrganisation(organisation.id)}" />
+                            </th:block>
+
+                        </th:block>
+
+                        <th:block th:if="${model.getPostCodeForPartnerOrganisation(organisation.id) == null}">
+
+                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}">Select project location</a>
+                            </th:block>
+
+                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                <span>-</span>
+                            </th:block>
+
+                        </th:block>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+
+    <th:block th:unless="${model.competition.locationPerPartner}">
+        <h2 class="heading-medium">Finance contacts</h2>
+        <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
+
+        <table id="project-details-finance2">
+            <thead>
             <tr>
                 <th scope="col" class="larger-cols">Partner</th>
                 <th scope="col" class="larger-cols">Finance contact</th>
                 <th scope="col" class="smaller-col">Submitted</th>
             </tr>
-        </thead>
-        <tbody>
-            <tr th:each="organisation: ${model.partnerOrganisations}">
+            </thead>
+            <tbody>
+            <tr th:each="organisation: ${model.organisations}">
                 <td>
                     <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
                         <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
@@ -100,26 +174,28 @@
                     </th:block>
                 </td>
                 <td>
-                  <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
+                    <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
                         <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}" />
-                  </th:block>
-                  <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
+                    </th:block>
+                    <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
                         <span>-</span>
-                  </th:block>
+                    </th:block>
                 </td>
                 <td>
-                  <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="yes">Yes</span>
-                  <span th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="no">No</span>
+                    <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="yes">Yes</span>
+                    <span th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="no">No</span>
                 </td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

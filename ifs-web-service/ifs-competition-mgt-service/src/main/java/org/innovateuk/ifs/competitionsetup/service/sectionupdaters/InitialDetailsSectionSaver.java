@@ -38,8 +38,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**

@@ -13,7 +13,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -62,7 +62,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
+import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**

@@ -22,3 +22,6 @@ pdfminer==20140328
 #SauceLabs dependencies
 requests==2.11.1
 simplejson==3.10.0
+
+#Timezones
+pytz==2018.3

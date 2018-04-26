@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,45 +149,15 @@ public class GrantOfferLetterController {
         return grantOfferLetterService.submitGrantOfferLetter(projectId).toPostResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @GetMapping("/{projectId}/is-send-grant-offer-letter-allowed")
-    public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId) {
-        return grantOfferLetterService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
-    }
-
     @PostMapping("/{projectId}/grant-offer/send")
     public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") final Long projectId) {
         return grantOfferLetterService.sendGrantOfferLetter(projectId).toPostResponse();
-    }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @GetMapping("/{projectId}/is-grant-offer-letter-already-sent")
-    public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
-        return grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
     }
 
     @PostMapping("/{projectId}/signed-grant-offer-letter/approval")
     public RestResult<Void> approveOrRejectSignedGrantOfferLetter(@PathVariable("projectId") final Long projectId,
                                                                   @RequestBody final GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
         return grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource).toPostResponse();
-    }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @GetMapping("/{projectId}/signed-grant-offer-letter/approval")
-    public RestResult<Boolean> isSignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
-        return grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
-    }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @GetMapping("/{projectId}/signed-grant-offer-letter/is-rejected")
-    public RestResult<Boolean> isSignedGrantOfferLetterRejected(@PathVariable("projectId") final Long projectId) {
-        return grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).toGetResponse();
-    }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    @GetMapping("/{projectId}/grant-offer-letter/state")
-    public RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(@PathVariable("projectId") final Long projectId) {
-        return grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).toGetResponse();
     }
 
     @GetMapping("/{projectId}/grant-offer-letter/current-state")

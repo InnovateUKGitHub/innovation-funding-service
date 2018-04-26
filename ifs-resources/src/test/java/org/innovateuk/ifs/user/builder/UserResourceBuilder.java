@@ -7,9 +7,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceBuilder> {
 

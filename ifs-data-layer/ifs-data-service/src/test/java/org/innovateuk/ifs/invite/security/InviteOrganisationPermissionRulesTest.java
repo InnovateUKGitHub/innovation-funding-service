@@ -8,8 +8,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,6 @@ import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -49,13 +48,12 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         collaborator = newUserResource().build();
         otherApplicant = newUserResource().build();
 
-        Role collaboratorRole = getRole(COLLABORATOR);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), Role.LEADAPPLICANT))
                 .thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), Role.COLLABORATOR))
                 .thenReturn(true);
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(),
-                collaboratorRole, applicationResource.getId(), organisationResource.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
+                Role.COLLABORATOR, applicationResource.getId(), organisationResource.getId())).thenReturn(newProcessRole().withRole(Role.COLLABORATOR).build());
     }
 
     @Test

@@ -2,9 +2,9 @@ package org.innovateuk.ifs.application.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -34,6 +34,9 @@ public class SectionServiceImpl implements SectionService {
     private SectionRestService sectionRestService;
 
     @Autowired
+    private SectionStatusRestService sectionStatusRestService;
+    
+    @Autowired
     private FormInputRestService formInputRestService;
 
     @Autowired
@@ -42,19 +45,19 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
         LOG.debug(String.format("mark section as complete %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
-        return sectionRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccess();
+        return sectionStatusRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccess();
     }
 
     @Override
     public void markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
         LOG.debug(String.format("mark section as not required %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
-        sectionRestService.markAsNotRequired(sectionId, applicationId, markedAsCompleteById).getSuccess();
+        sectionStatusRestService.markAsNotRequired(sectionId, applicationId, markedAsCompleteById).getSuccess();
     }
 
     @Override
     public void markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
         LOG.debug(String.format("mark section as incomplete %s / %s /%s ", sectionId, applicationId, markedAsInCompleteById));
-        sectionRestService.markAsInComplete(sectionId, applicationId, markedAsInCompleteById);
+        sectionStatusRestService.markAsInComplete(sectionId, applicationId, markedAsInCompleteById);
     }
 
     @Override
@@ -64,22 +67,22 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public List<Long> getInCompleted(Long applicationId) {
-        return sectionRestService.getIncompletedSectionIds(applicationId).getSuccess();
+        return sectionStatusRestService.getIncompletedSectionIds(applicationId).getSuccess();
     }
 
     @Override
     public List<Long> getCompleted(Long applicationId, Long organisationId) {
-        return sectionRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
+        return sectionStatusRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
     }
 
     @Override
     public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
-        return sectionRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
+        return sectionStatusRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
     }
 
     @Override
     public Boolean allSectionsMarkedAsComplete(Long applicationId) {
-        return sectionRestService.allSectionsMarkedAsComplete(applicationId).getSuccess();
+        return sectionStatusRestService.allSectionsMarkedAsComplete(applicationId).getSuccess();
     }
 
     /**

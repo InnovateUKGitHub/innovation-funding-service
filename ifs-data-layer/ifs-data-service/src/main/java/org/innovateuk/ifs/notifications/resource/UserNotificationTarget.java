@@ -1,20 +1,19 @@
 package org.innovateuk.ifs.notifications.resource;
 
-import org.innovateuk.ifs.user.domain.User;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.util.Objects;
 
 /**
  * Represents a User as the target of a given Notification
  */
 public class UserNotificationTarget implements NotificationTarget {
 
-    private String name;
-    private String emailAddress;
+    private final String name;
 
-    public UserNotificationTarget(User user) {
-        this.name = user.getName();
-        this.emailAddress = user.getEmail();
+    private final String emailAddress;
+
+    public UserNotificationTarget(String name, String emailAddress) {
+        this.name = name;
+        this.emailAddress = emailAddress;
     }
 
     @Override
@@ -30,22 +29,14 @@ public class UserNotificationTarget implements NotificationTarget {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         UserNotificationTarget that = (UserNotificationTarget) o;
-
-        return new EqualsBuilder()
-                .append(name, that.name)
-                .append(emailAddress, that.emailAddress)
-                .isEquals();
+        return Objects.equals(name, that.name) &&
+                Objects.equals(emailAddress, that.emailAddress);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(name)
-                .append(emailAddress)
-                .toHashCode();
+        return Objects.hash(name, emailAddress);
     }
 }

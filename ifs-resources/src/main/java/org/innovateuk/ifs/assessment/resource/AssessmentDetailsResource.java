@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.resource;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 
 import java.util.List;

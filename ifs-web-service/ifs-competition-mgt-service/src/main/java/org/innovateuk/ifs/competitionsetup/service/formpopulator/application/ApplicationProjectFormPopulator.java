@@ -35,6 +35,7 @@ public class ApplicationProjectFormPopulator implements CompetitionSetupSubsecti
 		if(objectId.isPresent()) {
 			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccess();
 			competitionSetupForm.setQuestion(questionResource);
+			competitionSetupForm.setRemovable(true);
 
 
 		} else {

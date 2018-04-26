@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.summary.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -34,8 +34,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -400,7 +400,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     }
 
     private CompetitionResource setupCompetitionResource() {
-        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now().minusHours(2);
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withAssessorAcceptsDate(now.minusDays(2))

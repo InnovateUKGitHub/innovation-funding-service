@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.service;
 
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

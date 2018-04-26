@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -27,14 +27,14 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     private String formInputResponseRestURL = "/forminputresponse";
 
     @Override
-    public RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(Long applicationId) {
+    public RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(long applicationId) {
         return getWithRestResult(formInputResponseRestURL + "/findResponsesByApplication/" + applicationId, formInputResponseListType());
     }
 
     @Override
-    public RestResult<ValidationMessages> saveQuestionResponse(Long userId,
-                                                               Long applicationId,
-                                                               Long formInputId,
+    public RestResult<ValidationMessages> saveQuestionResponse(long userId,
+                                                               long applicationId,
+                                                               long formInputId,
                                                                String value,
                                                                boolean ignoreEmpty) {
         ObjectMapper mapper = new ObjectMapper();

@@ -1,1 +1,0 @@
-ALTER TABLE project MODIFY offer_rejected BIT(1) DEFAULT NULL;

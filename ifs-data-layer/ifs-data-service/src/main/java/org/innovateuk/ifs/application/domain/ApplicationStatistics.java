@@ -6,12 +6,12 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
 import java.util.*;
 
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
  * ApplicationStatistics defines a view on the application table for statistical information
@@ -61,7 +61,7 @@ public class ApplicationStatistics {
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {
-        return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
+        return this.processRoles.stream().filter(p -> LEADAPPLICANT == p.getRole()).findAny();
     }
 
     public Long getLeadOrganisationId() {

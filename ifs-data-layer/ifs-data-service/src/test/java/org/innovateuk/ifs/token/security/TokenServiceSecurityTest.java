@@ -2,18 +2,18 @@ package org.innovateuk.ifs.token.security;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.token.transactional.TokenServiceImpl;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
-import static java.time.ZonedDateTime.now;
 import static org.mockito.Mockito.*;
 
 public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenService> {
@@ -22,7 +22,7 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
 
     @Override
     protected Class<? extends TokenService> getClassUnderTest() {
-        return TestTokenService.class;
+        return TokenServiceImpl.class;
     }
 
     @Before
@@ -31,7 +31,19 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
     }
 
     @Test
-    public void getEmailToken() throws Exception {
+    public void getPasswordResetToken() throws Exception {
+        when(classUnderTestMock.getPasswordResetToken("hash"))
+                .thenReturn(serviceSuccess(
+                        new Token(
+                                RESET_PASSWORD,
+                                User.class.getName(),
+                                1L,
+                                "hash",
+                                now(),
+                                JsonNodeFactory.instance.objectNode()
+                        )
+                ));
+
         assertAccessDenied(
                 () -> classUnderTest.getPasswordResetToken("hash"),
                 () -> {
@@ -41,7 +53,19 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
     }
 
     @Test
-    public void getPasswordResetToken() throws Exception {
+    public void getEmailToken() throws Exception {
+        when(classUnderTestMock.getEmailToken("hash"))
+                .thenReturn(serviceSuccess(
+                        new Token(
+                                VERIFY_EMAIL_ADDRESS,
+                                User.class.getName(),
+                                1L,
+                                "hash",
+                                now(),
+                                JsonNodeFactory.instance.objectNode()
+                        )
+                ));
+
         assertAccessDenied(
                 () -> classUnderTest.getEmailToken("hash"),
                 () -> {
@@ -71,28 +95,4 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
                     verifyNoMoreInteractions(tokenRules);
                 });
     }
-
-    public static class TestTokenService implements TokenService {
-
-        @Override
-        public ServiceResult<Token> getEmailToken(final String hash) {
-            return serviceSuccess(new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, "hash", now(), JsonNodeFactory.instance.objectNode()));
-        }
-
-        @Override
-        public ServiceResult<Token> getPasswordResetToken(final String hash) {
-            return serviceSuccess(new Token(RESET_PASSWORD, User.class.getName(), 1L, "hash", now(), JsonNodeFactory.instance.objectNode()));
-        }
-
-        @Override
-        public void removeToken(final Token token) {
-
-        }
-
-        @Override
-        public void handleExtraAttributes(final Token token) {
-
-        }
-    }
-
 }

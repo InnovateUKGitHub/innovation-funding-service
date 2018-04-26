@@ -5,18 +5,18 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<QuestionStatusController> {
 
     @Mock
-    private QuestionService questionService;
+    private QuestionStatusService questionStatusService;
 
     @Override
     protected QuestionStatusController supplyControllerUnderTest() {
@@ -39,7 +39,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         QuestionStatusResource questionStatus = newQuestionStatusResource().withApplication(applicationResource).build();
         List<QuestionStatusResource> questionStatuses = singletonList(questionStatus);
 
-        when(questionService.getQuestionStatusByQuestionIdAndApplicationId(1L, 2L)).thenReturn(serviceSuccess(questionStatuses));
+        when(questionStatusService.getQuestionStatusByQuestionIdAndApplicationId(1L, 2L)).thenReturn(serviceSuccess(questionStatuses));
 
         mockMvc.perform(get("/questionStatus/findByQuestionAndApplication/1/2"))
             .andExpect(status().isOk())
@@ -54,7 +54,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         Long organisationId = 3L;
         List<QuestionStatusResource> questionStatuses = QuestionStatusResourceBuilder.newQuestionStatusResource().build(1);
 
-        when(questionService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId, applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
+        when(questionStatusService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId, applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
 
         mockMvc.perform(get("/questionStatus/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
@@ -70,7 +70,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         Long organisationId = 3L;
         List<QuestionStatusResource> questionStatuses = QuestionStatusResourceBuilder.newQuestionStatusResource().build(1);
 
-        when(questionService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
+        when(questionStatusService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
 
         mockMvc.perform(get("/questionStatus/findByQuestionIdsAndApplicationIdAndOrganisationId/" + questionIdsList.stream().map(id -> id.toString()).collect(Collectors.joining(",")) + "/" + applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
@@ -84,7 +84,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         Long organisationId = 3L;
         List<QuestionStatusResource> questionStatuses = QuestionStatusResourceBuilder.newQuestionStatusResource().build(1);
 
-        when(questionService.findByApplicationAndOrganisation(applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
+        when(questionStatusService.findByApplicationAndOrganisation(applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
 
         mockMvc.perform(get("/questionStatus/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
@@ -97,7 +97,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         Long questionStatusId = 1L;
         QuestionStatusResource questionStatus = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
 
-        when(questionService.getQuestionStatusResourceById(questionStatusId)).thenReturn(serviceSuccess(questionStatus));
+        when(questionStatusService.getQuestionStatusResourceById(questionStatusId)).thenReturn(serviceSuccess(questionStatus));
 
         mockMvc.perform(get("/questionStatus/" + questionStatusId))
                 .andExpect(status().isOk())
@@ -111,7 +111,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         Long assigneeId = 2L;
         Integer count = 2;
 
-        when(questionService.getCountByApplicationIdAndAssigneeId(applicationId, assigneeId)).thenReturn(serviceSuccess(count));
+        when(questionStatusService.getCountByApplicationIdAndAssigneeId(applicationId, assigneeId)).thenReturn(serviceSuccess(count));
 
         mockMvc.perform(get("/questionStatus/getAssignedQuestionsCountByApplicationIdAndAssigneeId/" + applicationId + "/" + assigneeId))
                 .andExpect(status().isOk())

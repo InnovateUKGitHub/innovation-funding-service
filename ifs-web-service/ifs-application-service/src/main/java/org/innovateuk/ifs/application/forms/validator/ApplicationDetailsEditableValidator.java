@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.validator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;

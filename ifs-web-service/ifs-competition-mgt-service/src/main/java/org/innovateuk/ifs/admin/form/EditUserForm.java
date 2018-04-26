@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -32,7 +32,7 @@ public class EditUserForm extends BaseBindingResultTarget {
 
     private String emailAddress;
 
-    private UserRoleType role;
+    private Role role;
 
     // for spring form binding
     public EditUserForm() {
@@ -62,11 +62,11 @@ public class EditUserForm extends BaseBindingResultTarget {
         this.emailAddress = emailAddress;
     }
 
-    public UserRoleType getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(UserRoleType role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

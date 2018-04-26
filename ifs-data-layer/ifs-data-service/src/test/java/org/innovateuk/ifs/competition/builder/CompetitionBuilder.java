@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
@@ -47,6 +47,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withSetupComplete(boolean setupComplete) {
         return with(competition -> setField("setupComplete", setupComplete, competition));
+    }
+
+    public CompetitionBuilder withLocationPerPartner(boolean locationPerPartner) {
+        return with(competition -> setField("locationPerPartner", locationPerPartner, competition));
     }
 
     public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
@@ -110,6 +114,24 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withName(String... names) {
         return withArray((competition, name) -> setField("name", competition, name), names);
+    }
+
+    public CompetitionBuilder withMaxProjectDuration(Integer... maxProjectDurations) {
+        return withArray(
+                (competition, maxProjectDuration) -> setField(
+                        "maxProjectDuration",
+                        competition,
+                        maxProjectDuration),
+                maxProjectDurations);
+    }
+
+    public CompetitionBuilder withMinProjectDuration(Integer... minProjectDurations) {
+        return withArray(
+                (competition, minProjectDuration) -> setField(
+                        "minProjectDuration",
+                        competition,
+                        minProjectDuration),
+                minProjectDurations);
     }
 
     public CompetitionBuilder withStatus(CompetitionStatus status) {

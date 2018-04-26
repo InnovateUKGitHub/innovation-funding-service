@@ -8,11 +8,19 @@ Resource          ../defaultResources.robot
 the assessment start period changes in the db in the past
     [Arguments]   ${competition_id}
     ${yesterday} =    get yesterday
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+    When execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}'), ('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}');
+    And execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     And reload page
 
+the submission date changes in the db in the past
+    [Arguments]   ${competition_id}
+    ${yesterday} =    get yesterday
+    execute sql string  INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}');
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE');
+    reload page
+
 the calculation of the remaining days should be correct
-    [Arguments]    ${END_DATE}
+    [Arguments]    ${END_DATE}    ${COMPETITION_ID}
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    UTC    result_format=%Y-%m-%d    exclude_millis=true
@@ -22,7 +30,7 @@ the calculation of the remaining days should be correct
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.my-applications .msg-deadline .days-remaining
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.my-applications .msg-deadline[data-competition-id='${COMPETITION_ID}'] .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 the total calculation in dashboard should be correct
@@ -56,7 +64,7 @@ the days remaining should be correct (Top of the page)
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 the days remaining should be correct (Applicant's dashboard)
-    [Arguments]    ${END_DATE}
+    [Arguments]    ${END_DATE}  ${applicationName}
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    UTC    result_format=%Y-%m-%d    exclude_millis=true
@@ -65,12 +73,68 @@ the days remaining should be correct (Applicant's dashboard)
     ...    ELSE    set variable    ${CURRENT_DATE}
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${END_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.in-progress li:nth-child(3) .days-remaining
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    jQuery=.in-progress li:contains("${applicationName}") .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
+
+Get competitions id and set it as suite variable
+    [Arguments]  ${competitionTitle}
+    ${competitionId} =  get comp id from comp title  ${competitionTitle}
+    Set suite variable  ${competitionId}
+
+Save competition's current dates
+    [Arguments]  ${competitionId}
+    Connect to Database  @{database}
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='OPEN_DATE';
+    ${result} =  get from list  ${result}  0
+    ${openDate} =  get from list  ${result}  0
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='SUBMISSION_DATE';
+    ${result} =  get from list  ${result}  0
+    ${submissionDate} =  get from list  ${result}  0
+    [Return]  ${openDate}  ${submissionDate}
+
+Return the competition's milestones to their initial values
+    [Arguments]  ${competitionId}  ${openDate}  ${submissionDate}
+    Connect to Database  @{database}
+    Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
+    Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
+
+The competitions date changes so it is now Open
+    [Arguments]  ${competition}
+    Connect to Database  @{database}
+    Change the open date of the Competition in the database to one day before  ${competition}
+    the user navigates to the page   ${CA_Live}
+    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
+
+Change the open date of the Competition in the database to one day before
+    [Arguments]  ${competitionName}
+    ${yesterday} =  get yesterday
+    ${competitionId} =  get comp id from comp title  ${competitionName}
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type` = 'OPEN_DATE';
+
+Change the close date of the Competition in the database to tomorrow
+    [Arguments]  ${competition}
+    ${tomorrow} =  get tomorrow
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
+Change the close date of the Competition in the database to a fortnight
+    [Arguments]  ${competition}
+    ${fortnight} =  get fortnight
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fortnight}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
+Change the close date of the Competition in the database to thirteen days
+    [Arguments]  ${competition}
+    ${thirteen} =  get thirteen days
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${thirteen}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
+Change the open date of the Competition in the database to tomorrow
+    [Arguments]  ${competition}
+    ${tomorrow} =  get tomorrow
+    Connect to Database    @{database}
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
 
 get yesterday
     ${today} =    Get Time
-    ${yesterday} =    Subtract Time From Date    ${today}    1 day
+    ${yesterday} =  Subtract Time From Date  ${today}  1 day  exclude_millis=True
     [Return]    ${yesterday}
 
 get today
@@ -97,11 +161,6 @@ get thirteen days
     ${today} =    Get Time
     ${thirteen} =     Add time To Date    ${today}    13 day
     [Return]    ${thirteen}
-
-get fifteen days
-    ${today} =    Get Time
-    ${fifteen} =     Add time To Date    ${today}    15 day
-    [Return]    ${fifteen}
 
 get tomorrow day
     ${today}=    get time

@@ -21,14 +21,12 @@ public class InterviewInviteResourceBuilderTest {
         String expectedEmail = "tom@poly.io";
         String expectedHash = "inviteHash";
         long expectedUserId = 1L;
-        ZonedDateTime expectedInterviewDate = ZonedDateTime.now();
 
         InterviewInviteResource invite = newInterviewInviteResource()
                 .withCompetitionName(expectedCompetitionName)
                 .withCompetitionId(expectedCompId)
                 .withEmail(expectedEmail)
                 .withInviteHash(expectedHash)
-                .withInterviewDate(expectedInterviewDate)
                 .withUserId(expectedUserId)
                 .build();
 
@@ -36,7 +34,6 @@ public class InterviewInviteResourceBuilderTest {
         assertEquals(expectedCompId, invite.getCompetitionId());
         assertEquals(expectedEmail, invite.getEmail());
         assertEquals(expectedHash, invite.getHash());
-        assertEquals(expectedInterviewDate, invite.getInterviewDate());
         assertEquals(expectedUserId, invite.getUserId());
     }
 
@@ -46,7 +43,6 @@ public class InterviewInviteResourceBuilderTest {
         long[] expectedCompIds = {1L, 2L};
         String[] expectedEmails = {"tom@poly.io", "steve.smith@empire.com"};
         String[] expectedHashes = {"hash1", "hash2"};
-        ZonedDateTime[] expectedInterviewDates = {ZonedDateTime.now(), ZonedDateTime.now().plusHours(1)};
         long[] expectedUserIds = {3L, 4L};
 
         List<InterviewInviteResource> invites = newInterviewInviteResource()
@@ -54,7 +50,6 @@ public class InterviewInviteResourceBuilderTest {
                 .withCompetitionId(1L, 2L)
                 .withEmail(expectedEmails)
                 .withInviteHash(expectedHashes)
-                .withInterviewDate(expectedInterviewDates)
                 .withUserId(3L, 4L)
                 .build(2);
 
@@ -63,7 +58,6 @@ public class InterviewInviteResourceBuilderTest {
         assertEquals(expectedCompIds[0], first.getCompetitionId());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedHashes[0], first.getHash());
-        assertEquals(expectedInterviewDates[0], first.getInterviewDate());
         assertEquals(expectedUserIds[0], first.getUserId());
 
         InterviewInviteResource second = invites.get(1);
@@ -71,7 +65,6 @@ public class InterviewInviteResourceBuilderTest {
         assertEquals(expectedCompIds[1], second.getCompetitionId());
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals(expectedHashes[1], second.getHash());
-        assertEquals(expectedInterviewDates[1], second.getInterviewDate());
         assertEquals(expectedUserIds[1], second.getUserId());
     }
 }

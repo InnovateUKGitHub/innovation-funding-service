@@ -7,9 +7,9 @@ import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -52,7 +52,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .withEmail("A.D@gmail.com")
                 .build();
 
-        inviteUserResource = new InviteUserResource(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
+        inviteUserResource = new InviteUserResource(invitedUser, Role.IFS_ADMINISTRATOR);
     }
 
     @Test

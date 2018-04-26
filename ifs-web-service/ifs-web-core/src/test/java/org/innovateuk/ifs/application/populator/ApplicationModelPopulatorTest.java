@@ -1,22 +1,22 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
+import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -36,12 +36,13 @@ import java.util.Optional;
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -102,7 +103,7 @@ public class ApplicationModelPopulatorTest {
 
         List<ProcessRoleResource> userApplicationRoles = newProcessRoleResource()
                 .withUser(user, leadApplicant)
-                .withRoleName(UserRoleType.COLLABORATOR.getName(), UserRoleType.LEADAPPLICANT.getName())
+                .withRole(Role.COLLABORATOR, LEADAPPLICANT)
                 .withOrganisation(organisationId)
                 .build(2);
 

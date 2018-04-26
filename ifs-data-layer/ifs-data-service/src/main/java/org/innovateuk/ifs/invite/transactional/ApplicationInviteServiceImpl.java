@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressServiceImpl;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
@@ -27,12 +29,12 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -59,7 +61,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class ApplicationInviteServiceImpl extends BaseApplicationInviteService implements ApplicationInviteService {
+public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvite> implements ApplicationInviteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationInviteServiceImpl.class);
 
@@ -83,6 +85,9 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
     private ApplicationInviteRepository applicationInviteRepository;
 
     @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
@@ -101,6 +106,9 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
     private ApplicationProgressServiceImpl applicationProgressService;
 
     @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
     private QuestionReassignmentService questionReassignmentService;
 
     LocalValidatorFactoryBean validator;
@@ -109,6 +117,16 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
         validator = new LocalValidatorFactoryBean();
         validator.setProviderClass(HibernateValidator.class);
         validator.afterPropertiesSet();
+    }
+
+    @Override
+    protected Class<ApplicationInvite> getInviteClass() {
+        return ApplicationInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<ApplicationInvite> getInviteRepository() {
+        return applicationInviteRepository;
     }
 
     @Override
@@ -157,7 +175,7 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
     public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
         User loggedInUser = loggedInUserSupplier.get();
         NotificationSource from = systemNotificationSource;
-        NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        NotificationTarget to = new UserNotificationTarget(invite.getName(), invite.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
         if (StringUtils.isNotEmpty(invite.getTarget().getName())) {
@@ -190,7 +208,7 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
 
     @Override
     public ServiceResult<ApplicationInvite> findOneByHash(String hash) {
-        return find(applicationInviteRepository.getByHash(hash), notFoundError(ApplicationInvite.class, hash));
+        return getByHash(hash);
     }
 
     @Override
@@ -243,14 +261,12 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
     }
 
     @Override
-    public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
-        return getByHash(hash)
-                .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()))
-                .andOnSuccess(u -> serviceSuccess(u.isPresent()));
+    public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return super.checkUserExistsForInvite(inviteHash);
     }
 
     @Override
-    public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
+    public ServiceResult<UserResource> getUserByInviteHash(String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()).map(userMapper::mapToResource))
                 .andOnSuccess(u -> u.isPresent() ?

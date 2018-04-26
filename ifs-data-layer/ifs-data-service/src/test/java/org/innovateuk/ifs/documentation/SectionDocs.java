@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
 
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 

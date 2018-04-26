@@ -2,8 +2,8 @@ package org.innovateuk.ifs.finance.handler.item;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;

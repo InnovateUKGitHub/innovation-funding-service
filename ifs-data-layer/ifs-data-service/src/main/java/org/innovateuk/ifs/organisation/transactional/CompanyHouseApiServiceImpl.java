@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -27,12 +28,13 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Optional.ofNullable;
 
 /**
- * This class communicates with the Company House API.
+ * This class communicates with the Companies House API.
  * This is used to get information abouts companies.
  *
  * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
  */
 @Service
+@ConditionalOnProperty(name = "ifs.data.companies-house.lookup.enabled", havingValue = "", matchIfMissing = true)
 public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
     private static final Log LOG = LogFactory.getLog(CompanyHouseApiServiceImpl.class);

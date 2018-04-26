@@ -353,7 +353,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
     public void checkExistingUser() throws Exception {
         String hash = "invitehash";
 
-        when(reviewInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
+        when(reviewInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(TRUE));
 
         mockMvc.perform(get("/assessment-panel-invite/check-existing-user/{hash}", hash))
                 .andExpect(status().isOk())

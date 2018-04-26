@@ -6,7 +6,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +46,8 @@ public class BaseUserServiceImpl extends UserTransactionalService implements Bas
     }
 
     @Override
-    public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-        return serviceSuccess(usersToResources(userRepository.findByRolesOrderByFirstNameAscLastNameAsc(Role.getByName(roleType.getName()))));
+    public ServiceResult<List<UserResource>> findByProcessRole(Role roleType) {
+        return serviceSuccess(usersToResources(userRepository.findByRolesOrderByFirstNameAscLastNameAsc(roleType)));
     }
 
     private List<UserResource> usersToResources(List<User> filtered) {

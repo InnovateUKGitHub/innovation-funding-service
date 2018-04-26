@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.REMOVE_UPLOADED_FILE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;

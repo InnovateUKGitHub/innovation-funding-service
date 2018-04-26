@@ -12,7 +12,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${(param.status != null ? '/prototypes/2113-dashboard?status=' + param.status[0]:'/prototypes/2113-dashboard')})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->

@@ -2,9 +2,8 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -51,5 +50,47 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl).queryParam("page", page);
 
         return getWithRestResult(builder.toUriString(), InterviewAssignmentStagedApplicationPageResource.class);
+    }
+
+    @Override
+    public RestResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, int page) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "assigned-applications", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl).queryParam("page", page);
+
+        return getWithRestResult(builder.toUriString(), InterviewAssignmentApplicationPageResource.class);
+    }
+
+    @Override
+    public RestResult<Void> unstageApplication(long applicationId) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "unstage-application", applicationId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> unstageApplications(long competitionId) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "unstage-applications", competitionId), Void.class);
+    }
+
+    @Override
+    public RestResult<ApplicantInterviewInviteResource> getEmailTemplate() {
+        String baseUrl = format("%s/%s", REST_URL, "email-template");
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), ApplicantInterviewInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "send-invites", competitionId), assessorInviteSendResource, Void.class);
+    }
+
+    @Override
+    public RestResult<Boolean> isAssignedToInterview(long applicationId) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "is-assigned", applicationId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), Boolean.class);
     }
 }

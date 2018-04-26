@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage interview panel'" />
 </head>
 
-<body th:with="context='comp-management'" class="competition-management wide-page">
+<body class="competition-management wide-page">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -35,7 +35,7 @@
     <ul class="link-list extra-margin">
 
         <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-               th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">
+               th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">
             Assign applications
         </a>
             <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
@@ -57,6 +57,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>
 

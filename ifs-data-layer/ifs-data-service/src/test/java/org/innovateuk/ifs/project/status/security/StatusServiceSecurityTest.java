@@ -1,23 +1,17 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
+import org.innovateuk.ifs.project.status.transactional.StatusServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
 
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in ProjectService interact with Spring Security
@@ -47,31 +41,8 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
     }
 
     @Override
-    protected Class<TestProjectService> getClassUnderTest() {
-        return TestProjectService.class;
-    }
-
-    public static class TestProjectService implements StatusService {
-
-        @Override
-        public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectStatusResource> getProjectStatusByProjectId(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectStatusResource> getProjectStatusByProject(Project project) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
-            return null;
-        }
+    protected Class<? extends StatusService> getClassUnderTest() {
+        return StatusServiceImpl.class;
     }
 }
 

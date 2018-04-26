@@ -12,18 +12,12 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
-import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
-import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
-import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
+import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -35,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
@@ -42,9 +37,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -59,33 +52,33 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
 
-    protected static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
+    public static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
             .stream().map(ApplicationState::getBackingState).collect(toSet());
 
-
-    @Autowired
     private AssessmentRepository assessmentRepository;
-
-    @Autowired
     private AssessmentMapper assessmentMapper;
-
-    @Autowired
     private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
-
-    @Autowired
     private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
-
-    @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
-
-    @Autowired
     private ActivityStateRepository activityStateRepository;
 
-    @Autowired
-    private ReviewInviteRepository reviewInviteRepository;
+    public AssessmentServiceImpl() {
+    }
 
     @Autowired
-    private ReviewParticipantRepository reviewParticipantRepository;
+    public AssessmentServiceImpl(AssessmentRepository assessmentRepository,
+                                 AssessmentMapper assessmentMapper,
+                                 AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
+                                 AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
+                                 AssessmentWorkflowHandler assessmentWorkflowHandler,
+                                 ActivityStateRepository activityStateRepository) {
+        this.assessmentRepository = assessmentRepository;
+        this.assessmentMapper = assessmentMapper;
+        this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;
+        this.assessmentFundingDecisionOutcomeMapper = assessmentFundingDecisionOutcomeMapper;
+        this.assessmentWorkflowHandler = assessmentWorkflowHandler;
+        this.activityStateRepository = activityStateRepository;
+    }
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -162,39 +155,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
-    public ServiceResult<ReviewKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
-        ReviewKeyStatisticsResource reviewKeyStatisticsResource = new ReviewKeyStatisticsResource();
-        List<Long> assessmentPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
-
-        reviewKeyStatisticsResource.setApplicationsInPanel(getApplicationPanelAssignedCountStatistic(competitionId));
-        reviewKeyStatisticsResource.setAssessorsAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
-        reviewKeyStatisticsResource.setAssessorsPending(reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, Collections.singleton(InviteStatus.SENT)));
-
-        return serviceSuccess(reviewKeyStatisticsResource);
-    }
-
-    private int getApplicationPanelAssignedCountStatistic(long competitionId) {
-        return applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                competitionId, SUBMITTED_STATES, "",  null,true).size();
-    }
-
-    @Override
-    public ServiceResult<ReviewInviteStatisticsResource> getAssessmentPanelInviteStatistics(long competitionId) {
-        ReviewInviteStatisticsResource statisticsResource = new ReviewInviteStatisticsResource();
-        List<Long> assessmentPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
-
-        statisticsResource.setInvited(reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
-        statisticsResource.setAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
-        statisticsResource.setDeclined(getParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, assessmentPanelInviteIds));
-
-        return serviceSuccess(statisticsResource);
-    }
-
-    private int getParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
-        return reviewParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, PANEL_ASSESSOR, status, inviteIds);
-    }
-
-    @Override
     @Transactional
     public ServiceResult<Void> rejectInvitation(long assessmentId,
                                                 AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
@@ -266,7 +226,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
                         .andOnSuccess(application -> getAssessmentActivityState(AssessmentState.CREATED)
-                                        .andOnSuccess(activityState -> createAssessment(assessor, application, Role.ASSESSOR, activityState))
+                                        .andOnSuccess(activityState -> createAssessment(assessor, application, ASSESSOR, activityState))
                         )
                 );
     }
@@ -284,7 +244,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, Role role) {
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(assessor.getId(), application.getId());
+        ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(assessor.getId(), singletonList(Role.ASSESSOR), application.getId());
 
         if (processRole == null) {
             processRole = new ProcessRole();
@@ -298,7 +258,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     private ServiceResult<User> getAssessor(Long assessorId) {
-        return find(userRepository.findByIdAndRoles(assessorId, Role.ASSESSOR), notFoundError(User.class, UserRoleType.ASSESSOR, assessorId));
+        return find(userRepository.findByIdAndRoles(assessorId, ASSESSOR), notFoundError(User.class, ASSESSOR, assessorId));
     }
 
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {

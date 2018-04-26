@@ -5,7 +5,7 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.validator.AcademicValidator;
+import org.innovateuk.ifs.finance.validator.AcademicValidator;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;

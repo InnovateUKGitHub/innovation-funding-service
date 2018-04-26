@@ -9,7 +9,6 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
@@ -37,6 +36,7 @@ import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLet
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForPartnersView;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -273,7 +273,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         ProjectResource project = newProjectResource().withId(123L).build();
 
         List<ProjectUserResource> pmUser = newProjectUserResource().
-                withRoleName(UserRoleType.PROJECT_MANAGER).
+                withRole(PROJECT_MANAGER).
                 withUser(loggedInUser.getId()).
                 build(1);
 
@@ -300,7 +300,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         ProjectResource project = newProjectResource().withId(123L).build();
 
-        ProjectUserResource pmUser = newProjectUserResource().withRoleName(UserRoleType.PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
+        ProjectUserResource pmUser = newProjectUserResource().withRole(PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
         List<ProjectUserResource> puRes = new ArrayList<ProjectUserResource>(Arrays.asList(pmUser));
 
         when(projectService.getById(123L)).thenReturn(project);
@@ -335,7 +335,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         ProjectResource project = newProjectResource().withId(123L).build();
 
         List<ProjectUserResource> pmUser = newProjectUserResource().
-                withRoleName(UserRoleType.PROJECT_MANAGER).
+                withRole(PROJECT_MANAGER).
                 withUser(loggedInUser.getId()).
                 build(1);
 

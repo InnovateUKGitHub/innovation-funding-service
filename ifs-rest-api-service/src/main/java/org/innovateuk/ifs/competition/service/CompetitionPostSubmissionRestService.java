@@ -28,7 +28,4 @@ public interface CompetitionPostSubmissionRestService {
     RestResult<Long> countPendingSpendProfiles(long competitionId);
 
     RestResult<Void> closeAssessment(long competitionId);
-
-    RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField);
-
 }

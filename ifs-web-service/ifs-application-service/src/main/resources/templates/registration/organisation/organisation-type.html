@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body th:with="context='applicant'" class="create-application-eligibility">
+<body class="create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Create your account',size='heading-xlarge'" />
     <p>You are participating in this competition as part of the organisation
         <strong>
@@ -49,5 +48,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

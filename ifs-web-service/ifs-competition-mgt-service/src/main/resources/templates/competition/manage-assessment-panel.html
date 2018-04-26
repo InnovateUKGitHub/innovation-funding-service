@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessment panel'" />
 </head>
 
-<body th:with="context='comp-management'" class="competition-management">
+<body class="competition-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -24,14 +24,7 @@
                        th:formaction="@{/assessment/panel/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}">Confirm actions</button>
                </form>
            </div>
-           <!--/*
-               <div class="column-quarter">
-                   <div class="highlight-panel highlight-panel--tall">
-                       <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
-                   </div>
-               </div>
-                   */-->
-            </div>
+        </div>
 
         <h2 class="heading-medium">Key statistics</h2>
 
@@ -79,6 +72,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>
 

@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,7 +58,9 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
 
         return ServiceResult.serviceSuccess(setupStatuses
                 .stream()
-                .filter(setupStatusResource -> setupStatusResource.getClassName().equals(Question.class.getName()))
+                .filter(setupStatusResource ->
+                        setupStatusResource.getClassName().equals(Question.class.getName())
+                )
                 .collect(toMap(SetupStatusResource::getClassPk, SetupStatusResource::getCompleted)));
     }
 
@@ -69,7 +71,8 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
     }
 
     private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, Long questionId, CompetitionSetupSection parentSection) {
-        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(Question.class.getName(), questionId, Competition.class.getName(), competitionId)
+        Optional<SetupStatusResource> setupStatusOpt =
+                setupStatusService.findSetupStatusAndTarget(Question.class.getName(), questionId, Competition.class.getName(), competitionId)
                 .getOptionalSuccessObject();
 
         return setupStatusOpt.orElseGet(() -> createNewSetupStatus(competitionId, questionId, parentSection));

@@ -4,8 +4,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -15,9 +16,8 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_ALREADY_UPLOADED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -86,21 +86,8 @@ public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInp
                                 LOG.info("[FileLogging] FormInputResponse for file already exists for application id " + openApplication +
                                         " processRoleId " + processRoleId +
                                         " formInputId " + formInputId +
-                                        " , so deleting before creating...");
-                                FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(
-                                        formInputId,
-                                        applicationId,
-                                        processRoleId);
-                                final ServiceResult<FormInputResponse> deleteResult = deleteFormInputResponseFileUpload(formInputResponseFileEntryId);
-
-                                if (deleteResult.isFailure()) {
-                                    return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
-                                }
-
-                                LOG.info("[FileLogging] Already existing FormInputResponse for application id " + openApplication +
-                                        " processRoleId " + processRoleId  +
-                                        " formInputId " + formInputId +
-                                        " deleted successfully");
+                                        " , so returning error...");
+                                return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
                             }
 
                             return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier)

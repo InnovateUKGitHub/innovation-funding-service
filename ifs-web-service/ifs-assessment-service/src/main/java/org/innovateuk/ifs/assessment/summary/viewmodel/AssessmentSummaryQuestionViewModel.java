@@ -3,14 +3,13 @@ package org.innovateuk.ifs.assessment.summary.viewmodel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;

@@ -1,14 +1,9 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
-
-import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
@@ -45,19 +40,6 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
 
     @Override
     protected Class<? extends ApplicationCountSummaryService> getClassUnderTest() {
-        return TestApplicationCountSummaryService.class;
-    }
-
-    public static class TestApplicationCountSummaryService implements ApplicationCountSummaryService {
-
-        @Override
-        public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId, long assessorId, int pageIndex, int pageSize, Optional<Long> innovationArea, String filter, String sortField) {
-            return null;
-        }
+        return ApplicationCountSummaryServiceImpl.class;
     }
 }

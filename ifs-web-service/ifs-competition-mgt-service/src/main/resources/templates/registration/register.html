@@ -9,8 +9,6 @@
 <th:block th:insert="fragments/layout :: global-header"/>
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"/>
-
     <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
         <h2 class="heading-medium error-summary-heading">We were unable to create your account.</h2>
         <ul class="error-summary-list">

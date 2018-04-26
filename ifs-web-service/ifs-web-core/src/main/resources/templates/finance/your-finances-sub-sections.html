@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 
     <!-- ===========================Your finances section view =========================== -->
     <th:block th:fragment="finance(model)">
@@ -178,6 +178,7 @@
             </li>
         </th:block>
     </th:block>
+
     <th:block th:fragment="your_finance_summary (model)">
         <div class="form-group" style="overflow:auto;">
             <table>
@@ -207,6 +208,10 @@
         <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model})" />
         <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:if="${model.showTerms}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
+    </th:block>
+
+    <th:block th:fragment="assessment_finances(model)">
+        <th:block th:insert="'finance/'+${detailedCostings.financeView} :: assessment_detailed_finance(${model})" />
     </th:block>
 
     <th:block th:fragment="funding_finances(model)">

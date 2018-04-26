@@ -4,12 +4,11 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit assessments'" />
 </head>
 
-    <body th:with="context='assessment'" class="assessment-submit-confirm">
+    <body class="assessment-submit-confirm">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{id}(id=${competitionId})})" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit assessments',size='heading-xlarge'" />
 
@@ -27,5 +26,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

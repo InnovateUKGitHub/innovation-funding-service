@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.testdata.builders.data.InternalUserData;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
         return new InternalUserData();
     }
 
-    public InternalUserDataBuilder withRoles(List<UserRoleType> roles) {
+    public InternalUserDataBuilder withRoles(List<Role> roles) {
         return with(data -> data.setRoles(roles));
     }
 

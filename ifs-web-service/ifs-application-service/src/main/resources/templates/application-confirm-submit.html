@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm application submit'" />
 </head>
-<body th:with="context='applicant'" class="app-confirm-submit">
+<body class="app-confirm-submit">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" />
 
     <div th:if="${agreeToTerms}" class="event-alert" >
@@ -33,5 +32,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

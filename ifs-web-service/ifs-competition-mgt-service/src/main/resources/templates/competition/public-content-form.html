@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body th:with="context='comp-management'" class="competition-management competition-setup">
+<body class="competition-management competition-setup">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">
         <!-- Link back -->
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  />
@@ -49,6 +48,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

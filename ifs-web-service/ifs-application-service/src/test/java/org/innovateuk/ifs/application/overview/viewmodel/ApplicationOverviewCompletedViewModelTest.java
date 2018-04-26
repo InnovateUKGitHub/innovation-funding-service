@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +11,8 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;

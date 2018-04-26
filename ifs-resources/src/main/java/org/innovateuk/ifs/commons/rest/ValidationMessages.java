@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 
+import javax.validation.ConstraintViolation;
 import java.io.Serializable;
 import java.util.*;
 
@@ -45,6 +46,15 @@ public class ValidationMessages implements ErrorHolder, Serializable {
 
     public ValidationMessages(Long objectId, BindingResult bindingResult) {
         populateFromBindingResult(objectId, bindingResult);
+    }
+
+    public <T> ValidationMessages(Set<ConstraintViolation<T>> constraintViolations) {
+        List<Error> fieldErrors = simpleMap(constraintViolations,
+                violation -> fieldError(violation.getPropertyPath().toString(),
+                        violation.getLeafBean(),
+                        stripCurlyBrackets(violation.getMessageTemplate())));
+
+        errors.addAll(fieldErrors);
     }
 
     public ValidationMessages(Error... errors) {
@@ -188,11 +198,15 @@ public class ValidationMessages implements ErrorHolder, Serializable {
             return null;
         }
 
-        if (messageKey.startsWith("{") && messageKey.endsWith("}")) {
-            return messageKey.substring(1, messageKey.length() - 1);
+        return stripCurlyBrackets(messageKey);
+    }
+
+    private String stripCurlyBrackets(String key) {
+        if (key.startsWith("{") && key.endsWith("}")) {
+            return key.substring(1, key.length() - 1);
         }
 
-        return messageKey;
+        return key;
     }
 
     //

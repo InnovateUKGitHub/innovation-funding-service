@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.project.notes;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
+import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesAddNoteController;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
-import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesAddNoteController;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +19,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -51,10 +50,10 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testCancelNewForm() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.cancelNewForm(projectCompositeId.id(), 2L, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -72,10 +71,10 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testDownloadAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.downloadAttachment(projectCompositeId.id(), 2L, 3L, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -93,10 +92,10 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testSaveQuery() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.saveNote(projectCompositeId.id(), 2L, null, null, null, null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -114,10 +113,10 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testSaveQueryAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.saveNewNoteAttachment(null, projectCompositeId.id(), 2L, null, null, null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -135,10 +134,10 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testViewNewQuery() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.viewNewNote(projectCompositeId.id(), 2L, null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -156,10 +155,10 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testRemoveAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.removeAttachment(projectCompositeId.id(), 2L, 3L, null, null, null, null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {

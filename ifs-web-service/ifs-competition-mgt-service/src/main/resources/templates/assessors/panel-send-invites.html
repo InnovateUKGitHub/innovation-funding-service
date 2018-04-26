@@ -5,13 +5,11 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to assessment panel',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body th:with="context='comp-management'" class="competition-management competition-overview">
+<body class="competition-management competition-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Invite assessors to attend',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='heading-xlarge'" />
 
@@ -24,10 +22,20 @@
 
     <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
 
-    <form th:action="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
-        <div class="form-group extra-margin-bottom">
-            <label class="form-label-bold" for="subject">Subject</label>
-            <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
+    <form th:action="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" method="post" novalidate="novalidate" enctype="multipart/form-data" th:object="${form}">
+        <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+            <label class="form-label-bold" th:for="${#ids.next('subject')}">
+                <span>Subject</span>
+                <th:block th:if="${#fields.hasErrors('subject')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <input class="form-control width-full"
+                   id="subject"
+                   type="text"
+                   th:field="*{subject}"
+                   required="required"
+                   th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
         </div>
 
         <h3 class="heading-small">Message</h3>
@@ -64,5 +72,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

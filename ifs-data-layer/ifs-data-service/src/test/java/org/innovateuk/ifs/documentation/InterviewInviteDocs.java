@@ -17,7 +17,6 @@ public class InterviewInviteDocs {
             fieldWithPath("email").description("Email of the competition invitee"),
             fieldWithPath("hash").description("Hash id of the competition invite"),
             fieldWithPath("status").description("Status of the competition invite"),
-            fieldWithPath("interviewDate").description("Date of the assessment interview panel"),
             fieldWithPath("userId").description("Id of user invited"),
     };
 
@@ -26,7 +25,6 @@ public class InterviewInviteDocs {
             .withCompetitionName("Connected digital additive manufacturing")
             .withInviteHash("0519d73a-f062-4784-ae86-7a933a7de4c3")
             .withEmail("paul.plum@gmail.com")
-            .withInterviewDate(ZonedDateTime.now())
             .withUserId(2L)
             .withStatus(CREATED);
 }

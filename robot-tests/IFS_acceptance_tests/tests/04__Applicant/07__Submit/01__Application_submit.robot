@@ -18,9 +18,10 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-942 Information message when application has reached 100% complete
 ...
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
-Suite Setup       new account complete all but one
+Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
-Force Tags        Applicant
+                  #TODO IFS-3416 This ticket is in the testing backlog and covers the ${openDate} not found issue
+Force Tags        Applicant  MySQL
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
@@ -139,6 +140,7 @@ Submit flow rto lead (complete application)
 Applications are on Dashboard when Competition is Closed
     [Documentation]  IFS-1149
     [Tags]  MySQL
+    [Setup]  Get the original values of the competition's milestones
     Given the competition is closed
     Then the user should be able to see his application on his dashboard  ${submit_bus_email}  ${application_bus_name}
     And the user should be able to see his application on his dashboard   ${submit_rto_email}  ${application_rto_name}
@@ -192,7 +194,8 @@ the user puts zero project costs
 
 the competition is closed
     Connect to Database    @{database}
-    execute sql string    UPDATE `${database_name}`.`milestone` SET `date`='2017-08-01 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    ${yesterday} =  get yesterday
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
 
 the user should be able to see his application on his dashboard
     [Arguments]  ${user}  ${application}
@@ -201,6 +204,14 @@ the user should be able to see his application on his dashboard
 
 Custom Suite Teardown
     The user closes the browser
-    #Is required to return the competition back to its initial status for the following suites to run
-    Connect to Database  @{database}
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2077-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    # Is required to return the competition back to its initial status for the following suites to run
+    Return the competition's milestones to their initial values  ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${openDate}  ${submissionDate}
+
+Get the original values of the competition's milestones
+    ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    Set suite variable  ${openDate}
+    Set suite variable  ${submissionDate}
+
+Custom Suite Setup
+    new account complete all but one
+    Get the original values of the competition's milestones

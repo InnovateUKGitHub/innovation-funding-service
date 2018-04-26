@@ -3,26 +3,26 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit to lead partner'" />
 </head>
-<body th:with="context='project'">
+<body>
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"/>
-    <th:block th:insert="fragments/layout :: header-sub"/>
+    <th:block th:insert="fragments/layout :: header-sub" />
 
     <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${projectId},organisationId=${organisationId})}" method="POST">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Allow partner to edit',size='heading-medium'" />
         <p><span class="heading-small no-margin"><th:block th:text="${model.getOrganisationName()}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />
-        <input type="submit" class="button" value="Allow edits"/>
+        <input type="submit" class="button" value="Allow edits" />
     </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end"/>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"/>
-<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

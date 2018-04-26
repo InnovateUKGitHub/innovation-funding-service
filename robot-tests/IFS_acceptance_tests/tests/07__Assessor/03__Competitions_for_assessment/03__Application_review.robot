@@ -14,6 +14,8 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-6281 As an Assessor I want to see specific scoring guidance text for each application question so that I can score the question accurately
 ...
 ...               INFUND-8065 File download links are broken for assessors
+...
+...               IFS-2854 Allow assessors to see full application finances
 Suite Setup       The user logs-in in new browser  &{assessor_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -24,7 +26,7 @@ Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]    HappyPath
     Given the user clicks the button/link              link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link                link=Products and Services Personalised
+    And The user clicks the button/link                link=Intelligent water system
     When the user clicks the button/link               link=4. Economic benefit
     Then the user should see the element               jQuery=h1:contains("Economic benefit")
     And the user clicks previous and goes to the page  Project exploitation
@@ -101,11 +103,11 @@ Application questions should be scorable
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given The user opens the link in new window  products-and-services-personalised-technical-approach.pdf, 7 KB
-    And The user opens the link in new window    products-and-services-personalised-innovation.pdf, 7 KB
-    And The user opens the link in new window    products-and-services-personalised-project-team.pdf, 7 KB
+    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 7 KB
+    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7 KB
+    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 7 KB
     When the user clicks the button/link         jQuery=a:contains("6. Innovation")
-    And The user opens the link in new window    products-and-services-personalised-innovation.pdf, 7.94 KB
+    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7.94 KB
     And the user goes back to the previous tab
 
 Scope: Validations
@@ -200,12 +202,20 @@ Economic Benefit: Guidance
     [Teardown]  The user clicks the button/link    link=Back to your assessment overview
 
 Finance overview
-    [Documentation]    INFUND-3394
-    [Tags]
-    When the user clicks the button/link           link=Finances overview
-    Then the user should see the text in the page  Finances summary
+    [Documentation]    INFUND-3394  IFS-2854
+    [Tags]  MySQL
+    When the user clicks the button/link        link=Finances overview
+    Then the user should see the element        jQuery=h2:contains("Finances summary")
     And the finance summary total should be correct
     And the project cost breakdown total should be correct
+    When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user reloads the page
+    And The user clicks the button/link          jQuery=th:contains("Mo Juggling Mo Problems Ltd") a:contains("View finances")
+    Then the user should see the element         jQuery=h2:contains("Detailed finances")
+    And the project costs are correct in the overview
+    When The user clicks the button/link         link=Back to funding
+    And The user clicks the button/link          jQuery=th:contains("University of Bath") a:contains("View finances")
+    Then the academic finances are correct
 
 Status of the application should be In Progress
     [Documentation]    INFUND-6358
@@ -251,10 +261,10 @@ the finance summary total should be correct
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    200,903
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    57,803
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    2,468
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    140,632
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
 
 the project cost breakdown total should be correct
     Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    200,903
@@ -269,3 +279,23 @@ the project cost breakdown total should be correct
 The status of the appllications should be correct
     [Arguments]    ${APPLICATION}    ${STATUS}
     element should contain    ${APPLICATION}    ${STATUS}
+
+The user sets the finance option to detailed
+    [Arguments]  ${competition}
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`competition` SET `assessor_finance_view`='DETAILED' WHERE `name`='${competition}';
+
+The project costs are correct in the overview
+    The user should see the element       jQuery=button:contains("Labour") span:contains("£3,081")
+    The user should see the element       jQuery=button:contains("Overhead costs") span:contains("£0")
+    The user should see the element       jQuery=button:contains("Materials") span:contains("£100,200")
+    The user should see the element       jQuery=button:contains("Capital usage") span:contains("£552")
+    The user should see the element       jQuery=button:contains("Subcontracting costs") span:contains("£90,000")
+    The user should see the element       jQuery=button:contains("Travel and subsistence") span:contains("£5,970")
+    The user should see the element       jQuery=button:contains("Other costs") span:contains("£1,100")
+
+The academic finances are correct
+    The user should see the element       jQuery=.table-overview td:contains("3 months")
+    The user should see the element       jQuery=.table-overview td:contains("£990")
+    The user should see the element       jQuery=.table-overview td:contains("100%")
+    The user should see the element       jQuery=.table-overview td:contains("990")

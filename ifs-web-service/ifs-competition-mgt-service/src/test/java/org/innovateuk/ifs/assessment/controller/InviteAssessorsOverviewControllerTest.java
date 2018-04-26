@@ -108,7 +108,7 @@ public class InviteAssessorsOverviewControllerTest extends BaseControllerMockMVC
                 .thenReturn(restSuccess(pageResource));
         when(competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competition.getId(), empty(), statuses, empty())).thenReturn(restSuccess(inviteIds));
 
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId()))
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/pending-and-declined", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/overview"))
@@ -150,7 +150,7 @@ public class InviteAssessorsOverviewControllerTest extends BaseControllerMockMVC
                 .thenReturn(restSuccess(pageResource));
         when(competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competition.getId(),innovationArea, status,compliant)).thenReturn(restSuccess(inviteIds));
 
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId())
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/pending-and-declined", competition.getId())
                 .param("page", "1")
                 .param("status", "PENDING")
                 .param("innovationArea", "10")
@@ -210,7 +210,6 @@ public class InviteAssessorsOverviewControllerTest extends BaseControllerMockMVC
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
-        assertEquals(inviteStatistics.getInviteList(), model.getAssessorsStaged());
     }
 
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {

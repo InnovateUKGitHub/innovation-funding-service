@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.review.populator;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -11,14 +11,13 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +28,7 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 
 /**
  * Build the model for the Application under review view.
@@ -147,6 +147,6 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
         return userApplicationRoles
                 .stream()
                 .filter(processRoleResource -> processRoleResource.getUser().equals(user.getId()))
-                .anyMatch(processRoleResource -> processRoleResource.getRoleName().equals(UserRoleType.ASSESSOR.getName()));
+                .anyMatch(processRoleResource -> processRoleResource.getRole() == ASSESSOR.getId());
     }
 }

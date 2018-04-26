@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -37,7 +37,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     private String emailAddress;
 
-    private UserRoleType role;
+    private Role role;
 
     // for spring form binding
     public InviteUserForm() {
@@ -67,11 +67,11 @@ public class InviteUserForm extends BaseBindingResultTarget {
         this.emailAddress = emailAddress;
     }
 
-    public UserRoleType getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(UserRoleType role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

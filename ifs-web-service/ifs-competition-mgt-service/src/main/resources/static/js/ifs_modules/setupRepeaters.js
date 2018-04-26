@@ -146,7 +146,6 @@ IFS.competitionManagement.repeater = (function () {
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(rows.last().prop('id').split('contentDateGroup-row-')[1], 10) + 1
       }
-      var validDateErrorMessage = 'Please enter a valid date.'
 
       var html = '<div class="contentGroup" id="contentDateGroup-row-' + idCount + '">' +
                  '<div class="form-group"><fieldset>' +
@@ -155,15 +154,15 @@ IFS.competitionManagement.repeater = (function () {
                         '<input type="hidden" disabled name="dates[' + count + '].combined" />' +
                         '<div class="day">' +
                             '<label class="form-label" for="dates[' + idCount + '].day">Day</label>' +
-                            '<input class="form-control width-extra-small" placeholder="DD" type="number" id="dates[' + idCount + '].day" name="dates[' + count + '].day" min="1" max="31" required="required"  data-required-errormessage="' + validDateErrorMessage + '">' +
+                            '<input class="form-control width-extra-small" placeholder="DD" id="dates[' + idCount + '].day" name="dates[' + count + '].day" required="required">' +
                         '</div>' +
                         '<div class="month">' +
                             '<label class="form-label" for="dates[' + idCount + '].month">Month</label>' +
-                            '<input class="form-control width-extra-small" placeholder="MM" type="number" id="dates[' + idCount + '].month" name="dates[' + count + '].month" min="1" max="12" required="required" data-required-errormessage="' + validDateErrorMessage + '" />' +
+                            '<input class="form-control width-extra-small" placeholder="MM" id="dates[' + idCount + '].month" name="dates[' + count + '].month" required="required"/>' +
                         '</div>' +
                         '<div class="year">' +
                             '<label class="form-label" for="dates[' + idCount + '].year">Year</label>' +
-                            '<input class="form-control width-extra-small" placeholder="YYYY" type="number" id="dates[' + idCount + '].year" name="dates[' + count + '].year" min="1" required="required" data-required-errormessage="' + validDateErrorMessage + '" />' +
+                            '<input class="form-control width-extra-small" placeholder="YYYY" id="dates[' + idCount + '].year" name="dates[' + count + '].year" required="required"/>' +
                         '</div>' +
                     '</div>' +
                 '</fieldset></div>' +

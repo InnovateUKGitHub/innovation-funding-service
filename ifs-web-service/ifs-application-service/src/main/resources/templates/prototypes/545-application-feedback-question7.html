@@ -12,7 +12,7 @@
 
 
 <main id="content" th:with="score=${param.unsuccessful} ? 3 : 7">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
 
     <div th:if="${param.internal == null}" th:remove="tag">
 

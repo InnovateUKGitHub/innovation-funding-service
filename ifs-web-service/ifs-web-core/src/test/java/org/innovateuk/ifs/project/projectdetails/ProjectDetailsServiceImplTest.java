@@ -50,6 +50,20 @@ public class ProjectDetailsServiceImplTest {
     }
 
     @Test
+    public void testUpdatePartnerProjectLocation() {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        String postCode = "TW14 9QG";
+
+        when(projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postCode)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postCode);
+        assertTrue(result.isSuccess());
+
+        verify(projectDetailsRestService).updatePartnerProjectLocation(projectId, organisationId, postCode);
+    }
+
+    @Test
     public void testUpdateProjectManager() {
         when(projectDetailsRestService.updateProjectManager(1L, 2L)).thenReturn(restSuccess());
 
@@ -58,6 +72,7 @@ public class ProjectDetailsServiceImplTest {
         verify(projectDetailsRestService).updateProjectManager(1L, 2L);
     }
 
+    @Test
     public void testUpdateProjectStartDate() {
         LocalDate date = LocalDate.now();
 
@@ -67,7 +82,22 @@ public class ProjectDetailsServiceImplTest {
 
         assertTrue(result.isSuccess());
 
-        verify(projectDetailsRestService).updateProjectStartDate(1L, date).toServiceResult();
+        verify(projectDetailsRestService).updateProjectStartDate(1L, date);
+    }
+
+    @Test
+    public void testUpdateProjectDuration() {
+
+        long projectId = 3L;
+        long durationInMonths = 18L;
+
+        when(projectDetailsRestService.updateProjectDuration(projectId, durationInMonths)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.updateProjectDuration(projectId, durationInMonths);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectDetailsRestService).updateProjectDuration(projectId, durationInMonths);
     }
 
     @Test

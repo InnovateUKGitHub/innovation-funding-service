@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Other documents',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body th:with="context='project'" class="project-other-documents">
+<body class="project-other-documents">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:if="${model.collaborationAgreementRequired}" th:insert="fragments/modals :: modal-partner-documents" />
@@ -11,7 +11,6 @@
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='heading-xlarge'" />
 
@@ -230,6 +229,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

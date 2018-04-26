@@ -4,11 +4,10 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.mockito.Mockito.*;
@@ -25,7 +24,7 @@ public class ApplicationResearchCategoryServiceSecurityTest extends BaseServiceS
 
     @Override
     protected Class<? extends ApplicationResearchCategoryService> getClassUnderTest() {
-        return TestApplicationResearchCategoryService.class;
+        return ApplicationResearchCategoryServiceImpl.class;
     }
 
     @Before
@@ -44,12 +43,5 @@ public class ApplicationResearchCategoryServiceSecurityTest extends BaseServiceS
                 () -> classUnderTest.setResearchCategory(applicationId, researchCategoryId),
                 () -> verify(applicationRules).leadApplicantCanUpdateResearchCategory(isA(ApplicationResource.class), isA(UserResource.class))
         );
-    }
-
-    public static class TestApplicationResearchCategoryService implements ApplicationResearchCategoryService {
-
-        public ServiceResult<ApplicationResource> setResearchCategory(Long applicationId, Long researchCategoryId) {
-            return null;
-        }
     }
 }

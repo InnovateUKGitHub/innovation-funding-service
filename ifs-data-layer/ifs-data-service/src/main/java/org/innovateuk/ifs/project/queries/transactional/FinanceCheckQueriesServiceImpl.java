@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_U
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -137,7 +137,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
 
         Application application = project.getApplication();
 
-        NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+        NotificationTarget pmTarget = new UserNotificationTarget(fullName, financeContact.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + project.getId());
@@ -153,7 +153,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         NotificationSource from = systemNotificationSource;
         String fullName = financeContact.getName();
 
-        NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+        NotificationTarget pmTarget = new UserNotificationTarget(fullName, financeContact.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);

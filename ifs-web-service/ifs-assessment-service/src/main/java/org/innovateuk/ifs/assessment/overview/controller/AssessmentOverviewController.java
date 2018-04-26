@@ -3,9 +3,11 @@ package org.innovateuk.ifs.assessment.overview.controller;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
+import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -45,6 +47,9 @@ public class AssessmentOverviewController {
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
 
     @Autowired
+    private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesSummaryModelPopulator;
+
+    @Autowired
     private AssessmentService assessmentService;
 
     @Autowired
@@ -69,12 +74,23 @@ public class AssessmentOverviewController {
         return "assessment/application-finances-summary";
     }
 
+    @GetMapping("/detailed-finances/organisation/{organisationId}")
+    public String getDetailedFinances(Model model,
+                                      @PathVariable("assessmentId") long assessmentId,
+                                      @PathVariable("organisationId") long organisationId) {
+        model.addAttribute("model", assessmentDetailedFinancesSummaryModelPopulator.populateModel(assessmentId, organisationId, model));
+        return "assessment/application-detailed-finances";
+    }
+
     @GetMapping("/application/{applicationId}/formInput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
             UserResource loggedInUser) {
-        ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
+        ProcessRoleResource processRole = processRoleService.findProcessRolesByApplicationId(applicationId).stream()
+                .filter(role -> loggedInUser.getId().equals(role.getUser()))
+                .findAny()
+                .orElseThrow(ObjectNotFoundException::new);
 
         final ByteArrayResource resource = formInputResponseRestService
                 .getFile(formInputId, applicationId, processRole.getId()).getSuccess();

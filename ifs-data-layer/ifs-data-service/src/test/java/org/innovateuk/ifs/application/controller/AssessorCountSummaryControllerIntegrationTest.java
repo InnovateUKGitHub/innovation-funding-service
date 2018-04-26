@@ -8,10 +8,10 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -51,7 +51,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
     private UserRepository userRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -97,7 +97,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);

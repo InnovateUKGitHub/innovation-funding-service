@@ -24,6 +24,7 @@ Companies House: Valid company name
     [Teardown]    The user goes back to the previous page
 
 Companies House: User can choose the organisation and same operating address
+    [Documentation]    INFUND-887
     [Tags]    HappyPath
     When the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user should see the text in the page    Registered name
@@ -33,7 +34,7 @@ Companies House: User can choose the organisation and same operating address
     Then the user should not see the element    id=manual-company-input
     And the user unselects the checkbox    address-same
     And the user should see the element    id=manual-company-input
-    [Teardown]    And the user goes back to the previous page
+    [Teardown]    the user goes back to the previous page
 
 Companies House: Invalid company name
     [Documentation]    INFUND-887
@@ -51,6 +52,8 @@ Companies House: Valid registration number
     [Teardown]    The user goes back to the previous page
 
 Companies House: Empty company name field
+    [Documentation]    INFUND-887
+    [Tags]
     Given the user should see the text in the page    Create your account
     When the user enters text to a text field    id=organisationSearchName    ${EMPTY}
     And the user clicks the button/link    id=org-search
@@ -102,7 +105,7 @@ Manually add the details and pass to the confirmation page
 Applicant goes to the organisation search page
     Given the guest user opens the browser
     the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=Home and industrial efficiency programme
+    Given the user clicks the button/link in the paginated list     link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=span:contains("Business")

@@ -4,12 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit declaration of interest',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body th:with="context='assessment'" class="declaration-form">
+    <body class="declaration-form">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -424,5 +423,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

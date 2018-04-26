@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.populator;
 
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
-import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;

@@ -1,13 +1,16 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.application.builder.QuestionBuilder;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
@@ -16,7 +19,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -43,7 +48,9 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
 
     @Test
     public void testUserCanReadQuestionStatus() {
-        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource()
+                .withApplication(application).build();
         UserResource connectedUser = newUserResource().build();
         UserResource notConnectedUser = newUserResource().build();
 
@@ -58,8 +65,9 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
 
     @Test
     public void testUserCanUpdateQuestionStatus() {
-        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
-
+        ApplicationResource application = newApplicationResource().build();
+        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource()
+                .withApplication(application).build();
         UserResource leadApplicant = newUserResource().build();
         UserResource allowedAndConnectedUser = newUserResource().build();
         UserResource connectedUserAndNotAllowedUser = newUserResource().build();
@@ -68,7 +76,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
                 .thenReturn(true);
 
         ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
-        when(processRoleRepository.findByUserIdAndApplicationId(allowedAndConnectedUser.getId(), questionStatusResource.getApplication()))
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(allowedAndConnectedUser.getId(), applicantProcessRoles(), questionStatusResource.getApplication()))
                 .thenReturn(allowedProccesRole);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), Role.APPLICANT))
                 .thenReturn(true);
@@ -81,7 +89,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
                 .thenReturn(QuestionBuilder.newQuestion().withMultipleStatuses(false).build());
 
         ProcessRole connectedProcessRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
-        when(processRoleRepository.findByUserIdAndApplicationId(connectedUserAndNotAllowedUser.getId(), questionStatusResource.getApplication()))
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(connectedUserAndNotAllowedUser.getId(), applicantProcessRoles(), questionStatusResource.getApplication()))
                 .thenReturn(connectedProcessRole);
 
         assertTrue(rules.userCanUpdateQuestionStatus(questionStatusResource, leadApplicant));
@@ -104,5 +112,20 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, supportUser));
         assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, projectFinanceUser));
         assertFalse(rules.internalUserCanReadQuestionStatus(questionStatusResource, nonInternalUser));
+    }
+
+    @Test
+    public void testOnlyMemberOfProjectTeamCanMarkSection() {
+        ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
+        UserResource leadApplicant = UserResourceBuilder.newUserResource().build();
+        UserResource nonProjectTeamMember = UserResourceBuilder.newUserResource().build();
+
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT))
+                .thenReturn(true);
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), applicantProcessRoles(), application.getId()))
+                .thenReturn(null);
+
+        assertTrue(rules.onlyMemberOfProjectTeamCanMarkSection(application, leadApplicant));
+        assertFalse(rules.onlyMemberOfProjectTeamCanMarkSection(application, nonProjectTeamMember));
     }
 }

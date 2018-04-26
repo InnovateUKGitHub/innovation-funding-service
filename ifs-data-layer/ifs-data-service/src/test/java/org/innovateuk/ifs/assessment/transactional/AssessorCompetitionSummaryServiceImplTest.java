@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;

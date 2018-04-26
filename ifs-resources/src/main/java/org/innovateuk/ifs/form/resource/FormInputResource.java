@@ -161,50 +161,7 @@ public class FormInputResource {
         return this.allowedFileTypes;
     }
 
-    /**
-     * TODO: IFS-2564 - Remove deserializer in ZDD contract.
-     */
-    @JsonDeserialize(using = AllowedFileTypesDeserializer.class)
     public void setAllowedFileTypes(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
-    }
-
-    /**
-     * Custom deserializer for the 'allowedFileTypes' property.
-     *
-     * This is required as this property may come through from the
-     * data-tier as either an array or a string.
-     * Ideally we would use overloading on setter methods,
-     * but Jackson doesn't seem to deserialize correctly if we do this.
-     *
-     * TODO: IFS-2564 - Remove in ZDD contract.
-     */
-    static class AllowedFileTypesDeserializer extends JsonDeserializer<Set<FileTypeCategory>> {
-        @Override
-        public Set<FileTypeCategory> deserialize(JsonParser p, DeserializationContext ctxt)
-                throws IOException, JsonProcessingException
-        {
-            if (p.isExpectedStartArrayToken()) {
-                Set<FileTypeCategory> result = new LinkedHashSet<>();
-
-                while (p.nextToken() != JsonToken.END_ARRAY) {
-                    result.add(FileTypeCategory.valueOf(p.getValueAsString()));
-                }
-
-                return result;
-            }
-
-            if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
-                String valueAsString = p.getValueAsString();
-
-                if (valueAsString.isEmpty()) {
-                    return emptySet();
-                }
-
-                return simpleToLinkedHashSet(valueAsString.split(","), FileTypeCategory::valueOf);
-            }
-
-            throw ctxt.wrongTokenException(p, p.getCurrentToken(), "Token should be an Array or String.");
-        }
     }
 }

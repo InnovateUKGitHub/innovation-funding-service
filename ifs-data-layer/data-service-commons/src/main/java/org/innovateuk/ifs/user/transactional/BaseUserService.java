@@ -2,8 +2,8 @@ package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 
@@ -24,5 +24,5 @@ public interface BaseUserService {
     ServiceResult<List<UserResource>> findAll();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType);
+    ServiceResult<List<UserResource>> findByProcessRole(Role roleType);
 }

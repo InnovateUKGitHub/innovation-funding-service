@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 

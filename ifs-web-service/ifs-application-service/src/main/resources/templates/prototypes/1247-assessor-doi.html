@@ -12,7 +12,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
 
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1177-assessor-skills' : '/prototypes/1247-assessor-view-doi')})" th:unless="${param.version != null and param.version[0] == 'v2'}" />
 

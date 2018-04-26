@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -8,9 +8,11 @@ import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
@@ -48,6 +50,9 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private AuthenticationHelper authenticationHelper;
 
     public boolean projectCreated(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUser), GrantOfferLetterState.PENDING);
@@ -90,12 +95,6 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         return fireEvent(externalUserEvent(project, projectManager, SIGNED_GOL_REMOVED), project);
     }
 
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    public boolean isAlreadySent(Project project) {
-        GOLProcess process = getCurrentProcess(project);
-        return process != null && !GrantOfferLetterState.PENDING.equals(process.getActivityState());
-    }
-
     public boolean isApproved(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null && GrantOfferLetterState.APPROVED.equals(process.getActivityState());
@@ -120,6 +119,21 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     public GrantOfferLetterState getState(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null? process.getActivityState() : GrantOfferLetterState.PENDING;
+    }
+
+    public ServiceResult<GrantOfferLetterStateResource> getExtendedState(Project project) {
+
+        return authenticationHelper.getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+
+            GrantOfferLetterState state = getState(project);
+            GrantOfferLetterEvent lastProcessEvent = getLastProcessEvent(project);
+
+            if (project.isPartner(user) && !project.isProjectManager(user)) {
+                return GrantOfferLetterStateResource.stateInformationForPartnersView(state, lastProcessEvent);
+            } else {
+                return GrantOfferLetterStateResource.stateInformationForNonPartnersView(state, lastProcessEvent);
+            }
+        });
     }
 
     private boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {

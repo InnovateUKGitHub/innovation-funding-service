@@ -8,13 +8,14 @@ import org.innovateuk.ifs.management.viewmodel.IneligibleApplicationsRowViewMode
 import org.innovateuk.ifs.management.viewmodel.IneligibleApplicationsViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -52,7 +53,7 @@ public class IneligibleApplicationsModelPopulator {
                 filterForm.getFilterSearch(),
                 getApplications(summaryPageResource),
                 new PaginationViewModel(summaryPageResource, origin),
-                user.hasRole(UserRoleType.INNOVATION_LEAD) || user.hasRole(UserRoleType.SUPPORT)
+                user.hasRole(INNOVATION_LEAD) || user.hasRole(SUPPORT)
         );
     }
 

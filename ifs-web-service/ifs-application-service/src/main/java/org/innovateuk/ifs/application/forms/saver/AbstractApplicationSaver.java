@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;

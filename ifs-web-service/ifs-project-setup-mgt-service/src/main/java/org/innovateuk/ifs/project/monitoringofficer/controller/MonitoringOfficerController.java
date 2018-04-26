@@ -38,7 +38,7 @@ import static java.util.stream.Collectors.joining;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
@@ -187,7 +187,7 @@ public class MonitoringOfficerController {
 
     private String getProjectManagerName(ProjectResource project) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
-        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
         return projectManager.map(ProjectUserResource::getUserName).orElse("");
     }
 }

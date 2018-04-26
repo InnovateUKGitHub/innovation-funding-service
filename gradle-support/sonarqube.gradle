@@ -1,0 +1,23 @@
+apply plugin: org.sonarqube.gradle.SonarQubePlugin
+
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
+    }
+
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "IFS_Project"
+        property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
+        property "sonar.branch", "development"
+        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        property "sonar.exclusions", "**/*MapperImpl.java"
+    }
+}

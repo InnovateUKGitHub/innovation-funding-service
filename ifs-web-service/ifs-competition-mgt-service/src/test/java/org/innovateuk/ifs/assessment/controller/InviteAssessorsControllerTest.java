@@ -829,7 +829,7 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
                 .withCompliant(TRUE, FALSE)
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withStatus(ACCEPTED, REJECTED)
-                .withDetails("", "Invite declined as person is too busy")
+                .withDetails("", "Invite declined: person is too busy")
                 .build(2);
     }
 
@@ -851,7 +851,6 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
-        assertEquals(inviteStatistics.getInviteList(), model.getAssessorsStaged());
     }
 
     private void assertAvailableAssessors(List<AvailableAssessorResource> expectedAvailableAssessors, MvcResult result) {

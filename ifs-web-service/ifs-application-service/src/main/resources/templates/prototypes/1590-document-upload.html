@@ -12,7 +12,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
 
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${(param.user != null and param.user[0] == 'nonLead' ?  '/prototypes/1588-project-status?user=nonLead':'/prototypes/1588-project-status')})"  th:unless="${param.status != null and param.status[0] == 'submitted'}"/>
 

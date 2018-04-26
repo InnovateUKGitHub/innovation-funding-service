@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -98,7 +98,7 @@ public class OtherDocumentsController {
 
     private Optional<ProjectUserResource> getProjectManagerResource(ProjectResource project) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")

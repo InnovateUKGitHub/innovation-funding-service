@@ -24,6 +24,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               IFS-2015 Project Setup task management: Bank details
 ...
 ...               IFS-2398 - 2164 Add count of outstanding bank details checks to the task management link
+...
+...               IFS-2731  PS - External - Submitting Bank details with manually added Oper Address leads to ISE
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -84,6 +86,19 @@ Bank details server side validations
     Then the user should see an error    Please enter a valid account number.
     And the user should see an error    Please enter a valid sort code.
     And the user should see an error    You need to select an address before you can continue.
+
+The user enters bank details, wants to manually enter their address, leaves the address empty and submits
+    [Documentation]  IFS-2731
+    [Tags]
+    Given the user enters text to a text field    name = accountNumber    24681012
+    And the user enters text to a text field      name = sortCode         36912
+    When the user selects the radio button        addressType             ADD_NEW
+    And the user clicks the button/link           css = button[name = "manual-address"]        #Enter address manually
+    Then the user clicks the button/link          jQuery = button:contains("Submit bank account details")
+    And the user clicks the button/link           css = button[name = "submit-app-details"]    #Submit
+    And the user should see a summary error       The address cannot be blank.
+    And the user should see a summary error       The postcode cannot be blank.
+    And the user should see a summary error       The town cannot be blank.
 
 Bank details client side validations
     [Documentation]    INFUND-3010, INFUND-6887, INFUND-6482

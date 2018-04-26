@@ -4,14 +4,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.alert.service.AlertRestService;
-import org.innovateuk.ifs.application.UserApplicationRole;
-import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
-import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
-import org.innovateuk.ifs.application.finance.model.UserRole;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -34,9 +33,9 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
+import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -97,8 +96,7 @@ import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
@@ -107,7 +105,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
@@ -255,7 +254,7 @@ public class BaseUnitTest {
     @Mock
     protected ApplicationSummaryRestService applicationSummaryRestService;
     @Mock
-    protected CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
+    protected CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
     @Mock
     protected AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     @Mock
@@ -421,6 +420,8 @@ public class BaseUnitTest {
                 .withStartDate(ZonedDateTime.now().minusDays(2))
                 .withEndDate(ZonedDateTime.now().plusDays(5))
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withMinProjectDuraction(1)
+                .withMaxProjectDuraction(36)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());
@@ -670,11 +671,11 @@ public class BaseUnitTest {
         when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2))).thenReturn(processRole3);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3))).thenReturn(processRole4);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4))).thenReturn(processRole11);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0).getId())).thenReturn(processRole1);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1).getId())).thenReturn(processRole2);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2).getId())).thenReturn(processRole3);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3).getId())).thenReturn(processRole4);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4).getId())).thenReturn(processRole11);
 
         when(userService.findById(loggedInUser.getId())).thenReturn(loggedInUser);
 

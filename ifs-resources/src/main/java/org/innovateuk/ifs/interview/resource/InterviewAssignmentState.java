@@ -16,6 +16,9 @@ public enum InterviewAssignmentState implements ProcessState {
     AWAITING_FEEDBACK_RESPONSE(State.PENDING),
     SUBMITTED_FEEDBACK_RESPONSE(State.SUBMITTED);
 
+    public static final InterviewAssignmentState[] ASSIGNED_STATES =
+            { AWAITING_FEEDBACK_RESPONSE, SUBMITTED_FEEDBACK_RESPONSE };
+
     private final State backingState;
 
     private static final Map<String, InterviewAssignmentState> assessmentInterviewPanelStates =

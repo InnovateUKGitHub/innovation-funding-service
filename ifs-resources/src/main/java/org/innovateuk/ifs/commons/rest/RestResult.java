@@ -116,6 +116,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new DuplicateFileCreatedException(error.getErrorKey(), error.getArguments());
         }
 
+        if(restFailure.has(FILES_ALREADY_UPLOADED)){
+            throw new FileAlreadyUploadedException(error.getErrorKey(), error.getArguments());
+        }
+
         if(restFailure.has(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
             throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorKey(), error.getArguments());
         }
@@ -204,6 +208,18 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
         if (restFailure.has(ASSESSMENT_PANEL_INVITE_CLOSED)) {
             throw new InviteClosedException(error.getErrorKey(), error.getArguments());
         }
@@ -222,6 +238,14 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
         if (restFailure.has(ASSESSMENT_WITHDRAWN)) {
             throw new AssessmentWithdrawnException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(INTERVIEW_PANEL_INVITE_CLOSED)) {
+            throw new InviteClosedException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(INTERVIEW_PANEL_INVITE_EXPIRED)) {
+            throw new InviteExpiredException(error.getErrorKey(), error.getArguments());
         }
 
         if (restFailure.has(COMPETITION_CANNOT_RELEASE_FEEDBACK)) {
@@ -373,7 +397,6 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
             return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
-        } else {
         }
         return RestResult.<T>restFailure(new org.innovateuk.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
     }

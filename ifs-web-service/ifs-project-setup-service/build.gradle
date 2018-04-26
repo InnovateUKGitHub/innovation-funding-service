@@ -1,6 +1,3 @@
-jar {
-    baseName = 'project-setup'
-}
 
 project.version = projectSetupServiceVersion
 tagDocker.tag = projectSetupServiceVersion
@@ -8,13 +5,21 @@ osStageRemote.tag = projectSetupServiceVersion
 tagDockerLocal.tag = projectSetupServiceVersion
 osStageLocal.tag = projectSetupServiceVersion
 
+createContainer.hostName="project-setup-svc"
+createContainer.containerName="project-setup-svc"
+createContainer.containerId="project-setup-svc"
+createContainer.portBindings = ['9005:8000']
+
+def enabled = project.hasProperty('ifs.project-setup-service.enabled') ? project.property('ifs.project-setup-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+
+
+ext.serverContext = '/project-setup'
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
-
-    // weirdly, removing this line from this web module will cause the build to pull in version 2.1.2.RELEASE
-    // despite 3.0.1.RELEASE being specified explicitly in ifs-web-core's build.gradle
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.1.RELEASE"
-    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE"
 
     compile "commons-io:commons-io:2.5"
 

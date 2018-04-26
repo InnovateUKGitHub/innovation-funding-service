@@ -59,7 +59,7 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
         return OverviewSelectionForm.class;
     }
 
-    @GetMapping("/overview")
+    @GetMapping("/pending-and-declined")
     public String overview(Model model,
                            @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) OverviewAssessorsFilterForm filterForm,
                            @ModelAttribute(name = SELECTION_FORM, binding = false) OverviewSelectionForm selectionForm,
@@ -147,7 +147,7 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
         return updatedSelectionForm;
     }
 
-    @PostMapping(value = "/overview", params = {"selectionId"})
+    @PostMapping(value = "/pending-and-declined", params = {"selectionId"})
     public @ResponseBody JsonNode selectAssessorForResendList(
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
@@ -183,7 +183,7 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
         }
     }
 
-    @PostMapping(value = "/overview", params = {"addAll"})
+    @PostMapping(value = "/pending-and-declined", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToResendList(Model model,
                                                               @PathVariable("competitionId") long competitionId,
                                                               @RequestParam("addAll") boolean addAll,

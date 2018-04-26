@@ -14,7 +14,7 @@
 
 
     <main id="content">
-        <th:block th:insert="fragments/layout :: main-content-start" />
+
         <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Application team'}, ${'/prototypes/632-organisation-collaborator-overview' + (param.company == null or param.company[0] == 'empire' ? '' : '?company='+ param.company[0])})" th:unless="${param.status != null and param.status[0] == 'firstLoad'}" />
 
         <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application team'}, ${'/prototypes/632-organisation-collaborator-overview?company=empire&#38;status=firstLoad'})" />

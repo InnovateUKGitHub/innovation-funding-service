@@ -44,7 +44,7 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
         partnerOrganisationResource.setOrganisation(industrialOrganisation.getId());
         partnerOrganisationResource.setLeadOrganisation(false);
 
-        when(organisationService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
+        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         when(projectService.getById(project.getId())).thenReturn(project);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId())).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);

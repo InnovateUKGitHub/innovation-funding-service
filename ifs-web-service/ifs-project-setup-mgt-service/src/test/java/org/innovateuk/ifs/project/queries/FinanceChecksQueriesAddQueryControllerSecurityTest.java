@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.project.queries;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
+import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
-import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -18,7 +17,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 
 public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<FinanceChecksQueriesAddQueryController> {
@@ -35,10 +34,10 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
 
     @Test
     public void testCancelNewForm() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.cancelNewForm(1L, 2L, "", null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -56,10 +55,10 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
 
     @Test
     public void testDownloadAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.downloadAttachment(1L, 2L, 3L, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -77,10 +76,10 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
 
     @Test
     public void testSaveQuery() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.saveQuery(1L, 2L, "", null, null, null, null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -98,10 +97,10 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
 
     @Test
     public void testSaveQueryAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.uploadAttachment(null, 1L, 2L, "", null, null, null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -119,10 +118,10 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
 
     @Test
     public void testViewNewQuery() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.viewNew(1L, 2L, "", null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {
@@ -143,7 +142,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.FINANCE_CONTACT)).build());
         assertSecured(() -> classUnderTest.removeAttachment(1L, 2L, "", 3L, null, null, null, null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
+        List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonFinanceTeamRoles.forEach(role -> {

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.form.mapper;
 
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;

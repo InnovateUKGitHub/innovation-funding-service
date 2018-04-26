@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.interceptors;
 
-import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * Have the menu links globally available for each controller.
@@ -64,7 +62,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private void addShowManageUsersAttribute(HttpServletRequest request, ModelAndView modelAndView) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasRole(UserRoleType.IFS_ADMINISTRATOR));
+        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasRole(IFS_ADMINISTRATOR));
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {

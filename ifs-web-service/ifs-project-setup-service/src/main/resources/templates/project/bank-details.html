@@ -3,14 +3,13 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body th:with="context='project'" class="bank-detail">
+<body class="bank-detail">
   <th:block th:insert="fragments/layout :: body-start" />
   <th:block th:insert="fragments/layout :: global-header" />
 
   <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <main tabindex="-1" id="content">
-  <th:block th:insert="fragments/layout :: main-content-start" />
   <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
 
   <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -168,5 +167,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

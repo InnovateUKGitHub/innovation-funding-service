@@ -18,10 +18,9 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -44,22 +43,14 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocumentsService> {
@@ -738,8 +729,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         assertNotNull(project.getCollaborationAgreement());
         assertNotNull(project.getExploitationPlan());
         assertNotNull(project.getCollaborationAgreement());
-        assertTrue(project.getProjectUsers().get(0).getRole().getName()
-                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertEquals(PROJECT_MANAGER, project.getProjectUsers().get(0).getRole());
         assertNotNull(project.getDocumentsSubmittedDate());
     }
 
@@ -795,8 +785,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         assertTrue(result.isFailure());
         assertNull(project.getCollaborationAgreement());
         assertNull(project.getExploitationPlan());
-        assertTrue(project.getProjectUsers().get(0).getRole().getName()
-                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertEquals(PROJECT_MANAGER, project.getProjectUsers().get(0).getRole());
         assertNull(project.getDocumentsSubmittedDate());
     }
 
@@ -820,8 +809,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         assertTrue(result.isFailure());
         assertNull(project.getCollaborationAgreement());
         assertNotNull(project.getExploitationPlan());
-        assertTrue(project.getProjectUsers().get(0).getRole().getName()
-                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertEquals(PROJECT_MANAGER, project.getProjectUsers().get(0).getRole());
         assertNull(project.getDocumentsSubmittedDate());
     }
 
@@ -845,8 +833,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         assertTrue(result.isFailure());
         assertNotNull(project.getCollaborationAgreement());
         assertNull(project.getExploitationPlan());
-        assertTrue(project.getProjectUsers().get(0).getRole().getName()
-                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertEquals(PROJECT_MANAGER, project.getProjectUsers().get(0).getRole());
         assertNull(project.getDocumentsSubmittedDate());
     }
 
@@ -875,8 +862,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 () -> service.saveDocumentsSubmitDateTime(project.getId(), ZonedDateTime.now()));
 
         assertNotNull(project.getExploitationPlan());
-        assertTrue(project.getProjectUsers().get(0).getRole().getName()
-                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertEquals(PROJECT_MANAGER, project.getProjectUsers().get(0).getRole());
         assertNotNull(project.getDocumentsSubmittedDate());
     }
 
@@ -915,8 +901,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         assertTrue(result.isFailure());
         assertNull(project.getCollaborationAgreement());
         assertNull(project.getExploitationPlan());
-        assertTrue(project.getProjectUsers().get(0).getRole().getName()
-                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertEquals(PROJECT_MANAGER, project.getProjectUsers().get(0).getRole());
         assertNull(project.getDocumentsSubmittedDate());
     }
 

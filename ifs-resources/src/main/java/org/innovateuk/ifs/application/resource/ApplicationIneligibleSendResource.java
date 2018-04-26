@@ -9,22 +9,22 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class ApplicationIneligibleSendResource {
 
     private String subject;
-    private String content;
+    private String message;
 
     public ApplicationIneligibleSendResource() {
     }
 
-    public ApplicationIneligibleSendResource(String subject, String content) {
+    public ApplicationIneligibleSendResource(String subject, String message) {
         this.subject = subject;
-        this.content = content;
+        this.message = message;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ApplicationIneligibleSendResource {
 
         return new EqualsBuilder()
                 .append(subject, that.subject)
-                .append(content, that.content)
+                .append(message, that.message)
                 .isEquals();
     }
 
@@ -45,7 +45,7 @@ public class ApplicationIneligibleSendResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(subject)
-                .append(content)
+                .append(message)
                 .toHashCode();
     }
 }

@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.util;
 
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class SecurityRuleUtil {
     public static boolean isCompAdmin(UserResource user) {
@@ -11,15 +10,15 @@ public class SecurityRuleUtil {
     }
 
     public static boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) ||
-                user.hasRole(UserRoleType.PROJECT_FINANCE) ||
-                user.hasRole(UserRoleType.SUPPORT) ||
-                user.hasRole(UserRoleType.INNOVATION_LEAD);
+        return user.hasRole(COMP_ADMIN) ||
+                user.hasRole(PROJECT_FINANCE) ||
+                user.hasRole(SUPPORT) ||
+                user.hasRole(INNOVATION_LEAD);
     }
 
     public static boolean isInternalAdmin(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) ||
-                user.hasRole(UserRoleType.PROJECT_FINANCE);
+        return user.hasRole(COMP_ADMIN) ||
+                user.hasRole(PROJECT_FINANCE);
     }
 
     public static boolean isProjectFinanceUser(UserResource user) {

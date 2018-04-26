@@ -4,14 +4,13 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Manager',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body th:with="context='project'" class="project-detail project-manager">
+    <body class="project-detail project-manager">
         <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
         <th:block th:insert="fragments/modals :: modal-resend-project-manager"/>
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project Manager',subTitle=${model.projectName},size='heading-xlarge'" />
 
@@ -94,5 +93,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

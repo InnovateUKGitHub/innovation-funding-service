@@ -88,6 +88,6 @@ the user cannot login with the invalid email
 
 Applicant goes to the registration form
     the user navigates to the page                            ${frontDoor}
-    the user clicks the button/link                           link=Home and industrial efficiency programme
+    the user clicks the button/link in the paginated list     link=${createApplicationOpenCompetition}
     the user follows the flow to register their organisation  radio-1
 

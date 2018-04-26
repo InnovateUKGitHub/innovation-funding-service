@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -39,13 +39,13 @@ public class UserPermissionRules {
     @Autowired
     private ProjectUserRepository projectUserRepository;
 
-    private static List<String> CONSORTIUM_ROLES = asList(LEADAPPLICANT.getName(), COLLABORATOR.getName());
+    private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
 
-    private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole().getName());
+    private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole());
 
-    private static List<String> ASSESSOR_ROLES = asList(ASSESSOR.getName(), PANEL_ASSESSOR.getName());
+    private static List<Role> ASSESSOR_ROLES = asList(ASSESSOR, PANEL_ASSESSOR);
 
-    private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> ASSESSOR_ROLES.contains(role.getRole().getName());
+    private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> ASSESSOR_ROLES.contains(role.getRole());
 
     private static List<String> PROJECT_ROLES = asList(ProjectParticipantRole.PROJECT_MANAGER.getName(), ProjectParticipantRole.PROJECT_FINANCE_CONTACT.getName(), ProjectParticipantRole.PROJECT_PARTNER.getName());
 
@@ -84,7 +84,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
     public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
+        return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
@@ -152,7 +152,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ_USER_PROFILE", description = "A ifs admin user can read any user's profile")
     public boolean ifsAdminCanViewAnyUsersProfile(UserProfileResource profileDetails, UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
+        return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Exec can read the user's profile status")
@@ -195,17 +195,17 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "EDIT_INTERNAL_USER", description = "Only an IFS Administrator can edit an internal user")
     public boolean ifsAdminCanEditInternalUser(final UserResource userToEdit, UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
+        return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "DEACTIVATE", description = "IFS Administrator can deactivate Users")
     public boolean ifsAdminCanDeactivateUsers(UserResource userToCreate, UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
+        return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
     public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR);
+        return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {

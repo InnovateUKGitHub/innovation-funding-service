@@ -49,6 +49,6 @@ public class UserSurveyServiceImpl implements UserSurveyService {
     private Notification surveyNotification(User user, UserSurveyNotificationType notificationType) {
         final Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put(DIVERSITY_SURVEY_URL_KEY, diversitySurveyUrl);
-        return new Notification(systemNotificationSource, new UserNotificationTarget(user), notificationType, notificationArguments);
+        return new Notification(systemNotificationSource, new UserNotificationTarget(user.getName(), user.getEmail()), notificationType, notificationArguments);
     }
 }

@@ -12,7 +12,7 @@
           th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="assessors">
         <th:block th:if="${model.general.editable}" id="section-assessors-edit">
             <div class="form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'form-group-error'">
-                <fieldset class="inline">
+                <fieldset>
                     <legend class="heading-small">
                         How many assessors are required for each application?
                         <th:block th:if="${#fields.hasErrors('assessorCount')}">
@@ -115,6 +115,7 @@
                 </fieldset>
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('assessorFinanceView')} ? 'form-group-error'">
+                <fieldset class="inline">
                     <legend class="heading-small">
                         Assessor view of finances
                         <th:block th:if="${#fields.hasErrors('assessorFinanceView')}">
@@ -148,6 +149,7 @@
                             </label>
                         </div>
                     </div>
+                </fieldset>
 
                 <div th:unless="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
                         <input type="hidden" th:field="${competitionSetupForm.assessorFinanceView}" value="${competitionSetupForm.assessorFinanceView}"/>
@@ -172,7 +174,7 @@
                 <dt>Enable interview stage for this competition?</dt>
                 <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Yes' : 'No' "/>
 
-                <dt>Assesor view of finances?</dt>
+                <dt>Assessor view of finances?</dt>
                 <dd th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}"/>
             </dl>
 

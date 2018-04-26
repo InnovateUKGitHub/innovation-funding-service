@@ -9,8 +9,8 @@ import org.apache.commons.logging.LogFactory;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;

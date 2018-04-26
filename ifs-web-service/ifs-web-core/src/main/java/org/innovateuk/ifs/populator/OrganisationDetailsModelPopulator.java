@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.populator;
 
-import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;

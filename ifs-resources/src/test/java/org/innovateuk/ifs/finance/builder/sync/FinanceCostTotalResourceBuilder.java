@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.finance.builder.sync;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.resource.sync.FinanceType;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,16 +30,16 @@ public class FinanceCostTotalResourceBuilder extends BaseBuilder<FinanceCostTota
         return new FinanceCostTotalResourceBuilder(emptyList());
     }
 
-    public FinanceCostTotalResourceBuilder withName(String... costName) {
-        return withArraySetFieldByReflection("name", costName);
-    }
-
     public FinanceCostTotalResourceBuilder withTotal(BigDecimal... costTotal) {
         return withArraySetFieldByReflection("total", costTotal);
     }
 
-    public FinanceCostTotalResourceBuilder withType(FinanceType... financeTypes) {
-        return withArraySetFieldByReflection("financeType", financeTypes, "name");
+    public FinanceCostTotalResourceBuilder withFinanceType(FinanceType... financeTypes) {
+        return withArraySetFieldByReflection("financeType", financeTypes);
+    }
+
+    public FinanceCostTotalResourceBuilder withFinanceRowType(FinanceRowType... rowTypes) {
+        return withArraySetFieldByReflection("financeRowType", rowTypes);
     }
 
     public FinanceCostTotalResourceBuilder withFinanceId(Long... financeId) {

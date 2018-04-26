@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.commons.service.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.*;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ public class CompetitionSetupQuestionServiceImplTest {
 	private CompetitionSetupQuestionServiceImpl service;
 
 	@Mock
-	private CompetitionSetupQuestionRestService restService;
+	private QuestionSetupCompetitionRestService restService;
 
     @Test
     public void testGetQuestion() {
@@ -60,12 +60,10 @@ public class CompetitionSetupQuestionServiceImplTest {
 
     @Test
     public void testDeleteQuestion() throws Exception {
-        long questionId = 1L;
+        final Long questionId = 1L;
 
         when(restService.deleteById(questionId)).thenReturn(restSuccess());
-
-        ServiceResult<Void> result = service.deleteQuestion(questionId);
-
-        assertTrue(result.isSuccess());
+        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestion(questionId);
+        assertTrue(resultAssessedQuestion.isSuccess());
     }
 }

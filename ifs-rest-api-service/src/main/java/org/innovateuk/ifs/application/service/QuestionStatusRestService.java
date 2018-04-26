@@ -2,16 +2,24 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Future;
 
 /**
  * Rest service that exposes question status data
  */
 public interface QuestionStatusRestService {
-    RestResult<List<QuestionStatusResource>> findQuestionStatusesByQuestionAndApplicationId(final Long questionId, final Long applicationId);
-    RestResult<List<QuestionStatusResource>> findByQuestionAndApplicationAndOrganisation(final Long questionId, final Long applicationId, final Long organisationId);
-    RestResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(final Long applicationId, final Long organisationId);
-    RestResult<QuestionStatusResource> findQuestionStatusById(final Long id);
-    RestResult<List<QuestionStatusResource>> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId);
+    RestResult<List<QuestionStatusResource>> findQuestionStatusesByQuestionAndApplicationId(final long questionId, final long applicationId);
+    RestResult<List<QuestionStatusResource>> findByQuestionAndApplicationAndOrganisation(final long questionId, final long applicationId, final long organisationId);
+    RestResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(final long applicationId, final long organisationId);
+    RestResult<QuestionStatusResource> findQuestionStatusById(final long id);
+    RestResult<List<QuestionStatusResource>> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, long applicationId, long organisationId);
+    RestResult<List<ValidationMessages>> markAsComplete(long questionId, long applicationId, long markedAsCompleteById);
+    RestResult<Void> markAsInComplete(long questionId, long applicationId, long markedAsInCompleteById);
+    RestResult<Void> assign(long questionId, long applicationId, long assigneeId, long assignedById);
+    RestResult<Void> updateNotification(long questionStatusId, boolean notify);
+    Future<Set<Long>> getMarkedAsComplete(long applicationId, long organisationId);
 }

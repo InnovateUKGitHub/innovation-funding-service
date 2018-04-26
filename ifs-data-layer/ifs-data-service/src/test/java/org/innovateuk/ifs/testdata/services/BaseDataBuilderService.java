@@ -2,8 +2,8 @@ package org.innovateuk.ifs.testdata.services;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -92,14 +92,14 @@ public abstract class BaseDataBuilderService {
         return currentUser;
     }
 
-    List<QuestionResource> retrieveCachedQuestionsByCompetitionId(Long competitionId) {
-        return fromCache(competitionId, questionsByCompetitionId, () ->
-                questionService.findByCompetition(competitionId).getSuccess());
-    }
-
     List<FormInputResource> retrieveCachedFormInputsByQuestionId(QuestionResource question) {
         return fromCache(question.getId(), formInputsByQuestionId, () ->
                 formInputService.findByQuestionId(question.getId()).getSuccess());
+    }
+
+    List<QuestionResource> retrieveCachedQuestionsByCompetitionId(Long competitionId) {
+        return fromCache(competitionId, questionsByCompetitionId, () ->
+                questionService.findByCompetition(competitionId).getSuccess());
     }
 
     private <K, V> V fromCache(K key, Cache<K, V> cache, Callable<V> loadingFunction) {

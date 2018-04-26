@@ -4,13 +4,11 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor dashboard'" />
 </head>
 
-    <body th:with="context='assessment'" class="assessor-dashboard">
+    <body class="assessor-dashboard">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
-
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor dashboard',size='heading-xlarge'" />
             <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
                 <h2 class="heading-small no-margin">Complete your assessor account</h2>
@@ -103,7 +101,7 @@
                                     </div>
                                 </div>
                                 <div class="status">
-                                    <div class="status-msg msg-deadline">
+                                    <div class="status-msg msg-deadline" th:attr="data-competition-id=${activeCompetition.competitionId}">
                                         <strong class="bold-medium days-remaining" th:text="${activeCompetition.daysLeft}"></strong>
                                         <br />
                                         days left <br />
@@ -169,7 +167,7 @@
                                     </div>
                                 </div>
                                 <div class="status">
-                                    <div class="status-msg msg-deadline">
+                                    <div class="status-msg msg-deadline" th:attr="data-competition-id=${assessmentPanelAccept.competitionId}">
                                         <strong class="bold-medium days-remaining" th:text="${assessmentPanelAccept.daysLeft}"></strong>
                                         <br />days left <br />
                                         Deadline
@@ -198,6 +196,48 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+
+            <div class="interview-panel-invites" th:unless="${#lists.isEmpty(model.interviewPanelInvites)}">
+                <div class="progress-list"><h2 class="heading-medium">Invitations to interview panel (<span
+                    th:text="${#lists.size(model.interviewPanelInvites)}"/>)</h2>
+                    <ul>
+                        <li th:each="interviewPanelInvite : ${model.interviewPanelInvites}" class="status-2-col">
+                            <div class="task">
+                                <h3 class="heading-small">
+                                    <a th:href="@{/invite/interview/{inviteHash}(inviteHash=${interviewPanelInvite.inviteHash})}"
+                                       th:text="${interviewPanelInvite.competitionName}"/>
+                                </h3>
+                                <p>You have been asked to attend an interview panel for this competition. Please respond.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="interview-panel-invites">
+                <th:block th:unless="${#lists.isEmpty(model.interviewPanelAccepted)}">
+                    <div class="progress-list">
+                        <h2 class="heading-medium no-margin-top">Interviews you have agreed to attend (<span
+                        th:text="${#lists.size(model.interviewPanelAccepted)}"/>)</h2>
+                        <ul>
+                            <li th:each="interviewPanelAccept : ${model.interviewPanelAccepted}">
+                                <div class="task">
+                                    <h3 class="heading-small">
+                                        <a class="disabled"
+                                           th:text="${interviewPanelAccept.competitionName}"/>
+                                    </h3>
+
+                                    <p th:if="${interviewPanelAccept.awaitingApplications == 0}">Applications awaiting review will be added here.</p>
+
+                                    <div th:if="${interviewPanelAccept.awaitingApplications > 0}" class="action-required">
+                                        <p th:text="${interviewPanelAccept.awaitingApplications}" class="accepted-applications">COUNT</p> applications awaiting review
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </th:block>
             </div>
 
             <h2 class="heading-medium">Your assessor details</h2>
@@ -233,5 +273,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

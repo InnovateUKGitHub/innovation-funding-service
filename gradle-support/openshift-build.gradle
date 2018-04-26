@@ -1,15 +1,18 @@
 import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.container.extras.*
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-apply from: rootProject.file("gradle-support/openshift-methods.gradle")
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
+
 
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
     }
 
     dependencies {
-        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.6"
     }
 }
 
@@ -23,6 +26,35 @@ task tagDocker(type: DockerTagImage) {
     imageId = buildDocker.getTag()
     repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
+}
+
+task stop(type: DockerStopContainer) {
+    targetContainerId { createContainer.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task removeContainer(type: DockerRemoveContainer, dependsOn: stop) {
+    targetContainerId { createContainer.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createContainer(type: DockerCreateContainer, dependsOn: [buildDocker, removeContainer]) {
+    targetImageId { buildDocker.getImageId() }
+    containerName = "${project.name.replaceAll(/ifs-/, "")}"
+    containerId = "${project.name.replaceAll(/ifs-/, "")}"
+    network="ifs"
+}
+
+task deploy(type: DockerStartContainer, dependsOn: createContainer) {
+    targetContainerId { createContainer.getContainerId() }
+}
+
+task wait(type: DockerWaitHealthyContainer) {
+    targetContainerId { createContainer.getContainerId() }
 }
 
 task osStageRemote(type: DockerPushImage) {
@@ -54,4 +86,43 @@ task osStageLocal(type: DockerPushImage) {
         }
     }
     tag = project.version
+}
+
+def getLocalOCCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    // Get the docker repository for the local OS cluster
+    def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
+    def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
+    project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
+    project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
+    dockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
+    dockerRegistryCredentials.username = "unused"
+    dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+    dockerRegistryCredentials.email = "unused"
+    return dockerRegistryCredentials
+}
+
+def getRemoteOCCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    try {
+        // Get the docker repository for the remote OS cluster
+        dockerRegistryCredentials.url = project.dockerRegistry
+        dockerRegistryCredentials.username = "unused"
+        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email = "unused"
+
+    }
+    catch (ignored) {
+        println("Exception thrown creating the OpenShift docker registry credentials. " +
+                "This is most likely because the OpenShift commandline client is not installed. " +
+                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
+                "in which case it will need to be installed")
+        println(ignored)
+    }
+    return dockerRegistryCredentials
+}
+
+ext {
+    getLocalOCCredentials = this.&getLocalOCCredentials
+    getRemoteOCCredentials = this.&getRemoteOCCredentials
 }

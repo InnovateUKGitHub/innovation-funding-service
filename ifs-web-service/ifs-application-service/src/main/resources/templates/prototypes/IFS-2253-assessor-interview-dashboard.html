@@ -14,7 +14,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
@@ -64,12 +64,6 @@
                             You have been asked to attend an interview panel for this competition. Please respond.
                         </div>
                     </div>
-                    <div class="status">
-                        <div class="status-msg msg-deadline">
-                            <strong class="bold-medium days-remaining">30</strong><br /> days left<br /> Deadline <span class="day">28</span>
-                            <span class="month">August</span>
-                        </div>
-                    </div>
                 </li>
                 <li th:if="${param.status != null and param.status[0] == 'noApplications'}">
                     <div class="task">
@@ -79,12 +73,6 @@
                                 <span class="pending-applications">0</span> applications awaiting review  |
                                 Applications to be added soon
                             </strong>
-                        </div>
-                    </div>
-                    <div class="status">
-                        <div class="status-msg msg-deadline">
-                            <strong class="bold-medium days-remaining">30</strong><br /> days left<br /> Deadline <span class="day">28</span>
-                            <span class="month">August</span>
                         </div>
                     </div>
                 </li>
@@ -104,24 +92,12 @@
                         </strong>
                     </div>
                 </div>
-                <div class="status">
-                    <div class="status-msg msg-deadline">
-                        <strong class="bold-medium days-remaining">10</strong><br /> days left<br /> Deadline <span class="day">28</span>
-                        <span class="month">July</span>
-                    </div>
-                </div>
             </li>
             <li>
                 <div class="task">
                     <h3 class="heading-small"><a href="/prototypes/IFS-2254-apps-for-interview">Photonics for health</a></h3>
                     <div class="action-required">
                         Applications awaiting review will be added here.
-                    </div>
-                </div>
-                <div class="status">
-                    <div class="status-msg msg-deadline">
-                        <strong class="bold-medium days-remaining">10</strong><br /> days left<br /> Deadline <span class="day">28</span>
-                        <span class="month">July</span>
                     </div>
                 </div>
             </li>

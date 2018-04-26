@@ -4,8 +4,8 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -45,5 +45,5 @@ public interface RegistrationService {
     ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource userRegistrationResource);
 
     @PreAuthorize("hasPermission(#userToEdit, 'EDIT_INTERNAL_USER')")
-    ServiceResult<Void> editInternalUser(UserResource userToEdit, UserRoleType userRoleType);
+    ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType);
 }

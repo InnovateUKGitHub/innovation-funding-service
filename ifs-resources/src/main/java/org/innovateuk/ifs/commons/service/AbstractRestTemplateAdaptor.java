@@ -14,6 +14,7 @@ import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriTemplateHandler;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,12 +40,33 @@ public abstract class AbstractRestTemplateAdaptor {
     @Autowired
     private AsyncRestTemplate asyncRestTemplate;
 
+    private String baseUrl;
+
+    public AbstractRestTemplateAdaptor() {
+    }
+
+    public AbstractRestTemplateAdaptor(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
     protected RestTemplate getRestTemplate() {
+        restTemplate.setUriTemplateHandler(getUriTemplateHandler());
         return restTemplate;
     }
 
     protected AsyncRestTemplate getAsyncRestTemplate() {
+        asyncRestTemplate.setUriTemplateHandler(getUriTemplateHandler());
         return asyncRestTemplate;
+    }
+
+    private DefaultUriTemplateHandler getUriTemplateHandler() {
+        DefaultUriTemplateHandler uriTemplateHandler = new DefaultUriTemplateHandler();
+
+        if (baseUrl != null) {
+            uriTemplateHandler.setBaseUrl(baseUrl);
+        }
+
+        return uriTemplateHandler;
     }
 
     public void setRestTemplate(RestTemplate restTemplate) {
@@ -81,7 +103,14 @@ public abstract class AbstractRestTemplateAdaptor {
     }
 
     @RestCacheInvalidateResult
-    public <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPostWithEntity(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    public <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPostWithEntity(
+            String path,
+            Object postEntity,
+            Class<T> responseType,
+            Class<R> failureType,
+            HttpStatus expectedSuccessCode,
+            HttpStatus... otherExpectedStatusCodes
+    ) {
         try {
             ResponseEntity<String> asString = restPostWithEntity(path, postEntity, String.class);
             return handleSuccessOrFailureJsonResponse(asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
@@ -131,6 +160,15 @@ public abstract class AbstractRestTemplateAdaptor {
     @RestCacheResult
     public <T> CompletableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
         return withEmptyCallbackCompletable(getAsyncRestTemplate().exchange(path, HttpMethod.GET, jsonEntity(""), clazz));
+    }
+
+    @RestCacheInvalidateResult
+    public <T> CompletableFuture<ResponseEntity<T>> restPostWithEntityAsync(String path,
+                                                                            Object postEntity,
+                                                                            HttpHeaders additionalHeaders,
+                                                                            Class<T> responseType) {
+        return withEmptyCallbackCompletable(getAsyncRestTemplate().postForEntity(path,
+                jsonEntity(postEntity, additionalHeaders), responseType));
     }
 
     protected final <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> handleSuccessOrFailureJsonResponse(ResponseEntity<String> asString, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {

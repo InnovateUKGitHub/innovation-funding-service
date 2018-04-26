@@ -11,7 +11,7 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
  * This class represents a populated CompetitionStatusViewModel.

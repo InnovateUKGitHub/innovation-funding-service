@@ -12,12 +12,12 @@ import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
  * Permission rules for {@link ApplicationInvite} and {@link ApplicationInviteResource} for permissioning
@@ -99,11 +99,11 @@ public class ApplicationInvitePermissionRules {
     }
 
     private boolean isLeadForInvite(final ApplicationInvite invite, final UserResource user) {
-        return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+        return checkProcessRole(user, invite.getTarget().getId(), LEADAPPLICANT, processRoleRepository);
     }
 
     private boolean isLeadForInvite(final ApplicationInviteResource invite, final UserResource user) {
-        return checkProcessRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+        return checkProcessRole(user, invite.getApplication(), LEADAPPLICANT, processRoleRepository);
     }
 
     private boolean applicationIsEditableById(final Long applicationId) {

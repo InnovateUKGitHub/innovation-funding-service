@@ -20,10 +20,13 @@ public class RestTemplateAdaptorFactory {
     @Value("${ifs.data.company-house.key}")
     private String companyhouseKey = null;
 
+    @Value("${ifs.finance-totals.baseURL}")
+    private String financeDataServiceUrl;
+
     @Bean(autowire = Autowire.BY_TYPE)
     @Qualifier("shibboleth_adaptor")
-    public AbstractRestTemplateAdaptor shibbolethAdaptor(){
-        return new AbstractRestTemplateAdaptor(){
+    public AbstractRestTemplateAdaptor shibbolethAdaptor() {
+        return new AbstractRestTemplateAdaptor() {
             @Override
             public HttpHeaders getHeaders() {
                 HttpHeaders headers = getJSONHeaders();
@@ -33,11 +36,10 @@ public class RestTemplateAdaptorFactory {
         };
     }
 
-
     @Bean(autowire = Autowire.BY_TYPE)
     @Qualifier("companyhouse_adaptor")
-    public AbstractRestTemplateAdaptor companyHouseAdaptor(){
-        return new AbstractRestTemplateAdaptor(){
+    public AbstractRestTemplateAdaptor companyHouseAdaptor() {
+        return new AbstractRestTemplateAdaptor() {
             @Override
             public HttpHeaders getHeaders() {
                 HttpHeaders headers = getJSONHeaders();
@@ -52,8 +54,19 @@ public class RestTemplateAdaptorFactory {
 
     @Bean(autowire = Autowire.BY_TYPE)
     @Qualifier("sil_adaptor")
-    public AbstractRestTemplateAdaptor silAdaptor(){
+    public AbstractRestTemplateAdaptor silAdaptor() {
         return new AbstractRestTemplateAdaptor() {
+            @Override
+            public HttpHeaders getHeaders() {
+                return getJSONHeaders();
+            }
+        };
+    }
+
+    @Bean(autowire = Autowire.BY_TYPE)
+    @Qualifier("finance_data_service_adaptor")
+    public AbstractRestTemplateAdaptor financeDataServiceAdaptor() {
+        return new AbstractRestTemplateAdaptor(financeDataServiceUrl) {
             @Override
             public HttpHeaders getHeaders() {
                 return getJSONHeaders();

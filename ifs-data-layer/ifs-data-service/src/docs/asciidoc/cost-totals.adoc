@@ -1,0 +1,9 @@
+=== Send all cost totals
+==== Request
+include::{snippets}/cost-totals/send-all/http-request.adoc[]
+
+==== Response
+include::{snippets}/cost-totals/send-all/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/cost-totals/send-all/curl-request.adoc[]

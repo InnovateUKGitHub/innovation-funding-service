@@ -1,17 +1,16 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsSetType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.sectionResourceListType;
 
 /**
  * SectionRestServiceImpl is a utility for CRUD operations on {@link SectionResource}.
@@ -24,21 +23,6 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     private String sectionRestURL = "/section";
 
     @Override
-    public RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
-        return postWithRestResult(sectionRestURL + "/markAsComplete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, validationMessagesListType());
-    }
-
-    @Override
-    public RestResult<Void> markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
-        return postWithRestResult(sectionRestURL + "/markAsNotRequired/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, Void.class);
-    }
-
-    @Override
-    public RestResult<Void> markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
-        return postWithRestResult(sectionRestURL + "/markAsInComplete/" + sectionId + "/" + applicationId + "/" + markedAsInCompleteById, Void.class);
-    }
-
-    @Override
     public RestResult<SectionResource> getById(Long sectionId) {
         return getWithRestResult(sectionRestURL + "/" + sectionId, SectionResource.class);
     }
@@ -46,26 +30,6 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public RestResult<List<SectionResource>> getByCompetition(final Long competitionId) {
         return getWithRestResult(sectionRestURL + "/getByCompetition/" + competitionId, sectionResourceListType());
-    }
-
-    @Override
-    public RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId) {
-        return getWithRestResult(sectionRestURL + "/getCompletedSectionsByOrganisation/" + applicationId, mapOfLongToLongsSetType());
-    }
-
-    @Override
-    public RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId) {
-        return getWithRestResult(sectionRestURL + "/getCompletedSections/" + applicationId + "/" + organisationId, longsListType());
-    }
-
-    @Override
-    public RestResult<List<Long>> getIncompletedSectionIds(Long applicationId) {
-        return getWithRestResult(sectionRestURL + "/getIncompleteSections/" + applicationId, longsListType());
-    }
-
-    @Override
-    public RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId) {
-        return getWithRestResult(sectionRestURL + "/allSectionsMarkedAsComplete/" + applicationId, Boolean.class);
     }
 
     @Override
@@ -86,7 +50,6 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId) {
         return getWithRestResult(sectionRestURL + "/getFinanceSectionByCompetitionId/" + competitionId, SectionResource.class);
-
     }
 
     @Override

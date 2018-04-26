@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.builder;
 
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.junit.Test;
 
 import java.util.List;

@@ -1,4 +1,5 @@
 FROM debian:jessie-slim
+EXPOSE 443
 
 LABEL maintainer "infrastructure@orangebus.co.uk"
 
@@ -72,4 +73,6 @@ RUN apt-get update --fix-missing && \
   rm -Rf /usr/local/files/
 
 #USER www-data
+HEALTHCHECK --interval=15s --timeout=8s \
+  CMD curl -k -f https://localhost:443/Shibboleth.sso/Metadata || exit 1
 ENTRYPOINT [ "run-shibboleth-sp.sh" ]

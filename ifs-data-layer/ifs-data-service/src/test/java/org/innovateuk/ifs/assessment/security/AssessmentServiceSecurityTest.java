@@ -6,15 +6,10 @@ import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
-import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
-
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -25,7 +20,9 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.ne
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -41,7 +38,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     @Override
     protected Class<? extends AssessmentService> getClassUnderTest() {
-        return TestAssessmentService.class;
+        return AssessmentServiceImpl.class;
     }
 
     @Before
@@ -56,9 +53,12 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     public void findById() {
         AssessmentResource assessmentResource = newAssessmentResource().with(id(ID_TO_FIND)).build();
 
+        when(classUnderTestMock.findById(ID_TO_FIND)).thenReturn(serviceSuccess(assessmentResource));
+
         assertAccessDenied(
                 () -> classUnderTest.findById(ID_TO_FIND),
-                () -> verify(assessmentPermissionRules).userCanReadAssessment(eq(assessmentResource), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules)
+                        .userCanReadAssessment(eq(assessmentResource), isA(UserResource.class))
         );
     }
 
@@ -66,16 +66,20 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     public void findAssignableById() {
         AssessmentResource assessmentResource = newAssessmentResource().with(id(ID_TO_FIND)).build();
 
+        when(classUnderTestMock.findAssignableById(ID_TO_FIND)).thenReturn(serviceSuccess(assessmentResource));
+
         assertAccessDenied(
                 () -> classUnderTest.findAssignableById(ID_TO_FIND),
-                () -> verify(assessmentPermissionRules).userCanReadToAssign(eq(assessmentResource), isA
-                        (UserResource.class))
+                () -> verify(assessmentPermissionRules)
+                        .userCanReadToAssign(eq(assessmentResource), isA(UserResource.class))
         );
     }
 
     @Test
     public void findRejectableById() {
         AssessmentResource assessmentResource = newAssessmentResource().with(id(ID_TO_FIND)).build();
+
+        when(classUnderTestMock.findRejectableById(ID_TO_FIND)).thenReturn(serviceSuccess(assessmentResource));
 
         assertAccessDenied(
                 () -> classUnderTest.findRejectableById(ID_TO_FIND),
@@ -89,8 +93,13 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long userId = 3L;
         long competitionId = 1L;
 
+        when(classUnderTestMock.findByUserAndCompetition(userId, competitionId))
+                .thenReturn(serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
+
         classUnderTest.findByUserAndCompetition(userId, competitionId);
-        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
+
+        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+                .userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
     }
 
     @Test
@@ -98,8 +107,13 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long userId = 3L;
         long applicationId = 1L;
 
+        when(classUnderTestMock.findByUserAndApplication(userId, applicationId))
+                .thenReturn(serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
+
         classUnderTest.findByUserAndApplication(userId, applicationId);
-        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
+
+        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+                .userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
     }
 
     @Test
@@ -107,7 +121,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         AssessmentState state = AssessmentState.CREATED;
         long competitionId = 1L;
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.findByStateAndCompetition(state, competitionId),
+                COMP_ADMIN,
+                PROJECT_FINANCE
+        );
     }
 
     @Test
@@ -115,30 +133,24 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         AssessmentState state = AssessmentState.CREATED;
         long competitionId = 1L;
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
-    }
-
-    @Test
-    public void getAssessmentPanelKeyStatistics() {
-        long competitionId = 1L;
-
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessmentPanelKeyStatistics(competitionId), COMP_ADMIN, PROJECT_FINANCE);
-    }
-
-    @Test
-    public void getAssessmentPanelInviteStatistics() {
-        long competitionId = 1L;
-
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessmentPanelInviteStatistics(competitionId), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.countByStateAndCompetition(state, competitionId),
+                COMP_ADMIN,
+                PROJECT_FINANCE,
+                INNOVATION_LEAD
+        );
     }
 
     @Test
     public void getTotalScore() {
         Long assessmentId = 1L;
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId))
+                .thenReturn(newAssessmentResource().withId(assessmentId).build());
+
         assertAccessDenied(
                 () -> classUnderTest.getTotalScore(assessmentId),
-                () -> verify(assessmentPermissionRules).userCanReadAssessmentScore(isA(AssessmentResource.class), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules)
+                        .userCanReadAssessmentScore(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
@@ -147,17 +159,20 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         Long assessmentId = 1L;
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
                 newAssessmentFundingDecisionOutcomeResource().build();
+
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource()
                 .withId(assessmentId)
                 .build());
+
         assertAccessDenied(
                 () -> classUnderTest.recommend(assessmentId, assessmentFundingDecisionOutcomeResource),
-                () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules)
+                        .userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
     @Test
-    public void getApplicationFeedback() throws Exception {
+    public void getApplicationFeedback() {
         long applicationId = 1L;
         ApplicationResource expectedApplicationResource = newApplicationResource()
                 .withId(applicationId)
@@ -169,7 +184,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> classUnderTest.getApplicationFeedback(applicationId),
                 () -> {
                     verify(applicationLookupStrategy).getApplicationResource(applicationId);
-                    verify(applicationPermissionRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationPermissionRules)
+                            .usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class));
                 }
         );
     }
@@ -178,135 +194,63 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     public void rejectInvitation() {
         Long assessmentId = 1L;
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId))
+                .thenReturn(newAssessmentResource().withId(assessmentId).build());
+
         assertAccessDenied(
                 () -> classUnderTest.rejectInvitation(assessmentId, assessmentRejectOutcomeResource),
-                () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules)
+                        .userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
     @Test
     public void withdrawAssessment() {
         Long assessmentId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.withdrawAssessment(assessmentId),
+                COMP_ADMIN,
+                PROJECT_FINANCE
+        );
     }
 
     @Test
     public void accept() {
         Long assessmentId = 1L;
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId))
+                .thenReturn(newAssessmentResource().withId(assessmentId).build());
+
         assertAccessDenied(
                 () -> classUnderTest.acceptInvitation(assessmentId),
-                () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules)
+                        .userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
 
     @Test
-    public void submitAssessments() throws Exception {
-        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource().withAssessmentIds(asList(1L, 2L)).build();
+    public void submitAssessments() {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
+                .withAssessmentIds(asList(1L, 2L))
+                .build();
 
         assertAccessDenied(
                 () -> classUnderTest.submitAssessments(assessmentSubmissions),
-                () -> verify(assessmentPermissionRules).userCanSubmitAssessments(isA(AssessmentSubmissionsResource.class), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules)
+                        .userCanSubmitAssessments(isA(AssessmentSubmissionsResource.class), isA(UserResource.class))
         );
     }
 
     @Test
-    public void createAssessment() throws Exception {
+    public void createAssessment() {
         AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
                 .withApplicationId(1L)
                 .withAssessorId(3L)
                 .build();
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createAssessment(assessmentCreateResource), COMP_ADMIN, PROJECT_FINANCE);
-    }
-
-    public static class TestAssessmentService implements AssessmentService {
-        @Override
-        public ServiceResult<AssessmentResource> findById(long id) {
-            return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
-        }
-
-        @Override
-        public ServiceResult<AssessmentResource> findAssignableById(long id) {
-            return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
-        }
-
-        @Override
-        public ServiceResult<AssessmentResource> findRejectableById(long id) {
-            return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
-        }
-
-        @Override
-        public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
-            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<List<AssessmentResource>> findByUserAndApplication(long userId, long applicationId) {
-            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentState state, long competitionId) {
-            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<Integer> countByStateAndCompetition(AssessmentState state, long competitionId) {
-            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size());
-        }
-
-        @Override
-        public ServiceResult<ReviewKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ReviewInviteStatisticsResource> getAssessmentPanelInviteStatistics(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> recommend(@P("assessmentId") long assessmentId,
-                                             AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> rejectInvitation(@P("assessmentId") long assessmentId,
-                                                    AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> withdrawAssessment(@P("assessmentId") long assessmentId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> acceptInvitation(@P("assessmentId") long assessmentId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
-            return null;
-        }
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.createAssessment(assessmentCreateResource),
+                COMP_ADMIN,
+                PROJECT_FINANCE
+        );
     }
 }

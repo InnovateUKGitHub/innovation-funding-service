@@ -6,7 +6,7 @@ Documentation     INFUND-6459 As a member of the competitions team I can select 
 ...               IFS-1654 Reinstate application button should not be shown for ineligible applications which have reached 'previous' tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Custom Suite Teardown
-Force Tags        CompAdmin    Assessor
+Force Tags        CompAdmin  Assessor  MySQL
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
@@ -33,6 +33,7 @@ Assessors shouldn't see the closed competition
 
 *** Keywords ***
 Custom Suite Teardown
+    # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"
     Connect to Database  @{database}
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']};
     #Changed the status of the competition to "In Assessment" for the rest of the tests

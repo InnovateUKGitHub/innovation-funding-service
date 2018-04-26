@@ -26,8 +26,9 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewInviteAssessorsOverviewController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@SecuredBySpring(value = "Controller", description = "Only comp admin and project finance users can setup assessment" +
+        " panels if they competition supports them", securedType = ReviewInviteAssessorsOverviewController.class)
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<ReviewOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
@@ -48,7 +49,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
         return ReviewOverviewSelectionForm.class;
     }
 
-    @GetMapping("/overview")
+    @GetMapping("/pending-and-declined")
     public String overview(Model model,
                            @ModelAttribute(name = SELECTION_FORM, binding = false) ReviewOverviewSelectionForm selectionForm,
                            @SuppressWarnings("unused") BindingResult bindingResult,
@@ -102,7 +103,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
         return updatedSelectionForm;
     }
 
-    @PostMapping(value = "/overview", params = {"selectionId"})
+    @PostMapping(value = "/pending-and-declined", params = {"selectionId"})
     public @ResponseBody JsonNode selectAssessorForResendList(
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
@@ -135,7 +136,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
         }
     }
 
-    @PostMapping(value = "/overview", params = {"addAll"})
+    @PostMapping(value = "/pending-and-declined", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToResendList(Model model,
                                                               @PathVariable("competitionId") long competitionId,
                                                               @RequestParam("addAll") boolean addAll,

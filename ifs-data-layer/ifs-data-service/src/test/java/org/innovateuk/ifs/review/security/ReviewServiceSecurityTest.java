@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.transactional.ReviewService;
+import org.innovateuk.ifs.review.transactional.ReviewServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +15,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -25,13 +25,14 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
     private static final long competitionId = 2L;
     private static final long userId = 3L;
     private static final long reviewId = 4L;
-    private static int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
+    private static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
+
     private ReviewPermissionRules reviewPermissionRules;
     private ReviewLookupStrategy reviewLookupStrategy;
 
     @Override
     protected Class<? extends ReviewService> getClassUnderTest() {
-        return TestReviewService.class;
+        return ReviewServiceImpl.class;
     }
 
     @Before
@@ -52,8 +53,12 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
 
     @Test
     public void getAssessmentReviews() {
+        when(classUnderTestMock.getReviews(userId, competitionId))
+                .thenReturn(serviceSuccess(newReviewResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
+
         classUnderTest.getReviews(userId, competitionId);
-        verify(reviewPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentReviewOnDashboard(isA(ReviewResource.class), isA(UserResource.class));
+        verify(reviewPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+                .userCanReadAssessmentReviewOnDashboard(isA(ReviewResource.class), isA(UserResource.class));
     }
 
     @Test
@@ -82,48 +87,5 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
                 () -> classUnderTest.rejectReview(reviewId, rejectOutcomeResource),
                 () -> verify(reviewPermissionRules).userCanUpdateAssessmentReview(isA(ReviewResource.class), isA(UserResource.class))
         );
-    }
-
-    public static class TestReviewService implements ReviewService {
-
-        @Override
-        public ServiceResult<Void> assignApplicationToPanel(long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> unassignApplicationFromPanel(long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> createAndNotifyReviews(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isPendingReviewNotifications(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<ReviewResource>> getReviews(long userId, long competitionId) {
-            return serviceSuccess(newReviewResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<ReviewResource> getReview(long assessmentReviewId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> acceptReview(long assessmentReviewId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> rejectReview(long assessmentReviewId, ReviewRejectOutcomeResource reviewRejectOutcomeResource) {
-            return null;
-        }
     }
 }

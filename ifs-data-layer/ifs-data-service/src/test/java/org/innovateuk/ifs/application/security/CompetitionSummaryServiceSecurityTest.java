@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.transactional.CompetitionSummaryService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.application.transactional.CompetitionSummaryServiceImpl;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -29,7 +28,7 @@ public class CompetitionSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
     @Override
     protected Class<? extends CompetitionSummaryService> getClassUnderTest() {
-        return TestCompetitionSummaryService.class;
+        return CompetitionSummaryServiceImpl.class;
     }
 
     @Test
@@ -42,17 +41,5 @@ public class CompetitionSummaryServiceSecurityTest extends BaseServiceSecurityTe
             verify(rules).innovationLeadsCanViewCompetitionSummaryOnAssginedComps(any(CompetitionResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
-     * methods, which is lost when using mocks)
-     */
-    public static class TestCompetitionSummaryService implements CompetitionSummaryService {
-
-        @Override
-        public ServiceResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId) {
-            return null;
-        }
     }
 }

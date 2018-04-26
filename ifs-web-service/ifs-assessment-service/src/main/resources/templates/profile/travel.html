@@ -9,7 +9,6 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Travel and subsistence rates',size='heading-xlarge'" />

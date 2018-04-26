@@ -3,9 +3,9 @@ package org.innovateuk.ifs.assessment.feedback.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
@@ -20,8 +20,9 @@ import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -34,7 +35,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -50,8 +50,8 @@ import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -61,7 +61,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
@@ -97,9 +97,18 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         return new AssessmentFeedbackController();
     }
 
+    private ZonedDateTime twoHoursAgo;
+
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
+        twoHoursAgo = ZonedDateTime.now().minusHours(2);
+    }
+
     @Test
     public void getQuestion() throws Exception {
-        Long applicationId = 1L;
+        long applicationId = 1L;
 
         CompetitionResource competitionResource = setupCompetitionResource();
 
@@ -291,11 +300,9 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void getQuestion_applicationDetailsQuestion() throws Exception {
-        LocalDate now = LocalDate.now();
-
         ApplicationResource applicationResource = newApplicationResource()
                 .withName("Application name")
-                .withStartDate(now)
+                .withStartDate(twoHoursAgo.toLocalDate())
                 .withDurationInMonths(20L)
                 .build();
 
@@ -335,7 +342,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         AssessmentFeedbackApplicationDetailsViewModel expectedViewModel = new AssessmentFeedbackApplicationDetailsViewModel(
                 applicationResource.getId(),
                 "Application name",
-                now,
+                twoHoursAgo.toLocalDate(),
                 20L,
                 3,
                 50,
@@ -797,11 +804,9 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     private CompetitionResource setupCompetitionResource() {
-        ZonedDateTime now = ZonedDateTime.now();
-
         CompetitionResource competitionResource = newCompetitionResource()
-                .withAssessorAcceptsDate(now.minusDays(2))
-                .withAssessorDeadlineDate(now.plusDays(4))
+                .withAssessorAcceptsDate(twoHoursAgo.minusDays(2))
+                .withAssessorDeadlineDate(twoHoursAgo.plusDays(4))
                 .build();
 
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);

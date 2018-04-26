@@ -33,6 +33,7 @@ IFS.core.loadOrder = {
       IFS.core.submitNotification.init()
       IFS.core.passwordToggle.init()
       IFS.core.backLink.init()
+      IFS.core.preventInputRegex.init()
     },
     finalize: function () {
       IFS.core.modal.init()

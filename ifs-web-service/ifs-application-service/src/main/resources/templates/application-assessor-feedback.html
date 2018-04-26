@@ -10,7 +10,6 @@
 
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/summary(applicationId=${model.application.id})}"  />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='heading-large'" />
 

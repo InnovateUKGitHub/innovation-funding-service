@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.interview.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Base class for Assessment Interview Panel views.
@@ -16,8 +20,7 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
     private final String innovationArea;
     private final PaginationViewModel pagination;
     private final String originQuery;
-    private final int applicationsInCompetition;
-    private final int applicationsInPanel;
+    private final InterviewAssignmentKeyStatisticsResource keyStatisticsResource;
 
     protected InterviewAssignmentApplicationsViewModel(
             long competitionId,
@@ -25,8 +28,7 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
             String innovationArea,
             String innovationSector,
             List<T> applications,
-            int applicationsInCompetition,
-            int applicationsInPanel,
+            InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
             PaginationViewModel pagination,
             String originQuery) {
         this.competitionId = competitionId;
@@ -36,8 +38,7 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
         this.applications = applications;
         this.pagination = pagination;
         this.originQuery = originQuery;
-        this.applicationsInCompetition = applicationsInCompetition;
-        this.applicationsInPanel = applicationsInPanel;
+        this.keyStatisticsResource = keyStatisticsResource;
     }
 
     public long getCompetitionId() {
@@ -69,10 +70,44 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
     }
 
     public int getApplicationsInCompetition() {
-        return applicationsInCompetition;
+        return keyStatisticsResource.getApplicationsInCompetition();
     }
 
     public int getApplicationsInPanel() {
-        return applicationsInPanel;
+        return keyStatisticsResource.getApplicationsAssigned();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InterviewAssignmentApplicationsViewModel<?> that = (InterviewAssignmentApplicationsViewModel<?>) o;
+
+        return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(applications, that.applications)
+                .append(innovationSector, that.innovationSector)
+                .append(innovationArea, that.innovationArea)
+                .append(pagination, that.pagination)
+                .append(originQuery, that.originQuery)
+                .append(keyStatisticsResource, that.keyStatisticsResource)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(competitionName)
+                .append(applications)
+                .append(innovationSector)
+                .append(innovationArea)
+                .append(pagination)
+                .append(originQuery)
+                .append(keyStatisticsResource)
+                .toHashCode();
     }
 }

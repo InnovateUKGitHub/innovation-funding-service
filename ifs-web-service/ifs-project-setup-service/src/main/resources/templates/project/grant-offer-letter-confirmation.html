@@ -3,11 +3,10 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter Confirmation'" />
 </head>
-<body th:with="context='project'" class="gol-confirm-submit">
+<body class="gol-confirm-submit">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 <main id="content" tabindex="-1">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <h1 class="heading-medium">Send to Innovate UK</h1>
     <p>Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
 
@@ -18,5 +17,6 @@
 </main>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

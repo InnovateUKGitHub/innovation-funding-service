@@ -368,7 +368,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
     private UserResource setupLeadApplicant(ApplicationResource applicationResource) {
         UserResource leadApplicant = newUserResource().build();
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(newProcessRoleResource()
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(newProcessRoleResource()
                 .withUser(leadApplicant)
                 .build());
         return leadApplicant;

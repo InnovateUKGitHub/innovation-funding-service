@@ -8,10 +8,10 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -21,12 +21,11 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +46,8 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -124,12 +124,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
-        String applicantRoleName = APPLICANT.getName();
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource).
                 andOnSuccess(
                         () -> addUserToOrganisation(newUser, organisationId).
-                                andOnSuccess(user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, applicantRoleName) : ServiceResult.serviceSuccess(user))).
+                                andOnSuccess(user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, APPLICANT) : ServiceResult.serviceSuccess(user))).
                 andOnSuccess(
                         () -> createUserWithUid(newUser, userResource.getPassword(), null)
                 );
@@ -219,9 +218,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<User> addRoleToUser(User user, String roleName) {
-        Role role = Role.getByName(roleName);
-        if (user.getRoles().stream().filter(r -> r.getId() == role.getId()).count() == 0) {
+    private ServiceResult<User> addRoleToUser(User user, Role role) {
+        if (!user.hasRole(role)) {
             user.addRole(role);
         }
         return serviceSuccess(user);
@@ -267,7 +265,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private Notification getEmailVerificationNotification(final UserResource user, final Token token) {
-        final List<NotificationTarget> to = singletonList(new ExternalUserNotificationTarget(user.getName(), user.getEmail()));
+        final List<NotificationTarget> to = singletonList(new UserNotificationTarget(user.getName(), user.getEmail()));
         return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
     }
 
@@ -308,17 +306,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
-        UserRoleType roleType = UserRoleType.fromName(role.getName());
-
-        return getInternalRoleResources(roleType);
-    }
-
-    private ServiceResult<List<Role>> getInternalRoleResources(UserRoleType roleType) {
-
-        if(UserRoleType.IFS_ADMINISTRATOR.equals(roleType)){
-            return getIFSAdminRoles(roleType); // IFS Admin has multiple roles
+        if (role == IFS_ADMINISTRATOR){
+            return getIFSAdminRoles(role); // IFS Admin has multiple roles
         } else {
-            return serviceSuccess(singletonList(Role.getByName(roleType.getName())));
+            return serviceSuccess(singletonList(role));
         }
     }
 
@@ -339,8 +330,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess();
     }
 
-    private ServiceResult<List<Role>> getIFSAdminRoles(UserRoleType roleType) {
-        return serviceSuccess( asList(Role.getByName(roleType.getName()), Role.PROJECT_FINANCE) );
+    private ServiceResult<List<Role>> getIFSAdminRoles(Role roleType) {
+        return serviceSuccess( asList(roleType, Role.PROJECT_FINANCE) );
     }
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
@@ -362,7 +353,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> editInternalUser(UserResource userToEdit, UserRoleType userRoleType) {
+    public ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType) {
 
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findOne(userToEdit.getId()), notFoundError(User.class)))
@@ -378,9 +369,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 );
     }
 
-    private ServiceResult<Void> validateInternalUserRole(UserRoleType userRoleType) {
+    private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
 
-        return UserRoleType.internalRoles().stream().anyMatch(internalRole -> internalRole.equals(userRoleType))?
+        return Role.internalRoles().contains(userRoleType) ?
                 serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
     }
 }

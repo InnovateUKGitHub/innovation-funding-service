@@ -14,7 +14,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessments'}, ${'/prototypes/5052-manage-assessments'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
-import org.innovateuk.ifs.validator.OtherFundingValidator;
+import org.innovateuk.ifs.finance.validator.OtherFundingValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 

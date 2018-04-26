@@ -39,9 +39,9 @@ ${Invitation_existing_assessor1}           ${server}/assessment/invite/competiti
 ${Invitation_for_upcoming_comp_assessor1}  ${server}/assessment/invite/competition/1ec7d388-3639-44a9-ae62-16ad991dc92c
 ${Invitation_nonexisting_assessor2}        ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0
 ${ASSESSOR_DASHBOARD}                      ${server}/assessment/assessor/dashboard
-${Correct_date}                            12 January to 29 January
-${Correct_date_start}                      12 January
-${Correct_date_end}                        29 January
+${Correct_date_start}                      ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}
+${Correct_date_end}                        ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}
+${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_PRETTY_DATE} to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}: Assessment period
 
 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 # ${IN_ASSESSMENT_COMPETITION_NAME} is the Sustainable living models for the future
@@ -97,16 +97,15 @@ Existing assessor: Reject invitation from Dashboard
     And The user clicks the button/link                     jQuery=button:contains("Confirm")
     And the user should see the element                     jQuery=p:contains("Thank you for letting us know you are unable to assess applications within this competition.")
 
-Existing Assessor tries to accept closed competition
+Existing Assessor tries to accept expired invitation in closed assessment
     [Documentation]    INFUND-943
-    [Tags]
+    [Tags]  MySQL
     [Setup]    Close the competition in assessment
     Given Log in as a different user               &{existing_assessor1_credentials}
-    And The user should not see the element        link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And wait until element is not visible          jQuery=a:contains("${IN_ASSESSMENT_COMPETITION_NAME}")  # the without screenshots keyword doesnt seemt to work here!
     When the user navigates to the page            ${Invitation_for_upcoming_comp_assessor1}
     Then the user should see the element           jQuery=h1:contains("This invitation is now closed")
-    [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]};
+    [Teardown]  Reset competition's milestone
 
 Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228  INFUND-304  INFUND-3716  INFUND-5509  INFUND-6500
@@ -114,7 +113,7 @@ Existing assessor: Accept invitation from the invite link
     [Setup]    Logout as user
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user should see the element     jQuery=h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
-    And the user should see the element     jQuery=h2:contains("12 January 2068 to 28 January 2068: Assessment period")
+    And the user should see the element     jQuery=h2:contains("${assessmentPeriod}")
     And the user selects the radio button   acceptInvitation  true
     And The user clicks the button/link     jQuery=button:contains("Confirm")
     Then the user should see the element    jQuery=p:contains("Your email address is linked to an existing account.")
@@ -135,28 +134,30 @@ Upcoming competition should be visible
     [Tags]    HappyPath
     Given the user navigates to the page           ${ASSESSOR_DASHBOARD}
     And the assessor should see the correct date
-    When The user clicks the button/link           link=Home and industrial efficiency programme
-    And the user should see the element            jQuery=p:contains("You have agreed to be an assessor for the upcoming competition 'Home and industrial efficiency programme'")
+    When The user clicks the button/link           link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    And the user should see the element            jQuery=p:contains("You have agreed to be an assessor for the upcoming competition '${UPCOMING_COMPETITION_TO_ASSESS_NAME}'")
     And The user clicks the button/link            link=Assessor dashboard
     Then the user should see the element           jQuery=h2:contains("Upcoming competitions to assess")
 
 The assessment period starts the comp moves to the comp for assessment
+    [Documentation]  INFUND-3718  INFUND-3720
     [Tags]    MySQL    HappyPath
-    [Setup]    Connect to Database    @{database}
+    [Setup]  Retrieve original milestones
     Given the assessment start period changes in the db in the past     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the user should not see the element   jQuery=h2:contains("Upcoming competitions to assess")
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+    [Teardown]  Reset milestones back to the original values
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
     [Tags]    MySQL
-    Then the assessor should see the date for submission of assessment
+    Then the assessor should see the date for submission of assessment    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    MySQL
-    Then the assessor should see the number of days remaining
-    And the calculation of the remaining days should be correct  2068-01-28
+    [Tags]    MySQL  Failing
+    # TODO IFS-3176
+    Then the assessor should see the number of days remaining    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    And the calculation of the remaining days should be correct  ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
@@ -195,11 +196,13 @@ the assessor fills all fields with valid inputs
     the user cannot see a validation error in the page
 
 the assessor should see the date for submission of assessment
-    the user should see the element  css=.my-applications .msg-deadline .day
-    the user should see the element  css=.my-applications .msg-deadline .month
+    [Arguments]    ${competitionId}
+    the user should see the element  css=.my-applications .msg-deadline[data-competition-id='${competitionId}'] .day
+    the user should see the element  css=.my-applications .msg-deadline[data-competition-id='${competitionId}'] .month
 
 the assessor should see the number of days remaining
-    the user should see the element  css=.my-applications .msg-deadline .days-remaining
+    [Arguments]    ${competitionId}
+    the user should see the element  css=.my-applications .msg-deadline[data-competition-id='${competitionId}'] .days-remaining
 
 the assessor shouldn't be able to accept the rejected competition
     the user navigates to the page    ${Invitation_existing_assessor1}
@@ -238,3 +241,26 @@ The user should get a competition brief window
 The user closes the competition brief
     Close Window
     Select Window
+
+
+*** Keywords ***
+Reset competition's milestone
+    # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"
+    Connect to Database  @{database}
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `type`='ASSESSMENT_CLOSED' AND `competition_id`='${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]}';
+
+Retrieve original milestones
+    Connect to Database  @{database}
+    ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='SUBMISSION_DATE';
+    ${result} =  get from list  ${result}  0
+    ${assessorsNotified} =  get from list  ${result}  0
+    Set suite variable  ${openDate}
+    Set suite variable  ${submissionDate}
+    Set suite variable  ${assessorsNotified}
+
+Reset milestones back to the original values
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `type`='OPEN_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${assessorsNotified}' WHERE `type`='ASSESSORS_NOTIFIED' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';

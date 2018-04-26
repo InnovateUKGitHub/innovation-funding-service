@@ -23,6 +23,12 @@ import static org.springframework.http.HttpStatus.*;
 @Component
 public abstract class AbstractInternalRestTemplateAdaptor extends AbstractRestTemplateAdaptor {
 
+    public AbstractInternalRestTemplateAdaptor() {
+    }
+
+    public AbstractInternalRestTemplateAdaptor(String baseUrl) {
+        super(baseUrl);
+    }
 
     // Synchronous public calls
     @RestCacheResult

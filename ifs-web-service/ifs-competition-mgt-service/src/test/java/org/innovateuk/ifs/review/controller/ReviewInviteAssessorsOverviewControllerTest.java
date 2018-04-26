@@ -81,7 +81,7 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
+        when(competitionKeyStatisticsRestService.getReviewInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
                 .thenReturn(restSuccess(pageResource));
         when(reviewInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
 
-        MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/overview", competition.getId())
+        MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/pending-and-declined", competition.getId())
                 .param("page", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
@@ -127,7 +127,7 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
                 .withCompliant(TRUE, FALSE)
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withStatus(PENDING, REJECTED)
-                .withDetails("", "Invite declined as person is too busy")
+                .withDetails("", "Invite declined: person is too busy")
                 .build(2);
     }
 
@@ -149,7 +149,6 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
-        assertEquals(inviteStatistics.getPending(), model.getAssessorsStaged());
     }
 
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {

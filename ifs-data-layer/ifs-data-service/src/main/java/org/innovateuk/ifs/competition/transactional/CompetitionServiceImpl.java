@@ -1,14 +1,10 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -16,15 +12,14 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
@@ -32,14 +27,10 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,16 +40,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.data.domain.Sort.Direction.ASC;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -73,7 +64,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private UserRepository userRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -86,9 +77,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
-
-    @Autowired
-    private ApplicationMapper applicationMapper;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -105,11 +93,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private MilestoneService milestoneService;
 
-    private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP = new HashMap<String, Sort>() {{
-        put("id", new Sort(ASC, "id"));
-        put("name", new Sort(ASC, "name", "id"));
-    }};
-
     private static final String EOI = "Expression of interest";
 
     @Override
@@ -120,7 +103,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
-        List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
 
         List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
 
@@ -143,7 +126,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                     competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
                     competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
-                    competitionParticipantRepository.save(competitionParticipant);
+                    assessmentParticipantRepository.save(competitionParticipant);
 
                     return serviceSuccess();
                 });
@@ -154,11 +137,20 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
 
-        return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
+        return find(assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
                     notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
-                .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
+                .andOnSuccessReturnVoid(competitionParticipant -> assessmentParticipantRepository.delete(competitionParticipant));
     }
 
+    /**
+     * IFS-3016: Because of the change in ApplicantDashboardPopulator (getAllCompetitionsForUser),
+     * the endpoint is not used anymore, so this function can also be deleted
+     *
+     * TODO: remove in ZDD cleanup
+     * @param userId
+     * @return
+     */
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint not being used")
     @Override
     public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
         List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccess();
@@ -190,30 +182,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
-    private ZonedDateTime findMostRecentFundingInformDate(Competition competition) {
-        return competition.getApplications()
-                .stream()
-                .filter(application -> application.getManageFundingEmailDate() != null)
-                .max(Comparator.comparing(Application::getManageFundingEmailDate))
-                .get().getManageFundingEmailDate();
-    }
-
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             List<Competition> competitions;
-            if (user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+            if (user.hasRole(INNOVATION_LEAD)) {
                 competitions = competitionRepository.findProjectSetupForInnovationLead(user.getId());
             } else {
                 competitions = competitionRepository.findProjectSetup();
             }
-            // Only competitions with at least one funded and informed application can be considered as in project setup
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
                             .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
-                            .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
-                            .sorted(Comparator.comparing(Pair::getKey))
-                            .map(Pair::getValue)
                             .collect(Collectors.toList())),
                     this::searchResultFromCompetition));
         });
@@ -238,46 +218,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
-                                                                               int pageIndex,
-                                                                               int pageSize,
-                                                                               String sortField) {
-
-        Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
-                INELIGIBLE,
-                INELIGIBLE_INFORMED,
-                REJECTED), ApplicationState::getBackingState);
-
-        Sort sort = getApplicationSortField(sortField);
-        Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
-
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
-        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
-
-        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
-    }
-
-    private Sort getApplicationSortField(String sortBy) {
-        Sort result = APPLICATION_SORT_FIELD_MAP.get(sortBy);
-        return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
-    }
-
-    private ApplicationResource convertToApplicationResource(Application application) {
-
-        ApplicationResource applicationResource = applicationMapper.mapToResource(application);
-        Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
-        applicationResource.setLeadOrganisationName(leadOrganisation.getName());
-        return applicationResource;
-    }
-
-    @Override
     public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         String searchQueryLike = String.format("%%%s%%", searchQuery);
         PageRequest pageRequest = new PageRequest(page, size);
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            if (user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+            if (user.hasRole(INNOVATION_LEAD)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest));
-            } else if (user.hasRole(UserRoleType.SUPPORT)) {
+            } else if (user.hasRole(SUPPORT)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForSupportUser(searchQueryLike, pageRequest));
             } else {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.search(searchQueryLike, pageRequest));

@@ -4,12 +4,11 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors to panel'"/>
 </head>
 
-<body th:with="context='comp-management'" class="competition-management competition-overview invite-assessors">
+<body class="competition-management competition-overview invite-assessors">
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"/>
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Manage assessment panel',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}"/>
 
@@ -36,12 +35,6 @@
                 <small>Declined</small>
             </div>
         </div>
-        <div class="column-quarter">
-            <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
-                <small>Assessors on invite list</small>
-            </div>
-        </div>
     </div>
 
     <dl class="standard-definition-list extra-margin">
@@ -62,7 +55,7 @@
             <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
         <li class="not-selected">
-            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
+            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}">Pending and declined</a>
         </li>
         <li class="not-selected">
             <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
@@ -166,8 +159,9 @@
     <th:block th:insert="fragments/layout :: main-content-end"/>
 </main>
 
-<th:block th:insert="fragments/layout :: footer"/>
-<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

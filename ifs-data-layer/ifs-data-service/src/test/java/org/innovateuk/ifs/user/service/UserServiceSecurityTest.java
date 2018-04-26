@@ -1,30 +1,22 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
-import org.innovateuk.ifs.user.resource.SearchCategory;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.UserService;
+import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
-
-import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -47,18 +39,25 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindAssignableUsers() {
+        when(classUnderTestMock.findAssignableUsers(123L))
+                .thenReturn(serviceSuccess(newUserResource().buildSet(2)));
+
         classUnderTest.findAssignableUsers(123L);
         assertViewMultipleUsersExpectations();
     }
 
     @Test
     public void testFindByEmail() {
-        assertAccessDenied(() -> classUnderTest.findByEmail("asdf@example.com"), this::assertViewSingleUserExpectations);
+        String email = "asdf@example.com";
+
+        when(classUnderTestMock.findByEmail(email))
+                .thenReturn(serviceSuccess(newUserResource().build()));
+
+        assertAccessDenied(() -> classUnderTest.findByEmail(email), this::assertViewSingleUserExpectations);
     }
 
     @Test
     public void testChangePassword() {
-
         Token token = new Token();
         when(tokenLookupStrategies.getTokenByHash("hash")).thenReturn(token);
 
@@ -81,6 +80,9 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindRelatedUsers() {
+        when(classUnderTestMock.findRelatedUsers(123L))
+                .thenReturn(serviceSuccess(newUserResource().buildSet(2)));
+
         classUnderTest.findRelatedUsers(123L);
         assertViewMultipleUsersExpectations();
     }
@@ -94,11 +96,17 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     private void assertViewXUsersExpectations(int numberOfUsers) {
-        verify(userRules, times(numberOfUsers)).anyUserCanViewThemselves(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .anyUserCanViewThemselves(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(isA(UserResource.class), eq
+                        (getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 
@@ -118,92 +126,44 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindActiveByProcessRoles(){
-        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5)), () -> {
+    public void testFindActiveByProcessRoles() {
+        when(classUnderTestMock.findActiveByRoles(internalRoles(), new PageRequest(0, 5)))
+                .thenReturn(serviceSuccess(new UserPageResource()));
+
+        assertAccessDenied(() -> classUnderTest.findActiveByRoles(internalRoles(), new
+                PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
 
     @Test
-    public void testFindInactiveByProcessRoles(){
-        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5)), () -> {
+    public void testFindInactiveByProcessRoles() {
+        when(classUnderTestMock.findInactiveByRoles(internalRoles(), new PageRequest(0, 5)))
+                .thenReturn(serviceSuccess(new UserPageResource()));
+
+        assertAccessDenied(() -> classUnderTest.findInactiveByRoles(internalRoles(), new
+                PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
 
     @Test
-    public void testFindByProcessRolesAndSearchCriteria(){
+    public void testFindByProcessRolesAndSearchCriteria() {
+        when(classUnderTestMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory
+                .NAME))
+                .thenReturn(serviceSuccess(newUserOrganisationResource().build(2)));
+
         classUnderTest.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory.NAME);
-        verify(userRules, times(2)).internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
+
+        verify(userRules, times(2))
+                .internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(userRules);
     }
 
     @Override
     protected Class<? extends UserService> getClassUnderTest() {
-        return TestUserService.class;
-    }
-
-    /**
-     * Test class for use in Service Security tests.
-     */
-    public static class TestUserService implements UserService {
-        @Override
-        public ServiceResult<UserResource> findByEmail(String email) {
-            return serviceSuccess(newUserResource().build());
-        }
-
-        @Override
-        public ServiceResult<UserResource> findInactiveByEmail(String email) {
-            return serviceSuccess(newUserResource().build());
-        }
-
-        @Override
-        public ServiceResult<Set<UserResource>> findAssignableUsers(Long applicationId) {
-            return serviceSuccess(newUserResource().buildSet(2));
-        }
-
-        @Override
-        public ServiceResult<Set<UserResource>> findRelatedUsers(Long applicationId) {
-            return serviceSuccess(newUserResource().buildSet(2));
-        }
-
-        @Override
-        public ServiceResult<Void> sendPasswordResetNotification(@P("user") UserResource user) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> changePassword(@P("hash") String hash, String password) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
-            return serviceSuccess(new UserPageResource());
-        }
-
-        //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*        @Override
-        public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
-            return serviceSuccess(newUserOrganisationResource().build(2));
-        }*/
-
-        @Override
-        public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
-            return serviceSuccess(newUserOrganisationResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
-            return serviceSuccess(new UserPageResource());
-        }
-
+        return UserServiceImpl.class;
     }
 }

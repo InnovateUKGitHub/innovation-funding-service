@@ -3,17 +3,20 @@ package org.innovateuk.ifs.thread.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
+import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesServiceImpl;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.security.NoteLookupStrategy;
 import org.innovateuk.ifs.threads.security.ProjectFinanceNotePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.threads.resource.NoteResource;
-import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.isNull;
@@ -27,7 +30,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
     @Override
     protected Class<? extends FinanceCheckNotesService> getClassUnderTest() {
-        return TestFinanceCheckNotesService.class;
+        return FinanceCheckNotesServiceImpl.class;
     }
 
     @Before
@@ -39,6 +42,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void test_create() throws Exception {
         final NoteResource noteResource = new NoteResource(null, null, null, null, null);
+
         assertAccessDenied(
                 () -> classUnderTest.create(noteResource),
                 () -> {
@@ -51,6 +55,9 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     public void test_findOne() throws Exception {
         setLoggedInUser(null);
 
+        when(classUnderTestMock.findOne(1L))
+                .thenReturn(serviceSuccess(new NoteResource(1L, null, null, null, null)));
+
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
             verify(noteRules).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(noteRules);
@@ -60,6 +67,12 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void test_findAll() throws Exception {
         setLoggedInUser(null);
+
+        when(classUnderTestMock.findAll(22L))
+                .thenReturn(serviceSuccess(new ArrayList<>(asList(
+                        new NoteResource(2L, null, null, null, null),
+                        new NoteResource(3L, null, null, null, null)
+                ))));
 
         ServiceResult<List<NoteResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccess().size());
@@ -79,38 +92,4 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
             verifyNoMoreInteractions(noteRules);
         });
     }
-
-    public static class TestFinanceCheckNotesService implements FinanceCheckNotesService {
-
-        @Override
-        public ServiceResult<List<NoteResource>> findAll(Long contextClassPk) {
-            List<NoteResource> notes = new ArrayList<>();
-            notes.add(findOne(2L).getSuccess());
-            notes.add(findOne(3L).getSuccess());
-            return ServiceResult.serviceSuccess(notes);
-        }
-
-        @Override
-        public ServiceResult<NoteResource> findOne(Long id) {
-            return ServiceResult.serviceSuccess(new NoteResource(id,
-                    null, null, null, null));
-        }
-
-        @Override
-        public ServiceResult<Long> create(NoteResource NoteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> close(Long noteId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> addPost(PostResource post, Long noteId) {
-            return null;
-        }
-    }
-
-
 }

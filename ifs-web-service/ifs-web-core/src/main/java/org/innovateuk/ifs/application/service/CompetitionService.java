@@ -17,6 +17,7 @@ import java.util.List;
  */
 @Service
 public interface CompetitionService {
+
     CompetitionResource getById(Long id);
 
     List<UserResource> findInnovationLeads(Long competitionId);

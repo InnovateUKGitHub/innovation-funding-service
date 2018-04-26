@@ -1,6 +1,17 @@
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
 tagDocker.onlyIf { !isNamedEnv() }
 tagDocker.tag = mailSinkVersion
 tagDockerLocal.tag = mailSinkVersion
 osStageRemote.onlyIf { !isNamedEnv() }
 osStageRemote.tag = mailSinkVersion
 osStageLocal.tag = mailSinkVersion
+
+createContainer.hostName = "mail"
+createContainer.containerName = "mail"
+createContainer.containerId = "mail"
+createContainer.portBindings = ['8765:8080', "9876:8143"]
+
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}

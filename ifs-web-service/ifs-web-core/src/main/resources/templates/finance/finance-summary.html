@@ -52,6 +52,10 @@
                                 <div th:text="${applicationOrganisation.name}"></div>
                                 <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
                                 <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
+                                <a th:if="${showAssessorDetailedFinanceLink}"
+                                   th:href="@{/{assessmentId}/detailed-finances/organisation/{organisationId}(assessmentId=${assessmentId}, organisationId=${applicationOrganisation.id})}" th:style="'font-weight: normal;'">
+                                    View finances
+                                </a>
                             </th>
                             <td class="numeric bold" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                 <span th:text="'£'+${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" />
@@ -141,13 +145,13 @@
                             <th:block th:if="${currentApplication.isOpen()}">
                                 <th:block th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
                                     <img class="table-tick" width="20" height="17"
-                                        th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
+                                        th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
                                         alt="has marked the Finances as complete"/>
                                     <span class="visuallyhidden">Complete</span>
                                 </th:block>
                                 <th:block th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
                                     <img class="table-tick" width="20" height="20"
-                                        th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/icons/icon-messages/alert-icon.png')}"
+                                        th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
                                         alt="has not yet marked the Finances as complete" />
                                     <span class="visuallyhidden">Incomplete</span>
                                 </th:block>
@@ -220,7 +224,7 @@
             <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
                 <a th:if="${applicationOrganisation.id == userOrganisation.id}"
                    th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
-                   th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.application.resource.SectionType).FINANCE})}" >Return to the finances section to complete your finances</a>
+                   th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}" >Return to the finances section to complete your finances</a>
             </th:block>
 
             <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>

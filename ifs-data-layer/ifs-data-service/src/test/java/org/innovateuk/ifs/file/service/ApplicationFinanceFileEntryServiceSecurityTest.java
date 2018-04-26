@@ -1,16 +1,14 @@
 package org.innovateuk.ifs.file.service;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.ApplicationFinanceFileEntryService;
+import org.innovateuk.ifs.file.transactional.ApplicationFinanceFileEntryServiceImpl;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.security.ApplicationFinanceLookupStrategy;
 import org.innovateuk.ifs.finance.security.ApplicationFinancePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
 
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.mockito.Matchers.isA;
@@ -46,17 +44,7 @@ public class ApplicationFinanceFileEntryServiceSecurityTest extends BaseServiceS
 
     @Override
     protected Class<? extends ApplicationFinanceFileEntryService> getClassUnderTest() {
-        return TestFileEntryService.class;
-    }
-
-    public static class TestFileEntryService implements ApplicationFinanceFileEntryService {
-
-        @Override
-        public ServiceResult<FileEntryResource> getFileEntryByApplicationFinanceId(@P("applicationFinanceResourceId") Long applicationFinanceId) {
-            return null;
-        }
-
-
+        return ApplicationFinanceFileEntryServiceImpl.class;
     }
 }
 

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -22,10 +22,10 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.application.builder.QuestionStatusBuilder.newQuestionStatus;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;

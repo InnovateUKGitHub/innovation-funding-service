@@ -10,8 +10,6 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
   <div class="grid-row">
       <div class="column-two-thirds">
         <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">

@@ -28,7 +28,7 @@ public interface ReviewRepository extends ProcessRepository<Review>, PagingAndSo
             "  a.competition.id = :competitionId AND a.inAssessmentReviewPanel=true " +
             "AND " +
             "  ap.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
-            "  ap.role=org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR AND " +
+            "  ap.role=org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR AND " +
             "  NOT EXISTS (SELECT 1 FROM Review r " +
             "              WHERE " +
             "                r.target=a AND " +

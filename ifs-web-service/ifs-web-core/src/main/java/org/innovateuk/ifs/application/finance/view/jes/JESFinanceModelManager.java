@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -151,7 +151,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
     @Override
     public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
-        throw new NotImplementedException("JES forms dont have any cost data.");
+        throw new NotImplementedException("JES forms don't have any cost data.");
     }
 
     private ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {

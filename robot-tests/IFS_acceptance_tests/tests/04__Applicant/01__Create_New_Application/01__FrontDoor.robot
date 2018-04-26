@@ -15,7 +15,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 Guest user navigates to Front Door
     [Documentation]    INFUND-6923 INFUND-7946 IFS-247
     [Tags]
-    [Setup]    the user navigates to the front door
+    [Setup]  the user navigates to the page  ${FRONTDOOR}
     When the user should see the element     jQuery=a:contains("Innovate UK")
     Then the user should see the element     jQuery=h1:contains("Innovation competitions")
     And the user should see the element     css=#keywords
@@ -32,33 +32,32 @@ Guest user can see Competitions and their information
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user should see the element    link=Home and industrial efficiency programme
+    Given the user should see the element in the paginated list     link=${createApplicationOpenCompetition}
     Then the user should see the element    jQuery=h3:contains("Eligibility")
     And the user should see the element    jQuery=div:contains("UK based business of any size. Must involve at least one SME")
-    Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("15 April 2016")
-    And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("9 September 2067")
+    Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("${createApplicationOpenCompetitionOpenDate}")
+    And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("${createApplicationOpenCompetitionCloseDate}")
     #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
 
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL
     [Setup]  Connect to Database  @{database}
-    Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
+    Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
+    ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
+
     Given the user navigates to the page  ${frontDoor}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
-    And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
-    And Change the close date of the Competition in the database to fifteen days  ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
-    And Change the close date of the Competition in the database to thirteen days   ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
-    And Change the close date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
-    And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
+    Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
+
+    Given Change the open date of the Competition in the database to one day before  ${READY_TO_OPEN_COMPETITION_NAME}
+    When the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Open now  Opened
+
+    Given Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
+    When the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Closing soon  Opened
+
+    [Teardown]  Return the competition's milestones to their initial values  ${competitionId}  ${openDate}  ${submissionDate}
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923
@@ -67,21 +66,21 @@ Guest user can filter competitions by Innovation area
     When the user selects the option from the drop-down menu    Space technology    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
     Then the user should see the element    jQuery=a:contains("Transforming big data")
-    And the user should not see the element    jQuery=a:contains("Home and industrial efficiency programme")
+    And the user should not see the element in the paginated list   jQuery=a:contains("${createApplicationOpenCompetition}")
     When the user selects the option from the drop-down menu    Any    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
-    Then the user should see the element    jQuery=a:contains("Home and industrial efficiency programme")
+    Then the user should see the element in the paginated list   jQuery=a:contains("${createApplicationOpenCompetition}")
 
 Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714
     [Tags]  Pending
     # TODO IFS-2986
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link in the paginated list    link=${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery=h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
     And the user should see the element    jQuery=li:contains("Competition closes")
-    And the user should see the element    jQuery=li:contains("Friday 16 March 2018")
+    And the user should see the element    jQuery=li:contains("Friday 16 April 2018")
     And the user should see the text in the page    This competition has not yet opened.
     And the user should not see the text in the page    Or sign in to continue an existing application
     And the user should see the element    jQuery=.button:contains("Start new application")
@@ -99,11 +98,11 @@ Guest user can see the public information of a competition
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then the user should see the element    jQuery=h1:contains("Home and industrial efficiency programme")
-    And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Friday 15 April 2016")
+    Given the user clicks the button/link in the paginated list    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    Then the user should see the element    jQuery=h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
+    And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE}")
     And the user should see the element    jQuery=li:contains("Competition closes")
-    And the user should see the element    jQuery=li:contains("Friday 9 September 2067")
+    And the user should see the element    jQuery=li:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME_LONG}")
     And the user should see the text in the page    Or sign in to continue an existing application.
     And the user should see the element    jQuery=.button:contains("Start new application")
 
@@ -136,10 +135,10 @@ Guest user can see the public Dates of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link    link=Dates
-    When the user should see the element    jQuery=dt:contains("15 April 2016") + dd:contains("Competition opens")
+    When the user should see the element    jQuery=dt:contains("${getPrettyMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "OPEN_DATE")}") + dd:contains("Competition opens")
     And the user should see the element    jQuery=dt:contains("12 May 2016") + dd:contains("Briefing event in Belfast")
-    And the user should see the element    jQuery=dt:contains("9 September 2067") + dd:contains("Competition closes")
-    And the user should see the element    jQuery=dt:contains("20 June 2068") + dd:contains("Applicants notified")
+    And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME}") + dd:contains("Competition closes")
+    And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_NOTIFICATION_DATE}") + dd:contains("Applicants notified")
 
 Guest user can see the public How to apply of the competition
     [Documentation]    INFUND-6923
@@ -159,23 +158,19 @@ Guest user can apply to a competition
     [Documentation]    INFUND-6923
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=Home and industrial efficiency programme
+    Given the user clicks the button/link in the paginated list    link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
     Then the user should see the element    jQuery=.button:contains("Sign in")
     And the user should see the element    jQuery=.button:contains("Create")
 
 *** Keywords ***
-the user navigates to the front door
-    the user clicks the button/link    jQuery=span:contains("Need help signing in or creating an account")
-    the user clicks the button/link    jQuery=a:contains("competitions listings page")
-
 Close survey window
     Close Window
     Select Window
 
 the user can see the correct date status of the competition
     [Arguments]    ${competition_name}    ${date_status}    ${open_text}
-    the user should see the element    jQuery=h2:contains(${competition_name}) ~ h3:contains(${date_status}) ~ dl dt:contains(${open_text})
+    the user should see the element    jQuery=h2:contains("${competition_name}") ~ h3:contains("${date_status}") ~ dl dt:contains("${open_text}")
 
 the registration date of the non-ifs competition belongs to the past
     [Arguments]  ${competitionId}

@@ -14,14 +14,14 @@ task prepareDockerFile {
 
     def inputDir = project.file("$project.buildDir/docker")
 
-    def String spProxyKey = file(spProxyKeyFile).text.trim().replace('\n', '\\n')
-    def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
-    def String spProxyCacertificate = file(spProxyCacertificateFile).text.trim().replace('\n', '\\n')
-
-    def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
-    def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
     doFirst {
+        def String spProxyKey = file(spProxyKeyFile).text.trim().replace('\n', '\\n')
+        def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
+        def String spProxyCacertificate = file(spProxyCacertificateFile).text.trim().replace('\n', '\\n')
+
+        def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
+        def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
         copy {
             from 'src/main/docker/'
             into 'src/main/docker/'
@@ -54,3 +54,10 @@ tagDocker.tag = spVersion
 osStageRemote.tag = spVersion
 tagDockerLocal.tag = spVersion
 osStageLocal.tag = spVersion
+
+createContainer.containerName = "shib"
+createContainer.containerId = "shib"
+createContainer.env= ["SP_DOMAIN=ifs.local-dev","IDP_DOMAIN=auth.local-dev:9443","HTTPS_PORT=443","HTTP_PORT=80"]
+createContainer.networkAliases=["ifs.local-dev"]
+createContainer.portBindings = ['443:443']
+createContainer.hostName="shib"

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;

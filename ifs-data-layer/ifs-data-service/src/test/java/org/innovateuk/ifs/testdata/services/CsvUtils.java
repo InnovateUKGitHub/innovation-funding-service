@@ -12,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -62,7 +63,7 @@ public class CsvUtils {
     }
 
     public static List<CompetitionLine> readCompetitions() {
-        return simpleMap(readCsvLines("competitions"), CompetitionLine::new);
+        return simpleMapWithIndex(readCsvLines("competitions"), CompetitionLine::new);
     }
 
     public static List<CompetitionFunderLine> readCompetitionFunders() {
@@ -327,6 +328,8 @@ public class CsvUtils {
         public List<String> collaborators;
         public ZonedDateTime submittedDate;
         public ApplicationState status;
+        public boolean createApplicationResponses;
+        public boolean createFinanceResponses;
         public boolean markFinancesComplete;
         public String researchCategory;
         public String innovationArea;
@@ -345,6 +348,8 @@ public class CsvUtils {
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
             status = ApplicationState.valueOf(line.get(i++).toUpperCase());
+            createApplicationResponses = nullableBoolean(line.get(i++));
+            createFinanceResponses = nullableBoolean(line.get(i++));
             markFinancesComplete = nullableBoolean(line.get(i++));
             researchCategory = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));
@@ -402,6 +407,7 @@ public class CsvUtils {
 
     public static class CompetitionLine {
 
+        public int lineNumber;
         public String name;
         public String type;
         public List<String> innovationAreas;
@@ -412,23 +418,7 @@ public class CsvUtils {
         public Integer researchRatio;
         public Boolean resubmission;
         public Boolean multiStream;
-        public ZonedDateTime openDate;
-        public ZonedDateTime briefingDate;
-        public ZonedDateTime registrationDate;
-        public ZonedDateTime submissionDate;
-        public ZonedDateTime allocateAssessorDate;
-        public ZonedDateTime assessorBriefingDate;
-        public ZonedDateTime assessorsNotifiedDate;
-        public ZonedDateTime assessorAcceptsDate;
-        public ZonedDateTime assessorEndDate;
-        public ZonedDateTime assessmentClosedDate;
-        public ZonedDateTime drawLineDate;
-        public ZonedDateTime assessmentPanelDate;
-        public ZonedDateTime panelDate;
-        public ZonedDateTime fundersPanelDate;
-        public ZonedDateTime fundersPanelEndDate;
-        public ZonedDateTime releaseFeedback;
-        public ZonedDateTime feedbackReleased;
+        public CompetitionStatus competitionStatus;
         public String leadTechnologist;
         public String compExecutive;
         public boolean setupComplete;
@@ -453,8 +443,9 @@ public class CsvUtils {
         public boolean nonIfs;
         public String nonIfsUrl;
 
-        private CompetitionLine(List<String> line) {
+        private CompetitionLine(List<String> line, int lineNumber) {
 
+            this.lineNumber = lineNumber;
             int i = 0;
             name = nullable(line.get(i++));
             type = nullable(line.get(i++));
@@ -466,23 +457,7 @@ public class CsvUtils {
             researchRatio = nullableInteger(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             multiStream = nullableBoolean(line.get(i++));
-            openDate = nullableDateTime(line.get(i++));
-            briefingDate = nullableDateTime(line.get(i++));
-            registrationDate = nullableDateTime(line.get(i++));
-            submissionDate = nullableDateTime(line.get(i++));
-            allocateAssessorDate = nullableDateTime(line.get(i++));
-            assessorBriefingDate = nullableDateTime(line.get(i++));
-            assessorsNotifiedDate = nullableDateTime(line.get(i++));
-            assessorAcceptsDate = nullableDateTime(line.get(i++));
-            assessorEndDate = nullableDateTime(line.get(i++));
-            assessmentClosedDate = nullableDateTime(line.get(i++));
-            drawLineDate = nullableDateTime(line.get(i++));
-            assessmentPanelDate = nullableDateTime(line.get(i++));
-            panelDate = nullableDateTime(line.get(i++));
-            fundersPanelDate = nullableDateTime(line.get(i++));
-            fundersPanelEndDate = nullableDateTime(line.get(i++));
-            releaseFeedback = nullableDateTime(line.get(i++));
-            feedbackReleased = nullableDateTime(line.get(i++));
+            competitionStatus = CompetitionStatus.valueOf(line.get(i++));
             leadTechnologist = nullable((line.get(i++)));
             compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));

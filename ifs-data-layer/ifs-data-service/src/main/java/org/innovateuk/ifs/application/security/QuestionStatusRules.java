@@ -1,26 +1,28 @@
 package org.innovateuk.ifs.application.security;
 
-import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @Component
 @PermissionRules
-public class QuestionStatusRules {
+public class QuestionStatusRules extends BasePermissionRules {
 
     private static final Log LOG = LogFactory.getLog(QuestionStatusRules.class);
 
@@ -54,6 +56,11 @@ public class QuestionStatusRules {
         return userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsConnected(ids.applicationId, user));
     }
 
+    @PermissionRule(value = "MARK_SECTION", description = "Only member of project team can mark a section as complete")
+    public boolean onlyMemberOfProjectTeamCanMarkSection(ApplicationResource applicationResource, UserResource user) {
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
+    }
+
     private boolean userIsAllowed(final QuestionApplicationCompositeId ids, final UserResource user) {
         return questionHasMultipleStatuses(ids.questionId) || userIsAssigned(ids.questionId, ids.applicationId, user);
     }
@@ -67,7 +74,7 @@ public class QuestionStatusRules {
     }
 
     private boolean userIsAssigned(Long questionId, Long applicationId, UserResource user){
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
+        ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(user.getId(), applicantProcessRoles(), applicationId);
         return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(
                 questionId,
                 applicationId,

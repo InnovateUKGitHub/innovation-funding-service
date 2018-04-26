@@ -6,12 +6,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
+import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
@@ -109,7 +109,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
             UserResource assigningUser = retrieveUserById(assignedByUser.getUser());
 
             doAs(assigningUser, () ->
-                questionService.assign(new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId()),
+                    questionStatusService.assign(new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId()),
                         assigneeUser.getId(), assignedByUser.getId())
             );
         });
@@ -124,7 +124,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
             doAs(leadUser, () -> {
                 QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId());
                 return updateApplicationCompletionStatus ?
-                        questionService.markAsComplete(questionKey, lead.getId()) :
+                        questionStatusService.markAsComplete(questionKey, lead.getId()) :
                         testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, lead.getId());
             });
         });
@@ -138,7 +138,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
         FormInputResponseCommand updateRequest = new FormInputResponseCommand(
                 applicantFormInput.getId(), data.getApplication().getId(), user.getId(), value);
 
-        FormInputResponse response = formInputService.saveQuestionResponse(updateRequest).getSuccess();
+        FormInputResponse response = formInputResponseService.saveQuestionResponse(updateRequest).getSuccess();
         formInputResponseRepository.save(response);
     }
 

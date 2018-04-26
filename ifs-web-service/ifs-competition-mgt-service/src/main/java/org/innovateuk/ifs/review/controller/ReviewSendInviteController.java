@@ -37,8 +37,9 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/panel/competition/{competitionId}/assessors/invite")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewSendInviteController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@SecuredBySpring(value = "Controller", description = "Only comp admin and project finance users can setup assessment" +
+        " panels if they competition supports them", securedType = ReviewSendInviteController.class)
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewSendInviteController extends CompetitionManagementCookieController<ReviewOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
@@ -98,6 +99,29 @@ public class ReviewSendInviteController extends CompetitionManagementCookieContr
         });
     }
 
+    @GetMapping("/reviewResend")
+    public String getInvitesToResendFailureView(Model model,
+                                                @PathVariable("competitionId") long competitionId,
+                                                @ModelAttribute(name = "form", binding = false) ResendInviteForm inviteform,
+                                                BindingResult bindingResult,
+                                                ValidationHandler validationHandler) {
+        if(inviteform.getInviteIds() == null || inviteform.getInviteIds().isEmpty()){
+            return redirectToOverview(competitionId, 0);
+        }
+
+        AssessorInvitesToSendResource invites = reviewInviteRestService.getAllInvitesToResend(
+                competitionId,
+                inviteform.getInviteIds()).getSuccess();
+        model.addAttribute("model", new SendInvitesViewModel(
+                invites.getCompetitionId(),
+                invites.getCompetitionName(),
+                invites.getRecipients(),
+                invites.getContent()
+        ));
+        populateResendInviteFormWithExistingValues(inviteform, invites);
+        return "assessors/panel-resend-invites";
+    }
+
     @PostMapping("/reviewResend")
     public String getInvitesToResend(Model model,
                                      @PathVariable("competitionId") long competitionId,
@@ -137,21 +161,23 @@ public class ReviewSendInviteController extends CompetitionManagementCookieContr
                                  ValidationHandler validationHandler,
                                  HttpServletResponse response){
 
-        Supplier<String> failureView = () -> redirectToResendView(competitionId);
+        Supplier<String> failureView = () -> getInvitesToResendFailureView(model, competitionId, form, bindingResult, validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> resendResult = reviewInviteRestService.resendInvites(form.getInviteIds(),
                     new AssessorInviteSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
-            removeCookie(response, competitionId);
             return validationHandler.addAnyErrors(resendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> redirectToOverview(competitionId, 0));
+                    .failNowOrSucceedWith(failureView, () -> {
+                        removeCookie(response, competitionId);
+                        return redirectToOverview(competitionId, 0);
+                    });
         });
     }
 
     private String redirectToOverview(long competitionId, int page) {
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromPath("/assessment/panel/competition/{competitionId}/assessors/overview")
+                .fromPath("/assessment/panel/competition/{competitionId}/assessors/pending-and-declined")
                 .queryParam("page", page);
 
         return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId))
@@ -171,6 +197,6 @@ public class ReviewSendInviteController extends CompetitionManagementCookieContr
     }
 
     private String redirectToPanelOverviewTab(long competitionId) {
-        return format("redirect:/assessment/panel/competition/%s/assessors/overview", competitionId);
+        return format("redirect:/assessment/panel/competition/%s/assessors/pending-and-declined", competitionId);
     }
 }

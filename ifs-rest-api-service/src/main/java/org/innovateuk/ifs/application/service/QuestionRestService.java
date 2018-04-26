@@ -1,50 +1,37 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
 
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link QuestionResource} related data.
  */
 public interface QuestionRestService {
-    RestResult<List<ValidationMessages>> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);
+    RestResult<List<QuestionResource>> findByCompetition(long competitionId);
 
-    RestResult<Void> markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById);
+    RestResult<QuestionResource> findById(long questionId);
 
-    RestResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById);
+    RestResult<QuestionResource> getNextQuestion(long questionId);
 
-    RestResult<List<QuestionResource>> findByCompetition(Long competitionId);
+    RestResult<QuestionResource> getPreviousQuestion(long questionId);
 
-    RestResult<Void> updateNotification(Long questionStatusId, Boolean notify);
+    RestResult<QuestionResource> getPreviousQuestionBySection(long sectionId);
 
-    Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId);
+    RestResult<QuestionResource> getNextQuestionBySection(long sectionId);
 
-    RestResult<QuestionResource> findById(Long questionId);
+    RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(long competitionId, FormInputType formInputType);
 
-    RestResult<QuestionResource> getNextQuestion(Long questionId);
-
-    RestResult<QuestionResource> getPreviousQuestion(Long questionId);
-
-    RestResult<QuestionResource> getPreviousQuestionBySection(Long sectionId);
-
-    RestResult<QuestionResource> getNextQuestionBySection(Long sectionId);
-
-    RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType);
-
-    RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
+    RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(long sectionId, QuestionType type);
 
     RestResult<QuestionResource> save(QuestionResource questionResource);
 
-    RestResult<QuestionResource> getByIdAndAssessmentId(Long questionId, Long assessmentId);
+    RestResult<QuestionResource> getByIdAndAssessmentId(long questionId, long assessmentId);
 
-    RestResult<List<QuestionResource>> getQuestionsByAssessment(Long assessmentId);
+    RestResult<List<QuestionResource>> getQuestionsByAssessment(long assessmentId);
 
 
 }

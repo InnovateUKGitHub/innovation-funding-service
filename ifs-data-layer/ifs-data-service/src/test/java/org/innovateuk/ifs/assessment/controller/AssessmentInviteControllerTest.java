@@ -4,8 +4,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -325,31 +325,31 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void checkExistingUser() throws Exception {
-        when(assessmentInviteServiceMock.checkExistingUser("hash")).thenReturn(serviceSuccess(TRUE));
+        when(assessmentInviteServiceMock.checkUserExistsForInvite("hash")).thenReturn(serviceSuccess(TRUE));
 
         mockMvc.perform(
                 get("/competitioninvite/checkExistingUser/{inviteHash}", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
 
-        verify(assessmentInviteServiceMock).checkExistingUser("hash");
+        verify(assessmentInviteServiceMock).checkUserExistsForInvite("hash");
     }
 
     @Test
     public void checkExistingUser_userNotExists() throws Exception {
-        when(assessmentInviteServiceMock.checkExistingUser("hash")).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(assessmentInviteServiceMock.checkUserExistsForInvite("hash")).thenReturn(serviceSuccess(Boolean.FALSE));
 
         mockMvc.perform(
                 get("/competitioninvite/checkExistingUser/{inviteHash}", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("false"));
 
-        verify(assessmentInviteServiceMock).checkExistingUser("hash");
+        verify(assessmentInviteServiceMock).checkUserExistsForInvite("hash");
     }
 
     @Test
     public void checkExistingUser_hashNotExists() throws Exception {
-        when(assessmentInviteServiceMock.checkExistingUser("hashNotExists")).thenReturn(serviceFailure(notFoundError(AssessmentInvite.class, "hashNotExists")));
+        when(assessmentInviteServiceMock.checkUserExistsForInvite("hashNotExists")).thenReturn(serviceFailure(notFoundError(AssessmentInvite.class, "hashNotExists")));
 
         MvcResult result = mockMvc.perform(
                 get("/competitioninvite/checkExistingUser/{inviteHash}", "hashNotExists"))
@@ -359,7 +359,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
         assertEqualsUpNoIncludingStatusCode(response, notFoundError(AssessmentInvite.class, "hashNotExists"));
 
-        verify(assessmentInviteServiceMock).checkExistingUser("hashNotExists");
+        verify(assessmentInviteServiceMock).checkUserExistsForInvite("hashNotExists");
     }
 
     private void rejectFailure(Error expectedError) throws Exception {

@@ -3,12 +3,11 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit to lead partner'" />
 </head>
-<body th:with="context='project'">
+<body>
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
     <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
@@ -23,6 +22,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

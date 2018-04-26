@@ -44,10 +44,11 @@ Calculation of the applications for assessment should be correct
 Details of the competition are visible
     [Documentation]    INFUND-3723
     [Tags]    HappyPath
-    Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("Sustainable living models for the future")
+    Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery=dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
-    And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("12:00pm Thursday 12 January 2068")
-    And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("12:00pm Saturday 28 January 2068")
+    And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
+    ${date} =  request the date from the database
+    And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("${date}")
 
 Competition brief link can be seen
     [Documentation]    INFUND-5494
@@ -153,3 +154,12 @@ The user should get a competition brief window
 The user closes the competition brief
     Close Window
     Select Window
+
+request the date from the database
+    Connect to Database  @{database}
+    log  ${IN_ASSESSMENT_COMPETITION}
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%e %M %Y') FROM `${database_name}`.`milestone` WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' AND type='ASSESSOR_DEADLINE';
+    log  ${result}
+    ${result} =  get from list  ${result}  0
+    ${assessorDeadline} =  get from list  ${result}  0
+    [Return]  ${assessorDeadline}

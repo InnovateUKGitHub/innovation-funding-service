@@ -1,17 +1,14 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
+import org.innovateuk.ifs.user.transactional.BaseUserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -37,19 +34,25 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
 
     @Test
     public void testFindAll() {
+        when(classUnderTestMock.findAll())
+                .thenReturn(serviceSuccess(newUserResource().build(2)));
+
         classUnderTest.findAll();
         assertViewMultipleUsersExpectations();
     }
 
     @Test
     public void testGetUserById() {
-        assertAccessDenied(() -> classUnderTest.getUserById(123L), () -> {
-            assertViewSingleUserExpectations();
-        });
+        when(classUnderTestMock.getUserById(123L))
+                .thenReturn(serviceSuccess(newUserResource().build()));
+
+        assertAccessDenied(() -> classUnderTest.getUserById(123L), this::assertViewSingleUserExpectations);
     }
 
     @Test
     public void testGetUserByUid() {
+        when(classUnderTestMock.getUserResourceByUid("asdf"))
+                .thenReturn(serviceSuccess(newUserResource().build()));
 
         // this method must remain unsecured because it is the way in which we get a user onto the
         // SecurityContext in the first place for permission checking
@@ -66,11 +69,17 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
     }
 
     private void assertViewXUsersExpectations(int numberOfUsers) {
-        verify(userRules, times(numberOfUsers)).anyUserCanViewThemselves(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .anyUserCanViewThemselves(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(isA(UserResource.class), eq
+                        (getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 
@@ -81,33 +90,6 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
 
     @Override
     protected Class<? extends BaseUserService> getClassUnderTest() {
-        return TestBaseUserService.class;
-    }
-
-    /**
-     * Test class for use in Service Security tests.
-     */
-    public static class TestBaseUserService implements BaseUserService {
-
-        @Override
-        public ServiceResult<UserResource> getUserResourceByUid(String uid) {
-            return serviceSuccess(newUserResource().build());
-        }
-
-        @Override
-        public ServiceResult<UserResource> getUserById(Long id) {
-            return serviceSuccess(newUserResource().build());
-        }
-
-        @Override
-        public ServiceResult<List<UserResource>> findAll() {
-            return serviceSuccess(newUserResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-            return serviceSuccess(newUserResource().build(2));
-        }
-
+        return BaseUserServiceImpl.class;
     }
 }

@@ -15,8 +15,6 @@ import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuil
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -46,6 +44,40 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
 
         assertFalse(rules.internalUsersCanViewPartnerOrganisations(partnerOrg, user));
+    }
+
+    @Test
+    public void testPartnersCannotViewOtherPartnerOrganisations() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        UserResource user = newUserResource().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+                .withProject(projectId)
+                .withOrganisation(organisationId)
+                .build();
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+
+        assertFalse(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
+    }
+
+    @Test
+    public void testPartnersCanViewTheirOwnPartnerOrganisation() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        UserResource user = newUserResource().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+                .withProject(projectId)
+                .withOrganisation(organisationId)
+                .build();
+        ProjectUser projectUser = newProjectUser()
+                .build();
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+
+        assertTrue(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
     }
 
     @Test

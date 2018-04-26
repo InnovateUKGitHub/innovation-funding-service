@@ -4,16 +4,26 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
+import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.questionStatusResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.validationMessagesListType;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpMethod.GET;
 
 public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionStatusRestServiceImpl> {
     private static final String questionStatusRestURL = "/questionStatus";
@@ -23,6 +33,50 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         QuestionStatusRestServiceImpl questionStatusRestService = new QuestionStatusRestServiceImpl();
         return questionStatusRestService;
     }
+
+    @Test
+    public void assignTest() {
+
+        setupPutWithRestResultExpectations(questionStatusRestURL + "/assign/1/2/3/4", Void.class, null, null);
+
+        // now run the method under test
+        assertTrue(service.assign(1L, 2L, 3L, 4L).isSuccess());
+    }
+
+    @Test
+    public void getMarkedAsCompleteTest() throws Exception {
+        String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + questionStatusRestURL + "/get-marked-as-complete/1/2";
+
+        Long[] questionIds = new Long[]{3L, 4L, 5L};
+        when(mockAsyncRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(""), Long[].class)).thenReturn(settable(new ResponseEntity<>(questionIds, HttpStatus.OK)));
+
+        // now run the method under test
+        Set<Long> returnedQuestionIds = service.getMarkedAsComplete(1L, 2L).get();
+
+        // verify
+        assertNotNull(questionIds);
+        assertEquals(3, returnedQuestionIds.size());
+        assertEquals(new HashSet<>(Arrays.asList(questionIds)), returnedQuestionIds);
+    }
+
+    @Test
+    public void markAsCompleteTest() {
+        setupPutWithRestResultExpectations(questionStatusRestURL + "/mark-as-complete/1/2/3", validationMessagesListType(), null, null, HttpStatus.OK);
+        assertTrue(service.markAsComplete(1L, 2L, 3L).isSuccess());
+    }
+
+    @Test
+    public void markAsInCompleteTest() {
+        setupPutWithRestResultExpectations(questionStatusRestURL + "/mark-as-in-complete/1/2/3", Void.class, null, null);
+        assertTrue(service.markAsInComplete(1L, 2L, 3L).isSuccess());
+    }
+
+    @Test
+    public void updateNotificationTest() {
+        setupPutWithRestResultExpectations(questionStatusRestURL + "/update-notification/1/true", Void.class, null, null);
+        assertTrue(service.updateNotification(1L, true).isSuccess());
+    }
+
 
     @Test
     public void findQuestionStatusesByQuestionAndApplicationIdTest() {

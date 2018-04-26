@@ -8,7 +8,8 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 public enum ProjectEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
-    GOL_APPROVED("signed-gol-approved");
+    GOL_APPROVED("signed-gol-approved"),
+    PROJECT_WITHDRAWN("withdraw-project");
 
     String event;
 

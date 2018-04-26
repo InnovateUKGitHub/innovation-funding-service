@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;

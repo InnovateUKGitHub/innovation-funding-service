@@ -1,32 +1,30 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
+
 <body class="app-summary">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
 
-
-
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/IFS-2249-dashboard'})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Technology inspired'}, ${'Feedback overview'}, ${null})" />
 
-
     <!-- <div class="success-alert">
-        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
-        <p>Scores and written feedback from each assessor can be found below.</p>
-    </div>
+    <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
+    <p>Scores and written feedback from each assessor can be found below.</p>
+</div>
 
-    <h2 class="heading-medium no-margin-bottom">Application details</h2>
-    <p class="form-hint">Assessors do not provide scores on these sections of the application.</p> -->
+<h2 class="heading-medium no-margin-bottom">Application details</h2>
+<p class="form-hint">Assessors do not provide scores on these sections of the application.</p> -->
 
     <div class="grid-row">
         <div class="column-half">
@@ -48,8 +46,10 @@
 
         <div class="column-half">
             <h3 class="heading-small">Project timescales</h3>
-            <p>Project start date: <br>1 March 2016</p>
-            <p>Duration: <br>36 months</p>
+            <p>Project start date:
+                <br>1 March 2016</p>
+            <p>Duration:
+                <br>36 months</p>
 
             <h3 class="heading-small extra-margin">Total project cost</h3>
             <p>&pound;58,793</p>
@@ -57,63 +57,104 @@
     </div>
 
     <div class="message-alert">
-        <h2 class="heading-small">As the lead applicant you can respond to feedback. This response will be noted by the interview panel.</h2>
+        <th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+            <th:block th:unless="${param.status != null and param.status[0] == 'response'}">
+                <p>As the lead applicant you can respond to feedback. This response will be noted by the interview panel.</p>
+            </th:block>
+            <th:block th:if="${param.status != null and param.status[0] == 'response'}">
+                <p>Your response has been uploaded. This response will be noted by the interview panel.</p>
+            </th:block>
+        </th:block>
+
+        <th:block th:if="${param.user != null and param.user[0] == 'nonLead'}">
+            <p>
+                <th:block th:unless="${param.status != null and param.status[0] == 'response'}">
+                    The lead applicant can respond to feedback. This response will be noted by the interview panel.
+                </th:block>
+                <th:block th:if="${param.status != null and param.status[0] == 'response'}">
+                    The lead applicant has responded to feedback. This response will be noted by the interview panel.
+                </th:block>
+            </p>
+        </th:block>
     </div>
 
-    <h2 class="heading-medium">Your response</h2>
-
-    <div class="upload-section">
-        <details>
-            <summary><span class="summary">What should I include in the response?</span></summary>
-            <div class="panel">
-                <p>You may submit a written response to this feedback. You can upload up to 3 A4 pages in a single PDF document,
-                    including charts and diagrams. The maximum file upload size is 2MB.</p>
-            </div>
-        </details>
-
-        <div>
-            <p class="uploaded-file">No file currently uploaded</p>
-            <input type="file" id="collaborationAgreement" name="collaborationAgreement" class="inputfile">
-            <label for="collaborationAgreement" class="button-secondary extra-margin">+ Upload</label>
-            <button name="uploadCollaborationAgreementClicked" class="button-secondary" type="submit" data-for-file-upload="collaborationAgreement">Save</button>
+    <th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+        <h2 class="heading-medium">Your response</h2>
+        <div class="upload-section">
+            <details>
+                <summary>
+                    <span class="summary">What should I include in the response?</span>
+                </summary>
+                <div class="panel">
+                    <p>You may submit a written response to this feedback. You can upload up to 3 A4 pages in a single PDF
+                        document, including charts and diagrams. The maximum file upload size is 2MB.</p>
+                </div>
+            </details>
+            <th:block th:unless="${param.status != null and param.status[0] == 'response'}">
+                <div>
+                    <p class="uploaded-file">No file currently uploaded</p>
+                    <input type="file" id="collaborationAgreement" name="collaborationAgreement" class="inputfile">
+                    <label for="collaborationAgreement" class="button-secondary extra-margin">+ Upload</label>
+                    <button name="uploadCollaborationAgreementClicked" class="button-secondary" type="submit" data-for-file-upload="collaborationAgreement">Save</button>
+                </div>
+            </th:block>
+            <th:block th:if="${param.status != null and param.status[0] == 'response'}">
+                <a href="#" class="uploaded-file">Lead-response.pdf (opens in a new window)</a>
+                <button name="remove_uploaded_file" value="" class="button-secondary" type="submit">Remove</button>
+            </th:block>
         </div>
-    </div>
+    </th:block>
+
+    <th:block th:if="${param.user != null and param.user[0] == 'nonLead'}">
+        <h2 class="heading-medium">Response from lead applicant</h2>
+
+        <th:block th:unless="${param.status != null and param.status[0] == 'response'}">
+            <p>The lead applicant has not yet uploaded a response.</p>
+        </th:block>
+
+        <th:block th:if="${param.status != null and param.status[0] == 'response'}">
+            <div class="form-group download">
+                <h3 class="heading-small no-margin">Lead applicant response</h3>
+                <a target="_blank" href="#">steve-smith-repsonse-document.pdf, 8 KB (opens in a new window)</a>
+            </div>
+        </th:block>
+    </th:block>
 
     <!-- <ul class="list-overview extra-margin">
 
-        <li class="section-status">
-            <div class="grid-row">
-                <div class="column-two-thirds">
-                    <h3 class="heading-small"><a href="/prototypes/IFS-2437-project-summary">Project summary</a></h3>
-                </div>
-                <div class="column-third">
-                    <p class="form-hint no-margin">No feedback provided</p>
-                </div>
+    <li class="section-status">
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h3 class="heading-small"><a href="/prototypes/IFS-2437-project-summary">Project summary</a></h3>
             </div>
-        </li>
+            <div class="column-third">
+                <p class="form-hint no-margin">No feedback provided</p>
+            </div>
+        </div>
+    </li>
 
-        <li class="section-status">
-            <div class="grid-row">
-                <div class="column-two-thirds">
-                    <h3 class="heading-small"><a href="/prototypes/IFS-2437-public-description">Public description</a></h3>
-                </div>
-                <div class="column-third">
-                    <p class="form-hint no-margin">No feedback provided</p>
-                </div>
+    <li class="section-status">
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h3 class="heading-small"><a href="/prototypes/IFS-2437-public-description">Public description</a></h3>
             </div>
-        </li>
+            <div class="column-third">
+                <p class="form-hint no-margin">No feedback provided</p>
+            </div>
+        </div>
+    </li>
 
-        <li class="section-status">
-            <div class="grid-row">
-                <div class="column-two-thirds">
-                    <h3 class="heading-small"><a href="/prototypes/IFS-2437-scope">Scope</a></h3>
-                </div>
-                <div class="column-third">
-                    <p class="form-hint no-margin">No feedback provided</p>
-                </div>
+    <li class="section-status">
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h3 class="heading-small"><a href="/prototypes/IFS-2437-scope">Scope</a></h3>
             </div>
-        </li>
-    </ul> -->
+            <div class="column-third">
+                <p class="form-hint no-margin">No feedback provided</p>
+            </div>
+        </div>
+    </li>
+</ul> -->
 
     <section>
         <h2 class="heading-medium no-margin-bottom">Application details</h2>
@@ -295,226 +336,232 @@
                     &nbsp;
                 </div>
                 <div class="column-third">
-                    <p class="no-margin">Average overall: <strong class="heading-small">50%</strong></p>
+                    <p class="no-margin">Average overall:
+                        <strong class="heading-small">50%</strong>
+                    </p>
                 </div>
             </div>
         </div>
 
     </section>
 
-    <h2 class="heading-medium">Other feedback</h2>
+    <th:block th:unless="${param.status != null and param.status[0] == 'noFeedback'}">
+        <h2 class="heading-medium">Additional feedback</h2>
 
-    <div class="form-group download">
-        <h3 class="heading-small no-margin">Innovation lead response</h3>
-        <a target="_blank" href="#">innovation-lead-response.pdf, 8 KB (opens in a new window)</a>
-    </div>
-
-    <div class="form-group download">
-        <h3 class="heading-small no-margin">Panel assessment feedback</h3>
-        <a target="_blank" href="#">panel-assessment-feedback.pdf, 6 KB (opens in a new window)</a>
-    </div>
-
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">Panel assessment feedback</h3>
+            <a target="_blank" href="#">panel-assessment-feedback.pdf, 6 KB (opens in a new window)</a>
+        </div>
+    </th:block>
 
     <section>
         <h2 class="heading-medium">Finance</h2>
         <div class="collapsible">
             <h3>Finances summary</h3>
-            <div class="collapsible-content"><div class="question">
-                <div class="form-group finance-summary" style="overflow:auto;">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>
-                            </th><th scope="col" class="numeric">Total costs</th>
-                            <th scope="col" class="numeric width-small">% Grant</th>
-                            <th scope="col" class="numeric width-small-medium">Funding sought (£)</th>
-                            <th scope="col" class="numeric width-medium">Other public sector funding (£)</th>
-                            <th scope="col" class="numeric width-small-medium">Contribution to project (£)</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">
-                                <div>
-                                    <div>Empire Ltd</div>
-                                    <div>
-                                        <small>Lead organisation</small>
-                                    </div>
-                                    <a href="/application/112/form/section/127/" style="font-weight: normal;">
-                                        View finances
-                                    </a>
-                                </div>
-                            </th>
-                            <td class="numeric">
-                                <strong>£200,903</strong>
-                            </td>
-                            <td class="numeric">30%</td>
-                            <td class="numeric">57,803</td>
-                            <td class="numeric">2,468</td>
-                            <td class="numeric">140,632</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <div>
-                                    <div>Ludlow</div>
-                                    <div>
-                                        <small>Partner</small>
-                                    </div>
-                                </div>
-                            </th>
-
-                            <td class="numeric">
-                                <strong>£200,903</strong>
-                            </td>
-                            <td class="numeric">0%</td>
-                            <td class="numeric">0</td>
-                            <td class="numeric">2,468</td>
-                            <td class="numeric">198,435</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <div>
-                                    <div>EGGS</div>
-                                    <div>
-                                        <small>Partner</small>
-                                    </div>
-                                </div>
-                            </th>
-                            <td class="numeric">
-                                <strong>£990</strong>
-                            </td>
-                            <td class="numeric">100%</td>
-                            <td class="numeric">990</td>
-                            <td class="numeric">0</td>
-                            <td class="numeric">0</td>
-                        </tr>
-
-                        <tr>
-                            <th scope="row">Total</th>
-                            <td class="numeric">
-                                <strong>£402,797</strong>
-                            </td>
-                            <td></td>
-                            <td class="numeric">58,793</td>
-                            <td class="numeric">4,936</td>
-                            <td class="numeric">339,068</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-
-                <h2 class="heading-medium">Funding breakdown</h2>
-
-                <div class="project-cost-breakdown">
-                    <div style="overflow: auto;">
-
+            <div class="collapsible-content">
+                <div class="question">
+                    <div class="form-group finance-summary" style="overflow:auto;">
                         <table>
                             <thead>
                             <tr>
-                                <td></td>
-                                <th scope="col" class="numeric">Total</th>
-                                <th scope="col" class="numeric">
-                                    Labour (£)
+                                <th>
                                 </th>
-                                <th scope="col" class="numeric">
-                                    Overhead costs (£)
-                                </th>
-                                <th scope="col" class="numeric">
-                                    Materials (£)
-                                </th>
-                                <th scope="col" class="numeric  width-small">
-                                    Capital usage (£)
-                                </th>
-                                <th scope="col" class="numeric  width-small">
-                                    Subcontracting costs (£)
-                                </th>
-                                <th scope="col" class="numeric  width-small">
-                                    Travel and subsistence (£)
-                                </th>
-                                <th scope="col" class="numeric  width-small">
-                                    Other costs (£)
-                                </th>
+                                <th scope="col" class="numeric">Total costs</th>
+                                <th scope="col" class="numeric width-small">% Grant</th>
+                                <th scope="col" class="numeric width-small-medium">Funding sought (£)</th>
+                                <th scope="col" class="numeric width-medium">Other public sector funding (£)</th>
+                                <th scope="col" class="numeric width-small-medium">Contribution to project (£)</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-
                                 <th scope="row">
-                                    <div>Empire Ltd</div>
-                                    <div><small>Lead organisation</small></div>
+                                    <div>
+                                        <div>Empire Ltd</div>
+                                        <div>
+                                            <small>Lead organisation</small>
+                                        </div>
+                                        <a href="/application/112/form/section/127/" style="font-weight: normal;">
+                                            View finances
+                                        </a>
+                                    </div>
                                 </th>
-                                <td class="numeric bold">
-                                    <span>£200,903</span>
+                                <td class="numeric">
+                                    <strong>£200,903</strong>
                                 </td>
-                                <td class="numeric">3,081</td>
-                                <td class="numeric">0</td>
-                                <td class="numeric">100,200</td>
-                                <td class="numeric">552</td>
-                                <td class="numeric">90,000</td>
-                                <td class="numeric">5,970</td>
-                                <td class="numeric">1,100</td>
+                                <td class="numeric">30%</td>
+                                <td class="numeric">57,803</td>
+                                <td class="numeric">2,468</td>
+                                <td class="numeric">140,632</td>
                             </tr>
                             <tr>
                                 <th scope="row">
-                                    <div>Ludlow</div>
-
-                                    <div><small>Partner</small></div>
+                                    <div>
+                                        <div>Ludlow</div>
+                                        <div>
+                                            <small>Partner</small>
+                                        </div>
+                                    </div>
                                 </th>
-                                <td class="numeric bold">
-                                    <span>£200,903</span>
+
+                                <td class="numeric">
+                                    <strong>£200,903</strong>
                                 </td>
-                                <td class="numeric">3,081</td>
+                                <td class="numeric">0%</td>
                                 <td class="numeric">0</td>
-                                <td class="numeric">100,200</td>
-                                <td class="numeric">552</td>
-                                <td class="numeric">90,000</td>
-                                <td class="numeric">5,970</td>
-                                <td class="numeric">1,100</td>
+                                <td class="numeric">2,468</td>
+                                <td class="numeric">198,435</td>
                             </tr>
                             <tr>
                                 <th scope="row">
-                                    <div>EGGS</div>
-
-                                    <div><small>Partner</small></div>
+                                    <div>
+                                        <div>EGGS</div>
+                                        <div>
+                                            <small>Partner</small>
+                                        </div>
+                                    </div>
                                 </th>
-                                <td class="numeric bold">
-                                    <span>£990</span>
+                                <td class="numeric">
+                                    <strong>£990</strong>
                                 </td>
-                                <td class="numeric">286</td>
-                                <td class="numeric">154</td>
-                                <td class="numeric">66</td>
+                                <td class="numeric">100%</td>
+                                <td class="numeric">990</td>
                                 <td class="numeric">0</td>
                                 <td class="numeric">0</td>
-                                <td class="numeric">44</td>
-                                <td class="numeric">440</td>
                             </tr>
+
                             <tr>
                                 <th scope="row">Total</th>
-                                <td class="numeric bold">
-                                    <span>£402,797</span>
+                                <td class="numeric">
+                                    <strong>£402,797</strong>
                                 </td>
-
-                                <td class="numeric">6,449</td>
-
-                                <td class="numeric">154</td>
-
-                                <td class="numeric">200,466</td>
-
-                                <td class="numeric">1,104</td>
-
-                                <td class="numeric">180,000</td>
-
-                                <td class="numeric">11,984</td>
-
-                                <td class="numeric">2,640</td>
-
+                                <td></td>
+                                <td class="numeric">58,793</td>
+                                <td class="numeric">4,936</td>
+                                <td class="numeric">339,068</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
+
+
+                    <h2 class="heading-medium">Funding breakdown</h2>
+
+                    <div class="project-cost-breakdown">
+                        <div style="overflow: auto;">
+
+                            <table>
+                                <thead>
+                                <tr>
+                                    <td></td>
+                                    <th scope="col" class="numeric">Total</th>
+                                    <th scope="col" class="numeric">
+                                        Labour (£)
+                                    </th>
+                                    <th scope="col" class="numeric">
+                                        Overhead costs (£)
+                                    </th>
+                                    <th scope="col" class="numeric">
+                                        Materials (£)
+                                    </th>
+                                    <th scope="col" class="numeric  width-small">
+                                        Capital usage (£)
+                                    </th>
+                                    <th scope="col" class="numeric  width-small">
+                                        Subcontracting costs (£)
+                                    </th>
+                                    <th scope="col" class="numeric  width-small">
+                                        Travel and subsistence (£)
+                                    </th>
+                                    <th scope="col" class="numeric  width-small">
+                                        Other costs (£)
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+
+                                    <th scope="row">
+                                        <div>Empire Ltd</div>
+                                        <div>
+                                            <small>Lead organisation</small>
+                                        </div>
+                                    </th>
+                                    <td class="numeric bold">
+                                        <span>£200,903</span>
+                                    </td>
+                                    <td class="numeric">3,081</td>
+                                    <td class="numeric">0</td>
+                                    <td class="numeric">100,200</td>
+                                    <td class="numeric">552</td>
+                                    <td class="numeric">90,000</td>
+                                    <td class="numeric">5,970</td>
+                                    <td class="numeric">1,100</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        <div>Ludlow</div>
+
+                                        <div>
+                                            <small>Partner</small>
+                                        </div>
+                                    </th>
+                                    <td class="numeric bold">
+                                        <span>£200,903</span>
+                                    </td>
+                                    <td class="numeric">3,081</td>
+                                    <td class="numeric">0</td>
+                                    <td class="numeric">100,200</td>
+                                    <td class="numeric">552</td>
+                                    <td class="numeric">90,000</td>
+                                    <td class="numeric">5,970</td>
+                                    <td class="numeric">1,100</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        <div>EGGS</div>
+
+                                        <div>
+                                            <small>Partner</small>
+                                        </div>
+                                    </th>
+                                    <td class="numeric bold">
+                                        <span>£990</span>
+                                    </td>
+                                    <td class="numeric">286</td>
+                                    <td class="numeric">154</td>
+                                    <td class="numeric">66</td>
+                                    <td class="numeric">0</td>
+                                    <td class="numeric">0</td>
+                                    <td class="numeric">44</td>
+                                    <td class="numeric">440</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Total</th>
+                                    <td class="numeric bold">
+                                        <span>£402,797</span>
+                                    </td>
+
+                                    <td class="numeric">6,449</td>
+
+                                    <td class="numeric">154</td>
+
+                                    <td class="numeric">200,466</td>
+
+                                    <td class="numeric">1,104</td>
+
+                                    <td class="numeric">180,000</td>
+
+                                    <td class="numeric">11,984</td>
+
+                                    <td class="numeric">2,640</td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </section>
@@ -529,16 +576,17 @@
 
 <script type="text/javascript">
 
-	jQuery('input#agree-terms').on('click',function(e){
-		//e.preventDefault();
-		if ( jQuery(this).is(':checked') ) {
-			jQuery("#confirm-submit").removeClass('disabled');
-		}else{
-			jQuery("#confirm-submit").addClass('disabled');
-		}
+    jQuery('input#agree-terms').on('click', function (e) {
+        //e.preventDefault();
+        if (jQuery(this).is(':checked')) {
+            jQuery("#confirm-submit").removeClass('disabled');
+        } else {
+            jQuery("#confirm-submit").addClass('disabled');
+        }
 
-	});
+    });
 
 </script>
 </body>
+
 </html>

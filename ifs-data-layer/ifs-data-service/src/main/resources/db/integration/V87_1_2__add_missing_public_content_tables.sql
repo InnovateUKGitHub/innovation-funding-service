@@ -1,1 +1,0 @@
-insert into public_content (competition_id) select id from competition;

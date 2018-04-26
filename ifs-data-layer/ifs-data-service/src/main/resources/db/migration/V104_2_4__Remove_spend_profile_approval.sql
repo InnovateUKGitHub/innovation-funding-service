@@ -1,1 +1,0 @@
-ALTER TABLE spend_profile DROP COLUMN approval;

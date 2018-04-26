@@ -9,8 +9,6 @@
 <th:block th:insert="fragments/layout :: global-header" th:with="hidePropositionLinks=true" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
     <h1 class="heading-large" th:text="${title}">Payload too large</h1>
 
     <p th:if="${status}">

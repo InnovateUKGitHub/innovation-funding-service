@@ -3,20 +3,14 @@ package org.innovateuk.ifs.finance.service;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
+import org.innovateuk.ifs.finance.transactional.FinanceFileEntryServiceImpl;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
-
-import java.io.InputStream;
-import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.mockito.Matchers.isA;
@@ -98,30 +92,7 @@ public class FinanceFileEntryServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Override
-    protected Class<TestFinanceFileEntryService> getClassUnderTest() {
-        return TestFinanceFileEntryService.class;
-    }
-
-    public static class TestFinanceFileEntryService implements FinanceFileEntryService {
-
-        @Override
-        public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getFileContents(@P("applicationFinanceId") long applicationFinance) {
-            return null;
-        }
+    protected Class<? extends FinanceFileEntryService> getClassUnderTest() {
+        return FinanceFileEntryServiceImpl.class;
     }
 }

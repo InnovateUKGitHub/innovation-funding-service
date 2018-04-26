@@ -12,7 +12,6 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
 
@@ -23,7 +22,7 @@
         <thead>
             <tr>
                 <th scope="col" class="larger-cols">Question</th>
-                <th scope="col" class="larger-cols">Answer</th>
+                <th scope="col">Answer</th>
             </tr>
         </thead>
         <tbody>
@@ -56,18 +55,21 @@
         </tbody>
     </table>
 
-    <h2 class="heading-medium">Partner finance contacts</h2>
+    <!--/* If project setup location is enabled */-->
+    <th:block th:if="${model.locationPerPartnerRequired}">
+        <h2 class="heading-medium">Partner details</h2>
 
-    <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
+        <p>Each partner must provide a finance contact and a project location.</p>
 
-    <table id="project-details-finance">
-        <thead>
+        <table id="project-details-finance">
+            <thead>
             <tr>
                 <th scope="col" class="larger-cols">Partner</th>
-                <th scope="col" class="larger-cols">Finance contact</th>
+                <th scope="col">Finance contact</th>
+                <th scope="col">Project location</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
 
                 <td>
@@ -75,14 +77,57 @@
                     <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
                 </td>
                 <td>
-                  <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
-                  <th:block th:if="${organisationFinanceContact.value == null}">
+                    <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
+                    <th:block th:if="${organisationFinanceContact.value == null}">
                         Not yet completed
-                  </th:block>
+                    </th:block>
+                </td>
+                <td>
+                    <th:block th:unless="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}"
+                              th:text="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id)}" />
+                    <th:block th:if="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}">
+                        Not yet completed
+                    </th:block>
                 </td>
             </tr>
-        </tbody>
-    </table>
+
+            </tbody>
+        </table>
+    </th:block>
+
+    <th:block th:unless="${model.locationPerPartnerRequired}">
+        <h2 class="heading-medium">Partner finance contacts</h2>
+
+        <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
+
+        <table id="project-details-finance2">
+            <thead>
+                <tr>
+                    <th scope="col" class="larger-cols">Partner</th>
+                    <th scope="col" class="larger-cols">Finance contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="organisationFinanceContact: ${model.organisationFinanceContactMap}">
+
+                    <td>
+                        <th:block th:if="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name + ' (Lead)'}"></th:block>
+                        <th:block th:unless="${organisationFinanceContact.key.name.equals(model.leadOrganisation)}" th:text="${organisationFinanceContact.key.name}"></th:block>
+                    </td>
+                    <td>
+                      <th:block th:unless="${organisationFinanceContact.value == null}" th:text="${organisationFinanceContact.value.userName}" />
+                      <th:block th:if="${organisationFinanceContact.value == null}">
+                            Not yet completed
+                      </th:block>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+        <th:block th:if="${model.showWithdrawLink}">
+            <a data-js-modal="modal-withdraw-project" class="buttonlink extra-margin">Withdraw project</a>
+                <th:block th:insert="fragments/modals :: modal-withdraw-project" />
+        </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

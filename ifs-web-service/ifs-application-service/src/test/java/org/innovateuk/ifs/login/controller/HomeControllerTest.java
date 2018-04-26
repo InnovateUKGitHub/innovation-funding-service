@@ -6,23 +6,20 @@ import org.innovateuk.ifs.login.HomeController;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
 import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
 import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 
 public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController> {
@@ -142,7 +139,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     @Test
     public void testRoleSelectionAssessor() throws Exception {
         setLoggedInUser(assessorAndApplicant);
-        UserRoleType selectedRole = UserRoleType.ASSESSOR;
+        Role selectedRole = Role.ASSESSOR;
 
         mockMvc.perform(post("/roleSelection")
                 .param("selectedRole", selectedRole.name()))
@@ -154,7 +151,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     @Test
     public void testRoleSelectionApplicant() throws Exception {
         setLoggedInUser(assessorAndApplicant);
-        UserRoleType selectedRole = UserRoleType.APPLICANT;
+        Role selectedRole = Role.APPLICANT;
 
         mockMvc.perform(post("/roleSelection")
                 .param("selectedRole", selectedRole.name()))

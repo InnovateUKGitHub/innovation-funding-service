@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.resource.FundingDecision;;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -27,10 +27,10 @@ import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStr
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,14 +42,14 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CREATE_PROJECT_FROM_APPLICATION_FAILS;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
@@ -201,6 +201,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
             }
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> withdrawProject(long projectId) {
+
+        return getProject(projectId).andOnSuccess(
+                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                                projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))
+        );
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {

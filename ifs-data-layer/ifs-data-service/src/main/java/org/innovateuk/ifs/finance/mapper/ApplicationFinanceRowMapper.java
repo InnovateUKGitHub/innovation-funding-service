@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance.mapper;
 
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;

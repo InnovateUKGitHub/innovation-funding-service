@@ -35,7 +35,7 @@ task endpointDocumentation(type: Task) {
 
 repositories {
     maven { url "https://repo.spring.io/milestone" }
-    mavenCentral()
+    jcenter()
 }
 
 build.finalizedBy endpointDocumentation

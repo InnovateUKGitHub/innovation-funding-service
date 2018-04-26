@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.form.domain;
 
-import org.innovateuk.ifs.validator.EmailValidator;
-import org.innovateuk.ifs.validator.NotEmptyValidator;
+import org.innovateuk.ifs.validation.validator.EmailValidator;
+import org.innovateuk.ifs.validation.validator.NotEmptyValidator;
 import org.junit.Assert;
 import org.junit.Test;
 

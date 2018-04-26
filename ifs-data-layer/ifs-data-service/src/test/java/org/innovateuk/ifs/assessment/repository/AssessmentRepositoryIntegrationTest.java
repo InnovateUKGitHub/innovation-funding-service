@@ -42,7 +42,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 

@@ -26,6 +26,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -113,7 +114,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         when(internalUserServiceMock.editInternalUser(Mockito.any()))
                 .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE));
 
-        Role role = Role.IFS_ADMINISTRATOR;
+        Role role = IFS_ADMINISTRATOR;
 
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withRolesGlobal(Collections.singletonList(role))
@@ -147,15 +148,12 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
     @Test
     public void viewEditUserSuccess() throws Exception {
-
-        Role role = Role.IFS_ADMINISTRATOR;
-
         String email = "asdf@asdf.com";
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRolesGlobal(Collections.singletonList(role))
+                .withRolesGlobal(Collections.singletonList(IFS_ADMINISTRATOR))
                 .withStatus(UserStatus.ACTIVE)
                 .build();
 
@@ -165,7 +163,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         EditUserForm expectedForm = new EditUserForm();
         expectedForm.setFirstName("first");
         expectedForm.setLastName("last");
-        expectedForm.setRole(UserRoleType.IFS_ADMINISTRATOR);
+        expectedForm.setRole(IFS_ADMINISTRATOR);
         expectedForm.setEmailAddress(email);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/user/{userId}/edit", 1L))
@@ -179,7 +177,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void deactivateUserSuccess() throws Exception {
 
         String email = "asdf@asdf.com";
-        Role role = Role.IFS_ADMINISTRATOR;
+        Role role = IFS_ADMINISTRATOR;
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
@@ -201,7 +199,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void deactivateUserDeactivateFails() throws Exception {
 
         String email = "asdf@asdf.com";
-        Role role = Role.IFS_ADMINISTRATOR;
+        Role role = IFS_ADMINISTRATOR;
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
@@ -230,7 +228,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void reactivateUserSuccess() throws Exception {
 
         String email = "asdf@asdf.com";
-        Role role = Role.IFS_ADMINISTRATOR;
+        Role role = IFS_ADMINISTRATOR;
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
@@ -252,7 +250,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void reactivateUserReactivateFails() throws Exception {
 
         String email = "asdf@asdf.com";
-        Role role = Role.IFS_ADMINISTRATOR;
+        Role role = IFS_ADMINISTRATOR;
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")

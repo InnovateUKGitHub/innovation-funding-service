@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.registration.resource;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.user.resource.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.user.resource.*;
+
 import javax.validation.constraints.Size;
 import java.util.List;
 

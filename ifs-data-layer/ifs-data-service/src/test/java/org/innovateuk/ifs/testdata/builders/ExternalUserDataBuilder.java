@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.testdata.builders.data.ExternalUserData;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +9,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 
 /**
  * Generates applicant users via registration
@@ -19,7 +19,7 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
     private static final Logger LOG = LoggerFactory.getLogger(ExternalUserDataBuilder.class);
 
     public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
-        return with(data -> registerUser(firstName, lastName, emailAddress, organisationName, phoneNumber, singletonList(UserRoleType.APPLICANT), data));
+        return with(data -> registerUser(firstName, lastName, emailAddress, organisationName, phoneNumber, singletonList(APPLICANT), data));
     }
 
     public static ExternalUserDataBuilder newExternalUserData(ServiceLocator serviceLocator) {

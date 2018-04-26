@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.forms.controller;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -11,10 +11,12 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -86,11 +88,14 @@ public class ApplicationSubmitController {
     @Autowired
     private AssessmentRestService assessmentRestService;
 
+    @Autowired
+    private ProjectService projectService;
+
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
@@ -109,6 +114,10 @@ public class ApplicationSubmitController {
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
 
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
+
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        boolean projectWithdrawn = (project != null && project.isWithdrawn());
+        model.addAttribute("projectWithdrawn", projectWithdrawn);
 
         if (competition.getCompetitionStatus().isFeedbackReleased()) {
             model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.form.section.subform;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
+import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
 
 import javax.validation.constraints.NotNull;
@@ -9,19 +10,17 @@ import javax.validation.constraints.NotNull;
 /**
  * The repeating date that is being used in the {@link DatesForm}
  */
+@ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.publiccontent.datesform.date.required}")
 public class Date {
     private Long id;
 
-    @Range(min = 1, max = 31)
-    @NotNull(message = "{validation.publiccontent.datesform.date.required}")
+    @Range(min = 1, max = 31, message = "{validation.publiccontent.datesform.date.day}")
     private Integer day;
 
-    @Range(min = 1, max = 12)
-    @NotNull(message = "{validation.publiccontent.datesform.date.required}")
+    @Range(min = 1, max = 12, message = "{validation.publiccontent.datesform.date.month}")
     private Integer month;
 
-    @Range(min = 0, max = Integer.MAX_VALUE)
-    @NotNull(message = "{validation.publiccontent.datesform.date.required}")
+    @Range(min = 2000, max = 9999, message = "{validation.publiccontent.datesform.date.year}")
     private Integer year;
 
     @NotEmpty(message = "{validation.publiccontent.datesform.content.required}")

@@ -1,1 +1,0 @@
-ALTER TABLE `question` ADD COLUMN `assessor_maximum_score` int(11) DEFAULT NULL;

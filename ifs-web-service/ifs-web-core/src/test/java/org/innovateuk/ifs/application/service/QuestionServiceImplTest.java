@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.Future;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -50,12 +50,12 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         Long assigneeId = 3L;
         Long assignedById = 4L;
 
-        when(questionRestService.assign(questionId, applicationId, assigneeId, assignedById)).thenReturn(restSuccess());
+        when(questionStatusRestService.assign(questionId, applicationId, assigneeId, assignedById)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.assign(questionId, applicationId, assigneeId, assignedById);
 
         assertTrue(result.isSuccess());
-        verify(questionRestService).assign(questionId, applicationId, assigneeId, assignedById);
+        verify(questionStatusRestService).assign(questionId, applicationId, assigneeId, assignedById);
     }
 
     @Test
@@ -64,11 +64,11 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         Long applicationId = 2L;
         Long markedAsCompleteById = 3L;
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        when(questionRestService.markAsComplete(questionId, applicationId, markedAsCompleteById)).thenReturn(restSuccess(validationMessages));
+        when(questionStatusRestService.markAsComplete(questionId, applicationId, markedAsCompleteById)).thenReturn(restSuccess(validationMessages));
 
         List<ValidationMessages> result = service.markAsComplete(questionId, applicationId, markedAsCompleteById);
 
-        verify(questionRestService).assign(questionId, applicationId, 0L, 0L);
+        verify(questionStatusRestService).assign(questionId, applicationId, 0L, 0L);
         assertEquals(validationMessages, result);
     }
 
@@ -80,7 +80,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
 
         service.markAsIncomplete(questionId, applicationId, markedAsInCompleteById);
 
-        verify(questionRestService).markAsInComplete(questionId, applicationId, markedAsInCompleteById);
+        verify(questionStatusRestService).markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }
 
     @Test
@@ -127,8 +127,8 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
 
         service.removeNotifications(questionStatuses);
 
-        verify(questionRestService).updateNotification(status1Id, true);
-        verify(questionRestService).updateNotification(status2Id, true);
+        verify(questionStatusRestService).updateNotification(status1Id, true);
+        verify(questionStatusRestService).updateNotification(status2Id, true);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         Set<Long> ids = Sets.newHashSet(1L);
         when(future.get()).thenReturn(ids);
 
-        when(questionRestService.getMarkedAsComplete(applicationId, organisationId)).thenReturn(future);
+        when(questionStatusRestService.getMarkedAsComplete(applicationId, organisationId)).thenReturn(future);
         Future<Set<Long>> result = service.getMarkedAsComplete(applicationId, organisationId);
 
         assertEquals(ids, result.get());

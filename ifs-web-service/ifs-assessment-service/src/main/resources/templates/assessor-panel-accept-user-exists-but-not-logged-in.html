@@ -4,13 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assess competition'" />
     </head>
 
-    <body th:with="context='assessment'" class="create-application-eligibility">
+    <body class="create-application-eligibility">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
-
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment panel',size='heading-xlarge'" />
             <p th:text="|You have been invited to the assessment panel for: '${model.competitionName}'.|"></p>
 
@@ -30,5 +28,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

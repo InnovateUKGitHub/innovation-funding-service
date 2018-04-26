@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Affiliation;
+import org.innovateuk.ifs.user.domain.Ethnicity;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
@@ -8,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -20,7 +23,6 @@ import static org.innovateuk.ifs.user.resource.Title.Miss;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 /**

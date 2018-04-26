@@ -2,6 +2,8 @@ package org.innovateuk.ifs.config.http;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.AsyncClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFactory;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,6 +17,10 @@ public class HttpConfig {
 
     @Bean
     public AsyncRestTemplate asyncRestTemplate() {
-        return new AsyncRestTemplate();
+        return new AsyncRestTemplate(asyncHttpRequestFactory());
+    }
+
+    private AsyncClientHttpRequestFactory asyncHttpRequestFactory() {
+        return new HttpComponentsAsyncClientHttpRequestFactory();
     }
 }

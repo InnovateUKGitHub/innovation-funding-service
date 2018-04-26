@@ -19,7 +19,6 @@ import org.innovateuk.ifs.management.model.ReinstateIneligibleApplicationModelPo
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -44,6 +43,7 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
@@ -214,7 +214,7 @@ public class CompetitionManagementApplicationController {
     }
 
     private boolean isInternalUser(UserResource user) {
-        return user.hasRole(UserRoleType.IFS_ADMINISTRATOR) || isInternal(user);
+        return user.hasRole(IFS_ADMINISTRATOR) || isInternal(user);
     }
 
     private void validateIfTryingToMarkAsIneligible(String ineligibleReason,

@@ -5,10 +5,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
-import java.time.ZonedDateTime;
-
-import static java.time.temporal.ChronoUnit.DAYS;
-
 /**
  * DTO for {@link org.innovateuk.ifs.invite.domain.competition.InterviewInvite}s.
  */
@@ -20,15 +16,13 @@ public class InterviewInviteResource extends InviteResource {
     private String competitionName;
     private long userId;
     private String email;
-    private ZonedDateTime interviewDate;
 
     public InterviewInviteResource(String hash,
                                    long competitionId,
                                    String competitionName,
                                    InviteStatus status,
                                    long userId,
-                                   String email,
-                                   ZonedDateTime interviewDate
+                                   String email
     ) {
         this.hash = hash;
         this.competitionId = competitionId;
@@ -36,7 +30,6 @@ public class InterviewInviteResource extends InviteResource {
         this.status = status;
         this.userId = userId;
         this.email = email;
-        this.interviewDate = interviewDate;
     }
 
     public InterviewInviteResource() {
@@ -90,19 +83,6 @@ public class InterviewInviteResource extends InviteResource {
         this.email = email;
     }
 
-    public ZonedDateTime getInterviewDate() {
-        return interviewDate;
-    }
-
-    public void setInterviewDate(ZonedDateTime interviewDate) {
-        this.interviewDate = interviewDate;
-    }
-
-    @JsonIgnore
-    public long getInterviewDaysLeft() {
-        return DAYS.between(ZonedDateTime.now(), interviewDate);
-    }
-
     @JsonIgnore
     public boolean isPending() {
         return status == InviteStatus.SENT;
@@ -123,7 +103,6 @@ public class InterviewInviteResource extends InviteResource {
                 .append(userId, that.userId)
                 .append(competitionName, that.competitionName)
                 .append(email, that.email)
-                .append(interviewDate, that.interviewDate)
                 .isEquals();
     }
 
@@ -136,7 +115,6 @@ public class InterviewInviteResource extends InviteResource {
                 .append(userId)
                 .append(competitionName)
                 .append(email)
-                .append(interviewDate)
                 .toHashCode();
     }
 }

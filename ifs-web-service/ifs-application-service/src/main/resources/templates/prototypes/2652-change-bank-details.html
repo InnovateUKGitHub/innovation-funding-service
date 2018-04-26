@@ -14,7 +14,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Bank details'}, ${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/4547-review-all-bank-details?status=accepted' : '/prototypes/4547-review-all-bank-details')})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->

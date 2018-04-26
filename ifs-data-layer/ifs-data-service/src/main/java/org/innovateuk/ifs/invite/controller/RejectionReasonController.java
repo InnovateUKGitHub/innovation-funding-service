@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.springframework.beans.factory.annotation.Autowired;

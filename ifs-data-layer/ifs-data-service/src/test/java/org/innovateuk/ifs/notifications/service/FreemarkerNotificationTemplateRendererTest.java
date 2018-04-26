@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.notifications.service;
 
-import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
-import org.innovateuk.ifs.notifications.resource.NotificationSource;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.notifications.resource.NotificationSource;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -47,7 +47,7 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
     public void testRenderTemplate() throws IOException, TemplateException {
 
         NotificationSource from = this.systemNotificationSource;
-        NotificationTarget to = new ExternalUserNotificationTarget("A User", "user@example.com");
+        NotificationTarget to = new UserNotificationTarget("A User", "user@example.com");
 
         when(freemarkerConfigurationMock.getTemplate("/path/to/template")).thenReturn(freemarkerTemplateMock);
 
@@ -63,7 +63,7 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
     public void testRenderTemplateButGetTemplateFails() throws IOException {
 
         NotificationSource from = this.systemNotificationSource;
-        NotificationTarget to = new ExternalUserNotificationTarget("A User", "user@example.com");
+        NotificationTarget to = new UserNotificationTarget("A User", "user@example.com");
 
         when(freemarkerConfigurationMock.getTemplate("/path/to/template")).thenThrow(new IllegalArgumentException("no templates!"));
 
@@ -76,7 +76,7 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
     public void testRenderTemplateButProcessTemplateThrowsUnhandledException() throws IOException, TemplateException {
 
         NotificationSource from = this.systemNotificationSource;
-        NotificationTarget to = new ExternalUserNotificationTarget("A User", "user@example.com");
+        NotificationTarget to = new UserNotificationTarget("A User", "user@example.com");
 
         when(freemarkerConfigurationMock.getTemplate("/path/to/template")).thenReturn(freemarkerTemplateMock);
         doThrow(new IllegalArgumentException("No processing!")).when(freemarkerTemplateMock).process(isA(Map.class), isA(Writer.class));
@@ -90,7 +90,7 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
     public void testRenderTemplateButProcessTemplateThrowsHandledException() throws IOException, TemplateException {
 
         NotificationSource from = this.systemNotificationSource;
-        NotificationTarget to = new ExternalUserNotificationTarget("A User", "user@example.com");
+        NotificationTarget to = new UserNotificationTarget("A User", "user@example.com");
 
         when(freemarkerConfigurationMock.getTemplate("/path/to/template")).thenReturn(freemarkerTemplateMock);
         doThrow(new TemplateException("No processing!", null)).when(freemarkerTemplateMock).process(isA(Map.class), isA(Writer.class));

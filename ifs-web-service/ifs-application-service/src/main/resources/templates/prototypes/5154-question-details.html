@@ -13,7 +13,7 @@
 
 <main id="content">
 
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->

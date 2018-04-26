@@ -12,13 +12,15 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -49,6 +51,7 @@ import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbac
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
@@ -177,6 +180,42 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(model().attribute("scores", aggregateResource));
     }
 
+    public void testApplicationSummaryWithProjectWithdrawn() throws Exception {
+        CompetitionResource competition = competitionResources.get(0);
+        competition.setCompetitionStatus(PROJECT_SETUP);
+
+        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
+                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
+
+        ApplicationResource app = applications.get(0);
+        app.setCompetition(competition.getId());
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(
+                organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(
+                userApplicationRole));
+
+        when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
+                .thenReturn(restSuccess(aggregateResource));
+
+        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
+                .withFeedback(asList("Feedback 1", "Feedback 2"))
+                .build();
+
+        when(assessmentRestService.getApplicationFeedback(app.getId())).thenReturn(restSuccess(expectedFeedback));
+
+        ProjectResource project = newProjectResource().withProjectState(ProjectState.WITHDRAWN).build();
+        when(projectService.getByApplicationId(app.getId())).thenReturn(project);
+
+        mockMvc.perform(get("/application/" + app.getId() + "/summary"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("projectWithdrawn", true));
+    }
+
+
     @Test
     public void testApplicationSummaryReadyForReviewAction() throws Exception {
         ApplicationResource app = applications.get(0);
@@ -249,7 +288,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
+        when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(applicationRestService.updateApplicationState(app.getId(), SUBMITTED)).thenReturn(restSuccess());
@@ -268,7 +307,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     public void testApplicationSubmitAppisNotSubmittable() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
+        when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));

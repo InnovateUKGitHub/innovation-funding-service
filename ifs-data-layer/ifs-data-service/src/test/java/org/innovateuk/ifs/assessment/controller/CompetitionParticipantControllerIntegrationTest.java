@@ -5,9 +5,9 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.junit.After;
@@ -23,10 +23,10 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
+import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
@@ -42,7 +42,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     }
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -65,7 +65,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, SENT, PENDING);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        competitionParticipantRepository.save(asList(
+        assessmentParticipantRepository.save(asList(
                 expectedParticipant1,
                 expectedParticipant2
         ));
@@ -116,7 +116,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        competitionParticipantRepository.save(asList(
+        assessmentParticipantRepository.save(asList(
                 expectedParticipant1,
                 expectedParticipant2
         ));
@@ -147,7 +147,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         Competition competition1 = buildInAssessmentCompetition();
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, REJECTED);
 
-        competitionParticipantRepository.save(singletonList(expectedParticipant1));
+        assessmentParticipantRepository.save(singletonList(expectedParticipant1));
 
         flushAndClearSession();
 
@@ -168,7 +168,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        competitionParticipantRepository.save(asList(
+        assessmentParticipantRepository.save(asList(
                 expectedParticipant1,
                 expectedParticipant2
         ));

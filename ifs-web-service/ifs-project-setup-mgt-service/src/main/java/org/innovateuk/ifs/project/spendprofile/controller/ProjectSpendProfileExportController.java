@@ -8,7 +8,6 @@ import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -38,9 +37,21 @@ public class ProjectSpendProfileExportController {
                                                       HttpServletResponse response) throws IOException {
         SpendProfileCSVResource spendProfileCSVResource = spendProfileService.getSpendProfileCSV(projectId, organisationId);
         response.setContentType(CONTENT_TYPE);
-        response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName()));
+
+        /*
+         * Prevent 'HTTP response splitting attack' by removing comma from the 'Content-disposition' header.
+         * If there is a comma in the 'Content-disposition' header, then it results in two values of the same 'Content-disposition' header,
+         * which in turn is interpreted as a 'HTTP response splitting attack', because there cannot be "multiple Content-Disposition header" values
+         * in a single HTTP response.
+         *
+         */
+        response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(removeComma(spendProfileCSVResource.getFileName())));
         response.getOutputStream().print(spendProfileCSVResource.getCsvData());
         response.getOutputStream().flush();
+    }
+
+    private String removeComma(String input) {
+        return input.replace(",", "");
     }
 
     private String getCSVAttachmentHeader(String fileName) {

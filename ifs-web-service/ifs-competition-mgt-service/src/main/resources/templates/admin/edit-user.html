@@ -11,7 +11,6 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='View or search for an internal user',linkClass='link-back',linkUrl=@{/admin/users/active}" />
 
 
@@ -75,7 +74,7 @@
                 </th:block>
             </label>
             <select name="role" class="form-control" id="role" th:field="*{role}" required="required" data-required-errormessage="Please select a role">
-                <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.UserRoleType).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
+                <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
             </select>
         </div>
 

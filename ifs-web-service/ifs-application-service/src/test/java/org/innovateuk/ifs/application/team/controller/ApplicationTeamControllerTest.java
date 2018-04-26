@@ -103,7 +103,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -157,7 +157,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -210,7 +210,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -264,7 +264,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -291,7 +291,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -318,7 +318,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
@@ -352,7 +352,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
     private UserResource setupLeadApplicant(ApplicationResource applicationResource, Map<String, UserResource> usersMap) {
         UserResource leadApplicant = usersMap.get("steve.smith@empire.com");
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(newProcessRoleResource()
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(newProcessRoleResource()
                 .withUser(leadApplicant)
                 .build());
         when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);

@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks overview'" />
 </head>
-<body th:with="context='project'" class="finance-checks-overview">
+<body class="finance-checks-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${project.id})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=${project.name},size='heading-xlarge'" />
     <p>This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
@@ -27,6 +26,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

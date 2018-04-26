@@ -2,15 +2,17 @@ package org.innovateuk.ifs.transactional;
 
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
-import org.innovateuk.ifs.application.repository.SectionRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
@@ -46,6 +48,9 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
 
     @Autowired
     protected OrganisationRepository organisationRepository;
+
+    @Autowired
+    protected PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
     protected AddressTypeRepository addressTypeRepository;
@@ -118,6 +123,10 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
 
     protected ServiceResult<Organisation> getOrganisation(Long id) {
         return find(organisationRepository.findOne(id), notFoundError(Organisation.class, id));
+    }
+
+    protected ServiceResult<PartnerOrganisation> getPartnerOrganisation(final Long projectId, final Long organisationId) {
+        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(PartnerOrganisation.class, projectId, organisationId));
     }
 
     protected Supplier<ServiceResult<Question>> question(Long questionId) {

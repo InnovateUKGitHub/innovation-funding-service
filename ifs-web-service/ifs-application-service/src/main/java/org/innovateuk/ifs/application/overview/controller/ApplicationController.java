@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -92,7 +92,7 @@ public class ApplicationController {
 
     private boolean userIsLeadApplicant(long userId, long applicationId) {
         return processRoleService.findProcessRole(userId, applicationId)
-                .getRoleName().equals(UserRoleType.LEADAPPLICANT.getName());
+                .getRole() == LEADAPPLICANT.getId();
     }
 
     @PostMapping(value = "/{applicationId}")

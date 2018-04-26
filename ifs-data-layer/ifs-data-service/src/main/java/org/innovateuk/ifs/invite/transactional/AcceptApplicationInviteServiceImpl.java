@@ -6,13 +6,14 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
  * and initialising their state on the application correctly.
  */
 @Service
-public class AcceptApplicationInviteServiceImpl extends BaseApplicationInviteService implements AcceptApplicationInviteService {
+public class AcceptApplicationInviteServiceImpl extends InviteService<ApplicationInvite> implements AcceptApplicationInviteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AcceptApplicationInviteServiceImpl.class);
 
@@ -39,13 +40,23 @@ public class AcceptApplicationInviteServiceImpl extends BaseApplicationInviteSer
     private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private ApplicationProgressService applicationProgressService;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
+    private ApplicationInviteRepository applicationInviteRepository;
+
+    @Override
+    protected Class<ApplicationInvite> getInviteClass() {
+        return ApplicationInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<ApplicationInvite> getInviteRepository() {
+        return applicationInviteRepository;
+    }
 
     @Override
     @Transactional

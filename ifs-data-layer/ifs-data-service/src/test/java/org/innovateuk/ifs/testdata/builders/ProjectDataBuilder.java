@@ -9,7 +9,10 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.testdata.builders.data.ProjectData;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

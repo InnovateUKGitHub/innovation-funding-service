@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

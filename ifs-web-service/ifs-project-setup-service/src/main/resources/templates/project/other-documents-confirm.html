@@ -3,12 +3,11 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit other documents'" />
 </head>
-<body th:with="context='project'">
+<body>
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub"  th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner/documents/(projectId=${model.projectId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit other documents',subTitle=${model.projectName},size='heading-xlarge'" />
     <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
@@ -30,6 +29,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>

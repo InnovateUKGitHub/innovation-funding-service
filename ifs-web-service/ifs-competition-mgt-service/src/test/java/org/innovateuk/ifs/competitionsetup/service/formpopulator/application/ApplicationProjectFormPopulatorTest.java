@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator.application;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

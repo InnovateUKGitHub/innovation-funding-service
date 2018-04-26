@@ -6,10 +6,9 @@
 
     <body class="dashboard-internal wide-page">
         <th:block th:insert="fragments/layout :: body-start" />
-       <th:block th:insert="fragments/layout :: global-header" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
 
             <h1 class="heading-xlarge">

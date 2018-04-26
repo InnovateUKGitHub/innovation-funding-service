@@ -9,13 +9,15 @@ import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 
 /**
  * populates the model for the initial details competition setup section.
@@ -40,11 +42,11 @@ public class InitialDetailsModelPopulator implements CompetitionSetupSectionMode
     @Override
 	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
 		return new InitialDetailsViewModel(generalViewModel,
-                userService.findUserByType(UserRoleType.COMP_ADMIN),
+                userService.findUserByType(COMP_ADMIN),
 				categoryRestService.getInnovationSectors().getSuccess(),
 				addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
                 competitionService.getAllCompetitionTypes(),
-                userService.findUserByType(UserRoleType.INNOVATION_LEAD));
+                userService.findUserByType(INNOVATION_LEAD));
 	}
 
 	private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {

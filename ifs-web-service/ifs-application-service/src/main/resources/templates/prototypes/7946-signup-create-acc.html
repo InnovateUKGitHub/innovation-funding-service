@@ -12,7 +12,6 @@
 
 
 <main id="content">
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
   <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}"/>
 
   <!-- HARDCODED PROTOTYPE HTML -->

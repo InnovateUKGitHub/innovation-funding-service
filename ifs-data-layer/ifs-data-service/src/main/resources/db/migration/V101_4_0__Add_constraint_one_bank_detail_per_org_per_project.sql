@@ -1,1 +1,0 @@
-ALTER TABLE bank_details ADD CONSTRAINT UC_bank_details_org_and_project UNIQUE(project_id, organisation_id);

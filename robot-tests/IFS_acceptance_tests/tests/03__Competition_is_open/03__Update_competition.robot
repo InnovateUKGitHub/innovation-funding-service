@@ -270,15 +270,19 @@ the user can see the open date of the competition belongs to the future
 
 the user is able to change the value of the fields
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/detail/edit
-    the user selects the radio button    useResubmissionQuestion    use-resubmission-question-no
+    the user enters text to a text field  id=minProjectDuration  2
+    the user enters text to a text field  id=maxProjectDuration  30
+    the user selects the radio button  useResubmissionQuestion    use-resubmission-question-no
     the user clicks the button/link    jQuery=.button:contains("Done")
     the user clicks the button/link    link=Application details
-    the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("No")
+    the user should see the element    jQuery=dt:contains("Minimum") + dd:contains("2")
+    the user should see the element    jQuery=dt:contains("Maximum") + dd:contains("30")
+    the user should see the element    jQuery=dt:contains("resubmission") + dd:contains("No")
     the user clicks the button/link    jQuery=.button:contains("Edit this question")
     the user clicks the button/link    jQuery=label[for="use-resubmission-question-yes"]
     the user clicks the button/link    jQuery=.button:contains("Done")
     the user clicks the button/link    link=Application details
-    the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("Yes")
+    the user should see the element    jQuery=dt:contains("resubmission") + dd:contains("Yes")
 
 Custom suite setup
     the user logs-in in new browser  &{Comp_admin1_credentials}
@@ -303,7 +307,7 @@ the user moves the competition back again
     the user clicks the button/link    jQuery=button:contains("Done")   # this action  is marking appication section complete
     the user clicks the button/link    link=Competition setup
     the user clicks the button/link    link=Complete
-    the user clicks the button/link    link=Done
+    the user clicks the button/link    css=button[type="submit"]
     the user closes the browser
 
 the user fills in the milestone data with valid information
@@ -342,39 +346,17 @@ the user fills in the milestone data with valid information
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
 
 the user resets the milestone data
-    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    09
-    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    09
-    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2067
-    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    10
-    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    09
-    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2067
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    11
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    09
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2067
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    12
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2068
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    29
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
-    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2068
-    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    20
-    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    02
-    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2068
-    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    20
-    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    3
-    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2068
-    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    20
-    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    4
-    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2068
-    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    20
-    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    5
-    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2068
-    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    20
-    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    6
-    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2068
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    20
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    7
-    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2068
+    The user resets the milestone data for milestone    SUBMISSION_DATE    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    ALLOCATE_ASSESSORS    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    ASSESSOR_BRIEFING    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    ASSESSOR_ACCEPTS    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    ASSESSOR_DEADLINE    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    LINE_DRAW    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    ASSESSMENT_PANEL    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    PANEL_DATE    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    FUNDERS_PANEL    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    NOTIFICATIONS    ${createApplicationOpenCompetitionId}
+    The user resets the milestone data for milestone    RELEASE_FEEDBACK    ${createApplicationOpenCompetitionId}
 
 if textarea is empty the proper validation messages are shown
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css=.editor  Funding rules for this competition are now entered.
@@ -384,6 +366,13 @@ if textarea is empty the proper validation messages are shown
     ...                                           AND  the user clicks the button/link  css=.button[type="submit"]
     ...                                           AND  the user should see a field and summary error  This field cannot be left blank
     ...                                           AND  the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
+
+the user resets the milestone data for milestone
+    [Arguments]    ${milestone}    ${competitionId}
+    The user enters text to a text field    name=milestoneEntries[${milestone}].day    ${getMilestoneDay(${competitionId}, "${milestone}")}
+    The user enters text to a text field    name=milestoneEntries[${milestone}].month    ${getMilestoneMonth(${competitionId}, "${milestone}")}
+    The user enters text to a text field    name=milestoneEntries[${milestone}].year    ${getMilestoneYear(${competitionId}, "${milestone}")}
+
 
 Custom suite teardown
     the user moves the competition back again

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceOverviewViewModel;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;

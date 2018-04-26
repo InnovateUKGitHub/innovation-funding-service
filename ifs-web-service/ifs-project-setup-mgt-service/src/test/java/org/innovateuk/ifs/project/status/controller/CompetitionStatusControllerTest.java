@@ -2,15 +2,14 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,7 +18,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -29,9 +27,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

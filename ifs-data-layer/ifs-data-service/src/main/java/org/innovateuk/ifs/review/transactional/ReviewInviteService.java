@@ -3,7 +3,7 @@ package org.innovateuk.ifs.review.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
@@ -79,7 +79,7 @@ public interface ReviewInviteService {
     @SecuredBySpring(value = "READ_PANEL_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<ReviewInviteResource> openInvite(@P("inviteHash") String inviteHash);
+    ServiceResult<ReviewInviteResource> openInvite(String inviteHash);
 
     @PreAuthorize("hasPermission(#inviteHash, 'org.innovateuk.ifs.invite.resource.ReviewParticipantResource', 'ACCEPT')")
     @SecuredBySpring(value = "ACCEPT_PANEL_INVITE_ON_HASH",
@@ -91,13 +91,13 @@ public interface ReviewInviteService {
     @SecuredBySpring(value = "REJECT_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash);
+    ServiceResult<Void> rejectInvite(String inviteHash);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "CHECK_EXISTING_USER_ON_HASH",
             description = "The System Registration user can check for the presence of a User on an invite or the presence of a User with the invited e-mail address",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
+    ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "DELETE_INVITE",

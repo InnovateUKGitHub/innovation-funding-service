@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -28,6 +28,15 @@ public interface CompetitionService {
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
     ServiceResult<Void> removeInnovationLead(final Long competitionId, final Long innovationLeadUserId);
 
+    /**
+     * IFS-3016: Because of the change in ApplicantDashboardPopulator (getAllCompetitionsForUser),
+     * this endpoint is not used anymore.
+     *
+     * TODO: remove in ZDD cleanup
+     * @param userId
+     * @return
+     */
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint not being used")
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
 
@@ -48,9 +57,6 @@ public interface CompetitionService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_UNSUCCESSFUL_APPLICATIONS')")
-    ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageIndex, int pageSize, String sortField);
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")

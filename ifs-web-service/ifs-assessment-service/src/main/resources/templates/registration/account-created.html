@@ -4,13 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your account has been created'" />
     </head>
 
-    <body th:with="context='assessment'" class="sign-in">
+    <body class="sign-in">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
-
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your account has been created',size='heading-xlarge'" />
             <p>Before we can invite you to assess you will need to sign into your account to complete the following:</p>
 
@@ -33,5 +31,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

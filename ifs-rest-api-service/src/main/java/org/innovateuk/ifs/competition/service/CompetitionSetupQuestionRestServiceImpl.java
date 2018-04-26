@@ -20,21 +20,25 @@ public class CompetitionSetupQuestionRestServiceImpl extends BaseRestService imp
     private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionRestServiceImpl.class);
     private String competitionsSetupRestURL = "/competition-setup-question";
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionSetupCompetitionRestService")
     @Override
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
         return getWithRestResult(competitionsSetupRestURL + "/getById/" + questionId, CompetitionSetupQuestionResource.class);
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionSetupCompetitionRestService")
     @Override
     public RestResult<Void> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         return putWithRestResult(competitionsSetupRestURL + "/save", competitionSetupQuestionResource, Void.class);
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionSetupCompetitionRestService")
     @Override
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetition(Long competitionId) {
         return postWithRestResult(competitionsSetupRestURL + "/addDefaultToCompetition/" + competitionId, CompetitionSetupQuestionResource.class);
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionSetupCompetitionRestService")
     @Override
     public RestResult<Void> deleteById(Long questionId) {
         return deleteWithRestResult(competitionsSetupRestURL + "/deleteById/" + questionId, Void.class);

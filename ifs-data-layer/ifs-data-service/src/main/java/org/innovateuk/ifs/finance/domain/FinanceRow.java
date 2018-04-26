@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.StringUtils;
 

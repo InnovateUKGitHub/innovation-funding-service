@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 
 import java.util.List;

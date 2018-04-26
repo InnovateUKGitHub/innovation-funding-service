@@ -1,1 +1,0 @@
-ALTER TABLE `competition_type` CHANGE `NAME` `name` VARCHAR(255);

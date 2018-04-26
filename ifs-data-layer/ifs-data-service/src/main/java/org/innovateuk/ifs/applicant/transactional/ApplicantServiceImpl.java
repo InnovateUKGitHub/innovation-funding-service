@@ -3,8 +3,10 @@ package org.innovateuk.ifs.applicant.transactional;
 import org.innovateuk.ifs.applicant.resource.*;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.application.transactional.QuestionService;
-import org.innovateuk.ifs.application.transactional.SectionService;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
+import org.innovateuk.ifs.application.transactional.QuestionStatusService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -44,6 +46,10 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private OrganisationService organisationService;
     @Autowired
     private FormInputService formInputService;
+    @Autowired
+    private FormInputResponseService formInputResponseService;
+    @Autowired
+    private QuestionStatusService questionStatusService;
     @Autowired
     private UsersRolesService usersRolesService;
     @Autowired
@@ -93,7 +99,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
         results.trackResult(() -> questionService.getQuestionById(questionId), applicant::setQuestion);
-        results.trackResult(() -> questionService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId), questionStatusResources -> applicant.setApplicantQuestionStatuses(mapToApplicantStatuses(questionStatusResources, applicants)));
+        results.trackResult(() -> questionStatusService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId), questionStatusResources -> applicant.setApplicantQuestionStatuses(mapToApplicantStatuses(questionStatusResources, applicants)));
         results.trackResult(() -> mapFormInputs(results, questionId, applicationId, applicants), applicant::setApplicantFormInputs);
     }
 
@@ -159,7 +165,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private ServiceResult<List<ApplicantFormInputResponseResource>> mapFormInputResponse(ServiceResults results, FormInputResource formInputResource, Long applicationId, List<ApplicantResource> applicants) {
         List<ApplicantFormInputResponseResource> responses = new ArrayList<>();
-        results.trackResult(() -> formInputService.findResponsesByFormInputIdAndApplicationId(formInputResource.getId(), applicationId),
+        results.trackResult(() -> formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputResource.getId(), applicationId),
                 formInputResponseResources -> {
                     formInputResponseResources.forEach(formInputResponseResource -> {
                         ApplicantFormInputResponseResource applicantResponse = new ApplicantFormInputResponseResource();

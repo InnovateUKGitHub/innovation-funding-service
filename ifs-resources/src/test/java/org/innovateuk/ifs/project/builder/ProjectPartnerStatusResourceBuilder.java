@@ -58,6 +58,10 @@ public class ProjectPartnerStatusResourceBuilder extends BaseBuilder<ProjectPart
         return withArray((financeContactStatus, partnerStatus) -> partnerStatus.setFinanceContactStatus(financeContactStatus), financeContactStatuses);
     }
 
+    public ProjectPartnerStatusResourceBuilder withPartnerProjectLocationStatus(ProjectActivityStates... partnerProjectLocationStatuses){
+        return withArray((partnerProjectLocationStatus, partnerStatus) -> partnerStatus.setPartnerProjectLocationStatus(partnerProjectLocationStatus), partnerProjectLocationStatuses);
+    }
+
     public ProjectPartnerStatusResourceBuilder withSpendProfileStatus(ProjectActivityStates... spendProfileStatuses){
         return withArray((spendProfileStatus, partnerStatus) -> partnerStatus.setSpendProfileStatus(spendProfileStatus), spendProfileStatuses);
     }

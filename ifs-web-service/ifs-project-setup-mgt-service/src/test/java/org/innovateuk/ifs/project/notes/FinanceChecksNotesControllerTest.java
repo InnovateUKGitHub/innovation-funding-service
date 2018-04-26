@@ -4,7 +4,6 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,14 +15,13 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.util.JsonUtil;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -46,19 +44,18 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<FinanceChecksNotesController> {
@@ -76,7 +73,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
-    ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
+    ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRole(FINANCE_CONTACT).build();
 
     Role financeTeamRole = Role.PROJECT_FINANCE;
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(Arrays.asList(financeTeamRole)).build();
@@ -96,7 +93,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
-    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator();
+    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
 
     @Before
     public void setup() {

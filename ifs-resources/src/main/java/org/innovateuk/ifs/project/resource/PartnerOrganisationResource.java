@@ -11,6 +11,8 @@ public class PartnerOrganisationResource {
 
     private boolean leadOrganisation;
 
+    private String postCode;
+
     public Long getId() {
         return id;
     }
@@ -49,5 +51,13 @@ public class PartnerOrganisationResource {
 
     public void setProject(Long project) {
         this.project = project;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
     }
 }

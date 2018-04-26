@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;

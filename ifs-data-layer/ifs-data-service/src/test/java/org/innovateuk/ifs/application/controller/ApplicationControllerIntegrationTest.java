@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -37,7 +37,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     private UserMapper userMapper;
 
-    private QuestionController questionController;
+    private QuestionStatusController questionStatusController;
     private Long leadApplicantProcessRole;
     private Long leadApplicantId;
 
@@ -69,8 +69,8 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Autowired
-    public void setQuestionController(QuestionController questionController) {
-        this.questionController = questionController;
+    public void setQuestionStatusController(QuestionStatusController questionStatusController) {
+        this.questionStatusController = questionStatusController;
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         double delta = 0.10;
         assertEquals(33.8709677418, completedPercentage.doubleValue(), delta); //Changed after enabling mark as complete on some more questions for INFUND-446
 
-        questionController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
+        questionStatusController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
 
         CompletedPercentageResource response2  = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccess();
         BigDecimal completedPercentage2 = response2.getCompletedPercentage();
@@ -161,8 +161,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     public void testGetApplicationsByCompetitionIdAndUserId() throws Exception {
         Long competitionId = 1L;
         Long userId = 1L ;
-        UserRoleType role = UserRoleType.LEADAPPLICANT;
-        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).getSuccess();
+        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, Role.LEADAPPLICANT).getSuccess();
 
         assertEquals(6, applications.size());
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();
@@ -197,7 +196,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         ApplicationIneligibleSendResource applicationIneligibleSendResource =
                 newApplicationIneligibleSendResource()
                         .withSubject("Subject")
-                        .withContent("Message")
+                        .withMessage("Message")
                         .build();
 
         RestResult<Void> result = controller.informIneligible(APPLICATION_SUBMITTABLE_ID, applicationIneligibleSendResource);

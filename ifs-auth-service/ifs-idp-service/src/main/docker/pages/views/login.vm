@@ -48,11 +48,14 @@
         <script src="$resourcesDomain/js/vendor/govuk/ie.js" type="text/javascript"></script>
       <![endif]-->
         <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','#springMessageText('ifs.webserver.googleanalytics.trackingid', '#')');</script>
+        #set ($trackingID = "#springMessageText('ifs.webserver.googleanalytics.trackingid', '')")
+        #if( "$!trackingID" != "" )
+            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','$trackingID');</script>
+        #end
         <!-- End Google Tag Manager -->
 
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -61,7 +64,9 @@
     </head>
   	<body>
       <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
-      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id='#springMessageText('ifs.webserver.googleanalytics.trackingid', '#')'" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      #if( "$!trackingID" != "" )
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=$trackingID" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      #end
       <div id="skiplink-container">
         <div>
           <a href="#content" class="skiplink">Skip to main content</a>
@@ -257,8 +262,10 @@
         }
     </script>
     <script src="$resourcesDomain/js/ifs_modules/formValidation.js" type="text/javascript"></script>
+    <script src="$resourcesDomain/js/ifs_modules/passwordToggle.js" type="text/javascript"></script>
     <script type="text/javascript">
         IFS.core.formValidation.init();
+        IFS.core.passwordToggle.init();
     </script>
     <script>
         jQuery(document).ready(function(){
@@ -269,21 +276,6 @@
                 var valid = IFS.core.formValidation.checkEmail(emailField) && IFS.core.formValidation.checkRequired(passwordField);
                 if (valid) {
                     button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
-                }
-            });
-            jQuery(".password-toggle button").on("click", function(event){
-                event.preventDefault();
-                var button = jQuery(this);
-                var passwordInput = jQuery(this).prev();
-                var inputType = passwordInput.attr('type');
-                if (inputType === 'password') {
-                    passwordInput.prop("type", "text");
-                    button.text("Hide");
-                    button.attr("aria-checked", true);
-                } else {
-                    passwordInput.prop("type", "password");
-                    button.text("Show");
-                    button.attr("aria-checked", false);
                 }
             });
             jQuery.ajax({
