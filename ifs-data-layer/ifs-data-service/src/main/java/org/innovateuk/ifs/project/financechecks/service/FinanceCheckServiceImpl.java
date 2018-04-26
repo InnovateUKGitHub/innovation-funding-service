@@ -194,7 +194,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
             ProjectOrganisationCompositeId compositeId = getCompositeId(org);
             Pair<Viability, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
-            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
+            Pair<EligibilityState, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
 
@@ -265,7 +265,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     }
 
-    private Pair<Eligibility, EligibilityRagStatus> getEligibilityStatus(ProjectOrganisationCompositeId compositeId) {
+    private Pair<EligibilityState, EligibilityRagStatus> getEligibilityStatus(ProjectOrganisationCompositeId compositeId) {
 
         EligibilityResource eligibilityDetails = getEligibility(compositeId).getSuccess();
 
@@ -396,7 +396,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -493,7 +493,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private ServiceResult<EligibilityResource> buildEligibilityResource(EligibilityProcess eligibilityProcess, ProjectFinance projectFinance) {
-        EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityProcess.getProcessState()), projectFinance.getEligibilityStatus());
+        EligibilityResource eligibilityResource = new EligibilityResource(eligibilityProcess.getProcessState(), projectFinance.getEligibilityStatus());
 
         if (eligibilityProcess.getLastModified() != null) {
             eligibilityResource.setEligibilityApprovalDate(eligibilityProcess.getLastModified().toLocalDate());
@@ -502,29 +502,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
 
         return serviceSuccess(eligibilityResource);
-    }
-
-    // TODO remove this + the Eligibility enum
-    private Eligibility convertEligibilityState(EligibilityState eligibilityState) {
-
-        Eligibility eligibility;
-
-        switch (eligibilityState) {
-            case REVIEW:
-                eligibility = Eligibility.REVIEW;
-                break;
-            case NOT_APPLICABLE:
-                eligibility = Eligibility.NOT_APPLICABLE;
-                break;
-            case APPROVED:
-                eligibility = Eligibility.APPROVED;
-                break;
-            default:
-                eligibility = Eligibility.REVIEW;
-        }
-
-        return eligibility;
-
     }
 
     private void setEligibilityApprovalUser(EligibilityResource eligibilityResource, User eligibilityApprovalUser) {
@@ -566,22 +543,22 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         if (EligibilityState.APPROVED == currentEligibilityState) {
             return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
         }
 
-        if (Eligibility.APPROVED == eligibility && EligibilityRagStatus.UNSET == eligibilityRagStatus) {
+        if (EligibilityState.APPROVED == eligibility && EligibilityRagStatus.UNSET == eligibilityRagStatus) {
             return serviceFailure(ELIGIBILITY_RAG_STATUS_MUST_BE_SET);
         }
 
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Eligibility eligibility) {
+    private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, EligibilityState eligibility) {
 
-        if (Eligibility.APPROVED == eligibility) {
+        if (EligibilityState.APPROVED == eligibility) {
             eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
         }
         return serviceSuccess();
