@@ -252,24 +252,27 @@ the lead partner fills in project details if they are not already filled in
 
 the users fill in project details
     the lead partner fills in project details
-    internal user can see that MO can be assigned
     the academic partner fills in their finance contact
     the industrial partner fills in their finance contact
+    internal user can see that MO can be assigned
 
 the lead partner fills in project details
-    the user clicks the button/link    link=Target start date
-    the user enters text to a text field    id=projectStartDate_month    1
-    the user enters text to a text field     id=projectStartDate_year    ${nextyear}
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    the user clicks the button/link    link=Project address
-    the user selects the radio button    addressType    REGISTERED
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    the user clicks the button/link    link=Project Manager
-    the user selects the radio button    projectManager  projectManager2
-    the user clicks the button/link    jQuery=.button:contains("Save")
-    the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    the user selects the radio button    financeContact  financeContact2
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link           link=Target start date
+    the user enters text to a text field      id=projectStartDate_month    1
+    the user enters text to a text field      id=projectStartDate_year    ${nextyear}
+    the user clicks the button/link           css=button[type="submit"]
+    the user clicks the button/link           link=Project address
+    the user selects the radio button         addressType    REGISTERED
+    the user clicks the button/link           css=button[type="submit"]
+    the user clicks the button/link           link=Project Manager
+    the user selects the radio button         projectManager  projectManager2
+    the user clicks the button/link           css=button[type="submit"]
+    the user clicks the button/link           jQuery=td:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
+    the user selects the radio button         financeContact  financeContact2
+    the user clicks the button/link           css=button[type="submit"] #Save finance contact button
+    And the user clicks the button/link       jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
+    And the user enters text to a text field  css=#postCode  ${postcode}
+    And the user clicks the button/link       css=button[type="submit"] #Save project location button
 
 internal user can see that MO can be assigned
     log in as a different user   &{internal_finance_credentials}
@@ -277,18 +280,23 @@ internal user can see that MO can be assigned
     the user should not see an error in the page
 
 the academic partner fills in their finance contact
-    log in as a different user    &{collaborator2_credentials}
-    the user navigates to the page    ${project_in_setup_page}
-    the user clicks the button/link   link=Project details
-    the user clicks the button/link    link=${organisationEggsName}
-    the user selects the radio button    financeContact  financeContact2
-    the user clicks the button/link    jQuery=.button:contains("Save")
-
+    log in as a different user            &{collaborator2_credentials}
+    the user navigates to the page        ${project_in_setup_page}
+    the user clicks the button/link       link=Project details
+    the user clicks the button/link       jQuery=td:contains("${organisationEggsName}") ~ td a:contains("Select finance contact")
+    the user selects the radio button     financeContact  financeContact2
+    the user clicks the button/link       css=button[type="submit"] #Save finance contact button
+    the user clicks the button/link       jQuery=#project-details-finance td:contains("EGGS") ~ td a:contains("Select project location")
+    the user enters text to a text field  css=#postCode  ${postcode}
+    the user clicks the button/link       css=button[type="submit"] #Save project location button
 
 the industrial partner fills in their finance contact
-    log in as a different user    &{collaborator1_credentials}
-    the user navigates to the page    ${project_in_setup_page}
-    the user clicks the button/link   link=Project details
-    the user clicks the button/link    link=${organisationLudlowName}
-    the user selects the radio button    financeContact  financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    log in as a different user            &{collaborator1_credentials}
+    the user navigates to the page        ${project_in_setup_page}
+    the user clicks the button/link       link=Project details
+    the user clicks the button/link       jQuery=td:contains("${organisationLudlowName}") ~ td a:contains("Select finance contact")
+    the user selects the radio button     financeContact  financeContact1
+    the user clicks the button/link       css=button[type="submit"] #Save finance contact button
+    the user clicks the button/link       jQuery=#project-details-finance td:contains("Ludlow") ~ td a:contains("Select project location")
+    the user enters text to a text field  css=#postCode  ${postcode}
+    the user clicks the button/link       css=button[type="submit"] #Save project location button

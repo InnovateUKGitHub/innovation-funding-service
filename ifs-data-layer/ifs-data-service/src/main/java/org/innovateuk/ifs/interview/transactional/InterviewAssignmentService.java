@@ -60,8 +60,8 @@ public interface InterviewAssignmentService {
             description = "The Competition Admin user and Project Finance users can send invites to applicants")
     ServiceResult<Void> sendInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",
-            description = "Competition Admins and Project Finance users can retrieve available applications by competition")
-    ServiceResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId);
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "IS_APPLICATION_ASSIGNED_TO_INTERVIEW",
+            description = "The applicants can see if their application is assigned to interview")
+    ServiceResult<Boolean> isApplicationAssigned(long applicationId);
 }

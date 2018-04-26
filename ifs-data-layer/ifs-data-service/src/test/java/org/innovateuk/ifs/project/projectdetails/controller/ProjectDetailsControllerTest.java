@@ -39,7 +39,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/" + projectId + "/update-duration/" + durationInMonths)
+        mockMvc.perform(post("/project/" + projectId + "/duration/" + durationInMonths)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -56,6 +56,20 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().isOk());
 
         verify(projectDetailsServiceMock).updateFinanceContact(new ProjectOrganisationCompositeId(123L, 456L), 789L);
+    }
+
+    @Test
+    public void updatePartnerProjectLocation() throws Exception {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "TW14 9QG";
+        when(projectDetailsServiceMock.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postCode)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postCode={postCode}", projectId, organisationId, postCode))
+                .andExpect(status().isOk());
+
+        verify(projectDetailsServiceMock).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postCode);
     }
 
     @Test

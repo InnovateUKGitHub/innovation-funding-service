@@ -34,7 +34,7 @@ public class ExperianEndpointController {
 
     static {
         buildValidationTestData();
-        buildVerficiationTestData();
+        buildVerificationTestData();
     }
 
     @PostMapping("/experianValidate")
@@ -269,7 +269,7 @@ public class ExperianEndpointController {
         otherErrorsDuringValidation = new HashMap<>();
     }
 
-    private static void buildVerficiationTestData() {
+    private static void buildVerificationTestData() {
         verificationResults = new HashMap<>();
 
         verificationResults.put(
@@ -463,7 +463,7 @@ public class ExperianEndpointController {
                 new AccountDetails("090127", "78132557", "Consumed By Riffage Ltd", "06477798",
                         new Address(null, "1", "Riff Street", null, "Bath", "BA1 5LR")
                 ),
-                new VerificationResultWrapper(new VerificationResult("9", "8", "6", "No Match", emptyList()))
+                new VerificationResultWrapper(new VerificationResult("9", "8", "4", "No Match", emptyList()))
         );
 
         verificationResults.put(

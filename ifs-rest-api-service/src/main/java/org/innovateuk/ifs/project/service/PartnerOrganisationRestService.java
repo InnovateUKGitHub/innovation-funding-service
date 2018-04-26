@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PartnerOrganisationRestService {
     RestResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId);
+    RestResult<PartnerOrganisationResource> getPartnerOrganisation(long projectId, long organisationId);
 }

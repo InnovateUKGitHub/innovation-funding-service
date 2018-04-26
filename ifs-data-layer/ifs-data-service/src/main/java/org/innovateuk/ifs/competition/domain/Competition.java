@@ -105,7 +105,7 @@ public class Competition implements ProcessActivity {
     private Boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
-    private boolean useResubmissionQuestion = true;
+    private Boolean useResubmissionQuestion = true;
 
     private boolean template = false;
 
@@ -115,6 +115,8 @@ public class Competition implements ProcessActivity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private TermsAndConditions termsAndConditions;
+
+    private boolean locationPerPartner = true;
 
     public Competition() {
         setupComplete = false;
@@ -601,11 +603,11 @@ public class Competition implements ProcessActivity {
         this.template = template;
     }
 
-    public boolean isUseResubmissionQuestion() {
+    public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
 
-    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+    public void setUseResubmissionQuestion(Boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
@@ -676,6 +678,14 @@ public class Competition implements ProcessActivity {
 
     public void setTermsAndConditions(TermsAndConditions termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
+    }
+
+    public boolean isLocationPerPartner() {
+        return locationPerPartner;
+    }
+
+    public void setLocationPerPartner(boolean locationPerPartner) {
+        this.locationPerPartner = locationPerPartner;
     }
 
     public Integer getMaxProjectDuration() {

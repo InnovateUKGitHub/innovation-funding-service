@@ -52,7 +52,7 @@ public class AsyncRestCostTotalEndpointTest {
         when(restTemplateAdaptorMock.restPostWithEntityAsync(url, costTotalResources, authHeader, Void.class))
                 .thenReturn(new CompletableFuture<>());
 
-        costTotalEndpoint.sendCostTotals(costTotalResources);
+        costTotalEndpoint.sendCostTotals(1L, costTotalResources);
 
         verify(restTemplateAdaptorMock).restPostWithEntityAsync(url, costTotalResources, authHeader, Void.class);
     }

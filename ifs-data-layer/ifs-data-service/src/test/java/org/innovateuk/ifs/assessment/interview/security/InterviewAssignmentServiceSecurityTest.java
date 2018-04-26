@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
@@ -61,6 +62,7 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
         );
     }
 
+    @Test
     public void getEmailTemplate() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getEmailTemplate(),
@@ -76,10 +78,19 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
         );
     }
 
+    @Test
     public void sendInvites() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.sendInvites(1L, new AssessorInviteSendResource("Subject", "Content")),
                 COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void isApplicationAssigned() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.isApplicationAssigned(1L),
+                APPLICANT
         );
     }
 }

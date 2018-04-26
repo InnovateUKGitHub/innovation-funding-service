@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
@@ -24,6 +25,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -39,6 +41,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,10 +52,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
@@ -301,6 +306,43 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
         project.addProjectUser(newFinanceContact);
         return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postCode) {
+        return validatePostCode(postCode).
+                andOnSuccess(() -> validateIfPartnerProjectLocationCanBeChanged(composite.getProjectId())).
+                andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
+                andOnSuccessReturnVoid(partnerOrganisation -> partnerOrganisation.setPostCode(postCode.toUpperCase()));
+    }
+
+    private ServiceResult<Void> validatePostCode(String postCode) {
+        if (StringUtils.isBlank(postCode)) {
+            return serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST));
+        }
+
+        if (StringUtils.length(postCode) > MAX_POST_CODE_LENGTH) {
+            return serviceFailure(new Error("validation.field.too.many.characters", asList("", MAX_POST_CODE_LENGTH), HttpStatus.BAD_REQUEST));
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateIfPartnerProjectLocationCanBeChanged(long projectId) {
+        if (isMonitoringOfficerAssigned(projectId)) {
+            return serviceFailure(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED);
+        }
+        return serviceSuccess();
+    }
+
+    private boolean isMonitoringOfficerAssigned(long projectId) {
+        MonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
+        return monitoringOfficer != null;
+    }
+
+    private MonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
+        return monitoringOfficerRepository.findOneByProjectId(projectId);
     }
 
     @Override

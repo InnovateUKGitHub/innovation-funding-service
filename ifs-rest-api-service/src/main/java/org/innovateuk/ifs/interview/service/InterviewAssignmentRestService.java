@@ -29,5 +29,5 @@ public interface InterviewAssignmentRestService {
 
     RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
 
-    RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId);
+    RestResult<Boolean> isAssignedToInterview(long applicationId);
 }

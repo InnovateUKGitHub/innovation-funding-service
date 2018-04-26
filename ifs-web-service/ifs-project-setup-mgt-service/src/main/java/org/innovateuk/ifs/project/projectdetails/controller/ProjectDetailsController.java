@@ -14,30 +14,27 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
+import org.innovateuk.ifs.util.RedirectUtils;
+import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID_ARGUMENT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -56,16 +53,22 @@ public class ProjectDetailsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private CompetitionService competitionService;
+    private ProjectService projectService;
 
     @Autowired
-    private ProjectService projectService;
+    private CompetitionService competitionService;
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private ProjectRestService projectRestService;
+
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationService;
 
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
@@ -78,16 +81,36 @@ public class ProjectDetailsController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
 
-        List<OrganisationResource> partnerOrganisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
+        List<OrganisationResource> organisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
+
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+
+        boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
+        boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
-                null,
+                competitionResource.getName(),
+                isIfsAdministrator,
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
-                getFinanceContactForPartnerOrganisation(projectUsers, partnerOrganisations)));
+                getFinanceContactForPartnerOrganisation(projectUsers, organisations),
+                locationPerPartnerRequired,
+                locationPerPartnerRequired?
+                        partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
+                        : Collections.emptyList()));
 
         return "project/detail";
+    }
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "WITHDRAW_PROJECT", description = "Only the IFS administrator users are able to withdraw projects")
+    @PostMapping("/{projectId}/withdraw")
+    public String withdrawProject(@PathVariable("competitionId") final long competitionId,
+                                  @PathVariable("projectId") final long projectId, HttpServletRequest request) {
+         projectRestService.withdrawProject(projectId).getSuccess();
+
+        return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/unsuccessful");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
@@ -122,10 +145,10 @@ public class ProjectDetailsController {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
-    @GetMapping("/{projectId}/edit-duration")
-    public String editProjectDuration(@PathVariable("competitionId") final long competitionId,
-                                      @PathVariable("projectId") final long projectId, Model model,
-                                      UserResource loggedInUser) {
+    @GetMapping("/{projectId}/duration")
+    public String viewEditProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                          @PathVariable("projectId") final long projectId, Model model,
+                                          UserResource loggedInUser) {
 
 
         ProjectDurationForm form = new ProjectDurationForm();
@@ -140,9 +163,12 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(project,
                 competitionId,
                 competition.getName(),
+                false,
                 null,
                 null,
-                null));
+                null,
+                false,
+                Collections.emptyList()));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";
@@ -151,7 +177,7 @@ public class ProjectDetailsController {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
-    @PostMapping("/{projectId}/update-duration")
+    @PostMapping("/{projectId}/duration")
     public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
                                         @PathVariable("projectId") final long projectId,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDurationForm form,

@@ -71,6 +71,19 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
+    public void testUpdatePartnerProjectLocation() {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.updatePartnerProjectLocation(projectOrganisationCompositeId, "TW14 9QG"), () -> {
+            verify(projectDetailsPermissionRules).partnersCanUpdateProjectLocationForTheirOwnOrganisation(projectOrganisationCompositeId, getLoggedInUser());
+            verifyNoMoreInteractions(projectDetailsPermissionRules);
+        });
+    }
+
+    @Test
     public void testSetProjectManager() {
 
         ProjectResource project = newProjectResource().build();

@@ -24,7 +24,7 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates spendProfileStatus;
 
     private ProjectActivityStates financeContactStatus = COMPLETE;
-    // TODO DW - INFUND-4915 - blocked until Companies House Project Setup work tackled
+    private ProjectActivityStates partnerProjectLocationStatus;
     private ProjectActivityStates companiesHouseStatus = COMPLETE;
 
     /* Following properties are only applicable to lead partner */
@@ -44,6 +44,7 @@ public class ProjectPartnerStatusResource {
                                         ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus,
                                         ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus,
                                         ProjectActivityStates grantOfferLetterStatus, ProjectActivityStates financeContactStatus,
+                                        ProjectActivityStates partnerProjectLocationStatus,
                                         Boolean isGrantOfferLetterSent, Boolean isLead) {
         this.organisationId = organisationId;
         this.name = name;
@@ -56,6 +57,7 @@ public class ProjectPartnerStatusResource {
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
         this.financeContactStatus = financeContactStatus;
+        this.partnerProjectLocationStatus = partnerProjectLocationStatus;
         this.isGrantOfferLetterSent = isGrantOfferLetterSent;
         this.isLead = isLead;
     }
@@ -156,6 +158,14 @@ public class ProjectPartnerStatusResource {
         this.financeContactStatus = financeContactStatus;
     }
 
+    public ProjectActivityStates getPartnerProjectLocationStatus() {
+        return partnerProjectLocationStatus;
+    }
+
+    public void setPartnerProjectLocationStatus(ProjectActivityStates partnerProjectLocationStatus) {
+        this.partnerProjectLocationStatus = partnerProjectLocationStatus;
+    }
+
     public Boolean isGrantOfferLetterSent() { return isGrantOfferLetterSent; }
 
     public void setGrantOfferLetterSent(Boolean isGrantOfferLetterSent) { this.isGrantOfferLetterSent = isGrantOfferLetterSent; }
@@ -187,6 +197,8 @@ public class ProjectPartnerStatusResource {
                 .append(otherDocumentsStatus, that.otherDocumentsStatus)
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
                 .append(isGrantOfferLetterSent, that.isGrantOfferLetterSent)
+                .append(financeContactStatus, that.financeContactStatus)
+                .append(partnerProjectLocationStatus, that.partnerProjectLocationStatus)
                 .isEquals();
     }
 
@@ -203,6 +215,8 @@ public class ProjectPartnerStatusResource {
                 .append(otherDocumentsStatus)
                 .append(grantOfferLetterStatus)
                 .append(isGrantOfferLetterSent)
+                .append(financeContactStatus)
+                .append(partnerProjectLocationStatus)
                 .toHashCode();
     }
 
@@ -219,6 +233,8 @@ public class ProjectPartnerStatusResource {
                 .append("otherDocumentsStatus", otherDocumentsStatus)
                 .append("grantOfferLetterStatus", grantOfferLetterStatus)
                 .append("isGrantOfferLetterSent", isGrantOfferLetterSent)
+                .append("financeContactStatus", financeContactStatus)
+                .append("partnerProjectLocationStatus", partnerProjectLocationStatus)
                 .toString();
     }
 }

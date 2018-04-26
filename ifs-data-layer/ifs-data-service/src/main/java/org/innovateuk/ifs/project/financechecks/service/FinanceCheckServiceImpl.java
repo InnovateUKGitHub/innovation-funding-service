@@ -428,10 +428,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(ProjectFinance.class, projectId, organisationId));
     }
 
-    private ServiceResult<PartnerOrganisation> getPartnerOrganisation(Long projectId, Long organisationId) {
-        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(PartnerOrganisation.class, projectId, organisationId));
-    }
-
     private ServiceResult<Void> validateCreditReport(PartnerOrganisation partnerOrganisation) {
 
         return getViabilityProcess(partnerOrganisation)

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -39,7 +40,7 @@ public class ProjectDetailsController {
         return projectDetailsService.updateProjectStartDate(projectId, projectStartDate).toPostResponse();
     }
 
-    @PostMapping("/{projectId}/update-duration/{durationInMonths}")
+    @PostMapping("/{projectId}/duration/{durationInMonths}")
     public RestResult<Void> updateProjectDuration(@PathVariable("projectId") final long projectId,
                                                   @PathVariable("durationInMonths") final long durationInMonths) {
         return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
@@ -59,6 +60,14 @@ public class ProjectDetailsController {
                                                  @RequestParam("financeContact") Long financeContactUserId) {
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectDetailsService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
+    }
+
+    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
+    public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
+                                                         @PathVariable("organisationId") final long organisationId,
+                                                         @RequestParam("postCode") String postCode) {
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectDetailsService.updatePartnerProjectLocation(composite, postCode).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-finance-contact")
