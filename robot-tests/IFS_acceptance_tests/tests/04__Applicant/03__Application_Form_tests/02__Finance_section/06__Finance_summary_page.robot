@@ -109,9 +109,9 @@ Alert shows If the academic research participation is too high
     [Tags]    Email  HappyPath
     Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
-    Then The user navigates to the academic application finances
+    Then the user navigates to Your-finances page  Academic robot test application
     And The user clicks the button/link            link=Your project costs
-    When the user enters text to a text field      id=incurred-staff  1000000
+    When the user enters text to a text field      css=[name$="incurred_staff"]  1000000
     And log in as a different user                 &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page  The participation levels of this project are not within the required range
@@ -277,13 +277,13 @@ the contribution to project and funding sought should be 0 and not a negative nu
     the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 Green check should be visible
-    Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
+    Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/ifs-images/icons/icon-tick"]
 
 the red warning should be visible
     the user should see the element  jQuery=.warning-alert h2:contains("not marked their finances as complete")
 
 Lead enters a valid research participation value
-    the user navigates to the academic application finances
+    the user navigates to Your-finances page  Academic robot test application
     the user clicks the button/link                   link=Your project costs
     run keyword and ignore error without screenshots  the user clicks the button/link  jQuery=.buttonlink:contains("Edit")
     the user clicks the button/link                   jQuery=button:contains("Labour")

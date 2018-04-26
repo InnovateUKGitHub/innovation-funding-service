@@ -74,6 +74,7 @@ import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
@@ -110,6 +111,7 @@ import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsSer
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
@@ -132,6 +134,7 @@ import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
+import org.innovateuk.ifs.review.transactional.ReviewStatisticsService;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
@@ -686,6 +689,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
 
     @Mock
+    protected ProjectProcessRepository projectProcessRepositoryMock;
+
+    @Mock
     protected FinanceUtil financeUtilMock;
 
     @Mock
@@ -789,6 +795,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ReviewRejectOutcomeMapper reviewRejectOutcomeMapperMock;
+
+    @Mock
+    protected ReviewStatisticsService reviewStatisticsServiceMock;
+
+    @Mock
+    protected InterviewStatisticsService interviewStatisticsServiceMock;
 
     @Before
     public void setupMockInjection() {
