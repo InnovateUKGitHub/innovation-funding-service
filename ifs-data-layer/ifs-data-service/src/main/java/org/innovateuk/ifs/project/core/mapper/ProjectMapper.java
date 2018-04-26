@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.project.mapper;
+package org.innovateuk.ifs.project.core.mapper;
 
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectProcess;
-import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;

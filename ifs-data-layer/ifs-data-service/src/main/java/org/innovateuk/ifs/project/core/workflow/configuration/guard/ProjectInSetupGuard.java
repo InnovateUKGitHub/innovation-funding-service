@@ -1,11 +1,8 @@
-package org.innovateuk.ifs.project.workflow.configuration.guards;
+package org.innovateuk.ifs.project.core.workflow.configuration.guard;
 
-import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectProcess;
-import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.beans.factory.annotation.Autowired;

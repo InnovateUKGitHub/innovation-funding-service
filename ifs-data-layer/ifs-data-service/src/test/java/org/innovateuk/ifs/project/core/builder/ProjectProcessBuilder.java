@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.project.builder;
+package org.innovateuk.ifs.project.core.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.project.domain.*;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -10,8 +10,8 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 /**

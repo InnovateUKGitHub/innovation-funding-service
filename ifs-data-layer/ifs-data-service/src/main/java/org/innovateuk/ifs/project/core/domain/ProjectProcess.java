@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.domain;
+package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
