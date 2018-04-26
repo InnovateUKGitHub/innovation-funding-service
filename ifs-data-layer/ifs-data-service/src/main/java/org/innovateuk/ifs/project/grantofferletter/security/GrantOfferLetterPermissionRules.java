@@ -78,42 +78,42 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "UPLOAD_SIGNED_GRANT_OFFER",
             description = "Project manager or Lead partner can upload signed grant offer letter")
     public boolean leadPartnerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
+        return isLeadPartner(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "UPLOAD_SIGNED_GRANT_OFFER",
             description = "Project manager or Lead partner can upload signed grant offer letter")
     public boolean projectManagerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isProjectManager(project.getId(), user.getId());
+        return isProjectManager(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "DELETE_SIGNED_GRANT_OFFER",
             description = "Lead partner can delete signed grant offer letter")
     public boolean leadPartnerCanDeleteSignedGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
+        return isLeadPartner(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "SUBMIT_GRANT_OFFER_LETTER",
             description = "Project manager can submit the grant offer letter")
     public boolean projectManagerSubmitGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectManager(projectCompositeId.id(), user.getId());
+        return isProjectManager(projectCompositeId.id(), user.getId()) && isProjectInSetup(projectCompositeId.id());
     }
 
     @PermissionRule(
             value = "SEND_GRANT_OFFER_LETTER",
             description = "Internal users can send the Grant Offer Letter notification")
     public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternal(user);
+        return isInternal(user) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "APPROVE_SIGNED_GRANT_OFFER_LETTER",
             description = "Internal users can approve the signed Grant Offer Letter")
     public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternal(user);
+        return isInternal(user) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(

@@ -224,17 +224,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
         });
     }
 
-    @Override
-    public ServiceResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
-        int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.SUBMITTED.getBackingState());
-        int applicationsAssigned = interviewAssignmentRepository.
-                countByTargetCompetitionIdAndActivityStateStateIn(competitionId,
-                        simpleMapSet(asList(InterviewAssignmentState.ASSIGNED_STATES), InterviewAssignmentState::getBackingState)
-                );
-
-        return serviceSuccess(new InterviewAssignmentKeyStatisticsResource(applicationsInCompetition, applicationsAssigned));
-    }
-
     private ServiceResult<Application> getApplication(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
     }

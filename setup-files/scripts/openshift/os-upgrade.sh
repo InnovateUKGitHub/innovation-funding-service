@@ -23,6 +23,10 @@ function upgradeServices {
     oc apply -f $(getBuildLocation)/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "data-service"
 
+    # finance-data-service
+    oc apply -f $(getBuildLocation)/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "finance-data-service"
+
     # services
     oc apply -f $(getBuildLocation)/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
@@ -39,17 +43,15 @@ function upgradeServices {
         oc apply -f $(getBuildLocation)/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    if ! $(isNamedEnvironment ${TARGET}); then
-        oc apply -f $(getBuildLocation)/finance-data-service/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-    fi
-
-
     watchStatus
 }
 
 function forceReload {
     oc rollout latest dc/data-service ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus data-service
+
+    oc rollout latest dc/finance-data-service ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus finance-data-service
 
     oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
@@ -64,10 +66,6 @@ function forceReload {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         oc rollout latest dc/sil-stub ${SVC_ACCOUNT_CLAUSE}
-    fi
-
-    if ! $(isNamedEnvironment ${TARGET}); then
-        oc rollout latest dc/finance-data-service ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
@@ -87,10 +85,6 @@ function watchStatus {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         rolloutStatus sil-stub
-    fi
-
-    if ! $(isNamedEnvironment ${TARGET}); then
-        rolloutStatus finance-data-service
     fi
 }
 
@@ -129,9 +123,7 @@ fi
 
 if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf" ]]
 then
-    # We only scale up data-service once data-service started up and performed the Flyway migrations on one thread
+    # We only scale up data-serviced once started up and performed the Flyway migrations on one thread
     scaleDataService
-    # TODO: IFS-2657 Include scaleFinanceDataService once it is completed and ready for prdouction deploy (along with other script changes above)
-    # Below is not required for now, it will be put back in when we start deploying it to production & UAT in future
-    # scaleFinanceDataService
+    scaleFinanceDataService
 fi
