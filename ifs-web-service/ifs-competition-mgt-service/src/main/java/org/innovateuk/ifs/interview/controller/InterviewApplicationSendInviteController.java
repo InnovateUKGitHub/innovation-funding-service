@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsSendModelPopulator;
+import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
@@ -32,11 +32,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/applications/invite")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite applications to an Interview Panel", securedType = InterviewApplicationSendInviteController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW_APPLICATIONS')")
 public class InterviewApplicationSendInviteController {
 
     @Autowired
-    private InterviewAssignmentApplicationsSendModelPopulator interviewAssignmentApplicationsSendModelPopulator;
+    private InterviewApplicationsSendModelPopulator interviewApplicationsSendModelPopulator;
 
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -50,7 +50,7 @@ public class InterviewApplicationSendInviteController {
                                    BindingResult bindingResult) {
 
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_SEND, queryParams);
-        InterviewAssignmentApplicationsSendViewModel viewModel = interviewAssignmentApplicationsSendModelPopulator.populateModel(competitionId, page, originQuery);
+        InterviewAssignmentApplicationsSendViewModel viewModel = interviewApplicationsSendModelPopulator.populateModel(competitionId, page, originQuery);
 
         model.addAttribute("model", viewModel);
 
@@ -76,12 +76,12 @@ public class InterviewApplicationSendInviteController {
                     .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()));
 
             return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
-                    .failNowOrSucceedWith(failureView, () -> redirectToFindApplicationTab(competitionId));
+                    .failNowOrSucceedWith(failureView, () -> redirectToStatusTab(competitionId));
         });
     }
 
-    private String redirectToFindApplicationTab(long competitionId) {
-        return format("redirect:/assessment/interview/competition/%s/applications/find", competitionId);
+    private String redirectToStatusTab(long competitionId) {
+        return format("redirect:/assessment/interview/competition/%s/applications/view-status", competitionId);
     }
 
     private void populateGroupInviteFormWithExistingValues(SendInviteForm form) {

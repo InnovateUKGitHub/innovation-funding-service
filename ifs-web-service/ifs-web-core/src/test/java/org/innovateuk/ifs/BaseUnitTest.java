@@ -254,7 +254,7 @@ public class BaseUnitTest {
     @Mock
     protected ApplicationSummaryRestService applicationSummaryRestService;
     @Mock
-    protected CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
+    protected CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
     @Mock
     protected AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     @Mock
@@ -420,6 +420,8 @@ public class BaseUnitTest {
                 .withStartDate(ZonedDateTime.now().minusDays(2))
                 .withEndDate(ZonedDateTime.now().plusDays(5))
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withMinProjectDuraction(1)
+                .withMaxProjectDuraction(36)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());

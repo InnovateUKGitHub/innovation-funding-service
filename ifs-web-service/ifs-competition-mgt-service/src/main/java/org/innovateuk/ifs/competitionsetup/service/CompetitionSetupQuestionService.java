@@ -11,13 +11,13 @@ import org.springframework.validation.BindingResult;
  */
 public interface CompetitionSetupQuestionService {
 
-	ServiceResult<CompetitionSetupQuestionResource> getQuestion(Long questionId);
-
-	ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource question);
-
-	ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId);
-
-	ServiceResult<Void> deleteQuestion(Long questionId);
-
     ServiceResult<Void> validateApplicationQuestions(CompetitionResource competitionResource, LandingPageForm form, BindingResult result);
+
+    ServiceResult<CompetitionSetupQuestionResource> getQuestion(Long questionId);
+
+    ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource question);
+
+    ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId);
+
+    ServiceResult<Void> deleteQuestion(Long questionId);
 }

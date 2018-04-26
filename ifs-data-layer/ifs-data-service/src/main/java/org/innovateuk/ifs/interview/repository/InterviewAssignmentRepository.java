@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -26,6 +27,7 @@ public interface InterviewAssignmentRepository extends ProcessRepository<Intervi
 
     Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateStateNot(long competitionId, State backingState, Pageable pagable);
 
-    boolean existsByTargetIdAndActivityStateState(long applicationId, State backingState);
+    boolean existsByTargetIdAndActivityStateStateIn(long applicationId, List<State> backingState);
 
+    int countByTargetCompetitionIdAndActivityStateStateIn(long competitionId, Set<State> backingStates);
 }

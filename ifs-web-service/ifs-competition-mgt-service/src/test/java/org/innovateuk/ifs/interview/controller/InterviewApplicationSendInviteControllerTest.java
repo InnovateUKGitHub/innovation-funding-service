@@ -2,7 +2,7 @@ package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsSendModelPopulator;
+import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
@@ -26,6 +26,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
@@ -46,7 +47,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
     @Spy
     @InjectMocks
-    private InterviewAssignmentApplicationsSendModelPopulator interviewAssignmentApplicationsSendModelPopulator;
+    private InterviewApplicationsSendModelPopulator interviewApplicationsSendModelPopulator;
 
     @Override
     protected InterviewApplicationSendInviteController supplyControllerUnderTest() {
@@ -81,6 +82,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(interviewAssignmentRestService.getStagedApplications(competitionId, page)).thenReturn(restSuccess(invites));
         when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Some content")));
+        when(competitionKeyStatisticsRestService.getInterviewKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
 
         SendInviteForm expectedForm = new SendInviteForm();
         expectedForm.setSubject("Please attend an interview for an Innovate UK funding competition");
@@ -112,7 +114,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/applications/find", competitionId)));
+                .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/applications/view-status", competitionId)));
 
         verify(interviewAssignmentRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
         verifyNoMoreInteractions(interviewAssignmentRestService);
@@ -126,7 +128,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                                 "App 1", "Org 1"),
                         new InterviewAssignmentApplicationInviteRowViewModel(2L, 4L,
                                 "App 2", "Org 2")),
-                0, 0,  new PaginationViewModel(invites, ""),
+                newInterviewAssignmentKeyStatisticsResource().build(),  new PaginationViewModel(invites, ""),
                 "?origin=INTERVIEW_PANEL_SEND", "Some content"
         );
     }

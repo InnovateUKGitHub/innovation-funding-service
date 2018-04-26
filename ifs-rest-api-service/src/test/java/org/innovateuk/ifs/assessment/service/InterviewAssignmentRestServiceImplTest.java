@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestServiceImpl;
 import org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder;
 import org.innovateuk.ifs.invite.resource.*;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
@@ -154,6 +156,16 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         setupPostWithRestResultExpectations(format("%s/%s/%s", REST_URL, "send-invites", competitionId), sendResource, OK);
 
         RestResult<Void> actual = service.sendAllInvites(competitionId, sendResource);
+        assertTrue(actual.isSuccess());
+    }
+
+    @Test
+    public void isAssignedToInterview() {
+        long applicationId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "is-assigned", applicationId), Boolean.class, true);
+
+        RestResult<Boolean> actual = service.isAssignedToInterview(applicationId);
         assertTrue(actual.isSuccess());
     }
 }

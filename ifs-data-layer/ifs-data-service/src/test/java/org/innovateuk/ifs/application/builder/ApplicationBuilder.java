@@ -99,15 +99,6 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((assessmentPanelStatus, application) -> application.setInAssessmentReviewPanel(assessmentPanelStatus), inAssessmentReviewPanel);
     }
 
-    @Override
-    public void postProcess(int index, Application built) {
-
-        // add hibernate-style back refs
-        if (built.getCompetition() != null) {
-            built.getCompetition().getApplications().add(built);
-        }
-    }
-
     public ApplicationBuilder withCompletion(BigDecimal... bigDecimals) {
         return withArray((completion, application) -> application.setCompletion(completion), bigDecimals);
     }

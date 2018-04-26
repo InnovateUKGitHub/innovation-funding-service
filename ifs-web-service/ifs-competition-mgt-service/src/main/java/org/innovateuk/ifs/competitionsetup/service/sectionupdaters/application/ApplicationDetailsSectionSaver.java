@@ -55,7 +55,7 @@ public class ApplicationDetailsSectionSaver extends AbstractSectionSaver impleme
 			return ServiceResult.serviceFailure(new ValidationMessages(violations).getErrors());
 		}
 		else {
-			competition.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
+			competition.setUseResubmissionQuestion(form.getUseResubmissionQuestion());
 			competition.setMaxProjectDuration(Integer.valueOf(form.getMaxProjectDuration().intValue()));
 			competition.setMinProjectDuration(Integer.valueOf(form.getMinProjectDuration().intValue()));
 			return competitionSetupRestService.update(competition).toServiceResult();

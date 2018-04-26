@@ -54,3 +54,10 @@ tagDocker.tag = spVersion
 osStageRemote.tag = spVersion
 tagDockerLocal.tag = spVersion
 osStageLocal.tag = spVersion
+
+createContainer.containerName = "shib"
+createContainer.containerId = "shib"
+createContainer.env= ["SP_DOMAIN=ifs.local-dev","IDP_DOMAIN=auth.local-dev:9443","HTTPS_PORT=443","HTTP_PORT=80"]
+createContainer.networkAliases=["ifs.local-dev"]
+createContainer.portBindings = ['443:443']
+createContainer.hostName="shib"

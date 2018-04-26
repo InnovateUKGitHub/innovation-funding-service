@@ -736,16 +736,17 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         long applicationId = 2L;
         long formInputId = 3L;
 
-        ProcessRoleResource assessorRole = newProcessRoleResource().build();
+        loginDefaultUser();
+        UserResource assessor = getLoggedInUser();
+
+        ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
         ByteArrayResource fileContents = new ByteArrayResource("The returned file data".getBytes());
         FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/hello").withFilesizeBytes(1234L).build();
         FormInputResponseFileEntryResource formInputResponseFileEntry =
                 new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId());
 
-        loginDefaultUser();
-        UserResource assessor = getLoggedInUser();
 
-        when(processRoleService.findProcessRole(assessor.getId(), applicationId)).thenReturn(assessorRole);
+        when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(asList(assessorRole));
         when(formInputResponseRestService.getFile(formInputId,
                 applicationId,
                 assessorRole.getId()))
@@ -762,7 +763,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(header().string("Content-Type", "text/hello"))
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
 
-        verify(processRoleService).findProcessRole(assessor.getId(), applicationId);
+        verify(processRoleService).findProcessRolesByApplicationId(applicationId);
         verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId());
         verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId());
     }

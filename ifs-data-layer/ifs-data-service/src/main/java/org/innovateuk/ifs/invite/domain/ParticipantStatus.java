@@ -11,6 +11,7 @@ import org.innovateuk.ifs.util.enums.Identifiable;
  *  () -> PENDING
  *  PENDING -> ACCEPTED
  *  PENDING -> REJECTED
+ *  REJECTED -> PENDING
  * </pre></blockquote>
  *
  * @see Participant#setStatus(ParticipantStatus)

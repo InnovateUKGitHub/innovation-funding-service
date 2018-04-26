@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.interview.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 
 import java.util.List;
@@ -18,13 +21,11 @@ public class InterviewAssignmentApplicationsSendViewModel extends InterviewAssig
             String innovationArea,
             String innovationSector,
             List<InterviewAssignmentApplicationInviteRowViewModel> applications,
-            int applicationsInCompetition,
-            int applicationsInPanel,
+            InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
             PaginationViewModel pagination,
             String originQuery,
             String content) {
-        super(competitionId, competitionName, innovationArea, innovationSector, applications, applicationsInCompetition,
-                applicationsInPanel, pagination, originQuery);
+        super(competitionId, competitionName, innovationArea, innovationSector, applications, keyStatisticsResource, pagination, originQuery);
         this.content = content;
     }
 
@@ -35,14 +36,22 @@ public class InterviewAssignmentApplicationsSendViewModel extends InterviewAssig
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+
         InterviewAssignmentApplicationsSendViewModel that = (InterviewAssignmentApplicationsSendViewModel) o;
-        return Objects.equals(content, that.content);
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(content, that.content)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), content);
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(content)
+                .toHashCode();
     }
 }

@@ -1,12 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.ZeroDowntime;
@@ -25,7 +20,6 @@ import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
@@ -34,12 +28,9 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +40,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -60,7 +50,6 @@ import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.data.domain.Sort.Direction.ASC;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -193,14 +182,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
-    private ZonedDateTime findMostRecentFundingInformDate(Competition competition) {
-        return competition.getApplications()
-                .stream()
-                .filter(application -> application.getManageFundingEmailDate() != null)
-                .max(Comparator.comparing(Application::getManageFundingEmailDate))
-                .get().getManageFundingEmailDate();
-    }
-
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
@@ -210,13 +191,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             } else {
                 competitions = competitionRepository.findProjectSetup();
             }
-            // Only competitions with at least one funded and informed application can be considered as in project setup
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
                             .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
-                            .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
-                            .sorted(Comparator.comparing(Pair::getKey))
-                            .map(Pair::getValue)
                             .collect(Collectors.toList())),
                     this::searchResultFromCompetition));
         });

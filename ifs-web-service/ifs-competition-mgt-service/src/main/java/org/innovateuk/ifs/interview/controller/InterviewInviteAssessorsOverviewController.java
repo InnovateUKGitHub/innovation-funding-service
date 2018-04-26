@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewInviteAssessorsOverviewController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<InterviewOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "interviewOverviewSelectionForm";

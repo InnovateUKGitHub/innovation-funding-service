@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
+import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
 import org.innovateuk.ifs.validation.validator.NotEmptyValidator;
 import org.innovateuk.ifs.validation.validator.WordCountValidator;
 import org.junit.Before;

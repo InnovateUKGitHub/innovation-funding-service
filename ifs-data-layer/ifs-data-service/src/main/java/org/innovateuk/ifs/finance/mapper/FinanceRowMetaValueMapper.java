@@ -15,10 +15,4 @@ import org.mapstruct.Mapper;
 )
 public abstract class FinanceRowMetaValueMapper extends BaseMapper<FinanceRowMetaValue, FinanceRowMetaValueResource, Long> {
 
-    public Long mapCostValueToId(FinanceRowMetaValue object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

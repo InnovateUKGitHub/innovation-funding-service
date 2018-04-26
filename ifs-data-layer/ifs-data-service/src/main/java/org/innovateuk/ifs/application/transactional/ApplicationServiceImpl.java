@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -29,18 +28,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -174,7 +169,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id,
                                                                      final ApplicationState state) {
         if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(id)) {
-                return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
+            return serviceFailure(APPLICATION_NOT_READY_TO_BE_SUBMITTED);
         }
 
         return find(application(id)).andOnSuccess((application) -> {
@@ -216,6 +211,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                       Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccessReturn(User::isInternalUser);
+    }
+
+    @Override
+    public ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id) {
+        List<Application> applicationsForId = applicationRepository.findByCompetitionId(id);
+
+        // Only competitions with at least one funded and informed application can be considered as in project setup
+        return serviceSuccess(applicationsForId.stream()
+                .filter(application -> application.getManageFundingEmailDate() != null)
+                .max(Comparator.comparing(Application::getManageFundingEmailDate))
+                .get().getManageFundingEmailDate());
     }
 
     @Override
@@ -278,13 +284,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         competitionId,
                         states
                 );
-        return serviceSuccess(applicationResults);
-    }
-
-    @Override
-    public ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
-        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-        List<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
         return serviceSuccess(applicationResults);
     }
 

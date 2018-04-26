@@ -45,7 +45,7 @@ include::{snippets}/interview-panel/get-available-application-ids/response-field
 ==== Curl Example
 include::{snippets}/interview-panel/get-available-application-ids/curl-request.adoc[]
 
-=== Get stages application
+=== Get staged applications
 ==== Request
 include::{snippets}/interview-panel/get-staged-applications/http-request.adoc[]
 include::{snippets}/interview-panel/get-staged-applications/path-parameters.adoc[]
@@ -78,3 +78,14 @@ include::{snippets}/interview-panel/unstage-applications/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/unstage-applications/curl-request.adoc[]
+
+=== Is application assigned
+==== Request
+include::{snippets}/interview-panel/is-application-assigned/http-request.adoc[]
+include::{snippets}/interview-panel/is-application-assigned/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/is-application-assigned/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/is-application-assigned/curl-request.adoc[]

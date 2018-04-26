@@ -851,7 +851,6 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
-        assertEquals(inviteStatistics.getInviteList(), model.getAssessorsStaged());
     }
 
     private void assertAvailableAssessors(List<AvailableAssessorResource> expectedAvailableAssessors, MvcResult result) {

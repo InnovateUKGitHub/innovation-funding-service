@@ -222,10 +222,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition comp2 = newCompetition().withName("Comp2").withId(competitionId).withCompetitionType(progcompetitionType).build();
         Competition comp3 = newCompetition().withName("Comp3").withId(competitionId).withCompetitionType(eoicompetitionType).build();
 
-        Application fundedAndInformedApplication1 = newApplication().withCompetition(comp1).withManageFundingEmailDate(ZonedDateTime.now()).withFundingDecision(FundingDecisionStatus.FUNDED).build();
-        comp1.setApplications(singletonList(fundedAndInformedApplication1));
-        Application fundedAndInformedApplication2 = newApplication().withCompetition(comp2).withManageFundingEmailDate(ZonedDateTime.now().plusHours(1L)).withFundingDecision(FundingDecisionStatus.FUNDED).build();
-        comp2.setApplications(singletonList(fundedAndInformedApplication2));
         List<Competition> expectedCompetitions = Lists.newArrayList(comp1, comp2);
         List<Competition> allCompetitions = Lists.newArrayList(comp1, comp2, comp3);
 
