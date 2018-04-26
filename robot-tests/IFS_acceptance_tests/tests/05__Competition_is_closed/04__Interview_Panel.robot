@@ -99,7 +99,7 @@ Competition Admin can send or cancel sending the invitation to the applicants
     When the user clicks the button/link       link=Cancel
     Then the user navigates to the page        ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite
     When the user clicks the button/link       link=Review and send invites
-    Then the compAdmin upload an additional feedback for an application
+    Then the compAdmin uploads an additional feedback for an application
     And the user clicks the button/link        css=.button[type="submit"]     #Send invite
     Then the Competition Admin should see the assigned applications in the View status tab
     And the user checks for Key Statistics for assigned to interview panel
@@ -211,12 +211,11 @@ the user checks for the key statistics for invite assessors
     the user should see the element      jQuery=.column-quarter:contains("${accepted}") small:contains("Accepted")
     the user should see the element      jQuery=.column-quarter:contains("${Declined}") small:contains("Declined")
 
-the compAdmin upload an additional feedback for an application
-    the user uploads the file     css=#attachment-${Neural_network_application}    ${text_file}    #checking validation for worng fomrate file upload
-    the user should see a field and summary error      Your upload must be a PDF.
-    the user uploads the file     css=#attachment-${Neural_network_application}   ${too_large_pdf}  #checking for large file upload
+the compAdmin uploads an additional feedback for an application
+    the user uploads the file     id=attachment-${Neural_network_application}   ${too_large_pdf}  #checking for large file upload
     the user should see the element    jQuery=h1:contains("Attempt to upload a large file")
     the user goes back to the previous page
-    the user reloads the page
-    the user uploads the file     css=#attachment-${Neural_network_application}   ${5mb_pdf}
+    the user uploads the file     id=attachment-${Neural_network_application}    ${text_file}    #checking validation for worng fomrate file upload
+    the user should see a field and summary error      Your upload must be a PDF.
+    the user uploads the file     id=attachment-${Neural_network_application}   ${5mb_pdf}
     the user should see the element    link=testing_5MB.pdf
