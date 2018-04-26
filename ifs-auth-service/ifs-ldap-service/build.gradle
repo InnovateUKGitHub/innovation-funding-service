@@ -1,4 +1,5 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+import com.bmuschko.gradle.docker.tasks.container.*
 
 def String ldapCertsVolume = 'src/main/docker/certs'
 
@@ -41,3 +42,9 @@ tagDocker.tag = ldapVersion
 osStageRemote.tag = ldapVersion
 tagDockerLocal.tag = ldapVersion
 osStageLocal.tag = ldapVersion
+
+createContainer.containerName = "ldap"
+createContainer.containerId = "ldap"
+createContainer.env = ["LDAP_PORT=8389"]
+createContainer.portBindings = ['8389:8389']
+createContainer.hostName = "ldap"

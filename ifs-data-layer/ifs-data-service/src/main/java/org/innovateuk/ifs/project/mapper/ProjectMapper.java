@@ -4,12 +4,13 @@ import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectProcess;
+import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -21,6 +22,13 @@ import org.mapstruct.Mappings;
         }
 )
 public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource, Long> {
+
+    @Autowired
+    private ProjectProcessRepository projectProcessRepository;
+
+    @Mappings({
+            @Mapping(target = "projectState", ignore = true)
+    })
     @Override
     public abstract ProjectResource mapToResource(Project project);
 
@@ -34,6 +42,15 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     @Override
     public abstract Project mapToDomain(ProjectResource projectResource);
 
+
+    @AfterMapping
+    public void setAdditionalFieldsOnResource(Project project, @MappingTarget ProjectResource resource) {
+        ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
+
+        if (process != null) {
+            resource.setProjectState(process.getActivityState());
+        }
+    }
 
     public Long mapProjectToId(Project object) {
         if (object == null) {

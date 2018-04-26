@@ -1,7 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
-apply from: "../database-support.gradle"
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
@@ -29,6 +28,17 @@ buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
+
+def enabled = project.hasProperty('ifs.data-service.enabled') ? project.property('ifs.data-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+deploy.dependsOn ":docker:ifs-mysql:ifs-database:deploy"
+createContainer.portBindings = ['9006:8000']
+
+
+createContainer.networkAliases=["ifs-data-service"]
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
@@ -118,6 +128,9 @@ test {
     systemProperty 'pact.rootDir', project.getProperty('pactDir')
 
     finalizedBy asciidoctor
+    if (targetBuild == 'docker') {
+        dependsOn ":docker:ifs-mysql:ifs-database:initDB"
+    }
 }
 
 asciidoctor {
@@ -167,8 +180,7 @@ task generateMainMapperClasses(type: JavaCompile) {
 }
 
 task syncShib(type:Exec) {
-    workingDir '../../'
-    commandLine 'docker-compose', '-p', 'innovation-funding-service','-f', 'docker-compose/docker-compose.yml', 'exec',  '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
+    commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
 compileJava.dependsOn generateMainMapperClasses

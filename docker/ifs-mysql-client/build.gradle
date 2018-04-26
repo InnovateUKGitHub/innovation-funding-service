@@ -3,3 +3,8 @@ tagDocker.tag = mysqlClientVersion
 tagDockerLocal.tag = mysqlClientVersion
 osStageRemote.tag = mysqlClientVersion
 osStageLocal.tag = mysqlClientVersion
+
+
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = false
+}

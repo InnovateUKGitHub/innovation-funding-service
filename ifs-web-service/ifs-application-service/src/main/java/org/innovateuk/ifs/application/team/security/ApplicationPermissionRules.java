@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @PermissionRules
 @Component
-public class ApplicationPermissionRules extends BasePermissionRules{
+public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ADD_APPLICANT", description = "Allowed to add a new applicant")
     public boolean addApplicant(ApplicationCompositeId applicationCompositeId, UserResource loggedInUser) {

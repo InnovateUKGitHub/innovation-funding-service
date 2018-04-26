@@ -1,0 +1,60 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+import com.bmuschko.gradle.docker.tasks.container.extras.*
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
+
+buildscript {
+
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.6"
+    }
+
+}
+
+
+repositories {
+    jcenter()
+}
+
+task pullAdmin(type: Exec) {
+    doFirst {
+        commandLine 'docker', 'pull', 'enmobile/docker-spring-boot-admin'
+    }
+}
+
+task stopAdmin(type: DockerStopContainer) {
+    targetContainerId { createAdmin.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task removeAdmin(type: DockerRemoveContainer, dependsOn: stopAdmin) {
+    targetContainerId { createAdmin.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createAdmin(type: DockerCreateContainer, dependsOn: [pullAdmin, removeAdmin]) {
+    image = "enmobile/docker-spring-boot-admin"
+    imageId = "enmobile/docker-spring-boot-admin"
+    hostName="admin"
+    containerName="admin"
+    containerId="admin"
+    portBindings = ['3001:8123']
+    network="ifs"
+}
+
+task deployAdmin(type: DockerStartContainer, dependsOn: createAdmin) {
+    targetContainerId { createAdmin.getContainerId() }
+}
+
+

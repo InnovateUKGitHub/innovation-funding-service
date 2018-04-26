@@ -60,11 +60,6 @@ public class InterviewAssignmentController {
         return interviewAssignmentService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
     }
 
-    @GetMapping("key-statistics/{competitionId}")
-    public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(@PathVariable long competitionId) {
-        return interviewAssignmentService.getKeyStatistics(competitionId).toGetResponse();
-    }
-
     @PostMapping("/unstage-application/{applicationId}")
     public RestResult<Void> unstageApplication(@PathVariable long applicationId) {
         return interviewAssignmentService.unstageApplication(applicationId).toPostWithBodyResponse();
@@ -83,5 +78,10 @@ public class InterviewAssignmentController {
     @PostMapping("/send-invites/{competitionId}")
     public RestResult<Void> sendInvites(@PathVariable long competitionId, @Valid @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return interviewAssignmentService.sendInvites(competitionId, assessorInviteSendResource).toPostWithBodyResponse();
+    }
+
+    @GetMapping("/is-assigned/{applicationId}")
+    public RestResult<Boolean> isApplicationAssigned(@PathVariable long applicationId) {
+        return interviewAssignmentService.isApplicationAssigned(applicationId).toGetResponse();
     }
 }

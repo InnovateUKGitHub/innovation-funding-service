@@ -42,10 +42,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionNumberOrderService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
@@ -77,6 +74,7 @@ import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
@@ -113,6 +111,7 @@ import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsSer
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
@@ -125,6 +124,10 @@ import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
+import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
+import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
 import org.innovateuk.ifs.review.mapper.ReviewMapper;
 import org.innovateuk.ifs.review.mapper.ReviewParticipantMapper;
@@ -134,6 +137,7 @@ import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
+import org.innovateuk.ifs.review.transactional.ReviewStatisticsService;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
@@ -283,9 +287,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionSetupService competitionSetupServiceMock;
-
-    @Mock
-    protected CompetitionSetupQuestionService competitionSetupQuestionServiceMock;
 
     @Mock
     protected CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
@@ -690,6 +691,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
 
     @Mock
+    protected ProjectProcessRepository projectProcessRepositoryMock;
+
+    @Mock
     protected FinanceUtil financeUtilMock;
 
     @Mock
@@ -796,6 +800,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ReviewRejectOutcomeMapper reviewRejectOutcomeMapperMock;
+
+    @Mock
+    protected ReviewStatisticsService reviewStatisticsServiceMock;
+
+    @Mock
+    protected InterviewStatisticsService interviewStatisticsServiceMock;
 
     @Before
     public void setupMockInjection() {

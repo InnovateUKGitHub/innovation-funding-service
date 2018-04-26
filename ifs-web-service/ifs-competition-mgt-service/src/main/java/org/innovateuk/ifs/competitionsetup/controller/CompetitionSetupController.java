@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -83,8 +84,10 @@ public class CompetitionSetupController {
     private Validator validator;
 
     @GetMapping("/{competitionId}")
-    public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-
+    public String initCompetitionSetupSection(Model model,
+                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
+                                              @SuppressWarnings("UnusedParameters") BindingResult bindingResult) {
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -138,7 +141,7 @@ public class CompetitionSetupController {
             LOG.error("Invalid section path specified: " + sectionPath);
             return "redirect:/dashboard";
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
-            return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+            return format(APPLICATION_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.CONTENT) {
             return PUBLIC_CONTENT_LANDING_REDIRECT + competitionId;
         }
@@ -324,10 +327,18 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, model);
     }
 
-    @GetMapping("/{competitionId}/ready-to-open")
-    public String setAsReadyToOpen(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
-        return String.format("redirect:/competition/setup/%d", competitionId);
+    @PostMapping("/{competitionId}/ready-to-open")
+    public String setAsReadyToOpen(Model model,
+                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                   @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
+                                   @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                   ValidationHandler validationHandler) {
+        Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult);
+
+        ServiceResult<Void> updateResult = competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
+
+        return validationHandler.addAnyErrors(updateResult, asGlobalErrors())
+                .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/setup/%d", competitionId));
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")

@@ -79,14 +79,13 @@ include::{snippets}/interview-panel/unstage-applications/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/interview-panel/unstage-applications/curl-request.adoc[]
 
-=== Get key statistics
+=== Is application assigned
 ==== Request
-include::{snippets}/interview-panel/get-key-statistics/http-request.adoc[]
-include::{snippets}/interview-panel/get-key-statistics/path-parameters.adoc[]
+include::{snippets}/interview-panel/is-application-assigned/http-request.adoc[]
+include::{snippets}/interview-panel/is-application-assigned/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/interview-panel/get-key-statistics/http-response.adoc[]
-include::{snippets}/interview-panel/get-key-statistics/response-fields.adoc[]
+include::{snippets}/interview-panel/is-application-assigned/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/interview-panel/get-key-statistics/curl-request.adoc[]
+include::{snippets}/interview-panel/is-application-assigned/curl-request.adoc[]

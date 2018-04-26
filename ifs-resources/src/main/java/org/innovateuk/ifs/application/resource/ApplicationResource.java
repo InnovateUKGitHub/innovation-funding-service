@@ -217,7 +217,7 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean isSubmitted() {
-        return ApplicationState.submittedStates.contains(applicationState);
+        return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
 
     private boolean isInSubmittableCompetitionState() {

@@ -79,6 +79,7 @@ public class ApplicationQuestionSaverTest {
 
     @Before
     public void setup() {
+        application.setResubmission(false);
         form.setApplication(application);
 
         when(processRoleService.findProcessRole(userId, applicationId)).thenReturn(newProcessRoleResource().withId(processRoleId).build());

@@ -160,13 +160,12 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void getKeyStatistics() {
-        long competitionId = 1L;
-        InterviewAssignmentKeyStatisticsResource expected = newInterviewAssignmentKeyStatisticsResource().build();
+    public void isAssignedToInterview() {
+        long applicationId = 1L;
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "key-statistics", competitionId), InterviewAssignmentKeyStatisticsResource.class, expected);
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "is-assigned", applicationId), Boolean.class, true);
 
-        InterviewAssignmentKeyStatisticsResource actual = service.getKeyStatistics(competitionId).getSuccess();
-        assertEquals(expected, actual);
+        RestResult<Boolean> actual = service.isAssignedToInterview(applicationId);
+        assertTrue(actual.isSuccess());
     }
 }

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.application.validator.WordCountValidator;
+import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
