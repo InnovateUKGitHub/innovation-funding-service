@@ -1,17 +1,14 @@
-package org.innovateuk.ifs.assessment.interview.security;
+package org.innovateuk.ifs.interview.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentServiceImpl;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityTest<InterviewAssignmentService> {
 
@@ -63,25 +60,9 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void getEmailTemplate() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getEmailTemplate(),
-                COMP_ADMIN, PROJECT_FINANCE
-        );
-    }
-
-    @Test
     public void unstageApplications() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.unstageApplications(1L),
-                COMP_ADMIN, PROJECT_FINANCE
-        );
-    }
-
-    @Test
-    public void sendInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.sendInvites(1L, new AssessorInviteSendResource("Subject", "Content")),
                 COMP_ADMIN, PROJECT_FINANCE
         );
     }
@@ -91,38 +72,6 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.isApplicationAssigned(1L),
                 APPLICANT
-        );
-    }
-
-    @Test
-    public void uploadFeedback() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.uploadFeedback("", "", "", 1L, null),
-                COMP_ADMIN, PROJECT_FINANCE
-        );
-    }
-
-    @Test
-    public void downloadFeedback() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.downloadFeedback(1L),
-                COMP_ADMIN, PROJECT_FINANCE
-        );
-    }
-
-    @Test
-    public void deleteFeedback() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.deleteFeedback(1L),
-                COMP_ADMIN, PROJECT_FINANCE
-        );
-    }
-
-    @Test
-    public void findFeedback() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.findFeedback(1L),
-                COMP_ADMIN, PROJECT_FINANCE
         );
     }
 

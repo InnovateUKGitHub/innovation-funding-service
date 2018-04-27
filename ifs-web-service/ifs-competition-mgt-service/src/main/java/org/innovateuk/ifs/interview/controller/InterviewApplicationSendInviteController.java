@@ -125,7 +125,6 @@ public class InterviewApplicationSendInviteController {
                 .failNowOrSucceedWith(failureView, () -> getInvitesToSend(model, competitionId, form.getPage(), queryParams, form, bindingResult));
     }
 
-
     @GetMapping("/send/view-feedback/{applicationId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
                                    @PathVariable("competitionId") long competitionId,
@@ -142,6 +141,4 @@ public class InterviewApplicationSendInviteController {
     private void populateGroupInviteFormWithExistingValues(InterviewApplicationSendForm form) {
         form.setSubject("Please attend an interview for an Innovate UK funding competition");
     }
-
-
 }

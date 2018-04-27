@@ -1,19 +1,12 @@
-package org.innovateuk.ifs.assessment.interview.transactional;
+package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
-import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -26,22 +19,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 
-import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
-import static org.innovateuk.ifs.interview.builder.InterviewAssignmentMessageOutcomeBuilder.newInterviewAssignmentMessageOutcome;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
@@ -201,55 +185,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
     }
 
     @Test
-    public void getEmailTemplate() {
-        when(notificationTemplateRendererMock.renderTemplate(eq(systemNotificationSourceMock), any(NotificationTarget.class), eq("invite_applicants_to_interview_panel_text.txt"),
-                any(Map.class))).thenReturn(serviceSuccess("Content"));
-
-        ServiceResult<ApplicantInterviewInviteResource> result = service.getEmailTemplate();
-
-        assertTrue(result.isSuccess());
-        assertEquals(result.getSuccess().getContent(),"Content");
-    }
-
-    @Test
-    public void sendInvites() {
-        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
-        List<InterviewAssignment> interviewAssignments = newInterviewAssignment()
-                .withParticipant(
-                        newProcessRole()
-                                .withRole(Role.INTERVIEW_LEAD_APPLICANT)
-                                .withOrganisationId(LEAD_ORGANISATION.getId())
-                                .withUser(newUser()
-                                        .withFirstName("Someone").withLastName("SomeName").withEmailAddress("someone@example.com").build())
-                                .build()
-                )
-                .withTarget(
-                        newApplication()
-                                .withCompetition(newCompetition().build())
-                                .build()
-
-                )
-                .build(1);
-
-        InterviewAssignmentMessageOutcome outcome = new InterviewAssignmentMessageOutcome();
-        outcome.setAssessmentInterviewPanel(interviewAssignments.get(0));
-        outcome.setMessage(sendResource.getContent());
-        outcome.setSubject(sendResource.getSubject());
-
-        when(interviewAssignmentRepositoryMock.findByTargetCompetitionIdAndActivityStateState(
-                COMPETITION_ID, InterviewAssignmentState.CREATED.getBackingState())).thenReturn(interviewAssignments);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState())).thenReturn(PENDING_FEEDBACK_ACTIVITY_STATE);
-        when(notificationSenderMock.sendNotification(any(Notification.class))).thenReturn(serviceSuccess(null));
-
-        ServiceResult<Void> result = service.sendInvites(COMPETITION_ID, sendResource);
-
-        assertTrue(result.isSuccess());
-        verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
-        verify(interviewAssignmentWorkflowHandler).notifyInterviewPanel(interviewAssignments.get(0), outcome);
-    }
-
-    @Test
     public void isApplicationAssigned() {
         long applicationId = 1L;
         when(interviewAssignmentRepositoryMock.existsByTargetIdAndActivityStateStateIn(applicationId,
@@ -259,72 +194,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         ServiceResult<Boolean> result = service.isApplicationAssigned(applicationId);
 
         assertTrue(result.getSuccess());
-    }
-
-    @Test
-    public void findFeedback() throws Exception {
-        long applicationId = 1L;
-        FileEntry fileEntry = newFileEntry().build();
-        InterviewAssignment interviewAssignment = newInterviewAssignment().
-                withMessage(newInterviewAssignmentMessageOutcome()
-                        .withFeedback(fileEntry)
-                        .build()
-                ).build();
-        FileEntryResource fileEntryResource = newFileEntryResource().build();
-        when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
-        when(fileEntryServiceMock.findOne(fileEntry.getId())).thenReturn(serviceSuccess(fileEntryResource));
-
-        FileEntryResource response = service.findFeedback(applicationId).getSuccess();
-
-        assertEquals(fileEntryResource, response);
-    }
-
-    @Test
-    public void downloadFeedback() throws Exception {
-        final long applicationId = 1L;
-        final long fileId = 2L;
-        final FileEntry fileEntry = new FileEntry(fileId, "somefile.pdf", MediaType.APPLICATION_PDF, 1111L);
-        InterviewAssignment interviewAssignment = newInterviewAssignment().
-                withMessage(newInterviewAssignmentMessageOutcome()
-                        .withFeedback(fileEntry)
-                        .build()
-                ).build();
-        FileEntryResource fileEntryResource = new FileEntryResource();
-        fileEntryResource.setId(fileId);
-
-        when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
-        when(fileEntryServiceMock.findOne(fileId)).thenReturn(serviceSuccess(fileEntryResource));
-        final Supplier<InputStream> contentSupplier = () -> null;
-        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(ServiceResult.serviceSuccess(contentSupplier));
-
-        FileAndContents fileAndContents = service.downloadFeedback(applicationId).getSuccess();
-
-        assertEquals(fileAndContents.getContentsSupplier(), contentSupplier);
-        assertEquals(fileAndContents.getFileEntry(), fileEntryResource);
-    }
-
-    @Test
-    public void deleteFeedback() throws Exception {
-        final long applicationId = 1L;
-        final long fileId = 101L;
-        final FileEntry fileEntry = new FileEntry(fileId, "somefile.pdf", MediaType.APPLICATION_PDF, 1111L);
-        InterviewAssignmentMessageOutcome messageOutcome = newInterviewAssignmentMessageOutcome()
-                .withId(2L)
-                .withFeedback(fileEntry)
-                .build();
-        InterviewAssignment interviewAssignment = newInterviewAssignment()
-                .withMessage(messageOutcome)
-                .build();
-
-        when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
-        when(fileServiceMock.deleteFileIgnoreNotFound(fileId)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
-
-        ServiceResult<Void> response = service.deleteFeedback(applicationId);
-
-        assertTrue(response.isSuccess());
-        verify(interviewAssignmentMessageOutcomeRepository).delete(messageOutcome.getId());
-        verify(fileServiceMock).deleteFileIgnoreNotFound(fileId);
-
     }
 
     private static InterviewAssignment interviewPanelLambdaMatcher(Application application) {

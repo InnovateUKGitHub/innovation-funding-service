@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Form for sending competition invites
+ * Form for sending invites to applicants to join the interview. Includes feedback file upload.
  */
 public class InterviewApplicationSendForm extends SendInviteForm {
 
