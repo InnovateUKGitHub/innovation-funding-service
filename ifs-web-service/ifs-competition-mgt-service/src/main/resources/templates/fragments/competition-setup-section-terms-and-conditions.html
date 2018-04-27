@@ -10,7 +10,7 @@
 
     <p>These are the terms and conditions applicants must accept for this competition.</p>
 
-    <p><a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
+    <p><a th:text="${model.currentTermsAndConditions.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
         Terms and conditions</a> (opens in a new window)
     </p>
 

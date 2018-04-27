@@ -28,4 +28,10 @@ public class TermsAndConditionsServiceImpl implements TermsAndConditionsService 
         return serviceSuccess((List<TermsAndConditionsResource>)
                 termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findAll()));
     }
+
+    @Override
+    public ServiceResult<TermsAndConditionsResource> getById(Long id) {
+        return serviceSuccess((TermsAndConditionsResource)
+                termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findOne(id)));
+    }
 }

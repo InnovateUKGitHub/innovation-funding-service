@@ -23,4 +23,9 @@ public class TermsAndConditionsRestServiceImpl extends BaseRestService implement
     public RestResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions() {
         return getWithRestResult(termsAndConditionsRestUrl + "/getLatest", termsAndConditionsResourceListType());
     }
+
+    @Override
+    public RestResult<TermsAndConditionsResource> getById(Long id) {
+        return getWithRestResult(termsAndConditionsRestUrl + "/getById/" + id, TermsAndConditionsResource.class);
+    }
 }

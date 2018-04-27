@@ -30,6 +30,8 @@ public class TermsAndConditionsModelPopulator implements CompetitionSetupSection
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel,
                                                    CompetitionResource competitionResource) {
         List<TermsAndConditionsResource> termsAndConditionsList = termsAndConditionsRestService.getLatestTermsAndConditions().getSuccess();
-        return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList);
+        TermsAndConditionsResource termsAndConditions = termsAndConditionsRestService.getById(competitionResource.getTermsAndConditions()
+                .getId()).getSuccess();
+        return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList, termsAndConditions);
     }
 }
