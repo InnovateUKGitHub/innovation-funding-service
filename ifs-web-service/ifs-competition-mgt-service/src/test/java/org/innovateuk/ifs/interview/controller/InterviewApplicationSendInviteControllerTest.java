@@ -132,7 +132,6 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         verify(interviewAssignmentRestService).uploadFeedback(applicationId,"application/pdf", 11, "testFile.pdf", "My content!".getBytes());
     }
 
-
     @Test
     public void removeFeedback() throws Exception {
         long competitionId = 1L;

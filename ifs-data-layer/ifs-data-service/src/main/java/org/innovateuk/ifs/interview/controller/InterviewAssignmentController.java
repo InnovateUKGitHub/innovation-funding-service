@@ -2,6 +2,8 @@ package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
+import org.innovateuk.ifs.interview.transactional.InterviewApplicationInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +31,15 @@ public class InterviewAssignmentController {
 
     private InterviewAssignmentService interviewAssignmentService;
 
+    private InterviewApplicationFeedbackService interviewApplicationFeedbackService;
+
+    private InterviewApplicationInviteService interviewApplicationInviteService;
+
     @Autowired
-    public InterviewAssignmentController(InterviewAssignmentService interviewAssignmentService) {
+    public InterviewAssignmentController(InterviewAssignmentService interviewAssignmentService, InterviewApplicationFeedbackService interviewApplicationFeedbackService, InterviewApplicationInviteService interviewApplicationInviteService) {
         this.interviewAssignmentService = interviewAssignmentService;
+        this.interviewApplicationFeedbackService = interviewApplicationFeedbackService;
+        this.interviewApplicationInviteService = interviewApplicationInviteService;
     }
 
     @GetMapping("/available-applications/{competitionId}")
@@ -77,12 +85,12 @@ public class InterviewAssignmentController {
 
     @GetMapping("/email-template")
     public RestResult<ApplicantInterviewInviteResource> getEmailTemplate() {
-        return interviewAssignmentService.getEmailTemplate().toGetResponse();
+        return interviewApplicationInviteService.getEmailTemplate().toGetResponse();
     }
 
     @PostMapping("/send-invites/{competitionId}")
     public RestResult<Void> sendInvites(@PathVariable long competitionId, @Valid @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return interviewAssignmentService.sendInvites(competitionId, assessorInviteSendResource).toPostWithBodyResponse();
+        return interviewApplicationInviteService.sendInvites(competitionId, assessorInviteSendResource).toPostWithBodyResponse();
     }
 
     @GetMapping("/is-assigned/{applicationId}")
@@ -97,22 +105,22 @@ public class InterviewAssignmentController {
                                     @PathVariable("applicationId") long applicationId,
                                     HttpServletRequest request)
     {
-        return interviewAssignmentService.uploadFeedback(contentType, contentLength, originalFilename, applicationId, request).toPostCreateResponse();
+        return interviewApplicationFeedbackService.uploadFeedback(contentType, contentLength, originalFilename, applicationId, request).toPostCreateResponse();
     }
 
     @DeleteMapping(value = "/feedback/{applicationId}", produces = "application/json")
     public RestResult<Void> deleteFile(@PathVariable("applicationId") long applicationId) {
-        return interviewAssignmentService.deleteFeedback(applicationId).toDeleteResponse();
+        return interviewApplicationFeedbackService.deleteFeedback(applicationId).toDeleteResponse();
     }
 
     @GetMapping(value = "/feedback/{applicationId}", produces = "application/json")
     public @ResponseBody
     ResponseEntity<Object> downloadFile(@PathVariable("applicationId") long applicationId) throws IOException {
-        return handleFileDownload(() -> interviewAssignmentService.downloadFeedback(applicationId));
+        return handleFileDownload(() -> interviewApplicationFeedbackService.downloadFeedback(applicationId));
     }
 
     @GetMapping(value = "/feedback-details/{applicationId}", produces = "application/json")
     public RestResult<FileEntryResource> findFile(@PathVariable("applicationId") long applicationId) throws IOException {
-        return interviewAssignmentService.findFeedback(applicationId).toGetResponse();
+        return interviewApplicationFeedbackService.findFeedback(applicationId).toGetResponse();
     }
 }
