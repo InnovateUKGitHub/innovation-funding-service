@@ -61,7 +61,6 @@ public class ApplicationModelPopulator {
     @Autowired
     protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
-
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
