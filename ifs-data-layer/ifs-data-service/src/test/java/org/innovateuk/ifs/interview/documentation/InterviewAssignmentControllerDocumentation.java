@@ -269,7 +269,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Test
     public void findFeedback() throws Exception {
-        final Long applicationId = 22L;
+        final long applicationId = 22L;
         FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
         when(interviewApplicationFeedbackService.findFeedback(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
 
@@ -285,7 +285,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Test
     public void downloadFeedback() throws Exception {
-        final Long applicationId = 22L;
+        final long applicationId = 22L;
 
         Function<InterviewApplicationFeedbackService, ServiceResult<FileAndContents>> serviceCallToDownload =
                 (service) -> service.downloadFeedback(applicationId);
@@ -297,7 +297,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Test
     public void deleteFeedback() throws Exception {
-        final Long applicationId = 22L;
+        final long applicationId = 22L;
         when(interviewApplicationFeedbackService.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-panel/feedback/{applicationId}", applicationId))
@@ -311,7 +311,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Test
     public void uploadFeedback() throws Exception {
-        final Long applicationId = 77L;
+        final long applicationId = 77L;
         when(interviewApplicationFeedbackService.uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class))).thenReturn(serviceSuccess());
 

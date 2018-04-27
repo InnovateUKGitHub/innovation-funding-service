@@ -2,13 +2,12 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * Service for managing {@link InterviewInvite}s
+ * Service for inviting applicants to interview panels.
  */
 public interface InterviewApplicationInviteService {
 

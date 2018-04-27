@@ -36,7 +36,9 @@ public class InterviewAssignmentController {
     private InterviewApplicationInviteService interviewApplicationInviteService;
 
     @Autowired
-    public InterviewAssignmentController(InterviewAssignmentService interviewAssignmentService, InterviewApplicationFeedbackService interviewApplicationFeedbackService, InterviewApplicationInviteService interviewApplicationInviteService) {
+    public InterviewAssignmentController(InterviewAssignmentService interviewAssignmentService,
+                                         InterviewApplicationFeedbackService interviewApplicationFeedbackService,
+                                         InterviewApplicationInviteService interviewApplicationInviteService) {
         this.interviewAssignmentService = interviewAssignmentService;
         this.interviewApplicationFeedbackService = interviewApplicationFeedbackService;
         this.interviewApplicationInviteService = interviewApplicationInviteService;

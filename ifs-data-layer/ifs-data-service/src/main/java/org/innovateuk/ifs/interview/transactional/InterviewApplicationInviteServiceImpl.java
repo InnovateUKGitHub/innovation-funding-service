@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
- * Service for managing {@link InterviewAssignment}s.
+ * Service for inviting applicants to interview panels.
  */
 @Service
 @Transactional
@@ -78,7 +78,6 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
                 result = sendInvite(assessorInviteSendResource, assignment, awaitingFeedbackActivityState);
             }
         }
-
         return result;
     }
 

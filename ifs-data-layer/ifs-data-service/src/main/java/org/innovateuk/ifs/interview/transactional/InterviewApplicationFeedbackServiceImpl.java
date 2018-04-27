@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileU
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
- * Service for managing {@link InterviewAssignment}s.
+ * Service for uploading feedback for {@link InterviewAssignment}.
  */
 @Service
 @Transactional
@@ -52,7 +52,6 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
-
 
     @Override
     @Transactional
