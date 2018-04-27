@@ -13,12 +13,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public enum ApplicationState implements ProcessState, IdentifiableEnum<ApplicationState> {
 
     CREATED(27, State.CREATED), // initial state
-    OPEN(28, State.OPEN),
     SUBMITTED(29,State.SUBMITTED),
     INELIGIBLE(30, State.NOT_APPLICABLE),
     INELIGIBLE_INFORMED(31, State.NOT_APPLICABLE_INFORMED),
     APPROVED(32, State.ACCEPTED),
-    REJECTED(33, State.REJECTED);
+    REJECTED(33, State.REJECTED),
+    OPEN(28, State.OPEN);
 
     final long id;
     final State backingState;

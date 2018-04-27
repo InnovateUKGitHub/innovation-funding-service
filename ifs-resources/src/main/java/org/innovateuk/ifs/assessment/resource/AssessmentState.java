@@ -12,14 +12,14 @@ import java.util.Set;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 public enum AssessmentState implements ProcessState, IdentifiableEnum<AssessmentState> {
+    CREATED(19, State.CREATED),
     PENDING(1, State.PENDING),
-    OPEN(2, State.OPEN),
+    WITHDRAWN(20, State.WITHDRAWN),
     REJECTED(3, State.REJECTED),
+    ACCEPTED(12, State.ACCEPTED),
+    OPEN(2, State.OPEN),
     READY_TO_SUBMIT(4, State.READY_TO_SUBMIT),
     SUBMITTED(5, State.SUBMITTED),
-    ACCEPTED(12, State.ACCEPTED),
-    CREATED(19, State.CREATED),
-    WITHDRAWN(20, State.WITHDRAWN),
 
     DECIDE_IF_READY_TO_SUBMIT(-1, State.DECIDE_IF_READY_TO_SUBMIT); // pseudo state?
 

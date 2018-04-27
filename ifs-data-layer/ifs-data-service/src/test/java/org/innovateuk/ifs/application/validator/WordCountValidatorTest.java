@@ -1,16 +1,15 @@
-package org.innovateuk.ifs.validation.validator;
+package org.innovateuk.ifs.application.validator;
 
-import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.form.domain.FormInput;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.innovateuk.ifs.validation.validator.ValidatorTestUtil.getBindingResult;
 import static java.util.Collections.nCopies;
+import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.*;
 
 public class WordCountValidatorTest {

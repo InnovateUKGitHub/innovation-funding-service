@@ -13,6 +13,7 @@ import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.*;
@@ -116,6 +117,7 @@ import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtilTest;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -740,7 +742,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
 
     @Mock
-    protected ValidationUtil validationUtilMock;
+    protected ApplicationValidationUtil validationUtilMock;
+
+    @Mock
+    protected SpendProfileValidationUtilTest spendProfileValidationUtil;
 
     @Mock
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
