@@ -93,7 +93,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     public String getLinkUrl() {
         if (isSubmitted()) {
             if (assignedToInterview) {
-                return String.format("/application/%s/interview-feedback", getApplicationNumber());
+                return String.format("/application/%s/summary", getApplicationNumber());
             } else {
                 return String.format("/application/%s/track", getApplicationNumber());
             }
