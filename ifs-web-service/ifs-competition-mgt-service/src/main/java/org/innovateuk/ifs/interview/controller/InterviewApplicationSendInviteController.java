@@ -94,15 +94,15 @@ public class InterviewApplicationSendInviteController {
 
         Supplier<String> failureView = () -> {
             model.addAttribute("applicationInError", form.getAttachFeedbackApplicationId());
-            return getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult);
+            return getInvitesToSend(model, competitionId, form.getPage(), queryParams, form, bindingResult);
         };
 
-        MultipartFile file = form.getFeedback();
+        MultipartFile file = form.getNotEmptyFile();
         RestResult<Void> sendResult = interviewAssignmentRestService
                     .uploadFeedback(form.getAttachFeedbackApplicationId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
 
         return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
-                .failNowOrSucceedWith(failureView, () -> getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult));
+                .failNowOrSucceedWith(failureView, () -> getInvitesToSend(model, competitionId, form.getPage(), queryParams, form, bindingResult));
     }
 
     @PostMapping(value = "/send", params = {"removeFeedbackApplicationId"})
@@ -115,14 +115,14 @@ public class InterviewApplicationSendInviteController {
 
         Supplier<String> failureView = () -> {
             model.addAttribute("applicationInError", form.getRemoveFeedbackApplicationId());
-            return getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult);
+            return getInvitesToSend(model, competitionId, form.getPage(), queryParams, form, bindingResult);
         };
 
         RestResult<Void> sendResult = interviewAssignmentRestService
                 .deleteFeedback(form.getRemoveFeedbackApplicationId());
 
         return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
-                .failNowOrSucceedWith(failureView, () -> getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult));
+                .failNowOrSucceedWith(failureView, () -> getInvitesToSend(model, competitionId, form.getPage(), queryParams, form, bindingResult));
     }
 
 

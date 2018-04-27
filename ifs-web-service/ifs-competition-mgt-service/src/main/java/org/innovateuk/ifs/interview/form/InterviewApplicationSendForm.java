@@ -3,21 +3,32 @@ package org.innovateuk.ifs.interview.form;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 /**
  * Form for sending competition invites
  */
 public class InterviewApplicationSendForm extends SendInviteForm {
 
-    private MultipartFile feedback;
+    private List<MultipartFile> feedback;
     private Long attachFeedbackApplicationId;
     private Long removeFeedbackApplicationId;
+    private int page = 0;
 
+    public int getPage() {
+        return page;
+    }
 
-    public MultipartFile getFeedback() {
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public List<MultipartFile> getFeedback() {
         return feedback;
     }
 
-    public void setFeedback(MultipartFile feedback) {
+    public void setFeedback(List<MultipartFile> feedback) {
         this.feedback = feedback;
     }
 
@@ -37,4 +48,8 @@ public class InterviewApplicationSendForm extends SendInviteForm {
         this.removeFeedbackApplicationId = removeFeedbackApplicationId;
     }
 
+    public MultipartFile getNotEmptyFile() {
+        return feedback.stream().filter(((Predicate<MultipartFile>) MultipartFile::isEmpty).negate())
+                .findAny().get();
+    }
 }

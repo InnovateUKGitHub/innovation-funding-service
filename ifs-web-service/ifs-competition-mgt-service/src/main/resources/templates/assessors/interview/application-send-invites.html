@@ -43,6 +43,7 @@
 
     <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}"
           method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate">
+        <input type="hidden" name="page" th:value="${model.pagination.currentPage}" />
         <div class="table-overflow">
             <table>
                 <thead>
