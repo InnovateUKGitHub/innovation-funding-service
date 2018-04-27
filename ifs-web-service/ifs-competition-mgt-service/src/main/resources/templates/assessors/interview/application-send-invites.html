@@ -29,13 +29,12 @@
             <ul class="list list-bullet">
                 <li>a portable document format (.pdf)</li>
                 <li>readable with 100% magnification</li>
-                <li>less than 10mb in size</li>
+                <li>less than 10MB in size</li>
             </ul>
         </div>
     </details>
 
-
-    <div class="grid-row sorting">
+    <div class="grid-row sorting extra-margin">
         <div class="column-half">
             <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
             <span class="heading-small">applications</span>
@@ -66,9 +65,13 @@
                     <td>
                         <div th:with="isError=${applicationInError != null && applicationInError == app.applicationId}"
                              th:class="${isError ? 'form-group-error' : ''}">
-                            <th:block th:if="${isError}" th:each="err : ${#fields.detailedErrors('${__form__.*}')}">
-                                <span th:if="${err.global}" class="error-message" th:text="${err.message}">PDF upload error</span>
+                            <th:block th:if="${isError}">
+                                <th:block th:each="err : ${#fields.detailedErrors('${__form__.*}')}">
+                                    <span th:if="${err.global}" class="error-message" th:text="${err.message}">PDF upload error</span>
+                                </th:block>
+                                <p class="uploaded-file">No file currently uploaded</p>
                             </th:block>
+
                             <th:block th:unless="${app.hasAttachment()}">
                                 <div class="upload-section">
                                     <input type="file" th:id="${'attachment-' + app.applicationId}" class="inputfile" name="feedback">
