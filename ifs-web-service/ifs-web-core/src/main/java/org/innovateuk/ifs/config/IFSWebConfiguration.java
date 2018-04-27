@@ -30,9 +30,6 @@ import java.util.Locale;
 public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     public static final int CACHE_PERIOD = 60 * 60 * 24 * 60;
 
-    @Value("${ifs.web.alertMessagesEnabled:true}")
-    private boolean alertMessagesEnabled;
-
     @Autowired
     Environment env;
 
@@ -41,10 +38,6 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         super.addInterceptors(registry);
         registry.addInterceptor(getMenuLinksHandlerInterceptor());
         registry.addInterceptor(getGoogleAnalyticsHandlerInterceptor());
-
-        if (alertMessagesEnabled) {
-            registry.addInterceptor(getAlertMessageHandlerInterceptor());
-        }
     }
 
     @Override
@@ -91,11 +84,6 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public HandlerInterceptor getMenuLinksHandlerInterceptor() {
         return new MenuLinksHandlerInterceptor();
-    }
-
-    @Bean
-    public HandlerInterceptor getAlertMessageHandlerInterceptor() {
-        return new AlertMessageHandlerInterceptor();
     }
 
     @Bean
