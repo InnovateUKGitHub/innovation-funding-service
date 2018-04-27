@@ -1,16 +1,14 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
-
 public class TermsAndConditionsForm extends CompetitionSetupForm {
 
-    private TermsAndConditionsResource termsAndConditions;
+    private Long termsAndConditionsId;
 
-    public TermsAndConditionsResource getTermsAndConditions() {
-        return termsAndConditions;
+    public Long getTermsAndConditionsId() {
+        return termsAndConditionsId;
     }
 
-    public void setTermsAndConditions(TermsAndConditionsResource termsAndConditions) {
-        this.termsAndConditions = termsAndConditions;
+    public void setTermsAndConditionsId(Long termsAndConditionsId) {
+        this.termsAndConditionsId = termsAndConditionsId;
     }
 }

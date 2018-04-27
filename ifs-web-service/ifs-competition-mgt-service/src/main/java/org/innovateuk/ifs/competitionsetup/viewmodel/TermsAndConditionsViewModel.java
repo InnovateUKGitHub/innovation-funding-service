@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TermsAndConditionsViewModel extends CompetitionSetupViewModel {
 
-    List<TermsAndConditionsResource> termsAndConditionsList;
+    private List<TermsAndConditionsResource> termsAndConditionsList;
 
     public TermsAndConditionsViewModel(GeneralSetupViewModel generalSetupViewModel,
                                        List<TermsAndConditionsResource> termsAndConditionsList) {

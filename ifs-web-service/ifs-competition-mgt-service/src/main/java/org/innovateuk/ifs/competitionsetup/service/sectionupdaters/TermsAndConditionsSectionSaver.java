@@ -47,7 +47,7 @@ public class TermsAndConditionsSectionSaver extends AbstractSectionSaver impleme
         try {
             competitionRestService.updateTermsAndConditionsForCompetition(
                     competitionResource.getId(),
-                    form.getTermsAndConditions().getId()
+                    form.getTermsAndConditionsId()
             ).getSuccess();
         } catch (RuntimeException e) {
             LOG.error("Competition object not available");

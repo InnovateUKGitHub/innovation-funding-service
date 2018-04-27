@@ -10,31 +10,42 @@
 
     <p>These are the terms and conditions applicants must accept for this competition.</p>
 
-    <p><a th:text="${competitionSetupForm.termsAndConditions.name}"
-          th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
+    <p><a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
         Terms and conditions</a> (opens in a new window)
     </p>
 
     <form th:action="@{(${model.general.editable} ? '' : 'terms-and-conditions/edit')}"
-          th:attr="data-competition=${model.general.competition.id}"
           th:object="${competitionSetupForm}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           data-section="terms-and-conditions"
           method="post" novalidate="novalidate">
         <div th:if="${model.general.editable}" id="section-3-edit">
 
             <div class="form-group">
-                <select class="form-control" name="grantTermsAndConditions" id="grantTermsAndConditions"
-                th:field="${competitionSetupForm.termsAndConditions}">
-                    <option th:each="termsAndConditions : ${model.termsAndConditionsList}"
-                            th:value="${termsAndConditions}"
+                <select class="form-control width-x-large"
+                    id="termsAndConditionsId"
+                    name="termsAndConditionsId"
+                    required="required"
+                    th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}"
+                    data-autosave-disabled="">
+                    <option value="" disabled="disabled"
+                            th:selected="${competitionSetupForm.termsAndConditionsId == null}">Please select &hellip;</option>
+                    <option th:each="(termsAndConditions : ${model.termsAndConditionsList})"
                             th:text="${termsAndConditions.name}"
-                            th:selected="${termsAndConditions == competitionSetupForm.termsAndConditions}"
-                            value="1">Not available</option>
+                            th:value="${termsAndConditions.id}"
+                            th:selected="${competitionSetupForm.termsAndConditionsId == termsAndConditions.id}">
+                        Terms and conditions
+                    </option>
                 </select>
+                <input type="hidden" th:field="${competitionSetupForm.termsAndConditionsId}" />
             </div>
 
             <button class="button">Done</button>
         </div>
+
+        <th:block th:unless="${model.general.editable}" id="section-3-readonly">
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+        </th:block>
 
     </form>
 

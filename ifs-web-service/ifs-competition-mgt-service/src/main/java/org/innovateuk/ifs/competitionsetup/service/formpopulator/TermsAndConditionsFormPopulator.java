@@ -20,7 +20,7 @@ public class TermsAndConditionsFormPopulator implements CompetitionSetupFormPopu
     @Override
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
         TermsAndConditionsForm termsAndConditionsForm = new TermsAndConditionsForm();
-        termsAndConditionsForm.setTermsAndConditions(competitionResource.getTermsAndConditions());
+        termsAndConditionsForm.setTermsAndConditionsId(competitionResource.getTermsAndConditions().getId());
         return termsAndConditionsForm;
     }
 }
