@@ -121,28 +121,6 @@ public class ApplicationSummaryController {
         }
     }
 
-//    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
-//                                                                 final CompetitionResource competition,
-//                                                                 final UserResource user, final Model model,
-//                                                                 final ApplicationForm form,
-//                                                                 List<ProcessRoleResource> userApplicationRoles,
-//                                                                 final Optional<Boolean> markAsCompleteEnabled) {
-//        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
-//    }
-//
-//    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
-//                                                                 final CompetitionResource competition,
-//                                                                 final UserResource user,
-//                                                                 Optional<SectionResource> section,
-//                                                                 Optional<Long> currentQuestionId,
-//                                                                 final Model model,
-//                                                                 final ApplicationForm form,
-//                                                                 List<ProcessRoleResource> userApplicationRoles,
-//                                                                 final Optional<Boolean> markAsCompleteEnabled) {
-//        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
-//        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
-//    }
-
     private void addFeedbackAndScores(Model model, long applicationId) {
         model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
         model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
@@ -150,47 +128,5 @@ public class ApplicationSummaryController {
                 .getFeedback()
         );
     }
-
-
-    /*
-    *
-    * combine into summary method above
-    *
-    *
-    *
-    *
-    * */
-//
-//    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'APPLICATION_FEEDBACK')")
-//    @GetMapping("/{applicationId}/interview-feedback")
-//    public String interviewFeedback(@ModelAttribute("form") ApplicationForm form,
-//                                    Model model,
-//                                    @PathVariable("applicationId") long applicationId,
-//                                    UserResource user) {
-//
-//        ApplicationResource application = applicationService.getById(applicationId);
-//        CompetitionResource competition = competitionService.getById(application.getCompetition());
-//        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-//
-//        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.of(Boolean.FALSE));
-//        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-//
-//        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-//
-//        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
-//        model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
-//                .getSuccess()
-//                .getFeedback()
-//        );
-//
-//        return "application-interview-feedback";
-//    }
-
-
-
-
-
-
-
 
 }
