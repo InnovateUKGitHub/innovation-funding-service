@@ -140,22 +140,10 @@ The user navigates to the overview page of the Robot test application
     ${id} =  get application id by name  Robot test application
     the user navigates to the page       ${server}/application/${id}
 
-The user navigates to the academic application finances
-    When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Your finances
-
 The user navigates to the finance overview of the academic
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Finances overview
-
-The user marks the academic application finances as incomplete
-    the user navigates to the academic application finances
-    the user clicks the button/link    link=Your project costs
-    Focus    jQuery=button:contains("Edit")
-    the user clicks the button/link    jQuery=button:contains("Edit")
-    wait for autosave
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}

@@ -8,8 +8,10 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -45,14 +47,24 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);
     private static final int PAGE_SIZE = 20;
 
-    @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
-
-    @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
+    private ApplicationFundingDecisionService applicationFundingDecisionService;
+    private CompetitionService competitionService;
 
     @Autowired
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
+    public CompetitionManagementFundingDecisionController(ApplicationSummarySortFieldService applicationSummarySortFieldService,
+                                                          ApplicationSummaryRestService applicationSummaryRestService,
+                                                          ApplicationFundingDecisionService applicationFundingDecisionService,
+                                                          CompetitionService competitionService) {
+        this.applicationSummarySortFieldService = applicationSummarySortFieldService;
+        this.applicationSummaryRestService = applicationSummaryRestService;
+        this.applicationFundingDecisionService = applicationFundingDecisionService;
+        this.competitionService = competitionService;
+    }
+
+    public CompetitionManagementFundingDecisionController() {
+    }
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -226,7 +238,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     private MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
         MultiValueMap<String, String> filterMap = new LinkedMultiValueMap<>();
         if(fundingDecisionFilterForm.getFundingFilter().isPresent()) {
-            filterMap.set("fundingFilter", fundingDecisionFilterForm.getFundingFilter().get().getName());
+            filterMap.set("fundingFilter", fundingDecisionFilterForm.getFundingFilter().get().name());
         }
         if(fundingDecisionFilterForm.getStringFilter().isPresent()) {
             filterMap.set("stringFilter", fundingDecisionFilterForm.getStringFilter().get());
@@ -272,15 +284,22 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 .getSuccess();
     }
 
-    private String populateSubmittedModel(Model model, long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm) {
-        ApplicationSummaryPageResource results = getApplicationsByFilters(competitionId, paginationForm, fundingDecisionFilterForm);
+    private String populateSubmittedModel(Model model,
+                                          long competitionId,
+                                          FundingDecisionPaginationForm paginationForm,
+                                          FundingDecisionFilterForm fundingDecisionFilterForm,
+                                          FundingDecisionSelectionForm fundingDecisionSelectionForm) {
+
+        CompetitionResource competition = getCompetitionIfExist(competitionId);
+
+        ApplicationSummaryPageResource results = getApplicationsByFilters(competition.getId(), paginationForm, fundingDecisionFilterForm);
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
-                .getCompetitionSummary(competitionId)
+                .getCompetitionSummary(competition.getId())
                 .getSuccess();
 
-        List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
+        List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competition.getId(), fundingDecisionFilterForm);
         boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());
         boolean selectAllDisabled =  submittableApplicationIds.isEmpty();
 
@@ -299,5 +318,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             default:
                 return "redirect:/login";
         }
+    }
+
+    private CompetitionResource getCompetitionIfExist(long competitionId) {
+        return competitionService.getById(competitionId);
     }
 }

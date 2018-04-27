@@ -225,24 +225,21 @@ the user removes prev costs if there are any
 the academic user fills in his finances
     [Arguments]  ${application}
     the user navigates to Your-finances page  ${application}
-    the academic fills in the project costs   ${application}
+    the user clicks the button/link           link=Your project costs
+    the academic fills in the project costs
 
 the academic fills in the project costs
-    [Arguments]  ${application}
-    the user clicks the button/link       link=Your project costs
-    The user enters text to a text field  css=input[name$="tsb_reference"]  ${application}
-    The user enters text to a text field  id=incurred-staff  999.999
-    The user enters text to a text field  id=travel    999.999
-    The user enters text to a text field  id=other    999.999
-    the user should see the element       css=#subtotal-resources[data-calculation-rawvalue^="2999"]
-    The user enters text to a text field  id=investigators    999.999
-    The user enters text to a text field  id=estates    999.999
-    The user enters text to a text field  id=other-direct    999.999
-    the user should see the element       css=#subtotal-directly-allocated[data-calculation-rawvalue^="2999"]
-    The user enters text to a text field  id=indirect    999.999
-    The user enters text to a text field  id=exceptions-staff    999.999
-    The user enters text to a text field  id=exceptions-other-direct    999.999
-    the user should see the element       css=#total[data-calculation-rawvalue^="8999"]
+    The user enters text to a text field  css=[name$="incurred_staff"]  4242
+    The user enters text to a text field  css=[name$="incurred_travel_subsistence"]  4243
+    The user enters text to a text field  css=[name$="incurred_other_costs"]  4244
+    The user enters text to a text field  css=[name$="allocated_investigators"]  42
+    The user enters text to a text field  css=[name$="allocated_estates_costs"]  3000
+    The user enters text to a text field  css=[name$="allocated_other_costs"]  5
+    The user enters text to a text field  css=[name$="indirect_costs"]  8909
+    The user enters text to a text field  css=[name$="exceptions_staff"]  123
+    The user enters text to a text field  css=[name$="exceptions_other_costs"]  7890
+    The user enters text to a text field  css=input[name$="tsb_reference"]  L33t
+    Textfield Value Should Be             id=total  £23,784
     the user uploads the file             css=.inputfile  ${valid_pdf}
     the user should see the element       link=testing.pdf (opens in a new window)
     the user selects the checkbox         termsAgreed
