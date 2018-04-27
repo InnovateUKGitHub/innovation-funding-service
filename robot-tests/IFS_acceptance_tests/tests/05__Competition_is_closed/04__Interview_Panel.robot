@@ -34,6 +34,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3252 Invite Assessor to Interview Panel: Key statistics
 ...
 ...               IFS-2783 Assign Applications to Interview Panel: Add Feedback
+...
+...               IFS-3385 Assign applications to interview panel - Remove feedback
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -90,7 +92,7 @@ CompAdmin can add or remove the applications from the invite list
 
 Competition Admin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
-    [Documentation]  IFS-2782  IFS-3155   IFS-2635  IFS-3251  IFS-2783
+    [Documentation]  IFS-2782  IFS-3155   IFS-2635  IFS-3251  IFS-2783  IFS-3385
     [Tags]
     Given the user clicks the button/link      link=Invite
     When the user clicks the button/link       link=Review and send invites
@@ -100,6 +102,7 @@ Competition Admin can send or cancel sending the invitation to the applicants
     Then the user navigates to the page        ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite
     When the user clicks the button/link       link=Review and send invites
     Then the compAdmin uploads an additional feedback for an application
+    And the compAdmin remove an uploaded feedback for an application
     And the user clicks the button/link        css=.button[type="submit"]     #Send invite
     Then the Competition Admin should see the assigned applications in the View status tab
     And the user checks for Key Statistics for assigned to interview panel
@@ -219,3 +222,8 @@ the compAdmin uploads an additional feedback for an application
     the user should see a field and summary error      Your upload must be a PDF.
     the user uploads the file     id=attachment-${Neural_network_application}   ${5mb_pdf}
     the user should see the element    link=testing_5MB.pdf
+
+the compAdmin remove an uploaded feedback for an application
+        the user uploads the file          id=attachment-${computer_vision_application}   ${5mb_pdf}
+        the user should see the element    link=testing_5MB.pdf
+        the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
