@@ -1574,14 +1574,14 @@
             </th:block>
         </th:block>
         <th:block th:unless="${readonly}">
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')} ? 'form-group-error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')} ? 'form-group-error'">
                 <h2 th:text="${question.name}" class="heading-medium"></h2>
                 <fieldset class="inline" id="otherFundingShowHideToggle">
                     <legend th:id="|formInput[cost-${costCategory.otherFundingCostItem?.id}-otherPublicFunding]|">
                         <span class="visuallyhidden" th:text="${question.name}"></span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-otherPublicFunding'})" />
                     </legend>
                     <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
                     <div class="multiple-choice"  data-target="other-funding-table">
@@ -1605,18 +1605,6 @@
                         <label th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
                                 No
                         </label>
-                        <div class="multiple-choice invisible"
-                             th:with="unchosen=${!(costCategory.otherPublicFunding?.equals('No') or costCategory.otherPublicFunding?.equals('Yes'))}">
-                            <input type="radio"
-                                   th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-empty'}"
-                                   th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                                   value="unchosen"
-                                   required="required"
-                                   th:checked="${unchosen}" />
-                            <label th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-empty'}">
-                                Not chosen (hidden)
-                            </label>
-                        </div>
                     </div>
                     <div id="other-funding-table">
                         <div class="form-group" th:attr="data-repeatable-container=${question.id}">

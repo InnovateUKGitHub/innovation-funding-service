@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUND
  * or for sending it over.
  */
 public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
-    public static final String COST_KEY = OTHER_FUNDING.getType();
+    public static final String COST_KEY = "other-funding";
     public static final String OTHER_FUNDING_NAME = OTHER_FUNDING.getName();
 
     @Autowired
