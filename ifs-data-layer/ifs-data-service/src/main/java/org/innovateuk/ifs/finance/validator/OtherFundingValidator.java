@@ -68,7 +68,7 @@ public class OtherFundingValidator implements Validator {
     private void validateOtherPublicFunding(String otherPublicFunding, Errors errors) {
         List<String> allowedStrings = asList(null, "", "Yes", "No");
         if (!allowedStrings.contains(otherPublicFunding)) {
-            rejectValue(errors, "otherPublicFunding", "validation.field.must.not.be.blank");
+            rejectValue(errors, "otherPublicFunding", "validation.finance.other.funding.required");
         }
     }
 

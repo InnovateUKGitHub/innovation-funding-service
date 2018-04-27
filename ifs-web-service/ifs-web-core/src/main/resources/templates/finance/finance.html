@@ -1577,7 +1577,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')} ? 'form-group-error'">
                 <h2 th:text="${question.name}" class="heading-medium"></h2>
                 <fieldset class="inline" id="otherFundingShowHideToggle">
-                    <legend th:id="|formInput[cost-${costCategory.otherFundingCostItem?.id}-otherPublicFunding]|">
+                    <legend th:id="|formInput[cost-otherPublicFunding]|">
                         <span class="visuallyhidden" th:text="${question.name}"></span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
@@ -1590,6 +1590,7 @@
                                th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
                                value="Yes"
                                required="required"
+                               th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
                                th:checked="${costCategory.otherPublicFunding?.equals('Yes')}" />
                         <label th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}">
                                 Yes
@@ -1601,6 +1602,7 @@
                                th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
                                value="No"
                                required="required"
+                               th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
                                th:checked="${costCategory.otherPublicFunding?.equals('No')}" />
                         <label th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
                                 No

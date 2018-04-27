@@ -251,7 +251,7 @@ public class ApplicationSectionController {
             return true;
         }
 
-        bindingResult.rejectValue("formInput[cost-otherPublicFunding]", "validation.field.must.not.be.blank");
+        bindingResult.rejectValue("formInput[cost-otherPublicFunding]", "validation.finance.other.funding.required");
         return false;
     }
 

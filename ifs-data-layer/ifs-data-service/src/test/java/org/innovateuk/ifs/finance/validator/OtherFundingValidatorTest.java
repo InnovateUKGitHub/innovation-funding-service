@@ -96,7 +96,7 @@ public class OtherFundingValidatorTest {
     public void testInvalidOtherPublicFunding() {
         mockWithRadio("Bobbins");
         OtherFunding otherFunding = new OtherFunding(4L, "Bobbins", OTHER_FUNDING, null, null);
-        expectError(otherFunding, "validation.field.must.not.be.blank");
+        expectError(otherFunding, "validation.finance.other.funding.required");
     }
     @Test
     public void testValidFullAmount() {
