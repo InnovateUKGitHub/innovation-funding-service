@@ -27,7 +27,7 @@ public class EmailService {
     private SystemNotificationSource systemNotificationSource;
 
     public ServiceResult<Void> sendEmail(List<NotificationTarget> targets, Map<String, Object> globalArguments, final Enum template) {
-        Notification financeContactNotification = new Notification(systemNotificationSource, targets, template, globalArguments, emptyMap());
-        return notificationService.sendNotification(financeContactNotification, EMAIL);
+        Notification notification = new Notification(systemNotificationSource, targets, template, globalArguments, emptyMap());
+        return notificationService.sendNotification(notification, EMAIL);
     }
 }
