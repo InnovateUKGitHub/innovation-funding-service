@@ -21,13 +21,7 @@ repositories {
     jcenter()
 }
 
-task pullHub(type: Exec) {
-    doFirst {
-        commandLine 'docker', 'pull', 'selenium/hub:3.0.1-dysprosium'
-    }
-}
-
-task buildHubDocker(type: DockerBuildImage, dependsOn: pullHub) {
+task buildHubDocker(type: DockerBuildImage) {
     tag = "innovateuk/seleniumhub"
     inputDir = project.file("$project.projectDir/hubDocker")
 }
@@ -106,7 +100,6 @@ task createChrome(type: DockerCreateContainer, dependsOn: [pullChrome, removeChr
            "DBUS_SESSION_BUS_ADDRESS=/dev/null",
            "no_proxy=localhost",
            "HUB_ENV_no_proxy=localhost"]
-    links = ["hub:hub"]
 }
 
 task deployChrome(type: DockerStartContainer, dependsOn: createChrome) {
