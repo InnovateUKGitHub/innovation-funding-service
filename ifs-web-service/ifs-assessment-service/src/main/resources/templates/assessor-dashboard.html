@@ -78,7 +78,7 @@
                                         </strong>
                                     </div>
 
-                                    <div th:if="${activeCompetition.progressTotal - activeCompetition.progressAssessed == 0  && activeCompetition.pendingAssessments > 0}" class="action-required">
+                                    <div th:if="${activeCompetition.progressTotal - activeCompetition.progressAssessed == 0 && activeCompetition.pendingAssessments > 0}" class="action-required">
                                         <strong>
                                             <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications">
                                                 COUNT
