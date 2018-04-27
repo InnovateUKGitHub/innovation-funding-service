@@ -24,8 +24,6 @@ public interface UserService {
 
     ProcessRoleResource getLeadApplicantProcessRoleOrNull(Long applicationId);
 
-    boolean isUserOnApplication(long applicationId, long userId);
-
     List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
 
     Void verifyEmail(String hash);

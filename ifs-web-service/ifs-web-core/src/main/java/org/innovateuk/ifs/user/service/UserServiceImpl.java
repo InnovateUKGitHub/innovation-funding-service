@@ -61,15 +61,6 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    @Override
-    public boolean isUserOnApplication(long applicationId, long userId) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(applicationId);
-        List<Long> usersOnApplication = userApplicationRoles.stream()
-                .map(userApplicationRole -> userApplicationRole.getUser())
-                .collect(Collectors.toList());
-        return usersOnApplication.contains(userId);
-    }
-
 	@Override
 	public List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation) {
 		List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
