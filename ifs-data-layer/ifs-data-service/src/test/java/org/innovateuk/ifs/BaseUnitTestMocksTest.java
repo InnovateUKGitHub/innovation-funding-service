@@ -13,6 +13,7 @@ import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.*;
@@ -117,6 +118,7 @@ import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtilTest;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -153,7 +155,6 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -743,7 +744,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
 
     @Mock
-    protected ValidationUtil validationUtilMock;
+    protected ApplicationValidationUtil validationUtilMock;
+
+    @Mock
+    protected SpendProfileValidationUtilTest spendProfileValidationUtil;
 
     @Mock
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
