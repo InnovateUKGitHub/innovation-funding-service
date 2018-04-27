@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.validation.validator;
+package org.innovateuk.ifs.application.validator;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
