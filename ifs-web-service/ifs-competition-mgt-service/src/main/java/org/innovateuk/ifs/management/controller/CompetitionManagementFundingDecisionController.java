@@ -238,7 +238,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     private MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
         MultiValueMap<String, String> filterMap = new LinkedMultiValueMap<>();
         if(fundingDecisionFilterForm.getFundingFilter().isPresent()) {
-            filterMap.set("fundingFilter", fundingDecisionFilterForm.getFundingFilter().get().getName());
+            filterMap.set("fundingFilter", fundingDecisionFilterForm.getFundingFilter().get().name());
         }
         if(fundingDecisionFilterForm.getStringFilter().isPresent()) {
             filterMap.set("stringFilter", fundingDecisionFilterForm.getStringFilter().get());
