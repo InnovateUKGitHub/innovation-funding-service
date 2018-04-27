@@ -1,1 +1,1 @@
-${competitionName}: Finance contact invitation for application ${applicationId}
+${competitionName}: Finance contact invitation for project ${applicationId}
