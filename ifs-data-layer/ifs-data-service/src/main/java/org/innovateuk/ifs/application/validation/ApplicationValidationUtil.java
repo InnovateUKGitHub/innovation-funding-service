@@ -1,114 +1,59 @@
-package org.innovateuk.ifs.validation.util;
+package org.innovateuk.ifs.application.validation;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.validator.AssessorScopeValidator;
-import org.innovateuk.ifs.assessment.validator.AssessorScoreValidator;
-import org.innovateuk.ifs.assessment.validator.ResearchCategoryValidator;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.validator.*;
 import org.innovateuk.ifs.commons.ZeroDowntime;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.form.domain.FormValidator;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
-import org.innovateuk.ifs.validation.validator.*;
-import org.innovateuk.ifs.finance.validator.MinRowCountValidator;
 import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
-import org.innovateuk.ifs.validation.transactional.ValidatorService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.finance.validator.MinRowCountValidator;
+import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.FormValidator;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Path;
-import javax.validation.Validation;
-import javax.validation.groups.Default;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 
 @Component
-public class ValidationUtil {
-    private final static Log LOG = LogFactory.getLog(ValidationUtil.class);
-    private ValidatorService validatorService;
-    private MinRowCountValidator minRowCountValidator;
-    private SpendProfileCostValidator spendProfileCostValidator;
+public class ApplicationValidationUtil {
+    private final static Log LOG = LogFactory.getLog(ApplicationValidationUtil.class);
 
     @Autowired
-    ApplicationContext context;
+    private ApplicationContext context;
+
+    @Autowired
+    private ApplicationValidatorService applicationValidatorService;
+
+    @Autowired
+    private MinRowCountValidator minRowCountValidator;
 
     @Autowired
     private AcademicJesValidator academicJesValidator;
 
-    @Autowired
-    @Lazy
-    private ValidationUtil(ValidatorService validatorService,
-                           MinRowCountValidator minRowCountValidator,
-                           SpendProfileCostValidator spendProfileCostValidator
-    ) {
-        this.validatorService = validatorService;
-        this.minRowCountValidator = minRowCountValidator;
-        this.spendProfileCostValidator = spendProfileCostValidator;
-    }
-
-    /**
-     * This method is needed because we want to add validator Group to validation.
-     * Because we can't use the spring validators for this, we need to convert the validation messages.
-     * {@link http://docs.oracle.com/javaee/6/tutorial/doc/gkagv.html}
-     */
-    public static boolean isValid(Errors result, Object o, Class<?>... classes) {
-        if (classes == null || classes.length == 0 || classes[0] == null) {
-            classes = new Class<?>[]{Default.class};
-        }
-        javax.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<Object>> violations = validator.validate(o, classes);
-        addValidationMessages(result, violations);
-        return violations.size() == 0;
-    }
-
-    public static void addValidationMessages(Errors result, Set<ConstraintViolation<Object>> violations) {
-        for (ConstraintViolation<Object> v : violations) {
-            Path path = v.getPropertyPath();
-            String propertyName = "";
-            if (path != null) {
-                for (Path.Node n : path) {
-                    propertyName += n.getName() + ".";
-                }
-                propertyName = propertyName.substring(0, propertyName.length() - 1);
-            }
-
-            Map<String, Object> attributes = v.getConstraintDescriptor().getAttributes();
-            Map<String, Object> messageArguments =
-                    attributes != null ?
-                            simpleFilter(attributes, (key, value) -> !asList("groups", "message", "payload", "inclusive").contains(key))
-                            : emptyMap();
-
-            List<Object> messageArgumentValues = new ArrayList<>(messageArguments.values());
-
-            if (propertyName == null || "".equals(propertyName)) {
-                reject(result, v.getMessage(), messageArgumentValues.toArray());
-            } else {
-                rejectValue(result, propertyName, v.getMessage(), messageArgumentValues.toArray());
-            }
-        }
-    }
+    @ZeroDowntime(reference = "IFS-3366", description = "Remove old package names and add flyway script to correct them in database.")
+    private static final Map<String, Class<?>> oldPackageClassMap = ImmutableMap.<String, Class<?>> builder()
+            .put("org.innovateuk.ifs.validation.validator.EmailValidator", EmailValidator.class)
+            .put("org.innovateuk.ifs.validation.validator.NotEmptyValidator", NotEmptyValidator.class)
+            .put("org.innovateuk.ifs.validation.validator.WordCountValidator", WordCountValidator.class)
+            .put("org.innovateuk.ifs.validation.validator.NonNegativeLongIntegerValidator", NonNegativeLongIntegerValidator.class)
+            .put("org.innovateuk.ifs.validation.validator.SignedLongIntegerValidator", SignedLongIntegerValidator.class)
+            .put("org.innovateuk.ifs.validation.validator.PastMMYYYYValidator", PastMMYYYYValidator.class)
+            .build();
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
@@ -126,9 +71,14 @@ public class ValidationUtil {
                         // Sometimes we want to allow the user to enter a empty response. Then we can ignore the NotEmptyValidator .
                         if (!(ignoreEmpty &&
                                 (v.getClazzName().equals(NotEmptyValidator.class.getName())
-                                || v.getClazzName().equals(NotEmptyValidator.OLD_PACKAGE_NAME)))) {
+                                        || v.getClazzName().equals(NotEmptyValidator.OLD_PACKAGE_NAME)))) {
 
-                            validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
+                            try {
+                                validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
+                            } catch (ClassNotFoundException e) {
+                                validator = (Validator) context.getBean(oldPackageClassMap.get(v.getClazzName()));
+                            }
+
                             binder.addValidators(validator);
                         }
                     } catch (Exception e) {
@@ -183,7 +133,7 @@ public class ValidationUtil {
 
     private List<ValidationMessages> isFormInputValid(Application application, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        List<BindingResult> bindingResults = validatorService.validateFormInputResponse(application.getId(), formInput.getId());
+        List<BindingResult> bindingResults = applicationValidatorService.validateFormInputResponse(application.getId(), formInput.getId());
         for (BindingResult bindingResult : bindingResults) {
             if (bindingResult.hasErrors()) {
                 validationMessages.add(new ValidationMessages(formInput.getId(), bindingResult));
@@ -197,7 +147,7 @@ public class ValidationUtil {
         if (formInput.getFormValidators().isEmpty() && !hasValidator(formInput)) {
             // no validator? question is valid!
         } else {
-            BindingResult validationResult = validatorService.validateFormInputResponse(application, formInput.getId(), markedAsCompleteById);
+            BindingResult validationResult = applicationValidatorService.validateFormInputResponse(application, formInput.getId(), markedAsCompleteById);
 
             if (validationResult.hasErrors()) {
                 validationMessages.add(new ValidationMessages(formInput.getId(), validationResult));
@@ -215,7 +165,7 @@ public class ValidationUtil {
     private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
             FinanceRowType.fromType(formInput.getType()); // this checks if formInput is CostType related.
-            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
+            validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
         }
@@ -248,23 +198,8 @@ public class ValidationUtil {
         return results;
     }
 
-    public Optional<ValidationMessages> validateSpendProfileTableResource(SpendProfileTableResource tableResource) {
-
-        Optional<ValidationMessages> result = Optional.empty();
-
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(tableResource, "spendProfileTable");
-        ValidationUtils.invokeValidator(spendProfileCostValidator, tableResource, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            ValidationMessages messages = new ValidationMessages(bindingResult);
-            result = Optional.of(messages);
-        }
-
-        return result;
-    }
-
     private boolean nonEmpty(ValidationMessages validationMessages) {
-    	return validationMessages != null && validationMessages.hasErrors();
+        return validationMessages != null && validationMessages.hasErrors();
     }
 
     public ValidationMessages validateCostItem(FinanceRowItem costItem) {
@@ -293,16 +228,19 @@ public class ValidationUtil {
     }
 
     private void invokeProjectCostValidator(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
-        FinanceRowHandler financeRowHandler = validatorService.getProjectCostHandler(costItem);
+        FinanceRowHandler financeRowHandler = applicationValidatorService.getProjectCostHandler(costItem);
         financeRowHandler.validate(costItem, bindingResult);
     }
 
     private void invokeValidator(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
-        FinanceRowHandler financeRowHandler = validatorService.getCostHandler(costItem);
+        FinanceRowHandler financeRowHandler = applicationValidatorService.getCostHandler(costItem);
         financeRowHandler.validate(costItem, bindingResult);
     }
 
     private void invokeEmptyRowValidator(List<FinanceRowItem> costItems, BeanPropertyBindingResult bindingResult) {
         ValidationUtils.invokeValidator(minRowCountValidator, costItems, bindingResult);
     }
+
+
+
 }
