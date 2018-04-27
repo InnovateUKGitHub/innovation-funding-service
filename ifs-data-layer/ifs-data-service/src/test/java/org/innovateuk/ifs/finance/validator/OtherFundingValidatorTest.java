@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.validator;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
@@ -13,7 +14,6 @@ import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.validation.validator.ValidatorTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

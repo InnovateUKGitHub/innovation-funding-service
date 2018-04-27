@@ -64,7 +64,6 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
@@ -544,19 +543,5 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
         assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
         assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
-    }
-
-    @Test
-    public void getApplicationsByState() {
-        Set<ApplicationState> applicationStates = EnumSet.of(ApplicationState.SUBMITTED, ApplicationState
-                .REJECTED);
-        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-
-        List<Application> applications = newApplication()
-                .build(2);
-
-        when(applicationRepositoryMock.findByApplicationProcessActivityStateStateIn(states)).thenReturn(applications);
-        assertEquals(applications, service.getApplicationsByState(applicationStates).getSuccess());
-        verify(applicationRepositoryMock, only()).findByApplicationProcessActivityStateStateIn(states);
     }
 }

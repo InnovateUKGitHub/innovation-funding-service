@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -25,7 +24,7 @@ public class InProgressDashboardRowViewModelTest {
         assertThat(viewModel.getLinkUrl(), equalTo("/application/1"));
         assertThat(viewModel.getTitle(), equalTo("Application"));
         assertThat(viewModel.getHoursLeftBeforeSubmit(), equalTo(1L));
-        if (end.getDayOfMonth() == ZonedDateTime.now().getDayOfMonth()) {
+        if (TimeZoneUtil.toUkTimeZone(end).getDayOfMonth() == TimeZoneUtil.toUkTimeZone(ZonedDateTime.now()).getDayOfMonth()) {
             assertThat(viewModel.isClosingToday(), equalTo(true));
         } else {
             assertThat(viewModel.isClosingToday(), equalTo(false));

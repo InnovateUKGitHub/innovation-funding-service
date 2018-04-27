@@ -71,7 +71,6 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Autowired
     private OrganisationAddressMapper organisationAddressMapper;
 
-
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
 

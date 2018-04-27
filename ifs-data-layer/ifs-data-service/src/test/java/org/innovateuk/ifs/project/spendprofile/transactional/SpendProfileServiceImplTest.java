@@ -22,13 +22,13 @@ import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtil;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -76,7 +76,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Mock
     private EmailService projectEmailService;
     @Mock
-    private ValidationUtil validationUtil;
+    private SpendProfileValidationUtil validationUtil;
     @Mock
     private Error mockedError;
 

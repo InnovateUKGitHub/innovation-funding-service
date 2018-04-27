@@ -27,7 +27,7 @@ public class ApplicationDetailsFormPopulator implements CompetitionSetupSubsecti
 
 		competitionSetupForm.setMaxProjectDuration(convertIntegerToBigDecimal(competitionResource.getMaxProjectDuration()));
 		competitionSetupForm.setMinProjectDuration(convertIntegerToBigDecimal(competitionResource.getMinProjectDuration()));
-		competitionSetupForm.setUseResubmissionQuestion(competitionResource.isUseResubmissionQuestion());
+		competitionSetupForm.setUseResubmissionQuestion(competitionResource.getUseResubmissionQuestion());
 
 		return competitionSetupForm;
 	}
