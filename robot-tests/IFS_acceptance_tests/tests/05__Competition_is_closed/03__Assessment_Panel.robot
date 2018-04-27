@@ -339,5 +339,6 @@ enable assessment panel for the competition
     the user selects the radio button  hasAssessmentPanel  hasAssessmentPanel-0
     the user clicks the button/link    jQuery=button:contains("Done")
     the user clicks the button/link    link=Competition setup
+    the user clicks the button/link    link=Competition
     the user clicks the button/link    link=All competitions
     the user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
