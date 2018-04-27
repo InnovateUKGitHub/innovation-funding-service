@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
@@ -53,6 +54,13 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
+
+    @Autowired
+    protected ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
 
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
@@ -216,4 +224,27 @@ public class ApplicationModelPopulator {
         }
     }
 
+    public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
+                                                                 final CompetitionResource competition,
+                                                                 final UserResource user, final Model model,
+                                                                 final ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles,
+                                                                 final Optional<Boolean> markAsCompleteEnabled) {
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
+    }
+
+    public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
+                                                                 final CompetitionResource competition,
+                                                                 final UserResource user,
+                                                                 Optional<SectionResource> section,
+                                                                 Optional<Long> currentQuestionId,
+                                                                 final Model model,
+                                                                 final ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles,
+                                                                 final Optional<Boolean> markAsCompleteEnabled) {
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
+        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
+    }
 }
+
+
