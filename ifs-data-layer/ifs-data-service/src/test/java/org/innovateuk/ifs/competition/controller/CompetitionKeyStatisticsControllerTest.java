@@ -93,29 +93,6 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }
 
-    /*
-     *
-     @GetMapping({"/review"})
-     public RestResult<ReviewKeyStatisticsResource> getReviewStatistics(@PathVariable("id") long id) {
-     return reviewStatisticsService.getReviewPanelKeyStatistics(id).toGetResponse();
-     }
-
-     @GetMapping({"/review-invites"})
-     public RestResult<ReviewInviteStatisticsResource> getReviewInviteStatistics(@PathVariable("id") long id) {
-     return reviewStatisticsService.getReviewInviteStatistics(id).toGetResponse();
-     }
-
-     @GetMapping("/interview")
-     public RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewStatistics(@PathVariable("id") long id) {
-     return interviewStatisticsService.getInterviewPanelKeyStatistics(id).toGetResponse();
-     }
-
-     @GetMapping("/interview-invites")
-     public RestResult<InterviewInviteStatisticsResource> getInterviewInviteStatistics(@PathVariable("id") long id) {
-     return interviewStatisticsService.getInterviewInviteStatistics(id).toGetResponse();
-     }
-     */
-
     @Test
     public void getReviewStatistics() throws Exception {
         final long competitionId = 1L;
