@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.validator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.validation.validator.ApplicationFundingDecisionValidator;
 import org.junit.Before;
 import org.junit.Test;
 

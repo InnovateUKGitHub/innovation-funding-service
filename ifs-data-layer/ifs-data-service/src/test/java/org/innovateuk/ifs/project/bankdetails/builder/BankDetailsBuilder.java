@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.bankdetails.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
 
 import java.util.List;

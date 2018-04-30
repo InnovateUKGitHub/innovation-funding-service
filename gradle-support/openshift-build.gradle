@@ -56,7 +56,7 @@ task deploy(type: DockerStartContainer, dependsOn: createContainer) {
     targetContainerId { createContainer.getContainerId() }
 }
 
-task wait(type: DockerWaitHealthyContainer) {
+task wait(type: DockerWaitHealthyContainer, dependsOn: deploy) {
     targetContainerId { createContainer.getContainerId() }
 }
 
