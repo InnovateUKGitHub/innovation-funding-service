@@ -1,6 +1,17 @@
 .grid-row {
   &.sorting {
     border-bottom: 1px solid $secondary-text-colour;
+    margin: 0;
+
+    .column-one,
+    .column-half:first-child,
+    .column-third:first-child{
+      padding-left: 0;
+    }
+
+    .multiple-choice{
+      margin-left: 5px;
+    }
   }
 }
 
