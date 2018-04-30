@@ -432,8 +432,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             }
         }
 
-
-
         model.addAttribute("model", projectDetailsAddressViewModel);
         return "project/details-address";
     }
