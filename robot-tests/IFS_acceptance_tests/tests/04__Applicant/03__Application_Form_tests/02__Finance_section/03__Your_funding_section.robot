@@ -3,17 +3,20 @@ Documentation     INFUND-6794: As an applicant I will be invited to add funding 
 ...               INFUND-6895: As a lead applicant I will be advised that changing my 'Research category' after completing 'Funding level' will reset the 'Funding level'
 ...               IFS-2659: UJ - External - Finances - Able to submit without Other funding
 Suite Setup       Custom Suite Setup
-Suite Teardown    mark application details incomplete the user closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
+
+*** Variables ***
+${Application_name}  Hydrology the dynamics of Earth's surface water
 
 *** Test Cases ***
 Other funding validation message
     [Documentation]  IFS-2659
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Your funding
-    And the user selects the checkbox    termsAgreed
+    And the user selects the checkbox                   termsAgreed
     When The user clicks the button/link                jQuery=button:contains("Mark as complete")
     Then The user should see a field and summary error  Please tell us if you have received any other funding for this project.
 
@@ -69,7 +72,7 @@ If funding is complete. application details has a warning message
     ...    INFUND-6823
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=${Application_name}
     When the user clicks the button/link    link=Application details
     And the user clicks the button/link    jQuery=button:contains(Edit)
     And the user clicks the button/link    jQuery=button:contains("Change your research category")
@@ -80,7 +83,7 @@ Changing application details sets funding level to incomplete
     [Tags]    HappyPath
     When the user changes the research category
     And the user clicks the button/link    name=mark_as_complete
-    And applicant navigates to the finances of the robot application
+    And the user navigates to Your-finances page  ${Application_name}
     Then the user should see the element    css=.task-list li:nth-of-type(3) .action-required
 
 Funding level has been reset
@@ -125,7 +128,9 @@ Read only view of the other funding
 
 *** Keywords ***
 Custom Suite Setup
-    log in and create a new application if there is not one already with complete application details and completed org size section
+    the user logs-in in new browser       &{lead_applicant_credentials}
+    Mark application details as complete  ${Application_name}
+    Complete the org size section         ${Application_name}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 

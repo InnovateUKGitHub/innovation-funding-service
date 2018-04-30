@@ -22,16 +22,17 @@ Applicant navigates to the finances of the Robot application
 
 log in and create new application if there is not one already with complete application details
     log in and create new application if there is not one already  Robot test application
-    Mark application details as complete
+    Mark application details as complete  Robot test application
 
 log in and create a new application if there is not one already with complete application details and completed org size section
     log in and create new application if there is not one already  Robot test application
-    Mark application details as complete
-    Complete the org size section
+    Mark application details as complete  Robot test application
+    Complete the org size section  Robot test application
 
 Complete the org size section
+    [Arguments]  ${Application_name}
     the user navigates to the page    ${DASHBOARD_URL}
-    the user clicks the button/link    link=Robot test application
+    the user clicks the button/link    link=${Application_name}
     the user clicks the button/link    link=Your finances
     the user clicks the button/link    link=Your organisation
     ${orgSizeReadonly}=  run keyword and return status without screenshots    Element Should Be Visible   jQuery=button:contains("Edit")
@@ -48,8 +49,9 @@ mark application details incomplete the user closes the browser
     the user closes the browser
 
 Mark application details as complete
+    [Arguments]  ${Application_name}
     Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link=Robot test application
+    And the user clicks the button/link   link=${Application_name}
     the applicant completes the application details     Application details
 
 Mark application details as incomplete
