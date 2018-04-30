@@ -14,10 +14,10 @@ public class LandingPageForm extends CompetitionSetupForm {
     private List<CompetitionSetupForm> questions;
 
     @Valid
-    private ApplicationFinanceForm financeForm;
+    private FinanceForm financeForm;
 
     @Valid
-    private ApplicationDetailsForm detailsForm;
+    private DetailsForm detailsForm;
 
     public List<CompetitionSetupForm> getQuestions() {
         return questions;
@@ -27,19 +27,19 @@ public class LandingPageForm extends CompetitionSetupForm {
         this.questions = questions;
     }
 
-    public ApplicationFinanceForm getFinanceForm() {
+    public FinanceForm getFinanceForm() {
         return financeForm;
     }
 
-    public void setFinanceForm(ApplicationFinanceForm financeForm) {
+    public void setFinanceForm(FinanceForm financeForm) {
         this.financeForm = financeForm;
     }
 
-    public ApplicationDetailsForm getDetailsForm() {
+    public DetailsForm getDetailsForm() {
         return detailsForm;
     }
 
-    public void setDetailsForm(ApplicationDetailsForm detailsForm) {
+    public void setDetailsForm(DetailsForm detailsForm) {
         this.detailsForm = detailsForm;
     }
 }

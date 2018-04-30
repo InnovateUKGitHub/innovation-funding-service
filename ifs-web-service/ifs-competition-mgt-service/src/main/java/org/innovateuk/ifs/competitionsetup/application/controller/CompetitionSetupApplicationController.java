@@ -177,7 +177,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @PostMapping("/question/finance/edit")
-    public String submitApplicationFinances(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
+    public String submitApplicationFinances(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FinanceForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -187,7 +187,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @PostMapping("/question/finance/none/edit")
-    public String submitApplicationNoFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
+    public String submitApplicationNoFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) FinanceForm form,
                                               BindingResult bindingResult,
                                               ValidationHandler validationHandler,
                                               @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -196,7 +196,7 @@ public class CompetitionSetupApplicationController {
         return handleFinanceSaving(competitionId, model, form, validationHandler);
     }
 
-    private String handleFinanceSaving(long competitionId, Model model, ApplicationFinanceForm form, ValidationHandler validationHandler) {
+    private String handleFinanceSaving(long competitionId, Model model, FinanceForm form, ValidationHandler validationHandler) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
@@ -242,7 +242,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
-    public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
+    public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -263,7 +263,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @PostMapping("/question/{questionId}/edit")
-    public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+    public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ProjectForm competitionSetupForm,
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
                                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -324,7 +324,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @PostMapping("/detail/edit")
-    public String submitApplicationDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationDetailsForm form,
+    public String submitApplicationDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) DetailsForm form,
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -353,13 +353,13 @@ public class CompetitionSetupApplicationController {
 
     }
 
-    private void validateAssessmentGuidanceRows(ApplicationQuestionForm applicationQuestionForm, BindingResult bindingResult) {
+    private void validateAssessmentGuidanceRows(QuestionForm applicationQuestionForm, BindingResult bindingResult) {
         if (Boolean.TRUE.equals(applicationQuestionForm.getQuestion().getWrittenFeedback())) {
             ValidationUtils.invokeValidator(validator, applicationQuestionForm, bindingResult, GuidanceRowForm.GuidanceRowViewGroup.class);
         }
     }
 
-    private void validateScopeGuidanceRows(ApplicationProjectForm applicationProjectForm, BindingResult bindingResult) {
+    private void validateScopeGuidanceRows(ProjectForm applicationProjectForm, BindingResult bindingResult) {
         if (Boolean.TRUE.equals(applicationProjectForm.getQuestion().getWrittenFeedback())) {
             ValidationUtils.invokeValidator(validator, applicationProjectForm, bindingResult, GuidanceRowResource.GuidanceRowGroup.class);
         }

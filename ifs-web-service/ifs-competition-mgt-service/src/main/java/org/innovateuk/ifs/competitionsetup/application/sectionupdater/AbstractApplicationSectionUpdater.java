@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.application.form.AbstractApplicationQuestionForm;
+import org.innovateuk.ifs.competitionsetup.application.form.AbstractQuestionForm;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +34,12 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
 
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-        AbstractApplicationQuestionForm form = (AbstractApplicationQuestionForm) competitionSetupForm;
+        AbstractQuestionForm form = (AbstractQuestionForm) competitionSetupForm;
         mapGuidanceRows(form);
         return competitionSetupQuestionService.updateQuestion(form.getQuestion());
 	}
 
-	protected abstract void mapGuidanceRows(AbstractApplicationQuestionForm form);
+	protected abstract void mapGuidanceRows(AbstractQuestionForm form);
 
     @Override
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,

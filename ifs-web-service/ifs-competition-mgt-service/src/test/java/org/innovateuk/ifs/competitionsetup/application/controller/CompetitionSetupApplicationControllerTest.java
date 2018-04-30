@@ -7,8 +7,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.CompetitionSetupController;
-import org.innovateuk.ifs.competitionsetup.application.form.ApplicationDetailsForm;
-import org.innovateuk.ifs.competitionsetup.application.form.ApplicationQuestionForm;
+import org.innovateuk.ifs.competitionsetup.application.form.DetailsForm;
+import org.innovateuk.ifs.competitionsetup.application.form.QuestionForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
@@ -388,7 +388,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 
-        verify(competitionSetupService).saveCompetitionSetupSubsection(isA(ApplicationQuestionForm.class),
+        verify(competitionSetupService).saveCompetitionSetupSubsection(isA(QuestionForm.class),
                 eq(competition),
                 eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
     }
@@ -433,7 +433,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedFileTypes").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.appendixGuidance").getCode());
 
-        verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(ApplicationQuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
+        verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(QuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
     }
 
     @Test
@@ -681,7 +681,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withId(COMPETITION_ID)
                 .build();
-        ApplicationDetailsForm form = new ApplicationDetailsForm();
+        DetailsForm form = new DetailsForm();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.getSubsectionFormData(

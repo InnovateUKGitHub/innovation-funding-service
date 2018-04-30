@@ -12,7 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.application.form.AbstractApplicationQuestionForm;
+import org.innovateuk.ifs.competitionsetup.application.form.AbstractQuestionForm;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSubsectionFormPopulator;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
@@ -243,7 +243,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     private void markQuestionAsComplete(CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm, Long competitionId) {
         if(CompetitionSetupSubsection.QUESTIONS.equals(subsection) ||
                 CompetitionSetupSubsection.PROJECT_DETAILS.equals(subsection)) {
-            AbstractApplicationQuestionForm form = (AbstractApplicationQuestionForm) competitionSetupForm;
+            AbstractQuestionForm form = (AbstractQuestionForm) competitionSetupForm;
             questionSetupRestService.markQuestionSetupComplete(competitionId, CompetitionSetupSection.APPLICATION_FORM, form.getQuestion().getQuestionId());
         }
     }

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.application.form.ApplicationDetailsForm;
+import org.innovateuk.ifs.competitionsetup.application.form.DetailsForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupPopulator;
@@ -233,7 +233,7 @@ public class CompetitionSetupServiceImplTest {
 
     @Test(expected = IllegalStateException.class)
     public void saveCompetitionSetupSubsection_initialDetailsMustBeComplete() throws Exception {
-        CompetitionSetupForm competitionSetupForm = new ApplicationDetailsForm();
+        CompetitionSetupForm competitionSetupForm = new DetailsForm();
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
         CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;

@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.application.form.ApplicationFinanceForm;
+import org.innovateuk.ifs.competitionsetup.application.form.FinanceForm;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Test;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
 public class ApplicationFinanceSectionSaverTest {
 
     @InjectMocks
-    private ApplicationFinanceSectionUpdater service;
+    private FinanceSectionUpdater service;
 
     @Mock
     private CompetitionSetupFinanceService competitionSetupFinanceService;
@@ -81,7 +81,7 @@ public class ApplicationFinanceSectionSaverTest {
                                 .build(2)
                 );
 
-        ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
+        FinanceForm competitionSetupForm = new FinanceForm();
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
         competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
 
@@ -108,7 +108,7 @@ public class ApplicationFinanceSectionSaverTest {
 
         assertTrue(competition.isNonFinanceType());
 
-        ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
+        FinanceForm competitionSetupForm = new FinanceForm();
         competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
 
         // Call the service under test
@@ -120,7 +120,7 @@ public class ApplicationFinanceSectionSaverTest {
 
     @Test
     public void testsSupportsForm() {
-        assertTrue(service.supportsForm(ApplicationFinanceForm.class));
+        assertTrue(service.supportsForm(FinanceForm.class));
         assertFalse(service.supportsForm(CompetitionSetupForm.class));
     }
 
