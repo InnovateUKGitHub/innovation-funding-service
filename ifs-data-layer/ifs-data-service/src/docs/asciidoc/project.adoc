@@ -407,6 +407,18 @@ include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents
 ===== Curl Example
 include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/curl-request.adoc[]
 
+=== Accept or reject Other Documents
+==== Success
+===== Request
+include::{snippets}/project/accept-or-reject-other-documents/http-request.adoc[]
+include::{snippets}/project/accept-or-reject-other-documents/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/accept-or-reject-other-documents/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/accept-or-reject-other-documents/curl-request.adoc[]
+
 === Save Documents Submitted DateTime
 
 ==== Request
