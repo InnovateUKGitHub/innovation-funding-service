@@ -8,18 +8,14 @@ import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLette
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.io.InputStream;
 import java.util.EnumSet;
-import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
