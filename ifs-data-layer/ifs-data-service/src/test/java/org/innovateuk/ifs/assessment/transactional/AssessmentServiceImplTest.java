@@ -20,6 +20,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -39,6 +40,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -154,11 +156,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void findByUserAndCompetition() {
-        Long userId = 2L;
-        Long competitionId = 1L;
+        long userId = 2L;
+        long competitionId = 1L;
 
-        List<Assessment> assessments = newAssessment().build(2);
-        List<AssessmentResource> expected = newAssessmentResource().build(2);
+        List<Assessment> assessments = newAssessment().withProcessState(CREATED, WITHDRAWN).build(2);
+        List<AssessmentResource> expected = sort(newAssessmentResource().withActivityState(WITHDRAWN, CREATED).build(2), comparing(AssessmentResource::getAssessmentState));
 
         when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
