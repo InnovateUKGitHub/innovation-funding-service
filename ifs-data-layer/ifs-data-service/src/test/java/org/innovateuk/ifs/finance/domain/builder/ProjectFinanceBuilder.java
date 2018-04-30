@@ -2,7 +2,7 @@ package org.innovateuk.ifs.finance.domain.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
 
 import java.util.List;

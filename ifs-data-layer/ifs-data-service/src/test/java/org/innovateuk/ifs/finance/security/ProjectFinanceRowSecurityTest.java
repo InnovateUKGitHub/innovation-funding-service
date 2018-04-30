@@ -1,22 +1,15 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowServiceImpl;
-import org.innovateuk.ifs.project.security.ProjectFinancePermissionRules;
+import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.method.P;
-
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
