@@ -17,10 +17,17 @@ buildscript {
 }
 
 task buildDocker(type: DockerBuildImage) {
-    def arbitraryOutput = file("${project.buildDir}/buildDockerRan")
-    outputs.file(arbitraryOutput)
 
-    tag = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
+    def tagValue = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
+
+    outputs.upToDateWhen {
+
+        def listImagesCommand = "docker images"
+        def result = listImagesCommand.execute().text
+        result.contains tagValue
+    }
+
+    tag = tagValue
     inputDir = project.projectDir
 }
 
