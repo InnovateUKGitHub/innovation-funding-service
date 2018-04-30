@@ -104,7 +104,7 @@
         </div>
         <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
-        <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+        <div class="form-group extra-margin-bottom extra-margin" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
             <label class="form-label-bold" th:for="${#ids.next('subject')}">
                 <span>Email subject</span>
                 <th:block th:if="${#fields.hasErrors('subject')}">
