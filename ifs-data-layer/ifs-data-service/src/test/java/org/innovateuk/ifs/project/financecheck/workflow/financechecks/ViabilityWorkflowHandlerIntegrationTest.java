@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.financecheck.workflow.financechecks;
 
-import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
 import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIABILITY;
 import static org.junit.Assert.assertTrue;

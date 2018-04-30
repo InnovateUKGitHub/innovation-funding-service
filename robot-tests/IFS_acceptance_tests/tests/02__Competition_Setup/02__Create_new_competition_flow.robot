@@ -628,7 +628,7 @@ User should be able to Save the Competition as Open
     And the user should see the element      jQuery=li:contains("Application") .task-status-complete
     When the user clicks the button/link     css=#compCTA
     Then the user clicks the button/link     jQuery=.button:contains("Done")
-    When the user clicks the button/link     link=All competitions
+    When the user clicks the button/link     link=Competition
     And the user navigates to the page       ${CA_UpcomingComp}
     Then the user should see the element     jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 
