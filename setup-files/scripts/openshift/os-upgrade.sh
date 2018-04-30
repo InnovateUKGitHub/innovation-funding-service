@@ -19,13 +19,14 @@ SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 function upgradeServices {
+    # Deploying finance-data-service before data-service as latter submits updates to former.
+    # rolloutStatus checks ensure that service has been deployed successfully before proceeding further.
+    oc apply -f $(getBuildLocation)/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "finance-data-service"
+
     # data-service
     oc apply -f $(getBuildLocation)/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "data-service"
-
-    # finance-data-service
-    oc apply -f $(getBuildLocation)/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus "finance-data-service"
 
     # services
     oc apply -f $(getBuildLocation)/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
@@ -52,11 +53,11 @@ function upgradeServices {
 }
 
 function forceReload {
-    oc rollout latest dc/data-service ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus data-service
-
     oc rollout latest dc/finance-data-service ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus finance-data-service
+
+    oc rollout latest dc/data-service ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus data-service
 
     oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
