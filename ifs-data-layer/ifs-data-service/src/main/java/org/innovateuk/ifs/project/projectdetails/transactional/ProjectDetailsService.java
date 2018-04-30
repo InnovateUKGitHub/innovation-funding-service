@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDate;
@@ -14,6 +15,9 @@ import java.time.LocalDate;
  * Transactional and secure service for Project Details processing work
  */
 public interface ProjectDetailsService {
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
+    ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
     ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId);

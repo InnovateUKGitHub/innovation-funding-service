@@ -13,7 +13,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsServiceImpl;
-import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
