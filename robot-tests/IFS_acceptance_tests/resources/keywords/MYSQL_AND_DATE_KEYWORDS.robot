@@ -214,7 +214,7 @@ get organisation id by name
 get table id by name
     [Arguments]  ${table}  ${name}
     Connect to Database  @{database}
-    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`='${name}';
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`="${name}";
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0
