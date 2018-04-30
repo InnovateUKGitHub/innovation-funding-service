@@ -142,28 +142,6 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
-    public void getAssessmentPanelKeyStatistics() {
-        long competitionId = 1L;
-
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getAssessmentPanelKeyStatistics(competitionId),
-                COMP_ADMIN,
-                PROJECT_FINANCE
-        );
-    }
-
-    @Test
-    public void getAssessmentPanelInviteStatistics() {
-        long competitionId = 1L;
-
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getAssessmentPanelInviteStatistics(competitionId),
-                COMP_ADMIN,
-                PROJECT_FINANCE
-        );
-    }
-
-    @Test
     public void getTotalScore() {
         Long assessmentId = 1L;
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId))
@@ -194,7 +172,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
-    public void getApplicationFeedback() throws Exception {
+    public void getApplicationFeedback() {
         long applicationId = 1L;
         ApplicationResource expectedApplicationResource = newApplicationResource()
                 .withId(applicationId)
@@ -250,7 +228,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
-    public void submitAssessments() throws Exception {
+    public void submitAssessments() {
         AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
@@ -263,7 +241,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
-    public void createAssessment() throws Exception {
+    public void createAssessment() {
         AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
                 .withApplicationId(1L)
                 .withAssessorId(3L)

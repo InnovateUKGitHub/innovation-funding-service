@@ -79,7 +79,6 @@ The User can Add and Remove Assessors
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
-    And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link               link=Invite
     And The user clicks the button/link                jQuery=td:contains("Will Smith") ~ td .buttonlink:contains("Remove")
     Then The user should not see the text in the page  Will Smith
@@ -242,12 +241,6 @@ The key statistics are calculated
     ${DECLINED_ASSESSORS}=    Get matching xpath count    //*[text()="Invite declined"]
     ${DECLINED_COUNT}=    Get text    css=div:nth-child(3) > div > span
     Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${DECLINED_COUNT}
-
-the calculations of the Assessors on invite list should be correct
-    #Calculation of the Assessors on invite list
-    ${ASSESSORS_ON_LIST}=    Get matching xpath count    //*[@id="content"]/form/div[2]/table/tbody/tr
-    ${ASSESSORS_COUNT}=    Get text    jQuery=.highlight-panel:contains("Assessors on invite list") .heading-large
-    Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
 
 the user invites multiple assessors
     the user selects the checkbox  assessor-row-1
