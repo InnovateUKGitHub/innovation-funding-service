@@ -2,11 +2,11 @@ package org.innovateuk.ifs.project.financecheck.documentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.controller.ProjectFinanceRowController;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -27,7 +27,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     private static final String BASE_URL = "/cost/project";
 
     @Mock
-    private ValidationUtil validationUtil;
+    private ApplicationValidationUtil validationUtil;
 
     @Test
     public void addNewCost() throws Exception {

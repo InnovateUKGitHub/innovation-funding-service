@@ -93,9 +93,4 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
 
         return getWithRestResult(builder.toUriString(), Boolean.class);
     }
-
-    @Override
-    public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", REST_URL, "key-statistics", competitionId), InterviewAssignmentKeyStatisticsResource.class);
-    }
 }
