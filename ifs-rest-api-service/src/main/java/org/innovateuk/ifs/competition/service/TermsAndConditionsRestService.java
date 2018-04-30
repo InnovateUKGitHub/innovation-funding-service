@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
-import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 
 import java.util.List;
 

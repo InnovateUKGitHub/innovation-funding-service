@@ -26,12 +26,14 @@ public class TermsAndConditionsServiceImpl implements TermsAndConditionsService 
     @Override
     public ServiceResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions() {
         return serviceSuccess((List<TermsAndConditionsResource>)
-                termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findAll()));
+                termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findLatestVersions())
+        );
     }
 
     @Override
     public ServiceResult<TermsAndConditionsResource> getById(Long id) {
-        return serviceSuccess((TermsAndConditionsResource)
-                termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findOne(id)));
+        return serviceSuccess(
+                termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findOne(id))
+        );
     }
 }

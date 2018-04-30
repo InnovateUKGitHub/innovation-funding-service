@@ -16,12 +16,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder.newTermsAndConditionsResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TermsAndConditionsSectionSaverTest {
@@ -34,36 +36,31 @@ public class TermsAndConditionsSectionSaverTest {
 
     @Test
     public void testSaveCompetitionSetupSection() {
-        String tcName = "default";
-        String tcTemplate = "default-template";
-        String tcVersion = "1";
-
         TermsAndConditionsResource termsAndConditionsOld = newTermsAndConditionsResource()
-                .withName(tcName)
-                .withTemplate(tcTemplate)
-                .withVersion(tcVersion).build();
+                .withName("default")
+                .withTemplate("default-template")
+                .withVersion("1").build();
 
         TermsAndConditionsResource termsAndConditionsNew = newTermsAndConditionsResource()
-                .withName(tcName + "-new")
-                .withTemplate(tcTemplate + "-new")
+                .withName("default-new")
+                .withTemplate("default-template-new")
                 .withVersion("2").build();
 
         CompetitionResource competition = newCompetitionResource().withTermsAndConditions(termsAndConditionsOld).build();
 
-        assertEquals(tcName, competition.getTermsAndConditions().getName());
-        assertEquals(tcTemplate, competition.getTermsAndConditions().getTemplate());
-        assertEquals(tcVersion, competition.getTermsAndConditions().getVersion());
+        assertEquals("default", competition.getTermsAndConditions().getName());
+        assertEquals("default-template", competition.getTermsAndConditions().getTemplate());
+        assertEquals("1", competition.getTermsAndConditions().getVersion());
 
 
         TermsAndConditionsForm competitionSetupForm = new TermsAndConditionsForm();
-        competitionSetupForm.setTermsAndConditions(termsAndConditionsNew);
+        competitionSetupForm.setTermsAndConditionsId(termsAndConditionsNew.getId());
+
+
+        when(competitionRestService.updateTermsAndConditionsForCompetition(competition.getId(), termsAndConditionsNew.getId()))
+                .thenReturn(restSuccess());
 
         saver.saveSection(competition, competitionSetupForm);
-
-        assertEquals(tcName + "-new", competition.getTermsAndConditions().getName());
-        assertEquals(tcTemplate + "-new", competition.getTermsAndConditions().getTemplate());
-        assertEquals("2", competition.getTermsAndConditions().getVersion());
-
         verify(competitionRestService).updateTermsAndConditionsForCompetition(competition.getId(), termsAndConditionsNew.getId());
     }
 

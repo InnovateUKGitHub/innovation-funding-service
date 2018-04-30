@@ -28,13 +28,9 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testGetSectionFormDataTermsAndConditions() {
-        String termsAndConditionsName = "default";
-        String template = "default-template";
-        String version = "1";
+        Long id = 1L;
         TermsAndConditionsResource termsAndConditions = newTermsAndConditionsResource()
-                .withName(termsAndConditionsName)
-                .withTemplate(template)
-                .withVersion(version).build();
+                .withId(id).build();
 
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(termsAndConditions).build();
@@ -44,9 +40,7 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTestMocksTest {
         assertTrue(result instanceof TermsAndConditionsForm);
         TermsAndConditionsForm form = (TermsAndConditionsForm) result;
 
-        assertFalse(form.getTermsAndConditions() == null);
-        assertTrue(form.getTermsAndConditions().getName().equals(termsAndConditionsName));
-        assertTrue(form.getTermsAndConditions().getTemplate().equals(template));
-        assertTrue(form.getTermsAndConditions().getVersion().equals(version));
+        assertFalse(form.getTermsAndConditionsId() == null);
+        assertTrue(form.getTermsAndConditionsId().equals(id));
     }
 }
