@@ -358,13 +358,13 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                         project.setAddress(existingAddress);
                                     } else {
                                         Address newAddress = addressMapper.mapToDomain(address);
-                                        //if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
-                                            AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
-                                            List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
-                                            existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
-                                            OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
-                                            organisationAddressRepository.save(organisationAddress);
-                                        //}
+
+                                        AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
+                                        List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
+                                        existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
+                                        OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
+                                        organisationAddressRepository.save(organisationAddress);
+
                                         project.setAddress(newAddress);
                                     }
 

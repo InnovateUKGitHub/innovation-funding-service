@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
@@ -26,7 +25,6 @@ public class AddressResource {
     @NotBlank(message = "{validation.standard.postcode.required}")
     @Length(max = 9, message = "{validation.standard.postcode.length}")
     private String postcode;
-    //private List<Long> organisations = new ArrayList<>();
 
     public AddressResource() {
         // no-arg constructor
@@ -115,17 +113,9 @@ public class AddressResource {
         return id;
     }
 
-/*    public List<Long> getOrganisations() {
-        return organisations;
-    }*/
-
     public void setId(Long id) {
         this.id = id;
     }
-
-/*    public void setOrganisations(List<Long> organisations) {
-        this.organisations = organisations;
-    }*/
 
     @JsonIgnore
     public List<String> getNonEmptyLines() {
@@ -149,7 +139,6 @@ public class AddressResource {
                 .append(town, that.town)
                 .append(county, that.county)
                 .append(postcode, that.postcode)
-               // .append(organisations, that.organisations)
                 .isEquals();
     }
 
@@ -163,7 +152,6 @@ public class AddressResource {
                 .append(town)
                 .append(county)
                 .append(postcode)
-               // .append(organisations)
                 .toHashCode();
     }
 }

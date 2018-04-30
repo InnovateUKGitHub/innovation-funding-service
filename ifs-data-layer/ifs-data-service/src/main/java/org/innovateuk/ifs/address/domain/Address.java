@@ -1,15 +1,11 @@
 package org.innovateuk.ifs.address.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Resource object to store the address details, from the company, from the company house api.
@@ -29,9 +25,6 @@ public class Address {
     
     @Length(max = 9)
     private String postcode;
-
-/*    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
-    private List<OrganisationAddress> organisations = new ArrayList<>();*/
 
     public Address() {
         // no-arg constructor
@@ -98,15 +91,6 @@ public class Address {
         return id;
     }
 
-/*    @JsonIgnore
-    public List<OrganisationAddress> getOrganisations() {
-        return organisations;
-    }
-
-    public void setOrganisations(List<OrganisationAddress> organisations) {
-        this.organisations = organisations;
-    }*/
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -135,7 +119,6 @@ public class Address {
                 .append(town, address.town)
                 .append(county, address.county)
                 .append(postcode, address.postcode)
-                //.append(organisations, address.organisations)
                 .isEquals();
     }
 
@@ -148,7 +131,6 @@ public class Address {
                 .append(town)
                 .append(county)
                 .append(postcode)
-               // .append(organisations)
                 .toHashCode();
     }
 }
