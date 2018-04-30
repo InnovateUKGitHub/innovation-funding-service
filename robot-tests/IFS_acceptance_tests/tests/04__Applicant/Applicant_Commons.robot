@@ -21,13 +21,9 @@ Applicant navigates to the finances of the Robot application
     the user navigates to Your-finances page  Robot test application
 
 log in and create new application if there is not one already with complete application details
-    log in and create new application if there is not one already  Robot test application
-    Mark application details as complete  Robot test application
-
-log in and create a new application if there is not one already with complete application details and completed org size section
-    log in and create new application if there is not one already  Robot test application
-    Mark application details as complete  Robot test application
-    Complete the org size section  Robot test application
+    [Arguments]  ${Application_name}
+    log in and create new application if there is not one already  ${Application_name}
+    Mark application details as complete  ${Application_name}
 
 Complete the org size section
     [Arguments]  ${Application_name}

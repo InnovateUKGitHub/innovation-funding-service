@@ -6,7 +6,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 ...               INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes
 ...
 ...               INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links within the Finances section of my application
-Suite Setup       log in and create new application if there is not one already with complete application details
+Suite Setup       log in and create new application if there is not one already with complete application details  Robot test application
 Suite Teardown    the user closes the browser    # this keyword no longer needs to mark the application details as incomplete, due to the recent addition of research category this section is already incomplete
 Force Tags        HappyPath    Applicant
 Resource          ../../../../resources/defaultResources.robot

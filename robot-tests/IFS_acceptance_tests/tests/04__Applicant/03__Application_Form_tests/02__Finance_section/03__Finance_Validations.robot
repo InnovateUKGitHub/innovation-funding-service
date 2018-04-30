@@ -2,7 +2,7 @@
 Documentation     INFUND-844: As an applicant I want to receive a validation error in the finance sections if I my input is invalid in a particular field so that I am informed how to correctly submit the information
 ...
 ...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
-Suite Setup       log in and create new application if there is not one already with complete application details
+Suite Setup       log in and create new application if there is not one already with complete application details  Robot test application
 Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        Applicant  Pending
 Resource          ../../../../resources/defaultResources.robot

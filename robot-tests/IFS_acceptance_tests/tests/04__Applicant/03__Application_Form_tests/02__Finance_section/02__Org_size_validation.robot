@@ -4,7 +4,7 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 ...               INFUND-6394: As an Applicant I will be invited to input my Organisation size within a new ‘Your organisation’ page navigated to from ‘Your finances’
 ...
 ...               INFUND-6894: As an Applicant I will be advised that changing my 'Organisation size' after completing 'Funding level' will reset the 'Funding level'
-Suite Setup       log in and create new application if there is not one already with complete application details
+Suite Setup       log in and create new application if there is not one already with complete application details  Robot test application
 Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot

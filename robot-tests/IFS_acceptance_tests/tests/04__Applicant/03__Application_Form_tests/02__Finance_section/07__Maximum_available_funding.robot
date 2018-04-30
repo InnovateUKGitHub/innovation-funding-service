@@ -231,6 +231,6 @@ the correct funding displayed for lead applicant
 
 the user marks your funding section as complete
     the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  30
-    the user clicks the button twice       jQuery=label[for$="otherPublicFunding-no"]:contains("No")
+    the user clicks the button twice      jQuery=label[for$="otherPublicFunding-no"]:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
