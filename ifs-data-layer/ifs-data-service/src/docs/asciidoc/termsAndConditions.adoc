@@ -1,0 +1,23 @@
+=== Retrieve terms and conditions by Id
+==== Request
+include::{snippets}/terms-and-conditions/get-by-id/http-request.adoc[]
+include::{snippets}/terms-and-conditions/get-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/terms-and-conditions/get-by-id/http-response.adoc[]
+include::{snippets}/terms-and-conditions/get-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/terms-and-conditions/get-by-id/curl-request.adoc[]
+
+=== Get latest terms and conditions by version
+==== Request
+include::{snippets}/terms-and-conditions/get-latest/http-request.adoc[]
+include::{snippets}/terms-and-conditions/get-latest/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/terms-and-conditions/get-latest/http-response.adoc[]
+include::{snippets}/terms-and-conditions/get-latest/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/terms-and-conditions/get-latest/curl-request.adoc[]
