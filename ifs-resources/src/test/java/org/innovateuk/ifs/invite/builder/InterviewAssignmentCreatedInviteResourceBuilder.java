@@ -43,4 +43,8 @@ public class InterviewAssignmentCreatedInviteResourceBuilder extends BaseBuilder
     public InterviewAssignmentCreatedInviteResourceBuilder withLeadOrganisationName(String... value) {
         return withArraySetFieldByReflection("leadOrganisationName", value);
     }
+
+    public InterviewAssignmentCreatedInviteResourceBuilder withFilename(String... value) {
+       return withArraySetFieldByReflection("filename", value);
+    }
 }
