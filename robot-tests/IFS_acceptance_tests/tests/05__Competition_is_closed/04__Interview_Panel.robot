@@ -145,6 +145,22 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     Then the user checks for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
 
+Applicant can see the feedback given
+    [Documentation]  IFS-3291
+    [Tags]
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/applications/find
+    When the user selects the checkbox       assessor-row-4
+    And the user clicks the button/link      link=addSelected
+    And the user clicks the button/link      link=Review and send invites
+    When the user clicks the button/link     css=button[type="submit"]   #Send invite
+    Given log in as a different user         derik.arnold@load.example.com  ${short_password}
+    #Here
+    And the user should see the text in the element   css=span.status-msg.msg-deadline-waiting   Feedback available
+    And the user should see the text in the element   id=content   Invited to interview
+    And The user clicks the button/link               link=Crowd sourced cycling navigator
+    And the user should see the text in the element   column-third    Average score 8 / 10
+
+
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
