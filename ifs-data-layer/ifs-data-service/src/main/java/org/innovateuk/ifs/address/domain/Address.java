@@ -30,8 +30,8 @@ public class Address {
     @Length(max = 9)
     private String postcode;
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
-    private List<OrganisationAddress> organisations = new ArrayList<>();
+/*    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
+    private List<OrganisationAddress> organisations = new ArrayList<>();*/
 
     public Address() {
         // no-arg constructor
@@ -98,14 +98,14 @@ public class Address {
         return id;
     }
 
-    @JsonIgnore
+/*    @JsonIgnore
     public List<OrganisationAddress> getOrganisations() {
         return organisations;
     }
 
     public void setOrganisations(List<OrganisationAddress> organisations) {
         this.organisations = organisations;
-    }
+    }*/
 
     public void setId(Long id) {
         this.id = id;
@@ -135,7 +135,7 @@ public class Address {
                 .append(town, address.town)
                 .append(county, address.county)
                 .append(postcode, address.postcode)
-                .append(organisations, address.organisations)
+                //.append(organisations, address.organisations)
                 .isEquals();
     }
 
@@ -148,7 +148,7 @@ public class Address {
                 .append(town)
                 .append(county)
                 .append(postcode)
-                .append(organisations)
+               // .append(organisations)
                 .toHashCode();
     }
 }

@@ -423,12 +423,23 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
-        if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
+/*        if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
             RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
             if (result.isSuccess()) {
                 form.setAddressType(OrganisationAddressType.valueOf(result.getSuccess().getAddressType().getName()));
             }
+        }*/
+
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
+        if(project.getAddress() != null && project.getAddress().getId() != null) {
+            RestResult<OrganisationAddressResource> result = organisationAddressRestService.findByOrganisationIdAndAddressId(leadOrganisation.getId(), project.getAddress().getId());
+            if (result.isSuccess()) {
+                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccess().getAddressType().getName()));
+            }
         }
+
+
+
         model.addAttribute("model", projectDetailsAddressViewModel);
         return "project/details-address";
     }

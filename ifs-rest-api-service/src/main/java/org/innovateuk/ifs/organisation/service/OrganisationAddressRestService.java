@@ -6,4 +6,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 public interface OrganisationAddressRestService {
 
     RestResult<OrganisationAddressResource> findOne(Long id);
+
+    RestResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(Long organisationId, Long addressId);
 }

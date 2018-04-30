@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface OrganisationAddressRepository extends PagingAndSortingRepository<OrganisationAddress, Long> {
     List<OrganisationAddress> findByOrganisationIdAndAddressType(Long organisationId, AddressType addressType);
+    OrganisationAddress findByOrganisationIdAndAddressId(Long organisationId, Long addressId);
 }
