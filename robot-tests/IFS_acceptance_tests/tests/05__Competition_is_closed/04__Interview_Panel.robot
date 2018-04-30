@@ -224,6 +224,7 @@ the compAdmin uploads an additional feedback for an application
     the user should see the element    link=testing_5MB.pdf
 
 the compAdmin remove an uploaded feedback for an application
-        the user uploads the file          id=attachment-${computer_vision_application}   ${5mb_pdf}
-        the user should see the element    link=testing_5MB.pdf
-        the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
+    the user uploads the file          id=attachment-${computer_vision_application}   ${5mb_pdf}
+    the user should see the element    link=testing_5MB.pdf
+    the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
+    the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
