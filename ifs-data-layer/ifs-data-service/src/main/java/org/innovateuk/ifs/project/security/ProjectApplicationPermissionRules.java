@@ -8,6 +8,9 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+/**
+ * Project permission rules for viewing an application.
+ */
 @PermissionRules
 @Component
 public class ProjectApplicationPermissionRules extends BasePermissionRules {
