@@ -46,7 +46,7 @@ function upgradeServices {
 
     # conditionally deploy prototypes service
     if $(isSysIntEnvironment ${TARGET}) || ! $(isNamedEnvironment ${TARGET}); then
-        oc apply -f $(getBuildLocation)/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
