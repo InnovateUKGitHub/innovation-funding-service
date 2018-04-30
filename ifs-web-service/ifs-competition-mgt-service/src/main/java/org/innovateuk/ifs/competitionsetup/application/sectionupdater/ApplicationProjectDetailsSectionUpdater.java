@@ -4,10 +4,10 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.AbstractApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationProjectForm;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSubsectionUpdater;
+import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupSubsectionUpdater;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

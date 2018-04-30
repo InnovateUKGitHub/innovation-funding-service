@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.assessor.form;
 
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;

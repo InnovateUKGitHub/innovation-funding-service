@@ -3,8 +3,8 @@ package org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupViewModel;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;

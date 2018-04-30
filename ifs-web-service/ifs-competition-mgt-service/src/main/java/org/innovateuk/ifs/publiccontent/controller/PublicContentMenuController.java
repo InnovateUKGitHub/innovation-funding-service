@@ -3,7 +3,7 @@ package org.innovateuk.ifs.publiccontent.controller;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.publiccontent.form.PublishForm;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentMenuPopulator;

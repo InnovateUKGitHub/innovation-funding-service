@@ -3,10 +3,10 @@ package org.innovateuk.ifs.competitionsetup.assessor.populator;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupSectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.assessor.viewmodel.AssessorViewModel;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupViewModel;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

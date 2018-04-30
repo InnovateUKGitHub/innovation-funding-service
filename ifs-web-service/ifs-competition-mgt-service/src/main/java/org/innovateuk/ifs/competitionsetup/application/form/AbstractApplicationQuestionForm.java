@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.application.form;
 
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

@@ -3,8 +3,8 @@ package org.innovateuk.ifs.competitionsetup.assessor.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.assessor.form.AssessorsForm;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupFormPopulator;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupFormPopulator;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

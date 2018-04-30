@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.milestone.form;
 
 import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.GenericMilestoneRowForm;
 
 /**
  * List of Milestone Form Entries for the Milestone form.

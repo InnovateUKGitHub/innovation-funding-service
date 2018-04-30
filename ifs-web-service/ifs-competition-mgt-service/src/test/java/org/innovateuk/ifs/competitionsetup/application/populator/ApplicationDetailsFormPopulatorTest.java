@@ -2,9 +2,8 @@ package org.innovateuk.ifs.competitionsetup.application.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationDetailsForm;
-import org.innovateuk.ifs.competitionsetup.application.populator.ApplicationDetailsFormPopulator;
 import org.junit.Before;
 import org.junit.Test;
 

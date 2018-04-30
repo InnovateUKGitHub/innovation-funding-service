@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.milestone.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.milestone.viewmodel.MilestonesViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;

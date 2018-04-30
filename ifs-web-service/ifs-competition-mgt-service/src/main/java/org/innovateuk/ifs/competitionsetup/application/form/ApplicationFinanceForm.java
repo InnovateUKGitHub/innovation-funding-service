@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.application.form;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 
 public class ApplicationFinanceForm extends CompetitionSetupForm {

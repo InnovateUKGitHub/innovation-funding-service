@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.application.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;

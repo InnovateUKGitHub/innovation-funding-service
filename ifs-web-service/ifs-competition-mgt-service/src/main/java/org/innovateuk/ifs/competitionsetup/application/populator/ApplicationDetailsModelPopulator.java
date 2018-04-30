@@ -2,8 +2,8 @@ package org.innovateuk.ifs.competitionsetup.application.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupSubsectionModelPopulator;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSubsectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.competitionsetup.application.viewmodel.ApplicationDetailsViewModel;
 import org.springframework.stereotype.Service;
 

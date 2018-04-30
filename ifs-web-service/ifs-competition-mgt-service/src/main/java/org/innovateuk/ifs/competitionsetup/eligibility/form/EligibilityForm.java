@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competitionsetup.eligibility.form;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

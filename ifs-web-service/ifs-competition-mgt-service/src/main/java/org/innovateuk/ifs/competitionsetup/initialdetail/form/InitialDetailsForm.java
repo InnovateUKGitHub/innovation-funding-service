@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.initialdetail.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import javax.validation.constraints.NotNull;

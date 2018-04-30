@@ -3,8 +3,8 @@ package org.innovateuk.ifs.competitionsetup.application.sectionupdater;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupUpdater;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupUpdater;
 import org.springframework.http.HttpStatus;
 
 import java.util.Optional;

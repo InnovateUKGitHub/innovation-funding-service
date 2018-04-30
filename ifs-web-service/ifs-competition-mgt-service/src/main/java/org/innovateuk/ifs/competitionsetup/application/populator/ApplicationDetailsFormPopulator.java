@@ -2,9 +2,9 @@ package org.innovateuk.ifs.competitionsetup.application.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationDetailsForm;
-import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupSubsectionFormPopulator;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSubsectionFormPopulator;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

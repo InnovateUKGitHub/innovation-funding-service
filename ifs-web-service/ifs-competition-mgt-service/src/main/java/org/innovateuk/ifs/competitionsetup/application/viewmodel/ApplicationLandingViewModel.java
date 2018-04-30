@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.application.viewmodel;
 
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;

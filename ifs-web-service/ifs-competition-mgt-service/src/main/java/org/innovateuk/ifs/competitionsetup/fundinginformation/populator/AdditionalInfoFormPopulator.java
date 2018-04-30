@@ -5,9 +5,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInfoForm;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.common.form.FunderRowForm;
-import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupFormPopulator;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.FunderRowForm;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupFormPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.fundinginformation.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.common.form.FunderRowForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.FunderRowForm;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;

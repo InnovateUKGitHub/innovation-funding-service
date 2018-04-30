@@ -5,12 +5,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
-import org.innovateuk.ifs.competitionsetup.common.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupFormPopulator;
+import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupFormPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

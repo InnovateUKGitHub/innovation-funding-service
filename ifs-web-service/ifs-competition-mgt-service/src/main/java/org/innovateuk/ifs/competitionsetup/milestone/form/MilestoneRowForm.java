@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.milestone.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.core.form.GenericMilestoneRowForm;
 
 import java.time.ZonedDateTime;
 

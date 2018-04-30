@@ -4,10 +4,10 @@ import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmoun
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
-import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupFormPopulator;
-import org.innovateuk.ifs.competitionsetup.common.util.CompetitionUtils;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupFormPopulator;
+import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

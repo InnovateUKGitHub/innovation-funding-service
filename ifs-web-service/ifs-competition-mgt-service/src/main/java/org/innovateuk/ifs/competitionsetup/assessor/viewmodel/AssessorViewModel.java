@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.assessor.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupViewModel;
-import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 
 import java.util.List;
 
