@@ -18,6 +18,6 @@ public class NotifyInterviewAssignmentAction extends BaseInterviewAssignmentActi
     protected void doExecute(InterviewAssignment interviewAssignment, StateContext<InterviewAssignmentState, InterviewAssignmentEvent> context) {
         InterviewAssignmentMessageOutcome interviewAssignmentMessageOutcome =
                 (InterviewAssignmentMessageOutcome) context.getMessageHeader("message");
-        interviewAssignment.setMessage(interviewAssignmentMessageOutcome);
+        interviewAssignment.getProcessOutcomes().add(interviewAssignmentMessageOutcome);
     }
 }

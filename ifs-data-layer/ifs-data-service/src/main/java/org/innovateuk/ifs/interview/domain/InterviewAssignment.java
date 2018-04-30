@@ -27,12 +27,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
-    private InterviewAssignmentMessageOutcome message;
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
-    private InterviewAssignmentResponseOutcome response;
-
     public InterviewAssignment() {
     }
 
@@ -82,16 +76,18 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
         return InterviewAssignmentState.fromState(activityState.getState());
     }
 
-    public void setResponse(InterviewAssignmentResponseOutcome response) {
-        this.response = response;
-    }
-
     public InterviewAssignmentResponseOutcome getResponse() {
-        return response;
+        return (InterviewAssignmentResponseOutcome) processOutcomes.stream()
+                .filter(outcome -> outcome instanceof InterviewAssignmentResponseOutcome)
+                .findAny()
+                .orElse(null);
     }
 
-    public void setMessage(InterviewAssignmentMessageOutcome message) {
-        this.message = message;
+    public InterviewAssignmentMessageOutcome getMessage() {
+        return (InterviewAssignmentMessageOutcome) processOutcomes.stream()
+                .filter(outcome -> outcome instanceof InterviewAssignmentMessageOutcome)
+                .findAny()
+                .orElse(null);
     }
 
     @Override
@@ -118,17 +114,11 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .toHashCode();
     }
 
-    public InterviewAssignmentMessageOutcome getMessage() {
-        return message;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("participant", participant)
                 .append("target", target)
-                .append("message", message)
-                .append("response", response)
                 .append("activityState", activityState)
                 .append("processOutcomes", processOutcomes)
                 .append("internalParticipant", internalParticipant)
