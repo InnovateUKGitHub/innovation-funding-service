@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation     INFUND-6794: As an applicant I will be invited to add funding details within the 'Your funding' page of the application
 ...               INFUND-6895: As a lead applicant I will be advised that changing my 'Research category' after completing 'Funding level' will reset the 'Funding level'
+...               IFS-2659: UJ - External - Finances - Able to submit without Other funding
 Suite Setup       Custom Suite Setup
 Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        Applicant
@@ -8,11 +9,18 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
+Other funding validation message
+    [Documentation]  IFS-2659
+    [Tags]  HappyPath
+    Given the user clicks the button/link               link=Your funding
+    And the user selects the checkbox    termsAgreed
+    When The user clicks the button/link                jQuery=button:contains("Mark as complete")
+    Then The user should see a field and summary error  Please tell us if you have received any other funding for this project.
+
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
     [Tags]    HappyPath
-    When the user clicks the button/link    link=Your funding
-    And the user selects the radio button    other_funding-otherPublicFunding-    Yes
+    Given the user selects the radio button    other_funding-otherPublicFunding-    Yes
     Then the user should see the element    css=[name^="finance-grantclaimpercentage"]
     And the user should see the element    css=[name*=other_funding-fundingSource]
     And the user should see the element    css=[name*=other_funding-securedDate]
@@ -40,18 +48,20 @@ Funding level validations
 Other funding validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user enters text to a text field    css=[name*=other_funding-securedDate]    20
-    And the user enters text to a text field    css=[name*=other_funding-fundingAmount]    txt
-    And the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the text in the page    Invalid secured date
-    And the user should see the text in the page    This field cannot be left blank
-    When the user enters text to a text field    css=[name*=other_funding-securedDate]    12-${nextyear}
-    Then the user should not see the text in the page    Please enter a valid date
-    When the user enters text to a text field    css=[name*=other_funding-fundingAmount]    20000
-    Then the user should not see the text in the page    This field cannot be left blank
-    And the user should not see an error in the page
-    And the user selects the checkbox    termsAgreed
-    And the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    When the user enters text to a text field           css=[name*=other_funding-securedDate]    20
+    And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    txt
+    And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
+    Then The user should see a field and summary error  Invalid secured date
+    And The user should see a field and summary error   Funding source cannot be blank.
+    #TODO update the below error after IFS-3454 is done.
+    And The user should see a field and summary error   This field should be 1 or higher.
+    When the user enters text to a text field           css=[name*=other_funding-securedDate]    12-${nextyear}
+    And the user enters text to a text field            css=[name*=other_funding-fundingSource]  Lottery funding
+    When the user enters text to a text field           css=[name*=other_funding-fundingAmount]    20000
+    #TODO IFS-3457
+    #And the user cannot see a validation error in the page
+    And the user selects the checkbox                   termsAgreed
+    And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
 
 If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
