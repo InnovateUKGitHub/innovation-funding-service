@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.viewmodel;
 
-import java.util.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Holder of model attributes for the available applications shown in the 'Find' tab of the Assessment Interview Panel invite applications view.
@@ -25,14 +26,22 @@ public class InterviewAssignmentApplicationInviteSendRowViewModel extends Interv
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+
         InterviewAssignmentApplicationInviteSendRowViewModel that = (InterviewAssignmentApplicationInviteSendRowViewModel) o;
-        return Objects.equals(filename, that.filename);
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(filename, that.filename)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), filename);
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(filename)
+                .toHashCode();
     }
 }
