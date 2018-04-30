@@ -83,9 +83,9 @@ Bank details server side validations
     [Tags]
     When the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link   id=submit-bank-details
-    Then the user should see an error     Please enter a valid account number.
-    And the user should see an error      Please enter a valid sort code.
-    And the user should see an error      You need to select an address before you can continue.
+    Then the user should see a field and summary error  Please enter a valid account number.
+    And the user should see a field and summary error   Please enter a valid sort code.
+    And the user should see a field and summary error   You need to select an address before you can continue.
 
 The user enters bank details, wants to manually enter their address, leaves the address empty and submits
     [Documentation]  IFS-2731
@@ -95,7 +95,7 @@ The user enters bank details, wants to manually enter their address, leaves the 
     When the user selects the radio button        addressType             ADD_NEW
     And the user clicks the button/link           css = button[name = "manual-address"]        #Enter address manually
     Then the user clicks the button/link          jQuery = button:contains("Submit bank account details")
-    And the user clicks the button/link           id=submit-bank-details    #Submit
+    And the user clicks the button/link           id=submit-bank-details
     And the user should see a summary error       The address cannot be blank.
     And the user should see a summary error       The postcode cannot be blank.
     And the user should see a summary error       The town cannot be blank.
