@@ -46,7 +46,6 @@ function deploy() {
         oc create -f $(getBuildLocation)/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
-
     oc create -f $(getBuildLocation)/ ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
