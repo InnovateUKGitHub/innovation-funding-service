@@ -3,7 +3,7 @@ package org.innovateuk.ifs.thread.attachment.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.project.financechecks.security.AttachmentPermissionsRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.attachments.security.AttachmentLookupStrategy;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;

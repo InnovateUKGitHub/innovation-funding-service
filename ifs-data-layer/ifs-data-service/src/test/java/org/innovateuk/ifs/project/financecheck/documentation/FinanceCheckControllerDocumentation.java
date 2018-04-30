@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.documentation.FinanceCheckDocs.*;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static org.innovateuk.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
-import static org.innovateuk.ifs.project.builder.CostResourceBuilder.newCostResource;
+import static org.innovateuk.ifs.project.financecheck.builder.CostResourceBuilder.newCostResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckOverviewResourceBuilder.newFinanceCheckOverviewResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;
