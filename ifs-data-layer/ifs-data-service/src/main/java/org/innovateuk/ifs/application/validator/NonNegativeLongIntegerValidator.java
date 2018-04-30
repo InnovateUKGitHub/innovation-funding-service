@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.validation.validator;
+package org.innovateuk.ifs.application.validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -8,7 +8,6 @@ import org.springframework.validation.Errors;
 import java.math.BigDecimal;
 
 import static java.math.BigDecimal.ZERO;
-import static java.math.BigDecimal.valueOf;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 
 /**

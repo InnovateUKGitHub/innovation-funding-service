@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.validator;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.validation.validator.ApplicationMarkAsCompleteValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
