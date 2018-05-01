@@ -19,7 +19,6 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -47,7 +46,6 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -77,9 +75,9 @@ public class ApplicationNotificationServiceImplTest {
     private ApplicationNotificationService service = new ApplicationNotificationServiceImpl();
 
     private static final String WEB_BASE_URL = "www.baseUrl.com" ;
-    private static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(
+    private static final Set<ApplicationState> FUNDING_DECISIONS_MADE_STATUSES = asLinkedSet(
             ApplicationState.APPROVED,
-            ApplicationState.REJECTED), ApplicationState::getBackingState);
+            ApplicationState.REJECTED);
 
     @Before
     public void setUp() throws Exception {
@@ -111,7 +109,7 @@ public class ApplicationNotificationServiceImplTest {
     }
 
     @Test
-    public void notifyApplicantsByCompetition() throws Exception {
+    public void notifyApplicantsByCompetition() {
         Long competitionId = 1L;
         Long applicationOneId = 2L;
         Long applicationTwoId = 3L;
@@ -185,7 +183,7 @@ public class ApplicationNotificationServiceImplTest {
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -220,7 +218,7 @@ public class ApplicationNotificationServiceImplTest {
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSenderMock);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(0));
@@ -243,7 +241,7 @@ public class ApplicationNotificationServiceImplTest {
     }
 
     @Test
-    public void notifyApplicantsByCompetition_oneFailure() throws Exception {
+    public void notifyApplicantsByCompetition_oneFailure() {
         Long competitionId = 1L;
         Long applicationOneId = 2L;
         Long applicationTwoId = 3L;
@@ -317,7 +315,7 @@ public class ApplicationNotificationServiceImplTest {
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -351,7 +349,7 @@ public class ApplicationNotificationServiceImplTest {
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSenderMock);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(0));
@@ -377,7 +375,7 @@ public class ApplicationNotificationServiceImplTest {
     }
 
     @Test
-    public void notifyApplicantsByCompetition_allFailure() throws Exception {
+    public void notifyApplicantsByCompetition_allFailure() {
         Long competitionId = 1L;
         Long applicationOneId = 2L;
         Long applicationTwoId = 3L;
@@ -451,7 +449,7 @@ public class ApplicationNotificationServiceImplTest {
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -483,7 +481,7 @@ public class ApplicationNotificationServiceImplTest {
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSenderMock);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSenderMock).renderTemplates(notifications.get(0));
@@ -513,7 +511,7 @@ public class ApplicationNotificationServiceImplTest {
     }
 
     @Test
-    public void informIneligible() throws Exception {
+    public void informIneligible() {
         long applicationId = 1L;
         String subject = "subject";
         String message = "message";
@@ -575,7 +573,7 @@ public class ApplicationNotificationServiceImplTest {
     }
 
     @Test
-    public void informIneligible_workflowError() throws Exception {
+    public void informIneligible_workflowError() {
         long applicationId = 1L;
         String subject = "subject";
         String message = "message";

@@ -170,9 +170,9 @@ public class FinanceCheckSummaryResource {
 
     private boolean isEligibilityAllApprovedOrNotRequired() {
 
-        List<Eligibility> relevantStatuses = asList(
-                Eligibility.APPROVED,
-                Eligibility.NOT_APPLICABLE);
+        List<EligibilityState> relevantStatuses = asList(
+                EligibilityState.APPROVED,
+                EligibilityState.NOT_APPLICABLE);
 
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getEligibility()));
     }

@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +26,6 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -59,7 +57,7 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
 
         projectProcess = newProjectProcess()
                 .withProject(projectProcessProject)
-                .withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState()))
+                .withActivityState(ProjectState.SETUP)
                 .build();
     }
 
