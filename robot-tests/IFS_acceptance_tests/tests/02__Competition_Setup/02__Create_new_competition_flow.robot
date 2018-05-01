@@ -65,6 +65,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2285 APC Competition template: BEIS Value for Money: Pro-forma Spreadsheet
 ...
 ...               IFS-2776 As an Portfolio manager I am able to set the min/max project duration for a competition
+...
+...               IFS-3086 Investigate options to support selection of grant terms and conditions in Competition setup
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -187,15 +189,25 @@ Initial details - should have a green check
     And the user should see the element      css=#compCTA[disabled]
 
 User should have access to all the sections
-    [Documentation]    INFUND-4725, IFS-1104
+    [Documentation]    INFUND-4725, IFS-1104  IFS-3086
     Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Then The user should see the element    link=Funding information
-    And The user should see the element    link=Eligibility
-    And The user should see the element    link=Milestones
-    And The user should see the element    link=Application
-    And The user should see the element    link=Assessors
-    And The user should see the element    link=Public content
-    And The user should see the element    link=Stakeholders
+    Then The user should see the element    link=Terms and conditions
+    And The user should see the element     link=Funding information
+    And The user should see the element     link=Eligibility
+    And The user should see the element     link=Milestones
+    And The user should see the element     link=Application
+    And The user should see the element     link=Assessors
+    And The user should see the element     link=Public content
+    And The user should see the element     link=Stakeholders
+
+The user must select the Terms and Conditions they want Applicants to accept
+    [Documentation]  IFS-3086
+    [Tags]  HappyPath
+    Given the user clicks the button/link    link=Terms and conditions
+    When the user selects the option from the drop-down menu    2  id=termsAndConditionsId
+    And the user clicks the button/link      css=button.button  #Done
+    Then the user should see the element     jQuery=a:contains("APC Terms and Conditions")
+    And the user clicks the button/link      link=Competition setup
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
@@ -266,6 +278,7 @@ Funding information: should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(2) .task-status-complete
+    Then the user should see the element    jQuery=li:contains("Funding information") .task-status-complete
     And the user should see the element     css=#compCTA[disabled]
 
 Eligibility: Contain the correct options
