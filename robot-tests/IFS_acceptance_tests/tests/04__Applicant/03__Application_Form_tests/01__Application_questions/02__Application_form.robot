@@ -29,11 +29,13 @@ Application details: Previous submission
     Given the user navigates to the page                ${DASHBOARD_URL}
     And the user clicks the button/link                 link=${aeroApplication}
     And the user clicks the button/link                 link=Application details
-    When the user clicks the button/link                jQuery=label:contains("Yes")
+    When the user clicks the button/link                id=application-question-complete
+    Then the user should see a field and summary error  Please tell us if this application is a resubmission or not.
+    When the user clicks the button twice               css=label[for="application.resubmission-yes"]
     And the user clicks the button/link                 id=application-question-complete
     Then the user should see a field and summary error  Please enter the previous application number.
     And the user should see a field and summary error   Please enter the previous application title.
-    When the user clicks the button/link                jQuery=label:contains("No")
+    When the user clicks the button/link                css=label[for="application.resubmission-no"]
     Then The user should not see the element            css=[id="application.previousApplicationNumber"]
 
 Application details: Research category
