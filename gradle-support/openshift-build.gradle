@@ -53,7 +53,7 @@ task removeContainer(type: DockerRemoveContainer, dependsOn: stop) {
 }
 
 task createContainer(type: DockerCreateContainer, dependsOn: [buildDocker, removeContainer]) {
-    targetImageId { buildDocker.getImageId() }
+    imageId = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
     containerName = "${project.name.replaceAll(/ifs-/, "")}"
     containerId = "${project.name.replaceAll(/ifs-/, "")}"
     network="ifs"
