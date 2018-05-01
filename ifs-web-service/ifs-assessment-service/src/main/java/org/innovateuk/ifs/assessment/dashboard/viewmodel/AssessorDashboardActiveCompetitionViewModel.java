@@ -97,13 +97,13 @@ public class AssessorDashboardActiveCompetitionViewModel {
     }
 
     public boolean hasPendingAssessments(){
-        return !(pendingAssessments == 0);
+        return pendingAssessments != 0;
     }
 
     public boolean hasApplicationsToAssess(){
-        return !(progressTotal - progressAssessed == 0);
+        return progressTotal - progressAssessed != 0;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
