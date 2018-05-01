@@ -14,9 +14,6 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,9 +45,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private InterviewAssignmentMessageOutcomeRepository interviewAssignmentMessageOutcomeRepository;
 
     @Autowired
@@ -61,7 +55,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     @Override
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
-
             final Page<Application> pagedResult =
                     applicationRepository.findSubmittedApplicationsNotOnInterviewPanel(competitionId, pageable);
 
@@ -78,8 +71,8 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     @Transactional
     public ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable) {
         final Page<InterviewAssignment> pagedResult =
-                interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(
-                        competitionId, InterviewAssignmentState.CREATED.getBackingState(), pageable);
+                interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(
+                        competitionId, InterviewAssignmentState.CREATED, pageable);
 
         return serviceSuccess(new InterviewAssignmentStagedApplicationPageResource(
                 pagedResult.getTotalElements(),
@@ -97,8 +90,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
         final Page<InterviewAssignment> pagedResult =
                 interviewAssignmentRepository
-                        .findByTargetCompetitionIdAndActivityStateStateNot(
-                                competitionId, InterviewAssignmentState.CREATED.getBackingState(), pageable);
+                        .findByTargetCompetitionIdAndActivityStateNot(competitionId, InterviewAssignmentState.CREATED, pageable);
 
         return serviceSuccess(new InterviewAssignmentApplicationPageResource(
                 pagedResult.getTotalElements(),
@@ -122,34 +114,31 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     @Override
     public ServiceResult<Void> assignApplications(List<StagedApplicationResource> stagedInvites) {
-
-        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
-
         stagedInvites.stream()
                 .distinct()
                 .map(invite -> getApplication(invite.getApplicationId()))
-                .forEach(application -> assignApplicationToCompetition(application.getSuccess(), createdActivityState));
+                .forEach(application -> assignApplicationToCompetition(application.getSuccess()));
 
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<Void> unstageApplication(long applicationId) {
-        interviewAssignmentRepository.deleteByTargetIdAndActivityStateState(applicationId, InterviewAssignmentState.CREATED.getBackingState());
+        interviewAssignmentRepository.deleteByTargetIdAndActivityState(applicationId, InterviewAssignmentState.CREATED);
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<Void> unstageApplications(long competitionId) {
-        interviewAssignmentRepository.deleteByTargetCompetitionIdAndActivityStateState(competitionId, InterviewAssignmentState.CREATED.getBackingState());
+        interviewAssignmentRepository.deleteByTargetCompetitionIdAndActivityState(competitionId, InterviewAssignmentState.CREATED);
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<Boolean> isApplicationAssigned(long applicationId) {
-        return serviceSuccess(interviewAssignmentRepository.existsByTargetIdAndActivityStateStateIn(applicationId,
-                asList(AWAITING_FEEDBACK_RESPONSE.getBackingState(),
-                        SUBMITTED_FEEDBACK_RESPONSE.getBackingState())));
+        return serviceSuccess(interviewAssignmentRepository.existsByTargetIdAndActivityStateIn(applicationId,
+                asList(AWAITING_FEEDBACK_RESPONSE,
+                        SUBMITTED_FEEDBACK_RESPONSE)));
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {
@@ -194,7 +183,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
                                 application.getId(),
                                 application.getName(),
                                 leadOrganisation.getName(),
-                                panelInvite.getActivityState()
+                                panelInvite.getProcessState()
                         )
                 ).getSuccess();
     }
@@ -203,10 +192,10 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
         return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
     }
 
-    private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application, ActivityState createdActivityState) {
-        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateStateIn(application.getId(), singletonList(InterviewAssignmentState.CREATED.getBackingState()))) {
+    private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {
+        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateIn(application.getId(), singletonList(InterviewAssignmentState.CREATED))) {
             final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
-            final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);
+            final InterviewAssignment panel = new InterviewAssignment(application, pr);
 
             interviewAssignmentRepository.save(panel);
 

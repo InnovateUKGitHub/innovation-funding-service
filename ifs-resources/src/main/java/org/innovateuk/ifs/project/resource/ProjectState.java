@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.resource;
 
+import org.innovateuk.ifs.util.enums.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -10,17 +11,17 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Project Setup process.
  */
-public enum ProjectState implements ProcessState {
+public enum ProjectState implements ProcessState, IdentifiableEnum<ProjectState> {
 
-    SETUP(State.PENDING),
-    LIVE(State.ACCEPTED),
-    WITHDRAWN(State.WITHDRAWN);
+    SETUP(17, State.PENDING),
+    LIVE(18, State.ACCEPTED),
+    WITHDRAWN(48, State.WITHDRAWN);
 
-    //the status string value
-    private State backingState;
+    private final long id;
+    private final State backingState;
 
-    // creates the enum with the chosen type.
-    ProjectState(State backingState) {
+    ProjectState(long id, State backingState) {
+        this.id = id;
         this.backingState = backingState;
     }
 
@@ -41,5 +42,9 @@ public enum ProjectState implements ProcessState {
     public static ProjectState fromState(State state) {
         return ProcessState.fromState(ProjectState.values(), state);
     }
-}
 
+    @Override
+    public long getId() {
+        return id;
+    }
+}

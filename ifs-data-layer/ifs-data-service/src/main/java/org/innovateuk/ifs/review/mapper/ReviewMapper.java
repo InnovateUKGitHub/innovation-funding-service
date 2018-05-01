@@ -39,7 +39,7 @@ ReviewMapper extends BaseMapper<Review, ReviewResource, Long> {
             @Mapping(source = "target", target = "application"),
             @Mapping(source = "target.name", target = "applicationName"),
             @Mapping(source = "target.competition", target = "competition"),
-            @Mapping(source = "activityState", target = "reviewState")
+            @Mapping(source = "processState", target = "reviewState")
     })
     @Override
     public abstract ReviewResource mapToResource(Review domain);
@@ -48,7 +48,7 @@ ReviewMapper extends BaseMapper<Review, ReviewResource, Long> {
             @Mapping(target = "processEvent", source = "event"),
             @Mapping(target = "participant", source = "processRole"),
             @Mapping(target = "target", source = "application"),
-            @Mapping(target = "activityState", source = "reviewState", ignore = true),
+            @Mapping(target = "processState", source = "reviewState", ignore = true),
             @Mapping(target = "processOutcomes", ignore = true),
             @Mapping(target = "lastModified", ignore = true)
     })
