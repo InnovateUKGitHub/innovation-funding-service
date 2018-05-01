@@ -11,7 +11,7 @@
     <p>These are the terms and conditions applicants must accept for this competition.</p>
 
     <p><a th:text="${model.currentTermsAndConditions.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
-        Terms and conditions</a> (opens in a new window)
+        Terms and conditions</a>
     </p>
 
     <form th:action="@{(${model.general.editable} ? '' : 'terms-and-conditions/edit')}"
