@@ -782,8 +782,17 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateProjectAddressAddNewManually() throws Exception {
         OrganisationResource leadOrganisation = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().withPostcode("S1 2LB").withAddressLine1("Address Line 1").withTown("Sheffield").build();
-        addressResource.setId(null);
+
+        AddressResource addressResource = newAddressResource().
+                withId().
+                withAddressLine1("Address Line 1").
+                withAddressLine2().
+                withAddressLine3().
+                withTown("Sheffield").
+                withCounty().
+                withPostcode("S1 2LB").
+                build();
+
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
         leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));

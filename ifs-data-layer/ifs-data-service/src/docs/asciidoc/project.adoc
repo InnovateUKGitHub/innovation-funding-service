@@ -64,6 +64,18 @@ include::{snippets}/project/update-project-duration/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/project/update-project-duration/curl-request.adoc[]
 
+=== Update project address
+==== Request
+include::{snippets}/project/update-project-address/http-request.adoc[]
+include::{snippets}/project/update-project-address/path-parameters.adoc[]
+include::{snippets}/project/update-project-address/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/update-project-address/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-project-address/curl-request.adoc[]
+
 === Set Project Manager
 ==== Success case
 
