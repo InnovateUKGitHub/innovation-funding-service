@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.form.domain;
+package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.commons.util.IdentifiableEnumConverter;
 import org.innovateuk.ifs.form.resource.FormInputType;

@@ -98,6 +98,6 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     protected boolean isProjectInSetup(long projectId) {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
-        return ProjectState.SETUP.equals(projectProcess.getActivityState());
+        return ProjectState.SETUP.equals(projectProcess.getProcessState());
     }
 }
