@@ -72,9 +72,11 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
     public ServiceResult<Void> deleteFeedback(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment -> {
             long fileId = interviewAssignment.getMessage().getFeedback().getId();
-            return fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() ->
-                    interviewAssignmentMessageOutcomeRepository.delete(interviewAssignment.getMessage())
-            );
+            return fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() -> {
+                InterviewAssignmentMessageOutcome message = interviewAssignment.getMessage();
+                interviewAssignment.getProcessOutcomes().remove(message);
+                interviewAssignmentMessageOutcomeRepository.delete(message);
+            });
         });
     }
 
