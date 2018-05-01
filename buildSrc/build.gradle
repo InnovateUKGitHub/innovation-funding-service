@@ -1,0 +1,8 @@
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "com.bmuschko:gradle-docker-plugin:3.2.6"
+    compile 'com.aries:docker-java-shaded:3.0.14'
+}

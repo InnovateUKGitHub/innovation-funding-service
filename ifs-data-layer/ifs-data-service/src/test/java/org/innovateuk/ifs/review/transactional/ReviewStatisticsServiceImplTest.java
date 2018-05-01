@@ -26,7 +26,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.assessment.transactional.AssessmentServiceImpl.SUBMITTED_STATES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -77,7 +77,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .build(2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, "",  null,true)).thenReturn(applications);
         when(reviewInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
         when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
@@ -93,7 +93,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(applicationRepositoryMock, reviewInviteRepositoryMock, reviewParticipantRepositoryMock);
         inOrder.verify(reviewInviteRepositoryMock).getByCompetitionId(competitionId);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, "",  null,true);
 
         inOrder.verify(reviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);

@@ -51,8 +51,7 @@ Applicant has read only view on review and submit page
     [Tags]    HappyPath
     Given the user navigates to the page                  ${DASHBOARD_URL}
     And the user clicks the button/link                   link=${application_bus_name}
-    When the applicant completes the application details  Application details
-    And the user clicks the button/link                   link=Return to application overview
+    When the applicant completes the application details  ${application_bus_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     And the user clicks the button/link                   link=Your finances
     And the user marks the finances as complete           ${application_bus_name}  labour costs  n/a  no
     And the user clicks the button/link                   link=Review and submit
@@ -93,8 +92,6 @@ Submitted application is read only
     [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link     link=${application_bus_name}
-    and the user clicks the button/link     link=Return to dashboard
-    and the user clicks the button/link     link=${application_bus_name}
     When the user clicks the button/link    link=View application
     And The user should be redirected to the correct page    summary
     Then the user can check that the sections are read only  ${application_bus_name}
@@ -111,14 +108,13 @@ Status of the submitted application
 RTO lead has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
     [Tags]    HappyPath
-    [Setup]  log in as a different user             ${submit_rto_email}    ${correct_password}
-    Given the user navigates to the page                  ${DASHBOARD_URL}
-    And the user clicks the button/link                   link=${application_rto_name}
-    When the applicant completes the application details  Application details
-    When the user clicks the button/link     link=Return to application overview
-    And the user clicks the button/link                   link=Your finances
+    [Setup]  log in as a different user  ${submit_rto_email}  ${correct_password}
+    Given the user navigates to the page                   ${DASHBOARD_URL}
+    And the user clicks the button/link                    link=${application_rto_name}
+    When the applicant completes the application details   ${application_rto_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user clicks the button/link                   link=Your finances
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css=.extra-margin-bottom [aria-expanded="false"]
-    Then the user clicks the button/link   jQuery=button:contains("Not requesting funding")
+    Then the user clicks the button/link                   jQuery=button:contains("Not requesting funding")
     And the user puts zero project costs
     When the user clicks the button/link     link=Return to application overview
     And the user clicks the button/link      link=Review and submit
@@ -175,9 +171,9 @@ the applicant accepts the terms and conditions
     the user selects the checkbox    stateAidAgreed
 
 the applicant marks the first section as complete
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
-    the applicant completes the application details
+    the applicant completes the application details  ${application_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
 
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
@@ -213,5 +209,6 @@ Get the original values of the competition's milestones
     Set suite variable  ${submissionDate}
 
 Custom Suite Setup
+    Set predefined date variables
     new account complete all but one
     Get the original values of the competition's milestones

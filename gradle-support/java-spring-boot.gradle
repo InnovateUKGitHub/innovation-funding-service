@@ -22,6 +22,9 @@ test {
     beforeTest { desc ->
         println "Executing test ${desc.className}.${desc.name}"
     }
+    if (project.name != 'ifs-data-service') {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    }
 }
 
 dependencies {

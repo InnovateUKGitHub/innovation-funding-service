@@ -35,7 +35,7 @@ public class TokenRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
 
     @Rollback
     @Test
-    public void testFindByHash() throws Exception {
+    public void testFindByHash() {
         final String hash = hash(1L, "firstname.lastname@innovateuk.org");
 
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, now(), JsonNodeFactory.instance.objectNode());
@@ -48,7 +48,7 @@ public class TokenRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
 
     @Rollback
     @Test
-    public void testFindByHashAndTypeAndClassName() throws Exception {
+    public void testFindByHashAndTypeAndClassName() {
         final String hash1 = hash(1L, "firstname.lastname@innovateuk.org");
         final String hash2 = hash(1L, "firstname.lastname@innovateuk.org");
 
@@ -65,7 +65,7 @@ public class TokenRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
 
     @Rollback
     @Test
-    public void testFindByTypeAndClassNameAndClassPk() throws Exception {
+    public void testFindByTypeAndClassNameAndClassPk() {
         final String hash1 = hash(1L, "user.one@innovateuk.org");
         final String hash2 = hash(2L, "user.two@innovateuk.org");
 
@@ -86,5 +86,4 @@ public class TokenRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
         String hash = String.format("%s==%s==%s", userId, email, random);
         return encoder.encode(hash);
     }
-
 }

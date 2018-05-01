@@ -12,19 +12,22 @@ public class InterviewAssignmentStagedApplicationResource {
     private final long applicationId;
     private final String applicationName;
     private final String leadOrganisationName;
+    private final String filename;
 
     public InterviewAssignmentStagedApplicationResource() {
         id = -1;
         applicationId = -1;
         applicationName = null;
         leadOrganisationName = null;
+        filename = null;
     }
 
-    public InterviewAssignmentStagedApplicationResource(long id, long applicationId, String applicationName, String leadOrganisationName) {
+    public InterviewAssignmentStagedApplicationResource(long id, long applicationId, String applicationName, String leadOrganisationName, String filename) {
         this.id = id;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.leadOrganisationName = leadOrganisationName;
+        this.filename = filename;
     }
 
     public long getId() {
@@ -41,6 +44,10 @@ public class InterviewAssignmentStagedApplicationResource {
 
     public String getLeadOrganisationName() {
         return leadOrganisationName;
+    }
+
+    public String getFilename() {
+        return filename;
     }
 
     @Override
