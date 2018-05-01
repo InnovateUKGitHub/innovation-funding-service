@@ -20,20 +20,20 @@ public class TermsAndConditionsResourceBuilder extends BaseBuilder<TermsAndCondi
         return new TermsAndConditionsResourceBuilder(emptyList()).with(uniqueIds());
     }
 
-    public TermsAndConditionsResourceBuilder withId(Long id) {
-        return with(termsAndConditions -> setField("id", id, termsAndConditions));
+    public TermsAndConditionsResourceBuilder withId(Long... ids) {
+        return withArray((id, object) -> setField("id", id, object), ids);
     }
 
-    public TermsAndConditionsResourceBuilder withName(String name) {
-        return with(termsAndConditions -> setField("name", name, termsAndConditions));
+    public TermsAndConditionsResourceBuilder withName(String... names) {
+        return withArray((name, object) -> setField("name", name, object), names);
     }
 
-    public TermsAndConditionsResourceBuilder withTemplate(String template) {
-        return with(termsAndConditions -> setField("template", template, termsAndConditions));
+    public TermsAndConditionsResourceBuilder withTemplate(String... templates) {
+        return withArray((template, object) -> setField("template", template, object), templates);
     }
 
-    public TermsAndConditionsResourceBuilder withVersion(String version) {
-        return with(termsAndConditions -> setField("version", version, termsAndConditions));
+    public TermsAndConditionsResourceBuilder withVersion(String... versions) {
+        return withArray((version, object) -> setField("version", version, object), versions);
     }
 
     @Override

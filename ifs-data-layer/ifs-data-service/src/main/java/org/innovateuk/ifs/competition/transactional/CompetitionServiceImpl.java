@@ -375,11 +375,14 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
         TermsAndConditions termsAndConditions = termsAndConditionsRepository.findOne(termsAndConditionsId);
-        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
-                .andOnSuccess(competition -> {
-                    competition.setTermsAndConditions(termsAndConditions);
-                    competitionRepository.save(competition);
-                    return serviceSuccess();
-                });
+        if (termsAndConditions != null) {
+            return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+                    .andOnSuccess(competition -> {
+                        competition.setTermsAndConditions(termsAndConditions);
+                        competitionRepository.save(competition);
+                        return serviceSuccess();
+                    });
+        }
+        return serviceFailure(notFoundError(TermsAndConditions.class, termsAndConditionsId));
     }
 }

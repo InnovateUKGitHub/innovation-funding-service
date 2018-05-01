@@ -2,20 +2,15 @@ package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -37,12 +32,10 @@ import java.math.BigInteger;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
@@ -61,7 +54,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionServiceImpl> {
@@ -76,6 +68,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Mock
     private MilestoneService milestoneService;
+
+    @Mock
+    private TermsAndConditionsRepository termsAndConditionsRepository;
 
     private Long competitionId = 1L;
 
@@ -767,6 +762,29 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void updateTermsAndConditionsForCompetition() throws Exception {
+        Competition competition = newCompetition().build();
+
+        when(termsAndConditionsRepository.findOne(competition.getTermsAndConditions().getId())).thenReturn(competition.getTermsAndConditions());
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competition.getId(), competition.getTermsAndConditions().getId());
+
+        assertTrue(result.isSuccess());
+
+        //Verify that the entity is saved
+        verify(competitionRepositoryMock).save(competition);
+    }
+
+    @Test
+    public void updateInvalidTermsAndConditionsForCompetition() throws Exception {
+        Competition competition = newCompetition().build();
+        when(termsAndConditionsRepository.findOne(competition.getTermsAndConditions().getId())).thenReturn(null);
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competitionId, competition.getTermsAndConditions().getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(TermsAndConditions.class,
+                competition.getTermsAndConditions().getId())));
 
     }
 }
