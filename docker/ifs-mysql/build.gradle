@@ -1,3 +1,5 @@
+import org.innovateuk.ifs.tasks.StartDbContainerIfNotStartedTask
+
 subprojects {
 
     def sqlVersion = "5.6.39"
@@ -42,26 +44,20 @@ subprojects {
         }
     }
 
-    task startMySql(dependsOn: deploy) {
-        doLast {
-            exec {
-                //wait for sql container to start.
-                workingDir '.'
-                commandLine 'sleep', '10'
-            }
-        }
+    task startDbIfNotStarted(type: StartDbContainerIfNotStartedTask) {
+
     }
 
+
     task initDB {
-        createTestSchema.mustRunAfter startMySql
-        dependsOn startMySql
+        createTestSchema.mustRunAfter wait
+        wait.mustRunAfter startDbIfNotStarted
+        dependsOn startDbIfNotStarted
+        dependsOn wait
         dependsOn createTestSchema
     }
 
 }
-
-
-
 
 
 
