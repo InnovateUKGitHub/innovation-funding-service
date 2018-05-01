@@ -9,7 +9,6 @@ import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +19,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.interview.resource.InterviewEvent.NOTIFY;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_INTERVIEW;
 
 /**
  * Manages the process for assigning applications to assessors for an assessment interview.
@@ -48,11 +46,6 @@ public class InterviewWorkflowHandler extends BaseWorkflowEventHandler<Interview
 
     public boolean notifyInvitation(Interview interview) {
         return fireEvent(assessmentPanelApplicationInviteMessage(interview, NOTIFY), interview);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return ASSESSMENT_INTERVIEW;
     }
 
     @Override

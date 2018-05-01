@@ -8,9 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,16 +29,13 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     @Override
     protected void setControllerUnderTest(ApplicationAssessmentSummaryController controller) {
         this.controller = controller;
     }
 
     @Test
-    public void getAvailableAssessors() throws Exception {
+    public void getAvailableAssessors() {
         loginCompAdmin();
         ApplicationAssessorPageResource applicationAssessorResources = controller
                 .getAvailableAssessors(1L, 0, 20, null)
@@ -50,7 +44,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
         assertEquals(Collections.emptyList(), applicationAssessorResources.getContent());
     }
     @Test
-    public void getAssignedAssessors() throws Exception {
+    public void getAssignedAssessors() {
         loginCompAdmin();
         List<ApplicationAssessorResource> applicationAssessorResources = controller
                 .getAssignedAssessors(1L)
@@ -61,7 +55,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
 
     @Test
-    public void getApplicationAssessmentSummary() throws Exception {
+    public void getApplicationAssessmentSummary() {
         Competition competition = competitionRepository.save(newCompetition()
                 .with(id(null))
                 .withName("Connected digital additive manufacturing")
@@ -73,10 +67,8 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
                 .withName("Progressive machines")
                 .withApplicationState(CREATED)
                 .build();
-        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED));
 
         applicationRepository.save(application);
-
 
         flushAndClearSession();
 

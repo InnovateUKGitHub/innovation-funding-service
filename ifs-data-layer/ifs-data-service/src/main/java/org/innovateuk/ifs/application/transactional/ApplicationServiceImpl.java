@@ -15,10 +15,6 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,9 +55,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationWorkflowHandler applicationWorkflowHandler;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private ApplicationProgressService applicationProgressService;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP = new HashMap<String, Sort>() {{
@@ -96,12 +89,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
                                                                                                            User user,
                                                                                                            Competition competition) {
-        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(
-                ActivityType.APPLICATION,
-                State.CREATED
-        );
-
-        Application application = new Application(applicationName, createdActivityState);
+        Application application = new Application(applicationName);
         application.setStartDate(null);
 
         application.setDurationInMonths(3L);
@@ -278,11 +266,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId,
                                                                                    Collection<ApplicationState> applicationStates) {
-        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
         List<Application> applicationResults =
-                applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(
+                applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(
                         competitionId,
-                        states
+                        applicationStates
                 );
         return serviceSuccess(applicationResults);
     }
@@ -298,15 +285,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                                                int pageSize,
                                                                                String sortField) {
 
-        Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
+        Set<ApplicationState> unsuccessfulStates = asLinkedSet(
                 INELIGIBLE,
                 INELIGIBLE_INFORMED,
-                REJECTED), ApplicationState::getBackingState);
+                REJECTED);
 
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
+        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, unsuccessfulStates, pageable);
         List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));

@@ -2,8 +2,8 @@
 Documentation     INFUND-844: As an applicant I want to receive a validation error in the finance sections if I my input is invalid in a particular field so that I am informed how to correctly submit the information
 ...
 ...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
-Suite Setup       log in and create new application if there is not one already with complete application details  Robot test application
-Suite Teardown    mark application details incomplete the user closes the browser
+Suite Setup       Custom Suite Setup
+Suite Teardown    Mark application details as incomplete and the user closes the browser  Robot test application
 Force Tags        Applicant  Pending
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -14,21 +14,20 @@ Mark as complete Your funding with only one input should not be possible
     [Tags]
     [Setup]  Applicant navigates to the finances of the Robot application
     When the user clicks the button/link      link=Your funding
-    And the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  80
+    And the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  70
     And the user moves focus to the element   css=[data-target="other-funding-table"] label
-    Then the user should see the element      jQuery=.button[disabled]:contains("Mark as complete")
+    Then the user should see the element      jQuery=.disabled:contains("Mark as complete")
 
 Other funding client side
     [Documentation]    INFUND-2214
     [Tags]
-    [Setup]  Applicant navigates to the finances of the Robot application
-    Given the user clicks the button/link  link=Your funding
-    And the user clicks the button/link    jQuery=label:contains("Yes")
-    Then the user should see the element   css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
-    Then the user gets the expected validation errors    Invalid secured date.    Funding source cannot be blank.
-    And the user moves focus to the element    jQuery=label:contains("Yes")
-    And the user should see an error    This field should be 1 or higher.
+    When the user clicks the button twice   css=label[for$="otherPublicFunding-yes"]
+    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  -6565
+    Then the user should see the element    css=#other-funding-table[aria-hidden="false"]
+    # This line should be after css=label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
+    When the user should see a field error  Funding source cannot be blank.
+    Then the user should see a field error   Invalid secured date.
+    And the user should see a field error   This field should be 1 or higher.
 
 Other funding server side
     [Documentation]    INFUND-2214
@@ -67,13 +66,15 @@ Labour client side
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    12121212121212121212121212
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    Then the user gets the expected validation errors    You must enter a value less than 10 digits.    You must enter a value less than 20 digits.
-    And the user gets the expected validation errors    This field should be 365 or lower.    This field cannot be left blank.
+    Then the user should see a field error  You must enter a value less than 10 digits.
+    And the user should see a field error  You must enter a value less than 20 digits.
+    And the user should see a field error  This field should be 365 or lower.
+    And the user should see a field error  This field cannot be left blank.
     When the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    123456789101112131415161718192021
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    120
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
-    Then the user gets the expected validation errors    You must enter a value less than 20 digits.    This field should be 1 or higher.
-    [Teardown]
+    Then the user should see a field error    You must enter a value less than 20 digits.
+    And the user should see a field error        This field should be 1 or higher.
 
 Labour server side
     [Documentation]    INFUND-844
@@ -97,13 +98,13 @@ Admin costs client side
     Given the user clicks the button/link    jQuery=button:contains("Overhead costs")
     Given the user clicks the button/link    jQuery=label:contains("Custom overhead costs")
     And the user enters text to a text field    css=[id$="customRate"]    ${EMPTY}
-    Then the user gets the expected validation errors    This field cannot be left blank    This field cannot be left blank.    #Entered two times the same error because this keyword expects two errors
+    Then the user should see a field error    This field cannot be left blank
     When the user enters text to a text field    css=[id$="customRate"]    101
-    Then the user gets the expected validation errors    This field should be 100 or lower    This field should be 100 or lower.    #Entered two times the same error because this keyword expects two errors
+    Then the user should see a field error    This field should be 100 or lower
     When the user enters text to a text field    css=[id$="customRate"]    12121212121212121212121212
-    Then the user gets the expected validation errors    This field should be 100 or lower    This field should be 100 or lower.    #Entered two times the same error because this keyword expects two errors
+    Then the user should see a field error    This field should be 100 or lower
     When the user enters text to a text field    css=[id$="customRate"]    -1
-    Then the user gets the expected validation errors    This field should be 1 or higher    This field should be 1 or higher.    #Entered two times the same error because this keyword expects two errors
+    Then the user should see a field error    This field should be 1 or higher
 
 Admin costs server side
     [Documentation]    INFUND-844
@@ -129,8 +130,8 @@ Materials client side
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
     the user moves focus to the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
-    Then the user gets the expected validation errors    You must enter a value less than 10 digits.    This field should be 1 or higher.
-    [Teardown]
+    Then the user should see a field error    You must enter a value less than 10 digits.    This field should be 1 or higher.
+    And the user should see a field error    This field should be 1 or higher.
 
 Materials server side
     [Documentation]    INFUND-844
@@ -159,14 +160,18 @@ Capital usage client side
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    12121212121212121212121212121
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    -1
     And the user enters text to a text field    css=.form-finances-capital-usage-utilisation    101
-    Then the user gets the expected validation errors    This field should be 1 or higher.    You must enter a value less than 20 digits.
-    And the user gets the expected validation errors    This field cannot be left blank.    This field should be 100 or lower.
+    Then the user should see a field error    This field should be 1 or higher.
+    Then the user should see a field error    You must enter a value less than 20 digits.
+    And the user should see a field error    This field cannot be left blank.
+    And the user should see a field error     This field should be 100 or lower.
     When the user enters text to a text field    css=.form-finances-capital-usage-depreciation    12121212121212121212121212121
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    -1
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    -1
     And the user enters text to a text field    css=.form-finances-capital-usage-utilisation    101
-    Then the user gets the expected validation errors    You must enter a value less than 10 digits.    This field should be 1 or higher.
-    And the user gets the expected validation errors    This field should be 0 or higher.    This field should be 100 or lower.
+    Then the user should see a field error    You must enter a value less than 10 digits.
+    And the user should see a field error    This field should be 1 or higher.
+    And the user should see a field error    This field should be 0 or higher.
+    And the user should see a field error    This field should be 100 or lower.
 
 Capital usage server side
     [Documentation]    INFUND-844
@@ -188,7 +193,8 @@ Subcontracting costs client side
     Given the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     When the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    ${EMPTY}
     And the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    ${EMPTY}
-    Then the user gets the expected validation errors    This field cannot be left blank.    This field should be 1 or higher.
+    Then the user should see a field error    This field cannot be left blank.
+    Then the user should see a field error    This field should be 1 or higher.
 
 Subcontracting costs server side
     [Documentation]    INFUND-844
@@ -207,12 +213,14 @@ Travel and subsistence client side
     When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0123456789101112131415161718192021
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
-    Then the user gets the expected validation errors    This field cannot be left blank.    You must enter a value less than 10 digits.
+    Then the user should see a field error    This field cannot be left blank.
+    Then the user should see a field error    You must enter a value less than 10 digits.
     And the user should see an error    This field should be 1 or higher.
     When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    13123232134234234234234234423
-    Then the user gets the expected validation errors    This field cannot be left blank.    You must enter a value less than 20 digits.
+    Then the user should see a field error    This field cannot be left blank.
+    Then the user should see a field error    You must enter a value less than 20 digits.
     And the user should see an error    This field should be 1 or higher.
 
 Travel and subsistence server side
@@ -233,10 +241,12 @@ Other costs client side
     Given the user clicks the button/link    jQuery=button:contains("Other costs")
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
     And the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    ${EMPTY}
-    Then the user gets the expected validation errors    This field cannot be left blank.    This field should be 1 or higher.
+    Then the user should see a field error    This field cannot be left blank.
+    Then the user should see a field error    This field should be 1 or higher.
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
     And the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    ${EMPTY}
-    Then the user gets the expected validation errors    This field cannot be left blank.    This field should be 1 or higher.
+    Then the user should see a field error    This field cannot be left blank.
+    Then the user should see a field error    This field should be 1 or higher.
 
 Save with validation errors
     [Documentation]    INFUND-844
@@ -268,10 +278,12 @@ Funding level server side
     And the user should not see the element      css=.error-message
 
 *** Keywords ***
-user selects the admin costs
-    [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    the user selects the radio button    ${RADIO_BUTTON}    ${SELECTION}
-    focus    css=.app-submit-btn
+Custom Suite Setup
+    Set predefined date variables
+    log in and create new application if there is not one already with complete application details  Robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user navigates to Your-finances page  Robot test application
+    the user fills in the project costs  labour costs  n/a
+    the user fills in the organisation information  Robot test application  ${SMALL_ORGANISATION_SIZE}
 
 the field with the wrong input should be saved
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
@@ -290,8 +302,7 @@ the user enters invalid inputs in the other funding fields
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
-    the user moves the mouse away from the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input
-    the user moves focus to the element     jQuery=.button:contains("Mark as complete")
+    the user moves focus to the element     css=button.button[type="submit"]
 
 Remove row
     [Arguments]    ${section}    ${close button}
@@ -299,13 +310,3 @@ Remove row
     wait for autosave
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}
-
-The user gets the expected validation errors
-    [Arguments]    ${ERROR1}    ${ERROR2}
-    the user moves focus to the element    jQuery=.button:contains("Mark as complete")
-    wait for autosave
-    Then the user should see an error    ${ERROR1}
-    And the user should see an error    ${ERROR2}
-
-The user enters the funding level
-    The applicant enters Org Size and Funding level  ${SMALL_ORGANISATION_SIZE}  20

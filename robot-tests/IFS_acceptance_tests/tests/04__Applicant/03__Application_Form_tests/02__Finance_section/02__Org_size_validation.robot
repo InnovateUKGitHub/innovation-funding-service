@@ -4,8 +4,8 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 ...               INFUND-6394: As an Applicant I will be invited to input my Organisation size within a new ‘Your organisation’ page navigated to from ‘Your finances’
 ...
 ...               INFUND-6894: As an Applicant I will be advised that changing my 'Organisation size' after completing 'Funding level' will reset the 'Funding level'
-Suite Setup       log in and create new application if there is not one already with complete application details  Robot test application
-Suite Teardown    mark application details incomplete the user closes the browser
+Suite Setup       Custom Suite Setup
+Suite Teardown    Mark application details as incomplete and the user closes the browser  Robot test application
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -38,9 +38,8 @@ Funding section is now available
 Small org can't have more than 70% funding level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    46
-    Then the user should see the element  jQuery=span.error-message:contains("This field should be 45% or lower.")
-
+    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  80
+    Then the user should see a field error     This field should be 70% or lower.
 
 Funding section can be completed with under 70%
     [Documentation]    INFUND-1110
@@ -48,14 +47,12 @@ Funding section can be completed with under 70%
     When the user completes the funding section with funding level    45
     Then the user should not see the element    jQuery=.error-message
 
-
 User sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
     [Tags]    HappyPath
     When the user clicks the button/link    link=Your organisation
     Then the user should see the text in the page    The organisation size is used to calculate your funding level in the application.
     And the user should see the text in the page    Changing this selection will reset your funding level.
-
 
 Medium org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
@@ -74,13 +71,11 @@ Funding section has been reset
     When the user clicks the button/link    link=Your funding
     Then the funding section has been reset including funding level    45
 
-
 Medium org can't have more than 60% level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    36
-    Then the user should see the element  jQuery=span.error-message:contains("This field should be 35% or lower.")
-
+    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  70
+    Then the user should see a field error     This field should be 60% or lower.
 
 Funding section can be completed with under 60%
     [Documentation]    INFUND-1110
@@ -115,14 +110,11 @@ Funding section has been reset again
     When the user clicks the button/link    link=Your funding
     Then the funding section has been reset including funding level    35
 
-
-
 Large org can't have more than 50% level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    27
-    Then the user should see the element  jQuery=span.error-message:contains("This field should be 25% or lower.")
-
+    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  60
+    Then the user should see a field error     This field should be 50% or lower.
 
 Funding section can be completed with under 50%
     [Documentation]    INFUND-1110
@@ -132,8 +124,10 @@ Funding section can be completed with under 50%
     And the user marks the 'your funding' section as incomplete again
 
 
-
 *** Keywords ***
+Custom Suite Setup
+    Set predefined date variables
+    log in and create new application if there is not one already with complete application details  Robot test application  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
 
 The user marks their organisation as
     [Arguments]    ${org_size}
@@ -143,7 +137,6 @@ The user marks their organisation as
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user should not see the element  css=.error-message
     the user should see the text in the page    Please complete your project finances.
-
 
 the user completes the funding section with funding level
     [Arguments]    ${funding_level}

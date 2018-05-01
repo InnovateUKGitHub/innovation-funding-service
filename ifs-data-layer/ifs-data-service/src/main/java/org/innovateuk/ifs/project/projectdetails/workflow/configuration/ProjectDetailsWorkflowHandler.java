@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.project.projectdetails.workflow.configuration;
 
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
-import org.innovateuk.ifs.project.repository.ProjectRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +19,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.project.resource.ProjectDetailsEvent.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJECT_DETAILS;
 
 /**
  * {@code ProjectDetailsWorkflowService} is the entry point for triggering the workflow.
@@ -66,12 +64,7 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
 
     public boolean isSubmitted(Project project) {
         ProjectDetailsProcess process = getCurrentProcess(project);
-        return process != null && ProjectDetailsState.SUBMITTED.equals(process.getActivityState());
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return PROJECT_SETUP_PROJECT_DETAILS;
+        return process != null && ProjectDetailsState.SUBMITTED.equals(process.getProcessState());
     }
 
     @Override
