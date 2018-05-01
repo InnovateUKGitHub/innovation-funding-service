@@ -3,10 +3,9 @@ package org.innovateuk.ifs.analytics;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,11 +13,12 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import static java.lang.Long.parseLong;
-import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 
 /**
@@ -41,7 +41,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         final GoogleAnalyticsDataLayer dl = getOrCreateDataLayer(modelAndView);
 
         setCompetitionName(dl, request);
-        setUserRoles(dl);
+        setUserRoles(dl, request);
     }
 
     private static GoogleAnalyticsDataLayer getOrCreateDataLayer(ModelAndView modelAndView) {
@@ -69,14 +69,28 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         }
     }
 
-    private static void setUserRoles(GoogleAnalyticsDataLayer dl) {
+    private void setUserRoles(GoogleAnalyticsDataLayer dl, HttpServletRequest request) {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof UserAuthentication) {
             UserAuthentication userAuth = (UserAuthentication) auth;
-            dl.setUserRole(userAuth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(joining(",")));
+
+            List<Role> userRoles = simpleMap(
+                    userAuth.getAuthorities(),
+                    authority -> Role.getByName(authority.getAuthority().toLowerCase())
+            );
+
+            dl.setUserRoles(userRoles);
         }
-        else if (auth instanceof AnonymousAuthenticationToken) {
-                dl.setUserRole("anonymous");
+
+        final Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+
+        if(pathVariables.containsKey(APPLICATION_ID)) {
+            setApplicationOrProjectSpecificRolesFromRestService(dl, pathVariables, APPLICATION_ID, googleAnalyticsDataLayerRestService::getRolesByApplicationId);
+        }
+
+        if(pathVariables.containsKey(PROJECT_ID)) {
+            setApplicationOrProjectSpecificRolesFromRestService(dl, pathVariables, PROJECT_ID, googleAnalyticsDataLayerRestService::getRolesByProjectId);
         }
     }
 
@@ -87,4 +101,11 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
             dl.setCompetitionName(fromJson(competitionName, String.class));
         }
     }
+
+    private static void setApplicationOrProjectSpecificRolesFromRestService(GoogleAnalyticsDataLayer dl, final Map pathVariables, String pathVariable, Function<Long, RestResult<List<Role>>> f) {
+        final long id = parseLong((String) pathVariables.get(pathVariable));
+        final List<Role> roles = f.apply(id).getSuccess();
+        dl.addUserRoles(roles);
+    }
+
 }

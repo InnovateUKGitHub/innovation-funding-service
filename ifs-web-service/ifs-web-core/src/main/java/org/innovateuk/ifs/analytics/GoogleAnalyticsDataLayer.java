@@ -3,6 +3,12 @@ package org.innovateuk.ifs.analytics;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.user.resource.Role;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.joining;
 
 /**
  * The Google Analytics Tag Manager Data Layer. Contains our properties for Google Analytics.
@@ -11,7 +17,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class GoogleAnalyticsDataLayer {
 
     private String competitionName;
-    private String userRole;
+    private List<Role> userRoles = emptyList();
 
     public String getCompetitionName() {
         return competitionName;
@@ -21,12 +27,23 @@ public class GoogleAnalyticsDataLayer {
         this.competitionName = competitionName;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public String getUserRoles() {
+
+        if(userRoles == null || userRoles.isEmpty()) {
+            return "anonymous";
+        }
+        return userRoles
+                .stream()
+                .map(role -> role.toString().toLowerCase())
+                .collect(joining(","));
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setUserRoles(List<Role> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public void addUserRoles(List<Role> newRoles) {
+        userRoles.addAll(newRoles);
     }
 
     @Override
@@ -39,7 +56,7 @@ public class GoogleAnalyticsDataLayer {
 
         return new EqualsBuilder()
                 .append(competitionName, that.competitionName)
-                .append(userRole, that.userRole)
+                .append(userRoles, that.userRoles)
                 .isEquals();
     }
 
@@ -47,7 +64,7 @@ public class GoogleAnalyticsDataLayer {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionName)
-                .append(userRole)
+                .append(userRoles)
                 .toHashCode();
     }
 
@@ -55,7 +72,7 @@ public class GoogleAnalyticsDataLayer {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("competitionName", competitionName)
-                .append("userRole", userRole)
+                .append("userRoles", userRoles)
                 .toString();
     }
 }

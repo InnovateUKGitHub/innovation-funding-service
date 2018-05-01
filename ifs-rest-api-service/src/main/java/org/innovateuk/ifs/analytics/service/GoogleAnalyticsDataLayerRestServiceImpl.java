@@ -2,9 +2,13 @@ package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.roleListType;
 
 @Service
 public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService implements GoogleAnalyticsDataLayerRestService {
@@ -13,12 +17,19 @@ public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<String> getCompetitionNameForApplication(long applicationId) {
-        return getWithRestResult(format("%s/application/%d/competition-name", ANALYTICS_BASE_URL, applicationId), String.class);
+        return getWithRestResult(
+                format("%s/application/%d/competition-name", ANALYTICS_BASE_URL, applicationId),
+                String.class
+        );
     }
 
     @Override
     public RestResult<String> getCompetitionName(long competitionId) {
-        return getWithRestResultAnonymous(format("%s/competition/%d/competition-name", ANALYTICS_BASE_URL, competitionId), String.class);
+        return getWithRestResultAnonymous(format(
+                "%s/competition/%d/competition-name",
+                ANALYTICS_BASE_URL,
+                competitionId
+        ), String.class);
     }
 
     @Override
@@ -28,6 +39,21 @@ public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<String> getCompetitionNameForAssessment(long assessmentId) {
-        return getWithRestResult(format("%s/assessment/%d/competition-name", ANALYTICS_BASE_URL, assessmentId), String.class);
+        return getWithRestResult(
+                format("%s/assessment/%d/competition-name", ANALYTICS_BASE_URL, assessmentId),
+                String.class
+        );
+    }
+
+    @Override
+    public RestResult<List<Role>> getRolesByApplicationId(long applicationId) {
+        return getWithRestResult(
+                format("%s/application/%d/application-roles", ANALYTICS_BASE_URL, applicationId), roleListType()
+        );
+    }
+
+    @Override
+    public RestResult<List<Role>> getRolesByProjectId(long projectId) {
+        return getWithRestResult(format("%s/project/%d/project-roles", ANALYTICS_BASE_URL, projectId), roleListType());
     }
 }
