@@ -233,6 +233,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InterviewAssignmentMessageOutcomeRepository interviewAssignmentMessageOutcomeRepository;
 
     @Mock
+    protected InterviewAssignmentResponseOutcomeRepository interviewAssignmentResponseOutcomeRepository;
+
+    @Mock
     protected InterviewAssignmentService interviewAssignmentServiceMock;
 
     @Mock
@@ -249,6 +252,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InterviewAssignmentRepository interviewAssignmentRepositoryMock;
+
+    @Mock
+    protected InterviewResponseService interviewResponseService;
 
     @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
