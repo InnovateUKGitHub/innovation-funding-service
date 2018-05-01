@@ -106,7 +106,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="result, index : ${results.content}" th:class="${competitionSummary.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
+                <tr th:each="result, index : ${results.content}">
                     <td>
                         <div class="multiple-choice" th:if="${result.applicationFundingDecisionIsChangeable()}">
                             <input type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:checked="${#lists.contains(selectionForm.applicationIds, result.id)}" th:value="${result.id}" aria-labelledby="select-applications-label" />
