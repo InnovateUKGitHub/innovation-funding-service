@@ -13,9 +13,10 @@ ext.dockerDir = "docker/"
 task prepareDockerBaseInput {
     dependsOn build
     def inputDir = "$project.buildDir/docker"
+    def executableJarFile = "${jar.baseName}-${project.properties['version']}-executable.jar"
     def jarFile = "${jar.baseName}-${project.properties['version']}.jar"
 
-    inputs.file("$project.buildDir/libs/$jarFile")
+    inputs.file("$project.buildDir/libs/$executableJarFile")
 
     outputs.files(
             project.file("$inputDir/Dockerfile"),
@@ -36,7 +37,10 @@ task prepareDockerBaseInput {
             }
         }
         copy {
-            from jar
+            from("$project.buildDir/libs")
+            into project.file(inputDir)
+            include(executableJarFile)
+            rename (executableJarFile, jarFile)
             into project.file(inputDir)
         }
     }
