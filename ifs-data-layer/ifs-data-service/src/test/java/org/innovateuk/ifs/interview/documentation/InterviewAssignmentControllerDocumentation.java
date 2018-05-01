@@ -1,7 +1,11 @@
-package org.innovateuk.ifs.assessment.documentation;
+package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
+import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
@@ -10,30 +14,41 @@ import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceDocs.availableApplicationPageResourceBuilder;
 import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceDocs.availableApplicationPageResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableApplicationResourceDocs.availableApplicationResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationListResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationResourceFields;
+import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentApplicationResourceDocs.interviewAssignmentAssignedResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageResourceDocs.*;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageResourceDocs.interviewAssignmentAssignedPageResourceBuilder;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageResourceDocs.interviewAssignmentAssignedPageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InterviewAssignmentControllerDocumentation extends BaseControllerMockMVCTest<InterviewAssignmentController> {
@@ -45,7 +60,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Override
     public InterviewAssignmentController supplyControllerUnderTest() {
-        return new InterviewAssignmentController(null);
+        return new InterviewAssignmentController(null, null, null);
     }
 
     @Test
@@ -205,7 +220,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Test
     public void getEmailTemplate() throws Exception {
-        when(interviewAssignmentServiceMock.getEmailTemplate()).thenReturn(serviceSuccess(new ApplicantInterviewInviteResource("Content")));
+        when(interviewApplicationInviteService.getEmailTemplate()).thenReturn(serviceSuccess(new ApplicantInterviewInviteResource("Content")));
 
         mockMvc.perform(get("/interview-panel/email-template"))
                 .andExpect(status().isOk())
@@ -213,13 +228,13 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                         responseFields(fieldWithPath("content").description("The content of the email template sent to applicants"))
                 ));
 
-        verify(interviewAssignmentServiceMock, only()).getEmailTemplate();
+        verify(interviewApplicationInviteService, only()).getEmailTemplate();
     }
 
     @Test
     public void sendInvites() throws Exception {
         AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
-        when(interviewAssignmentServiceMock.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
+        when(interviewApplicationInviteService.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/send-invites/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -232,7 +247,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                         )
                 ));
 
-        verify(interviewAssignmentServiceMock, only()).sendInvites(competitionId, sendResource);
+        verify(interviewApplicationInviteService, only()).sendInvites(competitionId, sendResource);
     }
 
     @Test
@@ -250,5 +265,77 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                 ));
 
         verify(interviewAssignmentServiceMock, only()).isApplicationAssigned(applicationId);
+    }
+
+    @Test
+    public void findFeedback() throws Exception {
+        final long applicationId = 22L;
+        FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
+        when(interviewApplicationFeedbackService.findFeedback(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
+
+        mockMvc.perform(get("/interview-panel/feedback-details/{applicationId}", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(fileEntryResource)))
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(parameterWithName("applicationId").description("Id of the Attachment to be fetched")),
+                        responseFields(fileEntryResourceFields)));
+
+        verify(interviewApplicationFeedbackService).findFeedback(applicationId);
+    }
+
+    @Test
+    public void downloadFeedback() throws Exception {
+        final long applicationId = 22L;
+
+        Function<InterviewApplicationFeedbackService, ServiceResult<FileAndContents>> serviceCallToDownload =
+                (service) -> service.downloadFeedback(applicationId);
+
+        assertGetFileContents("/interview-panel/feedback/{applicationId}", new Object[]{applicationId},
+                emptyMap(), interviewApplicationFeedbackService, serviceCallToDownload)
+                .andDo(documentFileGetContentsMethod("interview-panel/{method-name}"));
+    }
+
+    @Test
+    public void deleteFeedback() throws Exception {
+        final long applicationId = 22L;
+        when(interviewApplicationFeedbackService.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-panel/feedback/{applicationId}", applicationId))
+                .andExpect(status().isNoContent())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(parameterWithName("applicationId").description("Id of the application to have attachment deleted")))
+                );
+
+        verify(interviewApplicationFeedbackService).deleteFeedback(applicationId);
+    }
+
+    @Test
+    public void uploadFeedback() throws Exception {
+        final long applicationId = 77L;
+        when(interviewApplicationFeedbackService.uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+                eq(applicationId), any(HttpServletRequest.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/feedback/{applicationId}", applicationId)
+                .param("filename", "randomFile.pdf")
+                .headers(createFileUploadHeader("application/pdf", 1234)))
+                .andExpect(status().isCreated())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(parameterWithName("applicationId").description("The application in which the feedback will be attached.")),
+                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
+                        requestHeaders(
+                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
+                        )
+                ));
+
+        verify(interviewApplicationFeedbackService).uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+                eq(applicationId), any(HttpServletRequest.class));
+    }
+
+    private HttpHeaders createFileUploadHeader(String contentType, long contentLength) {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        headers.setContentLength(contentLength);
+        headers.setAccept(singletonList(MediaType.parseMediaType("application/json")));
+        return headers;
     }
 }

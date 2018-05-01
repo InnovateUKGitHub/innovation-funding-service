@@ -40,3 +40,5 @@ processResources {
         exclude '**/application.properties'
     }
 }
+
+jar.dependsOn ":ifs-web-service:gulp_default"

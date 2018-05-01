@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
+import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
@@ -47,5 +48,9 @@ public class InterviewAssignmentBuilder extends BaseBuilder<InterviewAssignment,
 
     public InterviewAssignmentBuilder withState(InterviewAssignmentState... states) {
         return withArray((state, invite) -> invite.setProcessState(state), states);
+    }
+
+    public InterviewAssignmentBuilder withMessage(InterviewAssignmentMessageOutcome... outcomes) {
+        return withArray((outcome, invite) -> invite.setMessage(outcome), outcomes);
     }
 }

@@ -6,12 +6,11 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsRes
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Holder of model attributes for the invite applications for Assessment Interview Panel 'Send' applications view.
  */
-public class InterviewAssignmentApplicationsSendViewModel extends InterviewAssignmentApplicationsViewModel<InterviewAssignmentApplicationInviteRowViewModel> {
+public class InterviewAssignmentApplicationsSendViewModel extends InterviewAssignmentApplicationsViewModel<InterviewAssignmentApplicationInviteSendRowViewModel> {
 
     private final String content;
 
@@ -20,7 +19,7 @@ public class InterviewAssignmentApplicationsSendViewModel extends InterviewAssig
             String competitionName,
             String innovationArea,
             String innovationSector,
-            List<InterviewAssignmentApplicationInviteRowViewModel> applications,
+            List<InterviewAssignmentApplicationInviteSendRowViewModel> applications,
             InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
             PaginationViewModel pagination,
             String originQuery,

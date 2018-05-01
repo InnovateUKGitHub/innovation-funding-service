@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.interview.controller;
+package org.innovateuk.ifs.interview.controller;
 
 import com.drew.lang.Iterables;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
