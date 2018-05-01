@@ -911,6 +911,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void testInviteProjectFinanceUser(){
+
         InviteProjectResource invite = newInviteProjectResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(1L)
@@ -922,14 +923,20 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withRole(Role.LEADAPPLICANT)
                 .build(1)
                 .toArray(new ProcessRole[0]);
-        Application a = newApplication().withProcessRoles(roles).build();
 
-        Project project = newProject().withId(projectId).withName("Project 1").withApplication(a).build();
+        Application a = newApplication()
+                .withProcessRoles(roles)
+                .build();
+
+        Project project = newProject().withId(projectId).withName("Project 1")
+                .withApplication(a)
+                .build();
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", "Project 1");
         globalArguments.put("competitionName", "Competition 1");
