@@ -10,7 +10,7 @@ public class FinanceCheckPartnerStatusResource {
     private boolean isLead;
     private Viability viability;
     private ViabilityRagStatus viabilityRagStatus;
-    private Eligibility eligibility;
+    private EligibilityState eligibility;
     private EligibilityRagStatus eligibilityRagStatus;
     private boolean awaitingResponse;
     private boolean financeContactProvided;
@@ -19,7 +19,7 @@ public class FinanceCheckPartnerStatusResource {
     }
 
     public FinanceCheckPartnerStatusResource(Long id, String name, boolean isLead, Viability viability,
-                                             ViabilityRagStatus viabilityRagStatus, Eligibility eligibility,
+                                             ViabilityRagStatus viabilityRagStatus, EligibilityState eligibility,
                                              EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse,
                                              boolean financeContactProvided) {
         this.id = id;
@@ -57,11 +57,11 @@ public class FinanceCheckPartnerStatusResource {
         isLead = lead;
     }
 
-    public Eligibility getEligibility() {
+    public EligibilityState getEligibility() {
         return eligibility;
     }
 
-    public void setEligibility(Eligibility eligibility) {
+    public void setEligibility(EligibilityState eligibility) {
         this.eligibility = eligibility;
     }
 

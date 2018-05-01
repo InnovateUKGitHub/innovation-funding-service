@@ -11,7 +11,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +21,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.assessment.resource.AssessmentEvent.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 
 /**
  * {@code AssessmentWorkflowService} is the entry point for triggering the workflow.
@@ -76,11 +74,6 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
 
     public boolean notify(Assessment assessment) {
         return fireEvent(assessmentMessage(assessment, NOTIFY), assessment);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return APPLICATION_ASSESSMENT;
     }
 
     @Override
