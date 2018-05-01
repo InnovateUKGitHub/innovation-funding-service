@@ -2,7 +2,7 @@
 Documentation     INFUND-6794: As an applicant I will be invited to add funding details within the 'Your funding' page of the application
 ...               INFUND-6895: As a lead applicant I will be advised that changing my 'Research category' after completing 'Funding level' will reset the 'Funding level'
 Suite Setup       Custom Suite Setup
-Suite Teardown    mark application details incomplete the user closes the browser
+Suite Teardown    Mark application details as incomplete and the user closes the browser  Robot test application
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -22,17 +22,14 @@ Applicant has options to enter funding level and details of any other funding
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
     [Tags]    HappyPath
-    When the user should see the text in the page    Enter your funding level (maximum 25%)
+    The user should see the text in the page    Enter your funding level (maximum 50%)
 
 Funding level validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  26
-    And the user clicks the button/link        jQuery=button:contains("Mark as complete")
-    Then the user should see a field error     This field should be 25% or lower.
-    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  25.67
-    And the user moves focus to the element    css=button.extra-margin[type="submit"]
-    Then the user should see a field error     This field can only accept whole numbers.
+    When the user provides invalid value as percentage then he should see the error  This field should be 50% or lower.  60
+    When the user provides invalid value as percentage then he should see the error  This field should be 0% or higher.  -14
+    When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
     When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  24
     Then the user should not see an error in the page
@@ -115,9 +112,33 @@ Read only view of the other funding
 
 *** Keywords ***
 Custom Suite Setup
-    log in and create a new application if there is not one already with complete application details and completed org size section
-    ${nextyear} =  get next year
-    Set suite variable  ${nextyear}
+    Set predefined date variables
+    log in and create new application if there is not one already  Robot test application
+    ${applicationId} =  get application id by name  Robot test application
+    the user navigates to the page  ${server}/application/${applicationId}
+    the user clicks the button/link  link=Application details
+    the user fills in the Application details  Robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    Complete the org size section
+
+the user provides invalid value as percentage then he should see the error
+    [Arguments]  ${error}  ${value}
+    the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  ${value}
+    the user moves focus to the element   css=button.button[type="submit"]
+    the user should see a field error     ${error}
+
+Complete the org size section
+    the user navigates to the page    ${DASHBOARD_URL}
+    the user clicks the button/link    link=Robot test application
+    the user clicks the button/link    link=Your finances
+    the user clicks the button/link    link=Your organisation
+    ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit")
+    Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit")
+    the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
+    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
+    the user enters text to a text field    jQuery=label:contains("employees") + input    0
+    the user moves focus to the element    jQuery=button:contains("Mark as complete")
+    run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
 
 the user adds more rows in other funding
     the user enters text to a text field  css=[name*=other_funding-fundingSource]  Lottery funding
