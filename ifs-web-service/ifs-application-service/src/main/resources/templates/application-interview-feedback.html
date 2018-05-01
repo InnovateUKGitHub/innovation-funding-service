@@ -15,6 +15,11 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationName},size='heading-xlarge'" />
     </th:block>
 
+    <div th:if="${#fields.hasErrors('${interviewResponseForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(interviewResponseForm)" />
+    </div>
+
     <div class="grid-row">
         <div class="column-half">
             <h3 class="heading-small">Project title</h3>
@@ -48,7 +53,7 @@
 
     <th:block th:if="${interviewFeedbackViewModel.leadApplicant}">
         <form th:action="@{/application/{applicationId}/summary(applicationId=${currentApplication.id})}"
-              method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate">
+              method="post" enctype="multipart/form-data" th:object="${interviewResponseForm}" novalidate="novalidate">
             <h2 class="heading-medium">Your response</h2>
             <div class="upload-section">
                 <details role="group">

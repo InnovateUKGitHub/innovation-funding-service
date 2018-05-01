@@ -102,6 +102,7 @@ public class ApplicationSummaryController {
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
+                                     @ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler,
                                      Model model,
@@ -153,14 +154,14 @@ public class ApplicationSummaryController {
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/summary", params = "uploadResponse")
-    public String uploadResponse(@ModelAttribute("form") InterviewResponseForm form,
+    public String uploadResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm form,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
 
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), bindingResult, validationHandler, model, applicationId, user);
+        Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), form, bindingResult, validationHandler, model, applicationId, user);
         MultipartFile file = form.getResponse();
         RestResult<Void> sendResult = interviewResponseRestService
                 .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
@@ -173,13 +174,14 @@ public class ApplicationSummaryController {
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/summary", params = "removeResponse")
     public String removeResponse(@ModelAttribute("form") ApplicationForm form,
+                                 @ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  Model model,
                                  @PathVariable("applicationId") long applicationId,
                                  UserResource user) {
 
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, bindingResult, validationHandler, model, applicationId, user);
+        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, interviewResponseForm, bindingResult, validationHandler, model, applicationId, user);
         RestResult<Void> sendResult = interviewResponseRestService
                 .deleteResponse(applicationId);
 
