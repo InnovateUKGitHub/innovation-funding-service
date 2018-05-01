@@ -16,9 +16,6 @@ import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -113,10 +110,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         overMaxAllowedTextSize = StringUtils.repeat("<ifs_test>", 30);
 
         List<ProcessRole> proccessRoles = new ArrayList<>();
-        Application application = new Application(
-                "",
-                new ActivityState(ActivityType.APPLICATION, State.CREATED)
-        );
+        Application application = new Application("");
         application.setId(APPLICATION_ID);
         proccessRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(application).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");

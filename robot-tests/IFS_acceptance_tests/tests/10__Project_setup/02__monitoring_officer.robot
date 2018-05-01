@@ -263,16 +263,16 @@ the lead partner fills in project details
     the user clicks the button/link           css=button[type="submit"]
     the user clicks the button/link           link=Project address
     the user selects the radio button         addressType    REGISTERED
-    the user clicks the button/link           css=button[type="submit"]
+    the user clicks the button/link           jQuery=.button:contains("Save project address")
     the user clicks the button/link           link=Project Manager
     the user selects the radio button         projectManager  projectManager2
-    the user clicks the button/link           css=button[type="submit"]
+    the user clicks the button/link           id=save
     the user clicks the button/link           jQuery=td:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
     the user selects the radio button         financeContact  financeContact2
-    the user clicks the button/link           css=button[type="submit"] #Save finance contact button
+    the user clicks the button/link           id=save  #Save finance contact button
     And the user clicks the button/link       jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
     And the user enters text to a text field  css=#postCode  ${postcode}
-    And the user clicks the button/link       css=button[type="submit"] #Save project location button
+    And the user clicks the button/link       css=button[type="submit"]  #Save project location button
 
 internal user can see that MO can be assigned
     log in as a different user   &{internal_finance_credentials}
@@ -285,10 +285,10 @@ the academic partner fills in their finance contact
     the user clicks the button/link       link=Project details
     the user clicks the button/link       jQuery=td:contains("${organisationEggsName}") ~ td a:contains("Select finance contact")
     the user selects the radio button     financeContact  financeContact2
-    the user clicks the button/link       css=button[type="submit"] #Save finance contact button
+    the user clicks the button/link       id=save  #Save finance contact button
     the user clicks the button/link       jQuery=#project-details-finance td:contains("EGGS") ~ td a:contains("Select project location")
     the user enters text to a text field  css=#postCode  ${postcode}
-    the user clicks the button/link       css=button[type="submit"] #Save project location button
+    the user clicks the button/link       css=button[type="submit"]  #Save project location button
 
 the industrial partner fills in their finance contact
     log in as a different user            &{collaborator1_credentials}
@@ -296,7 +296,7 @@ the industrial partner fills in their finance contact
     the user clicks the button/link       link=Project details
     the user clicks the button/link       jQuery=td:contains("${organisationLudlowName}") ~ td a:contains("Select finance contact")
     the user selects the radio button     financeContact  financeContact1
-    the user clicks the button/link       css=button[type="submit"] #Save finance contact button
+    the user clicks the button/link       id=save  #Save finance contact button
     the user clicks the button/link       jQuery=#project-details-finance td:contains("Ludlow") ~ td a:contains("Select project location")
     the user enters text to a text field  css=#postCode  ${postcode}
-    the user clicks the button/link       css=button[type="submit"] #Save project location button
+    the user clicks the button/link       css=button[type="submit"]  #Save project location button

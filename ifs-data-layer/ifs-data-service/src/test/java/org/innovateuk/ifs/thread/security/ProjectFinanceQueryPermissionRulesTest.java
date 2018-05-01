@@ -11,7 +11,6 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +24,6 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
@@ -55,9 +53,9 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
 
         project = newProject().build();
         projectFinance = newProjectFinance().withProject(project).build();
-        projectProcessInSetup = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState())).build();
-        projectProcessInLive = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.LIVE.getBackingState())).build();
-        projectProcessInWithdrawn = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState())).build();
+        projectProcessInSetup = newProjectProcess().withActivityState(ProjectState.SETUP).build();
+        projectProcessInLive = newProjectProcess().withActivityState(ProjectState.LIVE).build();
+        projectProcessInWithdrawn = newProjectProcess().withActivityState(ProjectState.WITHDRAWN).build();
 
         when(projectFinanceRepositoryMock.findOne(anyLong())).thenReturn(projectFinance);
     }
@@ -73,31 +71,31 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
-    public void testThatOnlyProjectFinanceProjectFinanceUsersCanCreateQueries() throws Exception {
+    public void testThatOnlyProjectFinanceProjectFinanceUsersCanCreateQueries() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, partner));
     }
 
-    public void testThatProjectFinanceUsersCannotCreateQueriesWhenProjectIsInLive() throws Exception {
+    public void testThatProjectFinanceUsersCannotCreateQueriesWhenProjectIsInLive() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInLive);
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
     }
 
-    public void testThatProjectFinanceUsersCannotCreateQueriesWhenProjectIsInWithdrawn() throws Exception {
+    public void testThatProjectFinanceUsersCannotCreateQueriesWhenProjectIsInWithdrawn() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInWithdrawn);
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
     }
 
     @Test
-    public void testThatNewQueryMustContainInitialPost() throws Exception {
+    public void testThatNewQueryMustContainInitialPost() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryWithoutPosts(), partner));
     }
 
     @Test
-    public void testThatNewQueryInitialPostAuthorMustBeTheCurrentUser() throws Exception {
+    public void testThatNewQueryInitialPostAuthorMustBeTheCurrentUser() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         UserResource anotherProjectFinanceUser = newUserResource().withId(675L)
@@ -106,7 +104,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
-    public void testThatFirstPostMustComeFromTheProjectFinanceUser() throws Exception {
+    public void testThatFirstPostMustComeFromTheProjectFinanceUser() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         QueryResource queryWithoutPosts = queryWithoutPosts();
         assertTrue(rules.projectFinanceUsersCanAddPostToTheirQueries(queryWithoutPosts, projectFinanceUser));
@@ -116,7 +114,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
-    public void testThatOnlyTheProjectFinanceUserOrTheCorrectFinanceContactCanReplyToAQuery() throws Exception {
+    public void testThatOnlyTheProjectFinanceUserOrTheCorrectFinanceContactCanReplyToAQuery() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
                 .thenReturn(projectFinanceWithUserAsFinanceContact(partner));

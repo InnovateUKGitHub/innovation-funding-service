@@ -23,7 +23,7 @@ repositories {
 
 task buildHubDocker(type: DockerBuildImage) {
     tag = "innovateuk/seleniumhub"
-    inputDir = project.file("$project.projectDir/hubDocker")
+    inputDir = project.file("$project.projectDir/hubdocker")
 }
 
 task tagHubDocker(type: DockerTagImage) {

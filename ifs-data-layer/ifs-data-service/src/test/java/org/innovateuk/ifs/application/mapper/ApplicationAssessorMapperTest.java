@@ -8,7 +8,6 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -29,7 +28,6 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.inOrder;
@@ -68,7 +66,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                 .build();
 
         Assessment assessment = newAssessment()
-                .withActivityState(buildActivityStateWithState(REJECTED))
+                .withProcessState(REJECTED)
                 .withRejection(newAssessmentRejectOutcome()
                         .withRejectReason(CONFLICT_OF_INTEREST)
                         .withRejectComment("Member of board of directors")
@@ -105,7 +103,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                         .buildSet(1))
                 .withAvailable(false)
                 .withMostRecentAssessmentId(assessment.getId())
-                .withMostRecentAssessmentState(assessment.getActivityState())
+                .withMostRecentAssessmentState(assessment.getProcessState())
                 .withTotalApplicationsCount(unassignedCount)
                 .withAssignedCount(assignedCount)
                 .withSubmittedCount(submittedCount)
@@ -114,21 +112,21 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                 .withRejectComment("Member of board of directors")
                 .build();
 
-        when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(
+        when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateNotIn(
                 1L,
-                getBackingStates(assessmentStatesThatAreUnassigned)))
+                assessmentStatesThatAreUnassigned))
                 .thenReturn(unassignedCount);
 
-        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(
+        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(
                 1L,
                 competition.getId(),
-                getBackingStates(assessmentStatesThatAreAssigned)))
+                assessmentStatesThatAreAssigned))
                 .thenReturn(assignedCount);
 
-        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(
+        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(
                 1L,
                 competition.getId(),
-                getBackingStates(assessmentStatesThatAreSubmitted)))
+                assessmentStatesThatAreSubmitted))
                 .thenReturn(submittedCount);
 
 
@@ -144,15 +142,10 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
         profile.getInnovationAreas().forEach(
                 innovationArea -> inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea));
         inOrder.verify(assessmentRepositoryMock)
-                .countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(assessmentStatesThatAreUnassigned));
+                .countByParticipantUserIdAndActivityStateNotIn(userId, assessmentStatesThatAreUnassigned);
         inOrder.verify(assessmentRepositoryMock)
-                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(userId, competition.getId(), getBackingStates(assessmentStatesThatAreAssigned));
+                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(userId, competition.getId(), assessmentStatesThatAreAssigned);
         inOrder.verify(assessmentRepositoryMock)
-                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(userId, competition.getId(), getBackingStates(assessmentStatesThatAreSubmitted));
-
-    }
-
-    private ActivityState buildActivityStateWithState(AssessmentState state) {
-        return new ActivityState(APPLICATION_ASSESSMENT, state.getBackingState());
+                .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(userId, competition.getId(), assessmentStatesThatAreSubmitted);
     }
 }

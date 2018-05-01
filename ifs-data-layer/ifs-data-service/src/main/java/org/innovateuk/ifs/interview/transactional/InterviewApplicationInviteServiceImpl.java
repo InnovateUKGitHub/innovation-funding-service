@@ -15,9 +15,6 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +31,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Service
 @Transactional
 public class InterviewApplicationInviteServiceImpl implements InterviewApplicationInviteService {
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private InterviewAssignmentRepository interviewAssignmentRepository;
@@ -67,21 +61,19 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
 
     @Override
     public ServiceResult<Void> sendInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-        List<InterviewAssignment> interviewAssignments = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(
-                competitionId, InterviewAssignmentState.CREATED.getBackingState());
-
-        final ActivityState awaitingFeedbackActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
+        List<InterviewAssignment> interviewAssignments = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(
+                competitionId, InterviewAssignmentState.CREATED);
 
         ServiceResult<Void> result = serviceSuccess();
         for (InterviewAssignment assignment : interviewAssignments) {
             if (result.isSuccess()) {
-                result = sendInvite(assessorInviteSendResource, assignment, awaitingFeedbackActivityState);
+                result = sendInvite(assessorInviteSendResource, assignment);
             }
         }
         return result;
     }
 
-    private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment, ActivityState awaitingFeedbackActivityState) {
+    private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment) {
         User user = assignment.getParticipant().getUser();
         NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         Notification notification = new Notification(

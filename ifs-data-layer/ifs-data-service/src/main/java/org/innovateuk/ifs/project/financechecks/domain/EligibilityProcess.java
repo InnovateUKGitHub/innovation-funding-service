@@ -6,13 +6,9 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * The process of approving Eligibility for Organisations
@@ -28,20 +24,22 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private PartnerOrganisation target;
 
-    // for ORM use
+    @Column(name="activity_state_id")
+    private EligibilityState activityState;
+
     EligibilityProcess() {
     }
 
-    public EligibilityProcess(ProjectUser participant, PartnerOrganisation target, ActivityState originalState) {
+    public EligibilityProcess(ProjectUser participant, PartnerOrganisation target, EligibilityState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
-    public EligibilityProcess(User internalParticipant, PartnerOrganisation target, ActivityState originalState) {
+    public EligibilityProcess(User internalParticipant, PartnerOrganisation target, EligibilityState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -65,8 +63,13 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
     }
 
     @Override
-    public EligibilityState getActivityState() {
-        return EligibilityState.fromState(activityState.getState());
+    public EligibilityState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(EligibilityState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -78,19 +81,20 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
         EligibilityProcess that = (EligibilityProcess) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
-                .append(internalParticipant, that.internalParticipant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
     }
 }

@@ -25,9 +25,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private Long id;
     private String event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    protected ActivityState activityState;
-
     @LastModifiedDate
     private ZonedDateTime lastModified = ZonedDateTime.now();
 
@@ -48,12 +45,12 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     public Process() {
     }
 
-    public Process(String event, ActivityState activityState) {
+    protected Process(String event, StatesType activityState) {
         this.event = event;
-        this.activityState = activityState;
+        setProcessState(activityState);
     }
 
-    public Process(String event, ActivityState activityState, LocalDate startDate, LocalDate endDate) {
+    public Process(String event, StatesType activityState, LocalDate startDate, LocalDate endDate) {
         this(event, activityState);
         this.startDate = startDate;
         this.endDate = endDate;
@@ -91,10 +88,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return id;
     }
 
-    public void setActivityState(ActivityState status) {
-        this.activityState = status;
-    }
-
     public String getProcessEvent() {
         return event;
     }
@@ -123,11 +116,13 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         this.internalParticipant = internalParticipant;
     }
 
-    public boolean isInState(StatesType state) {
-        return state.getBackingState().equals(activityState.getState());
+    public final boolean isInState(StatesType state) {
+        return getProcessState() == state;
     }
 
-    public abstract StatesType getActivityState();
+    public abstract StatesType getProcessState();
+
+    public abstract void setProcessState(StatesType status);
 
     @Override
     public boolean equals(Object o) {
@@ -143,7 +138,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return new EqualsBuilder()
                 .append(id, process.id)
                 .append(event, process.event)
-                .append(activityState, process.activityState)
                 .append(startDate, process.startDate)
                 .append(endDate, process.endDate)
                 .append(version, process.version)
@@ -156,7 +150,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(event)
-                .append(activityState)
                 .append(startDate)
                 .append(endDate)
                 .append(version)
