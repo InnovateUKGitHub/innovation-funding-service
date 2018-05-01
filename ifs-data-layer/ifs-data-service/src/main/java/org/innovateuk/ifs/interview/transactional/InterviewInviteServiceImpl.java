@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interview.transactional;
 
-
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
@@ -11,8 +10,8 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
-import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationPageResource;
-import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationResource;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -272,27 +271,19 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     @Override
-    public ServiceResult<AssessorInterviewAllocationPageResource> getAllocateApplicationsOverview(long competitionId,
-                                                                                                  Pageable pageable) {
-        Page<AssessorInterviewAllocationResource> pagedResult = interviewParticipantRepository.getAllocateApplicationsOverview(
+    public ServiceResult<InterviewAssessorAllocateApplicationsPageResource> getAllocateApplicationsOverview(long competitionId,
+                                                                                                            Pageable pageable) {
+        Page<InterviewAssessorAllocateApplicationsResource> pagedResult = interviewParticipantRepository.getAllocateApplicationsOverview(
                 competitionId,
                 pageable);
 
-        return serviceSuccess(new AssessorInterviewAllocationPageResource(
+        return serviceSuccess(new InterviewAssessorAllocateApplicationsPageResource(
                 pagedResult.getTotalElements(),
                 pagedResult.getTotalPages(),
                 pagedResult.getContent(),
                 pagedResult.getNumber(),
                 pagedResult.getSize()
         ));
-
-//        return serviceSuccess(new AssessorInviteOverviewPageResource(
-//                pagedResult.getTotalElements(),
-//                pagedResult.getTotalPages(),
-//                inviteOverviews,
-//                pagedResult.getNumber(),
-//                pagedResult.getSize()
-//        ));
     }
 
 

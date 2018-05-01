@@ -34,7 +34,7 @@
             <tr th:each="assessor : ${model.assessors}">
                 <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
                 <td th:text="${assessor.skillAreas}">skill areas</td>
-                <td>0</td>
+                <td class="numeric">0</td>
                 <td class="alignright">
                     <a class="button-secondary no-margin disabled"
                        th:text="Allocate">
@@ -45,7 +45,6 @@
             </tbody>
         </table>
     </div>
-
 
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
     <th:block th:insert="fragments/layout :: main-content-end" />

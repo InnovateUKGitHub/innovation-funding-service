@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationPageResource;
-import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationResource;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -94,7 +93,7 @@ public class InterviewInviteController {
     }
 
     @GetMapping("/get-allocate-overview/{competitionId}")
-    public RestResult<AssessorInterviewAllocationPageResource> getAllocateApplicationsOverview(
+    public RestResult<InterviewAssessorAllocateApplicationsPageResource> getAllocateApplicationsOverview(
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable) {
         return interviewInviteService.getAllocateApplicationsOverview(competitionId, pageable).toGetResponse();

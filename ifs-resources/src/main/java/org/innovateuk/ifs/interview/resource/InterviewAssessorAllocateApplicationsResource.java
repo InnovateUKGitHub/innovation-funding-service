@@ -3,23 +3,17 @@ package org.innovateuk.ifs.interview.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.innovateuk.ifs.application.resource.AssessmentCountSummaryResource;
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 
-import java.util.List;
-
-public class AssessorInterviewAllocationResource {
+public class InterviewAssessorAllocateApplicationsResource {
 
     private long id;
     private String name;
     private String skillAreas;
 
-    public AssessorInterviewAllocationResource() {
+    public InterviewAssessorAllocateApplicationsResource() {
     }
 
-    public AssessorInterviewAllocationResource(long id, String name, String skillAreas) {
+    public InterviewAssessorAllocateApplicationsResource(long id, String name, String skillAreas) {
         this.id = id;
         this.name = name;
         this.skillAreas = skillAreas;
@@ -55,7 +49,7 @@ public class AssessorInterviewAllocationResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorInterviewAllocationResource that = (AssessorInterviewAllocationResource) o;
+        InterviewAssessorAllocateApplicationsResource that = (InterviewAssessorAllocateApplicationsResource) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

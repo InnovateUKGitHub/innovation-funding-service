@@ -2,26 +2,21 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
-import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationResource;
-import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
 
 /**
- * Holder of model attributes for the applications shown in the 'Manage applications' page
+ * Holder of model attributes for the assessors shown in the 'Allocate applications to assessors' page
  */
-public class InterviewApplicationAllocationRowViewModel {
+public class InterviewAllocateApplicationsRowViewModel {
     private final long id;
     private final String name;
     private final String skillAreas;
 
-    public InterviewApplicationAllocationRowViewModel(AssessorInterviewAllocationResource assessorInterviewAllocationResource) {
-        this.id = assessorInterviewAllocationResource.getId();
-        this.name = assessorInterviewAllocationResource.getName();
-        this.skillAreas = assessorInterviewAllocationResource.getSkillAreas();
+    public InterviewAllocateApplicationsRowViewModel(InterviewAssessorAllocateApplicationsResource interviewAssessorAllocateApplicationsResource) {
+        this.id = interviewAssessorAllocateApplicationsResource.getId();
+        this.name = interviewAssessorAllocateApplicationsResource.getName();
+        this.skillAreas = interviewAssessorAllocateApplicationsResource.getSkillAreas();
     }
 
     public long getId() {
@@ -42,7 +37,7 @@ public class InterviewApplicationAllocationRowViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewApplicationAllocationRowViewModel that = (InterviewApplicationAllocationRowViewModel) o;
+        InterviewAllocateApplicationsRowViewModel that = (InterviewAllocateApplicationsRowViewModel) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)
