@@ -42,7 +42,7 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           '</td>' +
           '<td><button id="invite-collaborator-' + rowId + '" class="button" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
           '<td class="alignright">' +
-          '<button id="invite-collaborator-remove-' + rowId + '" class="remove-another-row buttonlink" name="removeInvite" type="button" value="0">Remove</button>' +
+          '<button id="remove-collaborator-' + rowId + '" class="remove-another-row buttonlink" name="removeInvite" type="button" value="0">Remove</button>' +
           '</td>' +
           '</tr>')
       } else {
