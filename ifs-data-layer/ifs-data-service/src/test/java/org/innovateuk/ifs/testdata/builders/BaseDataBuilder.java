@@ -73,7 +73,6 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.*;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -156,7 +155,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected AssessmentService assessmentService;
     protected AssessmentWorkflowHandler assessmentWorkflowHandler;
     protected ProcessRoleRepository processRoleRepository;
-    protected ActivityStateRepository activityStateRepository;
     protected SectionRepository sectionRepository;
     protected QuestionRepository questionRepository;
     protected FormInputRepository formInputRepository;
@@ -241,7 +239,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         assessmentService = serviceLocator.getBean(AssessmentService.class);
         assessmentWorkflowHandler = serviceLocator.getBean(AssessmentWorkflowHandler.class);
         processRoleRepository = serviceLocator.getBean(ProcessRoleRepository.class);
-        activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
         sectionRepository = serviceLocator.getBean(SectionRepository.class);
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
         questionSetupService = serviceLocator.getBean(QuestionSetupService.class);

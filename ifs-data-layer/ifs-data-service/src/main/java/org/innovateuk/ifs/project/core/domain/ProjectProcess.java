@@ -1,15 +1,11 @@
 package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * The process for Project Setup
@@ -25,14 +21,16 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
+    @Column(name="activity_state_id")
+    private ProjectState activityState;
+
     public ProjectProcess() {
-        // no-arg constructor
     }
 
-    public ProjectProcess(ProjectUser participant, Project target, ActivityState originalState) {
+    public ProjectProcess(ProjectUser participant, Project target, ProjectState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -56,8 +54,13 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     }
 
     @Override
-    public ProjectState getActivityState() {
-        return ProjectState.fromState(activityState.getState());
+    public ProjectState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(ProjectState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -72,7 +75,6 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
@@ -81,7 +83,7 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
         return new HashCodeBuilder(17, 37)
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
     }
 }
-

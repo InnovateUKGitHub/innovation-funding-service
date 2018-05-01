@@ -11,9 +11,6 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 
 import java.util.List;
@@ -34,7 +31,6 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
 
     private static final long COMPETITION_ID = 1L;
     private static final Organisation LEAD_ORGANISATION = newOrganisation().withName("lead org").build();
-    private static final ActivityState PENDING_FEEDBACK_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.PENDING);
 
     @Override
     protected InterviewApplicationInviteServiceImpl supplyServiceUnderTest() {
@@ -77,10 +73,8 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
         outcome.setMessage(sendResource.getContent());
         outcome.setSubject(sendResource.getSubject());
 
-        when(interviewAssignmentRepositoryMock.findByTargetCompetitionIdAndActivityStateState(
-                COMPETITION_ID, InterviewAssignmentState.CREATED.getBackingState())).thenReturn(interviewAssignments);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState())).thenReturn(PENDING_FEEDBACK_ACTIVITY_STATE);
+        when(interviewAssignmentRepositoryMock.findByTargetCompetitionIdAndActivityState(
+                COMPETITION_ID, InterviewAssignmentState.CREATED)).thenReturn(interviewAssignments);
         when(notificationSenderMock.sendNotification(any(Notification.class))).thenReturn(serviceSuccess(null));
 
         ServiceResult<Void> result = service.sendInvites(COMPETITION_ID, sendResource);

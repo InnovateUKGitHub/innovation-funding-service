@@ -10,7 +10,6 @@ import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +20,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.review.resource.ReviewEvent.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 
 /**
  * Manages the process for assigning applications to assessors on an assessment panel.
@@ -74,11 +72,6 @@ public class ReviewWorkflowHandler extends BaseWorkflowEventHandler<Review, Revi
 
     public boolean withdraw(Review review) {
         return fireEvent(assessmentPanelApplicationInviteMessage(review, WITHDRAW), review);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return ASSESSMENT_REVIEW;
     }
 
     @Override

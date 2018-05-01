@@ -153,7 +153,6 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -713,9 +712,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected NotificationTemplateRenderer notificationTemplateRendererMock;
-
-    @Mock
-    protected ActivityStateRepository activityStateRepositoryMock;
 
     @Mock
     protected UsersRolesService usersRolesServiceMock;

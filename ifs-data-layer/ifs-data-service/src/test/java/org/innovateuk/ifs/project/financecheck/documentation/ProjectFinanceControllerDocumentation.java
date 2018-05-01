@@ -113,7 +113,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        EligibilityResource expectedEligibilityResource = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource expectedEligibilityResource = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         expectedEligibilityResource.setEligibilityApprovalDate(LocalDate.now());
         expectedEligibilityResource.setEligibilityApprovalUserFirstName("Lee");
         expectedEligibilityResource.setEligibilityApprovalUserLastName("Bowman");
@@ -139,7 +139,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        Eligibility eligibility = Eligibility.APPROVED;
+        EligibilityState eligibility = EligibilityState.APPROVED;
         EligibilityRagStatus eligibilityRagStatus = EligibilityRagStatus.GREEN;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
