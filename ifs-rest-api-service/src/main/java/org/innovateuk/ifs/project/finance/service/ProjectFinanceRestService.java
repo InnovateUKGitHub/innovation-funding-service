@@ -2,12 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.*;
 
 import java.util.List;
 
@@ -26,7 +21,7 @@ public interface ProjectFinanceRestService {
 
     RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId);
 
-    RestResult<Void> saveEligibility(Long projectId, Long organisationId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus);
+    RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
 
     RestResult<Boolean> isCreditReportConfirmed(Long projectId, Long organisationId);
 

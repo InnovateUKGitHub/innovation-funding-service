@@ -2,6 +2,7 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.review.domain.ReviewParticipant;
@@ -18,12 +19,9 @@ import org.innovateuk.ifs.review.mapper.ReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -66,9 +64,6 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewRepository reviewRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private NotificationSender notificationSender;
 
     @Autowired
@@ -107,7 +102,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ServiceResult<Void> withdrawAssessmentReviewsForApplication(Application application) {
         reviewRepository
-                .findByTargetIdAndActivityStateStateNot(application.getId(), State.WITHDRAWN)
+                .findByTargetIdAndActivityStateNot(application.getId(), ReviewState.WITHDRAWN)
                 .forEach(workflowHandler::withdraw);
         return serviceSuccess();
     }
@@ -129,7 +124,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ServiceResult<List<ReviewResource>> getReviews(long userId, long competitionId) {
-        List<Review> reviews = reviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        List<Review> reviews = reviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
         return serviceSuccess(simpleMap(reviews, reviewMapper::mapToResource));
     }
 
@@ -171,11 +166,9 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private ServiceResult<Void> createAssessmentReview(ReviewParticipant assessor, Application application) {
-        if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
-            final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED);
-
+        if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateNot(assessor.getUser(), application, ReviewState.WITHDRAWN)) {
             Review review =  new Review(application, assessor);
-            review.setActivityState(createdActivityState);
+            review.setProcessState(ReviewState.CREATED);
             reviewRepository.save(review);
         }
         return serviceSuccess();
@@ -190,12 +183,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     private List<Application> getAllApplicationsOnPanel(long competitionId) {
         return applicationRepository
-                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED);
     }
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {
         reviewRepository
-                .findByTargetCompetitionIdAndActivityStateState(competitionId, CREATED.getBackingState())
+                .findByTargetCompetitionIdAndActivityState(competitionId, CREATED)
                 .forEach(this::notifyInvitation);
 
         return serviceSuccess();

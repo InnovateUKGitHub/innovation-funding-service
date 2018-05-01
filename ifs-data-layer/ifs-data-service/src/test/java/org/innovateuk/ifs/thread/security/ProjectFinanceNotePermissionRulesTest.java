@@ -10,7 +10,6 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.security.ProjectFinanceNotePermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +22,6 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -48,9 +46,9 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
 
         project = newProject().build();
         projectFinance = newProjectFinance().withProject(project).build();
-        projectProcessInSetup = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState())).build();
-        projectProcessInLive = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.LIVE.getBackingState())).build();
-        projectProcessInWithdrawn = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState())).build();
+        projectProcessInSetup = newProjectProcess().withActivityState(ProjectState.SETUP).build();
+        projectProcessInLive = newProjectProcess().withActivityState(ProjectState.LIVE).build();
+        projectProcessInWithdrawn = newProjectProcess().withActivityState(ProjectState.WITHDRAWN).build();
 
         when(projectFinanceRepositoryMock.findOne(anyLong())).thenReturn(projectFinance);
     }
@@ -118,5 +116,4 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserTwo));
         assertFalse(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, intruder));
     }
-
 }

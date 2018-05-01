@@ -2,14 +2,12 @@ package org.innovateuk.ifs.project.projectdetails.domain;
 
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class ProjectDetailsProcess extends Process<ProjectUser, Project, ProjectDetailsState> {
@@ -22,14 +20,16 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
-    // for ORM use
+    @Column(name="activity_state_id")
+    private ProjectDetailsState activityState;
+
     ProjectDetailsProcess() {
     }
 
-    public ProjectDetailsProcess(ProjectUser participant, Project target, ActivityState originalState) {
+    public ProjectDetailsProcess(ProjectUser participant, Project target, ProjectDetailsState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -53,7 +53,38 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
     }
 
     @Override
-    public ProjectDetailsState getActivityState() {
-        return ProjectDetailsState.fromState(activityState.getState());
+    public ProjectDetailsState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(ProjectDetailsState status) {
+        this.activityState = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectDetailsProcess that = (ProjectDetailsProcess) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(participant, that.participant)
+                .append(target, that.target)
+                .append(activityState, that.activityState)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(participant)
+                .append(target)
+                .append(activityState)
+                .toHashCode();
     }
 }

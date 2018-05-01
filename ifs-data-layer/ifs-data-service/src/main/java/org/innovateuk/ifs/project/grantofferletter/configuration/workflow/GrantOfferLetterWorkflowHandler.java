@@ -14,7 +14,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Component;
 import java.util.function.BiFunction;
 
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
 
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.
@@ -76,7 +74,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     public boolean isSendAllowed(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.PENDING.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.PENDING.equals(process.getProcessState());
     }
 
     public boolean removeGrantOfferLetter(Project project, User internalUser) {
@@ -97,28 +95,28 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     public boolean isApproved(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.APPROVED.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.APPROVED.equals(process.getProcessState());
     }
 
     public boolean isRejected(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState()) &&
+        return process != null && GrantOfferLetterState.SENT.equals(process.getProcessState()) &&
                 SIGNED_GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
     }
 
     public boolean isReadyToApprove(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getProcessState());
     }
 
     public boolean isSent(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.SENT.equals(process.getProcessState());
     }
 
     public GrantOfferLetterState getState(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null? process.getActivityState() : GrantOfferLetterState.PENDING;
+        return process != null? process.getProcessState() : GrantOfferLetterState.PENDING;
     }
 
     public ServiceResult<GrantOfferLetterStateResource> getExtendedState(Project project) {
@@ -158,11 +156,6 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     @Override
     protected GOLProcess createNewProcess(Project target, ProjectUser participant) {
         return new GOLProcess(participant, target, null);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return PROJECT_SETUP_GRANT_OFFER_LETTER;
     }
 
     @Override

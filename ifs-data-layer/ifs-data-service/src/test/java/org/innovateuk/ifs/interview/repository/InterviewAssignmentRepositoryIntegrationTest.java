@@ -7,10 +7,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,14 +16,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,19 +35,13 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     @Override
     protected void setRepository(InterviewAssignmentRepository repository) {
         this.repository = repository;
     }
 
-    private final Set<State> NOTIFIED_INTERVIEW_ASSIGNMENT_STATES =
-            simpleMapSet(
-                    asList(AWAITING_FEEDBACK_RESPONSE, InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE),
-                    InterviewAssignmentState::getBackingState
-            );
+    private final Set<InterviewAssignmentState> NOTIFIED_INTERVIEW_ASSIGNMENT_STATES =
+            asLinkedSet(AWAITING_FEEDBACK_RESPONSE, InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE);
 
     @Test
     public void findByTargetCompetitionIdAndActivityStateState() {
@@ -73,7 +62,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         InterviewAssignment expected = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(CREATED))
+                .withState(CREATED)
                 .withTarget(application)
                 .build();
 
@@ -81,7 +70,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         flushAndClearSession();
 
-        Page<InterviewAssignment> actual = repository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), activityState(CREATED).getState(), pageable);
+        Page<InterviewAssignment> actual = repository.findByTargetCompetitionIdAndActivityState(competition.getId(), CREATED, pageable);
 
         assertEquals(expected.getId(), actual.getContent().get(0).getId());
     }
@@ -101,14 +90,9 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         applicationRepository.save(application);
 
-        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                InterviewAssignmentState.CREATED.getBackingState()
-        );
-
         InterviewAssignment expected = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState)
+                .withState(CREATED)
                 .withTarget(application)
                 .build();
 
@@ -116,7 +100,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         flushAndClearSession();
 
-        boolean interviewAssignmentExists = repository.existsByTargetIdAndActivityStateStateIn(application.getId(), singletonList(activityState.getState()));
+        boolean interviewAssignmentExists = repository.existsByTargetIdAndActivityStateIn(application.getId(), singletonList(InterviewAssignmentState.CREATED));
 
         assertTrue(interviewAssignmentExists);
     }
@@ -138,7 +122,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         List<InterviewAssignment> assignments = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(CREATED), activityState(AWAITING_FEEDBACK_RESPONSE), activityState(SUBMITTED_FEEDBACK_RESPONSE))
+                .withState(CREATED, AWAITING_FEEDBACK_RESPONSE, SUBMITTED_FEEDBACK_RESPONSE)
                 .withTarget(applications.toArray(new Application[3]))
                 .build(3);
 
@@ -146,7 +130,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         flushAndClearSession();
 
-        int count = repository.countByTargetCompetitionIdAndActivityStateStateIn(competition.getId(), NOTIFIED_INTERVIEW_ASSIGNMENT_STATES);
+        int count = repository.countByTargetCompetitionIdAndActivityStateIn(competition.getId(), NOTIFIED_INTERVIEW_ASSIGNMENT_STATES);
 
         assertEquals(2, count);
     }
@@ -168,7 +152,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         InterviewAssignment assignment = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(CREATED))
+                .withState(CREATED)
                 .withTarget(application)
                 .build();
 
@@ -176,7 +160,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         flushAndClearSession();
 
-        int count = repository.countByTargetCompetitionIdAndActivityStateStateIn(competition.getId(), NOTIFIED_INTERVIEW_ASSIGNMENT_STATES);
+        int count = repository.countByTargetCompetitionIdAndActivityStateIn(competition.getId(), NOTIFIED_INTERVIEW_ASSIGNMENT_STATES);
 
         assertEquals(0, count);
     }
@@ -191,15 +175,8 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         flushAndClearSession();
 
-        int count = repository.countByTargetCompetitionIdAndActivityStateStateIn(competition.getId(), NOTIFIED_INTERVIEW_ASSIGNMENT_STATES);
+        int count = repository.countByTargetCompetitionIdAndActivityStateIn(competition.getId(), NOTIFIED_INTERVIEW_ASSIGNMENT_STATES);
 
         assertEquals(0, count);
-    }
-
-    private ActivityState activityState(InterviewAssignmentState interviewAssignmentState) {
-        return activityStateRepository.findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                interviewAssignmentState.getBackingState()
-        );
     }
 }
