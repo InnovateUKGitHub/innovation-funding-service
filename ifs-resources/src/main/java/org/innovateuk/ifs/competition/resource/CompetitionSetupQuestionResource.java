@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.resource;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,8 +17,6 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")

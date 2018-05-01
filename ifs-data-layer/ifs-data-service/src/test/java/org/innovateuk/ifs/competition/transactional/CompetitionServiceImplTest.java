@@ -13,9 +13,9 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -58,7 +58,6 @@ import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganis
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -112,7 +111,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withUser(user)
                 .build(4);
 
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
         List<UserResource> result = service.findInnovationLeads(competitionId).getSuccess();
 
@@ -147,14 +146,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         savedCompetitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
         // Verify that the correct CompetitionParticipant is saved
-        verify(competitionParticipantRepositoryMock).save(savedCompetitionParticipant);
+        verify(assessmentParticipantRepositoryMock).save(savedCompetitionParticipant);
     }
 
     @Test
     public void removeInnovationLeadWhenCompetitionParticipantNotFound() throws Exception {
         Long innovationLeadUserId = 2L;
 
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .thenReturn(null);
         ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isFailure());
@@ -166,14 +165,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long innovationLeadUserId = 2L;
 
         AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .thenReturn(competitionParticipant);
 
         ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isSuccess());
 
         //Verify that the entity is deleted
-        verify(competitionParticipantRepositoryMock).delete(competitionParticipant);
+        verify(assessmentParticipantRepositoryMock).delete(competitionParticipant);
     }
 
     @Test
@@ -223,10 +222,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition comp2 = newCompetition().withName("Comp2").withId(competitionId).withCompetitionType(progcompetitionType).build();
         Competition comp3 = newCompetition().withName("Comp3").withId(competitionId).withCompetitionType(eoicompetitionType).build();
 
-        Application fundedAndInformedApplication1 = newApplication().withCompetition(comp1).withManageFundingEmailDate(ZonedDateTime.now()).withFundingDecision(FundingDecisionStatus.FUNDED).build();
-        comp1.setApplications(singletonList(fundedAndInformedApplication1));
-        Application fundedAndInformedApplication2 = newApplication().withCompetition(comp2).withManageFundingEmailDate(ZonedDateTime.now().plusHours(1L)).withFundingDecision(FundingDecisionStatus.FUNDED).build();
-        comp2.setApplications(singletonList(fundedAndInformedApplication2));
         List<Competition> expectedCompetitions = Lists.newArrayList(comp1, comp2);
         List<Competition> allCompetitions = Lists.newArrayList(comp1, comp2, comp3);
 

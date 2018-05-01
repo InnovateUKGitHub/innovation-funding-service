@@ -403,6 +403,10 @@ Application: Application details validations
     And the user enters text to a text field   id=maxProjectDuration  65
     Then the user should see a field error     The minimum must be smaller than the maximum.
     And the user should see a field error      This field should be 60 or lower.
+
+    When the user enters text to a text field  id=minProjectDuration  59
+    And the user clicks the button/link        css=button[type="submit"]
+    Then the user should see a summary error   This field should be 60 or lower
     [Teardown]  the user clicks the button/link  link=Application
 
 
@@ -624,7 +628,7 @@ User should be able to Save the Competition as Open
     And the user should see the element      jQuery=li:contains("Application") .task-status-complete
     When the user clicks the button/link     css=#compCTA
     Then the user clicks the button/link     jQuery=.button:contains("Done")
-    When the user clicks the button/link     link=All competitions
+    When the user clicks the button/link     link=Competition
     And the user navigates to the page       ${CA_UpcomingComp}
     Then the user should see the element     jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 

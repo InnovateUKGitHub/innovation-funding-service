@@ -31,19 +31,19 @@ function section() {
 function clearDownFileRepository() {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
-    docker exec innovationfundingservice_data-service_1  rm -rf ${storedFileFolder}
+    docker exec -d data-service  rm -rf ${storedFileFolder}
 
     echo "***********Deleting any holding for scan files***************"
     echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
-    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanHoldingFolder}
+    docker exec -d data-service  rm -rf ${virusScanHoldingFolder}
 
     echo "***********Deleting any quarantined files***************"
     echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
-    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanQuarantinedFolder}
+    docker exec -d data-service  rm -rf ${virusScanQuarantinedFolder}
 
     echo "***********Deleting any scanned files***************"
     echo "virusScanScannedFolder: ${virusScanScannedFolder}"
-    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanScannedFolder}
+    docker exec -d data-service  rm -rf ${virusScanScannedFolder}
 }
 
 function addTestFiles() {
@@ -51,15 +51,15 @@ function addTestFiles() {
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data-service_1:/tmp/testing.pdf
+    docker exec -d data-service  cp ${uploadFileDir}/testing.pdf /tmp/testing.pdf
 
     echo "***********Making the quarantined directory ***************"
-    docker exec innovationfundingservice_data-service_1 mkdir -p ${virusScanQuarantinedFolder}
+    docker exec -d data-service mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
+    docker exec -d data-service cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
     echo "***********Adding standard file upload location ***********"
-    docker exec innovationfundingservice_data-service_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+    docker exec -d data-service mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
 
     echo "***********Creating file entry for each db entry***********"
     max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
@@ -67,7 +67,7 @@ function addTestFiles() {
     do
       if [ "${i}" != "8" ]
       then
-        docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
+        docker exec -d data-service cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
       fi
     done
 }
@@ -89,7 +89,7 @@ function buildAndDeploy() {
         coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi
 
-    ./gradlew -Pcloud=development composeUp -Pifs.full-deployment.enabled=true -Pifs.finance-totals.enabled=false
+    ./gradlew -Pcloud=development deploy wait -x test
 }
 
 function injectRobotParameters() {
@@ -118,9 +118,11 @@ function startSeleniumGrid() {
 
     echo "=> Suite count: ${suiteCount}"
 
-    docker-compose up -d --force-recreate --build
-    sleep 2
-    docker-compose scale chrome=${suiteCount}
+    cd ${rootDir}
+
+    ./gradlew deployHub deployChrome
+
+    cd ${scriptDir}
 
     unset suiteCount
     if [[ ${quickTest} -eq 1 ]]
@@ -133,8 +135,8 @@ function startSeleniumGrid() {
 function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
-    cd ${scriptDir}
-    docker-compose down -v --remove-orphans
+    cd ${rootDir}
+    ./gradlew removeHub removeChrome
 }
 
 function startPybot() {

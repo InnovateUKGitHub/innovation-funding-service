@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewSelectionForm;
+import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
@@ -41,21 +42,30 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewAssessorInviteController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewAssessorInviteController extends CompetitionManagementCookieController<InterviewSelectionForm> {
 
     private static final String SELECTION_FORM = "interviewSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
 
-    @Autowired
     private InterviewInviteRestService interviewInviteRestService;
 
-    @Autowired
     private InterviewInviteAssessorsFindModelPopulator interviewInviteAssessorsFindModelPopulator;
 
-    @Autowired
     private InterviewInviteAssessorsInviteModelPopulator interviewInviteAssessorsInviteModelPopulator;
 
+    private InterviewInviteAssessorsAcceptedModelPopulator interviewInviteAssessorsAcceptedModelPopulator;
+
+    @Autowired
+    public InterviewAssessorInviteController(InterviewInviteRestService interviewInviteRestService,
+                                             InterviewInviteAssessorsFindModelPopulator interviewInviteAssessorsFindModelPopulator,
+                                             InterviewInviteAssessorsInviteModelPopulator interviewInviteAssessorsInviteModelPopulator,
+                                             InterviewInviteAssessorsAcceptedModelPopulator interviewInviteAssessorsAcceptedModelPopulator) {
+        this.interviewInviteRestService = interviewInviteRestService;
+        this.interviewInviteAssessorsFindModelPopulator = interviewInviteAssessorsFindModelPopulator;
+        this.interviewInviteAssessorsInviteModelPopulator = interviewInviteAssessorsInviteModelPopulator;
+        this.interviewInviteAssessorsAcceptedModelPopulator = interviewInviteAssessorsAcceptedModelPopulator;
+    }
 
     protected String getCookieName() {
         return SELECTION_FORM;
@@ -250,6 +260,22 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
                                                  @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
         deleteAllInvites(competitionId).getSuccess();
         return redirectToInvite(competitionId, page);
+    }
+
+    @GetMapping("/accepted")
+    public String accepted(Model model,
+                           @PathVariable("competitionId") long competitionId,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.INTERVIEW_ACCEPTED, queryParams);
+
+        model.addAttribute("model", interviewInviteAssessorsAcceptedModelPopulator.populateModel(
+                competitionId,
+                page,
+                originQuery
+        ));
+
+        return "assessors/interview/assessor-accepted";
     }
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {

@@ -8,29 +8,34 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle}" />
   </th:block>
 </head>
-<body class="competition-management competition-setup">
-
+<body class="competition-management competition-setup" th:with="currentSectionIsHome=${model.general.currentSectionIsHome()}">
 <th:block th:insert="fragments/modals :: modal-overlay" />
-<th:block th:insert="fragments/competition-setup :: comp-setup-complete-modal" />
+<th:block th:insert="fragments/competition-setup :: comp-setup-complete-modal" th:if="${currentSectionIsHome}"/>
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions', linkClass='link-back', linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition', linkClass='link-back', linkUrl=@{/competition/{competitionId}/(competitionId=${model.general.competition.id})}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
-
-    <th:block th:if="${model.general.currentSectionIsHome()}">
+    <th:block th:if="${currentSectionIsHome}">
+        <div class="error-summary" th:if="${#fields.hasErrors('${competitionSetupForm}')}">
+            <h2 class="heading-medium error-summary-heading">We cannot complete setup.</h2>
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.errors('${competitionSetupForm}')}" th:text="${err}"></li>
+            </ul>
+        </div>
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',size='heading-xlarge'" />
     </th:block>
 
-    <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(${model.general.allSections}, ${model.general.currentSection}, ${model.general.competition}, ${readyToOpen})" th:if="${model.general.currentSectionIsHome()}" />
+    <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(${model.general.allSections}, ${model.general.currentSection}, ${model.general.competition}, ${readyToOpen})" th:if="${currentSectionIsHome}" />
 
     <th:block th:if="${model.general.currentSectionFragment != null}">
         <th:block th:replace="fragments/competition-setup-sections :: ${model.general.currentSectionFragment}" />
     </th:block>
 
-    <th:block th:insert="fragments/competition-setup :: setup-home" th:if="${!model.general.currentSectionIsHome()}" />
+    <th:block th:insert="fragments/competition-setup :: setup-home" th:unless="${currentSectionIsHome}" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

@@ -1,0 +1,77 @@
+apply plugin: "java"
+apply plugin: "com.moowork.node"
+apply plugin: 'com.moowork.gulp'
+
+// Download and install a local node/npm version.
+gulp_default.dependsOn 'nodeSetup'
+
+// Install node packages from package.json before running gulp build
+gulp_default.dependsOn 'npmInstall'
+
+// makes sure on each build that gulp is installed
+gulp_default.dependsOn 'installGulp'
+
+processResources.dependsOn gulp_default
+
+node {
+    // Version of node to use.
+    version = '8.11.1'
+
+    // Version of npm to use.
+    npmVersion = '5.6.0'
+
+    // Version of Yarn to use.
+    yarnVersion = '1.5.1'
+
+    // Base URL for fetching node distributions (change if you have a mirror).
+    distBaseUrl = 'https://nodejs.org/dist'
+
+    // If true, it will download node using above parameters.
+    // If false, it will try to use globally installed node.
+    download = true
+
+    // Set the work directory for unpacking node
+    workDir = file("${projectDir}/node_install/nodejs")
+
+    // Set the work directory for NPM
+    npmWorkDir = file("${projectDir}/node_install/npm")
+
+    // Set the work directory for Yarn
+    yarnWorkDir = file("${projectDir}/node_install/yarn")
+
+    // Set the work directory where node_modules should be located
+    nodeModulesDir = file("${projectDir}")
+}
+
+npm_install {
+    inputs.files file("${projectDir}/package.json")
+    outputs.files file("${projectDir}/node_modules")
+    args = ['--loglevel', 'warn']
+    description = "Install Node.js packages"
+    outputs.upToDateWhen { false }
+}
+
+gulp_default {
+    inputs.dir file("${projectDir}/ifs-application-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-assessment-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-competition-mgt-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-front-door-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-project-setup-mgt-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-project-setup-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-web-core/src/main/resources/static")
+
+    outputs.dir file("${projectDir}/ifs-application-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-assessment-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-competition-mgt-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-front-door-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-project-setup-mgt-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-project-setup-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-web-core/build/resources/main/static")
+}
+
+gulp {
+    // Set the directory where gulpfile.js should be found
+    workDir = file("${project.projectDir}")
+    // Whether colors should output on the terminal
+    colors = true
+}

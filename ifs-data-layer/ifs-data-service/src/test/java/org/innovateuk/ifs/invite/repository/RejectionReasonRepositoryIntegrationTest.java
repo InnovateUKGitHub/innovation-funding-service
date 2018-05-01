@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

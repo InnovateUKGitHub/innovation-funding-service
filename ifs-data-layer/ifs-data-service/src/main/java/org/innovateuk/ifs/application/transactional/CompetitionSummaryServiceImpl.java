@@ -4,8 +4,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompetitionSummaryServiceImpl extends BaseTransactionalService implements CompetitionSummaryService {
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Override
     public ServiceResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId) {
@@ -32,30 +32,30 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
         competitionSummaryResource.setCompetitionStatus(competition.getCompetitionStatus());
         competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
         competitionSummaryResource.setApplicationsStarted(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(
                         competitionId, CREATED_AND_OPEN_STATUSES, limit
                 )
         );
         competitionSummaryResource.setApplicationsInProgress(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(
                         competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit
                 )
         );
         competitionSummaryResource.setApplicationsSubmitted(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES)
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES)
         );
         competitionSummaryResource.setIneligibleApplications(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, INELIGIBLE_STATES)
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, INELIGIBLE_STATES)
         );
         competitionSummaryResource.setApplicationsNotSubmitted(
                 competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted()
         );
         competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
         competitionSummaryResource.setApplicationsFunded(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.APPROVED.getBackingState())
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityState(competitionId, ApplicationState.APPROVED)
         );
         competitionSummaryResource.setAssessorsInvited(
-                competitionParticipantRepository.countByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.ASSESSOR)
+                assessmentParticipantRepository.countByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.ASSESSOR)
         );
         competitionSummaryResource.setAssessorDeadline(competition.getAssessorDeadlineDate());
 

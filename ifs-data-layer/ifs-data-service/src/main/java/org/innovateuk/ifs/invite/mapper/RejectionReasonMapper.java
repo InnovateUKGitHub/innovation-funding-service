@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.mapstruct.Mapper;
 

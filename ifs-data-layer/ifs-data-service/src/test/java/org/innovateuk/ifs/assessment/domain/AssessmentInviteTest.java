@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.domain;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
 import org.junit.Before;
 import org.junit.Test;
 

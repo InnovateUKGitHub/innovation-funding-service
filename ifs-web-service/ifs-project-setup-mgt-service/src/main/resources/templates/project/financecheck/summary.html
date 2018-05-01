@@ -47,7 +47,7 @@
       </dl>
 
       <th:block th:unless="${model.financeCheckSummaryResource.spendProfilesGenerated}">
-        <a th:href="@{/competition/{competitionId}/project/{projectId}/edit-duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}">Edit</a>
+        <a th:href="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}">Edit</a>
       </th:block>
     </div>
   </div>

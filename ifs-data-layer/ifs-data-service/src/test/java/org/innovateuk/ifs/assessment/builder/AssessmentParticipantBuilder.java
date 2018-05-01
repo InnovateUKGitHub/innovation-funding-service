@@ -4,10 +4,10 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.*;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.lang.reflect.Constructor;

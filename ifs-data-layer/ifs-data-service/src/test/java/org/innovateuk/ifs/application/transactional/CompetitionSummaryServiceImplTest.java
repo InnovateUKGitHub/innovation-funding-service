@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.application.transactional.ApplicationSummarySer
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +42,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
 
         when(competitionRepositoryMock.findById(COMP_ID)).thenReturn(competition);
         when(applicationRepositoryMock.countByCompetitionId(COMP_ID)).thenReturn(83);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(
                 COMP_ID, CREATED_AND_OPEN_STATUSES, new BigDecimal(50L))
         )
                 .thenReturn(1);
@@ -54,7 +54,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 .thenReturn(serviceSuccess(
                         newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
                 ));
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(
                 COMP_ID, SUBMITTED_AND_INELIGIBLE_STATES, new BigDecimal(50L))
         )
                 .thenReturn(1);
@@ -66,10 +66,10 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 .thenReturn(serviceSuccess(
                         newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
                 ));
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(COMP_ID, SUBMITTED_AND_INELIGIBLE_STATES)).thenReturn(5);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(COMP_ID, INELIGIBLE_STATES)).thenReturn(2);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMP_ID, ApplicationState.APPROVED.getBackingState())).thenReturn(8);
-        when(competitionParticipantRepositoryMock.countByCompetitionIdAndRole(COMP_ID, ASSESSOR)).thenReturn(10);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateIn(COMP_ID, SUBMITTED_AND_INELIGIBLE_STATES)).thenReturn(5);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateIn(COMP_ID, INELIGIBLE_STATES)).thenReturn(2);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityState(COMP_ID, ApplicationState.APPROVED)).thenReturn(8);
+        when(assessmentParticipantRepositoryMock.countByCompetitionIdAndRole(COMP_ID, ASSESSOR)).thenReturn(10);
     }
 
     @Test

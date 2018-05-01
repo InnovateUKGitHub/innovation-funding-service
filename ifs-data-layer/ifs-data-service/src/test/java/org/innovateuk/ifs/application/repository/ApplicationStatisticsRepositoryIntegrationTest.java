@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -14,22 +15,17 @@ import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -58,21 +54,19 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static org.innovateuk.ifs.workflow.resource.State.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class ApplicationStatisticsRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationStatisticsRepository> {
 
-    private static final Collection<State> SUBMITTED_STATUSES = simpleMap(asList(
+    private static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
-            ApplicationState.SUBMITTED), ApplicationState::getBackingState);
+            ApplicationState.SUBMITTED);
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -87,9 +81,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     private AssessmentRepository assessmentRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private ApplicationRepository applicationRepository;
 
     @Autowired
@@ -102,9 +93,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     private InnovationSectorRepository innovationSectorRepository;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -114,32 +102,32 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void findByCompetition() throws Exception {
+    public void findByCompetition() {
         Long competitionId = 1L;
 
-        List<ApplicationStatistics> statisticsList = repository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES);
+        List<ApplicationStatistics> statisticsList = repository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATUSES);
         assertEquals(5, statisticsList.size());
     }
 
     @Test
-    public void findByCompetitionPaged() throws Exception {
+    public void findByCompetitionPaged() {
         Long competitionId = 1L;
 
         Pageable pageable = new PageRequest(1, 3);
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES, "", pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATUSES, "", pageable);
         assertEquals(5, statisticsPage.getTotalElements());
         assertEquals(3, statisticsPage.getSize());
         assertEquals(1, statisticsPage.getNumber());
     }
 
     @Test
-    public void findByCompetitionFiltered() throws Exception {
+    public void findByCompetitionFiltered() {
         Long competitionId = 1L;
 
         Pageable pageable = new PageRequest(0, 20);
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATUSES,"4", pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATUSES,"4", pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());
@@ -147,7 +135,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
 
     @Test
-    public void findByCompetitionAndInnovationArea() throws Exception {
+    public void findByCompetitionAndInnovationArea() {
         long competitionId = 1L;
         long innovationAreaId = 54L;
         long assessorId = 20L;
@@ -169,22 +157,22 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
                 .withProcessRoles(processRole)
                 .build();
-        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED));
+        application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
 
         flushAndClearSession();
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, new String[]{"id"}));
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "id"));
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());
     }
 
     @Test
-    public void findByCompetitionAndInnovationAreaFiltered() throws Exception {
+    public void findByCompetitionAndInnovationAreaFiltered() {
         long competitionId = 1L;
         long innovationAreaId = 12L;
         long assessorId = 20L;
@@ -208,22 +196,22 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
                 .withProcessRoles(processRole)
                 .build();
-        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED));
+        application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
 
         flushAndClearSession();
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, new String[]{"id"}));
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "id"));
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());
     }
 
     @Test
-    public void getAssessorCountSummaryByCompetition() throws Exception {
+    public void getAssessorCountSummaryByCompetition() {
         long competitionId = 1L;
 
         loginCompAdmin();
@@ -248,7 +236,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -266,7 +254,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(PENDING))
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -295,7 +283,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void getAssessorCountSummaryByCompetition_sortByFirstName() throws Exception {
+    public void getAssessorCountSummaryByCompetition_sortByFirstName() {
         long competitionId = 1L;
 
         loginCompAdmin();
@@ -320,7 +308,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -338,7 +326,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(PENDING))
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -367,7 +355,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void getAssessorCountSummaryByCompetition_innovationSector() throws Exception {
+    public void getAssessorCountSummaryByCompetition_innovationSector() {
         long competitionId = 1L;
 
         loginCompAdmin();
@@ -412,7 +400,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -430,7 +418,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(PENDING))
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -459,7 +447,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void getAssessorCountSummaryByCompetition_businessType() throws Exception {
+    public void getAssessorCountSummaryByCompetition_businessType() {
         long competitionId = 1L;
 
         loginCompAdmin();
@@ -487,7 +475,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -505,7 +493,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(PENDING))
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -534,7 +522,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void getAssessorCountSummaryByCompetition_accepted() throws Exception {
+    public void getAssessorCountSummaryByCompetition_accepted() {
         long competitionId = 1L;
 
         loginCompAdmin();
@@ -559,7 +547,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -577,7 +565,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(ACCEPTED))
+                .withProcessState(AssessmentState.ACCEPTED)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -605,7 +593,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void getAssessorCountSummaryByCompetition_otherCompetition() throws Exception {
+    public void getAssessorCountSummaryByCompetition_otherCompetition() {
         long competitionId = 1L;
 
         loginCompAdmin();
@@ -632,7 +620,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
 
         List<AssessmentParticipant> otherCompetitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -641,7 +629,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(otherCompetitionParticipants);
+        assessmentParticipantRepository.save(otherCompetitionParticipants);
 
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
@@ -660,7 +648,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(ACCEPTED))
+                .withProcessState(AssessmentState.ACCEPTED)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -689,7 +677,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void getAssessorCountSummaryByCompetition_submitted() throws Exception {
+    public void getAssessorCountSummaryByCompetition_submitted() {
         long competitionId = 1L;
 
         loginCompAdmin();
@@ -714,7 +702,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -732,7 +720,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(SUBMITTED))
+                .withProcessState(AssessmentState.SUBMITTED)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -768,7 +756,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     }
 
     @Test
-    public void getAssessorCountSummaryByCompetition_noAssessorsOnCompetition() throws Exception {
+    public void getAssessorCountSummaryByCompetition_noAssessorsOnCompetition() {
         final long competitionId = 1L;
 
         final int pageSize = 10;
@@ -783,9 +771,5 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         assertEquals(pageSize, statisticsPage.getSize());
         assertEquals(pageNumber, statisticsPage.getNumber());
         assertEquals(0, statisticsPage.getNumberOfElements());
-    }
-
-    private ActivityState assessmentState(State state) {
-        return activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, state);
     }
 }

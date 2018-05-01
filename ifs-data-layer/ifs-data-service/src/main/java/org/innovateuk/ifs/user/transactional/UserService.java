@@ -38,11 +38,11 @@ public interface UserService {
     ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findActiveByProcessRoles(Set<Role> roleTypes, Pageable pageable);
+    ServiceResult<UserPageResource> findActiveByRoles(Set<Role> roleTypes, Pageable pageable);
 
     @PostFilter("hasPermission(filterObject, 'READ_USER_ORGANISATION')")
     ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<Role> roleTypes, String searchString, SearchCategory searchCategory);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<Role> roleTypes, Pageable pageable);
+    ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable);
 }

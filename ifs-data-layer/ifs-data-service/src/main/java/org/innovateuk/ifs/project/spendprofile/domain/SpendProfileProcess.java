@@ -2,17 +2,13 @@ package org.innovateuk.ifs.project.spendprofile.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * The process of submitting and approving a complete Spend Profile for Projects
@@ -27,20 +23,22 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
-    // for ORM use
+    @Column(name="activity_state_id")
+    private SpendProfileState activityState;
+
     SpendProfileProcess() {
     }
 
-    public SpendProfileProcess(ProjectUser participant, Project target, ActivityState originalState) {
+    public SpendProfileProcess(ProjectUser participant, Project target, SpendProfileState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
-    public SpendProfileProcess(User internalParticipant, Project target, ActivityState originalState) {
+    public SpendProfileProcess(User internalParticipant, Project target, SpendProfileState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -64,8 +62,13 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
     }
 
     @Override
-    public SpendProfileState getActivityState() {
-        return SpendProfileState.fromState(activityState.getState());
+    public SpendProfileState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(SpendProfileState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -77,18 +80,20 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
         SpendProfileProcess that = (SpendProfileProcess) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
     }
 }

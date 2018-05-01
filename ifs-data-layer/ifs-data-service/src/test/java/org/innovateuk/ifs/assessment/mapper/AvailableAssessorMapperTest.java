@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.mapper;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
+import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.RejectionReasonMapper;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;

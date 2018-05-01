@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.projectdetails.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
@@ -20,14 +19,21 @@ public class ProjectDetailsPermissionRules extends BasePermissionRules {
             value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
             description = "The lead partners can update the basic project details, like start date, address, Project Manager")
     public boolean leadPartnersCanUpdateTheBasicProjectDetails(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
+        return isLeadPartner(project.getId(), user.getId()) && isProjectInSetup(project.getId());
     }
 
     @PermissionRule(
             value = "UPDATE_FINANCE_CONTACT",
             description = "A partner can update the finance contact for their own organisation")
     public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectOrganisationCompositeId composite, UserResource user) {
-        return isPartner(composite.getProjectId(), user.getId()) && partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
+        return isPartner(composite.getProjectId(), user.getId()) &&
+                isProjectInSetup(composite.getProjectId()) &&
+                partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
+    }
+
+    @PermissionRule(value = "UPDATE_PARTNER_PROJECT_LOCATION", description = "A partner can update the project location for their own organisation")
+    public boolean partnersCanUpdateProjectLocationForTheirOwnOrganisation(ProjectOrganisationCompositeId composite, UserResource user) {
+        return partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
     }
 }
 

@@ -38,6 +38,7 @@ ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetit
 ${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
+${openCompetitionBusinessRTOCloseDate}  ${getSimpleMilestoneDate(${openCompetitionBusinessRTO}, "SUBMISSION_DATE")}
 
 ${openCompetitionPublicSector_name}  Photonics for Public
 ${openCompetitionPublicSector}       ${competition_ids['${openCompetitionPublicSector_name}']}
@@ -179,6 +180,7 @@ ${database_user}    root
 ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
+
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${CLOSED_COMPETITION}  ${competition_ids['${CLOSED_COMPETITION_NAME}']}
 ${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight train routing

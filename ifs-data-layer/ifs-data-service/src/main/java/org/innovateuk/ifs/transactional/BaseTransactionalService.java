@@ -10,8 +10,10 @@ import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,9 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
 
     @Autowired
     protected OrganisationRepository organisationRepository;
+
+    @Autowired
+    protected PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
     protected AddressTypeRepository addressTypeRepository;
@@ -118,6 +123,10 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
 
     protected ServiceResult<Organisation> getOrganisation(Long id) {
         return find(organisationRepository.findOne(id), notFoundError(Organisation.class, id));
+    }
+
+    protected ServiceResult<PartnerOrganisation> getPartnerOrganisation(final Long projectId, final Long organisationId) {
+        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(PartnerOrganisation.class, projectId, organisationId));
     }
 
     protected Supplier<ServiceResult<Question>> question(Long questionId) {

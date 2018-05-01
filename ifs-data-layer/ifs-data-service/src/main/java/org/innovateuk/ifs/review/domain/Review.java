@@ -3,7 +3,6 @@ package org.innovateuk.ifs.review.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -27,6 +26,9 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private ReviewRejectOutcome rejection;
+
+    @Column(name="activity_state_id")
+    private ReviewState activityState;
 
     public Review() {
         super();
@@ -77,26 +79,29 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
         this.target = target;
     }
 
-    public ReviewState getActivityState() {
-        return ReviewState.fromState(activityState.getState());
+    @Override
+    public ReviewState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(ReviewState status) {
+        this.activityState = status;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Review that = (Review) o;
+        Review review = (Review) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(participant, that.participant)
-                .append(target, that.target)
+                .append(participant, review.participant)
+                .append(target, review.target)
+                .append(activityState, review.activityState)
                 .isEquals();
     }
 
@@ -106,6 +111,7 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
     }
 }

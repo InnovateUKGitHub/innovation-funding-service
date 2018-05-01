@@ -41,7 +41,8 @@ public class CompetitionManagementAssessorProfileController {
         PANEL_ACCEPTED("/assessment/panel/competition/{competitionId}/assessors/accepted"),
         INTERVIEW_FIND("/assessment/interview/competition/{competitionId}/assessors/find"),
         INTERVIEW_INVITE("/assessment/interview/competition/{competitionId}/assessors/invite"),
-        INTERVIEW_OVERVIEW("/assessment/interview/competition/{competitionId}/assessors/pending-and-declined");
+        INTERVIEW_OVERVIEW("/assessment/interview/competition/{competitionId}/assessors/pending-and-declined"),
+        INTERVIEW_ACCEPTED("/assessment/interview/competition/{competitionId}/assessors/accepted");
 
         private String baseOriginUrl;
 

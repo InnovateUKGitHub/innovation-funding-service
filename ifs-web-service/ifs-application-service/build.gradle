@@ -11,6 +11,16 @@ osStageRemote.tag = applicationServiceVersion
 tagDockerLocal.tag = applicationServiceVersion
 osStageLocal.tag = applicationServiceVersion
 
+createContainer.hostName="application-svc"
+createContainer.containerName="application-svc"
+createContainer.containerId="application-svc"
+createContainer.portBindings = ['9001:8000']
+
+def enabled = project.hasProperty('ifs.application-service.enabled') ? project.property('ifs.application-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
@@ -24,5 +34,6 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
+jar.dependsOn ":ifs-web-service:gulp_default"
 
 

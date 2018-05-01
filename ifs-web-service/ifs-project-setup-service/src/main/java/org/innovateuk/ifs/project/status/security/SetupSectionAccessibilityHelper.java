@@ -50,6 +50,28 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
+    public SectionAccess canAccessPartnerProjectLocationPage(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
+
+        if (!partnerProjectLocationRequired) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Partner Project Location page until Companies House details are complete for Organisation")) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (isMonitoringOfficerAssigned()) {
+            return fail("Unable to access Partner Project Location page once Monitoring Officer has been assigned");
+        }
+
+        return ACCESSIBLE;
+    }
+
+    public boolean isMonitoringOfficerAssigned() {
+        return setupProgressChecker.isMonitoringOfficerAssigned();
+    }
+
     public SectionAccess leadCanAccessProjectManagerPage(OrganisationResource organisation) {
 
         if (isCompaniesHouseIncompleteOrGOLAlreadyGeneratedOrNotLeadPartner(organisation)) {
@@ -112,7 +134,7 @@ public class SetupSectionAccessibilityHelper {
         return setupProgressChecker.isGrantOfferLetterAvailable();
     }
 
-    public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation) {
+    public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Monitoring Officer section until Companies House details are complete for Organisation")) {
@@ -121,6 +143,10 @@ public class SetupSectionAccessibilityHelper {
 
         if (!setupProgressChecker.isProjectDetailsSubmitted()) {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
+        }
+
+        if (partnerProjectLocationRequired && !setupProgressChecker.isAllPartnerProjectLocationsSubmitted()) {
+            return NOT_ACCESSIBLE;
         }
 
         return ACCESSIBLE;
@@ -240,6 +266,10 @@ public class SetupSectionAccessibilityHelper {
 
     public boolean isFinanceContactSubmitted(OrganisationResource organisationResource) {
         return setupProgressChecker.isFinanceContactSubmitted(organisationResource);
+    }
+
+    public boolean isPartnerProjectLocationSubmitted(OrganisationResource organisationResource) {
+        return setupProgressChecker.isPartnerProjectLocationSubmitted(organisationResource);
     }
 
     private boolean isBankDetailsApproved(OrganisationResource organisation) {

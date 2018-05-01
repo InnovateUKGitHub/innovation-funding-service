@@ -18,7 +18,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.MapFunctions;
-import org.innovateuk.ifs.validation.validator.ApplicationFundingDecisionValidator;
+import org.innovateuk.ifs.application.validator.ApplicationFundingDecisionValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -228,8 +228,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	
     	assertTrue(result.isSuccess());
     	verify(applicationRepositoryMock).findByCompetitionId(competition.getId());
-    	assertEquals(ApplicationState.OPEN, application1.getApplicationProcess().getActivityState());
-    	assertEquals(ApplicationState.OPEN, application2.getApplicationProcess().getActivityState());
+    	assertEquals(ApplicationState.OPEN, application1.getApplicationProcess().getProcessState());
+    	assertEquals(ApplicationState.OPEN, application2.getApplicationProcess().getProcessState());
     	assertEquals(FundingDecisionStatus.UNDECIDED, application1.getFundingDecision());
     	assertEquals(FundingDecisionStatus.UNFUNDED, application2.getFundingDecision());
     	assertNull(competition.getFundersPanelEndDate());

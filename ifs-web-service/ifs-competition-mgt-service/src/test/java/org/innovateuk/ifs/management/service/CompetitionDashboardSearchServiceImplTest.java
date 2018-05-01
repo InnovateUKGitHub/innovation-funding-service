@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,10 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
     public void test_getProjectSetupCompetitions() throws Exception {
         CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", singleton("innovation area 1"), 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0, null, null, null);
         CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", singleton("innovation area 2"), 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0, null, null, null);
+
         when(competitionRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+        when(applicationRestService.getLatestEmailFundingDate(1L)).thenReturn(restSuccess(ZonedDateTime.now()));
+        when(applicationRestService.getLatestEmailFundingDate(2L)).thenReturn(restSuccess(ZonedDateTime.now()));
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
 

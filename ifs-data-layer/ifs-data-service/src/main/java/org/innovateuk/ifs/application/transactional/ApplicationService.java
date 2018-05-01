@@ -2,10 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
@@ -62,10 +59,6 @@ public interface ApplicationService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
 
-    @SecuredBySpring(value = "READ", description = "Only the system maintainer should be using this function")
-    @PreAuthorize("hasAuthority('system_maintainer')")
-    ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates);
-
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findAll();
 
@@ -75,6 +68,9 @@ public interface ApplicationService {
     @SecuredBySpring(value = "READ", description = "Support or IFS Admin can search applications from competition dashboard")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);

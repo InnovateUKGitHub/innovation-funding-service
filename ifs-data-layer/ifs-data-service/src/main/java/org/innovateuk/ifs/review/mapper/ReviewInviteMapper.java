@@ -3,7 +3,7 @@ package org.innovateuk.ifs.review.mapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

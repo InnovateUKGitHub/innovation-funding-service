@@ -76,7 +76,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/update-duration/{durationInMonths}", projectId, durationInMonths)
+        mockMvc.perform(post("/project/{projectId}/duration/{durationInMonths}", projectId, durationInMonths)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -138,6 +138,31 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("financeContact").description("Id of the user who is to be the Finance Contact for the given Project and Organisation")
                         ))
                 );
+    }
+
+    @Test
+    public void updatePartnerProjectLocation() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        String postCode = "TW14 9QG";
+
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        when(projectDetailsServiceMock.updatePartnerProjectLocation(composite, postCode)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postCode={postCode}", projectId, organisationId, postCode))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the Project"),
+                                parameterWithName("organisationId").description("Id of the Organisation")
+                        ),
+                        requestParameters(
+                                parameterWithName("postCode").description("The project location which is being set for the given Project and Organisation")
+                        ))
+                );
+
+        verify(projectDetailsServiceMock).updatePartnerProjectLocation(composite, postCode);
     }
 
     @Test

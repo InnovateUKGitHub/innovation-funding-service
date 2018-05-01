@@ -3,7 +3,7 @@ package org.innovateuk.ifs.review.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;

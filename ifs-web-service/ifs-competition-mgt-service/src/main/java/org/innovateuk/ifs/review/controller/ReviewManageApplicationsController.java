@@ -31,8 +31,9 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewManageApplicationsController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@SecuredBySpring(value = "Controller", description = "Only comp admin and project finance users can setup assessment" +
+        " panels if they competition supports them", securedType = ReviewManageApplicationsController.class)
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW_APPLICATIONS')")
 public class ReviewManageApplicationsController {
     private static final int PAGE_SIZE  = 20;
 

@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
@@ -83,13 +84,17 @@ public class ApplicationFinanceTotalsSenderImplTest {
                 .build(1);
 
         when(applicationFinanceHandler.getApplicationFinances(applicationId)).thenReturn(applicationFinanceResource);
-        when(financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(any())).thenReturn(expectedFinanceCostTotalResource);
-        when(spendProfileCostFilter.filterBySpendProfile(expectedFinanceCostTotalResource)).thenReturn(expectedFilteredFinanceCostTotalResource);
-        when(costTotalEndpoint.sendCostTotals(any())).thenReturn(ServiceResult.serviceSuccess());
+        when(financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(any()))
+                .thenReturn(expectedFinanceCostTotalResource);
+        when(spendProfileCostFilter.filterBySpendProfile(expectedFinanceCostTotalResource))
+                .thenReturn(expectedFilteredFinanceCostTotalResource);
+        when(costTotalEndpoint.sendCostTotals(isA(Long.class), same(expectedFilteredFinanceCostTotalResource)))
+                .thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = applicationFinanceTotalsSender.sendFinanceTotalsForApplication(applicationId);
 
         assertTrue(serviceResult.isSuccess());
-        verify(costTotalEndpoint, times(1)).sendCostTotals(expectedFilteredFinanceCostTotalResource);
+        verify(costTotalEndpoint, times(1)).sendCostTotals(isA(Long.class),
+                same(expectedFilteredFinanceCostTotalResource));
     }
 }

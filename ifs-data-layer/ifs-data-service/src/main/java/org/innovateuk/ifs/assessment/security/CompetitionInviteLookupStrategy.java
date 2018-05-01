@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.springframework.stereotype.Component;
 
 /**

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.workflow;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
@@ -10,16 +10,14 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEven
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.*;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
@@ -143,7 +141,7 @@ public class GrantOfferLetterWorkflowHandlerTest extends BaseUnitTestMocksTest {
 
     private void assertGetGrantOfferLetterStateForUser(Project project, User currentUser, GrantOfferLetterState state, GrantOfferLetterEvent lastEvent, GrantOfferLetterStateResource expectedStateInformation) {
 
-        GOLProcess golProcess = new GOLProcess(newProjectUser().build(), project, new ActivityState(ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER, state.getBackingState()));
+        GOLProcess golProcess = new GOLProcess(newProjectUser().build(), project, state);
         golProcess.setProcessEvent(lastEvent.getType());
 
         when(authenticationHelperMock.getCurrentlyLoggedInUser()).thenReturn(ServiceResult.serviceSuccess(currentUser));

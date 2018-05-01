@@ -11,8 +11,8 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -64,7 +64,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private RegistrationService registrationService;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -137,8 +137,8 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Transactional
     public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Assessment> assessments = assessmentRepository.findByActivityStateStateAndTargetCompetitionId(
-                    AssessmentState.CREATED.getBackingState(),
+            List<Assessment> assessments = assessmentRepository.findByActivityStateAndTargetCompetitionId(
+                    AssessmentState.CREATED,
                     competitionId
             );
 
@@ -191,9 +191,9 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private void assignCompetitionParticipantsToUser(User user) {
-        List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByInviteEmail(user.getEmail());
+        List<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.getByInviteEmail(user.getEmail());
         competitionParticipants.forEach(competitionParticipant -> competitionParticipant.setUser(user));
-        competitionParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.save(competitionParticipants);
     }
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {

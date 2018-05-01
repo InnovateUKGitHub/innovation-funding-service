@@ -12,6 +12,14 @@ osStageRemote.tag = frontDoorServiceVersion
 tagDockerLocal.tag = frontDoorServiceVersion
 osStageLocal.tag = frontDoorServiceVersion
 
+def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.property('ifs.front-door-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+
+createContainer.hostName="front-door-svc"
+createContainer.containerName="front-door-svc"
+createContainer.containerId="front-door-svc"
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
@@ -25,4 +33,4 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
-
+jar.dependsOn ":ifs-web-service:gulp_default"

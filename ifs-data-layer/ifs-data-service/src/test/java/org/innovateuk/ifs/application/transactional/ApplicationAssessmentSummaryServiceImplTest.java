@@ -7,8 +7,8 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -71,7 +71,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(1L, application.getId())).thenReturn(ofNullable(assessments.get(0)));
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(2L, application.getId())).thenReturn(ofNullable(assessments.get(1)));
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(competitionParticipantRepositoryMock.findParticipantsWithAssessments(
+        when(assessmentParticipantRepositoryMock.findParticipantsWithAssessments(
                 eq(competition.getId()),
                 eq(CompetitionParticipantRole.ASSESSOR),
                 eq(ACCEPTED),
@@ -97,7 +97,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(competitionParticipantRepositoryMock.findParticipantsWithoutAssessments(
+        when(assessmentParticipantRepositoryMock.findParticipantsWithoutAssessments(
                 eq(competition.getId()),
                 eq(CompetitionParticipantRole.ASSESSOR),
                 eq(ACCEPTED),

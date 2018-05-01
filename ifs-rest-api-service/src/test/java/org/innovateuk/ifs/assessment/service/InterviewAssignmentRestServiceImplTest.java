@@ -3,10 +3,12 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestServiceImpl;
 import org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
 
@@ -20,8 +22,8 @@ import static org.innovateuk.ifs.invite.builder.InterviewAssignmentInvitedResour
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitTest<InterviewAssignmentRestServiceImpl> {
@@ -155,5 +157,55 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
 
         RestResult<Void> actual = service.sendAllInvites(competitionId, sendResource);
         assertTrue(actual.isSuccess());
+    }
+
+    @Test
+    public void isAssignedToInterview() {
+        long applicationId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "is-assigned", applicationId), Boolean.class, true);
+
+        RestResult<Boolean> actual = service.isAssignedToInterview(applicationId);
+        assertTrue(actual.isSuccess());
+    }
+
+    @Test
+    public void findFeedback() throws Exception {
+        long applicationId = 1L;
+        FileEntryResource expected = new FileEntryResource();
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "feedback-details", applicationId), FileEntryResource.class, expected, OK);
+        final FileEntryResource response = service.findFeedback(applicationId).getSuccess();
+        assertSame(expected, response);
+    }
+
+    @Test
+    public void uploadFeedback() throws Exception {
+        String fileContentString = "keDFjFGrueurFGy3456efhjdg3";
+        byte[] fileContent = fileContentString.getBytes();
+        final String originalFilename = "testFile.pdf";
+        final String contentType = "text/pdf";
+        final long applicationId = 77L;
+        setupFileUploadWithRestResultExpectations(format("%s/%s/%s?filename=%s", REST_URL, "feedback", applicationId, originalFilename),
+                fileContentString, contentType, fileContent.length, CREATED);
+
+        RestResult<Void> result = service.uploadFeedback(applicationId, contentType, fileContent.length, originalFilename, fileContent);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void deleteFeedback() throws Exception {
+        long applicationId = 78L;
+        setupDeleteWithRestResultExpectations(format("%s/%s/%s", REST_URL, "feedback", applicationId));
+        service.deleteFeedback(applicationId);
+        setupDeleteWithRestResultVerifications(format("%s/%s/%s", REST_URL, "feedback", applicationId));
+    }
+
+    @Test
+    public void downloadFeedback() throws Exception {
+        final long applicationId= 912L;
+        ByteArrayResource expected = new ByteArrayResource("1u6536748".getBytes());
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "feedback", applicationId), ByteArrayResource.class, expected, OK);
+        final ByteArrayResource response = service.downloadFeedback(applicationId).getSuccess();
+        assertSame(expected, response);
     }
 }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interview.builder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.builder.BaseInviteBuilder;
-import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.ZonedDateTime;

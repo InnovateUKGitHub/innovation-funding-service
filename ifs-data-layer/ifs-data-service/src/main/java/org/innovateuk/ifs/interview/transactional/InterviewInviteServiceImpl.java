@@ -13,14 +13,14 @@ import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
-import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
-import org.innovateuk.ifs.invite.mapper.InterviewParticipantMapper;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
-import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
-import org.innovateuk.ifs.invite.repository.InterviewParticipantRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
+import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.interview.mapper.InterviewParticipantMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
@@ -53,7 +53,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -72,7 +72,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     private InterviewInviteRepository interviewInviteRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private InterviewParticipantRepository interviewParticipantRepository;
@@ -165,20 +165,20 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return getCompetition(competitionId).andOnSuccess(competition ->
                 ServiceResult.processAnyFailuresOrSucceed(simpleMap(
-                    interviewInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
-                    invite -> {
-                        interviewParticipantRepository.save(
-                                new InterviewParticipant(invite.send(loggedInUserSupplier.get(), now()))
-                        );
+                        interviewInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
+                        invite -> {
+                            interviewParticipantRepository.save(
+                                    new InterviewParticipant(invite.send(loggedInUserSupplier.get(), now()))
+                            );
 
-                        return sendInviteNotification(
-                                assessorInviteSendResource.getSubject(),
-                                assessorInviteSendResource.getContent(),
-                                invite,
-                                Notifications.INVITE_ASSESSOR_GROUP_TO_INTERVIEW
-                        );
-                    }
-            ))
+                            return sendInviteNotification(
+                                    assessorInviteSendResource.getSubject(),
+                                    assessorInviteSendResource.getContent(),
+                                    invite,
+                                    Notifications.INVITE_ASSESSOR_GROUP_TO_INTERVIEW
+                            );
+                        }
+                ))
         );
     }
 
@@ -186,31 +186,35 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     public ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
                 interviewInviteRepository.getByIdIn(inviteIds),
-                invite -> sendInviteNotification(
-                        assessorInviteSendResource.getSubject(),
-                        assessorInviteSendResource.getContent(),
-                        invite.sendOrResend(loggedInUserSupplier.get(), now()),
-                        Notifications.INVITE_ASSESSOR_GROUP_TO_INTERVIEW
-                )
+                invite -> {
+                    updateParticipantStatus(invite);
+
+                    return  sendInviteNotification(
+                            assessorInviteSendResource.getSubject(),
+                            assessorInviteSendResource.getContent(),
+                            invite.sendOrResend(loggedInUserSupplier.get(), now()),
+                            Notifications.INVITE_ASSESSOR_GROUP_TO_INTERVIEW
+                    );
+                }
         ));
     }
 
     @Override
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            final Page<AssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId, pageable);
+            final Page<AssessmentParticipant> pagedResult = assessmentParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId, pageable);
 
-            return serviceSuccess(new AvailableAssessorPageResource(
-                    pagedResult.getTotalElements(),
-                    pagedResult.getTotalPages(),
-                    simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResource),
-                    pagedResult.getNumber(),
-                    pagedResult.getSize()
-            ));
-        }
+        return serviceSuccess(new AvailableAssessorPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResource),
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
+    }
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        List<AssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId);
+        List<AssessmentParticipant> result = assessmentParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }
@@ -247,9 +251,9 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
                                                                                    Pageable pageable,
                                                                                    List<ParticipantStatus> statuses) {
         Page<InterviewParticipant> pagedResult = interviewParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
-                    competitionId,
-                    statuses,
-                    pageable);
+                competitionId,
+                statuses,
+                pageable);
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
@@ -287,11 +291,11 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     public ServiceResult<List<InterviewParticipantResource>> getAllInvitesByUser(long userId) {
         List<InterviewParticipantResource> interviewParticipantResources =
                 interviewParticipantRepository
-                .findByUserIdAndRole(userId, INTERVIEW_ASSESSOR)
-                .stream()
-                .filter(participant -> now().isBefore(participant.getInvite().getTarget().getPanelDate()))
-                .map(interviewParticipantMapper::mapToResource)
-                .collect(toList());
+                        .findByUserIdAndRole(userId, INTERVIEW_ASSESSOR)
+                        .stream()
+                        .filter(participant -> now().isBefore(participant.getInvite().getTarget().getPanelDate()))
+                        .map(interviewParticipantMapper::mapToResource)
+                        .collect(toList());
 
         interviewParticipantResources.forEach(this::determineStatusOfPanelApplications);
 
@@ -447,7 +451,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     private void determineStatusOfPanelApplications(InterviewParticipantResource interviewParticipantResource) {
 
         List<Interview> reviews = interviewRepository.
-                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                         interviewParticipantResource.getUserId(),
                         interviewParticipantResource.getCompetitionId());
 
@@ -455,6 +459,14 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     private Long getApplicationsPendingForPanelCount(List<Interview> reviews) {
-        return reviews.stream().filter(review -> review.getActivityState().equals(InterviewState.PENDING)).count();
+        return reviews.stream().filter(review -> review.getProcessState().equals(InterviewState.PENDING)).count();
+    }
+
+    private void updateParticipantStatus(InterviewInvite invite){
+        InterviewParticipant interviewParticipant = interviewParticipantRepository.getByInviteHash(invite.getHash());
+        if(interviewParticipant.getStatus() != PENDING){
+            interviewParticipant.setStatus(PENDING);
+            interviewParticipantRepository.save(interviewParticipant);
+        }
     }
 }

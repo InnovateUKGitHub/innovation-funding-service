@@ -63,6 +63,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("hasInterviewStage").description("Indicates if the competition will have an interview stage"),
             fieldWithPath("assessorFinanceView").description("Indicates if the competition will display an overview or a detailed view of the finances for the assessor"),
             fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition"),
+            fieldWithPath("locationPerPartner").description("Indicates if the project location per partner is required during project setup for this competition"),
             fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last"),
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last")
     };

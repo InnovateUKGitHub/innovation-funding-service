@@ -5,6 +5,19 @@ osStageRemote.tag = projectSetupServiceVersion
 tagDockerLocal.tag = projectSetupServiceVersion
 osStageLocal.tag = projectSetupServiceVersion
 
+createContainer.hostName="project-setup-svc"
+createContainer.containerName="project-setup-svc"
+createContainer.containerId="project-setup-svc"
+createContainer.portBindings = ['9005:8000']
+
+def enabled = project.hasProperty('ifs.project-setup-service.enabled') ? project.property('ifs.project-setup-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+
+
+ext.serverContext = '/project-setup'
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
@@ -27,3 +40,5 @@ processResources {
         exclude '**/application.properties'
     }
 }
+
+jar.dependsOn ":ifs-web-service:gulp_default"

@@ -20,7 +20,7 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.project.transactional.EmailService;
+import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -222,11 +222,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
         Page<RoleInvite> pagedResult = roleInviteRepository.findByStatus(InviteStatus.SENT, pageable);
         List<RoleInviteResource> roleInviteResources = simpleMap(pagedResult.getContent(), roleInvite -> roleInviteMapper.mapToResource(roleInvite));
-        return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(roleInviteResources), pagedResult.getNumber(), pagedResult.getSize()));
-    }
-
-    private List<RoleInviteResource> sortByName(List<RoleInviteResource> roleInviteResources) {
-        return roleInviteResources.stream().sorted(Comparator.comparing(roleInviteResource -> roleInviteResource.getName().toUpperCase())).collect(Collectors.toList());
+        return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), roleInviteResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override

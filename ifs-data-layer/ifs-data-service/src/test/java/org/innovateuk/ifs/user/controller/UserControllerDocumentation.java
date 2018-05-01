@@ -121,7 +121,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void testFindActiveInternalUsers() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
-        when(userServiceMock.findActiveByProcessRoles(Role.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(userPageResource));
+        when(userServiceMock.findActiveByRoles(Role.internalRoles(), new PageRequest(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
         mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
@@ -131,7 +131,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void testFindInactiveInternalUsers() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
-        when(userServiceMock.findInactiveByProcessRoles(Role.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(userPageResource));
+        when(userServiceMock.findInactiveByRoles(Role.internalRoles(), new PageRequest(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
         mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)

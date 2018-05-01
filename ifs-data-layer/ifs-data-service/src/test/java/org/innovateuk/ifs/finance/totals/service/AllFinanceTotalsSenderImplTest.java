@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,9 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
+import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +23,7 @@ public class AllFinanceTotalsSenderImplTest {
     private ApplicationFinanceTotalsSender applicationFinanceTotalsSender;
 
     @Mock
-    private ApplicationService applicationService;
+    private ApplicationRepository applicationRepository;
 
     @InjectMocks
     private AllFinanceTotalsSenderImpl allFinanceTotalsSender;
@@ -37,22 +36,18 @@ public class AllFinanceTotalsSenderImplTest {
 
     @Test
     public void sendAllFinanceTotals() {
-        List<Application> applications = newApplication()
+        Stream<Application> applicationsStream = newApplication()
                 .withCompetition(newCompetition().withId(1L).build())
-                .build(6);
+                .build(2)
+                .stream();
 
-        when(applicationService.getApplicationsByState(any())).thenReturn(ServiceResult.serviceSuccess(applications));
+        when(applicationRepository.findByApplicationProcessActivityStateIn(any()))
+                .thenReturn(applicationsStream);
         ServiceResult<Void> serviceResult = allFinanceTotalsSender.sendAllFinanceTotals();
 
         assertTrue(serviceResult.isSuccess());
-        verify(applicationFinanceTotalsSender, times(6)).sendFinanceTotalsForApplication(any());
-    }
-
-    @Test
-    public void sendAllFinanceTotals_allFinanceTotalsSenderIsNotCalledOnException() {
-        when(applicationService.getApplicationsByState(any())).thenThrow(Exception.class);
-        assertThatThrownBy(() -> allFinanceTotalsSender.sendAllFinanceTotals())
-                .isInstanceOf(Exception.class);
-        verifyZeroInteractions(applicationFinanceTotalsSender);
+        verify(applicationRepository, only()).findByApplicationProcessActivityStateIn(any());
+        verify(applicationFinanceTotalsSender, times(2)).sendFinanceTotalsForApplication(any());
+        verifyNoMoreInteractions(applicationRepository, applicationFinanceTotalsSender);
     }
 }

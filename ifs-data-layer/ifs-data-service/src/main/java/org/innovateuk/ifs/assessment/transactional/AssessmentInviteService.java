@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;

@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -208,5 +209,17 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccess();
         assertNotNull(result);
         Assert.assertEquals(applicationPage, result);
+    }
+
+    @Test
+    public void getLatestEmailFundingDate() {
+        long competitionId = 1L;
+        ZonedDateTime returnedDate = ZonedDateTime.now();
+        String expectedUrl = applicationRestURL + "/getLatestEmailFundingDate/" + competitionId;
+
+        setupGetWithRestResultExpectations(expectedUrl, ZonedDateTime.class, returnedDate);
+
+        ZonedDateTime date = service.getLatestEmailFundingDate(competitionId).getSuccess();
+        assertEquals(returnedDate, date);
     }
 }

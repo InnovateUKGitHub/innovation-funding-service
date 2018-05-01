@@ -8,7 +8,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -23,6 +23,7 @@ import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Mapper(config = GlobalMapperConfig.class)
@@ -61,7 +62,7 @@ public abstract class ApplicationAssessorMapper {
         mostRecentAssessment.ifPresent(assessment -> {
             populateRejection(applicationAssessorResource, assessment);
             applicationAssessorResource.setMostRecentAssessmentId(assessment.getId());
-            applicationAssessorResource.setMostRecentAssessmentState(assessment.getActivityState());
+            applicationAssessorResource.setMostRecentAssessmentState(assessment.getProcessState());
         });
 
         applicationAssessorResource.setTotalApplicationsCount(countAssignedApplications(user.getId()));
@@ -72,7 +73,7 @@ public abstract class ApplicationAssessorMapper {
     }
 
     private void populateRejection(ApplicationAssessorResource applicationAssessorResource, Assessment assessment) {
-        if (assessment.getActivityState() == REJECTED) {
+        if (assessment.getProcessState() == REJECTED) {
             AssessmentRejectOutcome rejection = assessment.getRejection();
             applicationAssessorResource.setRejectReason(rejection.getRejectReason());
             applicationAssessorResource.setRejectComment(rejection.getRejectComment());
@@ -80,7 +81,7 @@ public abstract class ApplicationAssessorMapper {
     }
 
     private long countAssignedApplications(Long userId) {
-        return assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(of(REJECTED, WITHDRAWN, SUBMITTED)));
+        return assessmentRepository.countByParticipantUserIdAndActivityStateNotIn(userId, asLinkedSet(REJECTED, WITHDRAWN, SUBMITTED));
     }
 
     private long countAssignedApplicationsByCompetition(CompetitionParticipant competitionParticipant) {
@@ -92,8 +93,7 @@ public abstract class ApplicationAssessorMapper {
     }
 
     private long countAssessmentsByCompetitionParticipantInStates(CompetitionParticipant competitionParticipant, Set<AssessmentState> states) {
-        return assessmentRepository.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(competitionParticipant.getUser().getId(),
-                competitionParticipant.getProcess().getId(),
-                getBackingStates(states));
+        return assessmentRepository.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateIn(competitionParticipant.getUser().getId(),
+                competitionParticipant.getProcess().getId(), states);
     }
 }

@@ -14,8 +14,8 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.transactional.EmailService;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -55,7 +55,7 @@ import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRol
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.transactional.InviteUserServiceImpl.Notifications.INVITE_INTERNAL_USER;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -306,55 +306,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     }
 
-    @Test
-    public void findPendingInternalUsersEnsureSortedByName() {
-        Pageable pageable = new PageRequest(0, 5);
-
-        Role role = Role.IFS_ADMINISTRATOR;
-
-        RoleInvite roleInvite1 = RoleInviteBuilder.newRoleInvite()
-                .withId(1L)
-                .withRole(role)
-                .withName("Rianne Almeida")
-                .withEmail("Rianne.Almeida@innovateuk.test")
-                .build();
-
-        RoleInvite roleInvite2 = RoleInviteBuilder.newRoleInvite()
-                .withId(2L)
-                .withRole(role)
-                .withName("Arden Pimenta")
-                .withEmail("Arden.Pimenta@innovateuk.test")
-                .build();
-
-        List<RoleInvite> roleInvites = new ArrayList<>();
-        roleInvites.add(roleInvite1);
-        roleInvites.add(roleInvite2);
-        Page<RoleInvite> page = new PageImpl<>(roleInvites, pageable, 4L);
-
-        RoleInviteResource roleInviteResource1 = new RoleInviteResource();
-        roleInviteResource1.setName("Rianne Almeida");
-        roleInviteResource1.setEmail("Rianne.Almeida@innovateuk.test");
-        roleInviteResource1.setRoleName("ifs_administrator");
-
-        RoleInviteResource roleInviteResource2 = new RoleInviteResource();
-        roleInviteResource2.setName("Arden Pimenta");
-        roleInviteResource2.setEmail("Arden.Pimenta@innovateuk.test");
-        roleInviteResource2.setRoleName("ifs_administrator");
-
-        when(roleInviteRepositoryMock.findByStatus(SENT, pageable)).thenReturn(page);
-        when(roleInviteMapperMock.mapToResource(roleInvite1)).thenReturn(roleInviteResource1);
-        when(roleInviteMapperMock.mapToResource(roleInvite2)).thenReturn(roleInviteResource2);
-
-        ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites(pageable);
-        assertTrue(result.isSuccess());
-
-        RoleInvitePageResource resultObject = result.getSuccess();
-
-        // Ensure they are sorted by name
-        assertEquals(roleInviteResource2, resultObject.getContent().get(0));
-        assertEquals(roleInviteResource1, resultObject.getContent().get(1));
-
-    }
 
     @Test
     public void findExternalInvitesWhenSearchStringIsNull(){

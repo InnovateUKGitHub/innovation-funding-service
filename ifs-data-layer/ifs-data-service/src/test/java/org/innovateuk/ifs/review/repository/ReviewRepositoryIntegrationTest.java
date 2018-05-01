@@ -7,19 +7,15 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
-import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
-import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
-import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.review.domain.Review;
+import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +25,8 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.review.builder.ReviewBuilder.newReview;
 import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInvite;
+import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
+import static org.innovateuk.ifs.review.resource.ReviewState.WITHDRAWN;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
@@ -41,9 +39,6 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -94,10 +89,10 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setProcessState(CREATED);
         repository.save(review);
 
-        assertTrue(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application, State.WITHDRAWN)); // probably should be notExists if that's allowed
+        assertTrue(repository.existsByParticipantUserAndTargetAndActivityStateNot(user, application, ReviewState.WITHDRAWN)); // probably should be notExists if that's allowed
     }
 
     @Test
@@ -129,10 +124,10 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setProcessState(CREATED);
         repository.save(review);
 
-        assertFalse(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application2, State.WITHDRAWN));
+        assertFalse(repository.existsByParticipantUserAndTargetAndActivityStateNot(user, application2, ReviewState.WITHDRAWN));
     }
 
     @Test
@@ -168,11 +163,11 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setProcessState(CREATED);
         repository.save(review);
 
 
-        assertTrue(repository.existsByTargetCompetitionIdAndActivityStateState(competition.getId(), State.CREATED));
+        assertTrue(repository.existsByTargetCompetitionIdAndActivityState(competition.getId(), ReviewState.CREATED));
     }
 
     @Test
@@ -209,11 +204,11 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setProcessState(CREATED);
         repository.save(review);
 
 
-        assertFalse(repository.existsByTargetCompetitionIdAndActivityStateState(competition2.getId(), State.CREATED));
+        assertFalse(repository.existsByTargetCompetitionIdAndActivityState(competition2.getId(), ReviewState.CREATED));
     }
 
     @Test
@@ -302,7 +297,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setProcessState(CREATED);
 
         repository.save(review);
 
@@ -356,7 +351,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.WITHDRAWN));
+        review.setProcessState(WITHDRAWN);
 
         repository.save(review);
 
