@@ -36,6 +36,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-2783 Assign Applications to Interview Panel: Add Feedback
 ...
 ...               IFS-3385 Assign applications to interview panel - Remove feedback
+...
+...               IFS-3291 Applicant dashboard - View application and assessment feedback
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -154,15 +156,19 @@ CompAdmin Views the assessors that have accepted the interview panel invite
 Applicant can see the feedback given
     [Documentation]  IFS-3291
     [Tags]
-    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/applications/find
+    Given the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/applications/find
     When the user selects the checkbox       assessor-row-4
-    And the user clicks the button/link      link=addSelected
+    And the user clicks the button/link      name=addSelected
+    #Additional feedback?
     And the user clicks the button/link      link=Review and send invites
-    When the user clicks the button/link     css=button[type="submit"]   #Send invite
+    When the user clicks the button/link     css=.button[type="submit"]   #Send invite
     Given log in as a different user         derik.arnold@load.example.com  ${short_password}
     #Here
-    And the user should see the text in the element   css=span.status-msg.msg-deadline-waiting   Feedback available
-    And the user should see the text in the element   id=content   Invited to interview
+    And the user should see the text in the element   jQuery=span:contains("Machine learning for transport infrastructure")  Feedback available
+    And the user should see the text in the element   jQuery=span:contains("Machine learning for transport infrastructure")  Invited to interview
+    #And the user should see the text in the element   jQuery=span:contains("Feedback available") ~ jQuery=span:contains("Invited to interview")
+    #And the user should see the text in the element   css=span.status-msg.msg-deadline-waiting   Feedback available
+    #And the user should see the text in the element   id=content   Invited to interview
     And The user clicks the button/link               link=Crowd sourced cycling navigator
     And the user should see the text in the element   column-third    Average score 8 / 10
 
