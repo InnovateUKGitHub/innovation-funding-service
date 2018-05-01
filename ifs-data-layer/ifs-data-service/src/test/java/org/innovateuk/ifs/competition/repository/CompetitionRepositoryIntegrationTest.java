@@ -8,6 +8,7 @@ import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;

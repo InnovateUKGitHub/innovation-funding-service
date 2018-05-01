@@ -3,7 +3,6 @@ package org.innovateuk.ifs.profile.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.competition.domain.SiteTermsAndConditions;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
@@ -70,16 +69,6 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
 
     public ProfileBuilder withAgreementSignedDate(ZonedDateTime... agreementSignedDates) {
         return withArray((agreementSignedDate, profile) -> setField("agreementSignedDate", agreementSignedDate, profile), agreementSignedDates);
-    }
-
-    public ProfileBuilder withSiteTermsAndConditions(SiteTermsAndConditions... siteTermsAndConditionss) {
-        return withArray((siteTermsAndConditions, user) -> setField("siteTermsAndConditions",
-                siteTermsAndConditions, user), siteTermsAndConditionss);
-    }
-
-    public ProfileBuilder withSiteTermsAndConditionsAcceptedDate(ZonedDateTime... siteTermsAndConditionsAcceptedDates) {
-        return withArray((siteTermsAndConditionsAcceptedDate, user) -> setField("siteTermsAndConditionsAcceptedDate",
-                siteTermsAndConditionsAcceptedDate, user), siteTermsAndConditionsAcceptedDates);
     }
 
     public ProfileBuilder withCreatedBy(User... users) {

@@ -6,8 +6,8 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
-import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -66,6 +66,7 @@ public class UserBuilderTest {
         Long expectedProfileId = 1L;
         List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL)
                 .build(2);
+        Set<Long> expectedTermsAndConditionsIds = new LinkedHashSet<>(asList(1L, 2L));
 
         User user = newUser()
                 .withId(expectedId)
@@ -84,6 +85,7 @@ public class UserBuilderTest {
                 .withEthnicity(expectedEthnicity)
                 .withProfileId(expectedProfileId)
                 .withAffiliations(expectedAffiliations)
+                .withTermsAndConditionsIds(expectedTermsAndConditionsIds)
                 .build();
 
         assertEquals(expectedId, user.getId());
@@ -102,6 +104,7 @@ public class UserBuilderTest {
         assertEquals(expectedEthnicity, user.getEthnicity());
         assertEquals(expectedProfileId, user.getProfileId());
         assertEquals(expectedAffiliations, user.getAffiliations());
+        assertEquals(expectedTermsAndConditionsIds, user.getTermsAndConditionsIds());
     }
 
     @Test
@@ -126,6 +129,9 @@ public class UserBuilderTest {
                 newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2),
                 newAffiliation().withAffiliationType(PERSONAL_FINANCIAL, FAMILY_FINANCIAL).build(2)
         };
+        Set<Long>[] expectedTermsAndConditionsIds = new Set[] {(new LinkedHashSet<>(asList(1L, 2L))), new
+                LinkedHashSet<>(asList(3L, 4L))
+        };
 
         List<User> users = newUser()
                 .withId(expectedIds)
@@ -144,6 +150,7 @@ public class UserBuilderTest {
                 .withEthnicity(expectedEthnicities)
                 .withProfileId(expectedProfileIds)
                 .withAffiliations(expectedAffiliations)
+                .withTermsAndConditionsIds(expectedTermsAndConditionsIds)
                 .build(2);
 
 
@@ -165,6 +172,7 @@ public class UserBuilderTest {
         assertEquals(expectedEthnicities[0], first.getEthnicity());
         assertEquals(expectedProfileIds[0], first.getProfileId());
         assertEquals(expectedAffiliations[0], first.getAffiliations());
+        assertEquals(expectedTermsAndConditionsIds[0], first.getTermsAndConditionsIds());
 
         User second = users.get(1);
 
@@ -184,5 +192,6 @@ public class UserBuilderTest {
         assertEquals(expectedEthnicities[1], second.getEthnicity());
         assertEquals(expectedProfileIds[1], second.getProfileId());
         assertEquals(expectedAffiliations[1], second.getAffiliations());
+        assertEquals(expectedTermsAndConditionsIds[1], second.getTermsAndConditionsIds());
     }
 }

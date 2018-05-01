@@ -19,7 +19,6 @@ public class ProfileResource {
     private String skillsAreas;
     private List<AffiliationResource> affiliations = new ArrayList<>();
     private AddressResource address;
-    private boolean siteTermsAndConditionsAccepted;
 
     public List<InnovationAreaResource> getInnovationAreas() {
         return innovationAreas;
@@ -61,14 +60,6 @@ public class ProfileResource {
         this.address = address;
     }
 
-    public boolean getSiteTermsAndConditionsAccepted() {
-        return siteTermsAndConditionsAccepted;
-    }
-
-    public void setSiteTermsAndConditionsAccepted(final boolean siteTermsAndConditionsAccepted) {
-        this.siteTermsAndConditionsAccepted = siteTermsAndConditionsAccepted;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -82,7 +73,6 @@ public class ProfileResource {
         final ProfileResource that = (ProfileResource) o;
 
         return new EqualsBuilder()
-                .append(siteTermsAndConditionsAccepted, that.siteTermsAndConditionsAccepted)
                 .append(innovationAreas, that.innovationAreas)
                 .append(businessType, that.businessType)
                 .append(skillsAreas, that.skillsAreas)
@@ -99,7 +89,6 @@ public class ProfileResource {
                 .append(skillsAreas)
                 .append(affiliations)
                 .append(address)
-                .append(siteTermsAndConditionsAccepted)
                 .toHashCode();
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 /**
  * Builder for {@link ProfileResource}.
@@ -44,11 +43,6 @@ public class ProfileResourceBuilder extends BaseBuilder<ProfileResource, Profile
 
     public ProfileResourceBuilder withAddress(AddressResource... addresses) {
         return withArraySetFieldByReflection("address", addresses);
-    }
-
-    public ProfileResourceBuilder withSiteTermsAndConditionsAccepted(Boolean... siteTermsAndConditionsAcceptedDates) {
-        return withArray((siteTermsAndConditionsAccepted, user) -> setField("siteTermsAndConditionsAccepted",
-                siteTermsAndConditionsAccepted, user), siteTermsAndConditionsAcceptedDates);
     }
 
     @Override

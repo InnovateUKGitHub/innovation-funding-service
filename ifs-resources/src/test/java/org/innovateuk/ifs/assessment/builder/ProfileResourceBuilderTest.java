@@ -26,7 +26,6 @@ public class ProfileResourceBuilderTest {
         BusinessType expectedBusinessType = BUSINESS;
         List<AffiliationResource> expectedAffiliations = newAffiliationResource().build(2);
         List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource().build(2);
-        boolean expectedSiteTermsAndConditionsAccepted = true;
 
         ProfileResource profileResource = newProfileResource()
                 .withAffiliations(expectedAffiliations)
@@ -34,7 +33,6 @@ public class ProfileResourceBuilderTest {
                 .withSkillsAreas(expectedSkillsAreas)
                 .withInnovationAreas(expectedInnovationAreas)
                 .withAddress(expectedAddress)
-                .withSiteTermsAndConditionsAccepted(expectedSiteTermsAndConditionsAccepted)
                 .build();
 
         assertEquals(expectedBusinessType, profileResource.getBusinessType());
@@ -42,7 +40,6 @@ public class ProfileResourceBuilderTest {
         assertEquals(expectedInnovationAreas, profileResource.getInnovationAreas());
         assertEquals(expectedAffiliations, profileResource.getAffiliations());
         assertEquals(expectedAddress, profileResource.getAddress());
-        assertEquals(expectedSiteTermsAndConditionsAccepted, profileResource.getSiteTermsAndConditionsAccepted());
     }
 
     @Test
@@ -52,7 +49,6 @@ public class ProfileResourceBuilderTest {
         BusinessType[] expectedBusinessType = {BUSINESS, ACADEMIC};
         List<AffiliationResource>[] expectedAffiliations = new List[]{newAffiliationResource().build(2), newAffiliationResource().build(2)};
         List<InnovationAreaResource>[] expectedInnovationAreas = new List[]{ newInnovationAreaResource().build(2),  newInnovationAreaResource().build(2)};
-        Boolean[] expectedSiteTermsAndConditionsAccepted = {true, false};
 
         List<ProfileResource> profileResources = newProfileResource()
                 .withSkillsAreas(expectedSkillsAreas)
@@ -60,7 +56,6 @@ public class ProfileResourceBuilderTest {
                 .withAffiliations(expectedAffiliations)
                 .withInnovationAreas(expectedInnovationAreas)
                 .withAddress(expectedAddresses)
-                .withSiteTermsAndConditionsAccepted(expectedSiteTermsAndConditionsAccepted)
                 .build(2);
 
         ProfileResource first = profileResources.get(0);
@@ -69,7 +64,6 @@ public class ProfileResourceBuilderTest {
         assertEquals(expectedAffiliations[0], first.getAffiliations());
         assertEquals(expectedInnovationAreas[0], first.getInnovationAreas());
         assertEquals(expectedAddresses[0], first.getAddress());
-        assertEquals(expectedSiteTermsAndConditionsAccepted[0], first.getSiteTermsAndConditionsAccepted());
 
         ProfileResource second = profileResources.get(1);
         assertEquals(expectedSkillsAreas[1], second.getSkillsAreas());
@@ -77,6 +71,5 @@ public class ProfileResourceBuilderTest {
         assertEquals(expectedAffiliations[1], second.getAffiliations());
         assertEquals(expectedInnovationAreas[1], second.getInnovationAreas());
         assertEquals(expectedAddresses[1], second.getAddress());
-        assertEquals(expectedSiteTermsAndConditionsAccepted[1], second.getSiteTermsAndConditionsAccepted());
     }
 }
