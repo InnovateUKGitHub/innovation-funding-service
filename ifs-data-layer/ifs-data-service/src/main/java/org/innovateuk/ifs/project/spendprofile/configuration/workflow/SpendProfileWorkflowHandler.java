@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.spendprofile.configuration.workflow;
 
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.repository.ProjectRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileProcessRepository;
@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -69,13 +68,13 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
         SpendProfileProcess process = getCurrentProcess(project);
         if (process == null)
             return false;
-        return !SpendProfileState.PENDING.equals(process.getActivityState());
+        return !SpendProfileState.PENDING.equals(process.getProcessState());
 
     }
 
     public boolean isReadyToApprove(Project project) {
         SpendProfileProcess process = getCurrentProcess(project);
-        return process != null && SpendProfileState.SUBMITTED.equals(process.getActivityState());
+        return process != null && SpendProfileState.SUBMITTED.equals(process.getProcessState());
     }
 
     private boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
@@ -90,9 +89,9 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
 
     public ApprovalType getApproval(Project project) {
         SpendProfileProcess process = getCurrentProcess(project);
-        if (process != null && SpendProfileState.APPROVED.equals(process.getActivityState())) {
+        if (process != null && SpendProfileState.APPROVED.equals(process.getProcessState())) {
             return ApprovalType.APPROVED;
-        } else if (process != null && SpendProfileState.REJECTED.equals(process.getActivityState())) {
+        } else if (process != null && SpendProfileState.REJECTED.equals(process.getProcessState())) {
             return ApprovalType.REJECTED;
         } else {
             return ApprovalType.UNSET;
@@ -102,11 +101,6 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
     @Override
     protected SpendProfileProcess createNewProcess(Project target, ProjectUser participant) {
         return new SpendProfileProcess(participant, target, null);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return ActivityType.PROJECT_SETUP_SPEND_PROFILE;
     }
 
     @Override

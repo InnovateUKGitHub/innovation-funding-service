@@ -5,9 +5,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -39,7 +37,7 @@ public class ApplicationTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "testApplicationName";
-        applicationState = ApplicationState.CREATED;
+        applicationState = CREATED;
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 
@@ -48,15 +46,15 @@ public class ApplicationTest {
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
 
-        application = new Application(competition, name, processRoles, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        application = new Application(competition, name, processRoles, CREATED);
         application.setId(id);
     }
 
     @Test
-    public void applicationShouldReturnCorrectAttributeValues() throws Exception {
+    public void applicationShouldReturnCorrectAttributeValues() {
         Assert.assertEquals(application.getId(), id);
         Assert.assertEquals(application.getName(), name);
-        Assert.assertEquals(application.getApplicationProcess().getActivityState(), applicationState);
+        Assert.assertEquals(application.getApplicationProcess().getProcessState(), applicationState);
         Assert.assertEquals(application.getProcessRoles(), processRoles);
         Assert.assertEquals(application.getCompetition(), competition);
         Assert.assertEquals(application.getApplicationFinances(), applicationFinances);
@@ -163,5 +161,4 @@ public class ApplicationTest {
     public void applicationFundingDecisionIsChangeable() {
         assertTrue(new Application().applicationFundingDecisionIsChangeable());
     }
-
 }
