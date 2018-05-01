@@ -48,6 +48,23 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     }
 
     @Test
+    public void addProjectCostWithoutPersisting() throws Exception {
+        String url = BASE_URL + "/add-without-persisting/{projectFinanceId}/{questionId}";
+
+        when(projectFinanceRowServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
+
+        mockMvc.perform(post(url, 123L, 456L).
+                contentType(APPLICATION_JSON)).
+                andExpect(status().isCreated()).
+                andDo(document("project/finance/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectFinanceId").description("Id of project finance associated with particular project and organisation to which a new cost row should be added (without persisting)"),
+                                parameterWithName("questionId").description("Id of question for which a new finance row should be added (without persisting)")
+                        )
+                ));
+    }
+
+    @Test
     public void getCostItem() throws Exception{
         String url = BASE_URL + "/{id}";
 
