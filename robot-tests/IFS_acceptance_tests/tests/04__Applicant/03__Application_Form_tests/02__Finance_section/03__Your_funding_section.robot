@@ -8,8 +8,10 @@ Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
+
 *** Variables ***
-${Application_name}  Hydrology the dynamics of Earth's surface water
+${applicationName}  Hydrology the dynamics of Earth's surface water
+
 
 *** Test Cases ***
 Other funding validation message
@@ -72,7 +74,7 @@ If funding is complete. application details has a warning message
     ...    INFUND-6823
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${Application_name}
+    And the user clicks the button/link    link=${applicationName}
     When the user clicks the button/link    link=Application details
     And the user clicks the button/link    jQuery=button:contains(Edit)
     And the user clicks the button/link    jQuery=button:contains("Change your research category")
@@ -83,7 +85,7 @@ Changing application details sets funding level to incomplete
     [Tags]    HappyPath
     When the user changes the research category
     And the user clicks the button/link    name=mark_as_complete
-    And the user navigates to Your-finances page  ${Application_name}
+    And the user navigates to Your-finances page  ${applicationName}
     Then the user should see the element    css=.task-list li:nth-of-type(3) .action-required
 
 Funding level has been reset
@@ -129,8 +131,8 @@ Read only view of the other funding
 *** Keywords ***
 Custom Suite Setup
     the user logs-in in new browser       &{lead_applicant_credentials}
-    Mark application details as complete  ${Application_name}
-    Complete the org size section         ${Application_name}
+    Mark application details as complete  ${applicationName}
+    Complete the org size section         ${applicationName}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 
