@@ -83,7 +83,7 @@
         <th:block th:if="${interviewFeedbackViewModel.hasAttachment()}">
             <div class="form-group download">
                 <h3 class="heading-small no-margin">Lead applicant response</h3>
-                <a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
+                <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
                    th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
                    target="_blank">File</a></p>
             </div>
