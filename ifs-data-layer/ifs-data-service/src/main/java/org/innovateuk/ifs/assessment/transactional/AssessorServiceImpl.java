@@ -137,8 +137,8 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Transactional
     public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Assessment> assessments = assessmentRepository.findByActivityStateStateAndTargetCompetitionId(
-                    AssessmentState.CREATED.getBackingState(),
+            List<Assessment> assessments = assessmentRepository.findByActivityStateAndTargetCompetitionId(
+                    AssessmentState.CREATED,
                     competitionId
             );
 

@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.repository.ApplicationStateConverter;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
@@ -28,13 +30,17 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     @OrderBy("id ASC")
     private List<IneligibleOutcome> ineligibleOutcomes = new ArrayList<>();
 
+    @Convert(converter = ApplicationStateConverter.class)
+    @Column(name="activity_state_id")
+    private ApplicationState activityState;
+
     ApplicationProcess() {
     }
 
-    public ApplicationProcess(Application target, ProcessRole participant, ActivityState initialState) {
+    public ApplicationProcess(Application target, ProcessRole participant, ApplicationState initialState) {
         this.target = target;
         this.participant = participant;
-        this.setActivityState(initialState);
+        this.setProcessState(initialState);
     }
 
     @Override
@@ -58,11 +64,44 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     }
 
     @Override
-    public ApplicationState getActivityState() {
-        return ApplicationState.fromState(activityState.getState());
+    public ApplicationState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(ApplicationState status) {
+        this.activityState = status;
     }
 
     public List<IneligibleOutcome> getIneligibleOutcomes() {
         return ineligibleOutcomes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationProcess that = (ApplicationProcess) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(participant, that.participant)
+                .append(target, that.target)
+                .append(ineligibleOutcomes, that.ineligibleOutcomes)
+                .append(activityState, that.activityState)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(participant)
+                .append(target)
+                .append(ineligibleOutcomes)
+                .append(activityState)
+                .toHashCode();
     }
 }

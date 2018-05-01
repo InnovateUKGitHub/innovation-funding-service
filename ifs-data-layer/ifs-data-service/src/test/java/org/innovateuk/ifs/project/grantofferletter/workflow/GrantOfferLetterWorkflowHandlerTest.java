@@ -10,8 +10,6 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEven
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -143,7 +141,7 @@ public class GrantOfferLetterWorkflowHandlerTest extends BaseUnitTestMocksTest {
 
     private void assertGetGrantOfferLetterStateForUser(Project project, User currentUser, GrantOfferLetterState state, GrantOfferLetterEvent lastEvent, GrantOfferLetterStateResource expectedStateInformation) {
 
-        GOLProcess golProcess = new GOLProcess(newProjectUser().build(), project, new ActivityState(ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER, state.getBackingState()));
+        GOLProcess golProcess = new GOLProcess(newProjectUser().build(), project, state);
         golProcess.setProcessEvent(lastEvent.getType());
 
         when(authenticationHelperMock.getCurrentlyLoggedInUser()).thenReturn(ServiceResult.serviceSuccess(currentUser));

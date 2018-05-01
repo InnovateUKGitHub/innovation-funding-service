@@ -16,9 +16,9 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceFormHandler;
 import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
@@ -167,7 +167,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
     @Test
     public void testViewEligibilityLeadOrg() throws Exception {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
@@ -186,7 +186,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
     @Test
     public void testViewEligibilityNonLeadOrg() throws Exception {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
@@ -205,7 +205,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
     @Test
     public void testViewEligibilityLeadOrgIsAcademic() throws Exception {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
@@ -226,7 +226,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
     @Test
     public void testViewEligibilityLeadOrgIsAcademicNoJesFileEntry() throws Exception {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
@@ -290,7 +290,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.UNSET)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -301,7 +301,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.UNSET);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET);
 
     }
 
@@ -311,7 +311,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.RED)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.RED)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -322,17 +322,17 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.RED);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.RED);
 
     }
 
     @Test
     public void testConfirmEligibilityWhenSaveEligibilityReturnsFailure() throws Exception {
 
-        when(projectFinanceService.saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.APPROVED, EligibilityRagStatus.RED)).
+        when(projectFinanceService.saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.APPROVED, EligibilityRagStatus.RED)).
                 thenReturn(serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         mockMvc.perform(
@@ -343,7 +343,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.APPROVED, EligibilityRagStatus.RED);
+        verify(projectFinanceService).saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.APPROVED, EligibilityRagStatus.RED);
 
     }
 
@@ -353,7 +353,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.GREEN)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -364,7 +364,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
 
     }
 
@@ -374,7 +374,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.UNSET)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -385,7 +385,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
 
     }
 
@@ -395,7 +395,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.RED)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.RED)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -406,17 +406,17 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.RED);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.RED);
 
     }
 
     @Test
     public void testSaveAndContinueWhenSaveEligibilityReturnsFailure() throws Exception {
 
-        when(projectFinanceService.saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.REVIEW, EligibilityRagStatus.RED)).
+        when(projectFinanceService.saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.REVIEW, EligibilityRagStatus.RED)).
                 thenReturn(serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         mockMvc.perform(
@@ -427,7 +427,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.REVIEW, EligibilityRagStatus.RED);
+        verify(projectFinanceService).saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.REVIEW, EligibilityRagStatus.RED);
 
     }
 
@@ -437,7 +437,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.GREEN)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.GREEN)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -448,7 +448,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.GREEN);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.GREEN);
 
     }
 

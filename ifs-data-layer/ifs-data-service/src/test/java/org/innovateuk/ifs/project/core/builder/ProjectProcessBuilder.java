@@ -10,9 +10,9 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 /**
  * Builder for {@link ProjectProcess} entities.
@@ -41,15 +41,15 @@ public class ProjectProcessBuilder extends BaseBuilder<ProjectProcess, ProjectPr
         return withArray((id, projectProcess) -> projectProcess.setId(id), ids);
     }
 
-    public ProjectProcessBuilder withProject(Project... project) {
-        return withArray((proj, projectProcess) -> setField("target", proj, projectProcess), project);
+    public ProjectProcessBuilder withProject(Project... projects) {
+        return withArray((project, projectProcess) -> setField("target", project, projectProcess), projects);
     }
 
-    public ProjectProcessBuilder withProjectUser(ProjectUser... projectUser){
-        return withArray((users, projectProcess) -> projectProcess.setParticipant(users), projectUser);
+    public ProjectProcessBuilder withProjectUser(ProjectUser... projectUsers){
+        return withArray((projectUser, projectProcess) -> projectProcess.setParticipant(projectUser), projectUsers);
     }
 
-    public ProjectProcessBuilder withActivityState(ActivityState... activityState) {
-        return withArray((state, object) -> object.setActivityState(state), activityState);
+    public ProjectProcessBuilder withActivityState(ProjectState... activityStates) {
+        return withArray((activityState, projectProcess) -> projectProcess.setProcessState(activityState), activityStates);
     }
 }
