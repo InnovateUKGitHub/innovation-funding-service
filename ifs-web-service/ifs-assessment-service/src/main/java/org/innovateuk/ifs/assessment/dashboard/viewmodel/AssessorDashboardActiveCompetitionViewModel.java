@@ -96,6 +96,14 @@ public class AssessorDashboardActiveCompetitionViewModel {
         this.daysLeftPercentage = daysLeftPercentage;
     }
 
+    public boolean hasPendingAssessments(){
+        return !(pendingAssessments == 0);
+    }
+
+    public boolean hasApplicationsToAssess(){
+        return !(progressTotal - progressAssessed == 0);
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
