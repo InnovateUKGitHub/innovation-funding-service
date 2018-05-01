@@ -1,0 +1,44 @@
+{
+  "_from": "govuk_frontend_toolkit@5.1.2",
+  "_id": "govuk_frontend_toolkit@5.1.2",
+  "_inBundle": false,
+  "_integrity": "sha1-04D74kjmA/NBm7KYOpr1S4eoQVw=",
+  "_location": "/govuk_frontend_toolkit",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "govuk_frontend_toolkit@5.1.2",
+    "name": "govuk_frontend_toolkit",
+    "escapedName": "govuk_frontend_toolkit",
+    "rawSpec": "5.1.2",
+    "saveSpec": null,
+    "fetchSpec": "5.1.2"
+  },
+  "_requiredBy": [
+    "/",
+    "/govuk-elements-sass"
+  ],
+  "_resolved": "https://registry.npmjs.org/govuk_frontend_toolkit/-/govuk_frontend_toolkit-5.1.2.tgz",
+  "_shasum": "d380fbe248e603f3419bb2983a9af54b87a8415c",
+  "_spec": "govuk_frontend_toolkit@5.1.2",
+  "_where": "/Users/kieran/innovation-funding-service/ifs-web-service",
+  "author": {
+    "name": "Government Digital Service developers",
+    "email": "govuk-dev@digital.cabinet-office.gov.uk"
+  },
+  "bugs": {
+    "url": "https://github.com/alphagov/govuk_frontend_toolkit/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "npm package for using the GOV.UK frontend toolkit",
+  "homepage": "https://github.com/alphagov/govuk_frontend_toolkit_npm#readme",
+  "license": "MIT",
+  "name": "govuk_frontend_toolkit",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alphagov/govuk_frontend_toolkit_npm.git"
+  },
+  "version": "5.1.2"
+}

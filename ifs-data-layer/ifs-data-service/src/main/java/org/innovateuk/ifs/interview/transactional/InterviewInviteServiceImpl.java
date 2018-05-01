@@ -11,6 +11,8 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
+import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationPageResource;
+import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationResource;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -267,6 +269,30 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
                 pagedResult.getNumber(),
                 pagedResult.getSize()
         ));
+    }
+
+    @Override
+    public ServiceResult<AssessorInterviewAllocationPageResource> getAllocateApplicationsOverview(long competitionId,
+                                                                                                  Pageable pageable) {
+        Page<AssessorInterviewAllocationResource> pagedResult = interviewParticipantRepository.getAllocateApplicationsOverview(
+                competitionId,
+                pageable);
+
+        return serviceSuccess(new AssessorInterviewAllocationPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                pagedResult.getContent(),
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
+
+//        return serviceSuccess(new AssessorInviteOverviewPageResource(
+//                pagedResult.getTotalElements(),
+//                pagedResult.getTotalPages(),
+//                inviteOverviews,
+//                pagedResult.getNumber(),
+//                pagedResult.getSize()
+//        ));
     }
 
 

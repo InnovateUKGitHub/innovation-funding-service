@@ -2,6 +2,8 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationPageResource;
+import org.innovateuk.ifs.interview.resource.AssessorInterviewAllocationResource;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.invite.resource.*;
@@ -68,6 +70,12 @@ public interface InterviewInviteService {
     ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                             Pageable pageable,
                                                                             List<ParticipantStatus> statuses);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_INTERVIEW_PANEL_INVITE_OVERVIEW_BY_COMPETITION",
+            description = "Competition Admins and Project Finance users can retrieve interview panel invitation overview by competition")
+    ServiceResult<AssessorInterviewAllocationPageResource> getAllocateApplicationsOverview(long competitionId,
+                                                                                           Pageable pageable);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_NON_ACCEPTED_INVITE_IDS_BY_COMPETITION",
