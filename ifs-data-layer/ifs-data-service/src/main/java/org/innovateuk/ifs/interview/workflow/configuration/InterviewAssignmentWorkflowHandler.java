@@ -11,11 +11,7 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
@@ -23,8 +19,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
-
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_INTERVIEW_PANEL;
 
 /**
  * Manages the process for assigning applications to assessors for an assessment interview.
@@ -45,15 +39,9 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-
     @Override
     protected InterviewAssignment createNewProcess(Application application, ProcessRole participant) {
-        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
-
-        return new InterviewAssignment(application, participant, createdActivityState);
+        return new InterviewAssignment(application, participant);
     }
 
     public boolean notifyInterviewPanel(InterviewAssignment interviewAssignment, InterviewAssignmentMessageOutcome messageOutcome) {
@@ -66,11 +54,6 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
 
     public boolean withdrawResponse(InterviewAssignment interviewAssignment) {
         return fireEvent(withdrawResponseMessage(interviewAssignment), interviewAssignment);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return ASSESSMENT_INTERVIEW_PANEL;
     }
 
     @Override

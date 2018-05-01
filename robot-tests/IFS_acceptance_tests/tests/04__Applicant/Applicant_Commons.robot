@@ -21,69 +21,41 @@ Applicant navigates to the finances of the Robot application
     the user navigates to Your-finances page  Robot test application
 
 log in and create new application if there is not one already with complete application details
-    log in and create new application if there is not one already  Robot test application
-    Mark application details as complete
+    [Arguments]  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
+    log in and create new application if there is not one already  ${applicationTitle}
+    the applicant completes the application details  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
 
-log in and create a new application if there is not one already with complete application details and completed org size section
-    log in and create new application if there is not one already  Robot test application
-    Mark application details as complete
-    Complete the org size section
-
-Complete the org size section
-    the user navigates to the page    ${DASHBOARD_URL}
-    the user clicks the button/link    link=Robot test application
-    the user clicks the button/link    link=Your finances
-    the user clicks the button/link    link=Your organisation
-    ${orgSizeReadonly}=  run keyword and return status without screenshots    Element Should Be Visible   jQuery=button:contains("Edit")
-    Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit")
-    the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
-    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
-    the user enters text to a text field    jQuery=label:contains("employees") + input    0
-    the user moves focus to the element    jQuery=button:contains("Mark as complete")
-    run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
-
-mark application details incomplete the user closes the browser
-    Mark application details as incomplete
+Mark application details as incomplete and the user closes the browser
+    [Arguments]  ${applicationTitle}
+    Mark application details as incomplete  ${applicationTitle}
     the user closes the browser
 
-Mark application details as complete
-    Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link=Robot test application
-    the applicant completes the application details     Application details
-
 Mark application details as incomplete
-    Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link=Robot test application
-    the user clicks the button/link       link=Application details
-    the user clicks the button/link       jQuery=button:contains("Edit")
-    the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=li:contains("Application details") > .task-status-incomplete
+    [Arguments]  ${applicationTitle}
+    the user navigates to the page   ${DASHBOARD_URL}
+    the user clicks the button/link  link=${applicationTitle}
+    the user clicks the button/link  link=Application details
+    the user clicks the button/link  jQuery=button:contains("Edit")
+    the user clicks the button/link  jQuery=button:contains("Save and return to application overview")
+    the user should see the element  jQuery=li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
-    Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details  Application details
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords  the user clicks the button/link  link=Application details
+    ...   AND  the user moves Application details in Edit mode
+    ...   AND  the user fills in the Application details  Robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
 
 the applicant completes the application details
-    [Arguments]   ${Application_details}
-    the user clicks the button/link       link=${Application_details}
+    [Arguments]  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
     the user moves Application details in Edit mode
-    the user clicks the button/link       jQuery=button:contains("research category")
-    the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
-    the user clicks the button/link       jQuery=button:contains("Save")
-    the user clicks the button twice      css=label[for="application.resubmission-no"]
-    # those Radio buttons need to be clicked twice.
-    The user enters text to a text field  id=application_details-startdate_day  18
-    The user enters text to a text field  id=application_details-startdate_year  2018
-    The user enters text to a text field  id=application_details-startdate_month  11
-    The user enters text to a text field  css=[id="application.durationInMonths"]  20
-    the user clicks the button/link       jQuery=button:contains("Mark as complete")
-    the user should see the element       jQuery=button:contains("Edit")
-    the user should not see the element   css=input
+    ${applicationId} =  get application id by name  ${applicationTitle}
+    the user navigates to the page   ${server}/application/${applicationId}
+    the user clicks the button/link  link=Application details
+    the user fills in the Application details  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
      ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.buttonlink[name="mark_as_incomplete"]
-     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]  # the Edit link
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
@@ -225,24 +197,21 @@ the user removes prev costs if there are any
 the academic user fills in his finances
     [Arguments]  ${application}
     the user navigates to Your-finances page  ${application}
-    the academic fills in the project costs   ${application}
+    the user clicks the button/link           link=Your project costs
+    the academic fills in the project costs
 
 the academic fills in the project costs
-    [Arguments]  ${application}
-    the user clicks the button/link       link=Your project costs
-    The user enters text to a text field  css=input[name$="tsb_reference"]  ${application}
-    The user enters text to a text field  id=incurred-staff  999.999
-    The user enters text to a text field  id=travel    999.999
-    The user enters text to a text field  id=other    999.999
-    the user should see the element       css=#subtotal-resources[data-calculation-rawvalue^="2999"]
-    The user enters text to a text field  id=investigators    999.999
-    The user enters text to a text field  id=estates    999.999
-    The user enters text to a text field  id=other-direct    999.999
-    the user should see the element       css=#subtotal-directly-allocated[data-calculation-rawvalue^="2999"]
-    The user enters text to a text field  id=indirect    999.999
-    The user enters text to a text field  id=exceptions-staff    999.999
-    The user enters text to a text field  id=exceptions-other-direct    999.999
-    the user should see the element       css=#total[data-calculation-rawvalue^="8999"]
+    The user enters text to a text field  css=[name$="incurred_staff"]  4242
+    The user enters text to a text field  css=[name$="incurred_travel_subsistence"]  4243
+    The user enters text to a text field  css=[name$="incurred_other_costs"]  4244
+    The user enters text to a text field  css=[name$="allocated_investigators"]  42
+    The user enters text to a text field  css=[name$="allocated_estates_costs"]  3000
+    The user enters text to a text field  css=[name$="allocated_other_costs"]  5
+    The user enters text to a text field  css=[name$="indirect_costs"]  8909
+    The user enters text to a text field  css=[name$="exceptions_staff"]  123
+    The user enters text to a text field  css=[name$="exceptions_other_costs"]  7890
+    The user enters text to a text field  css=input[name$="tsb_reference"]  L33t
+    Textfield Value Should Be             id=total  £23,784
     the user uploads the file             css=.inputfile  ${valid_pdf}
     the user should see the element       link=testing.pdf (opens in a new window)
     the user selects the checkbox         termsAgreed
@@ -284,8 +253,8 @@ the user checks Your Funding section
 
 the user selects research area
     [Arguments]  ${Application}
-    the applicant completes the application details     application details
-    And the user fills in the funding information    ${Application}
+    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the funding information        ${Application}
 
 the user fills in the funding information
     [Arguments]  ${Application}

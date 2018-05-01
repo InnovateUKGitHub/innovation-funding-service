@@ -4,6 +4,10 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +23,17 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
  */
 @Component
 @PermissionRules
-public class ProjectFinanceQueryPermissionRules  {
+public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
+
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
+    @Autowired
+    private ProjectProcessRepository projectProcessRepository;
+
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Queries")
     public boolean onlyProjectFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
+        return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
 
     private boolean queryHasOnePostWithAuthorBeingCurrentProjectFinance(QueryResource query, UserResource user) {
@@ -44,12 +52,12 @@ public class ProjectFinanceQueryPermissionRules  {
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a query")
     public boolean projectFinanceUsersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk);
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project partners can add posts to a query")
     public boolean projectPartnersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
-        return !query.posts.isEmpty() && isPartner(user, query.contextClassPk);
+        return !query.posts.isEmpty() && isProjectInSetup(query.contextClassPk) && isPartner(user, query.contextClassPk);
     }
 
     private boolean isPartner(UserResource user, Long projectFinance) {
@@ -59,5 +67,19 @@ public class ProjectFinanceQueryPermissionRules  {
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {
         return ofNullable(projectFinanceRepository.findOne(id));
+    }
+
+    private boolean isProjectInSetup(Long projectFinance) {
+        Optional<ProjectFinance> pf = findProjectFinance(projectFinance);
+        if (pf.isPresent()){
+            long projectId = pf.get().getProject().getId();
+            return isProjectStateInSetup(projectId);
+        }
+        return false;
+    }
+
+    private boolean isProjectStateInSetup(long projectId){
+        ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
+        return ProjectState.SETUP.equals(projectProcess.getProcessState());
     }
 }

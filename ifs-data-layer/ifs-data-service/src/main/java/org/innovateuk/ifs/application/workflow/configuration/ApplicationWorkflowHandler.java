@@ -10,9 +10,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
@@ -24,7 +21,6 @@ import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION;
 
 /**
  * Workflow handler for firing {@link ApplicationEvent} events.
@@ -47,12 +43,7 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
 
     @Override
     protected ApplicationProcess createNewProcess(Application target, ProcessRole participant) {
-        return new ApplicationProcess(target, participant, new ActivityState(APPLICATION, State.CREATED));
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return APPLICATION;
+        return new ApplicationProcess(target, participant, ApplicationState.CREATED);
     }
 
     @Override

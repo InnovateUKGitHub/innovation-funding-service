@@ -65,7 +65,7 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
 
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
-        when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelKeyStatisticsByCompetition(competitionId))
+        when(competitionKeyStatisticsRestService.getReviewKeyStatisticsByCompetition(competitionId))
                 .thenReturn(toGetResponse(reviewKeyStatisticsResource));
         when(reviewRestService.isPendingReviewNotifications(competitionId))
                 .thenReturn(toGetResponse(reviewsPending));

@@ -18,46 +18,93 @@
         <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
-    <div class="grid-row sorting">
+    <p>Upload additional assessment feedback for applicants, edit the email and click send. The applications will then be assigned to this interview panel.</p>
+    <details>
+        <summary>
+            <span class="summary">Additional feedback guidance</span>
+        </summary>
+        <div class="panel">
+            <p>You may upload additional assessment feedback per application, if available. The applicant can download this along with their overall feedback document which is sent out automatically.</p>
+            <p>The feedback document should be:</p>
+            <ul class="list list-bullet">
+                <li>a portable document format (.pdf)</li>
+                <li>readable with 100% magnification</li>
+                <li>less than 10MB in size</li>
+            </ul>
+        </div>
+    </details>
+
+    <div class="grid-row sorting extra-margin">
         <div class="column-half">
             <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
             <span class="heading-small">applications</span>
         </div>
     </div>
 
-    <div class="table-overflow">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col" class="width-small">Application number</th>
-                <th scope="col">Project title</th>
-                <th scope="col">Lead organisation</th>
-                <th scope="col">Additional feedback</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="app : ${model.applications}">
-                <td>
-                    <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${model.originQuery}"
-                       th:text="${app.applicationId}">123
-                    </a>
-                </td>
-                <td th:text="${app.applicationName}">Application name</td>
-                <td th:text="${app.leadOrganisation}">Lead organisation</td>
-                <td><!-- File upload --></td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(model.applications)}">
-                <td colspan="5">There are no applications to be invited to this panel.</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-
-
     <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}"
           method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate">
-        <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+        <input type="hidden" name="page" th:value="${model.pagination.currentPage}" />
+        <div class="table-overflow">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col">Project title</th>
+                    <th scope="col">Lead organisation</th>
+                    <th scope="col">Additional feedback</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="app : ${model.applications}">
+                    <td>
+                        <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${model.originQuery}"
+                           th:text="${app.applicationId}">123
+                        </a>
+                    </td>
+                    <td th:text="${app.applicationName}">Application name</td>
+                    <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                    <td>
+                        <div th:with="isError=${applicationInError != null && applicationInError == app.applicationId}"
+                             th:class="${isError ? 'form-group-error' : ''}">
+                            <th:block th:if="${isError}">
+                                <th:block th:each="err : ${#fields.detailedErrors('${__form__.*}')}">
+                                    <span th:if="${err.global}" class="error-message" th:text="${err.message}">PDF upload error</span>
+                                </th:block>
+                                <p class="uploaded-file">No file currently uploaded</p>
+                            </th:block>
+
+                            <th:block th:unless="${app.hasAttachment()}">
+                                <div class="upload-section">
+                                    <input type="file" th:id="${'attachment-' + app.applicationId}" class="inputfile" name="feedback">
+                                    <label th:for="${'attachment-' + app.applicationId}" class="button-secondary extra-margin">+ Upload</label>
+                                    <button name="attachFeedbackApplicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${'attachment-'+app.applicationId}" th:value="${app.applicationId}">Save</button>
+                                </div>
+                            </th:block>
+                            <th:block th:if="${app.hasAttachment()}">
+                                <div class="grid-row">
+                                    <div class="column-two-thirds">
+                                        <a th:text="${app.filename}"
+                                           th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
+                                           target="_blank">Uploaded-file.pdf</a>
+                                        <p class="form-hint">(opens in a new window)</p>
+                                    </div>
+                                    <div class="column-third">
+                                        <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button button-clear">Remove</button>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(model.applications)}">
+                    <td colspan="5">There are no applications to be invited to this panel.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+
+        <div class="form-group extra-margin-bottom extra-margin" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
             <label class="form-label-bold" th:for="${#ids.next('subject')}">
                 <span>Email subject</span>
                 <th:block th:if="${#fields.hasErrors('subject')}">

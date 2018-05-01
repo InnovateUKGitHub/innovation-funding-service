@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.spendprofile.security;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -100,22 +100,25 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "EDIT_SPEND_PROFILE",
             description = "Partners can edit their own Spend Profile data")
     public boolean partnersCanEditTheirOwnSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-
-        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
+        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId()) &&
+                isProjectInSetup(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(value = "MARK_SPEND_PROFILE_COMPLETE", description = "Any partner belonging to organisation can mark its spend profile as complete")
     public boolean partnersCanMarkSpendProfileAsComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
+        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId()) &&
+                isProjectInSetup(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "Any lead partner can mark partners spend profiles as incomplete")
     public boolean leadPartnerCanMarkSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
+        return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId()) &&
+                isProjectInSetup(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(value = "COMPLETE_SPEND_PROFILE_REVIEW", description = "Only a Project Manager can complete the project's spend profiles review")
     public boolean projectManagerCanCompleteSpendProfile(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectManager(projectCompositeId.id(), user.getId());
+        return isProjectManager(projectCompositeId.id(), user.getId()) &&
+                isProjectInSetup(projectCompositeId.id());
     }
 }

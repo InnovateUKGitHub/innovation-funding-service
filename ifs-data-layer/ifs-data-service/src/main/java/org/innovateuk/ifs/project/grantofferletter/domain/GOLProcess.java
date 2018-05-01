@@ -2,17 +2,13 @@ package org.innovateuk.ifs.project.grantofferletter.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * The process of submitting and approving Grant Offer Letter for Projects
@@ -28,20 +24,22 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
-    // for ORM use
+    @Column(name="activity_state_id")
+    private GrantOfferLetterState activityState;
+
     GOLProcess() {
     }
 
-    public GOLProcess(ProjectUser participant, Project target, ActivityState originalState) {
+    public GOLProcess(ProjectUser participant, Project target, GrantOfferLetterState originalState) {
         this.participant = participant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
-    public GOLProcess(User internalParticipant, Project target, ActivityState originalState) {
+    public GOLProcess(User internalParticipant, Project target, GrantOfferLetterState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
-        this.setActivityState(originalState);
+        this.setProcessState(originalState);
     }
 
     @Override
@@ -65,8 +63,13 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
     }
 
     @Override
-    public GrantOfferLetterState getActivityState() {
-        return GrantOfferLetterState.fromState(activityState.getState());
+    public GrantOfferLetterState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(GrantOfferLetterState status) {
+        this.activityState = status;
     }
 
     @Override
@@ -78,18 +81,20 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
         GOLProcess that = (GOLProcess) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
-                .append(getProcessEvent(), that.getProcessEvent())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
     }
 }
