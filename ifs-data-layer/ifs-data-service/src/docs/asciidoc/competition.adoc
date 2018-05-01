@@ -21,17 +21,6 @@ include::{snippets}/competition/find-all/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/competition/find-all/curl-request.adoc[]
 
-=== Retrieve all competitions for the userId
-==== Request
-include::{snippets}/competition/get-competitions-by-user-id/http-request.adoc[]
-
-==== Response
-include::{snippets}/competition/get-competitions-by-user-id/http-response.adoc[]
-include::{snippets}/competition/get-competitions-by-user-id/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/competition/get-competitions-by-user-id/curl-request.adoc[]
-
 === Mark Competition Setup Section as Complete
 ==== Request
 include::{snippets}/competition/mark-as-complete/http-request.adoc[]
