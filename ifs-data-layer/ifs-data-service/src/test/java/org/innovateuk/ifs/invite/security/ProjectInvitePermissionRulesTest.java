@@ -9,7 +9,6 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,13 +22,11 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<ProjectInvitePermissionRules> {
-
 
     private Project project;
     private Organisation organisationOne;
@@ -49,7 +46,7 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         project = newProject().build();
         organisationOne = newOrganisation().build();
         organisationTwo = newOrganisation().build();
@@ -77,7 +74,7 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
                 .build();
         projectProcess = newProjectProcess()
                 .withProject(project)
-                .withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState()))
+                .withActivityState(ProjectState.SETUP)
                 .build();
 
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), userOnProjectForOrganisationOne.getId(), PROJECT_PARTNER)).thenReturn(asList(projectUserForUserOnOgranisationOne));
@@ -86,7 +83,6 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), userOnProjectForOrganisationOne.getId(), organisationOne.getId(), PROJECT_PARTNER)).thenReturn(projectUserForUserOnOgranisationOne);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), userOnProjectForOrganisationTwo.getId(), organisationTwo.getId(), PROJECT_PARTNER)).thenReturn(projectUserForUserOnOgranisationTwo);
         when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
-
     }
 
     @Test
