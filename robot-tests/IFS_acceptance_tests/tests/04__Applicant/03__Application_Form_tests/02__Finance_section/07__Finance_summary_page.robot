@@ -18,7 +18,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               IFS-802 Enable Innovation Lead user profile matching CSS permissions
 ...
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
-Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
+Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Default Tags
@@ -233,7 +233,12 @@ Innovation lead can see read only view of Your funding
     Then the user should see the element           jQuery=dt:contains("Funding level") + dd:contains("30%")
     And the user should see the element            jQuery=th:contains("Lottery") ~ td:contains("£2,468")
 
+
 *** Keywords ***
+Custom suite setup
+    Set predefined date variables
+    The user logs-in in new browser  &{lead_applicant_credentials}
+
 the finance summary calculations should be correct
     the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£349,046")
     the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("58,793")
@@ -308,8 +313,8 @@ the user checks Your Funding section for the project
 
 the user selects research area via Your Funding section
     [Arguments]  ${Application}
-    the applicant completes the application details                   application details
-    And the user fills in the funding information with bigger amount  ${Application}
+    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the funding information with bigger amount  ${Application}
 
 the user fills in the funding information with bigger amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
