@@ -50,18 +50,18 @@ Funding level validations
 Other funding validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user enters text to a text field           css=[name*=other_funding-securedDate]    20
+    Given the user enters text to a text field           css=[name*=other_funding-securedDate]    20
     And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    txt
     And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
-    Then The user should see a field and summary error  Invalid secured date
+    And The user should see a field and summary error  Invalid secured date
     And The user should see a field and summary error   Funding source cannot be blank.
     #TODO update the below error after IFS-3454 is done.
     And The user should see a field and summary error   This field should be 1 or higher.
     When the user enters text to a text field           css=[name*=other_funding-securedDate]    12-${nextyear}
     And the user enters text to a text field            css=[name*=other_funding-fundingSource]  Lottery funding
-    When the user enters text to a text field           css=[name*=other_funding-fundingAmount]    20000
+    And the user enters text to a text field           css=[name*=other_funding-fundingAmount]    20000
     #TODO IFS-3457
-    #And the user cannot see a validation error in the page
+    #Then the user cannot see a validation error in the page
     And the user selects the checkbox                   termsAgreed
     And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
 
