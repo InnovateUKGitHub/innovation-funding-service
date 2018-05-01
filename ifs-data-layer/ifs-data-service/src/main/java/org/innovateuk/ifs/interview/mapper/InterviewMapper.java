@@ -35,7 +35,7 @@ public abstract class InterviewMapper extends BaseMapper<Interview, InterviewRes
             @Mapping(source = "target", target = "application"),
             @Mapping(source = "target.name", target = "applicationName"),
             @Mapping(source = "target.competition", target = "competition"),
-            @Mapping(source = "activityState", target = "interviewState")
+            @Mapping(source = "processState", target = "interviewState")
     })
     @Override
     public abstract InterviewResource mapToResource(Interview domain);
@@ -44,7 +44,7 @@ public abstract class InterviewMapper extends BaseMapper<Interview, InterviewRes
             @Mapping(target = "processEvent", source = "event"),
             @Mapping(target = "participant", source = "processRole"),
             @Mapping(target = "target", source = "application"),
-            @Mapping(target = "activityState", source = "interviewState", ignore = true),
+            @Mapping(target = "processState", source = "interviewState", ignore = true),
             @Mapping(target = "processOutcomes", ignore = true),
             @Mapping(target = "lastModified", ignore = true)
     })
