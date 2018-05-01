@@ -269,7 +269,7 @@ the lead partner fills in project details
     the user clicks the button/link           id=save
     the user clicks the button/link           jQuery=td:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
     the user selects the radio button         financeContact  financeContact2
-    the user clicks the button/link           css=button[type="submit"][name="save-fc"]  #Save finance contact button
+    the user clicks the button/link           id=save  #Save finance contact button
     And the user clicks the button/link       jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
     And the user enters text to a text field  css=#postCode  ${postcode}
     And the user clicks the button/link       css=button[type="submit"]  #Save project location button
