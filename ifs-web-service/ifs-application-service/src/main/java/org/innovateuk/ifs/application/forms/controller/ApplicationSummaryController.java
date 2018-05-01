@@ -170,7 +170,7 @@ public class ApplicationSummaryController {
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to remove interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/summary", params = "removeResponse")
     public String removeResponse(@ModelAttribute("form") ApplicationForm form,
@@ -190,6 +190,8 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping("/{applicationId}/summary/download-response")
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAuthority('applicant')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {

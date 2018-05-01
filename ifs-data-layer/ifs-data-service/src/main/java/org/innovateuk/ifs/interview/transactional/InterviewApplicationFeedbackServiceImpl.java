@@ -63,21 +63,18 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
                             InterviewAssignmentMessageOutcome outcome = new InterviewAssignmentMessageOutcome();
                             outcome.setAssessmentInterviewPanel(interviewAssignment);
                             outcome.setFeedback(created.getValue());
-                            interviewAssignment.setMessage(outcome);
+                            interviewAssignment.getProcessOutcomes().add(outcome);
                         })).toServiceResult());
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> deleteFeedback(long applicationId) {
-        return findAssignmentByApplicationId(applicationId).andOnSuccessReturnVoid(interviewAssignment -> {
+        return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment -> {
             long fileId = interviewAssignment.getMessage().getFeedback().getId();
-            long outcomeId = interviewAssignment.getMessage().getId();
-            interviewAssignment.getMessage().setFeedback(null);
-            interviewAssignmentMessageOutcomeRepository.save(interviewAssignment.getMessage());
-            interviewAssignment.setMessage(null);
-            interviewAssignmentMessageOutcomeRepository.delete(outcomeId);
-            fileService.deleteFileIgnoreNotFound(fileId);
+            return fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() ->
+                    interviewAssignmentMessageOutcomeRepository.delete(interviewAssignment.getMessage())
+            );
         });
     }
 
