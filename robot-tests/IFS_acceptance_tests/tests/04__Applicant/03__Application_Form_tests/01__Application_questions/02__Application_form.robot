@@ -26,15 +26,15 @@ ${aeroApplication}  Aerospace test application
 *** Test Cases ***
 Application details: Previous submission
     [Documentation]    INFUND-4694
-    Given the user navigates to the page           ${DASHBOARD_URL}
-    And the user clicks the button/link            link=${aeroApplication}
-    And the user clicks the button/link            link=Application details
-    When the user clicks the button/link           jQuery=label:contains("Yes")
-    Then the user should see the text in the page  Please provide the details of this previous application
-    And the user should see the text in the page   Previous application number
-    And the user should see the text in the page   Previous application title
-    When the user clicks the button/link           jQuery=label:contains("No")
-    Then The user should not see the element       css=[id="application.previousApplicationNumber"]
+    Given the user navigates to the page                ${DASHBOARD_URL}
+    And the user clicks the button/link                 link=${aeroApplication}
+    And the user clicks the button/link                 link=Application details
+    When the user clicks the button/link                jQuery=label:contains("Yes")
+    And the user clicks the button/link                 id=application-question-complete
+    Then the user should see a field and summary error  Please enter the previous application number.
+    And the user should see a field and summary error   Please enter the previous application title.
+    When the user clicks the button/link                jQuery=label:contains("No")
+    Then The user should not see the element            css=[id="application.previousApplicationNumber"]
 
 Application details: Research category
     [Documentation]    INFUND-6823
@@ -135,7 +135,6 @@ Incomplete sections contain mark as complete link
     Then the user should see the element   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
     And the user should see the element    jQuery=.collapsible:contains("Application details") button:contains("Return and edit")
     When the user clicks the button/link   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
-    capture large screenshot
     And the user fills in the Application details  ${aeroApplication}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     Then the user should no longer see the Mark-as-complete-link
 
