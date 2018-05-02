@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
