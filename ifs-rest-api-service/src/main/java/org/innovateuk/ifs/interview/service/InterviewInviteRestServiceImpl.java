@@ -3,7 +3,6 @@ package org.innovateuk.ifs.interview.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -120,17 +119,6 @@ public class InterviewInviteRestServiceImpl extends BaseRestService implements I
         builder.queryParam("statuses", convertedStatusesList);
 
         return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
-    }
-
-    @Override
-    public RestResult<InterviewAssessorAllocateApplicationsPageResource> getAllocateApplicationsOverview(long competitionId, int page) {
-
-        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-allocate-overview", competitionId);
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("page", page);
-
-        return getWithRestResult(builder.toUriString(), InterviewAssessorAllocateApplicationsPageResource.class);
     }
 
     @Override

@@ -311,31 +311,6 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
     }
 
     @Test
-    public void getAllocateApplicationsOverview() throws Exception {
-        long competitionId = 1L;
-        int page = 2;
-        int size = 10;
-
-        InterviewAssessorAllocateApplicationsPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
-                .withContent(newInterviewAssessorAllocateApplicationsResource().build(2))
-                .build();
-
-        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
-
-        when(interviewInviteServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
-                .thenReturn(serviceSuccess(expectedPageResource));
-
-        mockMvc.perform(get("/interview-panel-invite/get-allocate-overview/{competitionId}", competitionId)
-                .param("page", "2")
-                .param("size", "10")
-                .param("sort", "invite.email"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedPageResource)));
-
-        verify(interviewInviteServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
-    }
-
-    @Test
     public void deleteInvite() throws Exception {
         String email = "firstname.lastname@example.com";
         long competitionId = 1L;

@@ -158,19 +158,6 @@ include::{snippets}/interview-panel-invite/get-invitation-overview/response-fiel
 ==== Curl Example
 include::{snippets}/interview-panel-invite/get-invitation-overview/curl-request.adoc[]
 
-=== Get the overview of accepted assessors to allocate applications to
-==== Request
-include::{snippets}/interview-panel-invite/get-allocate-applications-overview/http-request.adoc[]
-include::{snippets}/interview-panel-invite/get-allocate-applications-overview/path-parameters.adoc[]
-include::{snippets}/interview-panel-invite/get-allocate-applications-overview/request-parameters.adoc[]
-
-==== Response
-include::{snippets}/interview-panel-invite/get-allocate-applications-overview/http-response.adoc[]
-include::{snippets}/interview-panel-invite/get-allocate-overview/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/interview-panel-invite/get-allocate-applications-overview/curl-request.adoc[]
-
 === Get non accepted assessor invite ids
 ==== Request
 include::{snippets}/interview-panel-invite/get-non-accepted-assessor-invite-ids/http-request.adoc[]

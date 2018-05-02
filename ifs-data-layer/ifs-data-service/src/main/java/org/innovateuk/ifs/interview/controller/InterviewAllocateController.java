@@ -1,0 +1,34 @@
+package org.innovateuk.ifs.interview.controller;
+
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
+import org.innovateuk.ifs.interview.transactional.InterviewAllocateService;
+import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Controller for allocating applications to assessors in Interview Panels.
+ */
+@RestController
+@RequestMapping("/interview-panel")
+public class InterviewAllocateController {
+
+    private static final int DEFAULT_PAGE_SIZE = 20;
+
+    @Autowired
+    private InterviewAllocateService interviewAllocateService;
+
+    @GetMapping("/allocate-overview/{competitionId}")
+    public RestResult<InterviewAssessorAllocateApplicationsPageResource> getAllocateApplicationsOverview(
+            @PathVariable long competitionId,
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable) {
+        return interviewAllocateService.getAllocateApplicationsOverview(competitionId, pageable).toGetResponse();
+    }
+}

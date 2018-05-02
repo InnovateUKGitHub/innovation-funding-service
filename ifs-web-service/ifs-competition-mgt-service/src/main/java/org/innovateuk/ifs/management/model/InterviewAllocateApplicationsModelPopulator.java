@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
-import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
+import org.innovateuk.ifs.interview.service.InterviewAllocateRestService;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,18 +18,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class InterviewAllocateApplicationsModelPopulator extends BaseManageAssessmentsModelPopulator<AssessorCountSummaryResource, AssessorCountSummaryPageResource, InterviewAllocateApplicationsViewModel> {
 
-    private InterviewInviteRestService interviewInviteRestService;
+    private InterviewAllocateRestService interviewAllocateRestService;
 
     @Autowired
-    public InterviewAllocateApplicationsModelPopulator(InterviewInviteRestService interviewInviteRestService) {
-        this.interviewInviteRestService = interviewInviteRestService;
+    public InterviewAllocateApplicationsModelPopulator(InterviewAllocateRestService interviewAllocateRestService) {
+        this.interviewAllocateRestService = interviewAllocateRestService;
     }
 
     public InterviewAllocateApplicationsViewModel populateModel(CompetitionResource competition,
                                                                 String origin
     ) {
 
-        InterviewAssessorAllocateApplicationsPageResource pageResource = interviewInviteRestService.getAllocateApplicationsOverview(
+        InterviewAssessorAllocateApplicationsPageResource pageResource = interviewAllocateRestService.getAllocateApplicationsOverview(
                 competition.getId(),
                 0)
                 .getSuccess();

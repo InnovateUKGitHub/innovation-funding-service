@@ -2,8 +2,6 @@ package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.interview.controller.InterviewInviteController;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
@@ -27,15 +25,11 @@ import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
-import static org.innovateuk.ifs.documentation.InterviewAssessorAllocateApplicationsPageResourceDocs.interviewAssessorAllocateApplicationsPageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAssessorAllocateApplicationsResourceDocs.interviewAssessorAllocateApplicationsResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewInviteDocs.INTERVIEW_INVITE_RESOURCE_BUILDER;
 import static org.innovateuk.ifs.documentation.InterviewInviteDocs.interviewInviteFields;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -306,45 +300,6 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
                 ));
 
         verify(interviewInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status);
-    }
-
-    @Test
-    public void getAllocateApplicationsOverview() throws Exception {
-        long competitionId = 1L;
-
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
-
-        List<InterviewAssessorAllocateApplicationsResource> content = newInterviewAssessorAllocateApplicationsResource().build(2);
-
-        InterviewAssessorAllocateApplicationsPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
-                .withContent(content)
-                .build();
-
-        when(interviewInviteServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
-                .thenReturn(serviceSuccess(expectedPageResource));
-
-        mockMvc.perform(get("/interview-panel-invite/get-allocate-overview/{competitionId}", 1L)
-                .param("size", "20")
-                .param("page", "0")
-                .param("sort", "invite.name,asc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel-invite/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`")
-                        ),
-                        responseFields(interviewAssessorAllocateApplicationsPageResourceFields)
-                                .andWithPrefix("content[].", interviewAssessorAllocateApplicationsResourceFields)
-                ));
-
-        verify(interviewInviteServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
     }
 
     @Test

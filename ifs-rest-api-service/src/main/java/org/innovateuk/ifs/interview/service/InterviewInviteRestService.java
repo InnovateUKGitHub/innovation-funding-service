@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
 import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
@@ -34,8 +33,6 @@ public interface InterviewInviteRestService {
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                          int page,
                                                                          List<ParticipantStatusResource> participantStatus);
-
-    RestResult<InterviewAssessorAllocateApplicationsPageResource> getAllocateApplicationsOverview(long competitionId, int page);
 
     RestResult<InterviewInviteResource> openInvite(String inviteHash);
 

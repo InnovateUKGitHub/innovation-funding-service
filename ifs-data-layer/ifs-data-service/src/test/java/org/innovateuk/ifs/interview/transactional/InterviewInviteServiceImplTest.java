@@ -13,8 +13,6 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -615,59 +613,6 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         assertEquals("Name 5", content.get(4).getName());
 
         content.forEach(this::assertNotExistingAssessorUser);
-    }
-
-    @Test
-    public void getAllocateApplicationsOverview() throws Exception {
-        long competitionId = 1L;
-        Pageable pageable = new PageRequest(0, 5);
-
-        List<InterviewAssessorAllocateApplicationsResource> expectedParticipants = newInterviewAssessorAllocateApplicationsResource()
-                .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
-                .build(5);
-
-        Page<InterviewAssessorAllocateApplicationsResource> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
-
-        when(interviewParticipantRepositoryMock.getAllocateApplicationsOverview(
-                competitionId,
-                pageable
-        ))
-                .thenReturn(pageResult);
-
-        List<AssessorInviteOverviewResource> overviewResources = newAssessorInviteOverviewResource()
-                .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
-                .build(5);
-
-        when(assessorInviteOverviewMapperMock.mapToResource(isA(InterviewParticipant.class)))
-                .thenReturn(
-                        overviewResources.get(0),
-                        overviewResources.get(1),
-                        overviewResources.get(2),
-                        overviewResources.get(3),
-                        overviewResources.get(4)
-                );
-
-        ServiceResult<InterviewAssessorAllocateApplicationsPageResource> result =
-                service.getAllocateApplicationsOverview(competitionId, pageable);
-
-        verify(interviewParticipantRepositoryMock)
-                .getAllocateApplicationsOverview(competitionId, pageable);
-
-        assertTrue(result.isSuccess());
-
-        InterviewAssessorAllocateApplicationsPageResource pageResource = result.getSuccess();
-
-        assertEquals(0, pageResource.getNumber());
-        assertEquals(5, pageResource.getSize());
-        assertEquals(2, pageResource.getTotalPages());
-        assertEquals(10, pageResource.getTotalElements());
-
-        List<InterviewAssessorAllocateApplicationsResource> content = pageResource.getContent();
-        assertEquals("Name 1", content.get(0).getName());
-        assertEquals("Name 2", content.get(1).getName());
-        assertEquals("Name 3", content.get(2).getName());
-        assertEquals("Name 4", content.get(3).getName());
-        assertEquals("Name 5", content.get(4).getName());
     }
 
     @Test

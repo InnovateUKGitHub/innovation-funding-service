@@ -2,12 +2,8 @@ package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
-import org.innovateuk.ifs.interview.model.InterviewApplicationsFindModelPopulator;
 import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
-import org.innovateuk.ifs.interview.viewmodel.InterviewViewModel;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.management.model.InterviewAllocateApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.InterviewAllocateApplicationsRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewAllocateApplicationsViewModel;
@@ -20,18 +16,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
-import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -50,7 +40,6 @@ public class InterviewApplicationAllocationControllerTest extends BaseController
     protected InterviewApplicationAllocationController supplyControllerUnderTest() {
         return new InterviewApplicationAllocationController();
     }
-
 
     @Test
     public void overview() throws Exception {
@@ -72,7 +61,7 @@ public class InterviewApplicationAllocationControllerTest extends BaseController
                 .withContent(singletonList(interviewAssessorAllocateApplicationsResource))
                 .build();
 
-        when(interviewInviteRestService.getAllocateApplicationsOverview(competition.getId(), page)).thenReturn(restSuccess(pageResource));
+        when(interviewAllocateRestService.getAllocateApplicationsOverview(competition.getId(), page)).thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/allocate-applications", competition.getId())
                 .param("page", "0"))
@@ -83,9 +72,9 @@ public class InterviewApplicationAllocationControllerTest extends BaseController
 
         InterviewAllocateApplicationsViewModel model = (InterviewAllocateApplicationsViewModel) result.getModelAndView().getModel().get("model");
 
-        InOrder inOrder = inOrder(competitionService, interviewInviteRestService);
+        InOrder inOrder = inOrder(competitionService, interviewAllocateRestService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(interviewInviteRestService).getAllocateApplicationsOverview(competition.getId(), page);
+        inOrder.verify(interviewAllocateRestService).getAllocateApplicationsOverview(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
 
         assertEquals((long) competition.getId(), model.getCompetitionId());
