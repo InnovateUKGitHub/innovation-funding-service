@@ -72,7 +72,7 @@ public interface InterviewInviteService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INTERVIEW_PANEL_INVITE_OVERVIEW_BY_COMPETITION",
-            description = "Competition Admins and Project Finance users can retrieve interview panel invitation overview by competition")
+            description = "Competition Admins and Project Finance users can retrieve interview panel assessors who have accepted for allocating applications to them by competition")
     ServiceResult<InterviewAssessorAllocateApplicationsPageResource> getAllocateApplicationsOverview(long competitionId,
                                                                                                      Pageable pageable);
 

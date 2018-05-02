@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
@@ -178,6 +180,23 @@ public class InterviewInviteRestServiceImplTest extends BaseRestServiceUnitTest<
         setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
 
         AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, Arrays.asList(ACCEPTED, PENDING))
+                .getSuccess();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAllocateApplicationsOverview() throws Exception {
+        long competitionId = 1L;
+        int page = 1;
+
+        InterviewAssessorAllocateApplicationsPageResource expected = newInterviewAssessorAllocateApplicationsPageResource().build();
+
+        String expectedUrl = format("%s/%s/%s?page=1", restUrl, "get-allocate-overview", competitionId);
+
+        setupGetWithRestResultExpectations(expectedUrl, InterviewAssessorAllocateApplicationsPageResource.class, expected);
+
+        InterviewAssessorAllocateApplicationsPageResource actual = service.getAllocateApplicationsOverview(competitionId, page)
                 .getSuccess();
 
         assertEquals(expected, actual);

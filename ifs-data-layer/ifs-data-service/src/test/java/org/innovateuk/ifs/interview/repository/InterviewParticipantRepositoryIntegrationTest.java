@@ -1,13 +1,21 @@
 package org.innovateuk.ifs.interview.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -23,6 +31,8 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -32,7 +42,10 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -45,6 +58,9 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -182,7 +198,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         repository.save(InterviewParticipants);
         flushAndClearSession();
 
-        assertEquals(12, repository.count()); // Including 8 pre-existing paricipants added via patch
+        assertEquals(12, repository.count()); // Including 8 pre-existing participants added via patch
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
         Page<InterviewParticipant> pagedResult = repository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
@@ -200,6 +216,60 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         assertEquals(1, content.size());
         assertEquals("Anthony Hale", content.get(0).getInvite().getName());
+    }
+
+    @Test
+    public void getAllocateApplicationsOverview() throws Exception {
+        loginSteveSmith();
+
+        List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
+        profileRepository.save(profiles);
+
+        User user = newUser()
+                .withId()
+                .withEmailAddress("test@test.co.uk")
+                .withUid("uid-1")
+                .withFirstName("Kieran")
+                .withLastName("Hester")
+                .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
+                .build();
+
+        userRepository.save(user);
+
+        List<InterviewInvite> newAssessorInvites = newInterviewInviteWithoutId()
+                .withUser(user)
+                .withName(user.getFirstName() + " " + user.getLastName())
+                .withEmail(user.getEmail())
+                .withCompetition(competition)
+                .withStatus(SENT)
+                .build(1);
+
+        List<InterviewParticipant> InterviewParticipants = saveNewInterviewParticipants(newAssessorInvites);
+
+        InterviewParticipants.get(0).getInvite().open();
+        CompetitionParticipantRole role = InterviewParticipants.get(0).getRole();
+        InterviewParticipants.get(0).acceptAndAssignUser(user);
+
+        repository.save(InterviewParticipants);
+        flushAndClearSession();
+
+        assertEquals(9, repository.count()); // Including 8 pre-existing participants added via patch
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<InterviewAssessorAllocateApplicationsResource> pagedResult = repository.getAllocateApplicationsOverview(
+                competition.getId(),
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(1, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<InterviewAssessorAllocateApplicationsResource> content = pagedResult.getContent();
+
+        assertEquals(1, content.size());
+        assertEquals("Kieran Hester", content.get(0).getName());
     }
 
     private InterviewParticipant saveNewInterviewParticipant(InterviewInvite invite) {

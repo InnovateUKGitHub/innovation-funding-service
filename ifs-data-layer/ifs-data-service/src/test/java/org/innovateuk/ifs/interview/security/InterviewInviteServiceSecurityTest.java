@@ -124,6 +124,14 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
     }
 
     @Test
+    public void getAllocateApplicationsOverview() {
+        Pageable pageable = new PageRequest(0, 20);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllocateApplicationsOverview(1L, pageable),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
     public void getAllInvitesByUser() throws Exception {
         UserResource assessorUserResource = newUserResource()
                 .withRolesGlobal(singletonList(Role.ASSESSOR))

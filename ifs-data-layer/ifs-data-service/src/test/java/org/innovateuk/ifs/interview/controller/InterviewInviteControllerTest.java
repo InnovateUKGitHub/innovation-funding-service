@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -28,6 +29,8 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
@@ -305,6 +308,31 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .andExpect(content().json(toJson(expectedPageResource)));
 
         verify(interviewInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status);
+    }
+
+    @Test
+    public void getAllocateApplicationsOverview() throws Exception {
+        long competitionId = 1L;
+        int page = 2;
+        int size = 10;
+
+        InterviewAssessorAllocateApplicationsPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
+                .withContent(newInterviewAssessorAllocateApplicationsResource().build(2))
+                .build();
+
+        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
+
+        when(interviewInviteServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
+                .thenReturn(serviceSuccess(expectedPageResource));
+
+        mockMvc.perform(get("/interview-panel-invite/get-allocate-overview/{competitionId}", competitionId)
+                .param("page", "2")
+                .param("size", "10")
+                .param("sort", "invite.email"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedPageResource)));
+
+        verify(interviewInviteServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
     }
 
     @Test
