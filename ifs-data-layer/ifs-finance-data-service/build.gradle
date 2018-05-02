@@ -99,7 +99,11 @@ test {
 }
 
 asciidoctor {
-    dependsOn test
+    dependsOn test {
+        useJUnit {
+            includeCategories 'org.innovateuk.ifs.ControllerTest'
+        }
+    }
     attributes 'snippets': snippetsDir
     backends 'html5'
     inputs.dir snippetsDir
