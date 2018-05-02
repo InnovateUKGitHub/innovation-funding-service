@@ -156,7 +156,7 @@ CompAdmin Views the assessors that have accepted the interview panel invite
 Applicant can see the feedback given
     [Documentation]  IFS-3291
     [Tags]
-    Given the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/applications/find
+    Given the user navigates to the page     ${SERVER}/management/assessment/interview/competition/18/applications/find
     When the user selects the checkbox       assessor-row-4
     And the user clicks the button/link      name=addSelected
     #Additional feedback?
@@ -164,12 +164,8 @@ Applicant can see the feedback given
     When the user clicks the button/link     css=.button[type="submit"]   #Send invite
     Given log in as a different user         derik.arnold@load.example.com  ${short_password}
     #Here
-    And the user should see the text in the element   jQuery=span:contains("Machine learning for transport infrastructure")  Feedback available
-    And the user should see the text in the element   jQuery=span:contains("Machine learning for transport infrastructure")  Invited to interview
-    #And the user should see the text in the element   jQuery=span:contains("Feedback available") ~ jQuery=span:contains("Invited to interview")
-    #And the user should see the text in the element   css=span.status-msg.msg-deadline-waiting   Feedback available
-    #And the user should see the text in the element   id=content   Invited to interview
-    And The user clicks the button/link               link=Crowd sourced cycling navigator
+    And the user should see the element      jQuery=.progress-list div:contains("Machine learning for driverless cars") + div:nth-child(2) span:contains("Invited to interview")
+    And The user clicks the button/link               link=Machine learning for driverless cars
     And the user should see the text in the element   column-third    Average score 8 / 10
 
 
