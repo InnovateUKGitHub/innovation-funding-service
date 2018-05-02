@@ -152,6 +152,7 @@ Academic finance overview
 
 *** Keywords ***
 Custom Suite Setup
+    Set predefined date variables
     the guest user opens the browser
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
@@ -175,7 +176,7 @@ the finance table should be correct
 Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}
     the user clicks the button/link                  link=Academic robot test application
-    the applicant completes the application details  Application details
+    the applicant completes the application details  Academic robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     the user navigates to Your-finances page  Academic robot test application
     the user marks the finances as complete          Academic robot test application  labour costs  n/a  no
 
