@@ -2,7 +2,6 @@ package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.security.access.prepost.PreAuthorize;
 
