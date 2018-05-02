@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
@@ -33,16 +32,16 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private InterviewAssignmentResponseOutcome response;
 
+    @Column(name="activity_state_id")
+    private InterviewAssignmentState activityState;
+
     public InterviewAssignment() {
     }
 
-    public InterviewAssignment(Application application, ProcessRole participant, ActivityState createdState) {
+    public InterviewAssignment(Application application, ProcessRole participant) {
         if (application == null) throw new NullPointerException("target cannot be null");
         if (participant == null) throw new NullPointerException("participant cannot be null");
-        if (createdState == null) throw new NullPointerException("createdState cannot be null");
 
-        if (createdState.getState() != InterviewAssignmentState.CREATED.getBackingState())
-            throw new IllegalArgumentException("createdState must be CREATED");
         if (participant.getRole() != INTERVIEW_LEAD_APPLICANT)
             throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
         if (!participant.getApplicationId().equals(application.getId()))
@@ -54,7 +53,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
 
         this.target = application;
         this.participant = participant;
-        setActivityState(createdState);
+        setProcessState(InterviewAssignmentState.CREATED);
     }
 
     @Override
@@ -78,8 +77,13 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     }
 
     @Override
-    public InterviewAssignmentState getActivityState() {
-        return InterviewAssignmentState.fromState(activityState.getState());
+    public InterviewAssignmentState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(InterviewAssignmentState status) {
+        this.activityState = status;
     }
 
     public void setResponse(InterviewAssignmentResponseOutcome response) {
@@ -94,6 +98,10 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
         this.message = message;
     }
 
+    public InterviewAssignmentMessageOutcome getMessage() {
+        return message;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,6 +114,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
+                .append(activityState, that.activityState)
                 .isEquals();
     }
 
@@ -115,11 +124,8 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
-    }
-
-    public InterviewAssignmentMessageOutcome getMessage() {
-        return message;
     }
 
     @Override
@@ -130,8 +136,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .append("message", message)
                 .append("response", response)
                 .append("activityState", activityState)
-                .append("processOutcomes", processOutcomes)
-                .append("internalParticipant", internalParticipant)
                 .toString();
     }
 }

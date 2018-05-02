@@ -7,7 +7,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryServiceImpl;
-import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

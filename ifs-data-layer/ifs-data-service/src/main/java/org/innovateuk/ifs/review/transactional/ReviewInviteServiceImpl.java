@@ -3,6 +3,7 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
@@ -35,10 +36,6 @@ import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -112,9 +109,6 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     @Autowired
     private ReviewRepository reviewRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private AvailableAssessorMapper availableAssessorMapper;
@@ -391,11 +385,10 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(ReviewParticipant participant) {
         Competition competition = participant.getProcess();
-        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
+        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
         applicationsInPanel.forEach(application -> {
             Review review = new Review(application, participant);
-            review.setActivityState(pendingActivityState);
+            review.setProcessState(ReviewState.PENDING);
             reviewRepository.save(review);
         });
         return serviceSuccess();
@@ -490,7 +483,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     private void determineStatusOfPanelApplications(ReviewParticipantResource reviewParticipantResource) {
 
         List<Review> reviews = reviewRepository.
-                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                         reviewParticipantResource.getUserId(),
                         reviewParticipantResource.getCompetitionId());
 
@@ -498,7 +491,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     }
 
     private Long getApplicationsPendingForPanelCount(List<Review> reviews) {
-        return reviews.stream().filter(review -> review.getActivityState().equals(ReviewState.PENDING)).count();
+        return reviews.stream().filter(review -> review.getProcessState().equals(ReviewState.PENDING)).count();
     }
 
     private void updateParticipantStatus(ReviewInvite invite){
