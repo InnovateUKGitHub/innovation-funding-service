@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;

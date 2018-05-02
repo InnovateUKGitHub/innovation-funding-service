@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.*;
