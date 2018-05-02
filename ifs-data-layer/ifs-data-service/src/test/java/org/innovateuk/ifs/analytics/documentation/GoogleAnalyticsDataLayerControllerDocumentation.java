@@ -3,9 +3,14 @@ package org.innovateuk.ifs.analytics.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.analytics.controller.GoogleAnalyticsDataLayerController;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -20,6 +25,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     private static final long COMPETITION_ID = 1L;
     private static final long PROJECT_ID = 1L;
     private static final long ASSESSMENT_ID = 1L;
+    private static final List<Role> APPLICATION_ROLES = singletonList(Role.LEADAPPLICANT);
+    private static final List<Role> PROJECT_ROLES = asList(Role.PARTNER, Role.FINANCE_CONTACT);
 
     @Mock
     private GoogleAnalyticsDataLayerService googleAnalyticsDataLayerService;
@@ -78,6 +85,32 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
                         pathParameters(
                                 parameterWithName("assessment").description("Id of the assessment")
                         )
+                ));
+    }
+
+    @Test
+    public void getApplicationRolesById() throws Exception {
+        when(googleAnalyticsDataLayerService.getRolesByApplicationId(APPLICATION_ID)).thenReturn(serviceSuccess(APPLICATION_ROLES));
+
+        mockMvc.perform(get("/analytics/application/{applicationId}/user-roles", APPLICATION_ID))
+                .andExpect(status().isOk())
+                .andDo(document("analytics/{method-name}",
+                                pathParameters(
+                                        parameterWithName("applicationId").description("Id of the application")
+                                )
+                ));
+    }
+
+    @Test
+    public void getProjectRolesById() throws Exception {
+        when(googleAnalyticsDataLayerService.getRolesByProjectId(PROJECT_ID)).thenReturn(serviceSuccess(PROJECT_ROLES));
+
+        mockMvc.perform(get("/analytics/project/{projectId}/user-roles", PROJECT_ID))
+                .andExpect(status().isOk())
+                .andDo(document("analyticsd/{method-name}",
+                                pathParameters(
+                                         parameterWithName("projectId").description("Id of the project")
+                                )
                 ));
     }
 
