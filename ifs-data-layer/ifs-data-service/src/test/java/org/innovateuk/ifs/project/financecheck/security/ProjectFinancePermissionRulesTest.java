@@ -12,7 +12,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +29,6 @@ import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStat
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +38,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
     @Before
     public void setUp() throws Exception {
-        projectProcess = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState())).build();
+        projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
         project = newProjectResource().withId(1L).withProjectState(ProjectState.SETUP).build();
     }
 
@@ -149,7 +147,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectUsersCanViewFinanceChecks() throws Exception {
+    public void testProjectUsersCanViewFinanceChecks() {
         UserResource user = newUserResource().build();
 
         setupUserAsPartner(project, user);
@@ -158,7 +156,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectFinanceContactCanViewFinanceChecks() throws Exception {
+    public void testProjectFinanceContactCanViewFinanceChecks() {
         UserResource user = newUserResource().build();
 
         setupFinanceContactExpectations(project, user);

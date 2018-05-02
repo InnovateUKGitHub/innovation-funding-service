@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,6 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 
 /**
  * Generates Assessments for Applications so that Assessors may start assessing them
@@ -67,14 +65,9 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             }
 
             if (EnumSet.of(OPEN).contains(state)) {
-                ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
-                        APPLICATION_ASSESSMENT,
-                        state.getBackingState()
-                );
-
                 testService.doWithinTransaction(() -> {
                     Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
-                    assessment.setActivityState(activityState);
+                    assessment.setProcessState(state);
                 });
             }
 
@@ -114,12 +107,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             // relevant competition is not necessarily IN_ASSESSMENT.
             // This means that the state transition to SUBMITTED through the workflow
             // handler will fail due to the `CompetitionInAssessmentGuard`.
-            ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
-                    APPLICATION_ASSESSMENT,
-                    SUBMITTED.getBackingState()
-            );
-
-            assessment.ifPresent(a -> a.setActivityState(activityState));
+            assessment.ifPresent(a -> a.setProcessState(AssessmentState.SUBMITTED));
         });
     }
 

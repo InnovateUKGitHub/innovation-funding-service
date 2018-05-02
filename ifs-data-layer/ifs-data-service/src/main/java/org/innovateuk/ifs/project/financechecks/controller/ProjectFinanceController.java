@@ -56,7 +56,7 @@ public class ProjectFinanceController {
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityRagStatus}")
     public RestResult<Void> saveEligibility(@PathVariable("projectId") final Long projectId,
                                             @PathVariable("organisationId") final Long organisationId,
-                                            @PathVariable("eligibility") final Eligibility eligibility,
+                                            @PathVariable("eligibility") final EligibilityState eligibility,
                                             @PathVariable("eligibilityRagStatus") final EligibilityRagStatus eligibilityRagStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus).toPostResponse();

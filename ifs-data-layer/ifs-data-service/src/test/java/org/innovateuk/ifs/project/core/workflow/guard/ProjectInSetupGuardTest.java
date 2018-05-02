@@ -6,14 +6,12 @@ import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.core.workflow.configuration.guard.ProjectInSetupGuard;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.springframework.statemachine.StateContext;
 
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -25,10 +23,10 @@ public class ProjectInSetupGuardTest extends BaseUnitTestMocksTest {
     private ProjectInSetupGuard projectInSetupGuard = new ProjectInSetupGuard();
 
     @Test
-    public void evaluate_ProjectIsInLive() throws Exception {
+    public void evaluate_ProjectIsInLive() {
         Project project = newProject().build();
         ProjectProcess projectProcess = newProjectProcess()
-                .withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.LIVE.getBackingState()))
+                .withActivityState(ProjectState.LIVE)
                 .build();
         when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(projectInSetupGuard.evaluate(setupContext(project)));
@@ -36,10 +34,10 @@ public class ProjectInSetupGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_ProjectIsInSetup() throws Exception {
+    public void evaluate_ProjectIsInSetup() {
         Project project = newProject().build();
         ProjectProcess projectProcess = newProjectProcess()
-                .withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState()))
+                .withActivityState(ProjectState.SETUP)
                 .build();
         when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(projectInSetupGuard.evaluate(setupContext(project)));
@@ -47,10 +45,10 @@ public class ProjectInSetupGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_ProjectIsWithdrawn() throws Exception {
+    public void evaluate_ProjectIsWithdrawn() {
         Project project = newProject().build();
         ProjectProcess projectProcess = newProjectProcess()
-                .withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState()))
+                .withActivityState(ProjectState.WITHDRAWN)
                 .build();
         when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertFalse(projectInSetupGuard.evaluate(setupContext(project)));
@@ -62,5 +60,4 @@ public class ProjectInSetupGuardTest extends BaseUnitTestMocksTest {
         when(context.getMessageHeader("target")).thenReturn(project);
         return context;
     }
-
 }
