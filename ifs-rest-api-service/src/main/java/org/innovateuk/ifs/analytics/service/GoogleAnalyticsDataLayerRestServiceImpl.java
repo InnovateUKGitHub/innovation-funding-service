@@ -48,12 +48,12 @@ public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService imp
     @Override
     public RestResult<List<Role>> getRolesByApplicationId(long applicationId) {
         return getWithRestResult(
-                format("%s/application/%d/application-roles", ANALYTICS_BASE_URL, applicationId), roleListType()
+                format("%s/application/%d/user-roles", ANALYTICS_BASE_URL, applicationId), roleListType()
         );
     }
 
     @Override
     public RestResult<List<Role>> getRolesByProjectId(long projectId) {
-        return getWithRestResult(format("%s/project/%d/project-roles", ANALYTICS_BASE_URL, projectId), roleListType());
+        return getWithRestResult(format("%s/project/%d/user-roles", ANALYTICS_BASE_URL, projectId), roleListType());
     }
 }

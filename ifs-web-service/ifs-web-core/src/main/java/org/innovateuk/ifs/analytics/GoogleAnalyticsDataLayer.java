@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -17,7 +18,7 @@ import static java.util.stream.Collectors.joining;
 public class GoogleAnalyticsDataLayer {
 
     private String competitionName;
-    private List<Role> userRoles = emptyList();
+    private List<Role> userRoles = new ArrayList<>();
 
     public String getCompetitionName() {
         return competitionName;

@@ -56,26 +56,23 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
     }
 
     @Override
-    public ServiceResult<List<Role>> getApplicationRolesById(long applicationId) {
-        UserAuthentication userAuth = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
-        long userId = userAuth.getDetails().getId();
+    public ServiceResult<List<Role>> getRolesByApplicationId(long applicationId) {
 
-        return serviceSuccess(
-                simpleMap(
-                        processRoleRepository.findByUserIdAndApplicationId(userId, applicationId),
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(
+                user -> simpleMap(
+                        processRoleRepository.findByUserAndApplicationId(user, applicationId),
                         ProcessRole::getRole
                 ));
     }
 
     @Override
-    public ServiceResult<List<Role>> getProjectRolesById(long projectId) {
-        UserAuthentication userAuth = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
-        long userId = userAuth.getDetails().getId();
+    public ServiceResult<List<Role>> getRolesByProjectId(long projectId) {
 
-        return serviceSuccess(
-                simpleMap(
-                        projectUserRepository.findByProjectIdAndUserId(projectId, userId),
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(
+                user -> simpleMap(
+                        projectUserRepository.findByProjectIdAndUserId(projectId, user.getId()),
                         projectUser -> Role.getById(projectUser.getRole().getId())
                 ));
+
     }
 }

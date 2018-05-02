@@ -2,7 +2,6 @@ package org.innovateuk.ifs.analytics.controller;
 
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +20,9 @@ public class GoogleAnalyticsDataLayerController {
         return googleAnalyticsDataLayerService.getCompetitionNameByApplicationId(applicationId).toGetResponse();
     }
 
-    @GetMapping("/application/{applicationId}/application-roles")
+    @GetMapping("/application/{applicationId}/user-roles")
     public RestResult<List<Role>> getApplicationRolesById(@PathVariable("applicationId") long applicationId) {
-        return googleAnalyticsDataLayerService.getApplicationRolesById(applicationId).toGetResponse();
+        return googleAnalyticsDataLayerService.getRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @GetMapping("/competition/{competitionId}/competition-name")
@@ -36,9 +35,9 @@ public class GoogleAnalyticsDataLayerController {
         return googleAnalyticsDataLayerService.getCompetitionNameByProjectId(projectId).toGetResponse();
     }
 
-    @GetMapping("/project/{projectId}/project-roles")
+    @GetMapping("/project/{projectId}/user-roles")
     public RestResult<List<Role>> getProjectRolesById(@PathVariable("projectId") long projectId) {
-        return googleAnalyticsDataLayerService.getProjectRolesById(projectId).toGetResponse();
+        return googleAnalyticsDataLayerService.getRolesByProjectId(projectId).toGetResponse();
     }
 
     @GetMapping("/assessment/{assessmentId}/competition-name")
