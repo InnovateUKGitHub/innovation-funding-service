@@ -204,9 +204,9 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
     [Tags]  HappyPath
     Given the user clicks the button/link    link=Terms and conditions
-    When the user selects the option from the drop-down menu    2  id=termsAndConditionsId
+    When the user selects the option from the drop-down menu    5  id=termsAndConditionsId
     And the user clicks the button/link      css=button.button  #Done
-    Then the user should see the element     jQuery=a:contains("APC Terms and Conditions")
+    Then the user should see the element     jQuery=a:contains("Advanced Propulsion Centre (APC)")
     And the user clicks the button/link      link=Competition setup
 
 Internal user can navigate to Public Content without having any issues
