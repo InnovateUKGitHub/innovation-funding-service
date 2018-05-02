@@ -224,16 +224,31 @@
                        th:value="${question.maxWords}"
                        th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
             </div>
-            <div class="form-group" th:if="${question.appendix != null}">
+            <div class="form-group" th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}"
+                 th:classappend="${#fields.hasErrors('question.appendix')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend class="form-label-bold">Appendix</legend>
+                    <legend class="form-label-bold" id="question.appendix">Appendix</legend>
+                    <th:block th:if="${#fields.hasErrors('question.appendix')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('question.appendix')}"
+                              th:text="${err}"></span>
+                    </th:block>
                     <div class="multiple-choice" data-target="allowedFileTypesDiv" data-target-clear-form="true">
-                        <input id="appendix-yes" th:name="question.appendix" th:checked="${question.appendix}" value="1"
+                        <input id="appendix-yes"
+                               th:name="question.appendix"
+                               th:checked="${question.appendix != null and question.appendix}"
+                               value="1"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                type="radio"/>
                         <label for="appendix-yes">Yes</label>
                     </div>
                     <div class="multiple-choice">
-                        <input id="appendix-no" th:name="question.appendix" th:checked="${!question.appendix}" value="0"
+                        <input id="appendix-no"
+                               th:name="question.appendix"
+                               th:checked="${question.appendix != null and !question.appendix}"
+                               value="0"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                type="radio"/>
                         <label for="appendix-no">No</label>
                     </div>
@@ -300,18 +315,30 @@
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
 
-                    <div class="form-group">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('question.researchCategoryQuestion')} ? 'form-group-error'">
                         <fieldset class="inline">
-                            <legend class="form-label-bold">Research category question</legend>
+                            <legend class="form-label-bold" id="question.researchCategoryQuestion">Research category question</legend>
+                            <th:block th:if="${#fields.hasErrors('question.researchCategoryQuestion')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
+                                th:text="${err}"></span>
+                            </th:block>
                             <div class="multiple-choice">
-                                <input id="research-category-yes" th:name="question.researchCategoryQuestion"
-                                       th:checked="${question.researchCategoryQuestion == true}" value="1"
+                                <input id="research-category-yes"
+                                       th:name="question.researchCategoryQuestion"
+                                       th:checked="${question.researchCategoryQuestion != null and question.researchCategoryQuestion}"
+                                       value="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                        type="radio"/>
                                 <label for="research-category-yes">Yes</label>
                             </div>
                             <div class="multiple-choice">
-                                <input id="research-category-no" th:name="question.researchCategoryQuestion"
-                                       th:checked="${question.researchCategoryQuestion == false}" value="0"
+                                <input id="research-category-no"
+                                       th:name="question.researchCategoryQuestion"
+                                       th:checked="${question.researchCategoryQuestion != null and !question.researchCategoryQuestion}"
+                                       value="0"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                        type="radio"/>
                                 <label for="research-category-no">No</label>
                             </div>
@@ -319,27 +346,37 @@
                     </div>
 
                 </th:block>
-
-                <th:block th:if="${question.scored != null}">
-
-                    <div class="form-group">
+                <th:block th:if="${question.scored != null or #fields.hasErrors('question.scored')}">
+                    <div class="form-group"
+                         th:classappend="${#fields.hasErrors('question.scored')} ? 'form-group-error'">
                         <fieldset class="inline">
-                            <legend class="form-label-bold">Scored</legend>
+                            <legend class="form-label-bold" id="question.scored">Scored</legend>
+                            <th:block th:if="${#fields.hasErrors('question.scored')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('question.scored')}"
+                                  th:text="${err}"></span>
+                            </th:block>
                             <div class="multiple-choice" data-target="score-total">
-                                <input id="scored-yes" th:name="question.scored" th:checked="${question.scored == true}"
-                                       value="1" type="radio"/>
+                                <input id="scored-yes"
+                                       th:name="question.scored"
+                                       th:checked="${question.scored != null and question.scored}"
+                                       value="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
                                 <label for="scored-yes">Yes</label>
                             </div>
                             <div class="multiple-choice">
-                                <input id="scored-no" th:name="question.scored" th:checked="${question.scored == false}"
-                                       value="0" type="radio"/>
+                                <input id="scored-no"
+                                       th:name="question.scored"
+                                       th:checked="${question.scored != null and !question.scored}"
+                                       value="0"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
                                 <label for="scored-no">No</label>
                             </div>
                         </fieldset>
                     </div>
-                </th:block>
-
-                <th:block th:if="${question.scored != null}">
                     <div class="form-group"
                          th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'form-group-error'"
                          id="score-total">
@@ -381,38 +418,39 @@
 
                 </th:block>
 
+                <th:block th:if="${question.writtenFeedback != null or #fields.hasErrors('question.writtenFeedback')}">
 
-                <div class="form-group"
-                     th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'form-group-error'">
-                    <fieldset class="inline">
-                        <legend class="form-label-bold">Written feedback</legend>
-                        <th:block th:if="${#fields.hasErrors('question.writtenFeedback')}">
+                    <div class="form-group"
+                         th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'form-group-error'">
+                        <fieldset class="inline">
+                            <legend class="form-label-bold" id="question.writtenFeedback">Written feedback</legend>
+                            <th:block th:if="${#fields.hasErrors('question.writtenFeedback')}">
                             <span class="error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
                                   th:text="${err}"></span>
-                        </th:block>
-                        <div class="multiple-choice" data-target="scored-options">
-                            <input id="writtenFeedback-yes"
-                                   th:name="question.writtenFeedback"
-                                   th:checked="${question.writtenFeedback != null and question.writtenFeedback}"
-                                   value="1"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                   type="radio"/>
-                            <label for="writtenFeedback-yes">Yes</label>
-                        </div>
-                        <div class="multiple-choice">
-                            <input id="writtenFeedback-no"
-                                   th:name="question.writtenFeedback"
-                                   th:checked="${question.writtenFeedback != null and !question.writtenFeedback}"
-                                   value="0"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                   type="radio"/>
-                            <label for="writtenFeedback-no">No</label>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="js-hidden" id="scored-options">
+                            </th:block>
+                            <div class="multiple-choice" data-target="scored-options">
+                                <input id="writtenFeedback-yes"
+                                       th:name="question.writtenFeedback"
+                                       th:checked="${question.writtenFeedback != null and question.writtenFeedback}"
+                                       value="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="writtenFeedback-yes">Yes</label>
+                            </div>
+                            <div class="multiple-choice">
+                                <input id="writtenFeedback-no"
+                                       th:name="question.writtenFeedback"
+                                       th:checked="${question.writtenFeedback != null and !question.writtenFeedback}"
+                                       value="0"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="writtenFeedback-no">No</label>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="js-hidden" id="scored-options">
                         <div class="form-group"
                              th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'form-group-error'">
                             <label class="form-label" for="question.assessmentGuidanceTitle">
@@ -638,8 +676,10 @@
                                        th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
                             </div>
                         </div>
-                </div>
+                    </div>
+                </th:block>
             </th:block>
+
         </div>
     </th:block>
 </div>
