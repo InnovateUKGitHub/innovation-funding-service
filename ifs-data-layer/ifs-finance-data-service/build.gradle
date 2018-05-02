@@ -99,14 +99,16 @@ test {
 }
 
 asciidoctor {
-    dependsOn test {
-        useJUnit {
-            includeCategories 'org.innovateuk.ifs.ControllerTest'
-        }
-    }
     attributes 'snippets': snippetsDir
     backends 'html5'
     inputs.dir snippetsDir
+}
+
+task asciidoctorOnly(type: Test) {
+    useJUnit {
+        includeCategories 'org.innovateuk.ifs.ControllerTest'
+    }
+    finalizedBy asciidoctor
 }
 
 task generateMainMapperClasses(type: JavaCompile) {
