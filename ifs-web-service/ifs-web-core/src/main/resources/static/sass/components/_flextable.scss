@@ -89,7 +89,7 @@
           > * {
             &:first-child {
               margin-top:-1px;
-              border-bottom: none !important;
+              border-bottom: none;
               border-top: 3px solid #000;
             }
           }
