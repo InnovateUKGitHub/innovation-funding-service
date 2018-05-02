@@ -6,7 +6,6 @@ import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.domain.ReviewRejectOutcome;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -14,7 +13,6 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 
 public class ReviewBuilder extends BaseBuilder<Review, ReviewBuilder> {
 
@@ -53,6 +51,6 @@ public class ReviewBuilder extends BaseBuilder<Review, ReviewBuilder> {
     }
 
     public ReviewBuilder withState(ReviewState... states) {
-        return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_REVIEW, state.getBackingState())), states);
+        return withArray((state, invite) -> invite.setProcessState(state), states);
     }
 }

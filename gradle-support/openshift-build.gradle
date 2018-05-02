@@ -56,6 +56,7 @@ task deploy(type: DockerStartContainer, dependsOn: createContainer) {
 task wait(type: DockerWaitHealthyContainer) {
     targetContainerId { createContainer.getContainerId() }
 }
+wait.mustRunAfter deploy
 
 task osStageRemote(type: DockerPushImage) {
     dependsOn tagDocker

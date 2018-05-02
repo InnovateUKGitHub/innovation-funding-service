@@ -7,10 +7,7 @@ import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * An invitation for an assessor to interview an application's applicants on an interview panel.
@@ -25,6 +22,9 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
+
+    @Column(name="activity_state_id")
+    private InterviewState activityState;
 
     public Interview() {
         super();
@@ -55,26 +55,29 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
         this.target = target;
     }
 
-    public InterviewState getActivityState() {
-        return InterviewState.fromState(activityState.getState());
+    @Override
+    public InterviewState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(InterviewState status) {
+        this.activityState = status;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Interview that = (Interview) o;
+        Interview interview = (Interview) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(participant, that.participant)
-                .append(target, that.target)
+                .append(participant, interview.participant)
+                .append(target, interview.target)
+                .append(activityState, interview.activityState)
                 .isEquals();
     }
 
@@ -84,6 +87,7 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
     }
 }

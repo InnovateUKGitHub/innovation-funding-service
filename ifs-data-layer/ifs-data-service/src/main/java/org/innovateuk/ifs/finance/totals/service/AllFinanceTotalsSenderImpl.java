@@ -43,7 +43,6 @@ public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender {
     }
 
     private Stream<Application> submittedApplicationsStream() {
-        return applicationRepository.findByApplicationProcessActivityStateStateIn(
-                simpleMap(submittedStates, ApplicationState::getBackingState));
+        return applicationRepository.findByApplicationProcessActivityStateIn(submittedStates);
     }
 }

@@ -58,7 +58,7 @@ public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
     }
 
     private int getApplicationPanelAssignedCountStatistic(long competitionId) {
-        return applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+        return applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, "",  null,true).size();
     }
 
