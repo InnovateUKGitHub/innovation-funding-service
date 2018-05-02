@@ -116,7 +116,7 @@
         <p>Your bank details will now be submitted to Innovate UK.</p>
         <hr />
         <div method="post">
-            <button class="button" name="submit-app-details">Submit</button>
+            <button class="button" id="submit-bank-details" name="submit-app-details">Submit</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -147,7 +147,7 @@
         <hr />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
-                <button class="button" name="submit-other-documents" type="submit">Submit</button>
+                <button class="button" id="submit-other-documents" name="submit-other-documents" type="submit">Submit</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>

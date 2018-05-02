@@ -2,7 +2,7 @@
 Documentation     INFUND-539 - As an applicant I want the ‘Application details’ drop down on the ‘Application overview’ page to show a green tick when I’ve marked it as complete, so that I know what I’ve done
 ...
 ...               INFUND-1733 As an applicant I want to see if the 'Your Finance' section is marked as complete in the overview page
-Suite Setup       log in and create new application if there is not one already  Robot test application
+Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Default Tags
@@ -38,3 +38,9 @@ Green check shows when finances are marked as complete
     Given the Application details are completed
     And the user navigates to Your-finances page  Robot test application
     Then the user marks the finances as complete  Robot test application  labour costs  n/a  no
+
+
+*** Keywords ***
+Custom Suite Setup
+    Set predefined date variables
+    log in and create new application if there is not one already  Robot test application
