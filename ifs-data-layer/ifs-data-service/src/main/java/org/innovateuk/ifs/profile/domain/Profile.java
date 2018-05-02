@@ -132,7 +132,7 @@ public class Profile extends AuditableEntity {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -141,7 +141,7 @@ public class Profile extends AuditableEntity {
             return false;
         }
 
-        final Profile profile = (Profile) o;
+        Profile profile = (Profile) o;
 
         return new EqualsBuilder()
                 .append(id, profile.id)

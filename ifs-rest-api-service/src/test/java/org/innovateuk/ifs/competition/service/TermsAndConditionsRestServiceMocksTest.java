@@ -19,8 +19,8 @@ public class TermsAndConditionsRestServiceMocksTest extends BaseRestServiceUnitT
     public void getLatestSiteTermsAndConditions() {
         SiteTermsAndConditionsResource expected = newSiteTermsAndConditionsResource().build();
 
-        setupGetWithRestResultExpectations("/terms-and-conditions/site", SiteTermsAndConditionsResource.class,
-                expected);
+        setupGetWithRestResultAnonymousExpectations("/terms-and-conditions/site",
+                SiteTermsAndConditionsResource.class, expected);
 
         assertSame(expected, service.getLatestSiteTermsAndConditions().getSuccess());
     }

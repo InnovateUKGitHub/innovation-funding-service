@@ -10,6 +10,6 @@ public class TermsAndConditionsRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<SiteTermsAndConditionsResource> getLatestSiteTermsAndConditions() {
-        return getWithRestResult("/terms-and-conditions/site", SiteTermsAndConditionsResource.class);
+        return getWithRestResultAnonymous("/terms-and-conditions/site", SiteTermsAndConditionsResource.class);
     }
 }
