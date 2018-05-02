@@ -29,8 +29,9 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/info")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = SiteTermsController.class)
-@PreAuthorize("permitAll")
+@SecuredBySpring(value = "Controller", description = "Applicants can view and agree to Site Terms and Conditions",
+        securedType = SiteTermsController.class)
+@PreAuthorize("hasAuthority('applicant')")
 public class SiteTermsController {
 
     @Autowired
