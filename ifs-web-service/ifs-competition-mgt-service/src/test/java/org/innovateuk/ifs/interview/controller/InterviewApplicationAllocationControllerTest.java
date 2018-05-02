@@ -1,0 +1,95 @@
+package org.innovateuk.ifs.interview.controller;
+
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
+import org.innovateuk.ifs.interview.model.InterviewApplicationsFindModelPopulator;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
+import org.innovateuk.ifs.interview.viewmodel.InterviewViewModel;
+import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
+import org.innovateuk.ifs.management.model.InterviewAllocateApplicationsModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.InterviewAllocateApplicationsRowViewModel;
+import org.innovateuk.ifs.management.viewmodel.InterviewAllocateApplicationsViewModel;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+@RunWith(MockitoJUnitRunner.class)
+@TestPropertySource(locations = "classpath:application.properties")
+public class InterviewApplicationAllocationControllerTest extends BaseControllerMockMVCTest<InterviewApplicationAllocationController> {
+
+    @Spy
+    @InjectMocks
+    private InterviewAllocateApplicationsModelPopulator interviewAllocateApplicationsModelPopulator;
+
+    @Override
+    protected InterviewApplicationAllocationController supplyControllerUnderTest() {
+        return new InterviewApplicationAllocationController();
+    }
+
+
+    @Test
+    public void overview() throws Exception {
+        int page = 0;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(1L)
+                .withName("Competition x")
+                .build();
+
+        when(competitionService.getById(competition.getId())).thenReturn(competition);
+
+        InterviewAssessorAllocateApplicationsResource interviewAssessorAllocateApplicationsResource = newInterviewAssessorAllocateApplicationsResource()
+                .build();
+
+        InterviewAllocateApplicationsRowViewModel assessors = new InterviewAllocateApplicationsRowViewModel(interviewAssessorAllocateApplicationsResource);
+
+        InterviewAssessorAllocateApplicationsPageResource pageResource = newInterviewAssessorAllocateApplicationsPageResource()
+                .withContent(singletonList(interviewAssessorAllocateApplicationsResource))
+                .build();
+
+        when(interviewInviteRestService.getAllocateApplicationsOverview(competition.getId(), page)).thenReturn(restSuccess(pageResource));
+
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/allocate-applications", competition.getId())
+                .param("page", "0"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/assessors-allocate-applications"))
+                .andReturn();
+
+        InterviewAllocateApplicationsViewModel model = (InterviewAllocateApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        InOrder inOrder = inOrder(competitionService, interviewInviteRestService);
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(interviewInviteRestService).getAllocateApplicationsOverview(competition.getId(), page);
+        inOrder.verifyNoMoreInteractions();
+
+        assertEquals((long) competition.getId(), model.getCompetitionId());
+        assertEquals(competition.getName(), model.getCompetitionName());
+        assertEquals(singletonList(assessors), model.getAssessors());
+    }
+}

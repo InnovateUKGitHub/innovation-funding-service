@@ -33,10 +33,10 @@ public class InterviewApplicationAllocationController {
     private CompetitionService competitionService;
 
     @GetMapping("/allocate-applications")
-    public String find(Model model,
-                       @PathVariable("competitionId") long competitionId,
-                       @RequestParam MultiValueMap<String, String> queryParams,
-                       @RequestParam(value = "page", defaultValue = "0") int page
+    public String overview(Model model,
+                           @PathVariable("competitionId") long competitionId,
+                           @RequestParam MultiValueMap<String, String> queryParams,
+                           @RequestParam(value = "page", defaultValue = "0") int page
     ) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
