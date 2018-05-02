@@ -60,7 +60,7 @@ Lead Adds/Removes rows
     And the user clicks the button/link       jQuery=button:contains("Add another contributor")
     And The user should not see the element   jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should see the element      css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
-    And The user clicks the button/link       jQuery=button:contains('Remove')
+    And The user clicks the button/link       id=remove-collaborator-1
     Then The user should not see the element  css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
 
 Lead cannot be removed
@@ -75,7 +75,7 @@ Lead organisation server-side validations
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
     And browser validations have been disabled
-    And the user clicks the button/link       jQuery=.button:contains("Invite")
+    And the user clicks the button/link       css=[id^="invite-collaborator"]
     Then the user should see an error         Please enter a valid email address.
     And the user should see an error          Please enter a name.
 
@@ -207,7 +207,7 @@ Partner can invite others to his own organisation
     And the user clicks the button/link       jQuery=button:contains("Add another contributor")
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
-    And the user clicks the button/link       jQuery=button:contains("Invite")
+    And the user clicks the button/link       id=invite-collaborator-1
     Then The user should see the element      jQuery=td:contains("mark21@innovateuk.com") + td:contains("Invite pending")
 
 Lead should see the accepted partner in the assign list
@@ -231,7 +231,7 @@ Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link            jQuery=button:contains("Add another contributor")
     When The user enters text to a text field      name=stagedInvite.name    Roger Axe
     And The user enters text to a text field       name=stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
-    And the user clicks the button/link            jQuery=button:contains("Invite")
+    And the user clicks the button/link            css=[id^="invite-collaborator"]
     Then the user should see the element           jQuery=.table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)+td:contains("Invite pending for 0 days")
     [Teardown]    Logout as user
 
