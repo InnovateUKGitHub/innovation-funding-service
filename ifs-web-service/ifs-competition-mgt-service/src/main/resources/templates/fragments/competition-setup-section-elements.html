@@ -224,72 +224,74 @@
                        th:value="${question.maxWords}"
                        th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
             </div>
-            <div class="form-group" th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}"
-                 th:classappend="${#fields.hasErrors('question.appendix')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend class="form-label-bold" id="question.appendix">Appendix</legend>
-                    <th:block th:if="${#fields.hasErrors('question.appendix')}">
+
+            <th:block th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}">
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('question.appendix')} ? 'form-group-error'">
+                    <fieldset class="inline">
+                        <legend class="form-label-bold" id="question.appendix">Appendix</legend>
+                        <th:block th:if="${#fields.hasErrors('question.appendix')}">
                         <span class="error-message" th:each="err : ${#fields.errors('question.appendix')}"
                               th:text="${err}"></span>
-                    </th:block>
-                    <div class="multiple-choice" data-target="allowedFileTypesDiv" data-target-clear-form="true">
-                        <input id="appendix-yes"
-                               th:name="question.appendix"
-                               th:checked="${question.appendix != null and question.appendix}"
-                               value="1"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                               type="radio"/>
-                        <label for="appendix-yes">Yes</label>
-                    </div>
-                    <div class="multiple-choice">
-                        <input id="appendix-no"
-                               th:name="question.appendix"
-                               th:checked="${question.appendix != null and !question.appendix}"
-                               value="0"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                               type="radio"/>
-                        <label for="appendix-no">No</label>
-                    </div>
-                </fieldset>
-            </div>
-            <div id="allowedFileTypesDiv" class="form-group panel" th:if="${question.appendix != null}">
-                <div class="form-group"
-                     th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
-                    <fieldset>
-                        <legend id="question.allowedFileTypes">
-                            <span class="form-label-bold">Accepted appendix file types</span>
-                            <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
-                                <span class="error-message"
-                                      th:each="err : ${#fields.errors('question.allowedFileTypes')}"
-                                      th:text="${err}"></span>
-                            </th:block>
-                        </legend>
-                        <div class="multiple-choice"
-                             th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
-                            <input type="checkbox"
-                                   th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
-                                   th:field="*{question.allowedFileTypes}"
-                                   th:value="${fileTypeCategory.name()}"
-                                   name="allowedFileTypes"
+                        </th:block>
+                        <div class="multiple-choice" data-target="allowedFileTypesDiv" data-target-clear-form="true">
+                            <input id="appendix-yes"
+                                   th:name="question.appendix"
+                                   th:checked="${question.appendix != null and question.appendix}"
+                                   value="1"
                                    required="required"
-                                   data-autosave-list/>
-                            <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}"
-                                   th:text="${fileTypeCategory.displayName}">PDF</label>
+                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                   type="radio"/>
+                            <label for="appendix-yes">Yes</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input id="appendix-no"
+                                   th:name="question.appendix"
+                                   th:checked="${question.appendix != null and !question.appendix}"
+                                   value="0"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                   type="radio"/>
+                            <label for="appendix-no">No</label>
                         </div>
                     </fieldset>
                 </div>
-                <div class="form-group"
-                     th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-group-error'">
-                    <label class="form-label" for="question.appendixGuidance">
-                        <span class="form-label-bold">Appendix guidance</span>
-                        <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
+                <div id="allowedFileTypesDiv" class="form-group panel">
+                    <div class="form-group"
+                         th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
+                        <fieldset>
+                            <legend id="question.allowedFileTypes">
+                                <span class="form-label-bold">Accepted appendix file types</span>
+                                <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
+                                <span class="error-message"
+                                      th:each="err : ${#fields.errors('question.allowedFileTypes')}"
+                                      th:text="${err}"></span>
+                                </th:block>
+                            </legend>
+                            <div class="multiple-choice"
+                                 th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
+                                <input type="checkbox"
+                                       th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
+                                       th:field="*{question.allowedFileTypes}"
+                                       th:value="${fileTypeCategory.name()}"
+                                       name="allowedFileTypes"
+                                       required="required"
+                                       data-autosave-list/>
+                                <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}"
+                                       th:text="${fileTypeCategory.displayName}">PDF</label>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="form-group"
+                         th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-group-error'">
+                        <label class="form-label" for="question.appendixGuidance">
+                            <span class="form-label-bold">Appendix guidance</span>
+                            <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
                             <span class="error-message" th:each="err : ${#fields.errors('question.appendixGuidance')}"
                                   th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <div class="textarea-wrapped">
+                            </th:block>
+                        </label>
+                        <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
                                   id="question.appendixGuidance"
@@ -298,12 +300,13 @@
                                   required="required"
                                   ifs:utext="${question.appendixGuidance}">
                         </textarea>
-                        <div class="textarea-footer">
-                            <span class="autosave-info"></span>
+                            <div class="textarea-footer">
+                                <span class="autosave-info"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </th:block>
 
             <th:block
                 th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
@@ -360,7 +363,8 @@
                                        th:name="question.scored"
                                        th:checked="${question.scored != null and question.scored}"
                                        value="1"
-                                       required="required"
+                                       require
+                                       d="required"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                        type="radio"/>
                                 <label for="scored-yes">Yes</label>
