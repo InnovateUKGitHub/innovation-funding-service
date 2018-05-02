@@ -101,7 +101,7 @@ include::{snippets}/competition/notify-assessors/http-response.adoc[]
 include::{snippets}/competition/notify-assessors/curl-request.adoc[]
 
 === Close assessment on a Competition
-=== Request
+==== Request
 include::{snippets}/competition/close-assessment/http-request.adoc[]
 include::{snippets}/competition/close-assessment/path-parameters.adoc[]
 

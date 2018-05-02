@@ -10,8 +10,8 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.termsAndConditionsResourceListType;
 
 /**
- * MilestoneRestServiceImpl is a utility for CRUD operations on {@link TermsAndConditionsResource}.
- * This class connects to the { org.innovateuk.ifs.competition.controller.MilestoneController}
+ * TermsAndConditionsRestServiceImpl is a utility for CRUD operations on {@link TermsAndConditionsResource}.
+ * This class connects to the { org.innovateuk.ifs.competition.controller.TermsAndConditionsController}
  * through a REST call.
  */
 @Service
