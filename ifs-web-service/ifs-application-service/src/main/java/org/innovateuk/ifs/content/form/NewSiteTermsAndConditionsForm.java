@@ -7,6 +7,9 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Form field model for accepting new Site Terms and Conditions.
+ */
 public class NewSiteTermsAndConditionsForm extends BaseBindingResultTarget {
 
     @NotNull(message = "{validation.newtermsandconditionsform.agree.required}")

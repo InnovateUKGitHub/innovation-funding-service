@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competition.resource;
 
+/**
+ * Resource representation of GrantTermsAndConditions
+ */
 public class GrantTermsAndConditionsResource extends TermsAndConditionsResource {
 
     public GrantTermsAndConditionsResource() {

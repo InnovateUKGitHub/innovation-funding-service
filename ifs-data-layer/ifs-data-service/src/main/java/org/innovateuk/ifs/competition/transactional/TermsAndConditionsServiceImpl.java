@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+/**
+ * Service for operations around the usage and processing of TermsAndConditions
+ */
 @Service
 public class TermsAndConditionsServiceImpl implements TermsAndConditionsService {
 

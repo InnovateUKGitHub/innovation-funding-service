@@ -24,6 +24,9 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
+/**
+ * This controller will handle all requests that are related to the Site Terms and Conditions.
+ */
 @Controller
 @RequestMapping("/info")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = SiteTermsController.class)
