@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.domain;
+package org.innovateuk.ifs.fundingdecision.domain;
 
 /**
  * enum to represents the possible states of a funding decision for a single application.
