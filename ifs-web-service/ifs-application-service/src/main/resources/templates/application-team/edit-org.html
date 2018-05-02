@@ -49,7 +49,8 @@
                             <td th:unless="${applicant.lead}" th:text="${applicant.pending} ? |Invite pending for ${applicant.daysPending} days| : ''">
                             </td>
                             <td class="alignright">
-                                <button th:if="${applicant.removable and applicantStat.size > 1}"
+                                <button th:id="|remove-contributor-${applicantStat.index}|"
+                                        th:if="${applicant.removable and applicantStat.size > 1}"
                                         th:value="${applicant.applicationInviteId}"
                                         class="buttonlink"
                                         name="removeInvite"
@@ -110,13 +111,12 @@
                 </table>
 
                 <div th:unless="*{stagedInvite}">
-                    <button
-                          class="buttonlink"
-                           data-repeatable-rowcontainer="#applicant-table tbody"
-                           data-applicant-table="update-org"
-                           type="submit"
+                    <button class="buttonlink"
+                            data-repeatable-rowcontainer="#applicant-table tbody"
+                            data-applicant-table="update-org"
+                            type="submit"
                             value="true"
-                           name="addStagedInvite">
+                            name="addStagedInvite">
                         Add another contributor
                     </button>
                 </div>
