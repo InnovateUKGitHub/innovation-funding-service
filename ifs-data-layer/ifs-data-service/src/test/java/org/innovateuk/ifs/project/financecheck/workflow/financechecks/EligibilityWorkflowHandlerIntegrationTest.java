@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.financecheck.workflow.financechecks;
 
-import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
 import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
@@ -11,8 +11,6 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -22,9 +20,8 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIGIBILITY;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,24 +31,17 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
 
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
-    private ActivityStateRepository activityStateRepositoryMock;
     private EligibilityProcessRepository eligibilityProcessRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         eligibilityProcessRepositoryMock = (EligibilityProcessRepository) mockSupplier.apply(EligibilityProcessRepository.class);
     }
 
     @Test
-    public void testProjectCreated() throws Exception {
-
+    public void testProjectCreated() {
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectUser projectUser = newProjectUser().build();
-
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_ELIGIBILITY, EligibilityState.REVIEW.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_ELIGIBILITY, EligibilityState.REVIEW.getBackingState())).thenReturn(expectedActivityState);
-
 
         // Call the workflow here
         boolean result = eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
@@ -60,17 +50,16 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected EligibilityProcess object (say X) and verifying that X was the object that was saved.
-        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(projectUser, partnerOrganisation, expectedActivityState);
+        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(projectUser, partnerOrganisation, EligibilityState.REVIEW);
 
         // Ensure the correct event was fired by the workflow
         expectedEligibilityProcess.setProcessEvent(EligibilityEvent.PROJECT_CREATED.getType());
 
         verify(eligibilityProcessRepositoryMock).save(expectedEligibilityProcess);
-
     }
 
     @Test
-    public void testEligibilityApproved() throws Exception {
+    public void testEligibilityApproved() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, internalUser)),
 
@@ -79,7 +68,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testNotRequestingFunding() throws Exception {
+    public void testNotRequestingFunding() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, internalUser)),
 
@@ -96,13 +85,10 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
         User internalUser = newUser().build();
 
         // Set the current state in the Eligibility Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_ELIGIBILITY, currentEligibilityState.getBackingState());
-        EligibilityProcess currentEligibilityProcess = new EligibilityProcess((User) null, partnerOrganisation, currentActivityState);
+        EligibilityProcess currentEligibilityProcess = new EligibilityProcess((User) null, partnerOrganisation, currentEligibilityState);
         when(eligibilityProcessRepositoryMock.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentEligibilityProcess);
 
         // Set the destination state which we expect when the event is fired
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_ELIGIBILITY, destinationEligibilityState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_ELIGIBILITY, destinationEligibilityState.getBackingState())).thenReturn(expectedActivityState);
 
         // Call the workflow here
         boolean result = workflowMethodToCall.apply(partnerOrganisation, internalUser);
@@ -111,7 +97,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected EligibilityProcess object (say X) and verifying that X was the object that was saved.
-        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(internalUser, partnerOrganisation, expectedActivityState);
+        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(internalUser, partnerOrganisation, destinationEligibilityState);
 
         // Ensure the correct event was fired by the workflow
         expectedEligibilityProcess.setProcessEvent(expectedEventToBeFired.getType());
@@ -138,7 +124,6 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     protected List<Class<? extends Repository>> getRepositoriesToMock() {
         List<Class<? extends Repository>> repositories = new ArrayList<>(super.getRepositoriesToMock());
         repositories.add(EligibilityProcessRepository.class);
-        repositories.add(ActivityStateRepository.class);
         return repositories;
     }
 }

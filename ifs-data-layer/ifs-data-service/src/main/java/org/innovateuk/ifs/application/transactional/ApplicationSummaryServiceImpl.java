@@ -50,26 +50,25 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
 
-    public static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
-            .stream().map(ApplicationState::getBackingState).collect(toSet());
+    public static final Set<ApplicationState> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES;
 
-    public static final Set<State> NOT_SUBMITTED_STATES = simpleMapSet(asLinkedSet(
+    public static final Set<ApplicationState> NOT_SUBMITTED_STATES = asLinkedSet(
             ApplicationState.CREATED,
-            ApplicationState.OPEN), ApplicationState::getBackingState);
+            ApplicationState.OPEN);
 
-    public static final Set<State> INELIGIBLE_STATES = simpleMapSet(asLinkedSet(
+    public static final Set<ApplicationState> INELIGIBLE_STATES = asLinkedSet(
             ApplicationState.INELIGIBLE,
-            INELIGIBLE_INFORMED), ApplicationState::getBackingState);
+            INELIGIBLE_INFORMED);
 
-    public static final Set<State> CREATED_AND_OPEN_STATUSES = simpleMapSet(asLinkedSet(
+    public static final Set<ApplicationState> CREATED_AND_OPEN_STATUSES = asLinkedSet(
             ApplicationState.CREATED,
-            ApplicationState.OPEN), ApplicationState::getBackingState);
+            ApplicationState.OPEN);
 
-    public static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(
+    public static final Set<ApplicationState> FUNDING_DECISIONS_MADE_STATUSES = asLinkedSet(
             ApplicationState.APPROVED,
-            ApplicationState.REJECTED), ApplicationState::getBackingState);
+            ApplicationState.REJECTED);
 
-    public static final Set<State> SUBMITTED_AND_INELIGIBLE_STATES = Stream.concat(
+    public static final Set<ApplicationState> SUBMITTED_AND_INELIGIBLE_STATES = Stream.concat(
             SUBMITTED_STATES.stream(),
             INELIGIBLE_STATES.stream()).collect(toSet());
 
@@ -111,8 +110,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<String> filter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, INELIGIBLE_STATES, filterStr, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, INELIGIBLE_STATES, filterStr));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateNotIn(competitionId, INELIGIBLE_STATES, filterStr, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateNotIn(competitionId, INELIGIBLE_STATES, filterStr));
     }
 
     @Override
@@ -128,9 +127,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         String filterString = trimFilterString(filter);
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                         competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                         competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null)));
     }
 
@@ -140,7 +139,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<String> filter,
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterString = trimFilterString(filter);
-        return find(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+        return find(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), null), notFoundError(ApplicationSummaryResource.class))
                 .andOnSuccessReturn(result -> result.stream()
                         .filter(applicationFundingDecisionIsSubmittable())
@@ -155,9 +154,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             int pageSize) {
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                         competitionId, NOT_SUBMITTED_STATES, "", null, null, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                         competitionId, NOT_SUBMITTED_STATES, "", null, null));
     }
 
@@ -212,11 +211,11 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<String> filter,
             Optional<Boolean> informFilter) {
         String filterStr = filter.map(String::trim).orElse("");
-        Set<State> states = informFilter.map(i -> i ? singleton(INELIGIBLE_INFORMED.getBackingState()) : singleton(INELIGIBLE.getBackingState())).orElse(INELIGIBLE_STATES);
+        Set<ApplicationState> states = informFilter.map(i -> i ? singleton(INELIGIBLE_INFORMED) : singleton(INELIGIBLE)).orElse(INELIGIBLE_STATES);
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                         competitionId, states, filterStr, null, null, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
                         competitionId, states, filterStr, null, null));
     }
 

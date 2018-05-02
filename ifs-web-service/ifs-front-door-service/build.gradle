@@ -33,4 +33,4 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
-
+jar.dependsOn ":ifs-web-service:gulp_default"

@@ -185,7 +185,7 @@ partner fills in his bank details
     the user sees that the radio button is selected  addressType  REGISTERED  # Added this check to give extra execution time
     the user should see the element                  css=#registeredAddress
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
-    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
+    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id=submit-bank-details
 
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}

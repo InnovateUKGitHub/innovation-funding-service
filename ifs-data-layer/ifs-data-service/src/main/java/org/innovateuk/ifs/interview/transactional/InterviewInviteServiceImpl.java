@@ -468,7 +468,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     private void determineStatusOfPanelApplications(InterviewParticipantResource interviewParticipantResource) {
 
         List<Interview> reviews = interviewRepository.
-                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                         interviewParticipantResource.getUserId(),
                         interviewParticipantResource.getCompetitionId());
 
@@ -476,7 +476,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     private Long getApplicationsPendingForPanelCount(List<Interview> reviews) {
-        return reviews.stream().filter(review -> review.getActivityState().equals(InterviewState.PENDING)).count();
+        return reviews.stream().filter(review -> review.getProcessState().equals(InterviewState.PENDING)).count();
     }
 
     private void updateParticipantStatus(InterviewInvite invite){

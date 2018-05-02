@@ -63,7 +63,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
             return;
         }
 
-        List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+        List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                 competitionParticipant.getUserId(),
                 competitionParticipant.getCompetitionId()
         );
@@ -74,15 +74,15 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     }
 
     private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments) {
-        return assessments.stream().filter(assessment -> assessment.getActivityState().equals(SUBMITTED)).count();
+        return assessments.stream().filter(assessment -> assessment.getProcessState().equals(SUBMITTED)).count();
     }
 
     private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments) {
         Set<AssessmentState> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
-        return assessments.stream().filter(assessment -> allowedAssessmentStates.contains(assessment.getActivityState())).count();
+        return assessments.stream().filter(assessment -> allowedAssessmentStates.contains(assessment.getProcessState())).count();
     }
 
     private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments) {
-        return assessments.stream().filter(assessment -> assessment.getActivityState().equals(PENDING)).count();
+        return assessments.stream().filter(assessment -> assessment.getProcessState().equals(PENDING)).count();
     }
 }
