@@ -26,7 +26,8 @@ public class AddressDocs {
             .withAddressLine3("addressLine3")
             .withTown("regular town")
             .withCounty("regular county")
-            .withPostcode("PD65OQ")
-            .withOrganisationList(asList(1L, 2L, 3L));
+            .withPostcode("PD65OQ");
+    //TODO - FIx this later
+            //.withOrganisationList(asList(1L, 2L, 3L));
 
 }
