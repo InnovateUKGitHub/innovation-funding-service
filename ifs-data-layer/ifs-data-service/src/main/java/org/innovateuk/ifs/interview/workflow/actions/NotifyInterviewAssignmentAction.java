@@ -4,6 +4,7 @@ import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
+import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflow;
 import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,6 @@ public class NotifyInterviewAssignmentAction extends BaseInterviewAssignmentActi
     protected void doExecute(InterviewAssignment interviewAssignment, StateContext<InterviewAssignmentState, InterviewAssignmentEvent> context) {
         InterviewAssignmentMessageOutcome interviewAssignmentMessageOutcome =
                 (InterviewAssignmentMessageOutcome) context.getMessageHeader("message");
-        interviewAssignment.getProcessOutcomes().add(interviewAssignmentMessageOutcome);
+        interviewAssignment.setMessage(interviewAssignmentMessageOutcome);
     }
 }

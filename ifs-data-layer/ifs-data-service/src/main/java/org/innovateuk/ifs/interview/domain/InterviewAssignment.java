@@ -26,6 +26,12 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "process")
+    private InterviewAssignmentResponseOutcome response;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "process")
+    private InterviewAssignmentMessageOutcome message;
+
     @Column(name="activity_state_id")
     private InterviewAssignmentState activityState;
 
@@ -80,20 +86,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
         this.activityState = status;
     }
 
-    public InterviewAssignmentResponseOutcome getResponse() {
-        return (InterviewAssignmentResponseOutcome) processOutcomes.stream()
-                .filter(outcome -> outcome instanceof InterviewAssignmentResponseOutcome)
-                .findAny()
-                .orElse(null);
-    }
-
-    public InterviewAssignmentMessageOutcome getMessage() {
-        return (InterviewAssignmentMessageOutcome) processOutcomes.stream()
-                .filter(outcome -> outcome instanceof InterviewAssignmentMessageOutcome)
-                .findAny()
-                .orElse(null);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -127,5 +119,29 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .append("target", target)
                 .append("activityState", activityState)
                 .toString();
+    }
+
+    public void setResponse(InterviewAssignmentResponseOutcome response) {
+        this.response = response;
+    }
+
+    public InterviewAssignmentResponseOutcome getResponse() {
+        return response;
+    }
+
+    public InterviewAssignmentMessageOutcome getMessage() {
+        return message;
+    }
+
+    public void setMessage(InterviewAssignmentMessageOutcome message) {
+        this.message = message;
+    }
+
+    public void removeMessage() {
+        this.message = null;
+    }
+
+    public void removeResponse() {
+        this.response = null;
     }
 }

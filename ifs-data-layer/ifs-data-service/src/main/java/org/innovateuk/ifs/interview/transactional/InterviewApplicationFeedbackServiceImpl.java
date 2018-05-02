@@ -60,10 +60,10 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
             handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                         .andOnSuccessReturnVoid(created -> {
-                            InterviewAssignmentMessageOutcome outcome = new InterviewAssignmentMessageOutcome();
-                            outcome.setAssessmentInterviewPanel(interviewAssignment);
-                            outcome.setFeedback(created.getValue());
-                            interviewAssignment.getProcessOutcomes().add(outcome);
+                            InterviewAssignmentMessageOutcome messageOutcome = new InterviewAssignmentMessageOutcome();
+                            messageOutcome.setAssessmentInterviewPanel(interviewAssignment);
+                            messageOutcome.setFeedback(created.getValue());
+                            interviewAssignment.setMessage(messageOutcome);
                         })).toServiceResult());
     }
 
@@ -73,9 +73,9 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment -> {
             long fileId = interviewAssignment.getMessage().getFeedback().getId();
             return fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() -> {
-                InterviewAssignmentMessageOutcome message = interviewAssignment.getMessage();
-                interviewAssignment.getProcessOutcomes().remove(message);
-                interviewAssignmentMessageOutcomeRepository.delete(message);
+                InterviewAssignmentMessageOutcome messageOutcome = interviewAssignment.getMessage();
+                interviewAssignment.removeMessage();
+                interviewAssignmentMessageOutcomeRepository.delete(messageOutcome);
             });
         });
     }

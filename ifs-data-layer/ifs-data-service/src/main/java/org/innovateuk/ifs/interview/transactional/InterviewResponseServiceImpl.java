@@ -73,7 +73,7 @@ public class InterviewResponseServiceImpl implements InterviewResponseService {
                                     outcome.setFileResponse(created.getValue());
                                     outcome.setProcess(interviewAssignment);
                                     interviewAssignmentWorkflowHandler.respondToInterviewPanel(interviewAssignment, outcome);
-                                    interviewAssignment.getProcessOutcomes().add(outcome);
+                                    interviewAssignment.setResponse(outcome);
                                 })).toServiceResult());
     }
 

@@ -32,7 +32,7 @@ public class WithdrawResponseInterviewAssignmentAction extends BaseInterviewAssi
         long fileId = interviewAssignment.getResponse().getFileResponse().getId();
         InterviewAssignmentResponseOutcome response = interviewAssignment.getResponse();
         fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() -> {
-            interviewAssignment.getProcessOutcomes().remove(response);
+            interviewAssignment.removeResponse();
             interviewAssignmentResponseOutcomeRepository.delete(response);
         });
     }

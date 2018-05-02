@@ -52,10 +52,10 @@ public class InterviewAssignmentBuilder extends BaseBuilder<InterviewAssignment,
     }
 
     public InterviewAssignmentBuilder withMessage(InterviewAssignmentMessageOutcome... outcomes) {
-        return withArray((outcome, invite) -> invite.getProcessOutcomes().add(outcome), outcomes);
+        return withArray((outcome, invite) -> invite.setMessage(outcome), outcomes);
     }
 
     public InterviewAssignmentBuilder withResponse(InterviewAssignmentResponseOutcome... outcomes) {
-        return withArray((outcome, invite) -> invite.getProcessOutcomes().add(outcome), outcomes);
+        return withArray((outcome, invite) -> invite.setResponse(outcome), outcomes);
     }
 }

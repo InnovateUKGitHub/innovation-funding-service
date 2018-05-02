@@ -19,6 +19,6 @@ public class FeedbackResponseInterviewAssignmentAction extends BaseInterviewAssi
         InterviewAssignmentResponseOutcome interviewAssignmentResponseOutcome =
                 (InterviewAssignmentResponseOutcome) context.getMessageHeader("response");
 
-        interviewAssignment.getProcessOutcomes().add(interviewAssignmentResponseOutcome);
+        interviewAssignment.setResponse(interviewAssignmentResponseOutcome);
     }
 }
