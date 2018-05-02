@@ -44,7 +44,7 @@ public class InterviewAssessorAllocateApplicationsResourceBuilderTest {
         assertEquals(expectedNames[0], first.getName());
         assertEquals(expectedSkillAreas[0], first.getSkillAreas());
 
-        InterviewAssessorAllocateApplicationsResource second = expectedInterviewAssessors.get(0);
+        InterviewAssessorAllocateApplicationsResource second = expectedInterviewAssessors.get(1);
         assertEquals((long) expectedIds[1], second.getId());
         assertEquals(expectedNames[1], second.getName());
         assertEquals(expectedSkillAreas[1], second.getSkillAreas());
