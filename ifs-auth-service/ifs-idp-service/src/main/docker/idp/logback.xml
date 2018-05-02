@@ -61,6 +61,11 @@
     <logger name="net.shibboleth.idp.saml.attribute.mapping" level="INFO" />
     <logger name="org.apache.xml.security" level="${idp.loglevel.xmlsec:-INFO}" />
     <logger name="org.springframework" level="${idp.loglevel.spring:-ERROR}"/>
+
+    <!--Exception is a false positive (a result of the user clicking the back button-->
+    <!--Exception logging is excluded as it was causing false positives with new relic. -->
+    <logger name="org.springframework.webflow.execution.repository.NoSuchFlowExecutionException" level="OFF"/>
+
     <logger name="org.apache.catalina" level="${idp.loglevel.container:-ERROR}"/>
     <logger name="org.eclipse.jetty" level="${idp.loglevel.container:-ERROR}"/>
 

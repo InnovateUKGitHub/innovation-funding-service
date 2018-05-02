@@ -69,7 +69,7 @@ Applicant completes Project Details
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
-    [Tags]  CompAdmin
+    [Tags]
     Given Log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
     And the user clicks the button/link    jQuery=tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")

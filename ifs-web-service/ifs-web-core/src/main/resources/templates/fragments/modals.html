@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- close button -->
+<!-- Close button -->
 <th:block th:fragment="close-button" xmlns:th="http://www.w3.org/1999/xhtml">
     <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
 </th:block>
 
-<!-- overlay -->
-
+<!-- Overlay -->
 <th:block th:fragment="modal-overlay">
     <div class="modal-overlay js-close" aria-hidden="true"></div>
 </th:block>
 
 
-<!-- confirm submit modal -->
-
+<!-- Confirm submit modal -->
 <th:block th:fragment="modal-confirm-submit (messageTitle, message, submitLink, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -28,8 +26,7 @@
     </div>
 </th:block>
 
-<!-- confirm submit application modal -->
-
+<!-- Confirm submit application modal -->
 <th:block th:fragment="modal-confirm-submit-application (messageTitle, message, submitLink, submitText, submittedText, cancelText)">
     <form id="submit-application-summary-form" method="post" th:action="${submitLink}">
         <div class="modal-confirm-submit-application" role="dialog" aria-hidden="true">
@@ -46,8 +43,7 @@
     </form>
 </th:block>
 
-<!-- confirm submit modal -->
-
+<!-- Confirm submit modal -->
 <th:block th:fragment="modal-confirm-submit-post (messageTitle, message, submitName, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -62,7 +58,7 @@
     </div>
 </th:block>
 
-<!-- public funding decision modal window -->
+<!-- Public funding decision modal window -->
 <th:block th:fragment="modal-publish-funding-decision">
     <div class="modal-publish-funding-decision" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -78,7 +74,7 @@
     </div>
 </th:block>
 
-<!-- save monotiring officer -->
+<!-- Save monitoring officer -->
 <th:block th:fragment="modal-assign-mo">
     <div class="modal-assign-mo" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -96,7 +92,7 @@
     </div>
 </th:block>
 
-<!-- save project details -->
+<!-- Save project details -->
 <th:block th:fragment="modal-project-details">
     <div class="modal-project-details" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -111,7 +107,8 @@
         </div>
     </div>
 </th:block>
-<!-- save project details -->
+
+<!-- Save project details -->
 <th:block th:fragment="modal-bank-details">
     <div class="modal-bank" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -119,13 +116,13 @@
         <p>Your bank details will now be submitted to Innovate UK.</p>
         <hr />
         <div method="post">
-            <button class="button" name="submit-app-details">Submit</button>
+            <button class="button" id="submit-bank-details" name="submit-app-details">Submit</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
 
-<!-- save finance checks -->
+<!-- Save finance checks -->
 <th:block th:fragment="generate-spend-profile">
     <div class="generate-spend-profile" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -141,7 +138,7 @@
     </div>
 </th:block>
 
-<!-- save partner documents -->
+<!-- Save partner documents -->
 <th:block th:fragment="modal-partner-documents">
     <div class="modal-partner-documents" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -150,14 +147,14 @@
         <hr />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
-                <button class="button" name="submit-other-documents" type="submit">Submit</button>
+                <button class="button" id="submit-other-documents" name="submit-other-documents" type="submit">Submit</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
     </div>
 </th:block>
 
-<!-- save partner document -->
+<!-- Save partner document -->
 <th:block th:fragment="modal-partner-document">
     <div class="modal-partner-document" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -173,7 +170,7 @@
     </div>
 </th:block>
 
-<!-- change bank details as internal user -->
+<!-- Change bank details as internal user -->
 <th:block th:fragment="modal-partner-change-bank-details">
     <div class="modal-partner-change-bank-details" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -200,7 +197,7 @@
     </div>
 </th:block>
 
-<!-- Accept Documents On Review -->
+<!-- Accept documents on review -->
 <th:block th:fragment="modal-accept-docs">
     <div class="modal-accept-docs" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -214,7 +211,7 @@
     </div>
 </th:block>
 
-<!-- Accept Document On Review -->
+<!-- accept document on review -->
 <th:block th:fragment="modal-accept-doc">
     <div class="modal-accept-doc" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -228,7 +225,7 @@
     </div>
 </th:block>
 
-<!-- Reject Documents On Review -->
+<!-- Reject documents on review -->
 <th:block th:fragment="modal-reject-docs">
     <div class="modal-reject-docs warning-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -245,7 +242,7 @@
     </div>
 </th:block>
 
-<!-- Reject Document On Review -->
+<!-- Reject document on review -->
 <th:block th:fragment="modal-reject-doc">
     <div class="modal-reject-doc warning-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -424,7 +421,7 @@
     </div>
 </th:block>
 
-<!-- confirmation of viability-->
+<!-- Confirmation of viability-->
 <th:block th:fragment="modal-confirm-viability">
     <div class="modal-confirm-viability" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -438,7 +435,7 @@
     </div>
 </th:block>
 
-<!-- confirmation of eligibility-->
+<!-- Confirmation of eligibility-->
 <th:block th:fragment="modal-confirm-eligibility">
     <div class="modal-confirm-eligibility" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -452,7 +449,7 @@
     </div>
 </th:block>
 
-<!-- confirmation new organisation -->
+<!-- Confirmation new organisation -->
 <th:block th:fragment="modal-delete-organisation">
     <div class="modal-delete-organisation" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -468,7 +465,7 @@
 </th:block>
 
 
-<!-- confirmation of user profile deactivation -->
+<!-- Confirmation of user profile deactivation -->
 <th:block th:fragment="modal-confirm-deactivate-user">
     <div class="modal-confirm-deactivate-user" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -484,7 +481,7 @@
     </div>
 </th:block>
 
-<!-- confirmation of user profile reactivation -->
+<!-- Confirmation of user profile reactivation -->
 <th:block th:fragment="modal-confirm-reactivate-user">
     <div class="modal-confirm-reactivate-user" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -500,7 +497,7 @@
     </div>
 </th:block>
 
-<!-- confirmation of marking query as resolved -->
+<!-- Confirmation of marking query as resolved -->
 <th:block th:fragment="modal-confirm-mark-resolved">
     <div class="modal-confirm-mark-resolved" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -519,7 +516,7 @@
     </div>
 </th:block>
 
-<!-- confirmation of resending finance contact invite -->
+<!-- Confirmation of resending Finance Contact invite -->
 <th:block th:fragment="modal-resend-finance-contact">
     <div class="modal-resend-finance-contact" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -539,7 +536,7 @@
     </div>
 </th:block>
 
-<!-- confirmation of resending project manager invite -->
+<!-- Confirmation of resending Project Manager invite -->
 <th:block th:fragment="modal-resend-project-manager">
     <div class="modal-resend-project-manager" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -558,7 +555,7 @@
     </div>
 </th:block>
 
-<!-- confirmation of resending internal user invite -->
+<!-- Confirmation of resending internal user invite -->
 <th:block th:fragment="modal-resend-internal-user">
     <div class="modal-resend-internal-user" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -572,6 +569,24 @@
                 <input type="hidden" id="invite-id" name="inviteId" value="" />
                 <button class="button" type="submit">Resend</button>
                 <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<!-- Confirmation of withdrawing a project -->
+<th:block th:fragment="modal-withdraw-project">
+    <div class="modal-withdraw-project" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Withdraw project from competition</h2>
+        <p>Are you sure you want to withdraw the project '<th:block th:text="${model.project.name}"></th:block>' from the competition '<th:block th:text="${model.competitionName}"></th:block>'&quest;</p>
+        <p>The project will be marked as withdrawn and removed from project setup. You can still view the application in
+            previous competitions.</p>
+        <hr />
+        <form th:action="@{/competition/{competitionId}/project/{projectId}/withdraw(competitionId=${model.competitionId},projectId=${model.project.id})}" method="post">
+            <div>
+                <button class="button" type="submit">Withdraw project</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
     </div>
