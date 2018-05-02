@@ -88,7 +88,7 @@ public class ProjectDetailsViewModel {
         return partnerOrganisations.stream()
                 .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
                 .findFirst()
-                .map(PartnerOrganisationResource::getPostCode)
+                .map(PartnerOrganisationResource::getPostcode)
                 .orElse(null);
     }
 

@@ -159,7 +159,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
 
-        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostCode()))? PENDING : COMPLETE;
+        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostcode()))? PENDING : COMPLETE;
 
     }
 

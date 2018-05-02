@@ -72,9 +72,9 @@ public class ProjectDetailsController {
     @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
     public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
                                                          @PathVariable("organisationId") final long organisationId,
-                                                         @RequestParam("postCode") String postCode) {
+                                                         @RequestParam("postcode") String postcode) {
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectDetailsService.updatePartnerProjectLocation(composite, postCode).toPostResponse();
+        return projectDetailsService.updatePartnerProjectLocation(composite, postcode).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-finance-contact")
