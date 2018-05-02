@@ -286,7 +286,6 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
         ));
     }
 
-
     @Override
     public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
         List<InterviewParticipant> participants = interviewParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
