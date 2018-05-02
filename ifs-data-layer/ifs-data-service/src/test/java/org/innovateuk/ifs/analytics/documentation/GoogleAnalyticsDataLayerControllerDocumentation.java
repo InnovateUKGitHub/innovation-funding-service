@@ -89,7 +89,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     }
 
     @Test
-    public void getApplicationRolesById() throws Exception {
+    public void getRolesByApplicationId() throws Exception {
         when(googleAnalyticsDataLayerService.getRolesByApplicationId(APPLICATION_ID)).thenReturn(serviceSuccess(APPLICATION_ROLES));
 
         mockMvc.perform(get("/analytics/application/{applicationId}/user-roles", APPLICATION_ID))
@@ -102,12 +102,12 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     }
 
     @Test
-    public void getProjectRolesById() throws Exception {
+    public void getRolesByProjectId() throws Exception {
         when(googleAnalyticsDataLayerService.getRolesByProjectId(PROJECT_ID)).thenReturn(serviceSuccess(PROJECT_ROLES));
 
         mockMvc.perform(get("/analytics/project/{projectId}/user-roles", PROJECT_ID))
                 .andExpect(status().isOk())
-                .andDo(document("analyticsd/{method-name}",
+                .andDo(document("analytics/{method-name}",
                                 pathParameters(
                                          parameterWithName("projectId").description("Id of the project")
                                 )

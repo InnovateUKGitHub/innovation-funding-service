@@ -21,7 +21,7 @@ public class GoogleAnalyticsDataLayerController {
     }
 
     @GetMapping("/application/{applicationId}/user-roles")
-    public RestResult<List<Role>> getApplicationRolesById(@PathVariable("applicationId") long applicationId) {
+    public RestResult<List<Role>> getRolesByApplicationId(@PathVariable("applicationId") long applicationId) {
         return googleAnalyticsDataLayerService.getRolesByApplicationId(applicationId).toGetResponse();
     }
 
@@ -36,7 +36,7 @@ public class GoogleAnalyticsDataLayerController {
     }
 
     @GetMapping("/project/{projectId}/user-roles")
-    public RestResult<List<Role>> getProjectRolesById(@PathVariable("projectId") long projectId) {
+    public RestResult<List<Role>> getRolesByProjectId(@PathVariable("projectId") long projectId) {
         return googleAnalyticsDataLayerService.getRolesByProjectId(projectId).toGetResponse();
     }
 

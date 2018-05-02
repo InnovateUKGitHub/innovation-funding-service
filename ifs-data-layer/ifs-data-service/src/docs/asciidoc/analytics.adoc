@@ -41,3 +41,19 @@ include::{snippets}/analytics/get-competition-name-for-project/http-response.ado
 
 ==== Curl Example
 include::{snippets}/analytics/get-competition-name-for-project/curl-request.adoc[]
+
+=== Retrieve application specific roles for a user
+==== Request
+include::{snippets}/analytics/get-roles-by-application-id/http-request.adoc[]
+include::{snippets}/analytics/get-roles-by-application-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-roles-by-application-id/http-response.adoc[]
+
+=== Retrieve project specific roles for a user
+==== Request
+include::{snippets}/analytics/get-roles-by-project-id/http-request.adoc[]
+include::{snippets}/analytics/get-roles-by-project-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-roles-by-project-id/http-response.adoc[]
