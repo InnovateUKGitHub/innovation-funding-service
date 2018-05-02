@@ -22,8 +22,8 @@ public class OrganisationAddressController {
     }
 
     @GetMapping("/organisation/{organisationId}/address/{addressId}")
-    public RestResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(@PathVariable("organisationId") final Long organisationId,
-                                                                                    @PathVariable("addressId") final Long addressId) {
+    public RestResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(@PathVariable("organisationId") final long organisationId,
+                                                                                    @PathVariable("addressId") final long addressId) {
         return service.findByOrganisationIdAndAddressId(organisationId, addressId).toGetResponse();
     }
 }

@@ -27,7 +27,7 @@ public class OrganisationAddressServiceImpl extends BaseTransactionalService imp
     }
 
     @Override
-    public ServiceResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(Long organisationId, Long addressId) {
+    public ServiceResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(long organisationId, long addressId) {
         return find(repository.findByOrganisationIdAndAddressId(organisationId, addressId), notFoundError(OrganisationAddress.class)).andOnSuccessReturn(mapper::mapToResource);
     }
 }

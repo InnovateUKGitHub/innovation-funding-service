@@ -16,7 +16,7 @@ public class OrganisationAddressRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
-    public RestResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(Long organisationId, Long addressId) {
+    public RestResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(long organisationId, long addressId) {
         return getWithRestResult(restUrl + "/organisation/" + organisationId + "/address/" + addressId, OrganisationAddressResource.class);
     }
 }

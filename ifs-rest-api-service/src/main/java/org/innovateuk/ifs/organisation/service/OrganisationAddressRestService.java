@@ -7,5 +7,5 @@ public interface OrganisationAddressRestService {
 
     RestResult<OrganisationAddressResource> findOne(Long id);
 
-    RestResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(Long organisationId, Long addressId);
+    RestResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(long organisationId, long addressId);
 }

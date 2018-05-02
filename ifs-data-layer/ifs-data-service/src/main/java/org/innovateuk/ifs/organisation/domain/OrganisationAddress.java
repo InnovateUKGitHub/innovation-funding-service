@@ -13,7 +13,7 @@ import javax.validation.Valid;
  */
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "organisation_id", "address_id" } ) } )
-    public class OrganisationAddress {
+public class OrganisationAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
