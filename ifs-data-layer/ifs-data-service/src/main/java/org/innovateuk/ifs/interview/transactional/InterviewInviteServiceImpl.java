@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interview.transactional;
 
-
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
@@ -268,7 +267,6 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
                 pagedResult.getSize()
         ));
     }
-
 
     @Override
     public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {

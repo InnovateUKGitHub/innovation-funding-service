@@ -246,6 +246,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InterviewInviteService interviewInviteServiceMock;
 
     @Mock
+    protected InterviewAllocateService interviewAllocateServiceMock;
+
+    @Mock
     protected InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
 
     @Mock
