@@ -19,8 +19,8 @@ public class TermsAndConditionsController {
     TermsAndConditionsService termsAndConditionsService;
 
     @GetMapping("/getLatest")
-    public RestResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions() {
-        return termsAndConditionsService.getLatestTermsAndConditions().toGetResponse();
+    public RestResult<List<TermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions() {
+        return termsAndConditionsService.getLatestVersionsForAllTermsAndConditions().toGetResponse();
     }
 
     @GetMapping("/getById/{id}")

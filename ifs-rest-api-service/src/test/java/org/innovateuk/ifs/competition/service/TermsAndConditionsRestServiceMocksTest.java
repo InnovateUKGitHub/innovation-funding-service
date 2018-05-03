@@ -41,7 +41,7 @@ public class TermsAndConditionsRestServiceMocksTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/getLatest",
                 termsAndConditionsResourceListType(), returnedResponse);
-        List<TermsAndConditionsResource> response = service.getLatestTermsAndConditions().getSuccess();
+        List<TermsAndConditionsResource> response = service.getLatestVersionsForAllTermsAndConditions().getSuccess();
 
         assertNotNull(response);
         assertEquals(returnedResponse, response);

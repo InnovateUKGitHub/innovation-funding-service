@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service for operations around the usage and processing of TermsAndConditions
@@ -24,7 +26,7 @@ public class TermsAndConditionsServiceImpl implements TermsAndConditionsService 
     TermsAndConditionsMapper termsAndConditionsMapper;
 
     @Override
-    public ServiceResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions() {
+    public ServiceResult<List<TermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions() {
         return serviceSuccess((List<TermsAndConditionsResource>)
                 termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findLatestVersions())
         );
@@ -32,8 +34,7 @@ public class TermsAndConditionsServiceImpl implements TermsAndConditionsService 
 
     @Override
     public ServiceResult<TermsAndConditionsResource> getById(Long id) {
-        return serviceSuccess(
-                termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findOne(id))
-        );
+        return find(termsAndConditionsRepository.findOne(id), notFoundError(TermsAndConditionsResource.class, id))
+                .andOnSuccess(termsAndConditions -> serviceSuccess(termsAndConditionsMapper.mapToResource(termsAndConditions)));
     }
 }

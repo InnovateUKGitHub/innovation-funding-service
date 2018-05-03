@@ -50,7 +50,7 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
     public void getLatestTermsAndConditions() throws Exception {
         List<TermsAndConditionsResource> response = new ArrayList<>();
         response.add(termsAndConditionsResourceBuilder.build());
-        when(termsAndConditionsService.getLatestTermsAndConditions()).thenReturn(serviceSuccess(response));
+        when(termsAndConditionsService.getLatestVersionsForAllTermsAndConditions()).thenReturn(serviceSuccess(response));
 
         mockMvc.perform(get("/terms-and-conditions/getLatest"))
                 .andExpect(status().isOk())

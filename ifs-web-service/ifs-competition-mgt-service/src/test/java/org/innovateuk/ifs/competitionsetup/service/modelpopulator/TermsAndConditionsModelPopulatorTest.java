@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.competitionsetup.viewmodel.TermsAndConditionsViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -53,7 +51,7 @@ public class TermsAndConditionsModelPopulatorTest {
 
         when(termsAndConditionsRestService.getById(termsAndConditions.getId()))
                 .thenReturn(restSuccess(competitionResource.getTermsAndConditions()));
-        when(termsAndConditionsRestService.getLatestTermsAndConditions()).thenReturn(restSuccess(termsAndConditionsList));
+        when(termsAndConditionsRestService.getLatestVersionsForAllTermsAndConditions()).thenReturn(restSuccess(termsAndConditionsList));
 
         TermsAndConditionsViewModel viewModel = (TermsAndConditionsViewModel) populator.populateModel(
                 getBasicGeneralSetupView(competitionResource),

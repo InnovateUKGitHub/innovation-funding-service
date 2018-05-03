@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface TermsAndConditionsRestService {
 
-    RestResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions();
+    RestResult<List<TermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions();
 
     RestResult<TermsAndConditionsResource> getById(Long id);
 }
