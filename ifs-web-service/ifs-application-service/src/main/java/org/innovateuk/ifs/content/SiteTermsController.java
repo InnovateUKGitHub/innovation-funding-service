@@ -8,6 +8,7 @@ import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.security.StatelessAuthenticationFilter.SAVED_REQUEST_URL_COOKIE_NAME;
 
 /**
  * This controller will handle all requests that are related to the Site Terms and Conditions.
@@ -40,6 +44,9 @@ public class SiteTermsController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CookieUtil cookieUtil;
+
     @GetMapping("terms-and-conditions")
     public String termsAndConditions() {
         SiteTermsAndConditionsResource siteTermsAndConditions = termsAndConditionsRestService
@@ -53,7 +60,9 @@ public class SiteTermsController {
     }
 
     @PostMapping("new-terms-and-conditions")
-    public String agreeNewTermsAndConditions(UserResource loggedInUser,
+    public String agreeNewTermsAndConditions(HttpServletRequest request,
+                                             HttpServletResponse response,
+                                             UserResource loggedInUser,
                                              @Valid @ModelAttribute(name = "form") NewSiteTermsAndConditionsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler) {
@@ -63,11 +72,25 @@ public class SiteTermsController {
 
             ServiceResult<Void> updateResult = userService.agreeNewTermsAndConditions(loggedInUser.getId());
 
-            // TODO IFS-3093 Where should the user be redirected to?
-            String redirect = "redirect:/applicant/dashboard";
-
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> redirect);
+                    .failNowOrSucceedWith(failureView, redirectHandler(request, response));
         });
     }
+
+    private Supplier<String> redirectHandler(HttpServletRequest request, HttpServletResponse response) {
+        return () -> {
+            String redirectUrl = getRedirectUrl(request);
+            deleteSavedRequestUrlCookie(response);
+            return redirectUrl;
+        };
+    }
+
+    private String getRedirectUrl(HttpServletRequest request) {
+        return "redirect:" + cookieUtil.getCookieValue(request, SAVED_REQUEST_URL_COOKIE_NAME);
+    }
+
+    private void deleteSavedRequestUrlCookie(HttpServletResponse response) {
+        cookieUtil.removeCookie(response, SAVED_REQUEST_URL_COOKIE_NAME);
+    }
+
 }

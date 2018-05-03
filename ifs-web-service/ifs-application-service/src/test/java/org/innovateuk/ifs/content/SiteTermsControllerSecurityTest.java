@@ -28,7 +28,7 @@ public class SiteTermsControllerSecurityTest extends BaseControllerSecurityTest<
 
     @Test
     public void agr() {
-        assertAccessDenied(() -> classUnderTest.agreeNewTermsAndConditions(null, null, null, null),
+        assertAccessDenied(() -> classUnderTest.agreeNewTermsAndConditions(null, null, null, null, null, null),
                 () -> {
 
                 });

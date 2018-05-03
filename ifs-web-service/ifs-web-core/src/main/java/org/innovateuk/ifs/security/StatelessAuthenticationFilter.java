@@ -5,11 +5,13 @@ import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.UrlUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,6 +25,7 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Service
 @Configurable
@@ -34,17 +37,22 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
+    @Autowired
+    private CookieUtil cookieUtil;
+
     @Value("management.contextPath")
     private String monitoringEndpoint;
 
     @Value("${logout.url}")
     private String logoutUrl;
 
+    public static final String SAVED_REQUEST_URL_COOKIE_NAME = "savedRequestUrl";
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        boolean redirected = false;
+
         if (shouldBeAuthenticated(request)) {
             Authentication authentication = userAuthenticationService.getAuthentication(request, true);
 
@@ -52,19 +60,19 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
                 UserResource userResource = userAuthenticationService.getAuthenticatedUser(request);
                 if (nullOrInactiveUser(userResource)) {
                     response.sendRedirect(logoutUrl);
+                    return;
                 } else {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     if (shouldRedirectToNewSiteTerms(request, userResource)) {
+                        saveRequestUrl(request, response);
                         response.sendRedirect("/info/new-terms-and-conditions");
-                        redirected = true;
+                        return;
                     }
                 }
             }
         }
 
-        if (!redirected) {
-            filterChain.doFilter(request, response);
-        }
+        filterChain.doFilter(request, response);
     }
 
     private boolean shouldBeAuthenticated(HttpServletRequest request) {
@@ -91,7 +99,13 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean siteTermsCheckNeeded(HttpServletRequest request,
                                          UserResource userResource) {
-        return !isSiteInfoRequest(request) && userHasApplicantRole(userResource);
+        return isGetRequest(request) &&
+                !isSiteInfoRequest(request) &&
+                userHasApplicantRole(userResource);
+    }
+
+    private boolean isGetRequest(HttpServletRequest request) {
+        return GET.name().equals(request.getMethod());
     }
 
     private boolean isSiteInfoRequest(HttpServletRequest request) {
@@ -109,5 +123,18 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
         SiteTermsAndConditionsResource latestSiteTermsAndConditions = termsAndConditionsRestService
                 .getLatestSiteTermsAndConditions().getSuccess();
         return userResource.getTermsAndConditionsIds().contains(latestSiteTermsAndConditions.getId());
+    }
+
+    private void saveRequestUrl(HttpServletRequest request, HttpServletResponse response) {
+        // If it wasn't for the stateless design we could use HttpSessionRequestCache in Spring Security to cache the
+        // request so that it can be reused after accepting the site terms and conditions. Instead, save the
+        // request url in a cookie.
+        cookieUtil.saveToCookie(response, SAVED_REQUEST_URL_COOKIE_NAME, UrlUtils.buildFullRequestUrl(
+                request.getScheme(),
+                request.getServerName(),
+                request.getServerPort(),
+                request.getRequestURI(),
+                request.getQueryString())
+        );
     }
 }
