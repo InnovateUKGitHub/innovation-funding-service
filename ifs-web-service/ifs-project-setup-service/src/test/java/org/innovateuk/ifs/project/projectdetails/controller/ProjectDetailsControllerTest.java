@@ -49,7 +49,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
@@ -603,8 +603,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
@@ -652,7 +652,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRole(PARTNER).
                 build(2);
 
-        InviteProjectResource createdInvite = newInviteProjectResource().withId(null)
+        InviteProjectResource createdInvite = newInviteProjectResource().withId()
                 .withProject(projectId).withName(invitedUserName)
                 .withEmail(invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -663,8 +663,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         createdInvite.setApplicationId(applicationId);
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
@@ -866,8 +866,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(2);
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(CREATED)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
@@ -915,8 +915,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(2);
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(OPENED)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
@@ -952,8 +952,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(inviteId)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(OPENED)
                 .withLeadOrganisation(leadOrganisation.getId()).build(1);
@@ -979,8 +979,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(inviteId)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(OPENED)
                 .withLeadOrganisation(leadOrganisation.getId()).build(1);

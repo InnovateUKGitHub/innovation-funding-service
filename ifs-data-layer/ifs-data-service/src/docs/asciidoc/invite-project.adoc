@@ -1,0 +1,11 @@
+=== Get Project Invite by hash
+==== Request
+include::{snippets}/invite-project/get-by-hash/http-request.adoc[]
+include::{snippets}/invite-project/get-by-hash/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/invite-project/get-by-hash/http-response.adoc[]
+include::{snippets}/invite-project/get-by-hash/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/invite-project/get-by-hash/curl-request.adoc[]
