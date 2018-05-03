@@ -22,6 +22,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
@@ -52,11 +53,9 @@ public class InterviewStatisticsServiceImpl implements InterviewStatisticsServic
 
     @Override
     public ServiceResult<InterviewAssignmentKeyStatisticsResource> getInterviewPanelKeyStatistics(long competitionId) {
-        int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.SUBMITTED.getBackingState());
+        int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED);
         int applicationsAssigned = interviewAssignmentRepository.
-                countByTargetCompetitionIdAndActivityStateStateIn(competitionId,
-                        simpleMapSet(asList(InterviewAssignmentState.ASSIGNED_STATES), InterviewAssignmentState::getBackingState)
-                );
+                countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
 
         return serviceSuccess(new InterviewAssignmentKeyStatisticsResource(applicationsInCompetition, applicationsAssigned));
     }

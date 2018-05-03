@@ -29,9 +29,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -50,6 +47,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
@@ -157,7 +155,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         User user = newUser().build();
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).build();
-        ApplicationState applicationState = ApplicationState.CREATED;
+        ApplicationState applicationState = CREATED;
 
         Application application = newApplication().
                 withId(1L).
@@ -178,7 +176,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
-            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
+            assertEquals(applicationState, created.getApplicationProcess().getProcessState());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
             assertNull(created.getStartDate());
@@ -195,7 +193,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(applicationResource);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created =
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
@@ -211,11 +208,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "testToken123abc", "my-uid");
         User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", "my-uid");
 
-        Application testApplication1 = new Application(null, "testApplication1Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication1 = new Application(null, "testApplication1Name", null, CREATED);
         testApplication1.setId(1L);
-        Application testApplication2 = new Application(null, "testApplication2Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication2 = new Application(null, "testApplication2Name", null, CREATED);
         testApplication2.setId(2L);
-        Application testApplication3 = new Application(null, "testApplication3Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication3 = new Application(null, "testApplication3Name", null, CREATED);
         testApplication3.setId(3L);
 
         ApplicationResource testApplication1Resource = newApplicationResource().with(id(1L)).withName("testApplication1Name").build();
@@ -324,7 +321,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Competition competition = newCompetition().with(id(1L)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         User user = newUser().with(id(userId)).build();
-        ApplicationState applicationState = ApplicationState.CREATED;
+        ApplicationState applicationState = CREATED;
 
         String applicationName = "testApplication";
 
@@ -348,13 +345,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
-            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
+            assertEquals(applicationState, created.getApplicationProcess().getProcessState());
             assertEquals(competitionId, created.getCompetition().getId());
             return true;
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccess();
         assertEquals(newApplication, created);
@@ -480,7 +476,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(pagedResult.getTotalPages()).thenReturn(0);
         when(pagedResult.getNumber()).thenReturn(0);
         when(pagedResult.getSize()).thenReturn(0);
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
 
         ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
         assertTrue(result.isSuccess());
@@ -530,7 +526,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(pagedResult.getNumber()).thenReturn(0);
         when(pagedResult.getSize()).thenReturn(2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
         when(applicationMapperMock.mapToResource(application1)).thenReturn(applicationResource1);
         when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
         when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);

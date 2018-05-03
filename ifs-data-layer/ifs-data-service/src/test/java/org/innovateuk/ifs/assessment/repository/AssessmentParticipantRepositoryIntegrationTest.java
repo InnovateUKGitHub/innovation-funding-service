@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -27,10 +28,6 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,9 +91,6 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -301,7 +295,6 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         Application application = applicationRepository.findByCompetitionId(competitions.get(0).getId()).get(0);
 
-        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
         List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newAssessmentInviteWithoutId()
@@ -332,7 +325,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
             processRoleRepository.save(processRole);
 
             Assessment assessment = new Assessment(application, processRole);
-            assessment.setActivityState(activityState);
+            assessment.setProcessState(AssessmentState.ACCEPTED);
             assessmentRepository.save(assessment);
         }
 
@@ -350,7 +343,6 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         Application application = applicationRepository.findByCompetitionId(competitions.get(0).getId()).get(0);
 
-        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
         List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newAssessmentInviteWithoutId()
@@ -379,7 +371,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         processRoleRepository.save(processRole);
 
         Assessment assessment = new Assessment(application, processRole);
-        assessment.setActivityState(activityState);
+        assessment.setProcessState(AssessmentState.ACCEPTED);
         assessmentRepository.save(assessment);
 
         flushAndClearSession();

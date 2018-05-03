@@ -399,6 +399,16 @@ td {
     display: block;
     margin: 10px 0;
   }
+
+  td &{
+    padding: 0;
+    margin: 0;
+    background: none;
+
+    .inputfile+label{
+      margin-top: 8px;
+    }
+  }
 }
 
 .no-js {
