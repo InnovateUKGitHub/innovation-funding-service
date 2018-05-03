@@ -7,6 +7,10 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
+
+*** Variables ***
+${competitionName}  Generic competition for TsnCs
+
 *** Test Cases ***
 User can edit six assesed questions
     [Documentation]    IFS-747
@@ -16,13 +20,29 @@ User can edit six assesed questions
     When the user clicks the button/link  link=1. Generic question title
     Then the user should see the element  jQuery=button:contains("Mark as complete")
 
-CompAdmin creates a new Generic competition and moves it to Open
-    [Documentation]    IFS-3261
+CompAdmin creates a new Generic competition
+    [Documentation]  IFS-3261
     [Tags]
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
-    When The competition admin creates a competition for  1  Generic competition for TsnCs  Generic
-    Then the competition moves to Open state
+    The competition admin creates a competition for  4  ${competitionName}  Generic
 
+Requesting the id of this Competition and moving to Open
+    [Documentation]  IFS-3261
+    ...   retrieving the id of the competition so that we can use it in urls
+    [Tags]  MySQL
+    ${competitionId} =  get comp id from comp title  ${competitionName}
+    Set suite variable  ${competitionId}
+    The competition moves to Open state  ${competitionId}
+
+Applicant Applies to Generic competition and is able to see the Ts&Cs
+    [Documentation]  IFS-1012  IFS-2879
+    [Tags]
+    [Setup]  Log in as a different user             becky.mason@gmail.com  ${short_password}
+    Given logged in user applies to competition     ${competitionName}
+    When the user clicks the button/link            link=Application details
+    Then the user fills in the Application details  Application Ts&Cs  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    When the user clicks the button/link            link=view the grant terms and conditions
+    Then the user should see the element            jQuery=h1:contains("Terms and conditions of an Innovate UK grant award")
 
 *** Keywords ***
 Custom suite setup
@@ -37,7 +57,7 @@ The competition admin creates a competition for
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}
-    the user marks the Application details section as complete  Generic
+    the user fills in the CS Application section with custom questions  no  Generic
     the user fills in the CS Assessors
     the user clicks the button/link  link=Public content
     the user fills in the Public content and publishes  ${extraKeyword}
