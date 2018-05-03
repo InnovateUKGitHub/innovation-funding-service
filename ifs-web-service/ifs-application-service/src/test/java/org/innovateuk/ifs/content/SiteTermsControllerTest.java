@@ -5,11 +5,13 @@ import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -70,7 +72,11 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/applicant/dashboard"));
 
-        verify(userService, only()).agreeNewTermsAndConditions(userId);
+        InOrder inOrder = inOrder(cookieUtil, userService);
+        inOrder.verify(userService).agreeNewTermsAndConditions(userId);
+        inOrder.verify(cookieUtil).getCookieValue(isA(HttpServletRequest.class), eq("savedRequestUrl"));
+        inOrder.verify(cookieUtil).removeCookie(isA(HttpServletResponse.class), eq("savedRequestUrl"));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
