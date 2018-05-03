@@ -34,7 +34,9 @@ def enabled = project.hasProperty('ifs.data-service.enabled') ? project.property
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
-deploy.dependsOn ":docker:ifs-mysql:ifs-database:deploy"
+deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
+deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
+
 createContainer.portBindings = ['8086:8080','9006:8000']
 
 
