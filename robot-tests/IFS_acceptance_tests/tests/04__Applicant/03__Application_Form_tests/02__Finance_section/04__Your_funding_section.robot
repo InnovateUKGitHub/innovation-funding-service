@@ -26,11 +26,11 @@ Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
     [Tags]    HappyPath
     Given the user selects the radio button    other_funding-otherPublicFunding-    Yes
-    Then the user should see the element    css=[name^="finance-grantclaimpercentage"]
-    And the user should see the element    css=[name*=other_funding-fundingSource]
-    And the user should see the element    css=[name*=other_funding-securedDate]
-    And the user should see the element    css=[name*=other_funding-fundingAmount]
-    And the user should see the element    css=[name^="other_funding-otherPublicFunding-"] ~ label
+    Then the user should see the element       css=[name^="finance-grantclaimpercentage"]
+    And the user should see the element        css=[name*=other_funding-fundingSource]
+    And the user should see the element        css=[name*=other_funding-securedDate]
+    And the user should see the element        css=[name*=other_funding-fundingAmount]
+    And the user should see the element        css=[name^="other_funding-otherPublicFunding-"] ~ label
 
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
@@ -50,16 +50,16 @@ Funding level validations
 Other funding validations
     [Documentation]    INFUND-6794
     [Tags]
-    Given the user enters text to a text field           css=[name*=other_funding-securedDate]    20
+    Given the user enters text to a text field          css=[name*=other_funding-securedDate]    20
     And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    txt
     And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
-    And The user should see a field and summary error  Invalid secured date
+    And The user should see a field and summary error   Invalid secured date
     And The user should see a field and summary error   Funding source cannot be blank.
     #TODO update the below error after IFS-3454 is done.
     And The user should see a field and summary error   This field should be 1 or higher.
     When the user enters text to a text field           css=[name*=other_funding-securedDate]    12-${nextyear}
     And the user enters text to a text field            css=[name*=other_funding-fundingSource]  Lottery funding
-    And the user enters text to a text field           css=[name*=other_funding-fundingAmount]    20000
+    And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    20000
     #TODO IFS-3457
     #Then the user cannot see a validation error in the page
     And the user selects the checkbox                   termsAgreed
@@ -70,9 +70,9 @@ If funding is complete. application details has a warning message
     ...
     ...    INFUND-6823
     [Tags]    HappyPath
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page   ${DASHBOARD_URL}
     And the user clicks the button/link    link=${applicationName}
-    When the user clicks the button/link    link=Application details
+    When the user clicks the button/link   link=Application details
     And the user clicks the button/link    jQuery=button:contains(Edit)
     And the user clicks the button/link    jQuery=button:contains("Change your research category")
     Then the user should see the text in the page    Changing the research category will reset the funding level for all business participants
