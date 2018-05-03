@@ -160,15 +160,15 @@ Applicantion feedback is released
     When the user selects the checkbox       assessor-row-4
     Then the user clicks the button/link     name=addSelected
     And the user clicks the button/link      link=Review and send invites
-    When the user clicks the button/link     css=.button[type="submit"]   #Send invite
+    Then the user clicks the button/link     css=.button[type="submit"]   #Send invite
 
 Applicant can see the feedback given
     [Documentation]  IFS-3291
     [Tags]
     Given log in as a different user         derik.arnold@load.example.com  ${short_password}
-    And the user should see the element      jQuery=.progress-list div:contains("Machine learning for driverless cars") + div:nth-child(2) span:contains("Invited to interview")
-    And The user clicks the button/link      link=Machine learning for driverless cars
-    Then the application question feedback scores are correct
+    When the user should see the element      jQuery=.progress-list div:contains("Machine learning for driverless cars") + div:nth-child(2) span:contains("Invited to interview")
+    Then The user clicks the button/link      link=Machine learning for driverless cars
+    And the application question feedback scores are correct
 
 
 *** Keywords ***
