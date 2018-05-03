@@ -1,12 +1,11 @@
-package org.innovateuk.ifs.application.mapper;
+package org.innovateuk.ifs.fundingdecision.mapper;
 
-import static org.junit.Assert.assertEquals;
-
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import static org.junit.Assert.assertEquals;
 
 public class FundingDecisionMapperTest {
 

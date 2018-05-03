@@ -6,8 +6,6 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -27,9 +25,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 @PermissionRules
 @Component
 public class ApplicationPermissionRules extends BasePermissionRules {
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -108,18 +103,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
     public boolean innovationLeadAssginedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && userIsInnovationLeadOnCompetition(application.getCompetition(), user.getId());
-    }
-
-    @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")
-    public boolean projectPartnerCanViewApplicationsLinkedToTheirProjects(final ApplicationResource application, final UserResource user) {
-
-        Project linkedProject = projectRepository.findOneByApplicationId(application.getId());
-
-        if (linkedProject == null) {
-            return false;
-        }
-
-        return isPartner(linkedProject.getId(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
