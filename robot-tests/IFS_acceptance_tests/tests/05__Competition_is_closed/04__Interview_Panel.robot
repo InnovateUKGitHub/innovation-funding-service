@@ -153,20 +153,22 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     Then the user checks for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
 
-Applicant can see the feedback given
+Applicantion feedback is released
     [Documentation]  IFS-3291
     [Tags]
     Given the user navigates to the page     ${SERVER}/management/assessment/interview/competition/18/applications/find
     When the user selects the checkbox       assessor-row-4
-    And the user clicks the button/link      name=addSelected
-    #Additional feedback?
+    Then the user clicks the button/link     name=addSelected
     And the user clicks the button/link      link=Review and send invites
     When the user clicks the button/link     css=.button[type="submit"]   #Send invite
+
+Applicant can see the feedback given
+    [Documentation]  IFS-3291
+    [Tags]
     Given log in as a different user         derik.arnold@load.example.com  ${short_password}
-    #Here
     And the user should see the element      jQuery=.progress-list div:contains("Machine learning for driverless cars") + div:nth-child(2) span:contains("Invited to interview")
-    And The user clicks the button/link               link=Machine learning for driverless cars
-    And the user should see the text in the element   column-third    Average score 8 / 10
+    And The user clicks the button/link      link=Machine learning for driverless cars
+    Then the application question feedback scores are correct
 
 
 *** Keywords ***
@@ -246,3 +248,16 @@ the compAdmin removes uploaded feedback for an application
     the user should see the element    link=testing_5MB.pdf
     the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
+
+the application question feedback scores are correct
+    the user should see the element    jQuery=.column-two-thirds:contains("Business opportunity") ~ div div:contains("Average score 8 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Potential market") ~ div div:contains("Average score 7 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Project exploitation") ~ div div:contains("Average score 6 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Economic benefit") ~ div div:contains("Average score 5 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Technical approach") ~ div div:contains("Average score 8 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Innovation") ~ div div:contains("Average score 6 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Risks") ~ div div:contains("Average score 9 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Project team") ~ div div:contains("Average score 6 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Funding") ~ div div:contains("Average score 7 / 10")
+    the user should see the element    jQuery=.column-two-thirds:contains("Adding value") ~ div div:contains("Average score 8 / 10")
+    the user should see the element    jQuery=p:contains("Average overall: 70%")
