@@ -1,23 +1,36 @@
 *** Settings ***
 Documentation     INFUND-6794: As an applicant I will be invited to add funding details within the 'Your funding' page of the application
 ...               INFUND-6895: As a lead applicant I will be advised that changing my 'Research category' after completing 'Funding level' will reset the 'Funding level'
+...               IFS-2659: UJ - External - Finances - Able to submit without Other funding
 Suite Setup       Custom Suite Setup
-Suite Teardown    Mark application details as incomplete and the user closes the browser  Robot test application
+Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
+
+*** Variables ***
+${applicationName}  Hydrology the dynamics of Earth's surface water
+
+
 *** Test Cases ***
+Other funding validation message
+    [Documentation]  IFS-2659
+    [Tags]  HappyPath
+    Given the user clicks the button/link               link=Your funding
+    And the user selects the checkbox                   termsAgreed
+    When The user clicks the button/link                jQuery=button:contains("Mark as complete")
+    Then The user should see a field and summary error  Please tell us if you have received any other funding for this project.
+
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
     [Tags]    HappyPath
-    When the user clicks the button/link    link=Your funding
-    And the user selects the radio button    other_funding-otherPublicFunding-    Yes
-    Then the user should see the element    css=[name^="finance-grantclaimpercentage"]
-    And the user should see the element    css=[name*=other_funding-fundingSource]
-    And the user should see the element    css=[name*=other_funding-securedDate]
-    And the user should see the element    css=[name*=other_funding-fundingAmount]
-    And the user should see the element    css=[name^="other_funding-otherPublicFunding-"] ~ label
+    Given the user selects the radio button    other_funding-otherPublicFunding-    Yes
+    Then the user should see the element       css=[name^="finance-grantclaimpercentage"]
+    And the user should see the element        css=[name*=other_funding-fundingSource]
+    And the user should see the element        css=[name*=other_funding-securedDate]
+    And the user should see the element        css=[name*=other_funding-fundingAmount]
+    And the user should see the element        css=[name^="other_funding-otherPublicFunding-"] ~ label
 
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
@@ -37,27 +50,29 @@ Funding level validations
 Other funding validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user enters text to a text field    css=[name*=other_funding-securedDate]    20
-    And the user enters text to a text field    css=[name*=other_funding-fundingAmount]    txt
-    And the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the text in the page    Invalid secured date
-    And the user should see the text in the page    This field cannot be left blank
-    When the user enters text to a text field    css=[name*=other_funding-securedDate]    12-${nextyear}
-    Then the user should not see the text in the page    Please enter a valid date
-    When the user enters text to a text field    css=[name*=other_funding-fundingAmount]    20000
-    Then the user should not see the text in the page    This field cannot be left blank
-    And the user should not see an error in the page
-    And the user selects the checkbox    termsAgreed
-    And the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    Given the user enters text to a text field          css=[name*=other_funding-securedDate]    20
+    And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    txt
+    And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
+    And The user should see a field and summary error   Invalid secured date
+    And The user should see a field and summary error   Funding source cannot be blank.
+    #TODO update the below error after IFS-3454 is done.
+    And The user should see a field and summary error   This field should be 1 or higher.
+    When the user enters text to a text field           css=[name*=other_funding-securedDate]    12-${nextyear}
+    And the user enters text to a text field            css=[name*=other_funding-fundingSource]  Lottery funding
+    And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    20000
+    #TODO IFS-3457
+    #Then the user cannot see a validation error in the page
+    And the user selects the checkbox                   termsAgreed
+    And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
 
 If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
     ...
     ...    INFUND-6823
     [Tags]    HappyPath
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
-    When the user clicks the button/link    link=Application details
+    Given the user navigates to the page   ${DASHBOARD_URL}
+    And the user clicks the button/link    link=${applicationName}
+    When the user clicks the button/link   link=Application details
     And the user clicks the button/link    jQuery=button:contains(Edit)
     And the user clicks the button/link    jQuery=button:contains("Change your research category")
     Then the user should see the text in the page    Changing the research category will reset the funding level for all business participants
@@ -67,7 +82,7 @@ Changing application details sets funding level to incomplete
     [Tags]    HappyPath
     When the user changes the research category
     And the user clicks the button/link    name=mark_as_complete
-    And applicant navigates to the finances of the robot application
+    And the user navigates to Your-finances page  ${applicationName}
     Then the user should see the element    css=.task-list li:nth-of-type(3) .action-required
 
 Funding level has been reset
@@ -113,12 +128,12 @@ Read only view of the other funding
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
-    log in and create new application if there is not one already  Robot test application
-    ${applicationId} =  get application id by name  Robot test application
+    the user logs-in in new browser       &{lead_applicant_credentials}
+    ${applicationId} =  get application id by name  ${applicationName}
     the user navigates to the page  ${server}/application/${applicationId}
     the user clicks the button/link  link=Application details
-    the user fills in the Application details  Robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
-    Complete the org size section
+    the user fills in the Application details  ${applicationName}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    Complete the org size section  ${applicationName}
 
 the user provides invalid value as percentage then he should see the error
     [Arguments]  ${error}  ${value}
@@ -127,8 +142,9 @@ the user provides invalid value as percentage then he should see the error
     the user should see a field error     ${error}
 
 Complete the org size section
+    [Arguments]  ${applicationName}
     the user navigates to the page    ${DASHBOARD_URL}
-    the user clicks the button/link    link=Robot test application
+    the user clicks the button/link    link=${applicationName}
     the user clicks the button/link    link=Your finances
     the user clicks the button/link    link=Your organisation
     ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit")
