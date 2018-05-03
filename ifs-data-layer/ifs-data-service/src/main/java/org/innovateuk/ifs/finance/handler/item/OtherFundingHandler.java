@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
+
 /**
  * Handles the other funding, i.e. converts the costs to be stored into the database
  * or for sending it over.
