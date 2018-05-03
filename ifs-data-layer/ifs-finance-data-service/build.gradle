@@ -67,16 +67,21 @@ dependencies {
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
+    compile project(':ifs-security')
+
     compile project(':ifs-data-layer:data-service-commons')
 
     testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile project(':ifs-resources')
     testCompile project(':ifs-commons')
+    compile project(':ifs-security')
+
     testCompile project(':ifs-data-layer:data-service-commons')
 
     testCompile project(':ifs-resources').sourceSets.test.output
     testCompile project(':ifs-commons').sourceSets.test.output
+    testCompile project(':ifs-security').sourceSets.test.output
     testCompile project(':ifs-data-layer:data-service-commons').sourceSets.test.output
     testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }

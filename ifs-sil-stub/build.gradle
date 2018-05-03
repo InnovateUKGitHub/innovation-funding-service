@@ -16,6 +16,8 @@ ext {
 dependencies {
     compile project(":ifs-commons")
     compile project(":ifs-sil-resources")
+    compile project(":ifs-security")
+
     compile "org.springframework.boot:spring-boot-starter-web"
     compile 'javax.mail:mail:1.4.7'
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
