@@ -11,14 +11,6 @@ public class SiteTermsControllerSecurityTest extends BaseControllerSecurityTest<
     }
 
     @Test
-    public void termsAndConditions() {
-        assertAccessDenied(() -> classUnderTest.termsAndConditions(),
-                () -> {
-
-                });
-    }
-
-    @Test
     public void newTermsAndConditions() {
         assertAccessDenied(() -> classUnderTest.newTermsAndConditions(null),
                 () -> {
@@ -27,7 +19,7 @@ public class SiteTermsControllerSecurityTest extends BaseControllerSecurityTest<
     }
 
     @Test
-    public void agr() {
+    public void agreeNewTermsAndConditions() {
         assertAccessDenied(() -> classUnderTest.agreeNewTermsAndConditions(null, null, null, null, null, null),
                 () -> {
 

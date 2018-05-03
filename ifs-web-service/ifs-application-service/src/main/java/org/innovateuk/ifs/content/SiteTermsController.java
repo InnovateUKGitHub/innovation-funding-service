@@ -47,6 +47,7 @@ public class SiteTermsController {
     @Autowired
     private CookieUtil cookieUtil;
 
+    @PreAuthorize("permitAll")
     @GetMapping("terms-and-conditions")
     public String termsAndConditions() {
         SiteTermsAndConditionsResource siteTermsAndConditions = termsAndConditionsRestService
