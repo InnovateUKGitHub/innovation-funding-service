@@ -156,23 +156,15 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     Then the user checks for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
 
-Applicantion feedback is released
-    [Documentation]  IFS-3291
-    [Tags]
-    Given the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/find
-    When the user selects the checkbox       assessor-row-4  #Selects application 147, Machine learning for driverless cars
-    Then the user clicks the button/link     name=addSelected
-    And the user clicks the button/link      link=Review and send invites
-    Then the user clicks the button/link     css=.button[type="submit"]   #Send invite
-
 Applicant can see the feedback given
     [Documentation]  IFS-3291
     [Tags]
-    Given log in as a different user          derik.arnold@load.example.com  ${short_password}
-    When the user should see the element      jQuery=.progress-list div:contains("${availableApp}") + div:nth-child(2) span:contains("Invited to interview")
-    Then The user clicks the button/link      link=Machine learning for driverless cars
-    And the application question feedback scores are correct
-
+    Given log in as a different user          aaron.robertson@load.example.com  ${short_password}
+    When the user should see the element      jQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + div:nth-child(2) span:contains("Invited to interview")
+    Then The user clicks the button/link      link=${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user clicks the button/link       jQuery=a:contains("Business opportunity")
+    Then the user should see the element      jQuery=p:contains("This is the business opportunity feedback")
+    And the user should see the element       jQuery=h2:contains("Average score: 8/ 10")
 
 *** Keywords ***
 Custom Suite Setup
@@ -251,16 +243,3 @@ the compAdmin removes uploaded feedback for an application
     the user should see the element    link=testing_5MB.pdf
     the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
-
-the application question feedback scores are correct
-    the user should see the element    jQuery=li:contains("Business opportunity") .column-third:contains("Average score 8 / 10")
-    the user should see the element    jQuery=li:contains("Potential market") .column-third:contains("Average score 7 / 10")
-    the user should see the element    jQuery=li:contains("Project exploitation") .column-third:contains("Average score 6 / 10")
-    the user should see the element    jQuery=li:contains("Economic benefit") .column-third:contains("Average score 5 / 10")
-    the user should see the element    jQuery=li:contains("Technical approach") .column-third:contains("Average score 8 / 10")
-    the user should see the element    jQuery=li:contains("Innovation") .column-third:contains("Average score 6 / 10")
-    the user should see the element    jQuery=li:contains("Risks") .column-third:contains("Average score 9 / 10")
-    the user should see the element    jQuery=li:contains("Project team") .column-third:contains("Average score 6 / 10")
-    the user should see the element    jQuery=li:contains("Funding") .column-third:contains("Average score 7 / 10")
-    the user should see the element    jQuery=li:contains("Adding value") .column-third:contains("Average score 8 / 10")
-    the user should see the element    jQuery=p:contains("Average overall: 70%")
