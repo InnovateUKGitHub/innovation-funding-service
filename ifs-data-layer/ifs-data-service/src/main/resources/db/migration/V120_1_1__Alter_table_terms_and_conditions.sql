@@ -28,3 +28,6 @@ SET `type`      = 'GRANT',
 ALTER TABLE terms_and_conditions
   ADD CONSTRAINT `terms_and_conditions_created_by_to_user_fk` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `terms_and_conditions_modified_by_to_user_fk` FOREIGN KEY (`modified_by`) REFERENCES `user` (`id`);
+
+DROP INDEX terms_and_conditions_UNIQUE ON terms_and_conditions;
+CREATE UNIQUE INDEX terms_and_conditions_UNIQUE ON terms_and_conditions (name, type, version);
