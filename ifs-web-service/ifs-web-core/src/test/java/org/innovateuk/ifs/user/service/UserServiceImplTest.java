@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -16,6 +17,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -151,6 +153,20 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restSuccess());
 
         assertTrue(service.agreeNewTermsAndConditions(userId).isSuccess());
+
+        verify(userRestService, only()).agreeNewSiteTermsAndConditions(userId);
+    }
+
+    @Test
+    public void agreeNewTermsAndConditions_userNotFound() {
+        Long userId = 1L;
+
+        when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restFailure(forbiddenError()));
+
+        ServiceResult<Void> serviceResult = service.agreeNewTermsAndConditions(userId);
+
+        assertFalse(serviceResult.isSuccess());
+        assertTrue(serviceResult.getFailure().is(forbiddenError()));
 
         verify(userRestService, only()).agreeNewSiteTermsAndConditions(userId);
     }
