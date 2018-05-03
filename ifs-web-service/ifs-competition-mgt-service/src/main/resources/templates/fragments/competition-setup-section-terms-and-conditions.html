@@ -43,7 +43,7 @@
             <button class="button">Done</button>
         </div>
 
-        <th:block th:unless="${model.general.editable}" id="section-3-readonly">
+        <th:block th:unless="${model.general.editable}">
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
 
