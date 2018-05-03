@@ -46,7 +46,7 @@ the user invites collaborator by email address
     the user clicks the button/link       jQuery=button:contains("Add another contributor")
     The user enters text to a text field  name=stagedInvite.name  research collab
     The user enters text to a text field  name=stagedInvite.email  ${COLLAB_USER_EMAIL}
-    the user clicks the button/link       jQuery=button:contains("Invite")
+    the user clicks the button/link       css=[id^="invite-collaborator"]
 
 the user changes the application name
     [Arguments]    ${application_name}

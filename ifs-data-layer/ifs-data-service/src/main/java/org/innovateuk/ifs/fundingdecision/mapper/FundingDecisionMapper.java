@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.application.mapper;
+package org.innovateuk.ifs.fundingdecision.mapper;
 
 import org.mapstruct.Mapper;
 
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 
