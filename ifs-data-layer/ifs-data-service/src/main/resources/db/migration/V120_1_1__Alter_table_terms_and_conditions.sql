@@ -21,9 +21,9 @@ ALTER TABLE terms_and_conditions MODIFY `version` smallint(20) NOT NULL;
 UPDATE terms_and_conditions
 SET `type`      = 'GRANT',
   `created_by`  = @system_maintenance_user_id,
-  `created_on`  = NOW(),
+  `created_on`  = '1970-01-01 00:00:01',
   `modified_by` = @system_maintenance_user_id,
-  `modified_on` = NOW();
+  `modified_on` = '1970-01-01 00:00:01';
 
 ALTER TABLE terms_and_conditions
   ADD CONSTRAINT `terms_and_conditions_created_by_to_user_fk` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),

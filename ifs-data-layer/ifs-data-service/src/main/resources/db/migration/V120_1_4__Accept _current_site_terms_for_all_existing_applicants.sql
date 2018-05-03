@@ -8,7 +8,7 @@ INSERT INTO user_terms_and_conditions (user_id, terms_and_conditions_id, accepte
   SELECT DISTINCT
     u.id,
     @site_terms_and_conditions_id,
-    NOW()
+    '1970-01-01 00:00:01'
   FROM user u
     INNER JOIN user_role ur ON u.id = ur.user_id
     INNER JOIN role r ON ur.role_id = r.id
