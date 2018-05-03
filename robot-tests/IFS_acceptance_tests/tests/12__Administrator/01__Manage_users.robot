@@ -111,9 +111,7 @@ Account creation validation checks
     [Tags]
     Given the user clicks the button/link   jQuery=.button:contains("Create account")
     Then the user should see a field error  Please enter a first name.
-    And the user should see a field error   Your first name should have at least 2 characters.
     When the user should see a field error  Please enter a last name.
-    Then the user should see a field error  Your last name should have at least 2 characters.
     And the user should see the element     jQuery=li[data-valid="false"]:contains("be at least 8 characters long")
 
 New user account is created and verified

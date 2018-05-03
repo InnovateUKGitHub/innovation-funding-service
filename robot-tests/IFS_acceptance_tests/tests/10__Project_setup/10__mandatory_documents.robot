@@ -67,8 +67,7 @@ PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012, INFUND-5490
     [Tags]
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    When the user navigates to the page    ${project_in_setup_page}/partner/documents
     And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
     #Then the user should see the 2 Upload buttons
     And the user should see the element    css=label[for="collaborationAgreement"]
@@ -78,8 +77,7 @@ PM cannot submit when both documents are not uploaded
 Large pdfs not allowed for either document
     [Documentation]    INFUND-3011
     [Tags]
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user uploads to the collaboration agreement question    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     And the user goes back to the previous page
@@ -101,8 +99,7 @@ PM can upload both documents
     [Documentation]    INFUND-3011  IFS-2371-2258
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user uploads to the exploitation plan question    ${valid_pdf}
     And the user should see the element    jQuery=button:disabled:contains("Submit documents")
     And the user should see the element    jQuery=.upload-section:contains("Exploitation plan") a:contains("testing")
@@ -114,15 +111,12 @@ Lead partner can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
     Given log in as a different user       &{lead_applicant_credentials}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    When the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Then the user opens the link in new window   ${valid_pdf}
+    And the user goes back to the previous tab
     When the user opens the link in new window   ${valid_pdf}
     Then the user goes back to the previous tab
-    When the user opens the link in new window   ${valid_pdf}
-    Then the user goes back to the previous tab
-    And the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    link=View the status of partners
-    When the user clicks the button/link    link=View the status of partners
+    When the user navigates to the page    ${project_in_setup_page}/team-status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
@@ -151,8 +145,7 @@ Non-lead partner can view both documents
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
-    And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=View the status of partners
+    When the user navigates to the page     ${project_in_setup_page}/team-status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -167,17 +160,12 @@ Non-lead partner cannot remove or submit right
 PM can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    And the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
-    And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=View the status of partners
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
-    And the user goes back to the previous page
+    Given log in as a different user      ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
+    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    When the user should see the element  link=${valid_pdf} (opens in a new window)
+    Then the user should see the element  link=${valid_pdf} (opens in a new window)
+    When the user navigates to the page   ${project_in_setup_page}/team-status
+    Then the user should see the element  css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 PM can remove the second document
     [Documentation]    INFUND-3011
@@ -193,7 +181,6 @@ Non-lead partner can still view the first document
     And the user clicks the button/link    link=Other documents
     Then the user should see the text in the page    ${valid_pdf}
 
-
 PM can remove the first document
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
@@ -206,16 +193,14 @@ PM can remove the first document
 Non-lead partner cannot view either document once removed
     [Documentation]    INFUND-4252
     [Setup]    log in as a different user  &{collaborator1_credentials}
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    When the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should not see the text in the page    ${valid_pdf}
 
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user uploads to the collaboration agreement question    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user uploads to the exploitation plan question    ${valid_pdf}
@@ -234,8 +219,7 @@ Mandatory document submission
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=button:contains("Cancel")
@@ -253,8 +237,7 @@ Mandatory document submission
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]    HappyPath
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
@@ -268,13 +251,12 @@ PM cannot remove the documents after submitting
     And the user should not see the element    name=removeExploitationPlanClicked
 
 Lead partner cannot remove the documents after submission by PM
-    [Documentation]    INFUND-3012
-    [Setup]    log in as a different user  &{lead_applicant_credentials}
-    Given the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=Other documents
-    Then the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
+    [Documentation]  INFUND-3012
+    [Tags]
+    [Setup]  log in as a different user       &{lead_applicant_credentials}
+    Given the user navigates to the page      ${project_in_setup_page}/partner/documents
+    When the user should not see the element  name=removeCollaborationAgreementClicked
+    Then the user should not see the element  name=removeExploitationPlanClicked
 
 Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
@@ -285,13 +267,12 @@ Lead partner can still view both documents after submitting
     Then the user goes back to the previous tab
 
 Non-lead partner cannot remove the documents after submission by PM
-    [Documentation]    INFUND-3012
-    [Setup]    log in as a different user   &{collaborator1_credentials}
-    Given the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=Other documents
-    Then the user should not see the text in the page    Remove
-    And the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
+    [Documentation]  INFUND-3012
+    [Tags]
+    [Setup]  log in as a different user       &{collaborator1_credentials}
+    Given the user navigates to the page      ${project_in_setup_page}/partner/documents
+    When the user should not see the element  name=removeCollaborationAgreementClicked
+    Then the user should not see the element  name=removeExploitationPlanClicked
 
 Non-lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
