@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -19,9 +20,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,8 +33,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static org.innovateuk.ifs.workflow.resource.State.PENDING;
 import static org.junit.Assert.assertEquals;
 
 public class AssessorCountSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<AssessorCountSummaryController> {
@@ -61,9 +57,6 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
 
     @Autowired
     private AssessmentRepository assessmentRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     @Override
@@ -115,7 +108,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(PENDING))
+                .withProcessState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);
@@ -126,9 +119,5 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
         assertEquals(0, counts.getNumber());
         assertEquals(1, counts.getTotalPages());
         assertEquals(2, counts.getContent().size());
-    }
-
-    private ActivityState assessmentState(State state) {
-        return activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, state);
     }
 }

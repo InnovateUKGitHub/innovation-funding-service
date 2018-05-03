@@ -15,10 +15,9 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${currentSectionIsHome}" />
-    <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${currentSectionIsHome}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions', linkClass='link-back', linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition', linkClass='link-back', linkUrl=@{/competition/{competitionId}/(competitionId=${model.general.competition.id})}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
     <th:block th:if="${currentSectionIsHome}">
         <div class="error-summary" th:if="${#fields.hasErrors('${competitionSetupForm}')}">
