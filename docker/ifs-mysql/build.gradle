@@ -37,6 +37,9 @@ subprojects {
     [stop, removeContainer, createContainer, deploy, wait].each { task ->
         task.enabled = enabled
     }
+    if (enabled) {
+        buildDocker.outputs.upToDateWhen { false }
+    }
 
     task createTestSchema(type: Exec) {
         doFirst {
