@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface InterviewRepository extends ProcessRepository<Interview>, PagingAndSortingRepository<Interview, Long> {
 
-    List<Interview> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(long userId, long competitionId);
+    List<Interview> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(long userId, long competitionId);
 
 }

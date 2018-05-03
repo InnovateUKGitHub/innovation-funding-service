@@ -35,6 +35,9 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private AssessmentRejectOutcome rejection;
 
+    @Column(name="activity_state_id")
+    private AssessmentState activityState;
+
     public Assessment() {
         super();
     }
@@ -42,6 +45,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     public Assessment(Application application, ProcessRole processRole) {
         this.participant = processRole;
         this.target = application;
+        this.activityState = AssessmentState.CREATED;
     }
 
     public AssessmentFundingDecisionOutcome getFundingDecision() {
@@ -94,19 +98,21 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.target = target;
     }
 
-    public AssessmentState getActivityState() {
-        return AssessmentState.fromState(activityState.getState());
+    @Override
+    public AssessmentState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(AssessmentState status) {
+        this.activityState = status;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         Assessment that = (Assessment) o;
 
@@ -115,6 +121,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(responses, that.responses)
+                .append(activityState, that.activityState)
                 .isEquals();
     }
 
@@ -125,6 +132,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
                 .append(participant)
                 .append(target)
                 .append(responses)
+                .append(activityState)
                 .toHashCode();
     }
 }

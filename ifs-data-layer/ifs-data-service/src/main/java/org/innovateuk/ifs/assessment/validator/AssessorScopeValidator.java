@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.validator;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.validation.validator.BaseValidator;
+import org.innovateuk.ifs.application.validator.BaseValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
