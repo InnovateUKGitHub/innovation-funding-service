@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 
 /**
  * The Google Analytics Tag Manager Data Layer. Contains our properties for Google Analytics.
@@ -32,10 +33,10 @@ public class GoogleAnalyticsDataLayer {
         if(userRoles == null || userRoles.isEmpty()) {
             return "anonymous";
         }
-        return userRoles
-                .stream()
-                .map(role -> role.toString().toLowerCase())
-                .collect(joining(","));
+        return simpleJoiner(userRoles,
+                            role -> role.toString().toLowerCase(),
+                            ",");
+
     }
 
     public void setUserRoles(List<Role> userRoles) {

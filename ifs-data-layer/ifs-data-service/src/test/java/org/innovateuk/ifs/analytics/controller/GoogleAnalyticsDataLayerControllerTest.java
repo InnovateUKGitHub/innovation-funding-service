@@ -86,8 +86,8 @@ public class GoogleAnalyticsDataLayerControllerTest extends BaseControllerMockMV
         final long applicationId = 12L;
         final Role role = Role.LEADAPPLICANT;
 
-        when(googleAnalyticsDataLayerServiceMock.getRolesByApplicationId(applicationId))
-                .thenReturn(serviceSuccess(singletonList(Role.LEADAPPLICANT)));
+        when(googleAnalyticsDataLayerServiceMock.getRolesByApplicationIdForCurrentUser(applicationId))
+                .thenReturn(serviceSuccess(singletonList(role)));
 
         mockMvc.perform(get("/analytics/application/{applicationId}/user-roles", applicationId))
                 .andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class GoogleAnalyticsDataLayerControllerTest extends BaseControllerMockMV
         final long projectId = 112L;
         final List<Role> roles = asList(Role.PARTNER, Role.PROJECT_MANAGER);
 
-        when(googleAnalyticsDataLayerServiceMock.getRolesByProjectId(projectId))
+        when(googleAnalyticsDataLayerServiceMock.getRolesByProjectIdForCurrentUser(projectId))
                 .thenReturn(serviceSuccess(roles));
 
         mockMvc.perform(get("/analytics/project/{projectId}/user-roles", projectId))

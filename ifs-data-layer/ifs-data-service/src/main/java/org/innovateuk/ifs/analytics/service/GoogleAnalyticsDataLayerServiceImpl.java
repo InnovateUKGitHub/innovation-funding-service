@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalService implements GoogleAnalyticsDataLayerService {
 
     @Autowired
-    ProjectUserRepository projectUserRepository;
+    private ProjectUserRepository projectUserRepository;
 
     @Override
     public ServiceResult<String> getCompetitionNameByApplicationId(long applicationId) {
@@ -50,7 +50,7 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
     }
 
     @Override
-    public ServiceResult<List<Role>> getRolesByApplicationId(long applicationId) {
+    public ServiceResult<List<Role>> getRolesByApplicationIdForCurrentUser(long applicationId) {
 
         return getCurrentlyLoggedInUser().andOnSuccessReturn(
                 user -> simpleMap(
@@ -60,7 +60,7 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
     }
 
     @Override
-    public ServiceResult<List<Role>> getRolesByProjectId(long projectId) {
+    public ServiceResult<List<Role>> getRolesByProjectIdForCurrentUser(long projectId) {
 
         return getCurrentlyLoggedInUser().andOnSuccessReturn(
                 user -> simpleMap(

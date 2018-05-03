@@ -85,11 +85,11 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
         final Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
-        if(pathVariables.containsKey(APPLICATION_ID)) {
+        if (pathVariables.containsKey(APPLICATION_ID)) {
             setApplicationOrProjectSpecificRolesFromRestService(dl, pathVariables, APPLICATION_ID, googleAnalyticsDataLayerRestService::getRolesByApplicationId);
         }
 
-        if(pathVariables.containsKey(PROJECT_ID)) {
+        if (pathVariables.containsKey(PROJECT_ID)) {
             setApplicationOrProjectSpecificRolesFromRestService(dl, pathVariables, PROJECT_ID, googleAnalyticsDataLayerRestService::getRolesByProjectId);
         }
     }
