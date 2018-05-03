@@ -145,7 +145,7 @@ CompAdmin resends the interview panel invite
     When the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_madeleine}
     Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user reads his email              ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.
-    When log in as a different user            ${assessor_madeleine_email}   ${short_password}
+    When log in as a different user           ${assessor_madeleine_email}   ${short_password}
     Then the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 CompAdmin Views the assessors that have accepted the interview panel invite
@@ -253,14 +253,14 @@ the compAdmin removes uploaded feedback for an application
     the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
 
 the application question feedback scores are correct
-    the user should see the element    jQuery=.column-two-thirds:contains("Business opportunity") ~ div div:contains("Average score 8 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Potential market") ~ div div:contains("Average score 7 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Project exploitation") ~ div div:contains("Average score 6 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Economic benefit") ~ div div:contains("Average score 5 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Technical approach") ~ div div:contains("Average score 8 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Innovation") ~ div div:contains("Average score 6 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Risks") ~ div div:contains("Average score 9 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Project team") ~ div div:contains("Average score 6 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Funding") ~ div div:contains("Average score 7 / 10")
-    the user should see the element    jQuery=.column-two-thirds:contains("Adding value") ~ div div:contains("Average score 8 / 10")
+    the user should see the element    jQuery=li:contains("Business opportunity") .column-third:contains("Average score 8 / 10")
+    the user should see the element    jQuery=li:contains("Potential market") .column-third:contains("Average score 7 / 10")
+    the user should see the element    jQuery=li:contains("Project exploitation") .column-third:contains("Average score 6 / 10")
+    the user should see the element    jQuery=li:contains("Economic benefit") .column-third:contains("Average score 5 / 10")
+    the user should see the element    jQuery=li:contains("Technical approach") .column-third:contains("Average score 8 / 10")
+    the user should see the element    jQuery=li:contains("Innovation") .column-third:contains("Average score 6 / 10")
+    the user should see the element    jQuery=li:contains("Risks") .column-third:contains("Average score 9 / 10")
+    the user should see the element    jQuery=li:contains("Project team") .column-third:contains("Average score 6 / 10")
+    the user should see the element    jQuery=li:contains("Funding") .column-third:contains("Average score 7 / 10")
+    the user should see the element    jQuery=li:contains("Adding value") .column-third:contains("Average score 8 / 10")
     the user should see the element    jQuery=p:contains("Average overall: 70%")
