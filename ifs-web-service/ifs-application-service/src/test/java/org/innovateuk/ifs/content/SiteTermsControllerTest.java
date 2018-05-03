@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
-import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,9 +26,6 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
 
     @Mock
     private TermsAndConditionsRestService termsAndConditionsRestService;
-
-    @Mock
-    private CookieUtil cookieUtil;
 
     @Override
     protected SiteTermsController supplyControllerUnderTest() {
@@ -66,7 +62,7 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
         String expectedRedirectUrl = "/applicant/dashboard";
 
         when(userService.agreeNewTermsAndConditions(userId)).thenReturn(serviceSuccess());
-        when(cookieUtil.getCookieValue(isA(HttpServletRequest.class), "savedRequestUrl"))
+        when(cookieUtil.getCookieValue(isA(HttpServletRequest.class), eq("savedRequestUrl")))
                 .thenReturn(expectedRedirectUrl);
 
         mockMvc.perform(post("/info/new-terms-and-conditions")
