@@ -729,41 +729,38 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testInviteProjectManagerSuccess() {
 
-        Long projectId = 1L;
-
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withCompetitionName("Competition 1")
-                .withApplicationId(1L)
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation(17L)
+                .withLeadOrganisation(organisation.getId())
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
         Project projectInDB = ProjectBuilder.newProject()
-                .withId(projectId)
                 .withName("Project 1")
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
         Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("projectName", "Project 1");
+        globalArguments.put("projectName", projectInDB.getName());
         globalArguments.put("competitionName", "Competition 1");
         globalArguments.put("leadOrganisation", organisation.getName());
-        globalArguments.put("applicationId", 1L);
+        globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
         when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
-        ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+        ServiceResult<Void> result = service.inviteProjectManager(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
     }
