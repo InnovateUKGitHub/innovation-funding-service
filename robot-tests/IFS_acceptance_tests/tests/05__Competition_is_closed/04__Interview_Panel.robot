@@ -44,6 +44,9 @@ Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
 
+*** Variables ***
+${availableApp}  Machine learning for driverless cars
+
 *** Test Cases ***
 User navigates to the Manage interview panel
     [Documentation]  IFS-2633 IFS-2637
@@ -149,15 +152,15 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     [Documentation]  IFS-3201 IFS-3252
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
-    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/accepted
     Then the user checks for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
 
 Applicantion feedback is released
     [Documentation]  IFS-3291
     [Tags]
-    Given the user navigates to the page     ${SERVER}/management/assessment/interview/competition/18/applications/find
-    When the user selects the checkbox       assessor-row-4
+    Given the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/find
+    When the user selects the checkbox       assessor-row-4  #Selects application 147, Machine learning for driverless cars
     Then the user clicks the button/link     name=addSelected
     And the user clicks the button/link      link=Review and send invites
     Then the user clicks the button/link     css=.button[type="submit"]   #Send invite
@@ -165,8 +168,8 @@ Applicantion feedback is released
 Applicant can see the feedback given
     [Documentation]  IFS-3291
     [Tags]
-    Given log in as a different user         derik.arnold@load.example.com  ${short_password}
-    When the user should see the element      jQuery=.progress-list div:contains("Machine learning for driverless cars") + div:nth-child(2) span:contains("Invited to interview")
+    Given log in as a different user          derik.arnold@load.example.com  ${short_password}
+    When the user should see the element      jQuery=.progress-list div:contains("${availableApp}") + div:nth-child(2) span:contains("Invited to interview")
     Then The user clicks the button/link      link=Machine learning for driverless cars
     And the application question feedback scores are correct
 
