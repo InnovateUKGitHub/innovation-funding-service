@@ -251,12 +251,12 @@ PM cannot remove the documents after submitting
     And the user should not see the element    name=removeExploitationPlanClicked
 
 Lead partner cannot remove the documents after submission by PM
-    [Documentation]    INFUND-3012
-    [Setup]    log in as a different user  &{lead_applicant_credentials}
-    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
-    When the user should not see the text in the page    Remove
-    Then the user should not see the element    name=removeCollaborationAgreementClicked
-    And the user should not see the element    name=removeExploitationPlanClicked
+    [Documentation]  INFUND-3012
+    [Tags]
+    [Setup]  log in as a different user       &{lead_applicant_credentials}
+    Given the user navigates to the page      ${project_in_setup_page}/partner/documents
+    When the user should not see the element  name=removeCollaborationAgreementClicked
+    Then the user should not see the element  name=removeExploitationPlanClicked
 
 Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
