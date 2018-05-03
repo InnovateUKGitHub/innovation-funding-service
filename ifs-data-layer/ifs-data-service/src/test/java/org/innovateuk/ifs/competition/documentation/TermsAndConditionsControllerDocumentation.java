@@ -57,7 +57,7 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
                 .andDo(document(
                         "terms-and-conditions/{method-name}",
                         responseFields(
-                                fieldWithPath("[]").description("list of terms and conditions the authenticated user has access to")
+                                fieldWithPath("[]").description("List of latest versions for all terms and conditions the authenticated user has access to")
                         )
                 ));
     }

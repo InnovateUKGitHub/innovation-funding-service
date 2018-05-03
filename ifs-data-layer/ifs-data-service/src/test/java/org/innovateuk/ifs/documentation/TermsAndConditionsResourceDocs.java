@@ -17,7 +17,7 @@ public class TermsAndConditionsResourceDocs {
 
     public static final TermsAndConditionsResourceBuilder termsAndConditionsResourceBuilder = newTermsAndConditionsResource()
             .withId(1L)
-            .withName("Default Terms and Conditions")
+            .withName("Innovate UK")
             .withTemplate("default-terms-and-conditions")
             .withVersion("1");
 }

@@ -1,3 +1,5 @@
+-- IFS-3086: Updating terms and conditions content
+
 UPDATE terms_and_conditions
 SET name = 'Innovate UK'
 WHERE name = 'Default Terms and Conditions';
