@@ -268,6 +268,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
                         .param(TERMS_AGREED_KEY, "1")
+                        .param("-otherPublicFunding", String.valueOf(true))
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -284,10 +285,30 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param("-otherPublicFunding", String.valueOf(true))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", TERMS_AGREED_KEY));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+    }
+
+    @Test
+    public void testApplicationFinanceMarkAsCompleteFailWithoutOtherPublicFunding() throws Exception {
+        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.FUNDING_FINANCES).build()).build());
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.YOUR_FINANCE).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(TERMS_AGREED_KEY, "1")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attributeErrorCount("form", 1))
+                .andExpect(model().attributeHasFieldErrors("form", "formInput[cost-otherPublicFunding]"));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 
