@@ -398,12 +398,15 @@ IFS.core.formValidation = (function () {
       var minLengthAttribute = 'minlength'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, minLengthAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, minLengthAttribute)
-      var minlength = parseInt(field.attr('minlength'), 10)
+      var minLength = parseInt(field.attr('minlength'), 10)
+      var duplicateRequiredMinLength = field.data('duplicate-required-minlength')
       var fieldVal = field.val()
-      var validMinlength = (fieldVal.length === 0) || (fieldVal.length >= minlength)
 
-      IFS.core.formValidation.setStatus(field, minLengthAttribute, validMinlength)
-      if (validMinlength) {
+      // Check if we need to validate the min length and required
+      var validMinLength = duplicateRequiredMinLength ? (fieldVal.length > 0) && (fieldVal.length >= minLength) : (fieldVal.length === 0) || (fieldVal.length >= minLength)
+
+      IFS.core.formValidation.setStatus(field, minLengthAttribute, validMinLength)
+      if (validMinLength) {
         IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
         return true
       } else {
@@ -415,8 +418,8 @@ IFS.core.formValidation = (function () {
       var maxLengthAttribute = 'maxlength'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, maxLengthAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, maxLengthAttribute)
-      var maxlength = parseInt(field.attr('maxlength'), 10)
-      if (field.val().length > maxlength) {
+      var maxLength = parseInt(field.attr('maxlength'), 10)
+      if (field.val().length > maxLength) {
         IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
         return false
       } else {
