@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.application.documentation;
+package org.innovateuk.ifs.fundingdecision.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.controller.ApplicationFundingDecisionController;
+import org.innovateuk.ifs.fundingdecision.controller.ApplicationFundingDecisionController;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;

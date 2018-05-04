@@ -22,7 +22,9 @@ test {
     beforeTest { desc ->
         println "Executing test ${desc.className}.${desc.name}"
     }
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    if (project.name != 'ifs-data-service') {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    }
 }
 
 dependencies {
@@ -58,6 +60,7 @@ springBoot {
 }
 
 bootRepackage {
+    classifier = 'executable'
     mainClass = 'org.innovateuk.ifs.Application'
     //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 

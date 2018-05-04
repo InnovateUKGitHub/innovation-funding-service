@@ -35,6 +35,11 @@ test {
     finalizedBy asciidoctor
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
+    dependsOn ":ifs-commons:build"
+}
+
 
 asciidoctor {
     dependsOn test
