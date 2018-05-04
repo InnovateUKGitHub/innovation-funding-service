@@ -53,14 +53,14 @@ public class ProjectDetailsServiceImplTest {
     public void testUpdatePartnerProjectLocation() {
         Long projectId = 1L;
         Long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
-        when(projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postCode)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postcode)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postCode);
+        ServiceResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postcode);
         assertTrue(result.isSuccess());
 
-        verify(projectDetailsRestService).updatePartnerProjectLocation(projectId, organisationId, postCode);
+        verify(projectDetailsRestService).updatePartnerProjectLocation(projectId, organisationId, postcode);
     }
 
     @Test

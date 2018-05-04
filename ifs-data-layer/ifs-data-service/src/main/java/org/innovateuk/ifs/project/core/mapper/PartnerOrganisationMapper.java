@@ -24,9 +24,6 @@ public abstract class PartnerOrganisationMapper extends BaseMapper<PartnerOrgani
     @Override
     public abstract  PartnerOrganisationResource mapToResource(PartnerOrganisation domain);
 
-/*    @Mappings({
-            @Mapping(target="postCode", ignore=true)
-    })*/
     @Override
     public abstract PartnerOrganisation mapToDomain(PartnerOrganisationResource resource);
 

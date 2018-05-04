@@ -61,18 +61,6 @@ public class PartnerOrganisation implements ProcessActivity {
         return leadOrganisation;
     }
 
-/*    @Deprecated
-    @ZeroDowntime(reference = "IFS-3470", description = "This still needs to be there else Hibernate complains - but should not be used anywhere. Hence marked with @Deprecated")
-    public String getPostCode() {
-        return postCode;
-    }
-
-    @Deprecated
-    @ZeroDowntime(reference = "IFS-3470", description = "This still needs to be there else Hibernate complains - but should not be used anywhere. Hence marked with @Deprecated")
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }*/
-
     @ZeroDowntime(reference = "IFS-3470", description = "Currently this will read the old column.")
     public String getPostcode() {
         return postCode; // returns the old column postCode (not postcode)

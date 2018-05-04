@@ -320,13 +320,13 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     @Transactional
     public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postcode) {
-        return validatePostCode(postcode).
+        return validatePostcode(postcode).
                 andOnSuccess(() -> validateIfPartnerProjectLocationCanBeChanged(composite.getProjectId())).
                 andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
                 andOnSuccessReturnVoid(partnerOrganisation -> partnerOrganisation.setPostcode(postcode.toUpperCase()));
     }
 
-    private ServiceResult<Void> validatePostCode(String postcode) {
+    private ServiceResult<Void> validatePostcode(String postcode) {
         if (StringUtils.isBlank(postcode)) {
             return serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST));
         }

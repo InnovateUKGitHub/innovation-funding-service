@@ -84,7 +84,7 @@ public class ProjectDetailsViewModel {
         return locationPerPartnerRequired;
     }
 
-    public String getPostCodeForPartnerOrganisation(Long organisationId) {
+    public String getPostcodeForPartnerOrganisation(Long organisationId) {
         return partnerOrganisations.stream()
                 .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
                 .findFirst()

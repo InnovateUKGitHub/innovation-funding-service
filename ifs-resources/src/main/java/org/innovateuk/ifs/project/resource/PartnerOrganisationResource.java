@@ -11,8 +11,6 @@ public class PartnerOrganisationResource {
 
     private boolean leadOrganisation;
 
-    //private String postCode;
-
     private String postcode;
 
     public Long getId() {
@@ -54,14 +52,6 @@ public class PartnerOrganisationResource {
     public void setProject(Long project) {
         this.project = project;
     }
-
-/*    public String getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }*/
 
     public String getPostcode() {
         return postcode;
