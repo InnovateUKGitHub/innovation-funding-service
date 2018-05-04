@@ -60,6 +60,7 @@ springBoot {
 }
 
 bootRepackage {
+    classifier = 'executable'
     mainClass = 'org.innovateuk.ifs.Application'
     //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 

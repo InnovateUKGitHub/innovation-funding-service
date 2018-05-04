@@ -21,7 +21,8 @@ def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.
 }
 createContainer.portBindings = ['9012:8000']
 
-deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:deploy"
+deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:wait"
+deploy.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deploy"
 
 createContainer.networkAliases=["ifs-finance-data-service"]
 
@@ -54,6 +55,15 @@ bootRun {
     addResources = false
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-resources/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+
+    dependsOn ":ifs-commons:build"
+    dependsOn ":ifs-resources:build"
+    dependsOn ":ifs-data-layer:data-service-commons:build"
+}
 
 configurations {
     mapstruct
