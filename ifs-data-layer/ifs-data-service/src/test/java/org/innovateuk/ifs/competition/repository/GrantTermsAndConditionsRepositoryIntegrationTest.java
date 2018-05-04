@@ -42,6 +42,8 @@ public class GrantTermsAndConditionsRepositoryIntegrationTest extends
     @Test
     public void findLatestVersions() {
 
+        loginCompAdmin();
+
         List<GrantTermsAndConditions> grantTermsAndConditionsList = newGrantTermsAndConditions()
                 .with(id(null))
                 .withName(

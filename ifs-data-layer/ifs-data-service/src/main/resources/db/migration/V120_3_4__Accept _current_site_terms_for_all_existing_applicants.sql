@@ -12,4 +12,4 @@ INSERT INTO user_terms_and_conditions (user_id, terms_and_conditions_id, accepte
   FROM user u
     INNER JOIN user_role ur ON u.id = ur.user_id
     INNER JOIN role r ON ur.role_id = r.id
-  WHERE r.name IN ('applicant', 'leadapplicant', 'collaborator');
+  WHERE r.name = 'applicant';

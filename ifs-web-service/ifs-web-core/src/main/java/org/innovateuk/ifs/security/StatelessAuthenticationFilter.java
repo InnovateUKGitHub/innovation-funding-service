@@ -3,7 +3,6 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.EnumSet;
-import java.util.Set;
 
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -114,9 +111,7 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean userHasApplicantRole(UserResource userResource) {
-        Set<Role> applicationRoles = EnumSet.of(APPLICANT, LEADAPPLICANT, COLLABORATOR);
-        applicationRoles.retainAll(userResource.getRoles());
-        return !applicationRoles.isEmpty();
+        return userResource.getRoles().contains(APPLICANT);
     }
 
     private boolean userHasAcceptedLatestSiteTerms(UserResource userResource) {
