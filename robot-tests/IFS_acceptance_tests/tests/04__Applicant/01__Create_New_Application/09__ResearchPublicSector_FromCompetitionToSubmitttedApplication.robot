@@ -100,7 +100,7 @@ The competition admin creates a competition for
     the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
-    The user removes the Project details questions and marks the Application section as done
+    The user removes the Project details questions and marks the Application section as done  yes  Generic
     the user fills in the CS Assessors
     the user clicks the button/link  link=Public content
     the user fills in the Public content and publishes  ${extraKeyword}
@@ -109,12 +109,6 @@ The competition admin creates a competition for
     the user clicks the button/link  css=button[type="submit"]
     the user navigates to the page   ${CA_UpcomingComp}
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
-
-The user removes the Project details questions and marks the Application section as done
-    the user clicks the button/link  link=Application
-    the user marks each question as complete  Application details
-    the user removes some of the Project details questions
-    the user marks the Assessed questions as complete  yes  Generic
 
 the user removes some of the Project details questions
     [Documentation]  IFS-2832
