@@ -21,6 +21,8 @@ subprojects {
         }
     }
 
+    createContainer.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+
     osStageRemote.onlyIf { !isNamedEnv() }
     osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
     osStageRemote.tag = sqlVersion
