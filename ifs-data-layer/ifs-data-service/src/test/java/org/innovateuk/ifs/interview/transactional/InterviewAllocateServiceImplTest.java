@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -39,11 +39,11 @@ public class InterviewAllocateServiceImplTest extends BaseServiceUnitTest<Interv
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
 
-        List<InterviewAssessorAllocateApplicationsResource> expectedParticipants = newInterviewAssessorAllocateApplicationsResource()
+        List<InterviewAllocateOverviewResource> expectedParticipants = newInterviewAssessorAllocateApplicationsResource()
                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
                 .build(5);
 
-        Page<InterviewAssessorAllocateApplicationsResource> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
+        Page<InterviewAllocateOverviewResource> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
         when(interviewParticipantRepositoryMock.getAllocateApplicationsOverview(
                 competitionId,
@@ -64,7 +64,7 @@ public class InterviewAllocateServiceImplTest extends BaseServiceUnitTest<Interv
                         overviewResources.get(4)
                 );
 
-        ServiceResult<InterviewAssessorAllocateApplicationsPageResource> result =
+        ServiceResult<InterviewAllocateOverviewPageResource> result =
                 service.getAllocateApplicationsOverview(competitionId, pageable);
 
         verify(interviewParticipantRepositoryMock)
@@ -72,14 +72,14 @@ public class InterviewAllocateServiceImplTest extends BaseServiceUnitTest<Interv
 
         assertTrue(result.isSuccess());
 
-        InterviewAssessorAllocateApplicationsPageResource pageResource = result.getSuccess();
+        InterviewAllocateOverviewPageResource pageResource = result.getSuccess();
 
         assertEquals(0, pageResource.getNumber());
         assertEquals(5, pageResource.getSize());
         assertEquals(2, pageResource.getTotalPages());
         assertEquals(10, pageResource.getTotalElements());
 
-        List<InterviewAssessorAllocateApplicationsResource> content = pageResource.getContent();
+        List<InterviewAllocateOverviewResource> content = pageResource.getContent();
         assertEquals("Name 1", content.get(0).getName());
         assertEquals("Name 2", content.get(1).getName());
         assertEquals("Name 3", content.get(2).getName());

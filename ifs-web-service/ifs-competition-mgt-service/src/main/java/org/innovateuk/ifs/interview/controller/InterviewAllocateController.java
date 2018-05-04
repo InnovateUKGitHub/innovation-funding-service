@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController;
-import org.innovateuk.ifs.management.model.InterviewAllocateApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.InterviewAllocateOverviewModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewApplicationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,12 +20,12 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
-@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can assign application to assessors for an Interview Panel", securedType = InterviewApplicationAllocationController.class)
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can assign application to assessors for an Interview Panel", securedType = InterviewAllocateController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
-public class InterviewApplicationAllocationController {
+public class InterviewAllocateController {
 
     @Autowired
-    private InterviewAllocateApplicationsModelPopulator interviewAllocateApplicationsModelPopulator;
+    private InterviewAllocateOverviewModelPopulator interviewAllocateOverviewModelPopulator;
 
     @Autowired
     private InterviewApplicationsModelPopulator interviewApplicationsModelPopulator;
@@ -43,13 +43,13 @@ public class InterviewApplicationAllocationController {
 
         String originQuery = buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.INTERVIEW_ACCEPTED, queryParams);
 
-        model.addAttribute("model", interviewAllocateApplicationsModelPopulator.populateModel(
+        model.addAttribute("model", interviewAllocateOverviewModelPopulator.populateModel(
                 competitionResource,
                 originQuery
         ));
         model.addAttribute("originQuery", originQuery);
 
-        return "competition/assessors-allocate-applications";
+        return "competition/interview-allocate-overview";
     }
 
     @GetMapping("/allocate-applications/{userId}")

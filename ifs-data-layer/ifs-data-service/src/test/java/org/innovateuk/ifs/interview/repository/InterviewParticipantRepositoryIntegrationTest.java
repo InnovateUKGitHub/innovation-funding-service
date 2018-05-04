@@ -6,7 +6,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
@@ -248,7 +248,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         assertEquals(9, repository.count()); // Including 8 pre-existing participants added via patch
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<InterviewAssessorAllocateApplicationsResource> pagedResult = repository.getAllocateApplicationsOverview(
+        Page<InterviewAllocateOverviewResource> pagedResult = repository.getAllocateApplicationsOverview(
                 competition.getId(),
                 pageable
         );
@@ -258,7 +258,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<InterviewAssessorAllocateApplicationsResource> content = pagedResult.getContent();
+        List<InterviewAllocateOverviewResource> content = pagedResult.getContent();
 
         assertEquals(1, content.size());
         assertEquals("Kieran Hester", content.get(0).getName());

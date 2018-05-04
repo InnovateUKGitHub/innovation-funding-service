@@ -2,8 +2,8 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,13 +23,13 @@ public class InterviewAllocateServiceImpl implements InterviewAllocateService  {
     private InterviewParticipantRepository interviewParticipantRepository;
 
     @Override
-    public ServiceResult<InterviewAssessorAllocateApplicationsPageResource> getAllocateApplicationsOverview(long competitionId,
-                                                                                                            Pageable pageable) {
-        Page<InterviewAssessorAllocateApplicationsResource> pagedResult = interviewParticipantRepository.getAllocateApplicationsOverview(
+    public ServiceResult<InterviewAllocateOverviewPageResource> getAllocateApplicationsOverview(long competitionId,
+                                                                                                Pageable pageable) {
+        Page<InterviewAllocateOverviewResource> pagedResult = interviewParticipantRepository.getAllocateApplicationsOverview(
                 competitionId,
                 pageable);
 
-        return serviceSuccess(new InterviewAssessorAllocateApplicationsPageResource(
+        return serviceSuccess(new InterviewAllocateOverviewPageResource(
                 pagedResult.getTotalElements(),
                 pagedResult.getTotalPages(),
                 pagedResult.getContent(),

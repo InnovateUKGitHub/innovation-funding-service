@@ -4,16 +4,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class InterviewAssessorAllocateApplicationsResource {
+public class InterviewAllocateOverviewResource {
 
     private long id;
     private String name;
     private String skillAreas;
 
-    public InterviewAssessorAllocateApplicationsResource() {
+    public InterviewAllocateOverviewResource() {
     }
 
-    public InterviewAssessorAllocateApplicationsResource(long id, String name, String skillAreas) {
+    public InterviewAllocateOverviewResource(long id, String name, String skillAreas) {
         this.id = id;
         this.name = name;
         this.skillAreas = skillAreas;
@@ -49,7 +49,7 @@ public class InterviewAssessorAllocateApplicationsResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewAssessorAllocateApplicationsResource that = (InterviewAssessorAllocateApplicationsResource) o;
+        InterviewAllocateOverviewResource that = (InterviewAllocateOverviewResource) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
