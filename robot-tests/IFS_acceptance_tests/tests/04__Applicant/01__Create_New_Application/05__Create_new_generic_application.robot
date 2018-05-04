@@ -1,11 +1,15 @@
 *** Settings ***
 Documentation     IFS-747 As a comp exec I am able to select a Competition type of Generic in Competition setup
-Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
-Resource          ../CompAdmin_Commons.robot
+Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
+
+
+*** Variables ***
+${competitionName}  Generic competition for TsnCs
 
 *** Test Cases ***
 User can edit six assesed questions
@@ -17,14 +21,34 @@ User can edit six assesed questions
     Then the user should see the element  jQuery=button:contains("Mark as complete")
 
 CompAdmin creates a new Generic competition
-    [Documentation]    IFS-3261
-    [Setup]  Given log in as a different user    &{Comp_admin1_credentials}
-    Given The competition admin creates a competition for    1  New Generic Test  Generic
-    When the competition moves to Open state
+    [Documentation]  IFS-3261
+    [Tags]
+    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    The competition admin creates a competition for  4  ${competitionName}  Generic
 
+Requesting the id of this Competition and moving to Open
+    [Documentation]  IFS-3261
+    ...   retrieving the id of the competition so that we can use it in urls
+    [Tags]  MySQL
+    ${competitionId} =  get comp id from comp title  ${competitionName}
+    Set suite variable  ${competitionId}
+    The competition moves to Open state  ${competitionId}
 
+Applicant Applies to Generic competition and is able to see the Ts&Cs
+    [Documentation]  IFS-1012  IFS-2879
+    [Tags]
+    [Setup]  Log in as a different user             becky.mason@gmail.com  ${short_password}
+    Given logged in user applies to competition     ${competitionName}
+    When the user clicks the button/link            link=Application details
+    Then the user fills in the Application details  Application Ts&Cs  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    When the user clicks the button/link            link=view the grant terms and conditions
+    Then the user should see the element            jQuery=h1:contains("Terms and conditions of an Innovate UK grant award")
 
 *** Keywords ***
+Custom suite setup
+    Set predefined date variables
+    The user logs-in in new browser  &{lead_applicant_credentials}
+
 The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page   ${CA_UpcomingComp}
@@ -33,8 +57,7 @@ The competition admin creates a competition for
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}
-    the internal user can see that the Generic competition has only one Application Question
-    The user removes the Project details questions and marks the Application section as done
+    the user fills in the CS Application section with custom questions  no  Generic
     the user fills in the CS Assessors
     the user clicks the button/link  link=Public content
     the user fills in the Public content and publishes  ${extraKeyword}
