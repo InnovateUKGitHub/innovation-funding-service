@@ -8,6 +8,10 @@ import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
@@ -81,9 +85,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ProjectRepository projectRepository;
-
-    @Autowired
-    private ApplicationService applicationService;
 
     @Autowired
     private PublicContentService publicContentService;
