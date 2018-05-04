@@ -338,6 +338,23 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                 ));
     }
 
+    @Test
+    public void completeSpendProfilesReview() throws Exception {
+
+        Long projectId = 1L;
+
+        when(spendProfileServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId)
+        )
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profiles review is being completed")
+                        )
+                ));
+    }
+
 
     private Map<Long, List<BigDecimal>> buildSpendProfileCostsPerCategoryMap() {
 

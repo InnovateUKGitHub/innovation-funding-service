@@ -516,6 +516,20 @@ include::{snippets}/project/mark-spend-profile-incomplete/http-response.adoc[]
 ===== Curl Example
 include::{snippets}/project/mark-spend-profile-incomplete/curl-request.adoc[]
 
+
+=== Complete Spend Profiles review
+==== Success
+===== Request
+include::{snippets}/project/complete-spend-profiles-review/http-request.adoc[]
+include::{snippets}/project/complete-spend-profiles-review/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/complete-spend-profiles-review/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/complete-spend-profiles-review/curl-request.adoc[]
+
+
 === Get Viability
 ==== Success
 ===== Request
