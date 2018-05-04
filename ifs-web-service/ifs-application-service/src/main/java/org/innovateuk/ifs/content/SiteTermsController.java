@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.security.StatelessAuthenticationFilter.SAVED_REQUEST_URL_COOKIE_NAME;
@@ -87,7 +88,8 @@ public class SiteTermsController {
     }
 
     private String getRedirectUrl(HttpServletRequest request) {
-        return "redirect:" + cookieUtil.getCookieValue(request, SAVED_REQUEST_URL_COOKIE_NAME);
+        String redirectUrl = cookieUtil.getCookieValue(request, SAVED_REQUEST_URL_COOKIE_NAME);
+        return format("redirect:%s", isNotBlank(redirectUrl) ? redirectUrl : "/");
     }
 
     private void deleteSavedRequestUrlCookie(HttpServletResponse response) {

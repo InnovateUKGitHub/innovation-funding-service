@@ -61,7 +61,7 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
     @Test
     public void agreeNewTermsAndConditions() throws Exception {
         long userId = 1L;
-        String expectedRedirectUrl = "/applicant/dashboard";
+        String expectedRedirectUrl = "/application/99/summary";
 
         when(userService.agreeNewTermsAndConditions(userId)).thenReturn(serviceSuccess());
         when(cookieUtil.getCookieValue(isA(HttpServletRequest.class), eq("savedRequestUrl")))
@@ -70,7 +70,7 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
         mockMvc.perform(post("/info/new-terms-and-conditions")
                 .param("agree", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/applicant/dashboard"));
+                .andExpect(redirectedUrl("/application/99/summary"));
 
         InOrder inOrder = inOrder(cookieUtil, userService);
         inOrder.verify(userService).agreeNewTermsAndConditions(userId);
@@ -101,5 +101,23 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
                 ("agree").getDefaultMessage());
 
         verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    public void agreeNewTermsAndConditions_noRedirectUrlCookieRedirectsToDashboard() throws Exception {
+        long userId = 1L;
+
+        when(userService.agreeNewTermsAndConditions(userId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/info/new-terms-and-conditions")
+                .param("agree", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+
+        InOrder inOrder = inOrder(cookieUtil, userService);
+        inOrder.verify(userService).agreeNewTermsAndConditions(userId);
+        inOrder.verify(cookieUtil).getCookieValue(isA(HttpServletRequest.class), eq("savedRequestUrl"));
+        inOrder.verify(cookieUtil).removeCookie(isA(HttpServletResponse.class), eq("savedRequestUrl"));
+        inOrder.verifyNoMoreInteractions();
     }
 }
