@@ -65,7 +65,7 @@ public interface UserRestService {
 
     RestResult<Void> editInternalUser(EditUserResource editUserResource);
 
-    RestResult<Void> agreeNewSiteTermsAndConditions(Long userId);
+    RestResult<Void> agreeNewSiteTermsAndConditions(long userId);
 
     RestResult<Void> deactivateUser(Long userId);
     RestResult<Void> reactivateUser(Long userId);

@@ -148,7 +148,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void agreeNewTermsAndConditions() {
-        Long userId = 1L;
+        long userId = 1L;
 
         when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restSuccess());
 
@@ -159,7 +159,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void agreeNewTermsAndConditions_userNotFound() {
-        Long userId = 1L;
+        long userId = 1L;
 
         when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restFailure(forbiddenError()));
 

@@ -364,7 +364,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
     @Test
     public void agreeNewSiteTermsAndConditions() {
-        Long userId = 1L;
+        long userId = 1L;
         setupPostWithRestResultExpectations(format("%s/id/%s/agreeNewSiteTermsAndConditions", usersUrl, userId),
                 HttpStatus.OK);
         assertTrue(service.agreeNewSiteTermsAndConditions(userId).isSuccess());

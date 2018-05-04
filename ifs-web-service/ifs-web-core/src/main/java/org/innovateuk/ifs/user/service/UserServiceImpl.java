@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<Void> agreeNewTermsAndConditions(Long userId) {
+    public ServiceResult<Void> agreeNewTermsAndConditions(long userId) {
         return userRestService.agreeNewSiteTermsAndConditions(userId).toServiceResult();
     }
 }

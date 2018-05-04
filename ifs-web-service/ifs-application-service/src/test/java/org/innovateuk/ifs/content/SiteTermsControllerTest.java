@@ -60,7 +60,7 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
 
     @Test
     public void agreeNewTermsAndConditions() throws Exception {
-        Long userId = 1L;
+        long userId = 1L;
         String expectedRedirectUrl = "/applicant/dashboard";
 
         when(userService.agreeNewTermsAndConditions(userId)).thenReturn(serviceSuccess());
