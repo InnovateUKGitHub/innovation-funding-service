@@ -255,8 +255,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         when(spendProfileServiceMock.getSpendProfile(projectOrganisationCompositeId)).
                 thenReturn(serviceFailure(CommonErrors.notFoundError(SpendProfile.class, projectId, organisationId)));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
-        )
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isNotFound())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -306,8 +305,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
-        )
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -327,8 +325,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
-        )
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -345,8 +342,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId)
-        )
+        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
