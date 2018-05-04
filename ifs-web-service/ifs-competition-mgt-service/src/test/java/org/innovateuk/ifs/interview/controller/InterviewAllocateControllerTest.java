@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.commons.rest.RestSuccess;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
@@ -15,7 +14,6 @@ import org.innovateuk.ifs.management.viewmodel.InterviewAllocateOverviewViewMode
 import org.innovateuk.ifs.management.viewmodel.InterviewAssessorApplicationsViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
