@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -10,7 +11,6 @@ import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -36,7 +36,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
@@ -169,22 +168,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         //Verify that the entity is deleted
         verify(assessmentParticipantRepositoryMock).delete(competitionParticipant);
-    }
-
-    @Test
-    public void getCompetitionsByUserId() throws Exception {
-        List<Competition> competitions = Lists.newArrayList(new Competition());
-        List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
-        List<Long> competitionIds = asList(1L,2L,3L);
-        Long userId = 9421L;
-
-        when(applicationServiceMock.findByUserId(userId)).thenReturn(serviceSuccess(newApplicationResource().withCompetition(1L, 2L, 2L, 3L, 3L, 3L).build(6)));
-        when(competitionRepositoryMock.findByIdIsIn(competitionIds)).thenReturn(competitions);
-        when(competitionMapperMock.mapToResource(competitions)).thenReturn(resources);
-
-        List<CompetitionResource> response = service.getCompetitionsByUserId(userId).getSuccess();
-
-        assertEquals(resources, response);
     }
 
     @Test
