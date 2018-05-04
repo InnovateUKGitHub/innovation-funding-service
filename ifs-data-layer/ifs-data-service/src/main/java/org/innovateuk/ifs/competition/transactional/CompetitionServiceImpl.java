@@ -1,17 +1,12 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
