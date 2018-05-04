@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocateService;
-import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,5 +30,21 @@ public class InterviewAllocateController {
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable) {
         return interviewAllocateService.getAllocateApplicationsOverview(competitionId, pageable).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/allocated-applications/{assessorId}")
+    public RestResult<InterviewApplicationPageResource> getAllocatedApplications(
+            @PathVariable long competitionId,
+            @PathVariable long assessorId,
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "interviewAssignment.target.name", direction = Sort.Direction.ASC) Pageable pageable) {
+        return interviewAllocateService.getAllocatedApplications(competitionId, assessorId, pageable).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/unallocated-applications/{assessorId}")
+    public RestResult<InterviewApplicationPageResource> getUnallocatedApplications(
+            @PathVariable long competitionId,
+            @PathVariable long assessorId,
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "interviewAssignment.target.name", direction = Sort.Direction.ASC) Pageable pageable) {
+        return interviewAllocateService.getUnallocatedApplications(competitionId, assessorId, pageable).toGetResponse();
     }
 }
