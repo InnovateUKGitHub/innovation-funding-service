@@ -32,13 +32,6 @@ public class ReviewInviteStatisticsResource {
         return declined;
     }
 
-
-    // TODO IFS-3308 remove in S24
-    @Deprecated
-    public int getPending() {
-        return invited - (accepted + declined);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
