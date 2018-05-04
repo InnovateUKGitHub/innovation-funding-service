@@ -15,3 +15,6 @@ def enabled = project.hasProperty('initialise') ? project.property('initialise')
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
+if (enabled) {
+    buildDocker.outputs.upToDateWhen { false }
+}
