@@ -15,12 +15,15 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
+
 /**
  * Handles the other funding, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
 public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     public static final String COST_KEY = "other-funding";
+    public static final String OTHER_FUNDING_NAME = OTHER_FUNDING.getName();
 
     @Autowired
     OtherFundingValidator validator;
@@ -51,8 +54,11 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         return buildRowItem(cost);
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), cost.getItem(), cost.getCost());
+    private FinanceRowItem buildRowItem(FinanceRow cost) {
+        if (OTHER_FUNDING_NAME.equals(cost.getDescription())) {
+            return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), null, cost.getCost());
+        }
+        return new OtherFunding(cost.getId(), null, cost.getDescription(), cost.getItem(), cost.getCost());
     }
 
     private ApplicationFinanceRow mapOtherFunding(FinanceRowItem costItem) {

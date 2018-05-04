@@ -21,6 +21,8 @@ subprojects {
         }
     }
 
+    createContainer.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+
     osStageRemote.onlyIf { !isNamedEnv() }
     osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
     osStageRemote.tag = sqlVersion
@@ -36,6 +38,9 @@ subprojects {
     def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
     [stop, removeContainer, createContainer, deploy, wait].each { task ->
         task.enabled = enabled
+    }
+    if (enabled) {
+        buildDocker.outputs.upToDateWhen { false }
     }
 
     task createTestSchema(type: Exec) {
