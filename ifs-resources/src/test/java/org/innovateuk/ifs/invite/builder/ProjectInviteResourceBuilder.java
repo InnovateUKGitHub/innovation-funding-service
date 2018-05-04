@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.invite.builder;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 
 public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectResource, ProjectInviteResourceBuilder> {
@@ -56,12 +56,20 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setProject(projectId));
     }
 
+    public ProjectInviteResourceBuilder withApplicationId(final Long applicationId) {
+        return with((inviteResource) -> inviteResource.setApplicationId(applicationId));
+    }
+
     public  ProjectInviteResourceBuilder withOrganisation(final Long organisationId) {
         return with((inviteResource) -> inviteResource.setOrganisation(organisationId));
     }
 
     public  ProjectInviteResourceBuilder withLeadOrganisation(final Long leadOrganisationId) {
         return with((inviteResource) -> inviteResource.setLeadOrganisationId(leadOrganisationId));
+    }
+
+    public  ProjectInviteResourceBuilder withCompetitionName(final String competitionName) {
+        return with((inviteResource) -> inviteResource.setCompetitionName(competitionName));
     }
 
     public  ProjectInviteResourceBuilder withInviteOrganisationName(final String inviteOrganisationName) {

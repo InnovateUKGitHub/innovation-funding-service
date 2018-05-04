@@ -52,49 +52,91 @@ public class InviteProjectResource extends InviteResource {
         this.project = project;
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getUser() { return user; }
+    public Long getUser() {
+        return user;
+    }
 
-    public void setUser(Long user) { this.user = user; }
+    public void setUser(Long user) {
+        this.user = user;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getNameConfirmed() { return nameConfirmed; }
+    public String getNameConfirmed() {
+        return nameConfirmed;
+    }
 
-    public void setNameConfirmed(String nameConfirmed) { this.nameConfirmed = nameConfirmed; }
+    public void setNameConfirmed(String nameConfirmed) {
+        this.nameConfirmed = nameConfirmed;
+    }
 
-    public String getEmail() { return email; }
+    public String getEmail() {
+        return email;
+    }
 
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public Long getProject() { return project; }
+    public Long getProject() {
+        return project;
+    }
 
-    public void setProject(Long project) { this.project = project; }
+    public void setProject(Long project) {
+        this.project = project;
+    }
 
-    public Long getOrganisation() { return organisation; }
+    public Long getOrganisation() {
+        return organisation;
+    }
 
-    public void setOrganisation(Long organisation) { this.organisation = organisation; }
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
+    }
 
-    public Long getApplicationId() { return applicationId; }
+    public Long getApplicationId() {
+        return applicationId; }
 
-    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId; }
 
-    public String getProjectName() { return projectName; }
+    public String getProjectName() {
+        return projectName;
+    }
 
-    public void setProjectName(String projectName) { this.projectName = projectName; }
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 
-    public String getHash() { return hash; }
+    public String getHash() {
+        return hash;
+    }
 
-    public void setHash(String hash) { this.hash = hash; }
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
 
-    public InviteStatus getStatus() { return status; }
+    public InviteStatus getStatus() {
+        return status;
+    }
 
-    public void setStatus(InviteStatus status) { this.status = status; }
+    public void setStatus(InviteStatus status) {
+        this.status = status;
+    }
 
     public Long getLeadOrganisationId() {
         return leadOrganisationId;

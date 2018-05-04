@@ -70,7 +70,7 @@
     <!--/* Changes body class from no-js to js when js is enabled */-->
     <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe th:src="'https://www.googletagmanager.com/ns.html?id='+${GoogleAnalyticsTrackingID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript th:if="${GoogleAnalyticsTrackingID}"><iframe th:src="'https://www.googletagmanager.com/ns.html?id='+${GoogleAnalyticsTrackingID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <th:block th:insert="fragments/elements :: skiplink-container" />
     <th:block th:insert="fragments/elements :: global-cookie-message" />
