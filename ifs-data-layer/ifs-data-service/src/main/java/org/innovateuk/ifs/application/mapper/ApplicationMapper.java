@@ -40,7 +40,7 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
     @Mappings({
             @Mapping(source = "competition.name", target = "competitionName"),
             @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
-            @Mapping(source = "applicationProcess.activityState", target = "applicationState"),
+            @Mapping(source = "applicationProcess.processState", target = "applicationState"),
             @Mapping(source = "applicationProcess.ineligibleOutcomes", target = "ineligibleOutcome"),
             @Mapping(target = "leadOrganisationName", ignore = true)
     })

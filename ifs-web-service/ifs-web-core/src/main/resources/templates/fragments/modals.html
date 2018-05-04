@@ -116,7 +116,7 @@
         <p>Your bank details will now be submitted to Innovate UK.</p>
         <hr />
         <div method="post">
-            <button class="button" name="submit-app-details">Submit</button>
+            <button class="button" id="submit-bank-details" name="submit-app-details">Submit</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -147,7 +147,7 @@
         <hr />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
-                <button class="button" name="submit-other-documents" type="submit">Submit</button>
+                <button class="button" id="submit-other-documents" name="submit-other-documents" type="submit">Submit</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
@@ -178,7 +178,7 @@
         <p>Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
         <hr />
         <div>
-            <button class="button" name="submit-change-bank-details">Update bank account details</button>
+            <button class="button" id="submit-change-bank-details" name="submit-change-bank-details">Update bank account details</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -191,7 +191,7 @@
         <p>This step should only be done after the bank account for the organisation has been checked and meets the requirements of Innovate UK</p>
         <hr />
         <div>
-            <button class="button" name="submit-approve-bank-details">Approve account</button>
+            <button class="button" id="submit-approve-bank-details" name="submit-approve-bank-details">Approve account</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>

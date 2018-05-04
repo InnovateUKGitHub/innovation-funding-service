@@ -13,9 +13,10 @@ import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -117,6 +118,8 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
         InviteProjectResource inviteResource = inviteMapper.mapToResource(invite);
         Organisation organisation = organisationRepository.findOne(inviteResource.getLeadOrganisationId());
         inviteResource.setLeadOrganisation(organisation.getName());
+        ProjectResource project = projectService.getProjectById(inviteResource.getProject()).getSuccess();
+        inviteResource.setApplicationId(project.getApplication());
         return inviteResource;
     }
 

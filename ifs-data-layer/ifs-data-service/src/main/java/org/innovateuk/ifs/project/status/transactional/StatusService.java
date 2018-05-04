@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;

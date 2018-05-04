@@ -23,17 +23,19 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.transactional.ProjectServiceImpl;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
-import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
-import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
-import org.innovateuk.ifs.project.transactional.EmailService;
-import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
+import org.innovateuk.ifs.util.EmailService;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -54,6 +56,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -70,7 +73,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail
  */
 @Service
 public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implements ProjectDetailsService {
-    private static final Log LOG = LogFactory.getLog(org.innovateuk.ifs.project.transactional.ProjectServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
 
@@ -119,6 +122,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     enum Notifications {
         INVITE_FINANCE_CONTACT,
         INVITE_PROJECT_MANAGER
+    }
+
+    @Override
+    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
+                notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
     }
 
     @Override
@@ -415,8 +424,10 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         String leadOrganisationName = leadOrganisation.getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
+        globalArguments.put("applicationId", inviteResource.getApplicationId());
         globalArguments.put("leadOrganisation", leadOrganisationName);
         globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
+        globalArguments.put("competitionName", inviteResource.getCompetitionName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
         return globalArguments;
     }

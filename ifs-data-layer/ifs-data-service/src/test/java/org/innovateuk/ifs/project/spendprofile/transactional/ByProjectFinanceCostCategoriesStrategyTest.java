@@ -27,9 +27,9 @@ import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMateria
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
-import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
-import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
-import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.spendprofile.transactional.ByProjectFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;

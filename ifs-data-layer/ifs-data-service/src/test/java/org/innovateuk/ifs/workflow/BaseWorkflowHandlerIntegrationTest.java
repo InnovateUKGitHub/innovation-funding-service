@@ -2,7 +2,6 @@ package org.innovateuk.ifs.workflow;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -97,7 +96,7 @@ public abstract class BaseWorkflowHandlerIntegrationTest<WorkflowHandlerType, Pr
     protected abstract Class<ProcessRepositoryType> getProcessRepositoryType();
 
     protected List<Class<? extends Repository>> getRepositoriesToMock() {
-        return asList(ActivityStateRepository.class, getProcessRepositoryType());
+        return asList(getProcessRepositoryType());
     }
 
     private void setRepositoriesOnWorkflowComponents(Function<Pair<? extends Repository, ? extends Repository>, ? extends Repository> repositorySelector) {

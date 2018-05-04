@@ -140,7 +140,6 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
         String expectedQuestionScore = "10";
 
         application.setCompetition(competition.getId());
-        application.setApplicationState(ApplicationState.IN_PANEL);
 
         competition.setHasAssessmentPanel(true);
         competition.setCompetitionStatus(FUNDERS_PANEL);

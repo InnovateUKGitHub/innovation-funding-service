@@ -41,12 +41,12 @@ public class AllFinanceTotalsSenderImplTest {
                 .build(2)
                 .stream();
 
-        when(applicationRepository.findByApplicationProcessActivityStateStateIn(any()))
+        when(applicationRepository.findByApplicationProcessActivityStateIn(any()))
                 .thenReturn(applicationsStream);
         ServiceResult<Void> serviceResult = allFinanceTotalsSender.sendAllFinanceTotals();
 
         assertTrue(serviceResult.isSuccess());
-        verify(applicationRepository, only()).findByApplicationProcessActivityStateStateIn(any());
+        verify(applicationRepository, only()).findByApplicationProcessActivityStateIn(any());
         verify(applicationFinanceTotalsSender, times(2)).sendFinanceTotalsForApplication(any());
         verifyNoMoreInteractions(applicationRepository, applicationFinanceTotalsSender);
     }
