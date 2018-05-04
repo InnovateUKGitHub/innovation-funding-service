@@ -46,6 +46,7 @@ The competition admin creates The Prince's Trust Comp
     the user navigates to the page   ${CA_UpcomingComp}
     the user clicks the button/link  jQuery=.button:contains("Create competition")
     the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${comp_type}
+    the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}

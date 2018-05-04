@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -218,5 +219,25 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         verify(competitionService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
 
+    }
+
+    @Test
+    public void updateTermsAndConditions() throws Exception {
+        final Long competitionId = 1L;
+        final Long termsAndConditionsId = 2L;
+
+        when(competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/updateTermsAndConditions/{tcId}", competitionId, termsAndConditionsId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which the terms and conditions need to be updated"),
+                                parameterWithName("tcId").description("The terms and conditions id to update it to")
+                        )
+                ));
+
+        verify(competitionService, only()).updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
     }
 }
