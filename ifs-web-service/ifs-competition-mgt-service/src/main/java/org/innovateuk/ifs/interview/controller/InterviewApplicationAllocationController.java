@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.interview.controller;
 
-import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.model.InterviewAllocateApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.InterviewApplicationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This controller will handle all Competition Management requests related to allocating applications to assessors for interview panel.
@@ -28,6 +26,9 @@ public class InterviewApplicationAllocationController {
 
     @Autowired
     private InterviewAllocateApplicationsModelPopulator interviewAllocateApplicationsModelPopulator;
+
+    @Autowired
+    private InterviewApplicationsModelPopulator interviewApplicationsModelPopulator;
 
     @Autowired
     private CompetitionService competitionService;
@@ -49,6 +50,20 @@ public class InterviewApplicationAllocationController {
         model.addAttribute("originQuery", originQuery);
 
         return "competition/assessors-allocate-applications";
+    }
+
+    @GetMapping("/allocate-applications/{userId}")
+    public String applications(Model model,
+                               @PathVariable("competitionId") long competitionId,
+                               @PathVariable("userId") long userId
+    ) {
+
+        model.addAttribute("model", interviewApplicationsModelPopulator.populateModel(
+                competitionId,
+                userId
+        ));
+
+        return "competition/interview-applications";
     }
 
 }
