@@ -15,6 +15,30 @@ public class TermsAndConditionsRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
+    public void test_getById() {
+        TermsAndConditionsResource returnedResponse = newTermsAndConditionsResource().build();
+
+        setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/getById/" + competitionId,
+                TermsAndConditionsResource.class, returnedResponse);
+        TermsAndConditionsResource response = service.getById(competitionId).getSuccess();
+        assertNotNull(response);
+        assertEquals(returnedResponse, response);
+    }
+
+    @Test
+    public void test_getLatestTermsAndConditions() {
+        List<TermsAndConditionsResource> returnedResponse = new ArrayList<>();
+        returnedResponse.add(newTermsAndConditionsResource().build());
+
+        setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/getLatest",
+                termsAndConditionsResourceListType(), returnedResponse);
+        List<TermsAndConditionsResource> response = service.getLatestVersionsForAllTermsAndConditions().getSuccess();
+
+        assertNotNull(response);
+        assertEquals(returnedResponse, response);
+    }
+
+    @Test
     public void getLatestSiteTermsAndConditions() {
         SiteTermsAndConditionsResource expected = newSiteTermsAndConditionsResource().build();
 
@@ -23,5 +47,4 @@ public class TermsAndConditionsRestServiceMocksTest extends BaseRestServiceUnitT
 
         assertSame(expected, service.getLatestSiteTermsAndConditions().getSuccess());
     }
-
 }

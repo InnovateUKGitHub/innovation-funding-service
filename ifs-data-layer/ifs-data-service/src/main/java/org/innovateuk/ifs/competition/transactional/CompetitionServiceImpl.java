@@ -7,14 +7,12 @@ import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
@@ -68,6 +66,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private TermsAndConditionsRepository termsAndConditionsRepository;
 
     @Autowired
     private CompetitionMapper competitionMapper;
@@ -368,5 +369,20 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
 
         return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId).longValue());
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
+        TermsAndConditions termsAndConditions = termsAndConditionsRepository.findOne(termsAndConditionsId);
+        if (termsAndConditions != null) {
+            return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+                    .andOnSuccess(competition -> {
+                        competition.setTermsAndConditions(termsAndConditions);
+                        competitionRepository.save(competition);
+                        return serviceSuccess();
+                    });
+        }
+        return serviceFailure(notFoundError(TermsAndConditions.class, termsAndConditionsId));
     }
 }
