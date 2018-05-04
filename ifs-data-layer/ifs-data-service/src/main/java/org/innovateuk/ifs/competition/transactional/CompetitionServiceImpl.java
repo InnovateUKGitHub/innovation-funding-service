@@ -10,7 +10,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -68,7 +68,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private TermsAndConditionsRepository termsAndConditionsRepository;
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
     @Autowired
     private CompetitionMapper competitionMapper;
@@ -374,7 +374,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
-        TermsAndConditions termsAndConditions = termsAndConditionsRepository.findOne(termsAndConditionsId);
+        GrantTermsAndConditions termsAndConditions = grantTermsAndConditionsRepository.findOne(termsAndConditionsId);
         if (termsAndConditions != null) {
             return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
                     .andOnSuccess(competition -> {
@@ -383,6 +383,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         return serviceSuccess();
                     });
         }
-        return serviceFailure(notFoundError(TermsAndConditions.class, termsAndConditionsId));
+        return serviceFailure(notFoundError(GrantTermsAndConditions.class, termsAndConditionsId));
     }
 }

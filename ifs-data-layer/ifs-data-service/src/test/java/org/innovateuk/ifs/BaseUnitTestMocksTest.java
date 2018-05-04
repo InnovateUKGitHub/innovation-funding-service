@@ -45,7 +45,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;

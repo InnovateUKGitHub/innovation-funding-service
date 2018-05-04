@@ -1,29 +1,25 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
-import static org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder.newTermsAndConditionsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<TermsAndConditionsController>  {
+public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<TermsAndConditionsController> {
 
     @Mock
     private TermsAndConditionsService termsAndConditionsService;
@@ -37,7 +33,8 @@ public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<
     public void getById() throws Exception {
         final Long competitionId = 1L;
 
-        when(termsAndConditionsService.getById(competitionId)).thenReturn(serviceSuccess(newTermsAndConditionsResource().build()));
+        when(termsAndConditionsService.getById(competitionId)).thenReturn(serviceSuccess
+                (newGrantTermsAndConditionsResource().build()));
 
         mockMvc.perform(get("/terms-and-conditions/getById/{id}", competitionId))
                 .andExpect(status().isOk());
@@ -47,9 +44,11 @@ public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void getLatestTermsAndConditions() throws Exception {
-        List<TermsAndConditionsResource> termsAndConditionsResourceList = TermsAndConditionsResourceBuilder.newTermsAndConditionsResource().build(2);
+        List<GrantTermsAndConditionsResource> termsAndConditionsResourceList = newGrantTermsAndConditionsResource()
+                .build(2);
 
-        when(termsAndConditionsService.getLatestVersionsForAllTermsAndConditions()).thenReturn(serviceSuccess(termsAndConditionsResourceList));
+        when(termsAndConditionsService.getLatestVersionsForAllTermsAndConditions()).thenReturn(serviceSuccess
+                (termsAndConditionsResourceList));
 
         mockMvc.perform(get("/terms-and-conditions/getLatest"))
                 .andExpect(status().isOk())

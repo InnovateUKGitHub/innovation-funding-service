@@ -2,55 +2,61 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.SiteTermsAndConditions;
-import org.innovateuk.ifs.competition.domain.TermsAndConditions;
+import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.mapper.SiteTermsAndConditionsMapper;
-import org.innovateuk.ifs.competition.mapper.TermsAndConditionsMapper;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.SiteTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.junit.Test;
 import org.mockito.InOrder;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsBuilder.newGrantTermsAndConditions;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsBuilder.newSiteTermsAndConditions;
-import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder
-        .newSiteTermsAndConditionsResource;
-import static org.innovateuk.ifs.competition.builder.TermsAndConditionsBuilder.newTermsAndConditions;
-import static org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder.newTermsAndConditionsResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 public class TermsAndConditionsServiceImplTest extends BaseServiceUnitTest<TermsAndConditionsServiceImpl> {
 
     @Mock
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
+    @Mock
     private SiteTermsAndConditionsRepository siteTermsAndConditionsRepository;
+
+    @Mock
+    private GrantTermsAndConditionsMapper grantTermsAndConditionsMapper;
 
     @Mock
     private SiteTermsAndConditionsMapper siteTermsAndConditionsMapper;
 
     @Override
     protected TermsAndConditionsServiceImpl supplyServiceUnderTest() {
-        return new TermsAndConditionsServiceImpl(siteTermsAndConditionsRepository, siteTermsAndConditionsMapper);
+        return new TermsAndConditionsServiceImpl(grantTermsAndConditionsRepository,
+                siteTermsAndConditionsRepository,
+                grantTermsAndConditionsMapper,
+                siteTermsAndConditionsMapper);
     }
 
     @Test
     public void test_getTemplateById() {
         String name = "Innovate UK";
-        TermsAndConditions termsAndConditions = newTermsAndConditions().withName(name).build();
-        TermsAndConditionsResource termsAndConditionsResource = newTermsAndConditionsResource().withName(name).build();
+        GrantTermsAndConditions termsAndConditions = newGrantTermsAndConditions().withName(name).build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource().withName(name)
+                .build();
 
-        when(termsAndConditionsRepository.findOne(termsAndConditions.getId())).thenReturn(termsAndConditions);
-        when(termsAndConditionsMapper.mapToResource(termsAndConditions)).thenReturn(termsAndConditionsResource);
+        when(grantTermsAndConditionsRepository.findOne(termsAndConditions.getId())).thenReturn(termsAndConditions);
+        when(grantTermsAndConditionsMapper.mapToResource(termsAndConditions)).thenReturn(termsAndConditionsResource);
 
-        ServiceResult<TermsAndConditionsResource> result = service.getById(termsAndConditions.getId());
+        ServiceResult<GrantTermsAndConditionsResource> result = service.getById(termsAndConditions.getId());
         assertTrue(result.isSuccess());
         assertNotNull(result);
         assertEquals(name, result.getSuccess().getName());
@@ -58,20 +64,23 @@ public class TermsAndConditionsServiceImplTest extends BaseServiceUnitTest<Terms
 
     @Test
     public void test_getTemplateByNull() {
-        ServiceResult<TermsAndConditionsResource> result = service.getById(null);
+        ServiceResult<GrantTermsAndConditionsResource> result = service.getById(null);
         assertTrue(result.isFailure());
         assertNotNull(result);
     }
 
     @Test
     public void test_getLatestVersionsForAllTermsAndConditions() {
-        List<TermsAndConditions> termsAndConditionsList = newTermsAndConditions().build(3);
-        List<TermsAndConditionsResource> termsAndConditionsResourceList = newTermsAndConditionsResource().build(3);
+        List<GrantTermsAndConditions> termsAndConditionsList = newGrantTermsAndConditions().build(3);
+        List<GrantTermsAndConditionsResource> termsAndConditionsResourceList = newGrantTermsAndConditionsResource()
+                .build(3);
 
-        when(termsAndConditionsRepository.findLatestVersions()).thenReturn(termsAndConditionsList);
-        when(termsAndConditionsMapper.mapToResource(termsAndConditionsList)).thenReturn(termsAndConditionsResourceList);
+        when(grantTermsAndConditionsRepository.findLatestVersions()).thenReturn(termsAndConditionsList);
+        when(grantTermsAndConditionsMapper.mapToResource(termsAndConditionsList)).thenReturn
+                (termsAndConditionsResourceList);
 
-        ServiceResult<List<TermsAndConditionsResource>> result = service.getLatestVersionsForAllTermsAndConditions();
+        ServiceResult<List<GrantTermsAndConditionsResource>> result = service
+                .getLatestVersionsForAllTermsAndConditions();
         assertTrue(result.isSuccess());
         assertNotNull(result);
         assertEquals(3, result.getSuccess().size());

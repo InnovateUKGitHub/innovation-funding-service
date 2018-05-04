@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +30,7 @@ public class TermsAndConditionsController {
     }
 
     @GetMapping("/getById/{id}")
-    public RestResult<TermsAndConditionsResource> getById( @PathVariable("id") final Long id){
+    public RestResult<GrantTermsAndConditionsResource> getById(@PathVariable("id") final Long id) {
         return termsAndConditionsService.getById(id).toGetResponse();
     }
 
