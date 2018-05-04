@@ -87,9 +87,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private ProjectRepository projectRepository;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private PublicContentService publicContentService;
 
     @Autowired
