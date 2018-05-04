@@ -12,7 +12,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 ${competitionName}  Generic competition for TsnCs
 
 *** Test Cases ***
-User can edit six assesed questions
+User can edit the assesed question
     [Documentation]    IFS-747
     [Tags]  HappyPath
     [Setup]  logged in user applies to competition  ${openGenericCompetition}
