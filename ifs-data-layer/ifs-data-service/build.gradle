@@ -34,8 +34,10 @@ def enabled = project.hasProperty('ifs.data-service.enabled') ? project.property
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
-deploy.dependsOn ":docker:ifs-mysql:ifs-database:deploy"
-createContainer.portBindings = ['9006:8000']
+deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
+deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
+
+createContainer.portBindings = ['8086:8080','9006:8000']
 
 
 createContainer.networkAliases=["ifs-data-service"]
@@ -69,6 +71,15 @@ ext {
 configurations {
     mapstruct
 }
+
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-file/build/classes")
+
+    dependsOn ":ifs-data-layer:data-service-commons:build"
+    dependsOn ":ifs-data-layer:data-service-file:build"
+}
+
 
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
