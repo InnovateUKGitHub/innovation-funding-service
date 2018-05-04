@@ -25,7 +25,6 @@ include::{snippets}/terms-and-conditions/get-by-id/curl-request.adoc[]
 === Find the latest grant terms and conditions by version
 ==== Request
 include::{snippets}/terms-and-conditions/get-latest/http-request.adoc[]
-include::{snippets}/terms-and-conditions/get-latest/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/terms-and-conditions/get-latest/http-response.adoc[]

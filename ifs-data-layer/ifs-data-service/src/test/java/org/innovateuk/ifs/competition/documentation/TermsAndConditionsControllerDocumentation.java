@@ -48,7 +48,7 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
-    public void getLatestTermsAndConditions() throws Exception {
+    public void getLatest() throws Exception {
         List<GrantTermsAndConditionsResource> response = grantTermsAndConditionsResourceBuilder.build(1);
         when(termsAndConditionsService.getLatestVersionsForAllTermsAndConditions()).thenReturn(serviceSuccess
                 (response));

@@ -43,7 +43,7 @@ public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void getLatestTermsAndConditions() throws Exception {
+    public void getLatest() throws Exception {
         List<GrantTermsAndConditionsResource> termsAndConditionsResourceList = newGrantTermsAndConditionsResource()
                 .build(2);
 
