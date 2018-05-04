@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.TermsAndConditions;
@@ -28,18 +27,6 @@ public interface CompetitionService {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
     ServiceResult<Void> removeInnovationLead(final Long competitionId, final Long innovationLeadUserId);
-
-    /**
-     * IFS-3016: Because of the change in ApplicantDashboardPopulator (getAllCompetitionsForUser),
-     * this endpoint is not used anymore.
-     *
-     * TODO: remove in ZDD cleanup
-     * @param userId
-     * @return
-     */
-    @ZeroDowntime(reference = "IFS-3016", description = "endpoint not being used")
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();

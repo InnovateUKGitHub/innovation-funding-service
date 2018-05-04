@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
@@ -20,9 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * CompetitionKeyStatisticsController exposes the statistics for a {@link Competition}
  */
-@ZeroDowntime(reference = "IFS-3308", description = "remove old mappings")
 @RestController
-@RequestMapping({"/competitionStatistics/{id}", "/competition-statistics/{id}"})
+@RequestMapping({"/competition-statistics/{id}"})
 public class CompetitionKeyStatisticsController {
 
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
@@ -41,7 +39,7 @@ public class CompetitionKeyStatisticsController {
         this.interviewStatisticsService = interviewStatisticsService;
     }
 
-    @GetMapping({"/readyToOpen", "/ready-to-open"})
+    @GetMapping({"/ready-to-open"})
     public RestResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getReadyToOpenKeyStatisticsByCompetition(id).toGetResponse();
     }
@@ -56,7 +54,7 @@ public class CompetitionKeyStatisticsController {
         return competitionKeyStatisticsService.getClosedKeyStatisticsByCompetition(id).toGetResponse();
     }
 
-    @GetMapping({"/inAssessment", "/in-assessment"})
+    @GetMapping({"/in-assessment"})
     public RestResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getInAssessmentKeyStatisticsByCompetition(id).toGetResponse();
     }
@@ -66,14 +64,12 @@ public class CompetitionKeyStatisticsController {
         return competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-3308", description = "remove /panel endpoint")
-    @GetMapping({"/panel", "/review"})
+    @GetMapping({"/review"})
     public RestResult<ReviewKeyStatisticsResource> getReviewStatistics(@PathVariable("id") long id) {
         return reviewStatisticsService.getReviewPanelKeyStatistics(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-3308", description = "remove /panelInvites endpoint")
-    @GetMapping({"/panelInvites", "/review-invites"})
+    @GetMapping({"/review-invites"})
     public RestResult<ReviewInviteStatisticsResource> getReviewInviteStatistics(@PathVariable("id") long id) {
         return reviewStatisticsService.getReviewInviteStatistics(id).toGetResponse();
     }

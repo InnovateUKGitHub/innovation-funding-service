@@ -2,10 +2,7 @@ package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionKeyStatisticsController;
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.junit.Test;
@@ -13,6 +10,8 @@ import org.junit.Test;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyStatisticsResourceDocs.competitionClosedKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyStatisticsResourceDocs.competitionClosedKeyStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.CompetitionFundedKeyStatisticsResourceDocs.competitionFundedKeyStatisticsResourceBuilder;
+import static org.innovateuk.ifs.documentation.CompetitionFundedKeyStatisticsResourceDocs.competitionFundedKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyStatisticsResourceDocs.competitionInAssessmentKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyStatisticsResourceDocs.competitionInAssessmentKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionOpenKeyStatisticsResourceDocs.competitionOpenKeyStatisticsResourceBuilder;
@@ -59,6 +58,8 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         ),
                         responseFields(competitionReadyToOpenKeyStatisticsResourceFields)
                 ));
+
+        verify(competitionKeyStatisticsServiceMock, only()).getReadyToOpenKeyStatisticsByCompetition(competitionId);
     }
 
     @Test
@@ -76,6 +77,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         responseFields(competitionOpenKeyStatisticsResourceFields)
                 ));
 
+        verify(competitionKeyStatisticsServiceMock, only()).getOpenKeyStatisticsByCompetition(competitionId);
     }
 
     @Test
@@ -93,6 +95,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         responseFields(competitionClosedKeyStatisticsResourceFields)
                 ));
 
+        verify(competitionKeyStatisticsServiceMock, only()).getClosedKeyStatisticsByCompetition(competitionId);
     }
 
     @Test
@@ -101,7 +104,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = competitionInAssessmentKeyStatisticsResourceBuilder.build();
 
         when(competitionKeyStatisticsServiceMock.getInAssessmentKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/inAssessment", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/in-assessment", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -110,6 +113,25 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         responseFields(competitionInAssessmentKeyStatisticsResourceFields)
                 ));
 
+        verify(competitionKeyStatisticsServiceMock, only()).getInAssessmentKeyStatisticsByCompetition(competitionId);
+    }
+
+    @Test
+    public void getFundedKeyStatistics() throws Exception {
+        long competitionId = 1L;
+        CompetitionFundedKeyStatisticsResource keyStatisticsResource = competitionFundedKeyStatisticsResourceBuilder.build();
+
+        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
+        mockMvc.perform(get("/competition-statistics/{id}/funded", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("competition-statistics/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition the stats are for")
+                        ),
+                        responseFields(competitionFundedKeyStatisticsResourceFields)
+                ));
+
+        verify(competitionKeyStatisticsServiceMock, only()).getFundedKeyStatisticsByCompetition(competitionId);
     }
 
     @Test
@@ -126,6 +148,8 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         ),
                         responseFields(reviewKeyStatisticsResourceFields)
                 ));
+
+        verify(reviewStatisticsServiceMock, only()).getReviewPanelKeyStatistics(competitionId);
     }
 
     @Test
@@ -142,6 +166,8 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         ),
                         responseFields(reviewInviteStatisticsResourceFields)
                 ));
+
+        verify(reviewStatisticsServiceMock, only()).getReviewInviteStatistics(competitionId);
     }
 
     @Test

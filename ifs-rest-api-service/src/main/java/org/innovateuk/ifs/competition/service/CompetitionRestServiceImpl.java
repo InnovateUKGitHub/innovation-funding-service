@@ -28,11 +28,6 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     }
 
     @Override
-    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
-        return getWithRestResult(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType());
-    }
-
-    @Override
     public RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
         return getWithRestResult(competitionsRestURL + "/live", competitionSearchResultItemListType());
     }
