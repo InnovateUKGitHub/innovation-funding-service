@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -52,20 +51,6 @@ public class CompetitionController {
     @GetMapping("/{id}/getOrganisationTypes")
     public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();
-    }
-
-    /**
-     * IFS-3016: Because of the change in ApplicantDashboardPopulator (getAllCompetitionsForUser),
-     * this endpoint is not used anymore.
-     *
-     * TODO: remove in ZDD cleanup
-     * @param userId
-     * @return
-     */
-    @ZeroDowntime(reference = "IFS-3016", description = "endpoint not being used")
-    @GetMapping("/getCompetitionsByUserId/{userId}")
-    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(@PathVariable("userId") final Long userId) {
-        return competitionService.getCompetitionsByUserId(userId).toGetResponse();
     }
 
     @GetMapping("/findAll")
