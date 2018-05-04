@@ -8,6 +8,7 @@ import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -91,6 +92,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private User userInDB;
 
     private User updatedUserInDB;
+
+    @Mock
+    private TermsAndConditionsService termsAndConditionsServiceMock;
 
     @Mock
     private StandardPasswordEncoder standardPasswordEncoder;

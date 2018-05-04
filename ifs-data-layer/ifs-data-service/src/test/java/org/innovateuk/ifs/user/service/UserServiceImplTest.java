@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.token.domain.Token;
@@ -60,10 +61,13 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     private static final String WEB_BASE_URL = "baseUrl";
 
     @Captor
-    ArgumentCaptor<Notification> notificationArgumentCaptor;
+    private ArgumentCaptor<Notification> notificationArgumentCaptor;
 
     @Mock
-    UserOrganisationMapper userOrganisationMapperMock;
+    private UserOrganisationMapper userOrganisationMapperMock;
+
+    @Mock
+    private TermsAndConditionsService termsAndConditionsServiceMock;
 
     @Override
     protected UserService supplyServiceUnderTest() {
