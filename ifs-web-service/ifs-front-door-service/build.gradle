@@ -17,6 +17,11 @@ def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.pr
     task.enabled = enabled
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
+
 createContainer.hostName="front-door-svc"
 createContainer.containerName="front-door-svc"
 createContainer.containerId="front-door-svc"
@@ -33,4 +38,4 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
-
+jar.dependsOn ":ifs-web-service:gulp_default"

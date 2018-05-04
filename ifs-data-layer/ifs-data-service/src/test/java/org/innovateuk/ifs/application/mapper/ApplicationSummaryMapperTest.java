@@ -1,20 +1,18 @@
 package org.innovateuk.ifs.application.mapper;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
+import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,7 +127,7 @@ public class ApplicationSummaryMapperTest {
 
     @Test
     public void testMapFundedBecauseOfStatus() {
-        source.getApplicationProcess().setActivityState(new ActivityState(ActivityType.APPLICATION, State.ACCEPTED));
+        source.getApplicationProcess().setProcessState(ApplicationState.APPROVED);
         source.setFundingDecision(null);
 
         ApplicationSummaryResource result = mapper.mapToResource(source);
@@ -140,7 +138,7 @@ public class ApplicationSummaryMapperTest {
 
     @Test
     public void testMapFundedBecauseOfFundingDecision() {
-        source.getApplicationProcess().setActivityState(new ActivityState(ActivityType.APPLICATION, State.OPEN));
+        source.getApplicationProcess().setProcessState(ApplicationState.OPEN);
         source.setFundingDecision(FundingDecisionStatus.FUNDED);
 
         ApplicationSummaryResource result = mapper.mapToResource(source);
