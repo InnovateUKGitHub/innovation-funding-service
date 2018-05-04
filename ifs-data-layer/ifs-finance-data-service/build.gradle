@@ -59,10 +59,14 @@ prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
     inputs.file("$rootProject.projectDir/ifs-resources/build/classes")
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-security/build/classes")
+
 
     dependsOn ":ifs-commons:build"
     dependsOn ":ifs-resources:build"
     dependsOn ":ifs-data-layer:data-service-commons:build"
+    dependsOn ":ifs-security:build"
+
 }
 
 configurations {
