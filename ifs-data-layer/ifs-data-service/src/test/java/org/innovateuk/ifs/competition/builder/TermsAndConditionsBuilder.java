@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.TermsAndConditions;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.util.List;
 import java.util.function.BiConsumer;

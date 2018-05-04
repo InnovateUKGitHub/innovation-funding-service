@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
+import static org.innovateuk.ifs.competition.builder.TermsAndConditionsBuilder.newTermsAndConditions;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
@@ -762,22 +763,29 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void updateTermsAndConditionsForCompetition() throws Exception {
+        TermsAndConditions termsAndConditions = newTermsAndConditions().build();
+
         Competition competition = newCompetition().build();
 
-        when(termsAndConditionsRepository.findOne(competition.getTermsAndConditions().getId())).thenReturn(competition.getTermsAndConditions());
+        when(termsAndConditionsRepository.findOne(termsAndConditions.getId()))
+                .thenReturn(termsAndConditions);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
-        ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competition.getId(), competition.getTermsAndConditions().getId());
+        ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competition.getId(), termsAndConditions.getId());
 
         assertTrue(result.isSuccess());
+        assertEquals(competition.getTermsAndConditions().getId(), termsAndConditions.getId());
 
         //Verify that the entity is saved
+        verify(competitionRepositoryMock).findOne(competition.getId());
         verify(competitionRepositoryMock).save(competition);
+        verify(termsAndConditionsRepository).findOne(termsAndConditions.getId());
     }
 
     @Test
     public void updateInvalidTermsAndConditionsForCompetition() throws Exception {
         Competition competition = newCompetition().build();
+
         when(termsAndConditionsRepository.findOne(competition.getTermsAndConditions().getId())).thenReturn(null);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
