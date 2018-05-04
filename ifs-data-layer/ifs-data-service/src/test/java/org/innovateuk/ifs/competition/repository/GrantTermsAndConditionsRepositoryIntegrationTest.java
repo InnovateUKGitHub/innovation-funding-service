@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsBuilder.newGrantTermsAndConditions;
 
-public class GrantTermsAndConditionsRespositoryIntegrationTest extends
+public class GrantTermsAndConditionsRepositoryIntegrationTest extends
         BaseRepositoryIntegrationTest<GrantTermsAndConditionsRepository> {
 
     @Autowired
