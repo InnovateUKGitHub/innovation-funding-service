@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocateRestServiceImpl;
 import org.junit.Test;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
 import static org.junit.Assert.assertEquals;
 
 public class InterviewAllocateRestServiceImplTest extends BaseRestServiceUnitTest<InterviewAllocateRestServiceImpl> {
@@ -24,13 +24,13 @@ public class InterviewAllocateRestServiceImplTest extends BaseRestServiceUnitTes
         long competitionId = 1L;
         int page = 1;
 
-        InterviewAssessorAllocateApplicationsPageResource expected = newInterviewAssessorAllocateApplicationsPageResource().build();
+        InterviewAllocateOverviewPageResource expected = newInterviewAssessorAllocateApplicationsPageResource().build();
 
         String expectedUrl = format("%s/%s/%s?page=1", restUrl, "allocate-overview", competitionId);
 
-        setupGetWithRestResultExpectations(expectedUrl, InterviewAssessorAllocateApplicationsPageResource.class, expected);
+        setupGetWithRestResultExpectations(expectedUrl, InterviewAllocateOverviewPageResource.class, expected);
 
-        InterviewAssessorAllocateApplicationsPageResource actual = service.getAllocateApplicationsOverview(competitionId, page)
+        InterviewAllocateOverviewPageResource actual = service.getAllocateApplicationsOverview(competitionId, page)
                 .getSuccess();
 
         assertEquals(expected, actual);

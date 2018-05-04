@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.invite.builder;
 
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
 import org.junit.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.invite.builder.InterviewAssessorAllocateApplicationsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
 import static org.junit.Assert.assertEquals;
 
-public class InterviewAssessorAllocateApplicationsPageResourceBuilderTest {
+public class InterviewAllocateOverviewPageResourceBuilderTest {
 
     private int[] numbers = {1, 2};
     private List[] contents = {asList(1, 2, 3), asList(4, 5, 6)};
@@ -19,7 +19,7 @@ public class InterviewAssessorAllocateApplicationsPageResourceBuilderTest {
 
     @Test
     public void buildOne() throws Exception {
-        InterviewAssessorAllocateApplicationsPageResource resource = newInterviewAssessorAllocateApplicationsPageResource()
+        InterviewAllocateOverviewPageResource resource = newInterviewAssessorAllocateApplicationsPageResource()
                 .withContent(contents[0])
                 .withNumber(numbers[0])
                 .withSize(sizes[0])
@@ -36,7 +36,7 @@ public class InterviewAssessorAllocateApplicationsPageResourceBuilderTest {
 
     @Test
     public void buildMany() throws Exception {
-        List<InterviewAssessorAllocateApplicationsPageResource> resources = newInterviewAssessorAllocateApplicationsPageResource()
+        List<InterviewAllocateOverviewPageResource> resources = newInterviewAssessorAllocateApplicationsPageResource()
                 .withContent(contents[0], contents[1])
                 .withNumber(numbers[0], numbers[1])
                 .withSize(sizes[0], sizes[1])
