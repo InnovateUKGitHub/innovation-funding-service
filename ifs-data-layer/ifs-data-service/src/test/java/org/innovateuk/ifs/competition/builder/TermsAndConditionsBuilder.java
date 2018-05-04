@@ -6,11 +6,12 @@ import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static java.util.Collections.emptyList;
+import static org.assertj.core.util.Lists.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class TermsAndConditionsBuilder extends BaseBuilder<TermsAndConditions, TermsAndConditionsBuilder> {
+public class TermsAndConditionsBuilder extends BaseBuilder<TermsAndConditions, TermsAndConditionsBuilder>  {
 
     private TermsAndConditionsBuilder(List<BiConsumer<Integer, TermsAndConditions>> newMultiActions) {
         super(newMultiActions);
@@ -37,12 +38,12 @@ public class TermsAndConditionsBuilder extends BaseBuilder<TermsAndConditions, T
     }
 
     @Override
-    protected TermsAndConditionsBuilder createNewBuilderWithActions(List<BiConsumer<Integer, TermsAndConditions>>actions) {
+    protected TermsAndConditionsBuilder createNewBuilderWithActions(List<BiConsumer<Integer, TermsAndConditions>> actions) {
         return new TermsAndConditionsBuilder(actions);
     }
 
     @Override
     protected TermsAndConditions createInitial() {
-        return new TermsAndConditions();
+        return createDefault(TermsAndConditions.class);
     }
 }

@@ -22,28 +22,25 @@
         <div th:if="${model.general.editable}" id="section-3-edit">
 
             <div class="form-group">
-                <select class="form-control width-x-large"
-                    id="termsAndConditionsId"
-                    name="termsAndConditionsId"
+                <select
+                    th:field="*{termsAndConditionsId}"
                     required="required"
+                    class="form-control width-x-large"
                     th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}"
                     data-autosave-disabled="">
-                    <option value="" disabled="disabled"
-                            th:selected="${competitionSetupForm.termsAndConditionsId == null}">Please select &hellip;</option>
-                    <option th:each="(termsAndConditions : ${model.termsAndConditionsList})"
+                    <option value="" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="termsAndConditions : ${model.termsAndConditionsList}"
                             th:text="${termsAndConditions.name}"
-                            th:value="${termsAndConditions.id}"
-                            th:selected="${competitionSetupForm.termsAndConditionsId == termsAndConditions.id}">
+                            th:value="${termsAndConditions.id}">
                         Terms and conditions
                     </option>
                 </select>
-                <input type="hidden" th:field="${competitionSetupForm.termsAndConditionsId}" />
             </div>
 
             <button class="button">Done</button>
         </div>
 
-        <th:block th:unless="${model.general.editable}" id="section-3-readonly">
+        <th:block th:unless="${model.general.editable}">
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
 

@@ -25,32 +25,32 @@ public class CompetitionController {
     private CompetitionService competitionService;
 
     @GetMapping("/{id}")
-    public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
+    public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final long id) {
         return competitionService.getCompetitionById(id).toGetResponse();
     }
 
     @GetMapping("/{id}/innovation-leads")
-    public RestResult<List<UserResource>> findInnovationLeads(@PathVariable("id") final Long competitionId) {
+    public RestResult<List<UserResource>> findInnovationLeads(@PathVariable("id") final long competitionId) {
 
         return competitionService.findInnovationLeads(competitionId).toGetResponse();
     }
 
     @PostMapping("/{id}/add-innovation-lead/{innovationLeadUserId}")
-    public RestResult<Void> addInnovationLead(@PathVariable("id") final Long competitionId,
-                                              @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+    public RestResult<Void> addInnovationLead(@PathVariable("id") final long competitionId,
+                                              @PathVariable("innovationLeadUserId") final long innovationLeadUserId) {
 
         return competitionService.addInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
     }
 
     @PostMapping("/{id}/remove-innovation-lead/{innovationLeadUserId}")
-    public RestResult<Void> removeInnovationLead(@PathVariable("id") final Long competitionId,
-                                                 @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+    public RestResult<Void> removeInnovationLead(@PathVariable("id") final long competitionId,
+                                                 @PathVariable("innovationLeadUserId") final long innovationLeadUserId) {
 
         return competitionService.removeInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
     }
 
     @GetMapping("/{id}/getOrganisationTypes")
-    public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final Long id) {
+    public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final long id) {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();
     }
 
@@ -106,8 +106,8 @@ public class CompetitionController {
     }
 
     @PutMapping("{id}/updateTermsAndConditions/{tcId}")
-    public RestResult<Void> updateTermsAndConditionsForCompetition(@PathVariable("id") final Long competitionId,
-                                                                   @PathVariable("tcId") final Long termsAndConditionsId) {
+    public RestResult<Void> updateTermsAndConditionsForCompetition(@PathVariable("id") final long competitionId,
+                                                                   @PathVariable("tcId") final long termsAndConditionsId) {
         return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
     }
 }

@@ -15,7 +15,7 @@ public interface TermsAndConditionsService {
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value="READ", securedType=TermsAndConditionsResource.class,
             description = "Get all the latest terms and condition")
-    ServiceResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions();
+    ServiceResult<List<TermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions();
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value="READ", securedType=TermsAndConditionsResource.class,

@@ -11,9 +11,7 @@ import org.mockito.InjectMocks;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder.newTermsAndConditionsResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TermsAndConditionsFormPopulatorTest extends BaseUnitTestMocksTest {
 
@@ -40,7 +38,7 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTestMocksTest {
         assertTrue(result instanceof TermsAndConditionsForm);
         TermsAndConditionsForm form = (TermsAndConditionsForm) result;
 
-        assertFalse(form.getTermsAndConditionsId() == null);
-        assertTrue(form.getTermsAndConditionsId().equals(id));
+        assertNotNull(form.getTermsAndConditionsId());
+        assertEquals(form.getTermsAndConditionsId(), id);
     }
 }

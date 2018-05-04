@@ -20,7 +20,7 @@ public class TermsAndConditionsRestServiceImpl extends BaseRestService implement
     private final String termsAndConditionsRestUrl = "/terms-and-conditions";
 
     @Override
-    public RestResult<List<TermsAndConditionsResource>> getLatestTermsAndConditions() {
+    public RestResult<List<TermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions() {
         return getWithRestResult(termsAndConditionsRestUrl + "/getLatest", termsAndConditionsResourceListType());
     }
 

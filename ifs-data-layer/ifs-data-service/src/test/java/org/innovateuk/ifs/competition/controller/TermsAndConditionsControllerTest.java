@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder;
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.junit.Test;
@@ -11,11 +12,13 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder.newTermsAndConditionsResource;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<TermsAndConditionsController>  {
 
@@ -41,14 +44,14 @@ public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void getLatestTermsAndConditions() throws Exception {
-        List<TermsAndConditionsResource> termsAndConditionsResourceList = new ArrayList<>();
-        termsAndConditionsResourceList.add(newTermsAndConditionsResource().build());
+        List<TermsAndConditionsResource> termsAndConditionsResourceList = TermsAndConditionsResourceBuilder.newTermsAndConditionsResource().build(2);
 
-        when(termsAndConditionsService.getLatestTermsAndConditions()).thenReturn(serviceSuccess(termsAndConditionsResourceList));
+        when(termsAndConditionsService.getLatestVersionsForAllTermsAndConditions()).thenReturn(serviceSuccess(termsAndConditionsResourceList));
 
         mockMvc.perform(get("/terms-and-conditions/getLatest"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(termsAndConditionsResourceList)));
 
-        verify(termsAndConditionsService, only()).getLatestTermsAndConditions();
+        verify(termsAndConditionsService, only()).getLatestVersionsForAllTermsAndConditions();
     }
 }
