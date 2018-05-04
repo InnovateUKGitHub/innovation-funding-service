@@ -105,6 +105,9 @@ asciidoctor {
 }
 
 task asciidoctorOnly(type: Test) {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
     useJUnit {
         includeCategories 'org.innovateuk.ifs.ControllerTest'
     }
