@@ -5,6 +5,7 @@ include::{snippets}/competition-statistics/get-ready-to-open-key-statistics/path
 
 ==== Response
 include::{snippets}/competition-statistics/get-ready-to-open-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-ready-to-open-key-statistics/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition-statistics/get-ready-to-open-key-statistics/curl-request.adoc[]
@@ -16,6 +17,7 @@ include::{snippets}/competition-statistics/get-open-key-statistics/path-paramete
 
 ==== Response
 include::{snippets}/competition-statistics/get-open-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-open-key-statistics/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition-statistics/get-open-key-statistics/curl-request.adoc[]
@@ -27,6 +29,7 @@ include::{snippets}/competition-statistics/get-closed-key-statistics/path-parame
 
 ==== Response
 include::{snippets}/competition-statistics/get-closed-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-closed-key-statistics/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition-statistics/get-closed-key-statistics/curl-request.adoc[]
@@ -38,20 +41,22 @@ include::{snippets}/competition-statistics/get-in-assessment-key-statistics/path
 
 ==== Response
 include::{snippets}/competition-statistics/get-in-assessment-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-in-assessment-key-statistics/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition-statistics/get-in-assessment-key-statistics/curl-request.adoc[]
 
-=== Assessment Panel Key Statistics
+=== Competition funded key statistics
 ==== Request
-include::{snippets}/competition-statistics/get-in-assessment-key-statistics/http-request.adoc[]
-include::{snippets}/competition-statistics/get-in-assessment-key-statistics/path-parameters.adoc[]
+include::{snippets}/competition-statistics/get-funded-key-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-funded-key-statistics/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competition-statistics/get-in-assessment-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-funded-key-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-funded-key-statistics/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/competition-statistics/get-in-assessment-key-statistics/curl-request.adoc[]
+include::{snippets}/competition-statistics/get-funded-key-statistics/curl-request.adoc[]
 
 === Get review statistics
 ==== Request
