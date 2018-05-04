@@ -44,8 +44,6 @@ Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
 
-*** Variables ***
-${availableApp}  Machine learning for driverless cars
 
 *** Test Cases ***
 User navigates to the Manage interview panel
@@ -159,7 +157,7 @@ CompAdmin Views the assessors that have accepted the interview panel invite
 Applicant can see the feedback given
     [Documentation]  IFS-3291
     [Tags]
-    Given log in as a different user          aaron.robertson@load.example.com  ${short_password}
+    Given log in as a different user          ${aaron_robertson_email}  ${short_password}
     When the user should see the element      jQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + div:nth-child(2) span:contains("Invited to interview")
     Then The user clicks the button/link      link=${CLOSED_COMPETITION_APPLICATION_TITLE}
     And the user clicks the button/link       jQuery=a:contains("Business opportunity")
