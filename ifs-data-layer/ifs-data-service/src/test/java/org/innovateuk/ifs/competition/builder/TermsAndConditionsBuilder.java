@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 
 import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class TermsAndConditionsBuilder extends BaseBuilder<TermsAndConditions, TermsAndConditionsBuilder>  {
@@ -20,8 +21,20 @@ public class TermsAndConditionsBuilder extends BaseBuilder<TermsAndConditions, T
         return new TermsAndConditionsBuilder(emptyList()).with(uniqueIds());
     }
 
+    public TermsAndConditionsBuilder withId(Long... ids) {
+        return withArray((id, object) -> setField("id", id, object), ids);
+    }
+
     public TermsAndConditionsBuilder withName(String... names) {
-        return withArraySetFieldByReflection("name", names);
+        return withArray((name, object) -> setField("name", name, object), names);
+    }
+
+    public TermsAndConditionsBuilder withTemplate(String... templates) {
+        return withArray((template, object) -> setField("template", template, object), templates);
+    }
+
+    public TermsAndConditionsBuilder withVersion(String... versions) {
+        return withArray((version, object) -> setField("version", version, object), versions);
     }
 
     @Override
