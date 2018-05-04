@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 public class InterviewApplicationsModelPopulator {
 
     @Autowired
-    private CompetitionRestService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
-    private UserRestService userService;
+    private UserRestService userRestService;
 
     @Autowired
     private AssessorRestService assessorRestService;
@@ -26,8 +26,8 @@ public class InterviewApplicationsModelPopulator {
                                                                 long userId
     ) {
 
-        UserResource user = userService.retrieveUserById(userId).getSuccess();
-        CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
+        UserResource user = userRestService.retrieveUserById(userId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(userId).getSuccess();
 
         competition.getInnovationAreaNames();
