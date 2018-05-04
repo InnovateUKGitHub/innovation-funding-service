@@ -8,18 +8,21 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.InviteProjectDocs.inviteProjectFields;
+import static org.innovateuk.ifs.documentation.InviteProjectDocs.inviteProjectFieldsList;
 import static org.innovateuk.ifs.documentation.InviteProjectDocs.inviteProjectResourceBuilder;
+import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InviteProjectControllerDocumentation extends BaseControllerMockMVCTest<InviteProjectController> {
@@ -39,7 +42,10 @@ public class InviteProjectControllerDocumentation extends BaseControllerMockMVCT
         mockMvc.perform(post("/projectinvite/saveInvite")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteProject)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("invite-project/{method-name}",
+                        requestFields(inviteProjectFields)
+                ));
 
     }
 
@@ -54,7 +60,7 @@ public class InviteProjectControllerDocumentation extends BaseControllerMockMVCT
                 andExpect(status().isOk()).
                 andDo(document("invite-project/{method-name}",
                         pathParameters(
-                                parameterWithName("hash").description("Hash of the invite that is being retrieved")
+                                parameterWithName("hash").description("Hash of the Project Invite that is being retrieved")
                         ),
                         responseFields(inviteProjectFields)
                 ));
@@ -72,7 +78,12 @@ public class InviteProjectControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(get("/projectinvite/getInvitesByProjectId/{projectId}", projectId)).
                 andExpect(status().isOk()).
-                andExpect(content().json(toJson(inviteProjects)));
+                andDo(document("invite-project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("The id of the Project for which we are retrieving Project Invites")
+                        ),
+                        responseFields(inviteProjectFieldsList)
+                ));
     }
 
     @Test
@@ -85,7 +96,13 @@ public class InviteProjectControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(put("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
                 .accept(APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("invite-project/{method-name}",
+                        pathParameters(
+                                parameterWithName("hash").description("The hash of the Project Invite being accepted"),
+                                parameterWithName("userId").description("The id of the User accepting the Project Invite")
+                        )
+                ));
     }
 
     @Test
@@ -97,6 +114,27 @@ public class InviteProjectControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(get("/projectinvite/checkExistingUser/{hash}", hash)
                 .accept(APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("invite-project/{method-name}",
+                        pathParameters(
+                                parameterWithName("hash").description("The hash of the Project Invite being inspected for the presence of an existing User")
+                        )
+                ));
+    }
+
+    @Test
+    public void getUserByInviteHash() throws Exception {
+
+        when(projectInviteServiceMock.getUserByInviteHash("asdf1234")).thenReturn(serviceSuccess(newUserResource().build()));
+
+        mockMvc.perform(get("/projectinvite/getUser/{hash}", "asdf1234")).
+                andExpect(status().isOk()).
+                andDo(document("invite-project/{method-name}",
+                        pathParameters(
+                                parameterWithName("hash").description("Hash of the Project Invite that the User is being retrieved from")
+                        ),
+                        responseFields(userResourceFields)
+                ));
+
     }
 }

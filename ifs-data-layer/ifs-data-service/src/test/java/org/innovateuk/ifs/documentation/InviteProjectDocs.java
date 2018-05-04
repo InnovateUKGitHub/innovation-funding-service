@@ -6,6 +6,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.UUID;
 
+import static org.innovateuk.ifs.documentation.RestDocsUtil.createTopLevelArrayOfDocumentation;
 import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -29,6 +30,8 @@ public class InviteProjectDocs {
             fieldWithPath("organisation").description("Id of the Organisation that the Invite recipient is being invited into"),
             fieldWithPath("organisationName").description("Name of the Organisation that the Invite recipient is being invited into")
     };
+
+    public static final FieldDescriptor[] inviteProjectFieldsList = createTopLevelArrayOfDocumentation(inviteProjectFields);
 
     public static final InviteProjectResourceBuilder inviteProjectResourceBuilder = newInviteProjectResource().
             withStatus(InviteStatus.CREATED).
