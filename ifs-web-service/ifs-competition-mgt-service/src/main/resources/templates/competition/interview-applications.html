@@ -9,17 +9,16 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications(competitionId=${model.competitionId})}" />
 
     <th:block th:insert="fragments/layout :: page-title"
               th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
-
 
     <div class="grid-row">
         <div class="column-half">
             <dl>
                 <dt>Assessor type</dt>
-                <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">something</dd>
+                <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
                 <dt>Phone number</dt>
                 <dd th:text="${model.user.getPhoneNumber()}">01234 567891</dd>
                 <dt>Email address</dt>
@@ -38,7 +37,7 @@
                     </th:block>
                 </dd>
                 <dt>Skill areas</dt>
-                <dd th:text="${model.profile.getSkillsAreas()}">-------</dd>
+                <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
             </dl>
         </div>
     </div>
