@@ -89,7 +89,6 @@ dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile project(':ifs-resources')
     testCompile project(':ifs-commons')
-    compile project(':ifs-security')
 
     testCompile project(':ifs-data-layer:data-service-commons')
 

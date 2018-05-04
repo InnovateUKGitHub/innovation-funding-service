@@ -14,9 +14,7 @@ configurations {
 dependencies {
     compile project(":ifs-commons")
     compile project(":ifs-security")
-
     compile project(":ifs-sil-resources")
-
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.14"
