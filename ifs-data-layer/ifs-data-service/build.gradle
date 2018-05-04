@@ -72,6 +72,15 @@ configurations {
     mapstruct
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-file/build/classes")
+
+    dependsOn ":ifs-data-layer:data-service-commons:build"
+    dependsOn ":ifs-data-layer:data-service-file:build"
+}
+
+
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
     compile project(":ifs-data-layer:data-service-file")
