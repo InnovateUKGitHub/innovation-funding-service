@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.interview.repository;
 
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
@@ -36,7 +36,7 @@ public interface InterviewParticipantRepository extends PagingAndSortingReposito
                                                                                         @Param("status") List<ParticipantStatus> status,
                                                                                         Pageable pageable);
 
-    @Query("SELECT NEW org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsResource(" +
+    @Query("SELECT NEW org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource(" +
             "  user.id, " +
             "  concat(user.firstName, ' ', user.lastName), " +
             "  profile.skillsAreas " +
@@ -50,7 +50,7 @@ public interface InterviewParticipantRepository extends PagingAndSortingReposito
             "  interviewParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR AND" +
             "  interviewParticipant.user.id IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")"
     )
-    Page<InterviewAssessorAllocateApplicationsResource> getAllocateApplicationsOverview(@Param("competitionId") long competitionId, Pageable pageable);
+    Page<InterviewAllocateOverviewResource> getAllocateApplicationsOverview(@Param("competitionId") long competitionId, Pageable pageable);
 
     @Query(BY_COMP_AND_STATUS_ON_PANEL)
     List<InterviewParticipant> getInterviewPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${'Allocate applications to ' + model.user.getName()}" />
+</head>
+
+<body class="competition-management competition-overview">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications(competitionId=${model.competitionId})}" />
+
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+
+    <div class="grid-row">
+        <div class="column-half">
+            <dl>
+                <dt>Assessor type</dt>
+                <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
+                <dt>Phone number</dt>
+                <dd th:text="${model.user.getPhoneNumber()}">01234 567891</dd>
+                <dt>Email address</dt>
+                <dd th:text="${model.user.getEmail()}">Felix.Wilson@gmail.com</dd>
+            </dl>
+        </div>
+
+        <div class="column-half">
+            <dl>
+                <dt>Innovation areas</dt>
+                <dd>
+                    <th:block th:each="innovationArea, iterStat : ${model.innovationAreas}">
+                        <ul class="list list-bullet">
+                            <li th:text="${innovationArea}">Materials and manufacturing</li>
+                        </ul>
+                    </th:block>
+                </dd>
+                <dt>Skill areas</dt>
+                <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
+            </dl>
+        </div>
+    </div>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

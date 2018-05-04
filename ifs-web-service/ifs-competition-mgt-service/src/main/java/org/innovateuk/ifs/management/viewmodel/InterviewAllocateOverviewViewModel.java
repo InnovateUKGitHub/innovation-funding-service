@@ -5,16 +5,16 @@ import java.util.List;
 /**
  *  Holder of model attributes for the assessors shown in the 'Allocate applications to assessors' page
  */
-public class InterviewAllocateApplicationsViewModel {
+public class InterviewAllocateOverviewViewModel {
     private long competitionId;
     private String competitionName;
-    private List<InterviewAllocateApplicationsRowViewModel> assessors;
+    private List<InterviewAllocateOverviewRowViewModel> assessors;
     private PaginationViewModel pagination;
 
-    public InterviewAllocateApplicationsViewModel(long competitionId,
-                                                  String competitionName,
-                                                  List<InterviewAllocateApplicationsRowViewModel> assessors,
-                                                  PaginationViewModel pagination
+    public InterviewAllocateOverviewViewModel(long competitionId,
+                                              String competitionName,
+                                              List<InterviewAllocateOverviewRowViewModel> assessors,
+                                              PaginationViewModel pagination
     ) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -30,11 +30,11 @@ public class InterviewAllocateApplicationsViewModel {
         return competitionName;
     }
 
-    public List<InterviewAllocateApplicationsRowViewModel> getAssessors() {
+    public List<InterviewAllocateOverviewRowViewModel> getAssessors() {
         return assessors;
     }
 
-    public void setAssessors(List<InterviewAllocateApplicationsRowViewModel> assessors) {
+    public void setAssessors(List<InterviewAllocateOverviewRowViewModel> assessors) {
         this.assessors = assessors;
     }
 

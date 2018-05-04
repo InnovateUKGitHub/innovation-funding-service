@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interview.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAssessorAllocateApplicationsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,14 +18,14 @@ public class InterviewAllocateRestServiceImpl extends BaseRestService implements
     private static final String interviewPanelRestUrl = "/interview-panel";
 
     @Override
-    public RestResult<InterviewAssessorAllocateApplicationsPageResource> getAllocateApplicationsOverview(long competitionId, int page) {
+    public RestResult<InterviewAllocateOverviewPageResource> getAllocateApplicationsOverview(long competitionId, int page) {
 
         String baseUrl = format("%s/%s/%s", interviewPanelRestUrl, "allocate-overview", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
 
-        return getWithRestResult(builder.toUriString(), InterviewAssessorAllocateApplicationsPageResource.class);
+        return getWithRestResult(builder.toUriString(), InterviewAllocateOverviewPageResource.class);
     }
 
     @Override
