@@ -21,6 +21,11 @@ def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('
     task.enabled = enabled
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
+
 jar {
     baseName = 'ifs-prototypes-service'
 }
