@@ -310,6 +310,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
         List<CompetitionSetupSection> requiredSections = new ArrayList<>();
         requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
+        requiredSections.add(CompetitionSetupSection.TERMS_AND_CONDITIONS);
         requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
         requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
         requiredSections.add(CompetitionSetupSection.MILESTONES);

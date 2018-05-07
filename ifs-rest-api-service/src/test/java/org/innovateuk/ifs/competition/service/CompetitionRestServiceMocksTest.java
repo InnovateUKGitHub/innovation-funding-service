@@ -82,17 +82,6 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    public void getCompetitionsByUserId() {
-        final Long userId = 123L;
-        List<CompetitionResource> returnedResponse = newCompetitionResource().build(2);
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType(), returnedResponse);
-
-        List<CompetitionResource> responses = service.getCompetitionsByUserId(userId).getSuccess();
-        assertNotNull(responses);
-        assertEquals(returnedResponse, responses);
-    }
-
     @Test
     public void getCompetitionTypes() {
         List<CompetitionTypeResource> returnedResponse = asList(new CompetitionTypeResource(), new CompetitionTypeResource());
@@ -179,5 +168,14 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         CompetitionSearchResult responses = service.searchCompetitions(searchQuery, page, size).getSuccess();
         assertNotNull(responses);
         Assert.assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void updateTermsAndConditionsForCompetition() {
+        setupPutWithRestResultExpectations(competitionsRestURL + "/123" + "/updateTermsAndConditions" + "/234", HttpStatus.OK);
+
+        RestResult<Void> response = service.updateTermsAndConditionsForCompetition(123L, 234L);
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
