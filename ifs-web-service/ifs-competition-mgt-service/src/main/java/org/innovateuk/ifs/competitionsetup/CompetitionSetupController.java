@@ -335,6 +335,17 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, model);
     }
 
+    @PostMapping("/{competitionId}/section/terms-and-conditions")
+    public String submitTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm competitionSetupForm,
+                                                @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                                ValidationHandler validationHandler,
+                                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                Model model) {
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
+    }
+
     @PostMapping("/{competitionId}/ready-to-open")
     public String setAsReadyToOpen(Model model,
                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,

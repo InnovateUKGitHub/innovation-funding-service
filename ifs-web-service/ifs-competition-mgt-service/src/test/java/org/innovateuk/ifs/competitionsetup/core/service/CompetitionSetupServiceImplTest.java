@@ -258,7 +258,8 @@ public class CompetitionSetupServiceImplTest {
                 CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
-                CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE)
+                CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE)
         );
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
@@ -274,6 +275,7 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
@@ -310,6 +312,7 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE));
         testSectionStatus.put(CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -335,6 +338,7 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM,Optional.of( Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)

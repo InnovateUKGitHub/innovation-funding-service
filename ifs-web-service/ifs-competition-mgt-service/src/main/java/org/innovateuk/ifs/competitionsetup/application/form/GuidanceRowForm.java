@@ -21,7 +21,6 @@ public class GuidanceRowForm {
     @Size(max=5000, message = "{validation.applicationquestionform.justification.max}", groups=GuidanceRowViewGroup.class)
     private String justification;
 
-
     @Min(value=0, message = "{validation.applicationquestionform.scorefrom.min}", groups=GuidanceRowViewGroup.class)
     @NotNull(message = "{validation.applicationquestionform.scorefrom.required}", groups=GuidanceRowViewGroup.class)
     private Integer scoreFrom;
