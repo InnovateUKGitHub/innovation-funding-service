@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
+package org.innovateuk.ifs.competitionsetup.core.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
-import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
-import org.innovateuk.ifs.competitionsetup.viewmodel.TermsAndConditionsViewModel;
-import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.TermsAndConditionsViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

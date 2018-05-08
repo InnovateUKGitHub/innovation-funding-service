@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.competitionsetup.service.formpopulator;
+package org.innovateuk.ifs.competitionsetup.core.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.TermsAndConditionsForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.TermsAndConditionsForm;
 import org.springframework.stereotype.Service;
 
 /**

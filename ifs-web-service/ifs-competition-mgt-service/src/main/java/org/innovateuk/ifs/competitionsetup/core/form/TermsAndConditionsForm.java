@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.form;
+package org.innovateuk.ifs.competitionsetup.core.form;
 
 import javax.validation.constraints.NotNull;
 

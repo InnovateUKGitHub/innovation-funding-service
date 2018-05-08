@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
+package org.innovateuk.ifs.competitionsetup.core.sectionupdater;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -7,8 +7,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.TermsAndConditionsForm;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.form.TermsAndConditionsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * Competition setup section saver for the terms and conditions section.
  */
 @Service
-public class TermsAndConditionsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+public class TermsAndConditionsSectionSaver extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
     private static final Log LOG = LogFactory.getLog(TermsAndConditionsSectionSaver.class);
 

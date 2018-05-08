@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.competitionsetup.viewmodel;
+package org.innovateuk.ifs.competitionsetup.core.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
-import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 
 import java.util.List;
 
