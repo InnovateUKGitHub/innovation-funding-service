@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -25,47 +24,33 @@ public class CompetitionController {
     private CompetitionService competitionService;
 
     @GetMapping("/{id}")
-    public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
+    public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final long id) {
         return competitionService.getCompetitionById(id).toGetResponse();
     }
 
     @GetMapping("/{id}/innovation-leads")
-    public RestResult<List<UserResource>> findInnovationLeads(@PathVariable("id") final Long competitionId) {
+    public RestResult<List<UserResource>> findInnovationLeads(@PathVariable("id") final long competitionId) {
 
         return competitionService.findInnovationLeads(competitionId).toGetResponse();
     }
 
     @PostMapping("/{id}/add-innovation-lead/{innovationLeadUserId}")
-    public RestResult<Void> addInnovationLead(@PathVariable("id") final Long competitionId,
-                                              @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+    public RestResult<Void> addInnovationLead(@PathVariable("id") final long competitionId,
+                                              @PathVariable("innovationLeadUserId") final long innovationLeadUserId) {
 
         return competitionService.addInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
     }
 
     @PostMapping("/{id}/remove-innovation-lead/{innovationLeadUserId}")
-    public RestResult<Void> removeInnovationLead(@PathVariable("id") final Long competitionId,
-                                                 @PathVariable("innovationLeadUserId") final Long innovationLeadUserId) {
+    public RestResult<Void> removeInnovationLead(@PathVariable("id") final long competitionId,
+                                                 @PathVariable("innovationLeadUserId") final long innovationLeadUserId) {
 
         return competitionService.removeInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
     }
 
     @GetMapping("/{id}/getOrganisationTypes")
-    public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final Long id) {
+    public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final long id) {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();
-    }
-
-    /**
-     * IFS-3016: Because of the change in ApplicantDashboardPopulator (getAllCompetitionsForUser),
-     * this endpoint is not used anymore.
-     *
-     * TODO: remove in ZDD cleanup
-     * @param userId
-     * @return
-     */
-    @ZeroDowntime(reference = "IFS-3016", description = "endpoint not being used")
-    @GetMapping("/getCompetitionsByUserId/{userId}")
-    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(@PathVariable("userId") final Long userId) {
-        return competitionService.getCompetitionsByUserId(userId).toGetResponse();
     }
 
     @GetMapping("/findAll")
@@ -103,5 +88,11 @@ public class CompetitionController {
     @GetMapping("/count")
     public RestResult<CompetitionCountResource> count() {
         return competitionService.countCompetitions().toGetResponse();
+    }
+
+    @PutMapping("{id}/updateTermsAndConditions/{tcId}")
+    public RestResult<Void> updateTermsAndConditionsForCompetition(@PathVariable("id") final long competitionId,
+                                                                   @PathVariable("tcId") final long termsAndConditionsId) {
+        return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
     }
 }

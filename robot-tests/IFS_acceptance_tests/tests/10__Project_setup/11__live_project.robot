@@ -260,7 +260,7 @@ users upload signed grant offer letter and submit
     the user clicks the button/link  link=Grant offer letter
     choose file                      signedGrantOfferLetter    ${upload_folder}/testing.pdf
     the user clicks the button/link  jQuery=a:contains("Send to Innovate UK")
-    the user clicks the button/link  jQuery=button:contains("Send to Innovate UK")
+    the user clicks the button/link  id=submit-gol-for-review
 
 grant offer letter is approved
     log in as a different user         &{internal_finance_credentials}
