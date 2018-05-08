@@ -40,6 +40,12 @@ the user fills in the CS Initial details
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
 
+the user selects the Terms and Conditions
+    the user clicks the button/link      link=Terms and conditions
+    the user clicks the button/link      css=button.button  #Done
+    the user clicks the button/link      link=Competition setup
+    the user should see the element      jQuery=li:contains("Terms and conditions") .task-status-complete
+
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
     the user enters text to a text field  id=funders[0].funder  FunderName FamilyName
