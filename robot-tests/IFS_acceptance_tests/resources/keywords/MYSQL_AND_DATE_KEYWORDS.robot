@@ -245,3 +245,8 @@ Set global date variables
     Set global variable  ${tomorrowday}
     ${monthWord} =      get month as word
     set global variable  ${monthWord}
+
+Delete user from terms and conditions database
+    [Arguments]    ${user_id}
+    Connect to Database  @{database}
+    execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}'
