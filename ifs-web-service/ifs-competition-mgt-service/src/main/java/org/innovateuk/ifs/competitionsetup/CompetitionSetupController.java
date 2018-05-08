@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competitionsetup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.competitionsetup.core.form.FunderRowForm;
+import org.innovateuk.ifs.competitionsetup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
