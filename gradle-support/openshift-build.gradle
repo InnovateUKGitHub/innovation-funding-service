@@ -17,8 +17,19 @@ buildscript {
 }
 
 task buildDocker(type: DockerBuildImage) {
+
     tag = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
     inputDir = project.projectDir
+
+    outputs.upToDateWhen {
+
+        def image = tag
+        if(image.contains(":")) {
+            image = image.substring(0, image.indexOf(":"))
+        }
+
+        "docker images".execute().text.contains(image)
+    }
 }
 
 task tagDocker(type: DockerTagImage) {
@@ -43,7 +54,7 @@ task removeContainer(type: DockerRemoveContainer, dependsOn: stop) {
 }
 
 task createContainer(type: DockerCreateContainer, dependsOn: [buildDocker, removeContainer]) {
-    targetImageId { buildDocker.getImageId() }
+    imageId = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
     containerName = "${project.name.replaceAll(/ifs-/, "")}"
     containerId = "${project.name.replaceAll(/ifs-/, "")}"
     network="ifs"
