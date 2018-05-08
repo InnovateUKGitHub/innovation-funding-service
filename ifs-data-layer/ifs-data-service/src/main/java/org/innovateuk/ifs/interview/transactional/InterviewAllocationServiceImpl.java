@@ -23,9 +23,9 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     private InterviewParticipantRepository interviewParticipantRepository;
 
     @Override
-    public ServiceResult<InterviewAcceptedAssessorsPageResource> getAllocateApplicationsOverview(long competitionId,
-                                                                                                 Pageable pageable) {
-        Page<InterviewAcceptedAssessorsResource> pagedResult = interviewParticipantRepository.getInterviewAllocateApplicationsOverviewByCompetition(
+    public ServiceResult<InterviewAcceptedAssessorsPageResource> getInterviewAcceptedAssessors(long competitionId,
+                                                                                               Pageable pageable) {
+        Page<InterviewAcceptedAssessorsResource> pagedResult = interviewParticipantRepository.getInterviewAcceptedAssessorsByCompetition(
                 competitionId,
                 pageable);
 

@@ -45,7 +45,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
 
         Page<InterviewAcceptedAssessorsResource> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(interviewParticipantRepositoryMock.getInterviewAllocateApplicationsOverviewByCompetition(
+        when(interviewParticipantRepositoryMock.getInterviewAcceptedAssessorsByCompetition(
                 competitionId,
                 pageable
         ))
@@ -65,10 +65,10 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
                 );
 
         ServiceResult<InterviewAcceptedAssessorsPageResource> result =
-                service.getAllocateApplicationsOverview(competitionId, pageable);
+                service.getInterviewAcceptedAssessors(competitionId, pageable);
 
         verify(interviewParticipantRepositoryMock)
-                .getInterviewAllocateApplicationsOverviewByCompetition(competitionId, pageable);
+                .getInterviewAcceptedAssessorsByCompetition(competitionId, pageable);
 
         assertTrue(result.isSuccess());
 

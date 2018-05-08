@@ -47,7 +47,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .withContent(content)
                 .build();
 
-        when(interviewAllocationServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
+        when(interviewAllocationServiceMock.getInterviewAcceptedAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/interview-panel/allocate-overview/{competitionId}", 1L)
@@ -71,6 +71,6 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                                 .andWithPrefix("content[].", interviewAssessorAllocateApplicationsResourceFields)
                 ));
 
-        verify(interviewAllocationServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
+        verify(interviewAllocationServiceMock, only()).getInterviewAcceptedAssessors(competitionId, pageable);
     }
 }

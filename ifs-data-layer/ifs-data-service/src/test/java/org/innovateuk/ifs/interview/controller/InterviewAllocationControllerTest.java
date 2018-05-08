@@ -37,7 +37,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
 
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
 
-        when(interviewAllocationServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
+        when(interviewAllocationServiceMock.getInterviewAcceptedAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/interview-panel/allocate-overview/{competitionId}", competitionId)
@@ -47,6 +47,6 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(interviewAllocationServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
+        verify(interviewAllocationServiceMock, only()).getInterviewAcceptedAssessors(competitionId, pageable);
     }
 }

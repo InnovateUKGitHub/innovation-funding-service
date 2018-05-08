@@ -50,7 +50,7 @@ public interface InterviewParticipantRepository extends PagingAndSortingReposito
             "  interviewParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR AND" +
             "  interviewParticipant.user.id IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")"
     )
-    Page<InterviewAcceptedAssessorsResource> getInterviewAllocateApplicationsOverviewByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
+    Page<InterviewAcceptedAssessorsResource> getInterviewAcceptedAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
 
     @Query(BY_COMP_AND_STATUS_ON_PANEL)
     List<InterviewParticipant> getInterviewPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,

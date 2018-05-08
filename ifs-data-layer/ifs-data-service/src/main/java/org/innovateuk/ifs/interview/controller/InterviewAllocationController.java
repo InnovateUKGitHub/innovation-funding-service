@@ -25,9 +25,9 @@ public class InterviewAllocationController {
     private InterviewAllocationService interviewAllocationService;
 
     @GetMapping("/allocate-overview/{competitionId}")
-    public RestResult<InterviewAcceptedAssessorsPageResource> getAllocateApplicationsOverview(
+    public RestResult<InterviewAcceptedAssessorsPageResource> getInterviewAcceptedAssessors(
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable) {
-        return interviewAllocationService.getAllocateApplicationsOverview(competitionId, pageable).toGetResponse();
+        return interviewAllocationService.getInterviewAcceptedAssessors(competitionId, pageable).toGetResponse();
     }
 }
