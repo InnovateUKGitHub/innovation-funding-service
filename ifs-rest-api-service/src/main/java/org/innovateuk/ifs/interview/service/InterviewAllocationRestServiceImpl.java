@@ -19,7 +19,7 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
     @Override
     public RestResult<InterviewAcceptedAssessorsPageResource> getInterviewAcceptedAssessors(long competitionId, int page) {
 
-        String baseUrl = format("%s/%s/%s", interviewPanelRestUrl, "allocate-overview", competitionId);
+        String baseUrl = format("%s/%s/%s", interviewPanelRestUrl, "allocate-assessors", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);

@@ -26,7 +26,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
-    public void getAllocateApplicationsOverview() throws Exception {
+    public void getInterviewAcceptedAssessors() throws Exception {
         long competitionId = 1L;
         int page = 2;
         int size = 10;
@@ -40,7 +40,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         when(interviewAllocationServiceMock.getInterviewAcceptedAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/interview-panel/allocate-overview/{competitionId}", competitionId)
+        mockMvc.perform(get("/interview-panel/allocate-assessors/{competitionId}", competitionId)
                 .param("page", "2")
                 .param("size", "10")
                 .param("sort", "invite.email"))

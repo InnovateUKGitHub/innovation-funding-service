@@ -36,7 +36,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
     }
 
     @Test
-    public void getAllocateApplicationsOverview() throws Exception {
+    public void getInterviewAcceptedAssessors() throws Exception {
         long competitionId = 1L;
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
@@ -50,7 +50,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         when(interviewAllocationServiceMock.getInterviewAcceptedAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/interview-panel/allocate-overview/{competitionId}", 1L)
+        mockMvc.perform(get("/interview-panel/allocate-assessors/{competitionId}", 1L)
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "invite.name,asc"))
