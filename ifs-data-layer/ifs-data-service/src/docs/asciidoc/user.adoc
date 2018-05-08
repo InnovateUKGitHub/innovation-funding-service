@@ -160,7 +160,6 @@ include::{snippets}/user/agree-new-site-terms-and-conditions/path-parameters.ado
 
 ==== Response
 include::{snippets}/user/agree-new-site-terms-and-conditions/http-response.adoc[]
-include::{snippets}/user/agree-new-site-terms-and-conditions/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/agree-new-site-terms-and-conditions/curl-request.adoc[]
