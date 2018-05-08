@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.competitionsetup.viewmodel.TermsAndConditionsViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
@@ -12,14 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder.newTermsAndConditionsResource;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,29 +38,28 @@ public class TermsAndConditionsModelPopulatorTest {
 
     @Test
     public void populateModel() {
-        TermsAndConditionsResource termsAndConditions = newTermsAndConditionsResource().build();
+        List<GrantTermsAndConditionsResource> termsAndConditions = newGrantTermsAndConditionsResource().build(1);
 
         CompetitionResource competitionResource = newCompetitionResource()
-                .withTermsAndConditions(termsAndConditions)
+                .withTermsAndConditions(termsAndConditions.get(0))
                 .build();
 
-        List<TermsAndConditionsResource> termsAndConditionsList = new ArrayList<>();
-        termsAndConditionsList.add(competitionResource.getTermsAndConditions());
-
-        when(termsAndConditionsRestService.getById(termsAndConditions.getId()))
+        when(termsAndConditionsRestService.getById(competitionResource.getTermsAndConditions().getId()))
                 .thenReturn(restSuccess(competitionResource.getTermsAndConditions()));
-        when(termsAndConditionsRestService.getLatestVersionsForAllTermsAndConditions()).thenReturn(restSuccess(termsAndConditionsList));
+        when(termsAndConditionsRestService.getLatestVersionsForAllTermsAndConditions()).thenReturn(
+                restSuccess(termsAndConditions));
 
         TermsAndConditionsViewModel viewModel = (TermsAndConditionsViewModel) populator.populateModel(
                 getBasicGeneralSetupView(competitionResource),
                 competitionResource);
 
         assertEquals(CompetitionSetupSection.TERMS_AND_CONDITIONS, viewModel.getGeneral().getCurrentSection());
-        assertEquals(viewModel.getTermsAndConditionsList(), termsAndConditionsList);
-        assertEquals(viewModel.getCurrentTermsAndConditions(), termsAndConditions);
+        assertEquals(viewModel.getTermsAndConditionsList(), termsAndConditions);
+        assertEquals(viewModel.getCurrentTermsAndConditions(), termsAndConditions.get(0));
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-        return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, CompetitionSetupSection.values(), Boolean.TRUE);
+        return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS,
+                CompetitionSetupSection.values(), Boolean.TRUE);
     }
 }

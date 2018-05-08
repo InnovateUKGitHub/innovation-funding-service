@@ -246,6 +246,6 @@ include::competitionKeyStatistics.adoc[]
 == ApplicationSummary
 include::application-summary.adoc[]
 
-[[termsAndConditions]]
-== TermsAndConditions
-include::termsAndConditions.adoc[]
+[[TermsAndConditions]]
+== Terms And Conditions
+include::terms-and-conditions.adoc[]
