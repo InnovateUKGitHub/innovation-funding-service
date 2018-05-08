@@ -173,8 +173,7 @@ Comp Admin user uploads new grant offer letter
     When the user uploads a file                annex  ${valid_pdf}
     And the user clicks the button/link         id=send-gol
     And the user clicks the button/link         jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
-    Then the user should not see the element    jQuery=.button:contains("Publish to project team")
-    And the user should not see the element     jQuery=button:contains("Remove")
+    Then the user should not see the element    css=[name="removeGrantOfferLetterClicked"]
     When the user navigates to the page         ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element        css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.waiting   # GOL
     And the user reads his email                ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  Your grant offer letter is available  We are pleased to inform you that your grant offer letter is now ready for you to sign
@@ -342,11 +341,11 @@ PM can upload new signed grant offer letter
 PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
-    When the user clicks the button/link    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
-    Then the user clicks the button/link    css=button[name="confirmSubmit"]
+    When the user clicks the button/link  css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    Then the user clicks the button/link  id=submit-gol-for-review
     And the user should not see an error in the page
-    When the user navigates to the page                ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    Then the user should see the element               css=li.waiting:nth-child(7)
+    When the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Then the user should see the element  css=li.waiting:nth-child(7)
 
 PM can download the signed grant offer letter
     [Documentation]    INFUND-7170
@@ -507,6 +506,7 @@ Verify support users permissions in project setup tab
     And the user clicks the button/link      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).status.ok a  # GOL
     And the user should see the element      jQuery=.success-alert h2:contains("These documents have been approved.")
 
+
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}
@@ -525,8 +525,8 @@ the user removes existing and uploads new grant offer letter
     the user clicks the button/link  css=button[name="removeSignedGrantOfferLetterClicked"]
     the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link  css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
-    the user clicks the button/link  css=button[name="confirmSubmit"]
-    the user should see the element  jQuery=li:contains(Grant offer letter) .status-waiting
+    the user clicks the button/link  id=submit-gol-for-review
+    the user should see the element  jQuery=li:contains("Grant offer letter") .status-waiting
 
 the user tries to reject without a reason he should get a validation message
     the user selects the radio button     approvalType  rejectGOL
