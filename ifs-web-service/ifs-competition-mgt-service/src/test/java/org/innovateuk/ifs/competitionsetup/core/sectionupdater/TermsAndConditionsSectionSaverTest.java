@@ -5,8 +5,6 @@ import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
-import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
-import org.innovateuk.ifs.competitionsetup.form.TermsAndConditionsForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
