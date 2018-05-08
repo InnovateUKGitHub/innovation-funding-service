@@ -547,7 +547,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         mockMvc.perform(get("/competition/{competitionId}/applications/unsuccessful?page={pageIndex}&size={pageSize}&sort={sortField}",
                 competitionId, pageIndex, pageSize, sortField))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/unsuccessful-applications"))
+                .andExpect(view().name("competition/previous-applications"))
                 .andExpect(model().attribute("model", viewModel))
                 .andReturn();
     }
