@@ -24,7 +24,7 @@
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
                         cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
-                        customLink='/competition/'+${competition.id}+'/applications/unsuccessful'"/>
+                        customLink='/competition/'+${competition.id}+'/applications/previous'"/>
             </li>
         </ul>
     </section>

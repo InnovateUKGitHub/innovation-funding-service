@@ -121,7 +121,7 @@ public class CompetitionManagementApplicationsController {
 
     @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can view the list of unsuccessful applications to a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_administrator', 'innovation_lead')")
-    @GetMapping("/unsuccessful")
+    @GetMapping("/previous")
     public String unsuccessfulApplications(Model model,
                                            @PathVariable("competitionId") long competitionId,
                                            @RequestParam MultiValueMap<String, String> queryParams,
@@ -157,6 +157,6 @@ public class CompetitionManagementApplicationsController {
         applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
         projectService.createProjectFromApplicationId(applicationId).getSuccess();
 
-        return "redirect:/competition/{competitionId}/applications/unsuccessful";
+        return "redirect:/competition/{competitionId}/applications/previous";
     }
 }

@@ -544,7 +544,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), any(UserResource.class), any()))
                 .thenReturn(viewModel);
 
-        mockMvc.perform(get("/competition/{competitionId}/applications/unsuccessful?page={pageIndex}&size={pageSize}&sort={sortField}",
+        mockMvc.perform(get("/competition/{competitionId}/applications/previous?page={pageIndex}&size={pageSize}&sort={sortField}",
                 competitionId, pageIndex, pageSize, sortField))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/previous-applications"))
@@ -572,7 +572,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         mockMvc.perform(post("/competition/1/applications/mark-successful/application/2"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/{competitionId}/applications/unsuccessful"))
+                .andExpect(view().name("redirect:/competition/{competitionId}/applications/previous"))
                 .andReturn();
 
         verify(unsuccessfulApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), any(UserResource.class), any());
