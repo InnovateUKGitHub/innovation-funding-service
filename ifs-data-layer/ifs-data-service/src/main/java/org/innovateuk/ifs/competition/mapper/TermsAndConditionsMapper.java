@@ -10,5 +10,5 @@ import org.mapstruct.Mapper;
         config = GlobalMapperConfig.class
 )
 public abstract class TermsAndConditionsMapper extends BaseMapper<TermsAndConditions, TermsAndConditionsResource, Long> {
-
+    public abstract TermsAndConditionsResource mapToResource(TermsAndConditions domain);
 }
