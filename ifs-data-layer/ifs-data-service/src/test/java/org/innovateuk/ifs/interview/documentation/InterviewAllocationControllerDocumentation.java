@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.interview.controller.InterviewAllocateController;
-import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
+import org.innovateuk.ifs.interview.controller.InterviewAllocationController;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,10 +12,10 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.InterviewAllocateOverviewPageResourceDocs.interviewAssessorAllocateApplicationsPageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAllocateOverviewResourceDocs.interviewAssessorAllocateApplicationsResourceFields;
-import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsPageResourceDocs.interviewAssessorAllocateApplicationsPageResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsResourceDocs.interviewAssessorAllocateApplicationsResourceFields;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,11 +28,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class InterviewAllocateControllerDocumentation extends BaseControllerMockMVCTest<InterviewAllocateController> {
+public class InterviewAllocationControllerDocumentation extends BaseControllerMockMVCTest<InterviewAllocationController> {
 
     @Override
-    protected InterviewAllocateController supplyControllerUnderTest() {
-        return new InterviewAllocateController();
+    protected InterviewAllocationController supplyControllerUnderTest() {
+        return new InterviewAllocationController();
     }
 
     @Test
@@ -41,13 +41,13 @@ public class InterviewAllocateControllerDocumentation extends BaseControllerMock
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        List<InterviewAllocateOverviewResource> content = newInterviewAssessorAllocateApplicationsResource().build(2);
+        List<InterviewAcceptedAssessorsResource> content = newInterviewAssessorAllocateApplicationsResource().build(2);
 
-        InterviewAllocateOverviewPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
+        InterviewAcceptedAssessorsPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
                 .withContent(content)
                 .build();
 
-        when(interviewAllocateServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
+        when(interviewAllocationServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/interview-panel/allocate-overview/{competitionId}", 1L)
@@ -71,6 +71,6 @@ public class InterviewAllocateControllerDocumentation extends BaseControllerMock
                                 .andWithPrefix("content[].", interviewAssessorAllocateApplicationsResourceFields)
                 ));
 
-        verify(interviewAllocateServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
+        verify(interviewAllocationServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
     }
 }

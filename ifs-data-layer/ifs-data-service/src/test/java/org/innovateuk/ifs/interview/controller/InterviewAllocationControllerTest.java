@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
@@ -18,11 +18,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class InterviewAllocateControllerTest extends BaseControllerMockMVCTest<InterviewAllocateController> {
+public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest<InterviewAllocationController> {
 
     @Override
-    protected InterviewAllocateController supplyControllerUnderTest() {
-        return new InterviewAllocateController();
+    protected InterviewAllocationController supplyControllerUnderTest() {
+        return new InterviewAllocationController();
     }
 
     @Test
@@ -31,13 +31,13 @@ public class InterviewAllocateControllerTest extends BaseControllerMockMVCTest<I
         int page = 2;
         int size = 10;
 
-        InterviewAllocateOverviewPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
+        InterviewAcceptedAssessorsPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
                 .withContent(newInterviewAssessorAllocateApplicationsResource().build(2))
                 .build();
 
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
 
-        when(interviewAllocateServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
+        when(interviewAllocationServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/interview-panel/allocate-overview/{competitionId}", competitionId)
@@ -47,6 +47,6 @@ public class InterviewAllocateControllerTest extends BaseControllerMockMVCTest<I
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(interviewAllocateServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
+        verify(interviewAllocationServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
     }
 }
