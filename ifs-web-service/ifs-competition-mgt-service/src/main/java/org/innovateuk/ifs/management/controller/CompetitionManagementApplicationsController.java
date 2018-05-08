@@ -134,7 +134,7 @@ public class CompetitionManagementApplicationsController {
         model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
 
-        return "competition/unsuccessful-applications";
+        return "competition/previous-applications";
     }
 
     @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can navigate between different lists of applications to a competition")
