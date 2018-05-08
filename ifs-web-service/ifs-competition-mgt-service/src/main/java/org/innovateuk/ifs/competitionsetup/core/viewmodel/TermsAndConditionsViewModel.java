@@ -1,28 +1,28 @@
 package org.innovateuk.ifs.competitionsetup.core.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 
 import java.util.List;
 
 public class TermsAndConditionsViewModel extends CompetitionSetupViewModel {
 
-    private List<TermsAndConditionsResource> termsAndConditionsList;
+    private List<GrantTermsAndConditionsResource> termsAndConditionsList;
 
-    private TermsAndConditionsResource currentTermsAndConditions;
+    private GrantTermsAndConditionsResource currentTermsAndConditions;
 
     public TermsAndConditionsViewModel(GeneralSetupViewModel generalSetupViewModel,
-                                       List<TermsAndConditionsResource> termsAndConditionsList,
-                                       TermsAndConditionsResource currentTermsAndConditions) {
+                                       List<GrantTermsAndConditionsResource> termsAndConditionsList,
+                                       GrantTermsAndConditionsResource currentTermsAndConditions) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.termsAndConditionsList = termsAndConditionsList;
         this.currentTermsAndConditions = currentTermsAndConditions;
     }
 
-    public List<TermsAndConditionsResource> getTermsAndConditionsList() {
+    public List<GrantTermsAndConditionsResource> getTermsAndConditionsList() {
         return termsAndConditionsList;
     }
 
-    public TermsAndConditionsResource getCurrentTermsAndConditions() {
+    public GrantTermsAndConditionsResource getCurrentTermsAndConditions() {
         return currentTermsAndConditions;
     }
 }

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.core.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.TermsAndConditionsViewModel;
@@ -30,9 +30,11 @@ public class TermsAndConditionsModelPopulator implements CompetitionSetupSection
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel,
                                                    CompetitionResource competitionResource) {
 
-        List<TermsAndConditionsResource> termsAndConditionsList = termsAndConditionsRestService.getLatestVersionsForAllTermsAndConditions().getSuccess();
+        List<GrantTermsAndConditionsResource> termsAndConditionsList = termsAndConditionsRestService
+                .getLatestVersionsForAllTermsAndConditions()
+                .getSuccess();
 
-        TermsAndConditionsResource termsAndConditions = termsAndConditionsRestService.getById(
+        GrantTermsAndConditionsResource termsAndConditions = termsAndConditionsRestService.getById(
                 competitionResource.getTermsAndConditions().getId()).getSuccess();
 
         return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList, termsAndConditions);

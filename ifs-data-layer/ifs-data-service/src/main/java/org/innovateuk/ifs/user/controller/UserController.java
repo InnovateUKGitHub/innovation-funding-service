@@ -201,6 +201,11 @@ public class UserController {
         ).toPostCreateResponse();
     }
 
+    @PostMapping("/id/{userId}/agreeNewSiteTermsAndConditions")
+    public RestResult<Void> agreeNewSiteTermsAndConditions(@PathVariable("userId") final long userId) {
+        return userService.agreeNewTermsAndConditions(userId).toPostResponse();
+    }
+
     @PostMapping("/updateDetails")
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userService.updateDetails(userResource).andOnSuccessReturnVoid(() -> crmService.syncCrmContact(userResource.getId())).toPutResponse();
