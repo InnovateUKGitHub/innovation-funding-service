@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -28,7 +27,6 @@ import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -694,23 +692,5 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("Applications", model.getBackTitle());
         assertEquals("/competition/1/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
-    }
-
-    @Test
-    public void navigationOptions() throws Exception {
-        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withName(COMPETITION_NAME).build();
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
-
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/manage", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/navigate-applications"))
-                .andReturn();
-
-        NavigateApplicationsViewModel model = (NavigateApplicationsViewModel) result.getModelAndView().getModel().get("model");
-
-        verify(competitionService, only()).getById(COMPETITION_ID);
-
-        assertEquals(COMPETITION_ID, model.getCompetitionId().longValue());
-        assertEquals(COMPETITION_NAME, model.getCompetitionName());
     }
 }
