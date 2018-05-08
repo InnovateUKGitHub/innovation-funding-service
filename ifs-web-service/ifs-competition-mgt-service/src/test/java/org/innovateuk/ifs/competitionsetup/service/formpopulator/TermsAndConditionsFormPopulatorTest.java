@@ -3,14 +3,14 @@ package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.TermsAndConditionsForm;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder.newTermsAndConditionsResource;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.junit.Assert.*;
 
 public class TermsAndConditionsFormPopulatorTest extends BaseUnitTestMocksTest {
@@ -26,9 +26,7 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testGetSectionFormDataTermsAndConditions() {
-        Long id = 1L;
-        TermsAndConditionsResource termsAndConditions = newTermsAndConditionsResource()
-                .withId(id).build();
+        GrantTermsAndConditionsResource termsAndConditions = newGrantTermsAndConditionsResource().build();
 
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(termsAndConditions).build();
@@ -39,6 +37,6 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTestMocksTest {
         TermsAndConditionsForm form = (TermsAndConditionsForm) result;
 
         assertNotNull(form.getTermsAndConditionsId());
-        assertEquals(form.getTermsAndConditionsId(), id);
+        assertEquals(form.getTermsAndConditionsId(), termsAndConditions.getId());
     }
 }
