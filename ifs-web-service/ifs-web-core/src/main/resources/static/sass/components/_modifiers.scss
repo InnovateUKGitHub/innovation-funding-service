@@ -128,9 +128,11 @@ table {
     max-width: 100%;
 
     td {
-      &:first-child input,
-      &:first-child textarea {
-        margin-left: 3px;
+      &:first-child{
+        input,
+        textarea {
+          margin-left: 3px;
+        }
       }
     }
   }
