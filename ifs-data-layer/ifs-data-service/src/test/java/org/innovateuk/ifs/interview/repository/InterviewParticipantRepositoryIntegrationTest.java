@@ -211,7 +211,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
     }
 
     @Test
-    public void getAllocateApplicationsOverview() throws Exception {
+    public void getInterviewAcceptedAssessors() throws Exception {
         loginSteveSmith();
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);

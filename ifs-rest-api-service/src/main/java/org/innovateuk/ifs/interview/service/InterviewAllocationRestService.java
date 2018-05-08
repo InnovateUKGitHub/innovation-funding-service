@@ -8,6 +8,6 @@ import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResou
  */
 public interface InterviewAllocationRestService {
 
-    RestResult<InterviewAcceptedAssessorsPageResource> getAllocateApplicationsOverview(long competitionId, int page);
+    RestResult<InterviewAcceptedAssessorsPageResource> getInterviewAcceptedAssessors(long competitionId, int page);
 
 }

@@ -8,8 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
@@ -31,8 +31,8 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         int page = 2;
         int size = 10;
 
-        InterviewAcceptedAssessorsPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
-                .withContent(newInterviewAssessorAllocateApplicationsResource().build(2))
+        InterviewAcceptedAssessorsPageResource expectedPageResource = newInterviewAcceptedAssessorsPageResource()
+                .withContent(newInterviewAcceptedAssessorsResource().build(2))
                 .build();
 
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.email"));

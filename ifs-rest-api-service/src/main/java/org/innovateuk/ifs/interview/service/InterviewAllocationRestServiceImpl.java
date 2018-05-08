@@ -17,7 +17,7 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
     private static final String interviewPanelRestUrl = "/interview-panel";
 
     @Override
-    public RestResult<InterviewAcceptedAssessorsPageResource> getAllocateApplicationsOverview(long competitionId, int page) {
+    public RestResult<InterviewAcceptedAssessorsPageResource> getInterviewAcceptedAssessors(long competitionId, int page) {
 
         String baseUrl = format("%s/%s/%s", interviewPanelRestUrl, "allocate-overview", competitionId);
 

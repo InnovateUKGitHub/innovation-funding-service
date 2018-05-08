@@ -11,7 +11,7 @@ import static java.util.Collections.emptyList;
 
 public class InterviewAcceptedAssessorsPageResourceBuilder extends PageResourceBuilder<InterviewAcceptedAssessorsPageResource, InterviewAcceptedAssessorsPageResourceBuilder, InterviewAcceptedAssessorsResource> {
 
-    public static InterviewAcceptedAssessorsPageResourceBuilder newInterviewAssessorAllocateApplicationsPageResource() {
+    public static InterviewAcceptedAssessorsPageResourceBuilder newInterviewAcceptedAssessorsPageResource() {
         return new InterviewAcceptedAssessorsPageResourceBuilder(emptyList());
     }
 

@@ -30,7 +30,7 @@ public class InterviewAllocationController {
     @Autowired
     private CompetitionService competitionService;
 
-    @GetMapping("/allocate-applications")
+    @GetMapping("/allocate-assessors")
     public String overview(Model model,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam MultiValueMap<String, String> queryParams,
@@ -46,7 +46,7 @@ public class InterviewAllocationController {
         ));
         model.addAttribute("originQuery", originQuery);
 
-        return "competition/interview-allocate-overview";
+        return "competition/interview-accepted-assessors";
     }
 
 }

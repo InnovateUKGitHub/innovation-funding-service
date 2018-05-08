@@ -6,7 +6,7 @@ import org.innovateuk.ifs.interview.service.InterviewAllocationRestServiceImpl;
 import org.junit.Test;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
 import static org.junit.Assert.assertEquals;
 
 public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitTest<InterviewAllocationRestServiceImpl> {
@@ -24,13 +24,13 @@ public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitT
         long competitionId = 1L;
         int page = 1;
 
-        InterviewAcceptedAssessorsPageResource expected = newInterviewAssessorAllocateApplicationsPageResource().build();
+        InterviewAcceptedAssessorsPageResource expected = newInterviewAcceptedAssessorsPageResource().build();
 
         String expectedUrl = format("%s/%s/%s?page=1", restUrl, "allocate-overview", competitionId);
 
         setupGetWithRestResultExpectations(expectedUrl, InterviewAcceptedAssessorsPageResource.class, expected);
 
-        InterviewAcceptedAssessorsPageResource actual = service.getAllocateApplicationsOverview(competitionId, page)
+        InterviewAcceptedAssessorsPageResource actual = service.getInterviewAcceptedAssessors(competitionId, page)
                 .getSuccess();
 
         assertEquals(expected, actual);

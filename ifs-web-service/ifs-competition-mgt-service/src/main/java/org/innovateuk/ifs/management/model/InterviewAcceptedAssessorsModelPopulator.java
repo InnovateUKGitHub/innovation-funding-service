@@ -27,7 +27,7 @@ public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessme
 
     public InterviewAcceptedAssessorsViewModel populateModel(CompetitionResource competition, String origin) {
 
-        InterviewAcceptedAssessorsPageResource pageResource = interviewAllocationRestService.getAllocateApplicationsOverview(
+        InterviewAcceptedAssessorsPageResource pageResource = interviewAllocationRestService.getInterviewAcceptedAssessors(
                 competition.getId(),
                 0)
                 .getSuccess();

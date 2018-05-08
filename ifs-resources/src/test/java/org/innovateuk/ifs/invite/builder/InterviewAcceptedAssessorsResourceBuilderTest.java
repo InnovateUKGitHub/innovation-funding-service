@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.junit.Assert.assertEquals;
 
 public class InterviewAcceptedAssessorsResourceBuilderTest {
@@ -16,7 +16,7 @@ public class InterviewAcceptedAssessorsResourceBuilderTest {
         String expectedName = "name 1";
         String expectedSkillArea = "skills";
 
-        InterviewAcceptedAssessorsResource expectedInterviewAssessor = newInterviewAssessorAllocateApplicationsResource()
+        InterviewAcceptedAssessorsResource expectedInterviewAssessor = newInterviewAcceptedAssessorsResource()
                 .withId(expectedId)
                 .withName(expectedName)
                 .withSkillArears(expectedSkillArea)
@@ -33,7 +33,7 @@ public class InterviewAcceptedAssessorsResourceBuilderTest {
         String[] expectedNames = {"name 1", "name 2"};
         String[] expectedSkillAreas = {"skill 1", "skill 2"};
 
-        List<InterviewAcceptedAssessorsResource> expectedInterviewAssessors = newInterviewAssessorAllocateApplicationsResource()
+        List<InterviewAcceptedAssessorsResource> expectedInterviewAssessors = newInterviewAcceptedAssessorsResource()
                 .withId(expectedIds)
                 .withName(expectedNames)
                 .withSkillArears(expectedSkillAreas)

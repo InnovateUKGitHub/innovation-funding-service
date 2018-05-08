@@ -6,7 +6,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class InterviewAcceptedAssessorsResourceDocs {
 
-    public static final FieldDescriptor[] interviewAssessorAllocateApplicationsResourceFields = {
+    public static final FieldDescriptor[] interviewAcceptedAssessorsResourceFields = {
             fieldWithPath("id").description("Id of the assessor"),
             fieldWithPath("name").description("Name of the assessor"),
             fieldWithPath("skillAreas").description("Skill areas of the assessor"),

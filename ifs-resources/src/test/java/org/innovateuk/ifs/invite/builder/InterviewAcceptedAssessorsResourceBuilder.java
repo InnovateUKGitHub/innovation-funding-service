@@ -26,7 +26,7 @@ public class InterviewAcceptedAssessorsResourceBuilder
         return new InterviewAcceptedAssessorsResource();
     }
 
-    public static InterviewAcceptedAssessorsResourceBuilder newInterviewAssessorAllocateApplicationsResource() {
+    public static InterviewAcceptedAssessorsResourceBuilder newInterviewAcceptedAssessorsResource() {
         return new InterviewAcceptedAssessorsResourceBuilder(emptyList());
     }
 

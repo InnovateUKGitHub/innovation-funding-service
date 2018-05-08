@@ -13,9 +13,9 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsPageResourceDocs.interviewAssessorAllocateApplicationsPageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsResourceDocs.interviewAssessorAllocateApplicationsResourceFields;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsResourceDocs.interviewAcceptedAssessorsResourceFields;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,9 +41,9 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        List<InterviewAcceptedAssessorsResource> content = newInterviewAssessorAllocateApplicationsResource().build(2);
+        List<InterviewAcceptedAssessorsResource> content = newInterviewAcceptedAssessorsResource().build(2);
 
-        InterviewAcceptedAssessorsPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
+        InterviewAcceptedAssessorsPageResource expectedPageResource = newInterviewAcceptedAssessorsPageResource()
                 .withContent(content)
                 .build();
 
@@ -68,7 +68,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                                         .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`")
                         ),
                         responseFields(interviewAssessorAllocateApplicationsPageResourceFields)
-                                .andWithPrefix("content[].", interviewAssessorAllocateApplicationsResourceFields)
+                                .andWithPrefix("content[].", interviewAcceptedAssessorsResourceFields)
                 ));
 
         verify(interviewAllocationServiceMock, only()).getInterviewAcceptedAssessors(competitionId, pageable);

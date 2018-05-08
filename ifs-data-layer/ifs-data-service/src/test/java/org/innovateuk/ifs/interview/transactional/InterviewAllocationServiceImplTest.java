@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -39,7 +39,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
 
-        List<InterviewAcceptedAssessorsResource> expectedParticipants = newInterviewAssessorAllocateApplicationsResource()
+        List<InterviewAcceptedAssessorsResource> expectedParticipants = newInterviewAcceptedAssessorsResource()
                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
                 .build(5);
 
