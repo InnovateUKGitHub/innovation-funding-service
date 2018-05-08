@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.junit.Test;
@@ -12,6 +14,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatist
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteStatisticsResourceBuilder.newInterviewInviteStatisticsResource;
 import static org.innovateuk.ifs.review.builder.ReviewInviteStatisticsResourceBuilder.newReviewInviteStatisticsResource;
 import static org.innovateuk.ifs.review.builder.ReviewKeyStatisticsResourceBuilder.newReviewKeyStatisticsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -36,7 +40,7 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
 
         when(competitionKeyStatisticsServiceMock.getReadyToOpenKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/readyToOpen", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/ready-to-open", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }
@@ -48,7 +52,7 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         CompetitionOpenKeyStatisticsResource keyStatisticsResource = newCompetitionOpenKeyStatisticsResource().build();
         when(competitionKeyStatisticsServiceMock.getOpenKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/open", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/open", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }
@@ -60,7 +64,7 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         CompetitionClosedKeyStatisticsResource keyStatisticsResource = newCompetitionClosedKeyStatisticsResource().build();
         when(competitionKeyStatisticsServiceMock.getClosedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/closed", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/closed", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }
@@ -72,7 +76,7 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = newCompetitionInAssessmentKeyStatisticsResource().build();
         when(competitionKeyStatisticsServiceMock.getInAssessmentKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/inAssessment", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/in-assessment", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }
@@ -84,32 +88,56 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         CompetitionFundedKeyStatisticsResource keyStatisticsResource = newCompetitionFundedKeyStatisticsResource().build();
         when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/funded", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/funded", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }
 
     @Test
-    public void getAssessmentPanelKeyStatistics() throws Exception {
+    public void getReviewStatistics() throws Exception {
         final long competitionId = 1L;
 
         ReviewKeyStatisticsResource reviewKeyStatisticsResource = newReviewKeyStatisticsResource().build();
         when(reviewStatisticsServiceMock.getReviewPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/review", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/review", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(reviewKeyStatisticsResource)));
     }
 
     @Test
-    public void getAssessmentPanelInviteStatistics() throws Exception {
+    public void getReviewInviteStatistics() throws Exception {
         final long competitionId = 1L;
 
         ReviewInviteStatisticsResource reviewInviteStatisticsResource = newReviewInviteStatisticsResource().build();
         when(reviewStatisticsServiceMock.getReviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/review-invites", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(reviewInviteStatisticsResource)));
+    }
+
+    @Test
+    public void getInterviewStatistics() throws Exception {
+        final long competitionId = 1L;
+
+        InterviewAssignmentKeyStatisticsResource interviewAssignmentKeyStatisticsResource = newInterviewAssignmentKeyStatisticsResource().build();
+        when(interviewStatisticsServiceMock.getInterviewPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(interviewAssignmentKeyStatisticsResource));
+
+        mockMvc.perform(get("/competition-statistics/{id}/interview", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(interviewAssignmentKeyStatisticsResource)));
+    }
+
+    @Test
+    public void getInterviewInviteStatistics() throws Exception {
+        final long competitionId = 1L;
+
+        InterviewInviteStatisticsResource interviewInviteStatisticsResource = newInterviewInviteStatisticsResource().build();
+        when(interviewStatisticsServiceMock.getInterviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(interviewInviteStatisticsResource));
+
+        mockMvc.perform(get("/competition-statistics/{id}/interview-invites", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(interviewInviteStatisticsResource)));
     }
 }
