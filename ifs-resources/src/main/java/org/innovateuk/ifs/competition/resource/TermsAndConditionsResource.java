@@ -1,19 +1,25 @@
 package org.innovateuk.ifs.competition.resource;
 
+import java.time.ZonedDateTime;
+
 /**
  * Resource representation of TermsAndConditions
  */
-public class TermsAndConditionsResource {
+public abstract class TermsAndConditionsResource {
 
     private Long id;
     private String name;
     private String template;
-    private String version;
+    private int version;
+    private String createdBy;
+    private ZonedDateTime createdOn;
+    private String modifiedBy;
+    private ZonedDateTime modifiedOn;
 
     public TermsAndConditionsResource() {
     }
 
-    public TermsAndConditionsResource(String name, String template, String version) {
+    public TermsAndConditionsResource(String name, String template, int version) {
         this.name = name;
         this.template = template;
         this.version = version;
@@ -43,11 +49,43 @@ public class TermsAndConditionsResource {
         this.template = template;
     }
 
-    public String getVersion() {
+    public int getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(int version) {
         this.version = version;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(final String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public ZonedDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(final ZonedDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(final String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(final ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 }

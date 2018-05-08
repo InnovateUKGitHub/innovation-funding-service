@@ -45,4 +45,7 @@ public interface UserService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable);
+
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'AGREE_TERMS')")
+    ServiceResult<Void> agreeNewTermsAndConditions(long userId);
 }
