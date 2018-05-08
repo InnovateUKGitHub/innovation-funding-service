@@ -294,8 +294,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<Map<CompetitionSetupSubsection, Optional<Boolean>>>() {};
     }
 
-    public static ParameterizedTypeReference<List<TermsAndConditionsResource>> termsAndConditionsResourceListType() {
-        return new ParameterizedTypeReference<List<TermsAndConditionsResource>>() {};
+    public static ParameterizedTypeReference<List<GrantTermsAndConditionsResource>> grantTermsAndConditionsResourceListType() {
+        return new ParameterizedTypeReference<List<GrantTermsAndConditionsResource>>() {};
     }
 
     public static ParameterizedTypeReference<Map<Long, Boolean>> longStatusMap() {

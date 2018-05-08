@@ -10,10 +10,7 @@ import org.innovateuk.ifs.user.resource.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -70,6 +67,12 @@ public class User extends AuditableEntity implements Serializable {
 
     @Column(unique = true)
     private Long profileId;
+
+    @ElementCollection
+    @CollectionTable(name = "user_terms_and_conditions", joinColumns = {@JoinColumn(name="user_id")})
+    @Column(name="terms_and_conditions_id")
+    @OrderColumn(name="accepted_date")
+    private Set<Long> termsAndConditionsIds = new LinkedHashSet<>();
 
     public User() {
         // no-arg constructor
@@ -237,6 +240,14 @@ public class User extends AuditableEntity implements Serializable {
 
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
+    }
+
+    public Set<Long> getTermsAndConditionsIds() {
+        return termsAndConditionsIds;
+    }
+
+    public void setTermsAndConditionsIds(Set<Long> termsAndConditionsIds) {
+        this.termsAndConditionsIds = termsAndConditionsIds;
     }
 
     public List<Affiliation> getAffiliations() {
