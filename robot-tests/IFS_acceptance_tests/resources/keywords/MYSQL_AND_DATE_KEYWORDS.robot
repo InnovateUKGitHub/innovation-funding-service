@@ -249,4 +249,4 @@ Set global date variables
 Delete user from terms and conditions database
     [Arguments]    ${user_id}
     Connect to Database  @{database}
-    execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}'
+    execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}';

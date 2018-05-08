@@ -110,6 +110,7 @@ Research and technology organisations (RTO) search (accept invitation flow with 
 
 Validation on terms and condition page
     [Documentation]  IFS-3093
+    [Tags]  MySQL
     [Setup]  Delete user from terms and conditions database   ${collaboratorId}
     Given Log in as a different user                   &{collaborator1_credentials}
     When The user clicks the button/link                css=button[type="submit"]
