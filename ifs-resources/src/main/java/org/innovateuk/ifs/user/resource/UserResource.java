@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -38,6 +39,7 @@ public class UserResource {
     private Long ethnicity;
     private Long profileId;
     private boolean allowMarketingEmails;
+    private Set<Long> termsAndConditionsIds;
     private ZonedDateTime createdOn;
     private String createdBy;
     private ZonedDateTime modifiedOn;
@@ -217,6 +219,14 @@ public class UserResource {
         this.allowMarketingEmails = allowMarketingEmails;
     }
 
+    public Set<Long> getTermsAndConditionsIds() {
+        return termsAndConditionsIds;
+    }
+
+    public void setTermsAndConditionsIds(Set<Long> termsAndConditionsIds) {
+        this.termsAndConditionsIds = termsAndConditionsIds;
+    }
+
     public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
@@ -267,7 +277,7 @@ public class UserResource {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -276,9 +286,10 @@ public class UserResource {
             return false;
         }
 
-        UserResource that = (UserResource) o;
+        final UserResource that = (UserResource) o;
 
         return new EqualsBuilder()
+                .append(allowMarketingEmails, that.allowMarketingEmails)
                 .append(id, that.id)
                 .append(uid, that.uid)
                 .append(title, that.title)
@@ -295,11 +306,11 @@ public class UserResource {
                 .append(disability, that.disability)
                 .append(ethnicity, that.ethnicity)
                 .append(profileId, that.profileId)
-                .append(allowMarketingEmails, that.allowMarketingEmails)
-                .append(createdBy, that.createdBy)
+                .append(termsAndConditionsIds, that.termsAndConditionsIds)
                 .append(createdOn, that.createdOn)
-                .append(modifiedBy, that.modifiedBy)
+                .append(createdBy, that.createdBy)
                 .append(modifiedOn, that.modifiedOn)
+                .append(modifiedBy, that.modifiedBy)
                 .isEquals();
     }
 
@@ -323,10 +334,11 @@ public class UserResource {
                 .append(ethnicity)
                 .append(profileId)
                 .append(allowMarketingEmails)
-                .append(createdBy)
+                .append(termsAndConditionsIds)
                 .append(createdOn)
-                .append(modifiedBy)
+                .append(createdBy)
                 .append(modifiedOn)
+                .append(modifiedBy)
                 .toHashCode();
     }
 }
