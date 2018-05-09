@@ -269,7 +269,7 @@ Lead partner marks spend profile as complete
     [Tags]    HappyPath
     [Setup]  Log in as a different user        ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     Given the user navigates to the page       ${external_spendprofile_summary}/review
-    When the user clicks the button/link       jQuery=.button:contains("Mark as complete")
+    When the user clicks the button/link       css=[name="mark-as-complete"]
     Then the user should not see the element   jQuery=.success-alert p:contains("Your spend profile is marked as complete. You can still edit this page.")
     And the user should not see the element    css=table a[type="number"]    # checking here that the table has become read-only
     When the user clicks the button/link            link=Project setup status
@@ -317,17 +317,17 @@ Non-lead partner can see correct project start date and duration
 
 Industrial partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852
-    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link     jQuery=button:contains("Cancel")
-    Then the user should see the element    jQuery=a:contains("Submit to lead partner")
+    When the user clicks the button/link  link=Submit to lead partner
+    And the user clicks the button/link   jQuery=button:contains("Cancel")
+    Then the user should see the element  link=Submit to lead partner
 
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link             jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link             jQuery=.button:contains("Submit")
-    Then the user should see the text in the page    We have reviewed and confirmed your project costs
-    And the user should not see the element          css=table a[type="number"]    # checking here that the table has become read-only
+    When the user clicks the button/link           link=Submit to lead partner
+    And the user clicks the button/link            jQuery=.button:contains("Submit")
+    Then the user should see the text in the page  We have reviewed and confirmed your project costs
+    And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
 
 Status updates for industrial user after spend profile submission
     [Documentation]    INFUND-6881
@@ -414,17 +414,11 @@ Academic partner edits spend profile and this updates on the table
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    1
 
-Academic partner can choose cancel on the dialogue
-    [Documentation]    INFUND-6852
-    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link     jQuery=button:contains("Cancel")
-    Then the user should see the element    jQuery=a:contains("Submit to lead partner")
-
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link           jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link    jQuery=.button:contains("Submit")
+    When the user clicks the button/link           link=Submit to lead partner
+    And the user clicks the button/link            jQuery=button.button:contains("Submit")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
     And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -450,12 +444,12 @@ Project Manager can view partners' spend profiles
     And the user clicks the button/link             link=${Meembee_Name}
     And the user should see the text in the page    We have reviewed and confirmed your project costs
     And the user should not see the element         jQuery=.button:contains("Edit")
-    And the user should not see the element         jQuery=.button:contains("Mark as complete")
+    And the user should not see the element         css=[name="mark-as-complete"]
     And the user goes back to the previous page
     And the user clicks the button/link             link=${Zooveo_Name}
     And the user should see the text in the page    We have reviewed and confirmed your project costs
     And the user should not see the element         jQuery=.button:contains("Edit")
-    And the user should not see the element         jQuery=.button:contains("Mark as complete")
+    And the user should not see the element         css=[name="mark-as-complete"]
     And the user goes back to the previous page
     When the user should see all spend profiles as complete
     Then the user should see the element            jQuery=.button:contains("Review and send total project spend profile")
@@ -479,9 +473,9 @@ Project Manager can view combined spend profile
 
 Project Manager can choose cancel on the dialogue
     [Documentation]    INFUND-3767
-    When the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
-    And the user clicks the button/link     jQuery=button:contains("Cancel")
-    Then the user should see the element    jQuery=.button:contains("Send project spend profile")
+    When the user clicks the button/link  link=Send project spend profile
+    And the user clicks the button/link   jQuery=button:contains("Cancel")
+    Then the user should see the element  link=Send project spend profile
 
 Project Manager can see the button Allow edits
     [Documentation]    INFUND-6350
@@ -517,8 +511,8 @@ Partner can receive edit rights to his SP
     Then the user should see the element    css=li.require-action:nth-child(5)
     When the user clicks the button/link    link=Spend profile
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
-    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link    jQuery=.button:contains("Submit")
+    When the user clicks the button/link    link=Submit to lead partner
+    And the user clicks the button/link     jQuery=button.button:contains("Submit")
 
 Project Manager can send the project's spend profiles
     [Documentation]    INFUND-3767
@@ -526,16 +520,16 @@ Project Manager can send the project's spend profiles
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
-    Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
+    Then the user clicks the button/link     link=Send project spend profile
     And the user should see the element      jQuery=button:contains("Cancel")
-    When the user clicks the button/link     css=.modal-confirm-spend-profile-totals .button[value="Send"]
+    When the user clicks the button/link     id=submit-send-all-spend-profiles
 
 PM's Spend profile Summary page gets updated after submit
     [Documentation]    INFUND-3766
     [Tags]
     Given the user navigates to the page     ${external_spendprofile_summary}
     Then the user should see the element     jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
-    And the user should not see the element  jQuery=.button:contains("Send project spend profile")
+    And the user should not see the element  link=Send project spend profile
 
 Status updates after spend profile submitted
     [Documentation]    INFUND-6225
@@ -702,7 +696,7 @@ Lead partner can edit own spend profile and mark as complete
     And the user should see the text in the page    Your spend profile is marked as complete
     And the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
-    And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link    css=[name="mark-as-complete"]
 
 Industrial partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
@@ -713,8 +707,8 @@ Industrial partner receives edit rights and can submit their spend profile
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     When the user clicks the button/link    link=Spend profile
-    And the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link    jQuery=.button:contains("Submit")
+    And the user clicks the button/link     link=Submit to lead partner
+    And the user clicks the button/link     jQuery=button.button:contains("Submit")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
@@ -730,8 +724,8 @@ Academic partner receives edit rights and can submit their spend profile
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     And the user clicks the button/link    link=Spend profile
-    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link    jQuery=.button:contains("Submit")
+    When the user clicks the button/link   link=Submit to lead partner
+    And the user clicks the button/link    jQuery=button.button:contains("Submit")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
@@ -744,10 +738,9 @@ Lead partner can send the combined spend profile
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
-    Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
+    Then the user clicks the button/link     link=Send project spend profile
     And the user should see the element      jQuery=button:contains("Cancel")
-    When the user clicks the button/link     css=.modal-confirm-spend-profile-totals .button[value="Send"]
-
+    When the user clicks the button/link     id=submit-send-all-spend-profiles
 
 Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507, INFUND-5549

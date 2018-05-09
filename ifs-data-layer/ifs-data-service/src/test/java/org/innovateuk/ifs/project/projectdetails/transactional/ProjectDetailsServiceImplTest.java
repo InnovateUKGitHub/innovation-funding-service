@@ -33,6 +33,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -160,7 +161,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void testInvalidProjectManagerProvided() {
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                .build()));
         ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
         assertFalse(result.isSuccess());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
@@ -175,7 +178,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertTrue(existingProject.getProjectUsers().isEmpty());
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.COMPLETE)
+                .build()));
 
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isFailure());
@@ -189,7 +194,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                .build()));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -224,7 +231,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                .build()));
 
         setLoggedInUser(newUserResource().withId(leadPartnerProjectUser.getId()).build());
 
@@ -674,38 +683,46 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testInviteProjectManagerWhenUnableToSendNotification() {
 
-        Long projectId = 1L;
-
         InviteProjectResource inviteResource = newInviteProjectResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation(17L)
+                .withLeadOrganisation(organisation.getId())
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
         Project projectInDB = ProjectBuilder.newProject()
-                .withId(projectId)
                 .withName("Project 1")
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
-        Map<String, Object> globalArgs = new HashMap<>();
-        globalArgs.put("projectName", "Project 1");
-        globalArgs.put("leadOrganisation", organisation.getName());
-        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
-        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
+
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", projectInDB.getName());
+        globalArguments.put("competitionName", "Competition 1");
+        globalArguments.put("leadOrganisation", organisation.getName());
+        globalArguments.put("applicationId", application.getId());
+        globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+
+        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+                .withEmail("a@b.com")
+                .withName("A B")
+                .build());
 
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                .build()));
 
-        ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+        ServiceResult<Void> result = service.inviteProjectManager(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
@@ -714,37 +731,38 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testInviteProjectManagerSuccess() {
 
-        Long projectId = 1L;
-
         InviteProjectResource inviteResource = newInviteProjectResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation(17L)
+                .withLeadOrganisation(organisation.getId())
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
         Project projectInDB = ProjectBuilder.newProject()
-                .withId(projectId)
                 .withName("Project 1")
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
-        Map<String, Object> globalArgs = new HashMap<>();
-        globalArgs.put("projectName", "Project 1");
-        globalArgs.put("leadOrganisation", organisation.getName());
-        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
-        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", projectInDB.getName());
+        globalArguments.put("competitionName", "Competition 1");
+        globalArguments.put("leadOrganisation", organisation.getName());
+        globalArguments.put("applicationId", application.getId());
+        globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
-        ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+        ServiceResult<Void> result = service.inviteProjectManager(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
     }
@@ -780,12 +798,12 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testInviteFinanceContactSuccess() {
 
-        Long projectId = 1L;
-
         InviteProjectResource inviteResource = newInviteProjectResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation(17L)
+                .withLeadOrganisation(organisation.getId())
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -797,18 +815,23 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
-        Map<String, Object> globalArgs = new HashMap<>();
-        globalArgs.put("projectName", "Project 1");
-        globalArgs.put("leadOrganisation", organisation.getName());
-        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
-        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", projectInDB.getName());
+        globalArguments.put("competitionName", "Competition 1");
+        globalArguments.put("leadOrganisation", organisation.getName());
+        globalArguments.put("applicationId", application.getId());
+        globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withName("A B").withEmail("a@b.com").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+                .withName("A B")
+                .withEmail("a@b.com")
+                .build());
 
-        ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
+        ServiceResult<Void> result = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
     }
@@ -828,8 +851,10 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
         assertTrue(result.isSuccess());
+        assertEquals(registeredAddress, project.getAddress());
     }
 
     @Test
@@ -847,18 +872,32 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
         assertTrue(result.isSuccess());
+        assertEquals(operatingAddress, project.getAddress());
     }
 
     @Test
     public void testUpdateProjectAddressToNewProjectAddress() {
 
-        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
+        Organisation leadOrganisation = newOrganisation()
+                .withId(organisation.getId())
+                .build();
+
         AddressResource newAddressResource = newAddressResource().build();
-        Address newAddress = newAddress().build();
-        AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
-        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+        Address newAddress = newAddress()
+                .build();
+
+        AddressType projectAddressType = newAddressType()
+                .withId((long) PROJECT.getOrdinal())
+                .withName(PROJECT.name())
+                .build();
+
+        OrganisationAddress organisationAddress = newOrganisationAddress()
+                .withOrganisation(leadOrganisation)
+                .withAddress(newAddress).withAddressType(projectAddressType)
+                .build();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
@@ -873,35 +912,90 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
+        verify(organisationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationAddress.class));
+        assertEquals(newAddress, project.getAddress());
+    }
+
+    @Test
+    public void testUpdateProjectAddressToNewProjectAddressAndExistingAddressAssociatedWithOrg() {
+
+        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
+        AddressResource newAddressResource = newAddressResource().build();
+        Address newAddress = newAddress().build();
+        AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
+        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
+        when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
+        when(addressTypeRepositoryMock.findOne(PROJECT.getOrdinal())).thenReturn(projectAddressType);
+        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(singletonList(organisationAddress));
+        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        assertNull(project.getAddress());
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        assertTrue(result.isSuccess());
+        verify(organisationAddressRepositoryMock).delete(organisationAddress);
+        assertEquals(newAddress, project.getAddress());
     }
 
     @Test
     public void testInviteProjectFinanceUser(){
-        InviteProjectResource invite = newInviteProjectResource().withInviteOrganisationName("Invite Organisation 1").build();
+
+        InviteProjectResource inviteResource = newInviteProjectResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation(organisation.getId())
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
         ProcessRole[] roles = newProcessRole()
-                .withOrganisationId(o.getId())
+                .withOrganisationId(organisation.getId())
                 .withRole(Role.LEADAPPLICANT)
                 .build(1)
                 .toArray(new ProcessRole[0]);
-        Application a = newApplication().withProcessRoles(roles).build();
 
-        Project project = newProject().withId(projectId).withName("Project 1").withApplication(a).build();
+        Application a = newApplication()
+                .withProcessRoles(roles)
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .withApplication(a)
+                .build();
+
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
-        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        Map<String, Object> globalArgs = new HashMap<>();
-        globalArgs.put("projectName", "Project 1");
-        globalArgs.put("leadOrganisation", organisation.getName());
-        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
-        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + invite.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
-        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", projectInDB.getName());
+        globalArguments.put("competitionName", "Competition 1");
+        globalArguments.put("leadOrganisation", organisation.getName());
+        globalArguments.put("applicationId", application.getId());
+        globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
+        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+                .withEmail("a@b.com")
+                .withName("A B")
+                .build());
+
+        ServiceResult<Void> success = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
         assertTrue(success.isSuccess());
     }
