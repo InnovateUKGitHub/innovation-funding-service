@@ -2,12 +2,16 @@ package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.FormInputResponseController;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.util.ValidationUtil;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
@@ -27,6 +31,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<FormInputResponseController> {
+
+    @Mock
+    private FormInputResponseService formInputResponseService;
+
+    @Mock
+    private ApplicationValidationUtil validationUtilMock;
 
     @Override
     protected FormInputResponseController supplyControllerUnderTest() {

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -55,6 +56,9 @@ import static org.mockito.Mockito.*;
 public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<ApplicationFundingService> {
 
     private static final String webBaseUrl = "http://ifs-local-dev";
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
 
     @Mock
     private FundingDecisionMapper fundingDecisionMapper;
