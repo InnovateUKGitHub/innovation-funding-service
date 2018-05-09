@@ -8,4 +8,7 @@ public interface OrganisationAddressService {
 
     @NotSecured(value = "Anyone can see an OrganisationAddress", mustBeSecuredByOtherServices = false)
     ServiceResult<OrganisationAddressResource> findOne(Long id);
+
+    @NotSecured(value = "Anyone can see an OrganisationAddress", mustBeSecuredByOtherServices = false)
+    ServiceResult<OrganisationAddressResource> findByOrganisationIdAndAddressId(long organisationId, long addressId);
 }
