@@ -3,6 +3,7 @@ package org.innovateuk.ifs.form.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class QuestionResource {
     private Long section;
     private String questionNumber;
     private QuestionType type;
+    private CompetitionSetupQuestionType questionSetupType;
     private Integer assessorMaximumScore;
 
     public QuestionResource() {
@@ -155,6 +157,14 @@ public class QuestionResource {
     public void setType(QuestionType type) {
 		this.type = type;
 	}
+
+    public CompetitionSetupQuestionType getQuestionSetupType() {
+        return questionSetupType;
+    }
+
+    public void setQuestionSetupType(CompetitionSetupQuestionType questionSetupType) {
+        this.questionSetupType = questionSetupType;
+    }
 
     public void setFormInputs(List<Long> formInputs) {
         this.formInputs = formInputs;

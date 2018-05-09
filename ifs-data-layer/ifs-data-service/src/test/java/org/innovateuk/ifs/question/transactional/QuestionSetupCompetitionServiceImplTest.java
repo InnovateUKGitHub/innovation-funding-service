@@ -51,7 +51,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
     private static String number = "number";
     private static String shortTitle = CompetitionSetupQuestionType.SCOPE.getShortName();
-    private static String newShortTitle = "CannotBeSet";
+    private static String newShortTitle = "ScopeTwo";
     private static String title = "title";
     private static String subTitle = "subTitle";
     private static String guidanceTitle = "guidanceTitle";
@@ -62,6 +62,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private static String assessmentGuidanceTitle = "assessmentGuidanceTitle";
     private static Integer assessmentMaxWords = 2;
     private static Integer scoreTotal = 10;
+    private static CompetitionSetupQuestionType competitionSetupQuestionType = CompetitionSetupQuestionType.SCOPE;
 
     @Mock
     private QuestionRepository questionRepository;
@@ -125,6 +126,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withDescription(subTitle)
                 .withShortName(shortTitle)
                 .withName(title)
+                .withQuestionSetupType(competitionSetupQuestionType)
                 .withId(questionId)
                 .build();
 
@@ -189,7 +191,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .build();
 
         Question question = newQuestion().
-                withShortName(CompetitionSetupQuestionType.SCOPE.getShortName()).build();
+                withShortName(newShortTitle).build();
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();

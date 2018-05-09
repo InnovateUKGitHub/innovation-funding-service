@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -80,7 +79,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
         setupResource.setQuestionId(question.getId());
-        setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
+        setupResource.setType(question.getQuestionSetupType());
 
         return serviceSuccess(setupResource);
     }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -39,7 +40,6 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
     }
 
     private static final String COMPETIITON_TYPE_SECTOR_NAME = "Sector";
-    private static final String SCOPE = "Scope";
 
     @Mock
     private GuidanceRowTemplatePersistorImpl guidanceRowTemplatePersistorMock;
@@ -96,8 +96,9 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withDescription(FEEDBACK.getType())
                 .build(2);
         Question question = newQuestion()
-                .withShortName(SCOPE)
-                .withSection(newSection().withName(SCOPE).build())
+                .withShortName(CompetitionSetupQuestionType.SCOPE.getShortName())
+                .withQuestionSetupType(CompetitionSetupQuestionType.SCOPE)
+                .withSection(newSection().withName(CompetitionSetupQuestionType.SCOPE.getShortName()).build())
                 .withCompetition(competition)
                 .withFormInputs(formInputsList).build();
 
