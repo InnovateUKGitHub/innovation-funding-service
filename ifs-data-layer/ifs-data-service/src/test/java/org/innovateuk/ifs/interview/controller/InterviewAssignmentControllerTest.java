@@ -6,8 +6,11 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
+import org.innovateuk.ifs.interview.transactional.InterviewApplicationInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,6 +42,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVCTest<InterviewAssignmentController> {
 
     private static final long COMPETITION_ID = 1L;
+
+    @Mock
+    private InterviewAssignmentService interviewAssignmentServiceMock;
+
+    @Mock
+    private InterviewApplicationInviteService interviewApplicationInviteService;
+
+    @Mock
+    private InterviewApplicationFeedbackService interviewApplicationFeedbackService;
 
     @Override
     protected InterviewAssignmentController supplyControllerUnderTest() {

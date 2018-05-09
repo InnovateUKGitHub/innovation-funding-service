@@ -4,14 +4,20 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
+import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +37,21 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
 
     private static final long COMPETITION_ID = 1L;
     private static final Organisation LEAD_ORGANISATION = newOrganisation().withName("lead org").build();
+
+    @Mock
+    private NotificationTemplateRenderer notificationTemplateRendererMock;
+
+    @Mock
+    private NotificationSender notificationSenderMock;
+
+    @Mock
+    private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
+
+    @Mock
+    private InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
 
     @Override
     protected InterviewApplicationInviteServiceImpl supplyServiceUnderTest() {

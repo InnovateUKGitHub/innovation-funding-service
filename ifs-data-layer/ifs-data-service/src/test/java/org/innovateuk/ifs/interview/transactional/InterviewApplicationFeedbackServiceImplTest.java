@@ -5,9 +5,14 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentMessageOutcomeRepository;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.io.InputStream;
@@ -24,6 +29,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class InterviewApplicationFeedbackServiceImplTest extends BaseServiceUnitTest<InterviewApplicationFeedbackServiceImpl> {
+
+    @Mock
+    private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
+
+    @Mock
+    private InterviewAssignmentMessageOutcomeRepository interviewAssignmentMessageOutcomeRepository;
+
+    @Mock
+    private FileService fileServiceMock;
+
+    @Mock
+    private FileEntryService fileEntryServiceMock;
 
     @Override
     protected InterviewApplicationFeedbackServiceImpl supplyServiceUnderTest() {

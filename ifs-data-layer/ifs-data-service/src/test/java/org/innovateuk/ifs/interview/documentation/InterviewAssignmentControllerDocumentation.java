@@ -7,11 +7,14 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
+import org.innovateuk.ifs.interview.transactional.InterviewApplicationInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -58,6 +61,15 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
     StagedApplicationListResource stagedApplicationInviteListResource = stagedApplicationListResourceBuilder.build();
     List<StagedApplicationResource> stagedInviteResources = stagedApplicationInviteListResource.getInvites();
+
+    @Mock
+    private InterviewAssignmentService interviewAssignmentServiceMock;
+
+    @Mock
+    private InterviewApplicationInviteService interviewApplicationInviteService;
+
+    @Mock
+    private InterviewApplicationFeedbackService interviewApplicationFeedbackService;
 
     @Override
     public InterviewAssignmentController supplyControllerUnderTest() {
