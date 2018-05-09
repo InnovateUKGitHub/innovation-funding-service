@@ -154,14 +154,14 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         Interview assignedInterview = newInterview()
                 .with(id(null))
-                .withState(InterviewState.ACCEPTED)
+                .withState(InterviewState.ASSIGNED)
                 .withParticipant(assessorRole2)
                 .withTarget(application2)
                 .build();
 
         Interview notAssignedInterview = newInterview()
                 .with(id(null))
-                .withState(InterviewState.ACCEPTED)
+                .withState(InterviewState.ASSIGNED)
                 .withParticipant(otherAssessorRole1)
                 .withTarget(application1)
                 .build();
@@ -190,7 +190,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         assertThat(content.getId(), is(equalTo(application1.getId())));
         assertThat(content.getLeadOrganisation(), is(equalTo(organisation.getName())));
-        assertThat(content.getNumberOfAssessors(), is(equalTo(2L)));
+        assertThat(content.getNumberOfAssessors(), is(equalTo(1L)));
     }
 
     @Test
@@ -205,7 +205,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         assertThat(content.getId(), is(equalTo(application2.getId())));
         assertThat(content.getLeadOrganisation(), is(equalTo(organisation.getName())));
-        assertThat(content.getNumberOfAssessors(), is(equalTo(2L)));
+        assertThat(content.getNumberOfAssessors(), is(equalTo(1L)));
     }
 
     @Test
