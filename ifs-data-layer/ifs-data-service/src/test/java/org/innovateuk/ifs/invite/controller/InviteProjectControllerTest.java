@@ -6,9 +6,11 @@ import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -30,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<InviteProjectController> {
+
+    @Mock
+    private ProjectInviteService projectInviteServiceMock;
 
     @Override
     protected InviteProjectController supplyControllerUnderTest() {
