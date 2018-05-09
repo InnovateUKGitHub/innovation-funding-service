@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -66,6 +67,15 @@ public class ProjectDetailsController {
                                                  @RequestParam("financeContact") Long financeContactUserId) {
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectDetailsService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
+    }
+
+    @ZeroDowntime(reference = "IFS-3470", description = "To support the older request param postCode. This will be deleted in next release")
+    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
+    public RestResult<Void> updatePartnerProjectLocationZDD(@PathVariable("projectId") final long projectId,
+                                                         @PathVariable("organisationId") final long organisationId,
+                                                         @RequestParam("postCode") String postCode) {
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectDetailsService.updatePartnerProjectLocation(composite, postCode).toPostResponse();
     }
 
     @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
