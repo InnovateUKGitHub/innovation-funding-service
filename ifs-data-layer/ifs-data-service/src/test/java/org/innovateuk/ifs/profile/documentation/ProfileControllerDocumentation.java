@@ -2,11 +2,13 @@ package org.innovateuk.ifs.profile.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.profile.controller.ProfileController;
+import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProfileAgreementDocs.profileAgreementResourceBuilder;
@@ -26,6 +28,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<ProfileController> {
+
+    @Mock
+    private ProfileService profileServiceMock;
 
     @Override
     protected ProfileController supplyControllerUnderTest() {

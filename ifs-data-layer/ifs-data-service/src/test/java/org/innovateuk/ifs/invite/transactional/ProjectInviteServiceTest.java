@@ -4,14 +4,23 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
+import org.innovateuk.ifs.invite.mapper.RoleInviteMapper;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
+import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +49,21 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private ProjectInviteService projectInviteService = new ProjectInviteServiceImpl();
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ProjectInviteRepository projectInviteRepositoryMock;
+
+    @Mock
+    private ProjectService projectServiceMock;
+
+    @Mock
+    private InviteProjectMapper inviteProjectMapperMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
 
     @Test
     public void testAcceptProjectInviteSuccess() throws Exception {
