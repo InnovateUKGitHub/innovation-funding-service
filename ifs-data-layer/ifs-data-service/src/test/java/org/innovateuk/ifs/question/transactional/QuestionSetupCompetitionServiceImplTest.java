@@ -234,40 +234,6 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_updateShouldNotChangeAppendixFormInputWhenItCantBeFound() {
-        setMocksForSuccessfulUpdate();
-        CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
-
-        resource.setAppendix(false);
-        resource.setAllowedFileTypes(asSet(FileTypeCategory.PDF));
-        resource.setAppendixGuidance(fileUploadGuidance);
-
-
-        boolean appendixEnabled = true;
-        String guidanceAnswer = "Only excel files with spaghetti VB macros allowed";
-        String allowedFileTypes = "XLSX";
-
-        FormInput appendixFormInput = newFormInput()
-                .withActive(appendixEnabled)
-                .withGuidanceAnswer(guidanceAnswer)
-                .withAllowedFileTypes(allowedFileTypes)
-                .build();
-        //Override repository response set in setMocksForSuccessfulUpdate test prep function
-        when(formInputRepository.findByQuestionIdAndScopeAndType(
-                1L,
-                FormInputScope.APPLICATION,
-                FormInputType.FILEUPLOAD
-        )).thenReturn(appendixFormInput);
-
-        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
-
-        assertEquals(true, result.isSuccess());
-        assertNotEquals(appendixEnabled, appendixFormInput.getActive());
-        assertNotEquals(guidanceAnswer, appendixFormInput.getAllowedFileTypes());
-        assertNotEquals(allowedFileTypes, appendixFormInput.getGuidanceAnswer());
-    }
-
-    @Test
     public void test_updateShouldNotChangeAppendixFormInputWhenOptionIsNull() {
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
