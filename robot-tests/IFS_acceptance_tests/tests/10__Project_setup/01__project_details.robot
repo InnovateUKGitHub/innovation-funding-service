@@ -57,6 +57,7 @@ Resource          PS_Common.robot
 
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
+${pmEmailId}  ${user_ids['${PS_SP_APPLICATION_PM_EMAIL}']}
 
 *** Test Cases ***
 Internal users can see Project Details not yet completed
@@ -626,6 +627,15 @@ Invited Finance contact is able to see the Finances
     And the user clicks the button/link   link=project finance overview
     Then the user should see the element  jQuery=h3:contains("Project cost breakdown")
     And the user should not see an error in the page
+
+User is able to accept new site terms and conditions
+    [Documentation]  IFS-3093
+    [Tags]  MySQL
+    [Setup]  Delete user from terms and conditions database   ${pmEmailId}
+    Log in as a different user             ${PS_SP_APPLICATION_PM_EMAIL}   ${short_password}
+    When the user selects the checkbox     agree
+    And the user clicks the button/link    css=button[type="submit"]
+    Then the user should see the element   jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
 the user should see a validation error
