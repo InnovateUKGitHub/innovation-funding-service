@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.form.InterviewAllocationSelectionForm;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewAcceptedAssessorsModelPopulator;
@@ -52,10 +53,10 @@ public class InterviewAllocationController {
         ));
         model.addAttribute("originQuery", originQuery);
 
-        return "competition/interview-accepted-assessors";
+        return "assessors/interview/allocate-accepted-assessors";
     }
 
-    @GetMapping("/allocate-applications/{userId}")
+    @GetMapping("/unallocated-applications/{userId}")
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
                                @PathVariable("userId") long userId,
@@ -68,7 +69,9 @@ public class InterviewAllocationController {
                 page
         ));
 
-        return "competition/interview-applications";
+        model.addAttribute("form", new InterviewAllocationSelectionForm());
+
+        return "assessors/interview/unallocated-applications";
     }
 
 }

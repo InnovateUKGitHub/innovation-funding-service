@@ -9,12 +9,13 @@ public class InterviewApplicationPageResource extends PageResource<InterviewAppl
     private long unallocatedApplications;
     private long allocatedApplications;
 
-
     public InterviewApplicationPageResource() {
     }
 
     public InterviewApplicationPageResource(long totalElements, int totalPages, List<InterviewApplicationResource> content, int number, int size, long unallocatedApplications, long allocatedApplications) {
         super(totalElements, totalPages, content, number, size);
+        this.unallocatedApplications = unallocatedApplications;
+        this.allocatedApplications = allocatedApplications;
     }
 
     public long getUnallocatedApplications() {

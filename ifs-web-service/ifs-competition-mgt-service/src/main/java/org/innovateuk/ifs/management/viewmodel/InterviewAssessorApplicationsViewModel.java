@@ -17,6 +17,7 @@ public class InterviewAssessorApplicationsViewModel {
     private final PaginationViewModel pagination;
     private final long unallocatedApplications;
     private final long allocatedApplications;
+    private final boolean selectAllDisabled;
 
     public InterviewAssessorApplicationsViewModel(long competitionId,
                                                   String competitionName,
@@ -26,7 +27,8 @@ public class InterviewAssessorApplicationsViewModel {
                                                   List<InterviewAllocatedApplicationRowViewModel> rows,
                                                   PaginationViewModel pagination,
                                                   long unallocatedApplications,
-                                                  long allocatedApplications) {
+                                                  long allocatedApplications,
+                                                  boolean selectAllDisabled) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.user = user;
@@ -36,6 +38,7 @@ public class InterviewAssessorApplicationsViewModel {
         this.pagination = pagination;
         this.unallocatedApplications = unallocatedApplications;
         this.allocatedApplications = allocatedApplications;
+        this.selectAllDisabled = selectAllDisabled;
     }
 
     public long getCompetitionId() {
@@ -72,5 +75,9 @@ public class InterviewAssessorApplicationsViewModel {
 
     public long getAllocatedApplications() {
         return allocatedApplications;
+    }
+
+    public boolean isSelectAllDisabled() {
+        return selectAllDisabled;
     }
 }
