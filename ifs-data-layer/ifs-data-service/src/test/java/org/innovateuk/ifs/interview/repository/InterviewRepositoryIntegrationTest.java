@@ -190,7 +190,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         assertThat(content.getId(), is(equalTo(application1.getId())));
         assertThat(content.getLeadOrganisation(), is(equalTo(organisation.getName())));
-        assertThat(content.getNumberOfAssessors(), is(equalTo(1L)));
+        assertThat(content.getNumberOfAssessors(), is(equalTo(2L)));
     }
 
     @Test
@@ -205,7 +205,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         assertThat(content.getId(), is(equalTo(application2.getId())));
         assertThat(content.getLeadOrganisation(), is(equalTo(organisation.getName())));
-        assertThat(content.getNumberOfAssessors(), is(equalTo(1L)));
+        assertThat(content.getNumberOfAssessors(), is(equalTo(2L)));
     }
 
     @Test
@@ -221,5 +221,4 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         assertThat(count, is(equalTo(1L)));
     }
-
 }
