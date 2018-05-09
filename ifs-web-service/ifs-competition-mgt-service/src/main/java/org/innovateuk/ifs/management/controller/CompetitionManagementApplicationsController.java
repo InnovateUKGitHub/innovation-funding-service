@@ -137,16 +137,6 @@ public class CompetitionManagementApplicationsController {
         return "competition/previous-applications";
     }
 
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can navigate between different lists of applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_administrator', 'innovation_lead')")
-    @GetMapping("/manage")
-    public String manageApplications(Model model,
-                                     @PathVariable("competitionId") long competitionId) {
-
-        model.addAttribute("model", navigateApplicationsModelPopulator.populateModel(competitionId));
-        return "competition/navigate-applications";
-    }
-
     @SecuredBySpring(value = "UPDATE", description = "Only the IFS admin is able to mark an application as successful after funding decisions have been made")
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @PostMapping("/mark-successful/application/{applicationId}")
