@@ -723,7 +723,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testViewAddress() throws Exception {
         OrganisationResource organisationResource = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().withOrganisationList(Collections.singletonList(organisationResource.getId())).build();
+        AddressResource addressResource = newAddressResource().build();
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
         organisationResource.setAddresses(Collections.singletonList(organisationAddressResource));
@@ -733,7 +733,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
-        when(organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0))).thenReturn(restSuccess(organisationAddressResource));
+        when(organisationAddressRestService.findByOrganisationIdAndAddressId(organisationResource.getId(), project.getAddress().getId())).thenReturn(restSuccess(organisationAddressResource));
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/project-address", project.getId())).
                 andExpect(status().isOk()).
@@ -758,7 +758,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateProjectAddressToBeSameAsRegistered() throws Exception {
         OrganisationResource leadOrganisation = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().withOrganisationList(Collections.singletonList(leadOrganisation.getId())).build();
+        AddressResource addressResource = newAddressResource().build();
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
         leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));

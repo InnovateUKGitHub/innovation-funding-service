@@ -367,13 +367,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                         project.setAddress(existingAddress);
                                     } else {
                                         Address newAddress = addressMapper.mapToDomain(address);
-                                        if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
-                                            AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
-                                            List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
-                                            existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
-                                            OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
-                                            organisationAddressRepository.save(organisationAddress);
-                                        }
+                                        updateOrganisationAddress(organisationAddressType, organisation, newAddress);
                                         project.setAddress(newAddress);
                                     }
 
@@ -383,6 +377,15 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                     });
                                 })
                 );
+    }
+
+    private void updateOrganisationAddress(OrganisationAddressType organisationAddressType, Organisation organisation, Address newAddress) {
+
+        AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
+        List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
+        existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
+        OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
+        organisationAddressRepository.save(organisationAddress);
     }
 
     @Override
@@ -424,8 +427,10 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         String leadOrganisationName = leadOrganisation.getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
+        globalArguments.put("applicationId", inviteResource.getApplicationId());
         globalArguments.put("leadOrganisation", leadOrganisationName);
         globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
+        globalArguments.put("competitionName", inviteResource.getCompetitionName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
         return globalArguments;
     }

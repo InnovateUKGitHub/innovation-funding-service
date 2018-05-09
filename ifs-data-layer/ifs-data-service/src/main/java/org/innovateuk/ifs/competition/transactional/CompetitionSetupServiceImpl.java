@@ -3,22 +3,18 @@ package org.innovateuk.ifs.competition.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.TermsAndConditions;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
-import org.innovateuk.ifs.competition.mapper.TermsAndConditionsMapper;
+import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
@@ -65,9 +61,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private SetupStatusService setupStatusService;
     @Autowired
-    private TermsAndConditionsRepository termsAndConditionsRepository;
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
     @Autowired
-    private TermsAndConditionsMapper termsAndConditionsMapper;
+    private GrantTermsAndConditionsMapper termsAndConditionsMapper;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -131,7 +127,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         // here
         if (competitionTypeId != null) {
             CompetitionType competitionTypeSelected = competitionTypeRepository.findOne(competitionTypeId);
-            TermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
+            GrantTermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
             competitionResource.setTermsAndConditions(termsAndConditionsMapper.mapToResource(termsAndConditions));
         }
 
@@ -317,9 +313,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {
-
-        TermsAndConditions defaultTermsAndConditions =
-                termsAndConditionsRepository.findOneByTemplate(TermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
+        GrantTermsAndConditions defaultTermsAndConditions = grantTermsAndConditionsRepository.findOneByTemplate
+                (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
 

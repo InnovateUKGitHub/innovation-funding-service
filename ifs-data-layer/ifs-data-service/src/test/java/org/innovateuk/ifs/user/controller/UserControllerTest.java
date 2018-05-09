@@ -308,6 +308,18 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
+    public void agreeNewSiteTermsAndConditions() throws Exception {
+        long userId = 1L;
+
+        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/id/{userId}/agreeNewSiteTermsAndConditions", userId))
+                .andExpect(status().isOk());
+
+        verify(userServiceMock, only()).agreeNewTermsAndConditions(userId);
+    }
+
+    @Test
     public void editInternalUser() throws Exception {
 
         EditUserResource editUserResource = new EditUserResource(1L, "First", "Last", Role.IFS_ADMINISTRATOR);
