@@ -90,12 +90,12 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
         when(partnerOrganisationPermissionRules.internalUsersCanViewPartnerOrganisations(partnerOrganisations.get(0),
                 internalUser))
                 .thenReturn(true);
-
         ServiceResult<PartnerOrganisationResource> result = classUnderTest.getPartnerOrganisation(123L, 234L);
 
         verify(partnerOrganisationPermissionRules)
                 .internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource
                         .class));
+
         verifyNoMoreInteractions(partnerOrganisationPermissionRules);
 
         assertTrue(result.isSuccess());
