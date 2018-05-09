@@ -22,9 +22,7 @@ public class InterviewApplicationsModelPopulator {
     @Autowired
     private AssessorRestService assessorRestService;
 
-    public InterviewAssessorApplicationsViewModel populateModel(long competitionId,
-                                                                long userId
-    ) {
+    public InterviewAssessorApplicationsViewModel populateModel(long competitionId, long userId) {
 
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
