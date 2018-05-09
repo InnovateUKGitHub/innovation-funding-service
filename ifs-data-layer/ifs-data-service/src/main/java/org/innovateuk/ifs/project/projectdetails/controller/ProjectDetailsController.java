@@ -70,7 +70,7 @@ public class ProjectDetailsController {
     }
 
     @ZeroDowntime(reference = "IFS-3470", description = "To support the older request param postCode. This will be deleted in next release")
-    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
+    @PostMapping(value = "/{projectId}/organisation/{organisationId}/partner-project-location", params = "postCode")
     public RestResult<Void> updatePartnerProjectLocationZDD(@PathVariable("projectId") final long projectId,
                                                          @PathVariable("organisationId") final long organisationId,
                                                          @RequestParam("postCode") String postCode) {
@@ -78,7 +78,7 @@ public class ProjectDetailsController {
         return projectDetailsService.updatePartnerProjectLocation(composite, postCode).toPostResponse();
     }
 
-    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
+    @PostMapping(value = "/{projectId}/organisation/{organisationId}/partner-project-location", params = "postcode")
     public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
                                                          @PathVariable("organisationId") final long organisationId,
                                                          @RequestParam("postcode") String postcode) {
