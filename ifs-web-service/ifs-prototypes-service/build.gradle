@@ -6,8 +6,8 @@ configurations {
     providedRuntime
 }
 project.version = prototypesServiceVersion
-tagDocker.tag = "1.1.42-prototypes"
-osStageRemote.tag = "1.1.42-prototypes"
+tagDocker.tag = prototypesServiceVersion
+osStageRemote.tag = prototypesServiceVersion
 tagDockerLocal.tag = prototypesServiceVersion
 osStageLocal.tag = prototypesServiceVersion
 
