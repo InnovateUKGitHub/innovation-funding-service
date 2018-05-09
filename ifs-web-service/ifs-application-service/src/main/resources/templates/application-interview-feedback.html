@@ -44,19 +44,6 @@
                 <p>&pound;<th:block th:text="${totalFundingSought} ? ${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
             </div>
         </div>
-
-        <div class="column-half">
-            <h3 class="heading-small">Project timescales</h3>
-            <p class="no-margin">Project start date: <br />
-                <th:block
-                    th:if="${currentApplication.startDate}"
-                    th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" />
-            </p>
-            <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
-
-            <h3 class="heading-small extra-margin">Total project cost</h3>
-            <p>&pound;<th:block th:text="${totalFundingSought} ? ${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
-        </div>
     </div>
 
     <th:block th:if="${interviewFeedbackViewModel.leadApplicant}">
