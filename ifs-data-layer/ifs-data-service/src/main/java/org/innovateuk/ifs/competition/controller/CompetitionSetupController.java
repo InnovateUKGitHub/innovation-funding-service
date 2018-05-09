@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
@@ -33,8 +34,8 @@ public class CompetitionSetupController {
     }
 
     @PutMapping("/{id}/update-competition-initial-details")
-    public RestResult<Void> updateCompetitionInitialDetails(@RequestBody CompetitionResource competitionResource,
-                                                           @PathVariable("id") final Long id) {
+    public RestResult<Void> updateCompetitionInitialDetails(@Valid @RequestBody CompetitionResource competitionResource,
+                                                            @PathVariable("id") final Long id) {
         CompetitionResource existingCompetitionResource = competitionService.getCompetitionById(id).getSuccess();
         return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource, existingCompetitionResource.getLeadTechnologist()).toPutResponse();
     }
