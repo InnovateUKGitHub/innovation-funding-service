@@ -31,18 +31,23 @@
             <h3 class="heading-small">Lead organisation</h3>
             <p th:text="${leadOrganisation.name}">Aptrans Ltd</p>
 
-            <div class="column-half">
-                <h3 class="heading-small">Project timescales</h3>
-                <p>Project start date: <br />
-                    <th:block
+            <h3 class="heading-small">Partners</h3>
+            <ul class="list list-bullet">
+                <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
+            </ul>
+        </div>
+
+        <div class="column-half">
+            <h3 class="heading-small">Project timescales</h3>
+            <p>Project start date: <br />
+                <th:block
                         th:if="${currentApplication.startDate}"
                         th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" />
-                </p>
-                <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
+            </p>
+            <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
 
-                <h3 class="heading-small extra-margin">Total project cost</h3>
-                <p>&pound;<th:block th:text="${totalFundingSought} ? ${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
-            </div>
+            <h3 class="heading-small extra-margin">Total project cost</h3>
+            <p>&pound;<th:block th:text="${totalFundingSought} ? ${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
         </div>
     </div>
 
