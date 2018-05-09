@@ -1,37 +1,57 @@
 package org.innovateuk.ifs.project.financecheck.transactional;
 
+import org.hibernate.validator.constraints.ModCheck;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
+import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.MockPolicy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -87,6 +107,57 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private Long organisationId = 234L;
     private Long competitionId = 456L;
     private Long projectId = 789L;
+
+    @Mock
+    private FinanceCheckRepository financeCheckRepositoryMock;
+
+    @Mock
+    private ProjectRepository projectRepositoryMock;
+
+    @Mock
+    private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
+
+    @Mock
+    private SpendProfileRepository spendProfileRepositoryMock;
+
+    @Mock
+    private ProjectFinanceRowService projectFinanceRowServiceMock;
+
+    @Mock
+    private StatusService statusServiceMock;
+
+    @Mock
+    private EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+
+    @Mock
+    private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
+
+    @Mock
+    private ProjectFinanceRepository projectFinanceRepositoryMock;
+
+    @Mock
+    private FinanceCheckQueriesService financeCheckQueriesService;
+
+    @Mock
+    private FinanceService financeServiceMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private CompetitionSetupTransactionalService competitionSetupTransactionalServiceMock;
+
+    @Mock
+    private FormInputRepository formInputRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private FormInputResponseRepository formInputResponseRepositoryMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
 
     @Test
     public void testGetByProjectAndOrganisationNotFound() {
