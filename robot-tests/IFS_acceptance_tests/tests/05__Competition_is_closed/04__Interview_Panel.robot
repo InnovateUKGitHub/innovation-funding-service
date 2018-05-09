@@ -38,6 +38,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3385 Assign applications to interview panel - Remove feedback
 ...
 ...               IFS-3291 Applicant dashboard - View application and assessment feedback
+...
+...               IFS-3435 Allocate applications to assessors - View
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -163,6 +165,13 @@ Applicant can see the feedback given
     And the user clicks the button/link       jQuery=a:contains("Business opportunity")
     Then the user should see the element      jQuery=p:contains("This is the business opportunity feedback")
     And the user should see the element       jQuery=h2:contains("Average score: 8/ 10")
+
+CompAdmin Views the applications that can be allocated to the assessors
+    [Documentation]  IFS-3435
+    [Tags]
+    Given log in as a different user         &{Comp_admin1_credentials}
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
+    Then the user should see the element     jQuery=a:contains("${assessor_joel}")
 
 *** Keywords ***
 Custom Suite Setup
