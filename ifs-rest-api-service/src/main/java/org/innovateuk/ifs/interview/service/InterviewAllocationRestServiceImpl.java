@@ -7,7 +7,10 @@ import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResou
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 /**
  * REST service for allocating application to assessors in interview panels
@@ -46,5 +49,14 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
                 .queryParam("page", page);
 
         return getWithRestResult(builder.toUriString(), InterviewApplicationPageResource.class);
+    }
+
+    @Override
+    public RestResult<List<Long>> getUnallocatedApplicationIds(long competitionId, long assessorId) {
+        String baseUrl = format("%s/%s/%s/%s", interviewPanelRestUrl, competitionId, "unallocated-application-ids", assessorId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), longsListType());
     }
 }

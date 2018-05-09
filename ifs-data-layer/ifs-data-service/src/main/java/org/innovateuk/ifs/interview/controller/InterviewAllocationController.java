@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Controller for allocating applications to assessors in Interview Panels.
  */
@@ -46,5 +48,12 @@ public class InterviewAllocationController {
             @PathVariable long assessorId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.name", direction = Sort.Direction.ASC) Pageable pageable) {
         return interviewAllocationService.getUnallocatedApplications(competitionId, assessorId, pageable).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/unallocated-application-ids/{assessorId}")
+    public RestResult<List<Long>> getUnallocatedApplicationIds(
+            @PathVariable long competitionId,
+            @PathVariable long assessorId) {
+        return interviewAllocationService.getUnallocatedApplicationIds(competitionId, assessorId).toGetResponse();
     }
 }

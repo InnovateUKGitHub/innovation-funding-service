@@ -33,7 +33,9 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " FROM InterviewAssignment interviewAssignment" +
             " JOIN ProcessRole processRole ON processRole.applicationId = interviewAssignment.target.id " +
             " JOIN Organisation organisation ON organisation.id = processRole.organisationId " +
-            " LEFT JOIN Interview interviews ON interviews.target.id = interviewAssignment.target.id AND interviews.class = Interview " + // states?
+            " LEFT JOIN Interview interviews ON interviews.target.id = interviewAssignment.target.id" +
+                    //This line is needed, it doesn't seem to add check for descriminator value.
+                    " AND interviews.class = Interview " +
             " WHERE " +
             "   processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
             "   interviewAssignment.target.competition.id = :competitionId AND " +
@@ -41,6 +43,17 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, " +
             "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE " +
             " ) ";
+
+    String APPLICATION_ID_QUERY =
+            " SELECT interviewAssignment.target.id " +
+                    " FROM InterviewAssignment interviewAssignment" +
+                    " WHERE " +
+                    "   interviewAssignment.target.competition.id = :competitionId AND " +
+                    "   interviewAssignment.activityState IN (" +
+                    "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, " +
+                    "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE " +
+                    " ) ";
+
 
     String ASSIGNED_INTERVIEW_SUB_QUERY =  " (SELECT innerInterview.id FROM Interview innerInterview WHERE " +
             " innerInterview.target.id = interviewAssignment.target.id AND " +
@@ -74,4 +87,9 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " AND EXISTS " +
             ASSIGNED_INTERVIEW_SUB_QUERY)
     long countAllocatedApplications(long competitionId, long assessorId);
+
+    @Query(APPLICATION_ID_QUERY +
+            " AND NOT EXISTS " +
+            ASSIGNED_INTERVIEW_SUB_QUERY)
+    List<Long> findApplicationIdsNotAssignedToAssessor(long competitionId, long assessorId);
 }
