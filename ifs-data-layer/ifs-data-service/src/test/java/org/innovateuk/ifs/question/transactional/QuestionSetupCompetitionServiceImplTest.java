@@ -156,7 +156,6 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getTitle(), title);
         assertEquals(resource.getGuidance(), guidance);
         assertEquals(resource.getType(), CompetitionSetupQuestionType.SCOPE);
-        assertEquals(resource.getShortTitleEditable(), false);
         assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
         assertEquals(resource.getAllowedFileTypes(), new LinkedHashSet<>(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET)));
 
@@ -221,9 +220,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(questionFormInput.getWordCount(), maxWords);
         assertEquals(writtenFeedbackFormInput.getGuidanceAnswer(), assessmentGuidanceAnswer);
         assertEquals(writtenFeedbackFormInput.getGuidanceTitle(), assessmentGuidanceTitle);
-        //Short name shouldn't be set on SCOPE question.
-        assertNotEquals(question.getShortName(), newShortTitle);
-        assertEquals(question.getShortName(), shortTitle);
+        assertEquals(question.getShortName(), newShortTitle);
 
         assertEquals(appendixFormInput.getActive(), false);
         assertEquals(appendixFormInput.getGuidanceAnswer(), null);

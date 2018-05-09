@@ -31,7 +31,6 @@ public class CompetitionSetupQuestionResource {
     private String number;
     @NotBlank
     private String shortTitle;
-    private Boolean shortTitleEditable;
     @NotBlank
     private String title;
     private String subTitle;
@@ -177,14 +176,6 @@ public class CompetitionSetupQuestionResource {
         this.number = number;
     }
 
-    public Boolean getShortTitleEditable() {
-        return shortTitleEditable;
-    }
-
-    public void setShortTitleEditable(Boolean shortTitleEditable) {
-        this.shortTitleEditable = shortTitleEditable;
-    }
-
     public String getShortTitle() {
         return shortTitle;
     }
@@ -258,7 +249,6 @@ public class CompetitionSetupQuestionResource {
                 .append(type, that.type)
                 .append(number, that.number)
                 .append(shortTitle, that.shortTitle)
-                .append(shortTitleEditable, that.shortTitleEditable)
                 .append(title, that.title)
                 .append(subTitle, that.subTitle)
                 .append(guidanceTitle, that.guidanceTitle)
@@ -284,7 +274,6 @@ public class CompetitionSetupQuestionResource {
                 .append(type)
                 .append(number)
                 .append(shortTitle)
-                .append(shortTitleEditable)
                 .append(title)
                 .append(subTitle)
                 .append(guidanceTitle)

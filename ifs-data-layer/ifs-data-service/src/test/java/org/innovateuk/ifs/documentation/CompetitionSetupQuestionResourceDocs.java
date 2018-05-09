@@ -29,7 +29,6 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("scope").description("Is there a scope question for the assessor"),
             fieldWithPath("researchCategoryQuestion").description("Is there a research category question for the assessor"),
             fieldWithPath("writtenFeedback").description("Should the assessor provide written feedback"),
-            fieldWithPath("shortTitleEditable").description("Can the short title be edited for this question"),
             fieldWithPath("guidanceRows[]").description("The rows of extra guidance information displayed to assessors"),
             fieldWithPath("guidanceRows[].id").description("The id of the guidance row in the database"),
             fieldWithPath("guidanceRows[].subject").description("The subject of the guidance"),
