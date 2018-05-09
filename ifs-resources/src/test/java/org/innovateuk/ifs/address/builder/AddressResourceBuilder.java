@@ -56,10 +56,4 @@ public class AddressResourceBuilder extends BaseBuilder<AddressResource, Address
     public AddressResourceBuilder withPostcode(String... postcodes) {
         return withArray((postcode, address) -> setField("postcode", postcode, address), postcodes);
     }
-
-    @SafeVarargs
-    public final AddressResourceBuilder withOrganisationList(List<Long>... organisationLists) {
-        return withArray((organisationList, address) -> setField("organisations", organisationList, address), organisationLists);
-    }
-
 }

@@ -1,9 +1,15 @@
 package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 
+import java.util.List;
+
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.roleListType;
 import static org.junit.Assert.assertEquals;
 
 public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestServiceUnitTest<GoogleAnalyticsDataLayerRestServiceImpl> {
@@ -77,5 +83,36 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
         String actual = service.getCompetitionNameForAssessment(assessmentId).getSuccess();
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getApplicationRolesById() {
+        long applicationId = 123L;
+        List<Role> expectedRoles = singletonList(Role.COLLABORATOR);
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%d/user-roles", restUrl, "application", applicationId),
+                roleListType(),
+                expectedRoles
+        );
+
+        List<Role> roles = service.getRolesByApplicationId(applicationId).getSuccess();
+
+        assertEquals(expectedRoles, roles);
+    }
+
+    @Test
+    public void getProjectRolesById() {
+        long projectId = 999L;
+        List<Role> expectedRoles = asList(Role.PARTNER, Role.PROJECT_MANAGER);
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%d/user-roles", restUrl, "project", projectId),
+                roleListType(),
+                expectedRoles
+        );
+
+        List<Role> roles = service.getRolesByProjectId(projectId).getSuccess();
+
+        assertEquals(expectedRoles, roles);
     }
 }
