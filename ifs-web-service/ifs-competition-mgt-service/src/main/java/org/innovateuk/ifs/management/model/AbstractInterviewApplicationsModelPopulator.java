@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
-import org.innovateuk.ifs.interview.service.InterviewAllocateRestService;
+import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.viewmodel.InterviewAllocatedApplicationRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewAssessorApplicationsViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -30,17 +30,15 @@ public abstract class AbstractInterviewApplicationsModelPopulator {
     private AssessorRestService assessorRestService;
 
     @Autowired
-    protected InterviewAllocateRestService interviewAllocateRestService;
+    protected InterviewAllocationRestService interviewAllocateRestService;
 
-    public InterviewAssessorApplicationsViewModel populateModel(long competitionId, long userId) {
+    public InterviewAssessorApplicationsViewModel populateModel(long competitionId, long userId, int page) {
 
         UserResource user = userService.retrieveUserById(userId).getSuccess();
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(userId).getSuccess();
 
-        competition.getInnovationAreaNames();
-
-        InterviewApplicationPageResource interviewApplicationPageResource = getPageResource(competitionId, userId, 0);
+        InterviewApplicationPageResource interviewApplicationPageResource = getPageResource(competitionId, userId, page);
 
         InterviewAssessorApplicationsViewModel model = new InterviewAssessorApplicationsViewModel(
                 competition.getId(),

@@ -58,12 +58,14 @@ public class InterviewAllocationController {
     @GetMapping("/allocate-applications/{userId}")
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @PathVariable("userId") long userId
+                               @PathVariable("userId") long userId,
+                               @RequestParam(value = "page", defaultValue = "0") int page
     ) {
 
         model.addAttribute("model", unallocatedInterviewApplicationsModelPopulator.populateModel(
                 competitionId,
-                userId
+                userId,
+                page
         ));
 
         return "competition/interview-applications";
