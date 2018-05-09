@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.termsAndConditionsResourceListType;
-import static org.innovateuk.ifs.competition.builder.TermsAndConditionsResourceBuilder.newTermsAndConditionsResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.grantTermsAndConditionsResourceListType;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
+import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
+import static org.junit.Assert.*;
 
 public class TermsAndConditionsRestServiceMocksTest extends BaseRestServiceUnitTest<TermsAndConditionsRestServiceImpl> {
 
@@ -19,31 +19,41 @@ public class TermsAndConditionsRestServiceMocksTest extends BaseRestServiceUnitT
 
     @Override
     protected TermsAndConditionsRestServiceImpl registerRestServiceUnderTest() {
-        TermsAndConditionsRestServiceImpl termsAndConditionsRestService = new TermsAndConditionsRestServiceImpl();
-        return termsAndConditionsRestService;
+        return new TermsAndConditionsRestServiceImpl();
     }
 
     @Test
     public void test_getById() {
-        TermsAndConditionsResource returnedResponse = newTermsAndConditionsResource().build();
+        GrantTermsAndConditionsResource returnedResponse = newGrantTermsAndConditionsResource().build();
 
         setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/getById/" + competitionId,
-                TermsAndConditionsResource.class, returnedResponse);
-        TermsAndConditionsResource response = service.getById(competitionId).getSuccess();
+                GrantTermsAndConditionsResource.class, returnedResponse);
+        GrantTermsAndConditionsResource response = service.getById(competitionId).getSuccess();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }
 
     @Test
     public void test_getLatestTermsAndConditions() {
-        List<TermsAndConditionsResource> returnedResponse = new ArrayList<>();
-        returnedResponse.add(newTermsAndConditionsResource().build());
+        List<GrantTermsAndConditionsResource> returnedResponse = newGrantTermsAndConditionsResource().build(1);
 
         setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/getLatest",
-                termsAndConditionsResourceListType(), returnedResponse);
-        List<TermsAndConditionsResource> response = service.getLatestVersionsForAllTermsAndConditions().getSuccess();
+                grantTermsAndConditionsResourceListType(), returnedResponse);
+
+        List<GrantTermsAndConditionsResource> response = service.getLatestVersionsForAllTermsAndConditions()
+                .getSuccess();
 
         assertNotNull(response);
         assertEquals(returnedResponse, response);
+    }
+
+    @Test
+    public void getLatestSiteTermsAndConditions() {
+        SiteTermsAndConditionsResource expected = newSiteTermsAndConditionsResource().build();
+
+        setupGetWithRestResultAnonymousExpectations("/terms-and-conditions/site",
+                SiteTermsAndConditionsResource.class, expected);
+
+        assertSame(expected, service.getLatestSiteTermsAndConditions().getSuccess());
     }
 }

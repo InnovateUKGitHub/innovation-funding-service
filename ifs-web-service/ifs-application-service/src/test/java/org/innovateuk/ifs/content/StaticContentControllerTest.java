@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class StaticContentControllerTest extends BaseControllerMockMVCTest<StaticContentController> {
 
-
     @Override
     protected StaticContentController supplyControllerUnderTest() {
         return new StaticContentController();
@@ -27,12 +26,5 @@ public class StaticContentControllerTest extends BaseControllerMockMVCTest<Stati
         mockMvc.perform(get("/info/cookies"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("content/cookies"));
-    }
-
-    @Test
-    public void termsAndConditions() throws Exception {
-        mockMvc.perform(get("/info/terms-and-conditions"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("content/terms-and-conditions"));
     }
 }

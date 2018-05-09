@@ -671,6 +671,19 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         });
     }
 
+    @Test
+    public void testUsersCanAgreeSiteTermsAndConditionsForThemselves() {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
+                if (user.equals(otherUser)) {
+                    assertTrue(rules.usersCanAgreeSiteTermsAndConditions(otherUser, user));
+                } else {
+                    assertFalse(rules.usersCanAgreeSiteTermsAndConditions(otherUser, user));
+                }
+            });
+        });
+    }
+
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
         return new UserPermissionRules();

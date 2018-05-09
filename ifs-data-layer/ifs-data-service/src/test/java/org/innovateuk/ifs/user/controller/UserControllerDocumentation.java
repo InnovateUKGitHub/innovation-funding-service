@@ -174,6 +174,22 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     }
 
     @Test
+    public void agreeNewSiteTermsAndConditions() throws Exception {
+        long userId = 1L;
+
+        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/id/{userId}/agreeNewSiteTermsAndConditions", userId))
+                .andExpect(status().isOk())
+                .andDo(document("user/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Identifier of the user agreeing to the site " +
+                                        "terms and conditions")
+                        )
+                ));
+    }
+
+    @Test
     public void editInternalUser() throws Exception {
 
         EditUserResource editUserResource = new EditUserResource(1L, "Johnathan", "Dow", Role.SUPPORT);
