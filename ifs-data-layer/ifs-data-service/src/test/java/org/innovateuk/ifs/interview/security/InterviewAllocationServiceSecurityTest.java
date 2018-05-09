@@ -31,13 +31,11 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
     @Before
     public void setUp() throws Exception {
         competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
-        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean
-                (CompetitionParticipantLookupStrategy.class);
+        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
         interviewInvitePermissionRules = getMockPermissionRulesBean(InterviewInvitePermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
         interviewParticipantPermissionRules = getMockPermissionRulesBean(InterviewParticipantPermissionRules.class);
-        interviewParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean
-                (InterviewParticipantLookupStrategy.class);
+        interviewParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(InterviewParticipantLookupStrategy.class);
     }
 
     @Test
