@@ -5,6 +5,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,17 +28,25 @@ public class AffiliationServiceImpl extends BaseTransactionalService implements 
     private AffiliationMapper affiliationMapper;
 
     @Override
-    public ServiceResult<List<AffiliationResource>> getUserAffiliations(long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccessReturn(user -> user.getAffiliations().stream().map(affiliation -> affiliationMapper.mapToResource(affiliation)).collect(toList()));
+    public ServiceResult<AffiliationListResource> getUserAffiliations(long userId) {
+        List<AffiliationResource> affiliationResources = find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccessReturn(
+                        user -> user.getAffiliations()
+                                .stream()
+                                .map(affiliation -> affiliationMapper.mapToResource(affiliation))
+                                .collect(toList()))
+                .getSuccess();
+
+        return ServiceResult.serviceSuccess(new AffiliationListResource(affiliationResources));
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateUserAffiliations(long userId, List<AffiliationResource> affiliations) {
+    public ServiceResult<Void> updateUserAffiliations(long userId, AffiliationListResource affiliations) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
             List<Affiliation> targetAffiliations = user.getAffiliations();
             targetAffiliations.clear();
-            affiliationMapper.mapToDomain(affiliations)
+            affiliationMapper.mapToDomain(affiliations.getAffiliationResourceList())
                     .forEach(affiliation -> {
                         affiliation.setUser(user);
                         targetAffiliations.add(affiliation);
