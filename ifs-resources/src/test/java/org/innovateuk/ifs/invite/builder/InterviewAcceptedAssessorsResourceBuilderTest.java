@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.invite.builder;
 
-import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.junit.Assert.assertEquals;
 
-public class InterviewAllocateOverviewResourceBuilderTest {
+public class InterviewAcceptedAssessorsResourceBuilderTest {
 
     @Test
     public void buildOne() {
@@ -16,7 +16,7 @@ public class InterviewAllocateOverviewResourceBuilderTest {
         String expectedName = "name 1";
         String expectedSkillArea = "skills";
 
-        InterviewAllocateOverviewResource expectedInterviewAssessor = newInterviewAssessorAllocateApplicationsResource()
+        InterviewAcceptedAssessorsResource expectedInterviewAssessor = newInterviewAcceptedAssessorsResource()
                 .withId(expectedId)
                 .withName(expectedName)
                 .withSkillArears(expectedSkillArea)
@@ -33,18 +33,18 @@ public class InterviewAllocateOverviewResourceBuilderTest {
         String[] expectedNames = {"name 1", "name 2"};
         String[] expectedSkillAreas = {"skill 1", "skill 2"};
 
-        List<InterviewAllocateOverviewResource> expectedInterviewAssessors = newInterviewAssessorAllocateApplicationsResource()
+        List<InterviewAcceptedAssessorsResource> expectedInterviewAssessors = newInterviewAcceptedAssessorsResource()
                 .withId(expectedIds)
                 .withName(expectedNames)
                 .withSkillArears(expectedSkillAreas)
                 .build(2);
 
-        InterviewAllocateOverviewResource first = expectedInterviewAssessors.get(0);
+        InterviewAcceptedAssessorsResource first = expectedInterviewAssessors.get(0);
         assertEquals((long) expectedIds[0], first.getId());
         assertEquals(expectedNames[0], first.getName());
         assertEquals(expectedSkillAreas[0], first.getSkillAreas());
 
-        InterviewAllocateOverviewResource second = expectedInterviewAssessors.get(1);
+        InterviewAcceptedAssessorsResource second = expectedInterviewAssessors.get(1);
         assertEquals((long) expectedIds[1], second.getId());
         assertEquals(expectedNames[1], second.getName());
         assertEquals(expectedSkillAreas[1], second.getSkillAreas());

@@ -3,20 +3,20 @@ package org.innovateuk.ifs.management.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 
 /**
  * Holder of model attributes for the assessors shown in the 'Allocate applications to assessors' page
  */
-public class InterviewAllocateOverviewRowViewModel {
+public class InterviewAcceptedAssessorsRowViewModel {
     private final long id;
     private final String name;
     private final String skillAreas;
 
-    public InterviewAllocateOverviewRowViewModel(InterviewAllocateOverviewResource interviewAllocateOverviewResource) {
-        this.id = interviewAllocateOverviewResource.getId();
-        this.name = interviewAllocateOverviewResource.getName();
-        this.skillAreas = interviewAllocateOverviewResource.getSkillAreas();
+    public InterviewAcceptedAssessorsRowViewModel(InterviewAcceptedAssessorsResource interviewAcceptedAssessorsResource) {
+        this.id = interviewAcceptedAssessorsResource.getId();
+        this.name = interviewAcceptedAssessorsResource.getName();
+        this.skillAreas = interviewAcceptedAssessorsResource.getSkillAreas();
     }
 
     public long getId() {
@@ -37,7 +37,7 @@ public class InterviewAllocateOverviewRowViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewAllocateOverviewRowViewModel that = (InterviewAllocateOverviewRowViewModel) o;
+        InterviewAcceptedAssessorsRowViewModel that = (InterviewAcceptedAssessorsRowViewModel) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

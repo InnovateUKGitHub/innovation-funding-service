@@ -4,8 +4,8 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController;
-import org.innovateuk.ifs.management.model.InterviewAllocateOverviewModelPopulator;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.InterviewAcceptedAssessorsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,12 +23,12 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
-@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can assign application to assessors for an Interview Panel", securedType = InterviewAllocateController.class)
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can assign application to assessors for an Interview Panel", securedType = InterviewAllocationController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
-public class InterviewAllocateController {
+public class InterviewAllocationController {
 
     @Autowired
-    private InterviewAllocateOverviewModelPopulator interviewAllocateOverviewModelPopulator;
+    private InterviewAcceptedAssessorsModelPopulator interviewAcceptedAssessorsModelPopulator;
 
     @Autowired
     private UnallocatedInterviewApplicationsModelPopulator unallocatedInterviewApplicationsModelPopulator;
@@ -36,7 +36,7 @@ public class InterviewAllocateController {
     @Autowired
     private CompetitionService competitionService;
 
-    @GetMapping("/allocate-applications")
+    @GetMapping("/allocate-assessors")
     public String overview(Model model,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam MultiValueMap<String, String> queryParams,
@@ -46,13 +46,13 @@ public class InterviewAllocateController {
 
         String originQuery = buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.INTERVIEW_ACCEPTED, queryParams);
 
-        model.addAttribute("model", interviewAllocateOverviewModelPopulator.populateModel(
+        model.addAttribute("model", interviewAcceptedAssessorsModelPopulator.populateModel(
                 competitionResource,
                 originQuery
         ));
         model.addAttribute("originQuery", originQuery);
 
-        return "competition/interview-allocate-overview";
+        return "competition/interview-accepted-assessors";
     }
 
     @GetMapping("/allocate-applications/{userId}")
