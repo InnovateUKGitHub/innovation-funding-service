@@ -29,12 +29,12 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             "   interviewAssignment.target.id, " +
             "   interviewAssignment.target.name, " +
             "   organisation.name, " +
-            "   count(allAssignments) " +
+            "   count(allInterviews) " +
             " ) " +
             " FROM InterviewAssignment interviewAssignment" +
             " JOIN ProcessRole processRole ON processRole.applicationId = interviewAssignment.target.id " +
             " JOIN Organisation organisation ON organisation.id = processRole.organisationId " +
-            " LEFT JOIN InterviewAssignment allAssignments ON allAssignments.target.id = processRole.applicationId " + // states?
+            " LEFT JOIN Interview allInterviews ON allInterviews.target.id = processRole.applicationId " + // states?
             " WHERE " +
             "   processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
             "   interviewAssignment.target.competition.id = :competitionId AND " +
