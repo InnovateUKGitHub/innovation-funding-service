@@ -18,8 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.interview.builder.InterviewBuilder.newInterview;
-import static org.innovateuk.ifs.interview.resource.InterviewState.CREATED;
-import static org.innovateuk.ifs.interview.resource.InterviewState.PENDING;
+import static org.innovateuk.ifs.interview.resource.InterviewState.ASSIGNED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -50,7 +49,7 @@ public class InterviewWorkflowHandlerIntegrationTest
 
     @Test
     public void notifyInvitation() {
-        assertStateChangeOnWorkflowHandlerCall(CREATED, PENDING, invite -> workflowHandler.notifyInvitation(invite));
+        assertStateChangeOnWorkflowHandlerCall(ASSIGNED, ASSIGNED, invite -> workflowHandler.notifyInvitation(invite));
     }
 
     @Override

@@ -154,14 +154,14 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         Interview assignedInterview = newInterview()
                 .with(id(null))
-                .withState(InterviewState.ACCEPTED)
+                .withState(InterviewState.ASSIGNED)
                 .withParticipant(assessorRole2)
                 .withTarget(application2)
                 .build();
 
         Interview notAssignedInterview = newInterview()
                 .with(id(null))
-                .withState(InterviewState.ACCEPTED)
+                .withState(InterviewState.ASSIGNED)
                 .withParticipant(otherAssessorRole1)
                 .withTarget(application1)
                 .build();
