@@ -22,19 +22,26 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " interviewAssignment.target.competition.id = :competitionId AND " +
             " interviewAssignment.activityState IN (org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE) ";
 
-    String INTERVIEW_PAGE_RESOURCE_QUERY = "SELECT NEW org.innovateuk.ifs.interview.resource.InterviewApplicationResource(" +
-            " interviewAssignment.target.id, " +
-            " interviewAssignment.target.name, " +
-            " organisation.name, " +
-            " 1L " +
-            ") " +
+
+    // TODO Probably should be in InterviewAssignmentRepository
+    String INTERVIEW_PAGE_RESOURCE_QUERY =
+            " SELECT NEW org.innovateuk.ifs.interview.resource.InterviewApplicationResource(" +
+            "   interviewAssignment.target.id, " +
+            "   interviewAssignment.target.name, " +
+            "   organisation.name, " +
+            "   count(allAssignments) " +
+            " ) " +
             " FROM InterviewAssignment interviewAssignment" +
             " JOIN ProcessRole processRole ON processRole.applicationId = interviewAssignment.target.id " +
             " JOIN Organisation organisation ON organisation.id = processRole.organisationId " +
+            " LEFT JOIN InterviewAssignment allAssignments ON allAssignments.target.id = processRole.applicationId " + // states?
             " WHERE " +
-            " processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
-            " interviewAssignment.target.competition.id = :competitionId AND " +
-            " interviewAssignment.activityState IN (org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE) ";
+            "   processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
+            "   interviewAssignment.target.competition.id = :competitionId AND " +
+            "   interviewAssignment.activityState IN (" +
+            "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, " +
+            "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE " +
+            " ) ";
 
     String ASSIGNED_INTERVIEW_SUB_QUERY =  " (SELECT innerInterview.id FROM Interview innerInterview WHERE " +
             " innerInterview.target.id = interviewAssignment.target.id AND " +
