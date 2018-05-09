@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.transactional.ApplicationInnovationAreaService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -13,6 +15,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationInnovationAreaControllerTest extends BaseControllerMockMVCTest<ApplicationInnovationAreaController> {
+
+    @Mock
+    private ApplicationInnovationAreaService applicationInnovationAreaService;
+
     @Override
     protected ApplicationInnovationAreaController supplyControllerUnderTest() {
         return new ApplicationInnovationAreaController();

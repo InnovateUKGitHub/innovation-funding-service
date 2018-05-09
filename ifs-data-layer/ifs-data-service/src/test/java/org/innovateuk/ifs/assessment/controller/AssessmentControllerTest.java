@@ -3,9 +3,11 @@ package org.innovateuk.ifs.assessment.controller;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +42,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessmentControllerTest extends BaseControllerMockMVCTest<AssessmentController> {
+
+    @Mock
+    private AssessmentService assessmentServiceMock;
 
     @Override
     protected AssessmentController supplyControllerUnderTest() {

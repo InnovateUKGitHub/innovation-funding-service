@@ -2,7 +2,10 @@ package org.innovateuk.ifs.address.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.transactional.AddressLookupService;
+import org.innovateuk.ifs.address.transactional.AddressService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -14,6 +17,12 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AddressControllerTest extends BaseControllerMockMVCTest<AddressController> {
+
+    @Mock
+    private AddressLookupService addressLookupServiceMock;
+
+    @Mock
+    private AddressService addressService;
 
     @Override
     protected AddressController supplyControllerUnderTest() {

@@ -3,7 +3,9 @@ package org.innovateuk.ifs.application.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.FormInputResponseController;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 
 import java.util.List;
@@ -19,6 +21,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 
 public class FormInputResponseControllerDocumentation extends BaseControllerMockMVCTest<FormInputResponseController> {
+
+    @Mock
+    private FormInputResponseService formInputResponseService;
 
     @Override
     protected FormInputResponseController supplyControllerUnderTest() {
