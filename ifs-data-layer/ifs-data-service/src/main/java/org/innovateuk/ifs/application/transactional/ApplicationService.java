@@ -41,6 +41,11 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_AS_INELIGIBLE')")
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason);
 
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value="WITHDRAW_APPLICATION", description = "Only the IFS administrators have permission to withdraw a project")
+    ServiceResult<Void> withdrawApplication(long applicationId);
+
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> showApplicationTeam(final Long applicationId, final Long userId);
 

@@ -195,6 +195,19 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
+    public ServiceResult<Void> withdrawApplication(long applicationId) {
+        return find(application(applicationId))
+                .andOnSuccess(application -> {
+                    if (!applicationWorkflowHandler.withdraw(application)) {
+                        return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
+                    }
+                    applicationRepository.save(application);
+                    return serviceSuccess();
+                });
+    }
+
+    @Override
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
                                                       Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))

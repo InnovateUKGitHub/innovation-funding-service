@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -70,6 +71,9 @@ public class ProjectDetailsController {
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationService;
 
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
     @GetMapping("/{projectId}/details")
@@ -109,6 +113,8 @@ public class ProjectDetailsController {
     public String withdrawProject(@PathVariable("competitionId") final long competitionId,
                                   @PathVariable("projectId") final long projectId, HttpServletRequest request) {
          projectRestService.withdrawProject(projectId).getSuccess();
+         long applicationId = projectRestService.getProjectById(projectId).getSuccess().getApplication();
+         applicationRestService.withdrawApplication(applicationId);
 
         return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/unsuccessful");
     }
