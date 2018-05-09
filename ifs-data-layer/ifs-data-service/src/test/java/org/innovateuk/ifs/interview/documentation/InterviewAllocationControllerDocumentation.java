@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.interview.controller.InterviewAllocateController;
-import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAllocateOverviewResource;
+import org.innovateuk.ifs.interview.controller.InterviewAllocationController;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,10 +12,10 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.InterviewAllocateOverviewPageResourceDocs.interviewAssessorAllocateApplicationsPageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAllocateOverviewResourceDocs.interviewAssessorAllocateApplicationsResourceFields;
-import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewPageResourceBuilder.newInterviewAssessorAllocateApplicationsPageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAllocateOverviewResourceBuilder.newInterviewAssessorAllocateApplicationsResource;
+import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsPageResourceDocs.interviewAssessorAllocateApplicationsPageResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsResourceDocs.interviewAcceptedAssessorsResourceFields;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,29 +28,29 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class InterviewAllocateControllerDocumentation extends BaseControllerMockMVCTest<InterviewAllocateController> {
+public class InterviewAllocationControllerDocumentation extends BaseControllerMockMVCTest<InterviewAllocationController> {
 
     @Override
-    protected InterviewAllocateController supplyControllerUnderTest() {
-        return new InterviewAllocateController();
+    protected InterviewAllocationController supplyControllerUnderTest() {
+        return new InterviewAllocationController();
     }
 
     @Test
-    public void getAllocateApplicationsOverview() throws Exception {
+    public void getInterviewAcceptedAssessors() throws Exception {
         long competitionId = 1L;
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        List<InterviewAllocateOverviewResource> content = newInterviewAssessorAllocateApplicationsResource().build(2);
+        List<InterviewAcceptedAssessorsResource> content = newInterviewAcceptedAssessorsResource().build(2);
 
-        InterviewAllocateOverviewPageResource expectedPageResource = newInterviewAssessorAllocateApplicationsPageResource()
+        InterviewAcceptedAssessorsPageResource expectedPageResource = newInterviewAcceptedAssessorsPageResource()
                 .withContent(content)
                 .build();
 
-        when(interviewAllocateServiceMock.getAllocateApplicationsOverview(competitionId, pageable))
+        when(interviewAllocationServiceMock.getInterviewAcceptedAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/interview-panel/allocate-overview/{competitionId}", 1L)
+        mockMvc.perform(get("/interview-panel/allocate-assessors/{competitionId}", 1L)
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "invite.name,asc"))
@@ -68,9 +68,9 @@ public class InterviewAllocateControllerDocumentation extends BaseControllerMock
                                         .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`")
                         ),
                         responseFields(interviewAssessorAllocateApplicationsPageResourceFields)
-                                .andWithPrefix("content[].", interviewAssessorAllocateApplicationsResourceFields)
+                                .andWithPrefix("content[].", interviewAcceptedAssessorsResourceFields)
                 ));
 
-        verify(interviewAllocateServiceMock, only()).getAllocateApplicationsOverview(competitionId, pageable);
+        verify(interviewAllocationServiceMock, only()).getInterviewAcceptedAssessors(competitionId, pageable);
     }
 }
