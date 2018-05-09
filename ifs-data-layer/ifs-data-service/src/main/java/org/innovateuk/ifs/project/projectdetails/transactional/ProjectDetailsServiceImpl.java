@@ -367,13 +367,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                         project.setAddress(existingAddress);
                                     } else {
                                         Address newAddress = addressMapper.mapToDomain(address);
-                                        if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
-                                            AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
-                                            List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
-                                            existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
-                                            OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
-                                            organisationAddressRepository.save(organisationAddress);
-                                        }
+                                        updateOrganisationAddress(organisationAddressType, organisation, newAddress);
                                         project.setAddress(newAddress);
                                     }
 
@@ -383,6 +377,15 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                     });
                                 })
                 );
+    }
+
+    private void updateOrganisationAddress(OrganisationAddressType organisationAddressType, Organisation organisation, Address newAddress) {
+
+        AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
+        List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
+        existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
+        OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
+        organisationAddressRepository.save(organisationAddress);
     }
 
     @Override

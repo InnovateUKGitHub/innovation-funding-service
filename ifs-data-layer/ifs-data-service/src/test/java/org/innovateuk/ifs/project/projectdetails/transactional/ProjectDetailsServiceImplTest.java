@@ -33,6 +33,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -850,8 +851,10 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
         assertTrue(result.isSuccess());
+        assertEquals(registeredAddress, project.getAddress());
     }
 
     @Test
@@ -869,8 +872,10 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
         assertTrue(result.isSuccess());
+        assertEquals(operatingAddress, project.getAddress());
     }
 
     @Test
@@ -907,8 +912,40 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
+        verify(organisationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationAddress.class));
+        assertEquals(newAddress, project.getAddress());
+    }
+
+    @Test
+    public void testUpdateProjectAddressToNewProjectAddressAndExistingAddressAssociatedWithOrg() {
+
+        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
+        AddressResource newAddressResource = newAddressResource().build();
+        Address newAddress = newAddress().build();
+        AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
+        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
+        when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
+        when(addressTypeRepositoryMock.findOne(PROJECT.getOrdinal())).thenReturn(projectAddressType);
+        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(singletonList(organisationAddress));
+        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        assertNull(project.getAddress());
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        assertTrue(result.isSuccess());
+        verify(organisationAddressRepositoryMock).delete(organisationAddress);
+        assertEquals(newAddress, project.getAddress());
     }
 
     @Test

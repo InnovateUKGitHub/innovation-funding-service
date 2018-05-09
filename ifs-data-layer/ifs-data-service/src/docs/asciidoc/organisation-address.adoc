@@ -1,0 +1,23 @@
+=== Retrieve Organisation Address by id
+==== Request
+include::{snippets}/organisationaddress/find-by-id/http-request.adoc[]
+include::{snippets}/organisationaddress/find-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/organisationaddress/find-by-id/http-response.adoc[]
+include::{snippets}/organisationaddress/find-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisationaddress/find-by-id/curl-request.adoc[]
+
+=== Retrieve Organisation Address by Organisation id and Address id
+==== Request
+include::{snippets}/organisationaddress/find-by-organisation-id-and-address-id/http-request.adoc[]
+include::{snippets}/organisationaddress/find-by-organisation-id-and-address-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/organisationaddress/find-by-organisation-id-and-address-id/http-response.adoc[]
+include::{snippets}/organisationaddress/find-by-organisation-id-and-address-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisationaddress/find-by-organisation-id-and-address-id/curl-request.adoc[]
