@@ -7,6 +7,8 @@ import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResou
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 /**
  * Service for allocating applications to assessors in interview panels
  */
@@ -31,4 +33,6 @@ public interface InterviewAllocationService {
     ServiceResult<InterviewApplicationPageResource> getAllocatedApplications(long competition,
                                                                                long assessorUserId,
                                                                                Pageable pageable);
+
+    ServiceResult<List<Long>> getUnallocatedApplicationIds(long competitionId, long assessorId);
 }

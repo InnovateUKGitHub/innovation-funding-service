@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -81,5 +83,10 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
                 unallocatedApplications,
                 allocatedApplications
         ));
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getUnallocatedApplicationIds(long competitionId, long assessorId) {
+        return serviceSuccess(interviewRepository.findApplicationIdsNotAssignedToAssessor(competitionId, assessorId));
     }
 }
