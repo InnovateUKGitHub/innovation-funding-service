@@ -177,4 +177,9 @@ public class UserServiceImpl implements UserService {
 
         return execUser != null && execUser.hasRole(role);
     }
+
+    @Override
+    public ServiceResult<Void> agreeNewTermsAndConditions(long userId) {
+        return userRestService.agreeNewSiteTermsAndConditions(userId).toServiceResult();
+    }
 }

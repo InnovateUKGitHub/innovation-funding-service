@@ -1,0 +1,65 @@
+
+<!-- =================Section: Terms and Conditions (3) =========================== -->
+<th:block th:fragment="section-content">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='heading-xlarge'" />
+
+    <p>These are the terms and conditions applicants must accept for this competition.</p>
+
+    <p><a th:text="${model.currentTermsAndConditions.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
+        Terms and conditions</a>
+    </p>
+
+    <form th:action="@{(${model.general.editable} ? '' : 'terms-and-conditions/edit')}"
+          th:object="${competitionSetupForm}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
+          data-section="terms-and-conditions"
+          method="post" novalidate="novalidate">
+        <div th:if="${model.general.editable}" id="section-3-edit">
+
+            <div class="form-group">
+                <select
+                    th:field="*{termsAndConditionsId}"
+                    required="required"
+                    class="form-control width-x-large"
+                    th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}"
+                    data-autosave-disabled="">
+                    <option value="" disabled="disabled">Please select &hellip;</option>
+                    <option th:each="termsAndConditions : ${model.termsAndConditionsList}"
+                            th:text="${termsAndConditions.name}"
+                            th:value="${termsAndConditions.id}">
+                        Terms and conditions
+                    </option>
+                </select>
+            </div>
+
+            <button class="button">Done</button>
+        </div>
+
+        <th:block th:unless="${model.general.editable}">
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+        </th:block>
+
+    </form>
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='initial')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Initial details</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='additional')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Funding information</span>
+            </a>
+        </li>
+    </ul>
+</th:block>

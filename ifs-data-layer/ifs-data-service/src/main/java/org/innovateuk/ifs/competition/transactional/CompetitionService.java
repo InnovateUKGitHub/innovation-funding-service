@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -27,18 +26,6 @@ public interface CompetitionService {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
     ServiceResult<Void> removeInnovationLead(final Long competitionId, final Long innovationLeadUserId);
-
-    /**
-     * IFS-3016: Because of the change in ApplicantDashboardPopulator (getAllCompetitionsForUser),
-     * this endpoint is not used anymore.
-     *
-     * TODO: remove in ZDD cleanup
-     * @param userId
-     * @return
-     */
-    @ZeroDowntime(reference = "IFS-3016", description = "endpoint not being used")
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
@@ -101,4 +88,9 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "COUNT_PENDING_SPEND_PROFILES", description = "Project finance users can count projects for which Spend Profile generation is pending, for a given competition")
     ServiceResult<Long> countPendingSpendProfiles(Long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @SecuredBySpring(value="UPDATE_TERMS_AND_CONDITIONS", securedType=CompetitionResource.class,
+            description = "Only Comp Admins are able to update grant terms and conditions for the given competitions")
+    ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 }

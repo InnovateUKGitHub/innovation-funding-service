@@ -28,7 +28,7 @@ import org.mapstruct.Mappings;
                 SectionMapper.class,
                 CompetitionFunderMapper.class,
                 OrganisationTypeMapper.class,
-                TermsAndConditionsMapper.class
+                GrantTermsAndConditionsMapper.class
         }
 )
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {

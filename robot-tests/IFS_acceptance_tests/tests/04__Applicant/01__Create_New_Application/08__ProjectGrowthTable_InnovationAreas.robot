@@ -38,6 +38,7 @@ Comp Admin starts a new Competition
     Given the user navigates to the page           ${CA_UpcomingComp}
     When the user clicks the button/link           jQuery=.button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
+    And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
@@ -109,6 +110,7 @@ Once the project growth table is selected
     When the user clicks the button/link                 jQuery=.button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
+    And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones              ${month}  ${nextyear}
