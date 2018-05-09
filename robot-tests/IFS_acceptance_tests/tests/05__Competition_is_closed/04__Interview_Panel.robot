@@ -172,6 +172,8 @@ CompAdmin Views the applications that can be allocated to the assessors
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery=a:contains("${assessor_joel}")
+    Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
+    Then the user should see the element     jQuery=h1:contains("Allocate applications to assessors")
 
 *** Keywords ***
 Custom Suite Setup
