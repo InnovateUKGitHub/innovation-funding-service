@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.viewmodel;
 
 public class InterviewAllocatedApplicationRowViewModel {
 
-    private final  long id;
+    private final long id;
     private final String name;
     private final String leadOrganisation;
     private final long numberOfAssessors;

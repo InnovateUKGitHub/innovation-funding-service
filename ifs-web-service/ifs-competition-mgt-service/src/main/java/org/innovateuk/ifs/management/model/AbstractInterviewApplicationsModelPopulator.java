@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.management.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
 
 public abstract class AbstractInterviewApplicationsModelPopulator {
 
@@ -49,7 +50,8 @@ public abstract class AbstractInterviewApplicationsModelPopulator {
                 toViewModel(interviewApplicationPageResource),
                 new PaginationViewModel(interviewApplicationPageResource, ""),
                 interviewApplicationPageResource.getUnallocatedApplications(),
-                interviewApplicationPageResource.getAllocatedApplications()
+                interviewApplicationPageResource.getAllocatedApplications(),
+                interviewApplicationPageResource.getTotalElements() > SELECTION_LIMIT
         );
 
         return model;

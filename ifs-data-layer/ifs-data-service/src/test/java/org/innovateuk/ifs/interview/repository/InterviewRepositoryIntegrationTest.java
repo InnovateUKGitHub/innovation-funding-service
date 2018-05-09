@@ -154,14 +154,14 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         Interview assignedInterview = newInterview()
                 .with(id(null))
-                .withState(InterviewState.ACCEPTED)
+                .withState(InterviewState.ASSIGNED)
                 .withParticipant(assessorRole2)
                 .withTarget(application2)
                 .build();
 
         Interview notAssignedInterview = newInterview()
                 .with(id(null))
-                .withState(InterviewState.ACCEPTED)
+                .withState(InterviewState.ASSIGNED)
                 .withParticipant(otherAssessorRole1)
                 .withTarget(application1)
                 .build();
@@ -182,7 +182,6 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void findApplicationsNotAssignedToAssessor() {
         Pageable pageable = new PageRequest(0, 20);
 
-        //assessor already invited to application 2. Should only get application 1 here.
         Page<InterviewApplicationResource> page = repository.findApplicationsNotAssignedToAssessor(competition.getId(), assessor.getId(), pageable);
 
         assertThat(page.getTotalElements(), is(equalTo(1L)));
@@ -198,7 +197,6 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void findApplicationsAssignedToAssessor() {
         Pageable pageable = new PageRequest(0, 20);
 
-        //assessor already invited to application 2. Should only get application 1 here.
         Page<InterviewApplicationResource> page = repository.findApplicationsAssignedToAssessor(competition.getId(), assessor.getId(), pageable);
 
         assertThat(page.getTotalElements(), is(equalTo(1L)));
@@ -223,5 +221,4 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         assertThat(count, is(equalTo(1L)));
     }
-
 }

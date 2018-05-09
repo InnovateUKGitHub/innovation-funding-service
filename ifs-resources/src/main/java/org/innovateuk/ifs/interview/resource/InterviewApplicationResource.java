@@ -6,26 +6,26 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class InterviewApplicationResource {
 
-    private Long id;
+    private long id;
     private String name;
     private String leadOrganisation;
-    private Long numberOfAssessors;
+    private long numberOfAssessors;
 
     public InterviewApplicationResource() {
     }
 
-    public InterviewApplicationResource(Long id, String name, String leadOrganisation, Long numberOfAssessors) {
+    public InterviewApplicationResource(long id, String name, String leadOrganisation, long numberOfAssessors) {
         this.id = id;
         this.name = name;
         this.leadOrganisation = leadOrganisation;
         this.numberOfAssessors = numberOfAssessors;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -45,11 +45,11 @@ public class InterviewApplicationResource {
         this.leadOrganisation = leadOrganisation;
     }
 
-    public Long getNumberOfAssessors() {
+    public long getNumberOfAssessors() {
         return numberOfAssessors;
     }
 
-    public void setNumberOfAssessors(Long numberOfAssessors) {
+    public void setNumberOfAssessors(long numberOfAssessors) {
         this.numberOfAssessors = numberOfAssessors;
     }
 
