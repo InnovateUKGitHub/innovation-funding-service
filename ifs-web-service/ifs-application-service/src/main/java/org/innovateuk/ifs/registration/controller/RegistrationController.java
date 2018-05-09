@@ -165,7 +165,7 @@ public class RegistrationController {
     }
 
     /**
-     * When the current user is a invitee, user the invite email-address in the registration flow.
+     * When the current user is an invitee, use the invite email-address in the registration flow.
      */
     private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);

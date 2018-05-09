@@ -1,3 +1,14 @@
+=== Find the latest site terms and conditions
+==== Request
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/http-request.adoc[]
+
+==== Response
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/http-response.adoc[]
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/terms-and-conditions/get-latest-site-terms-and-conditions/curl-request.adoc[]
+
 === Retrieve terms and conditions by Id
 ==== Request
 include::{snippets}/terms-and-conditions/get-by-id/http-request.adoc[]
@@ -10,7 +21,7 @@ include::{snippets}/terms-and-conditions/get-by-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/terms-and-conditions/get-by-id/curl-request.adoc[]
 
-=== Get latest terms and conditions by version
+=== Find the latest grant terms and conditions by version
 ==== Request
 include::{snippets}/terms-and-conditions/get-latest/http-request.adoc[]
 
