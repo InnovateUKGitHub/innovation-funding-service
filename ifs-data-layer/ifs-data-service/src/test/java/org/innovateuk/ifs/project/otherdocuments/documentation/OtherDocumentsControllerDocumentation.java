@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OtherDocumentsControllerDocumentation extends BaseControllerMockMVCTest<OtherDocumentsController> {
+public class OtherDocumentsControllerDocumentation extends BaseFileControllerMockMVCTest<OtherDocumentsController> {
 
     @Override
     protected OtherDocumentsController supplyControllerUnderTest() {

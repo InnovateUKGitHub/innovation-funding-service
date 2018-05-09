@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.thread.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.threads.attachments.controller.ProjectFinanceAttachmentsController;
@@ -34,7 +35,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectFinanceAttachmentsControllerDocumentation extends BaseControllerMockMVCTest<ProjectFinanceAttachmentsController> {
+public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileControllerMockMVCTest<ProjectFinanceAttachmentsController> {
 
     private static final String identifier = "project/finance/attachments/{method-name}";
 

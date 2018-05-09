@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<GrantOfferLetterController> {
+public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTest<GrantOfferLetterController> {
 
     private static final long projectId = 123L;
     private static final long maxFilesize = 1234L;

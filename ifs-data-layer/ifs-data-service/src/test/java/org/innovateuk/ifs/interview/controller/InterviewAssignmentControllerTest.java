@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest<InterviewAssignmentController> {
+public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVCTest<InterviewAssignmentController> {
 
     private static final long COMPETITION_ID = 1L;
 

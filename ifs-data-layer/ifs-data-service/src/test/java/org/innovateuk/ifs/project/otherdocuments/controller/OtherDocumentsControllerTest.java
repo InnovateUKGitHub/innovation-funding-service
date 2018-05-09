@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
+public class OtherDocumentsControllerTest extends BaseFileControllerMockMVCTest<OtherDocumentsController> {
 
     private static final long projectId = 123L;
     private static final long maxFilesize = 1234L;
