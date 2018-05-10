@@ -20,13 +20,17 @@
             <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
 
                 <fieldset>
-                    <legend class="visuallyhidden">Create a new application?</legend>
-                    <div class="form-group">
+                    <legend class="visuallyhidden" id="createNewApplication">Create a new application?</legend>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'form-group-error'">
+                        <th:block th:if="${#fields.hasErrors('createNewApplication')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
+                        </th:block>
                         <div class="multiple-choice">
                             <input id="new-application-yes"
                                    type="radio"
                                    th:name="create-application"
-                                   value="true" />
+                                   value="true"
+                                   required="required"/>
                             <label for="new-application-yes">
                                 Yes, I want to create a new application.
                             </label>
@@ -35,7 +39,8 @@
                             <input type="radio"
                                    id="new-application-no"
                                    name="create-application"
-                                   value="false" />
+                                   value="false"
+                                   required="required"/>
                             <label for="new-application-no">
                                 No, I want to continue with my existing application.
                             </label>

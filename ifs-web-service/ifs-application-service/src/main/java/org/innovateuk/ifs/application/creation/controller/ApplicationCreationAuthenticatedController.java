@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,22 +75,25 @@ public class ApplicationCreationAuthenticatedController {
     @PostMapping("/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
-                       @RequestParam(value = FORM_RADIO_NAME, required = false) Optional<String> createNewApplication,
-                       UserResource user) {
+                       @RequestParam(value = FORM_RADIO_NAME, required = false)
+                           @ModelAttribute(FORM_RADIO_NAME)
+                           @NotNull(message = "validation.field.confirm.new.application") Boolean createNewApplication,
+                       UserResource user, BindingResult bindingResult) {
         if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
 
-        if(createNewApplication.isPresent()) {
-            if (RADIO_TRUE.equals(createNewApplication.get())) {
+        if(createNewApplication!=null) {
+            if (createNewApplication) {
                 return createApplicationAndShowInvitees(user, competitionId);
-            } else if (RADIO_FALSE.equals(createNewApplication.get())) {
+            } else if (!createNewApplication) {
                 // redirect to dashboard
                 return "redirect:/";
             }
         }
 
         // user did not check one of the radio elements, show page again.
+        bindingResult.rejectValue("createNewApplication","validation.field.confirm.new.application");
         return "redirect:/application/create-authenticated/" + competitionId;
     }
 
