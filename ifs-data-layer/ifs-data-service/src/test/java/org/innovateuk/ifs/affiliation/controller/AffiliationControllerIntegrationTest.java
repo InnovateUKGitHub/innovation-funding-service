@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 import static org.junit.Assert.assertEquals;
@@ -48,7 +50,7 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
                 .build(2));
         userRepository.save(user);
 
-        List<AffiliationResource> response = controller.getUserAffiliations(userId).getSuccess();
+        List<AffiliationResource> response = controller.getUserAffiliations(userId).getSuccess().getAffiliationResourceList();
         assertEquals(2, response.size());
 
         assertEquals(EMPLOYER, response.get(0).getAffiliationType());
@@ -71,19 +73,25 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
                 .build(2));
         userRepository.save(user);
 
-        List<AffiliationResource> getAfterSaveResponse = controller.getUserAffiliations(userId).getSuccess();
+        List<AffiliationResource> getAfterSaveResponse = controller.getUserAffiliations(userId).getSuccess().getAffiliationResourceList();
         assertEquals(2, getAfterSaveResponse.size());
 
-        RestResult<Void> updateResponse = controller.updateUserAffiliations(userId, newAffiliationResource()
-                .withId(null, null)
-                .withAffiliationType(PROFESSIONAL, FAMILY_FINANCIAL)
-                .withExists(TRUE, TRUE)
-                .withUser(userId, userId)
-                .build(2));
+         AffiliationListResource affiliationListResource = newAffiliationListResource()
+                 .withAffiliationList(
+                         newAffiliationResource()
+                            .withId(null, null)
+                            .withAffiliationType(PROFESSIONAL, FAMILY_FINANCIAL)
+                            .withExists(TRUE, TRUE)
+                            .withUser(userId, userId)
+                            .build(2)
+                 )
+                 .build();
+
+        RestResult<Void> updateResponse = controller.updateUserAffiliations(userId, affiliationListResource);
 
         assertTrue(updateResponse.isSuccess());
 
-        List<AffiliationResource> getAfterUpdateResponse = controller.getUserAffiliations(userId).getSuccess();
+        List<AffiliationResource> getAfterUpdateResponse = controller.getUserAffiliations(userId).getSuccess().getAffiliationResourceList();
         assertEquals(2, getAfterUpdateResponse.size());
         assertEquals(PROFESSIONAL, getAfterUpdateResponse.get(0).getAffiliationType());
         assertEquals(FAMILY_FINANCIAL, getAfterUpdateResponse.get(1).getAffiliationType());

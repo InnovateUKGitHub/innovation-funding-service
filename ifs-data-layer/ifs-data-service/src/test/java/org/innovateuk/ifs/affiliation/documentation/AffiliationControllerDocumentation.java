@@ -2,6 +2,7 @@ package org.innovateuk.ifs.affiliation.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.affiliation.controller.AffiliationController;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationResourceBuilder;
 import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationResourceFields;
+import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -33,7 +35,7 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
     public void getUserAffiliations() throws Exception {
         Long userId = 1L;
         List<AffiliationResource> responses = affiliationResourceBuilder.build(2);
-        when(affiliationServiceMock.getUserAffiliations(userId)).thenReturn(serviceSuccess(responses));
+        when(affiliationServiceMock.getUserAffiliations(userId)).thenReturn(serviceSuccess(new AffiliationListResource(responses)));
 
         mockMvc.perform(get("/affiliation/id/{id}/getUserAffiliations", userId))
                 .andExpect(status().isOk())
@@ -52,7 +54,11 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
         Long userId = 1L;
         List<AffiliationResource> affiliations = affiliationResourceBuilder
                 .build(2);
-        when(affiliationServiceMock.updateUserAffiliations(userId, affiliations)).thenReturn(serviceSuccess());
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(affiliations)
+                .build();
+
+        when(affiliationServiceMock.updateUserAffiliations(userId, affiliationListResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/affiliation/id/{id}/updateUserAffiliations", userId)
                 .contentType(APPLICATION_JSON)

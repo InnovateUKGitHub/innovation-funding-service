@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.affiliationListResourceType;
 import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.junit.Assert.assertEquals;
@@ -34,7 +34,7 @@ public class AffiliationRestServiceImplTest extends BaseRestServiceUnitTest<Affi
                 .withAffiliationList(affiliationResources)
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", affiliationUrl, userId), affiliationResourceListType(), expected.getAffiliationResourceList(), OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", affiliationUrl, userId), AffiliationListResource.class, expected);
 
         AffiliationListResource response = service.getUserAffiliations(userId).getSuccess();
         assertEquals(expected, response);

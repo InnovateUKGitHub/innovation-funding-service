@@ -15,6 +15,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -29,15 +30,13 @@ public class AffiliationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<AffiliationListResource> getUserAffiliations(long userId) {
-        List<AffiliationResource> affiliationResources = find(userRepository.findOne(userId), notFoundError(User.class, userId))
-                .andOnSuccessReturn(
-                        user -> user.getAffiliations()
-                                .stream()
-                                .map(affiliation -> affiliationMapper.mapToResource(affiliation))
-                                .collect(toList()))
-                .getSuccess();
-
-        return ServiceResult.serviceSuccess(new AffiliationListResource(affiliationResources));
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
+            List<AffiliationResource> affiliationResources = user.getAffiliations()
+                    .stream()
+                    .map(affiliation -> affiliationMapper.mapToResource(affiliation))
+                    .collect(toList());
+            return serviceSuccess(new AffiliationListResource(affiliationResources));
+        });
     }
 
     @Override
