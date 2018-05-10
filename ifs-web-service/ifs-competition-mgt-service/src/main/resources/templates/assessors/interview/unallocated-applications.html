@@ -66,8 +66,8 @@
     </div>
 
     <form method="POST"
-          th:action="@{/assessment/interview/competition/{competitionId}/applications/find/addSelected(competitionId=${model.competitionId})}"
-          th:object="${form}"
+          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+          th:object="${interviewAllocationSelectionForm}"
           data-multipage-select=""
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
@@ -77,18 +77,18 @@
                     <input type="checkbox"
                            data-select-all=""
                            id="select-all-check"
-                           th:checked="${form.getAllSelected()}"
+                           th:checked="${interviewAllocationSelectionForm.getAllSelected()}"
                            th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
                     <label for="select-all-check">
                         Select all applications
                     </label>
                 </div>
                 <span class="form-hint">
-                    <span data-count-selected="" th:text="${#lists.size(form.selectedIds)}"></span> applications selected
+                    <span data-count-selected="" th:text="${#lists.size(interviewAllocationSelectionForm.selectedIds)}"></span> applications selected
                 </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(form.selectedIds)}">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAllocationSelectionForm.selectedIds)}">
                     Allocate
                 </button>
             </div>

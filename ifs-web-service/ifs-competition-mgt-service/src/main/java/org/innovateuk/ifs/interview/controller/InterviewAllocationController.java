@@ -81,17 +81,18 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                Model model,
                                @PathVariable("competitionId") long competitionId,
                                @PathVariable("userId") long userId,
-                               @RequestParam(value = "page", defaultValue = "0") int page
+                               @RequestParam(value = "page", defaultValue = "0") int page,
+                               HttpServletRequest request,
+                               HttpServletResponse response
     ) {
+        updateSelectionForm(request, response, competitionId, selectionForm);
+
 
         model.addAttribute("model", unallocatedInterviewApplicationsModelPopulator.populateModel(
                 competitionId,
                 userId,
                 page
         ));
-
-        model.addAttribute("form", new InterviewAllocationSelectionForm());
-
         return "assessors/interview/unallocated-applications";
     }
 
@@ -159,4 +160,15 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return interviewAllocationRestService.getUnallocatedApplicationIds(competitionId, assessorId).getSuccess();
     }
 
+    private void updateSelectionForm(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     long competitionId,
+                                     InterviewAllocationSelectionForm selectionForm) {
+        InterviewAllocationSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewAllocationSelectionForm());
+
+        selectionForm.setSelectedIds(storedSelectionForm.getSelectedIds());
+        selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
+
+        saveFormToCookie(response, competitionId, selectionForm);
+    }
 }
