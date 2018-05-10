@@ -286,15 +286,26 @@ Lead Applicant resends the invite to the Project manager
     Then the user resends and clicks the button    Resend
     [Teardown]  logout as user
 
+Invited project manager registration validation
+    [Documentation]  INFUND-3550 INFUND-3554
+    [Tags]  HappyPath  Email
+    Given the user accepts invitation                   ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Project Manager invitation for project  managing the project
+    When the user clicks the button/link                css=button[type="submit"][name="create-account"]
+    Then The user should see a field and summary error  Please enter a first name.
+    And the user should see a field and summary error   Please enter a last name.
+    And the user should see a field and summary error   To create a new account you must agree to the website terms and conditions.
+    And the user should see a field and summary error   Please enter your password.
+
+
 Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
     [Tags]  HappyPath  Email
-    Given the user accepts invitation and signs in  ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Project Manager invitation for project ${PROJECT_SETUP_APPLICATION_1}  managing the project  Bob  Jones
-    When The guest user inserts user email and password  ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
-    And the guest user clicks the log-in button
-    Then the user should see the element        jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    Then the user should not see the element    css=.my-applications .in-progress  #applications in progress section
-    And the user should not see the element  jQuery=h2:contains("Application in progress")
+    Given the user selects the checkbox                 termsAndConditions
+    And the invited user fills the create account form  Bob  Jones
+    And the user cannot see a validation error in the page
+    When the invited user signs in                      ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Bob  Jones
+    Then the user should see the element                jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    And the user should not see the element             css=.my-applications .in-progress  #applications in progress section
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
@@ -460,10 +471,10 @@ Lead applicant resends the invite to the Finance contact
 Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
     [Tags]  HappyPath  Email
-    Given the user accepts invitation and signs in  ${invitedFinanceContact}  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PROJECT_SETUP_APPLICATION_1}   providing finance details  John  Smith
-    When The guest user inserts user email and password  ${invitedFinanceContact}  ${correct_password}
-    And the guest user clicks the log-in button
-    Then the user should see the element  jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    Given the user accepts invitation                   ${invitedFinanceContact}  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PROJECT_SETUP_APPLICATION_1}   providing finance details
+    And the invited user fills the create account form  John  Smith
+    When the invited user signs in                      ${invitedFinanceContact}  John  Smith
+    Then the user should see the element                jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
@@ -690,22 +701,25 @@ Custom suite setup
 
 the invitee is able to assign himself as Finance Contact
     [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
-    the user accepts invitation and signs in      ${email}  ${title}  ${pattern}  ${name}  ${famName}
-    The guest user inserts user email and password  ${email}  ${correct_password}
-    the guest user clicks the log-in button
-    the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${organisationLudlowId}
-    the user selects the radio button  financeContact  financeContact3
-    the user clicks the button/link    jQuery=button:contains("Save finance contact")
+    the user accepts invitation                     ${email}  ${title}  ${pattern}
+    the invited user fills the create account form  ${name}  ${famName}
+    then the invited user signs in                  ${email}  ${name}  ${famName}
+    the user navigates to the page                  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${organisationLudlowId}
+    the user selects the radio button               financeContact  financeContact3
+    the user clicks the button/link                 jQuery=button:contains("Save finance contact")
 
-the user accepts invitation and signs in
-    [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
+the user accepts invitation
+    [Arguments]  ${email}  ${title}  ${pattern}
     the user reads his email and clicks the link  ${email}  ${title}  ${pattern}
     the user should see the element               jQuery=h1:contains("Join a project")
     the user clicks the button/link               link=Create account
-    the invited user fills the create account form  ${name}  ${famName}
-    the user reads his email and clicks the link  ${email}  Please verify your email address  Dear ${name} ${famName}
-    the user should see the element               jQuery=h1:contains("Account verified")
-    the user clicks the button/link               jQuery=.button:contains("Sign in")
+
+the invited user signs in
+    [Arguments]  ${email}  ${name}  ${famName}
+    the user reads his email and clicks the link    ${email}  Please verify your email address  Dear ${name} ${famName}
+    the user should see the element                 jQuery=h1:contains("Account verified")
+    the user clicks the button/link                 jQuery=.button:contains("Sign in")
+    Logging in and Error Checking                   ${email}  ${correct_password}
 
 The user resends and clicks the button
     [Arguments]  ${Resend_OR_Cancel}
