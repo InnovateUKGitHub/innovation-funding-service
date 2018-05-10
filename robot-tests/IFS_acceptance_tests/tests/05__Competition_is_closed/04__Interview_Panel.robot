@@ -166,7 +166,7 @@ Applicant can see the feedback given
     Then the user should see the element      jQuery=p:contains("This is the business opportunity feedback")
     And the user should see the element       jQuery=h2:contains("Average score: 8/ 10")
 
-CompAdmin Views the applications that can be allocated to the assessors
+CompAdmin can access the Allocate applications to assessors screen
     [Documentation]  IFS-3435
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
