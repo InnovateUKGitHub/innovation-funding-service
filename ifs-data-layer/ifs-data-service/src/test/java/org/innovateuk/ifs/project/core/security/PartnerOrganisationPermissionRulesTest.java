@@ -23,9 +23,6 @@ import static org.mockito.Mockito.when;
 
 public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesTest<PartnerOrganisationPermissionRules> {
 
-    @Mock
-    private ProjectUserRepository projectUserRepositoryMock;
-
     @Override
     protected PartnerOrganisationPermissionRules supplyPermissionRulesUnderTest() {
         return new PartnerOrganisationPermissionRules();

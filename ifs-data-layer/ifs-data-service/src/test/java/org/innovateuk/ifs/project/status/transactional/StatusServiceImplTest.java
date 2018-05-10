@@ -40,6 +40,7 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
@@ -181,6 +182,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
+
+    @Mock
+    private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
     @Before
     public void setUp() {

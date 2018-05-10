@@ -54,11 +54,6 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
     @Mock
     private FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
 
-    @Mock
-    private FileService fileServiceMock;
-
-    @Mock
-    private FileEntryMapper fileEntryMapperMock;
 
     @Mock
     private ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
@@ -66,10 +61,6 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
     @Mock
     private FileEntryRepository fileEntryRepositoryMock;
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
 
     @Override
     protected OverheadFileServiceImpl supplyServiceUnderTest() {

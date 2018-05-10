@@ -37,13 +37,13 @@ import static org.mockito.Mockito.*;
 public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocksTest {
 
     @Mock
-    private FileService fileServiceMock;
+    protected FileService fileServiceMock;
 
     @Mock
-    private FileEntryMapper fileEntryMapperMock;
+    protected FileEntryMapper fileEntryMapperMock;
 
     @Mock
-    private FileTemplateRenderer rendererMock;
+    protected FileTemplateRenderer rendererMock;
 
     @InjectMocks
     protected ServiceType service = supplyServiceUnderTest();

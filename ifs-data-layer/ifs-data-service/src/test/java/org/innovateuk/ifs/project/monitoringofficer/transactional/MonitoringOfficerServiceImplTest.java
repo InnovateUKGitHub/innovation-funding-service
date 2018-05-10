@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
@@ -35,6 +36,9 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
     @Mock
     private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+
+    @Mock
+    private MonitoringOfficerMapper monitoringOfficerMapper;
 
     @Mock
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -42,6 +43,9 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private QuestionRepository questionRepositoryMock;
+
+    @Mock
+    private QuestionStatusRepository questionStatusRepository;
 
     @Mock
     private ProcessRoleRepository processRoleRepositoryMock;

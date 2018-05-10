@@ -37,9 +37,6 @@ public class InterviewApplicationFeedbackServiceImplTest extends BaseServiceUnit
     private InterviewAssignmentMessageOutcomeRepository interviewAssignmentMessageOutcomeRepository;
 
     @Mock
-    private FileService fileServiceMock;
-
-    @Mock
     private FileEntryService fileEntryServiceMock;
 
     @Override

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -64,6 +65,9 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private ProjectUserRepository projectUserRepository;
 
     @Test
     public void testAcceptProjectInviteSuccess() throws Exception {

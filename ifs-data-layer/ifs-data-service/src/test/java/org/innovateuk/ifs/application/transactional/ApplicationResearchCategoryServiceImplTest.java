@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.domain.Question;
@@ -47,6 +48,9 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
 
     @Mock
     private FinanceService financeServiceMock;
+
+    @Mock
+    private ApplicationMapper applicationMapper;
 
     @Override
     protected ApplicationResearchCategoryService supplyServiceUnderTest() {

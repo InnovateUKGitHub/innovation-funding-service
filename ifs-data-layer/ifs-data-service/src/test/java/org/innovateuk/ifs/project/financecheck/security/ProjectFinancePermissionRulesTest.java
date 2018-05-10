@@ -42,8 +42,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Mock
     private ProjectProcessRepository projectProcessRepositoryMock;
 
-    @Mock
-    private ProjectUserRepository projectUserRepositoryMock;
 
     @Before
     public void setUp() throws Exception {

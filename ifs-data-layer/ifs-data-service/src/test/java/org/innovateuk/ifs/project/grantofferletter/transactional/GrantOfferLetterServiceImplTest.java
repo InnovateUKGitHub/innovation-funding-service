@@ -158,17 +158,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private UserRepository userRepositoryMock;
 
     @Mock
-    private FileService fileServiceMock;
-
-    @Mock
     private SpendProfileService spendProfileServiceMock;
-
-    @Mock
-    private FileTemplateRenderer rendererMock;
-
-
-    @Mock
-    private FileEntryMapper fileEntryMapperMock;
 
     @Mock
     private NotificationService notificationServiceMock;

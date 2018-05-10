@@ -35,9 +35,6 @@ import static org.mockito.Mockito.when;
 public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<BankDetailsPermissionRules> {
 
     @Mock
-    private ProjectUserRepository projectUserRepositoryMock;
-
-    @Mock
     private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Override

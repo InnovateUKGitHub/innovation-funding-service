@@ -96,11 +96,6 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
     @Mock
     private ProjectWorkflowHandler projectWorkflowHandlerMock;
 
-    @Mock
-    private FileService fileServiceMock;
-
-    @Mock
-    private FileEntryMapper fileEntryMapperMock;
 
     @Mock
     private ProjectUserRepository projectUserRepositoryMock;

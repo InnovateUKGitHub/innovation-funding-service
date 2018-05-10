@@ -35,6 +35,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -131,6 +132,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private NotificationSender notificationSenderMock;
+
+    @Mock
+    private AffiliationMapper affliationMapper;
 
 
 

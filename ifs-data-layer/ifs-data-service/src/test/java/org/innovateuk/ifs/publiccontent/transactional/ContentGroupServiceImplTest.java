@@ -43,12 +43,6 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
     @Mock
     private ContentGroupRepository contentGroupRepository;
 
-    @Mock
-    private FileService fileServiceMock;
-
-    @Mock
-    private FileEntryMapper fileEntryMapperMock;
-
     @Test
     public void testUploadFile() {
         long contentGroupId = 1L;

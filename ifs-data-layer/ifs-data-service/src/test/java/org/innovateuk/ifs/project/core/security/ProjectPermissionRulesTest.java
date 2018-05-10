@@ -22,9 +22,6 @@ import static org.mockito.Mockito.when;
 public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectPermissionRules> {
 
     @Mock
-    private ProjectUserRepository projectUserRepositoryMock;
-
-    @Mock
     private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Override

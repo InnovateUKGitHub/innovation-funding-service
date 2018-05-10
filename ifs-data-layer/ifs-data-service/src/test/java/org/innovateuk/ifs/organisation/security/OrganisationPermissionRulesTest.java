@@ -40,12 +40,6 @@ import static org.mockito.Mockito.when;
  */
 public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<OrganisationPermissionRules> {
 
-    @Mock
-    private ProcessRoleRepository processRoleRepositoryMock;
-
-    @Mock
-    private ProjectUserRepository projectUserRepositoryMock;
-
     @Test
     public void testSystemRegistrationUserCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
         allGlobalRoleUsers.forEach(user -> {
