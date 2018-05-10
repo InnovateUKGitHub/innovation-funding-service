@@ -84,12 +84,9 @@ items:
     name: prototypes-svc
   spec:
     ports:
-    - name: 8080-tcp
+    - name: 443-tcp
       port: 8080
       targetPort: 8080
-    - name: 8009-tcp
-      port: 8009
-      targetPort: 8009
     selector:
       deploymentconfig: prototypes-svc
   status:
@@ -101,7 +98,7 @@ items:
   spec:
     host: "${PROTOTYPES_ADDRESS}"
     port:
-      targetPort: 8080-tcp
+      targetPort: 443-tcp
     tls:
       termination: edge
       insecureEdgeTerminationPolicy: Redirect

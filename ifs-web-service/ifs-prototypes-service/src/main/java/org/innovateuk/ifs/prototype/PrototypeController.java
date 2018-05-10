@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * A controller to serve embedded prototype pages from the actual application during development.
  */
 @Controller
-@RequestMapping("/prototypes")
+@RequestMapping("/")
 public class PrototypeController {
 
     private static final Log LOG = LogFactory.getLog(PrototypeController.class);

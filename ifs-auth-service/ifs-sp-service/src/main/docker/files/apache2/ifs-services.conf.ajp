@@ -192,22 +192,6 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
-  <Location ~ "/prototypes">
-    AuthType shibboleth
-    ShibRequireSession Off
-    ShibRequestSetting isPassive On
-    ShibRequestSetting applicationId default
-    require shibboleth
-  </Location>
-
-  <Location ~ "/prototypes/.*">
-    AuthType shibboleth
-    ShibRequireSession Off
-    ShibRequestSetting isPassive On
-    ShibRequestSetting applicationId default
-    require shibboleth
-  </Location>
-
   # if that becomes a bigger requirement we might have to rethink it (using glusterfs?)
   <Location /files>
     ProxyPass !
@@ -230,9 +214,6 @@ ShibCompatValidUser On
   ProxyPass  /project-setup-management/ ajp://project-setup-mgt-svc:8009/project-setup-management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup/ ajp://project-setup-svc:8009/project-setup/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /competition/ ajp://front-door-svc:8009/competition/ timeout=30 connectiontimeout=30 retry=2
-  ProxyPass  /prototypes ajp://prototypes-svc:8009/prototypes timeout=30 connectiontimeout=30 retry=2
-  ProxyPass  /prototypes/ ajp://prototypes-svc:8009/prototypes/ timeout=30 connectiontimeout=30 retry=2
-
   ProxyPass  / ajp://application-svc:8009/ timeout=30 connectiontimeout=30 retry=2
 
   LogLevel warn proxy:info proxy_ajp:info
