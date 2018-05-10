@@ -266,7 +266,7 @@ navigate to external finance contact page, choose finance contact and save
 Select project location
     [Arguments]  ${org_id}  ${projectId}
     the user navigates to the page        ${server}/project-setup/project/${projectId}/organisation/${org_id}/partner-project-location
-    the user enters text to a text field  css=#postCode  ${postcode}
+    the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
 

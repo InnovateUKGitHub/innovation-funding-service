@@ -530,7 +530,7 @@ Validation for project location
     [Setup]  log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to the page                ${project_in_setup_details_page}
     Given the user clicks the button/link               jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
-    And the user moves focus to the element             id=postCode
+    And the user moves focus to the element             id=postcode
     And the user should see an error                    This field cannot be left blank.
     When the user clicks the button/link                css=button[type="submit"]
     Then the user should see a field and summary error  This field cannot be left blank.
@@ -717,6 +717,6 @@ Select the project location
     [Arguments]  ${org}
     the user navigates to the page        ${project_in_setup_details_page}
     the user clicks the button/link       jQuery=#project-details-finance td:contains("${org}") ~ td a:contains("Select project location")
-    the user enters text to a text field  css=#postCode  ${postcode}
+    the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
