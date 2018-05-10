@@ -11,7 +11,9 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -49,6 +51,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTest<SpendProfileController> {
+
+
+    @Mock
+    private SpendProfileService spendProfileServiceMock;
 
     @Override
     protected SpendProfileController supplyControllerUnderTest() {

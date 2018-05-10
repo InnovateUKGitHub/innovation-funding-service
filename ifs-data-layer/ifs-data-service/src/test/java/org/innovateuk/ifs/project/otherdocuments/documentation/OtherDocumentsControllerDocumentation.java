@@ -2,9 +2,12 @@ package org.innovateuk.ifs.project.otherdocuments.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
+import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +27,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class OtherDocumentsControllerDocumentation extends BaseFileControllerMockMVCTest<OtherDocumentsController> {
+
+    @Mock
+    private OtherDocumentsService otherDocumentsServiceMock;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
 
     @Override
     protected OtherDocumentsController supplyControllerUnderTest() {
