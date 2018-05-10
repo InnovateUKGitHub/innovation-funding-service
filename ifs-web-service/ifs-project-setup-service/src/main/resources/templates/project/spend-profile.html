@@ -98,8 +98,7 @@
                             <th scope="row" th:if="${model.usingJesFinances}" id="month" colspan="2">Je-S category</th>
                             <th scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
                             <th:block th:each="month,stats : ${model.table.getMonths()}">
-                                <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}"
-                                    th:id="|month-${stats.index}|"></th>
+                                <th scope="col" th:text="${'Month ' + (stats.index+1)}" th:id="|month-${stats.index}|" />
                             </th:block>
                             <th scope="col" class="fix-right">Total</th>
                             <th scope="col" class="fix-right">Eligible project cost</th>
@@ -301,7 +300,7 @@
                                                           .jan-'+(item.year+1)+',
                                                           .feb-'+(item.year+1)+',
                                                           .mar-'+(item.year+1)}">
-                            &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />                                
+                            &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
                         </td>
                     </tr>
                     </tbody>
