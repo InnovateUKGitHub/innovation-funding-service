@@ -136,7 +136,12 @@
                       <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine1')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <input class="form-control" type="text" th:errorclass="form-control-error" required="required" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" th:field="*{addressForm.selectedPostcode.addressLine1}" />
+                <input class="form-control"
+                       type="text"
+                       th:errorclass="form-control-error"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.standard.addressline1.required}"
+                       th:field="*{addressForm.selectedPostcode.addressLine1}" />
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine2')} ? 'form-group-error'">
                 <label class="form-label visuallyhidden" for="addressForm.selectedPostcode.addressLine2">
@@ -181,7 +186,10 @@
                       <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.postcode')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <input class="form-control postcode" type="text" th:errorclass="form-control-error" required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}" th:field="*{addressForm.selectedPostcode.postcode}"/>
+                <input class="form-control postcode"
+                       type="text" th:errorclass="form-control-error"
+                       required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}"
+                       th:field="*{addressForm.selectedPostcode.postcode}"/>
             </div>
         </fieldset>
 
