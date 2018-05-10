@@ -1,18 +1,28 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import com.sun.xml.internal.bind.v2.runtime.AssociationMap;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
+import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +59,30 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private AssessmentService assessmentService = new AssessmentServiceImpl();
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private AssessmentMapper assessmentMapperMock;
+
+    @Mock
+    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
+
+    @Mock
+    private AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
+
+    @Mock
+    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapperMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
 
     @Test
     public void findById() {

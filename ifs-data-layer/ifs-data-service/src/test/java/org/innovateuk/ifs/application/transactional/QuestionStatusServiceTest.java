@@ -2,11 +2,14 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.transactional.SectionService;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -36,6 +39,15 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private QuestionRepository questionRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
 
     @Test
     public void assignTest() throws Exception {

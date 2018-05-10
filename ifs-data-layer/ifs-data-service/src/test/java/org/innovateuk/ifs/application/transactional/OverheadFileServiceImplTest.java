@@ -4,16 +4,24 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.mapper.FileEntryMapper;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.transactional.OverheadFileServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
@@ -36,6 +44,27 @@ import static org.mockito.Mockito.*;
 public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFileServiceImpl> {
 
     private static String fileMetaFieldType = "file_entry";
+
+    @Mock
+    private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
+
+    @Mock
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepositoryMock;
+
+    @Mock
+    private FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
+
+    @Mock
+    private FileService fileServiceMock;
+
+    @Mock
+    private FileEntryMapper fileEntryMapperMock;
+
+    @Mock
+    private ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
+
+    @Mock
+    private FileEntryRepository fileEntryRepositoryMock;
 
     @Before
     public void setUp() throws Exception {

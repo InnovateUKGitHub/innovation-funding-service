@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -10,6 +12,8 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -31,6 +35,18 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
 
     @Mock
     private ResearchCategoryRepository researchCategoryRepository;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private QuestionService questionServiceMock;
+
+    @Mock
+    private UsersRolesService usersRolesServiceMock;
+
+    @Mock
+    private FinanceService financeServiceMock;
 
     @Override
     protected ApplicationResearchCategoryService supplyServiceUnderTest() {
