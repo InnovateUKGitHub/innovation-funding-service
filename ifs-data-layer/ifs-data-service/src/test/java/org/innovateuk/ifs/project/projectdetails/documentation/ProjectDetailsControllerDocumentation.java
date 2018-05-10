@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.projectdetails.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -8,23 +10,18 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -198,7 +195,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
+                                parameterWithName("projectId").description("Id of project that the project manager is being invited to")
                         )
                 ));
     }
@@ -214,7 +211,33 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
+                                parameterWithName("projectId").description("Id of project that the finance contact is being invited to")
+                        )
+                ));
+    }
+
+    @Test
+    public void updateProjectAddress() throws Exception {
+
+        long projectId = 123L;
+        long leadOrganisationId = 456L;
+        OrganisationAddressType addressType = OrganisationAddressType.PROJECT;
+
+        AddressResource address = newAddressResource().build();
+
+        when(projectDetailsServiceMock.updateProjectAddress(leadOrganisationId, projectId, addressType, address)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/address?leadOrganisationId={leadOrganisationId}&addressType={addressType}", projectId, leadOrganisationId, addressType)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(address)))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                            parameterWithName("projectId").description("Id of project that the project address is being set on")
+                        ),
+                        requestParameters(
+                            parameterWithName("leadOrganisationId").description("Id of the Lead Organisation for this Project"),
+                            parameterWithName("addressType").description("The type of address that is being selected")
                         )
                 ));
     }
