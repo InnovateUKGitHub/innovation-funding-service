@@ -9,9 +9,9 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationListResourceBuilder;
 import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationResourceBuilder;
 import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationResourceFields;
-import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -44,8 +44,8 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("id").description("Identifier of the user associated with affiliations being requested")
                         ),
                         responseFields(
-                                fieldWithPath("[]").description("List of affiliations belonging to the user")
-                        ).andWithPrefix("[].", affiliationResourceFields)
+                                fieldWithPath("affiliationResourceList[]").description("List of affiliations belonging to the user")
+                        ).andWithPrefix("affiliationResourceList[].", affiliationResourceFields)
                 ));
     }
 
@@ -54,22 +54,21 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
         Long userId = 1L;
         List<AffiliationResource> affiliations = affiliationResourceBuilder
                 .build(2);
-        AffiliationListResource affiliationListResource = newAffiliationListResource()
-                .withAffiliationList(affiliations)
+        AffiliationListResource affiliationListResource = affiliationListResourceBuilder
                 .build();
 
         when(affiliationServiceMock.updateUserAffiliations(userId, affiliationListResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/affiliation/id/{id}/updateUserAffiliations", userId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(affiliations)))
+                .content(objectMapper.writeValueAsString(affiliationListResource)))
                 .andExpect(status().isOk())
                 .andDo(document("affiliation/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Identifier of the user associated with affiliations being updated")
                         ),
-                        requestFields(fieldWithPath("[]").description("List of affiliations belonging to the user"))
-                                .andWithPrefix("[].", affiliationResourceFields)
+                        requestFields(fieldWithPath("affiliationResourceList[]").description("List of affiliations belonging to the user"))
+                                .andWithPrefix("affiliationResourceList[].", affiliationResourceFields)
                 ));
     }
 }

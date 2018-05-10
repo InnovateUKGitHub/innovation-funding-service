@@ -52,9 +52,8 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
                 .thenReturn(serviceSuccess(affiliationListResource));
 
         classUnderTest.getUserAffiliations(userId);
-        verify(rules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
-                .usersCanViewTheirOwnAffiliations(isA(AffiliationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(rules);
+
     }
 
     @Test
