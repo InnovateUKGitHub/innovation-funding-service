@@ -8,11 +8,11 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -87,13 +87,13 @@ public class Application implements ProcessActivity {
     public Application() {
     }
 
-    public Application(String name, ActivityState activityState) {
-        requireNonNull(activityState, "activityState cannot be null " + activityState);
+    public Application(String name) {
         this.name = name;
-        this.applicationProcess = new ApplicationProcess(this, null, activityState);
+        this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
     }
 
-    public Application(Competition competition, String name, List<ProcessRole> processRoles, ActivityState activityState) {
+    // TODO can hopefully remove the activityState param here and just set to CREATED
+    public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationState activityState) {
         requireNonNull(activityState, "activityState cannot be null " + activityState);
         this.competition = competition;
         this.name = name;

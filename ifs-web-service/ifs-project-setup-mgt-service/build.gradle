@@ -14,6 +14,10 @@ def enabled = project.hasProperty('ifs.project-setup-mgt-service.enabled') ? pro
     task.enabled = enabled
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
 
 ext.serverContext = '/project-setup-management'
 
@@ -39,3 +43,5 @@ processResources {
         exclude '**/application.properties'
     }
 }
+
+jar.dependsOn ":ifs-web-service:gulp_default"

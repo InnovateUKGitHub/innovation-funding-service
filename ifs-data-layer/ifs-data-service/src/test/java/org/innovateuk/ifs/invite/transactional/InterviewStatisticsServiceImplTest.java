@@ -22,8 +22,8 @@ import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatist
 import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
@@ -44,11 +44,11 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
                         .withApplicationsAssigned(applicationsAssigned)
                         .build();
 
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState()))
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityState(COMPETITION_ID, ApplicationState.SUBMITTED))
                 .thenReturn(applicationsInCompetition);
 
-        when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
-                simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState)))
+        when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
+                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES)))
                 .thenReturn(applicationsAssigned);
 
         InterviewAssignmentKeyStatisticsResource keyStatisticsResource = interviewStatisticsService.getInterviewPanelKeyStatistics(COMPETITION_ID).getSuccess();
@@ -56,9 +56,9 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(expectedKeyStatisticsResource, keyStatisticsResource);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, interviewAssignmentRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState());
-        inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
-                simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState));
+        inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityState(COMPETITION_ID, ApplicationState.SUBMITTED);
+        inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
+                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
         inOrder.verifyNoMoreInteractions();
     }
 

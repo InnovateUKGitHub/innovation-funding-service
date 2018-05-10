@@ -8,6 +8,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0ba
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/new-account-organisation-type
+${collaboratorId}  ${user_ids['${collaborator1_credentials["email"]}']}
 # This file uses the Application: Climate science the history of Greenland's ice    (Lead applcant: Steve.Smith)
 
 *** Test Cases ***
@@ -106,6 +107,21 @@ Research and technology organisations (RTO) search (accept invitation flow with 
     And the user clicks the button/link                                          link=Climate science the history of Greenland's ice
     And the user clicks the button/link                                          link=Your finances
     And the user should see the element                                          jQuery=h1:contains("Your finances")
+
+Validation on terms and condition page
+    [Documentation]  IFS-3093
+    [Tags]  MySQL
+    [Setup]  Delete user from terms and conditions database   ${collaboratorId}
+    Given Log in as a different user                   &{collaborator1_credentials}
+    When The user clicks the button/link                css=button[type="submit"]
+    Then the user should see a field and summary error  In order to continue you must agree to the terms and conditions.
+
+User is able to accept new terms and conditions
+    [Documentation]  IFS-3093
+    Given the user selects the checkbox   agree
+    And the user cannot see a validation error in the page
+    When the user clicks the button/link  css=button[type="submit"]
+    Then the user should see the element  jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
 Custom Suite Setup

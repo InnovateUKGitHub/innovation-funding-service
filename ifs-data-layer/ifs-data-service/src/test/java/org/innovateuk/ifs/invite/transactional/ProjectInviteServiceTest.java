@@ -5,8 +5,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
@@ -15,24 +16,24 @@ import org.mockito.InjectMocks;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static junit.framework.TestCase.assertEquals;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mapstruct.factory.Mappers.getMapper;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
@@ -177,14 +178,28 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testGetInvitesByProject() throws Exception {
-        Project project = newProject().build();
-        ProjectInvite inviteProject = newProjectInvite().withOrganisation(newOrganisation()).build();
-        InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(inviteProject);
-        when(projectInviteRepositoryMock.findByProjectId(project.getId())).thenReturn(asList(inviteProject));
-        when(inviteProjectMapperMock.mapToResource(inviteProject)).thenReturn(inviteProjectResource);
-        when(organisationRepositoryMock.findOne(anyLong())).thenReturn(inviteProject.getOrganisation());
-        ServiceResult<List<InviteProjectResource>> invitesByProject = projectInviteService.getInvitesByProject(project.getId());
+
+        ProjectResource projectResource = newProjectResource()
+                .build();
+
+        Organisation organisation = newOrganisation()
+                .build();
+
+        InviteProjectResource inviteProjectResource = newInviteProjectResource()
+                .withProject(projectResource.getId())
+                .withLeadOrganisation(organisation.getId())
+                .build();
+
+        ProjectInvite projectInvite = newProjectInvite()
+                .build();
+
+        when(projectInviteRepositoryMock.findByProjectId(projectResource.getId())).thenReturn(singletonList(projectInvite));
+        when(inviteProjectMapperMock.mapToResource(projectInvite)).thenReturn(inviteProjectResource);
+        when(organisationRepositoryMock.findOne(inviteProjectResource.getLeadOrganisationId())).thenReturn(organisation);
+        when(projectServiceMock.getProjectById(projectResource.getId())).thenReturn(serviceSuccess(projectResource));
+
+        ServiceResult<List<InviteProjectResource>> invitesByProject = projectInviteService.getInvitesByProject(projectResource.getId());
         assertTrue(invitesByProject.isSuccess());
-        assertEquals(asList(inviteProjectResource), invitesByProject.getSuccess());
+        assertEquals(singletonList(inviteProjectResource), invitesByProject.getSuccess());
     }
 }

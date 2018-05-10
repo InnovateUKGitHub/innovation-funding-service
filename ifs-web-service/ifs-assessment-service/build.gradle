@@ -18,6 +18,10 @@ def enabled = project.hasProperty('ifs.assessment-service.enabled') ? project.pr
     task.enabled = enabled
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
 
 ext.serverContext = '/assessment'
 
@@ -32,3 +36,5 @@ dependencies {
 
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
+
+jar.dependsOn ":ifs-web-service:gulp_default"

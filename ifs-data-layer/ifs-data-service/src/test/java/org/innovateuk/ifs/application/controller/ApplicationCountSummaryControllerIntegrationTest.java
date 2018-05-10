@@ -12,9 +12,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,9 +32,6 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
 
     @Autowired
     private InnovationAreaRepository innovationAreaRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -99,7 +93,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
                 .withCompetition(competitionRepository.findById(competitionId))
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
                 .build();
-        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED));
+        application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
 

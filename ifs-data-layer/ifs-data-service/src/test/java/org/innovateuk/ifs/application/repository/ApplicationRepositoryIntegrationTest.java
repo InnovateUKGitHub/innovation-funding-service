@@ -5,17 +5,14 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.repository.ProjectRepository;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,26 +20,23 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.application.resource.ApplicationState.submittedAndFinishedStates;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 
 @Rollback
 public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationRepository> {
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -67,16 +61,13 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByApplicationProcessActivityStateStateIn() {
-        Collection<State> states = simpleMap(submittedAndFinishedStates, ApplicationState::getBackingState);
+        List<Application> applicationList = simpleMap(ApplicationState.values(), this::createApplicationByState);
 
-        List<Application> applicationList = simpleMap(EnumSet.complementOf(EnumSet.of(ApplicationState.IN_PANEL)),
-                this::createApplicationByState);
-
-        long initial = repository.findByApplicationProcessActivityStateStateIn(states).count();
+        long initial = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates).count();
 
         repository.save(applicationList);
 
-        Stream<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
+        Stream<Application> applications = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates);
 
         assertEquals(initial + 5, applications.count());
     }
@@ -88,7 +79,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
-                .withActivityState(activityState(ApplicationState.CREATED), activityState(ApplicationState.SUBMITTED))
+                .withActivityState(CREATED, SUBMITTED)
                 .with(id(null))
                 .build(2);
 
@@ -123,7 +114,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
-                .withActivityState(activityState(ApplicationState.SUBMITTED), activityState(ApplicationState.SUBMITTED))
+                .withActivityState(SUBMITTED)
                 .with(id(null))
                 .build(2);
 
@@ -131,7 +122,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         InterviewAssignment interviewPanel = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(InterviewAssignmentState.CREATED))
+                .withState(InterviewAssignmentState.CREATED)
                 .withTarget(applications.get(0))
                 .build();
 
@@ -153,14 +144,14 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Application> applications = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withActivityState(activityState(ApplicationState.SUBMITTED), activityState(ApplicationState.SUBMITTED))
+                .withActivityState(SUBMITTED)
                 .build(2);
 
         applicationRepository.save(applications);
 
         InterviewAssignment interviewAssignment = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE))
+                .withState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE)
                 .withTarget(applications.get(0))
                 .build();
 
@@ -195,7 +186,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Assessment assessment = assessmentRepository.save(newAssessment()
                 .withApplication(application)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.SUBMITTED))
+                .withProcessState(AssessmentState.SUBMITTED)
                 .build()
         );
 
@@ -209,17 +200,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withApplicationState(applicationState)
                 .build();
-        application.getApplicationProcess().setActivityState(activityState(applicationState));
+        application.getApplicationProcess().setProcessState(applicationState);
         return application;
-    }
-
-    private ActivityState activityState(ApplicationState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, applicationState
-                .getBackingState());
-    }
-
-    private ActivityState activityState(InterviewAssignmentState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                applicationState.getBackingState());
     }
 }
