@@ -10,14 +10,16 @@ import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.PayloadDocumentation;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.ValidationMessagesDocs.validationMessagesFields;
+import static org.innovateuk.ifs.project.financecheck.documentation.ProjectFinanceResponseFields.projectFinanceGrantClaimRowFields;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,7 +32,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     private ApplicationValidationUtil validationUtil;
 
     @Test
-    public void addNewCost() throws Exception {
+    public void addProjectCost() throws Exception {
         String url = BASE_URL + "/add/{projectFinanceId}/{questionId}";
 
         when(validationUtil.validateProjectCostItem(any(FinanceRowItem.class))).thenReturn(new ValidationMessages());
@@ -43,7 +45,26 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
                         pathParameters(
                                 parameterWithName("projectFinanceId").description("Id of project finance associated with particular project and organisation to which a new cost row should to be added"),
                                 parameterWithName("questionId").description("Id of question for which a new finance row should be added")
-                        )
+                        ),
+                        responseFields(validationMessagesFields)
+                ));
+    }
+
+    @Test
+    public void addProjectCostWithoutPersisting() throws Exception {
+        String url = BASE_URL + "/add-without-persisting/{projectFinanceId}/{questionId}";
+
+        when(projectFinanceRowServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
+
+        mockMvc.perform(post(url, 123L, 456L).
+                contentType(APPLICATION_JSON)).
+                andExpect(status().isCreated()).
+                andDo(document("project/finance/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectFinanceId").description("Id of project finance associated with particular project and organisation to which a new cost row should be added (without persisting)"),
+                                parameterWithName("questionId").description("Id of question for which a new finance row should be added (without persisting)")
+                        ),
+                        responseFields(projectFinanceGrantClaimRowFields)
                 ));
     }
 
@@ -60,14 +81,12 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
                         pathParameters(
                                 parameterWithName("id").description("Id of cost item to be returned")
                         ),
-                        PayloadDocumentation.responseFields(
-                                ProjectFinanceResponseFields.projectFinanceGrantClaimRowFields
-                        )
+                        responseFields(projectFinanceGrantClaimRowFields)
                 ));
     }
 
     @Test
-    public void update() throws Exception {
+    public void updateCostItem() throws Exception {
 
         GrantClaim costItem = new GrantClaim();
         when(projectFinanceRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
@@ -79,7 +98,8 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
                 andDo(document("project/finance/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of cost item to be updated")
-                        )
+                        ),
+                        responseFields(validationMessagesFields)
                 ));
     }
 

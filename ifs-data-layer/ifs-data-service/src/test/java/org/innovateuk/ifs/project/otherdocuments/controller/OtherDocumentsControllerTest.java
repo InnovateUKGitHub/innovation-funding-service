@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsSer
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -25,7 +26,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -154,14 +156,19 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
     @Test
     public void acceptOrRejectOtherDocuments() throws Exception {
-        when(otherDocumentsServiceMock.acceptOrRejectOtherDocuments(1L, true)).thenReturn(serviceSuccess());
+        when(otherDocumentsServiceMock.acceptOrRejectOtherDocuments(123L, true)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/1/partner/documents/approved/{approved}", true).
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/project/{projectId}/partner/documents/approved/{approved}", 123L, true).
                 contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-        .andDo(document("project/{method-name}"));
+        .andDo(document("project/{method-name}",
+                pathParameters(
+                    parameterWithName("projectId").description("Id of the project for which the Other Documents are being approved or rejected"),
+                    parameterWithName("approved").description("Whether the Other Documents are being approved or rejected")
+                )
+        ));
 
-        verify(otherDocumentsServiceMock).acceptOrRejectOtherDocuments(1L, true);
+        verify(otherDocumentsServiceMock).acceptOrRejectOtherDocuments(123L, true);
     }
 
     @Test
