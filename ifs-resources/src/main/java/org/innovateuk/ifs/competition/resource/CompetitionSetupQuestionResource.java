@@ -47,7 +47,6 @@ public class CompetitionSetupQuestionResource {
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Boolean appendix;
     private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
     private String appendixGuidance;
@@ -57,11 +56,9 @@ public class CompetitionSetupQuestionResource {
     @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
     private Integer assessmentMaxWords;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Boolean scored;
     private Integer scoreTotal;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Boolean writtenFeedback;
 
     @Valid
