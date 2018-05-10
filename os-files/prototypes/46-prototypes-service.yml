@@ -101,7 +101,7 @@ items:
   spec:
     host: "${PROTOTYPES_ADDRESS}"
     port:
-      targetPort: 443-tcp
+      targetPort: 8080-tcp
     tls:
       termination: edge
       insecureEdgeTerminationPolicy: Redirect
