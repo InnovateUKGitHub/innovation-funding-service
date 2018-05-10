@@ -43,6 +43,9 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
     @Mock(name = "fileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
 
+    @Mock
+    private GrantOfferLetterService grantOfferLetterServiceMock;
+
     @Override
     protected GrantOfferLetterController supplyControllerUnderTest() {
         GrantOfferLetterController controller = new GrantOfferLetterController();
