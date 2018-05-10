@@ -9,6 +9,7 @@ import org.innovateuk.ifs.threads.attachments.controller.ProjectFinanceAttachmen
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -28,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectFinanceAttachmentControllerTest extends BaseFileControllerMockMVCTest<ProjectFinanceAttachmentsController> {
+
+    @Mock
+    private ProjectFinanceAttachmentService projectFinanceAttachmentServiceMock;
 
     @Override
     protected ProjectFinanceAttachmentsController supplyControllerUnderTest() {

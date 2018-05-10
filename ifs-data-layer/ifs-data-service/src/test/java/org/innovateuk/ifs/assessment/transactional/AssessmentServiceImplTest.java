@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import com.sun.xml.internal.bind.v2.runtime.AssociationMap;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
