@@ -15,9 +15,9 @@ public class InterviewFeedbackViewModel {
     private final boolean leadApplicant;
 
 
-    public InterviewFeedbackViewModel(String applicantFeedbackFilename, String feedbackFilename, boolean leadApplicant) {
+    public InterviewFeedbackViewModel(String responseFilename, String feedbackFilename, boolean leadApplicant) {
         this.feedbackFilename = feedbackFilename;
-        this.responseFilename = applicantFeedbackFilename;
+        this.responseFilename = responseFilename;
         this.leadApplicant = leadApplicant;
     }
 
