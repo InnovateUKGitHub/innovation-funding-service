@@ -2,8 +2,11 @@ package org.innovateuk.ifs.user.controller;
 
 import com.google.gson.Gson;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.is;
@@ -16,6 +19,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class OrganisationControllerTest extends BaseControllerMockMVCTest<OrganisationController> {
+
+    @Mock
+    private OrganisationService organisationServiceMock;
+
+    @Mock
+    private OrganisationInitialCreationService organisationInitialCreationServiceMock;
 
     @Override
     protected OrganisationController supplyControllerUnderTest() {

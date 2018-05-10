@@ -8,6 +8,7 @@ import org.innovateuk.ifs.threads.attachments.controller.ProjectFinanceAttachmen
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -38,6 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileControllerMockMVCTest<ProjectFinanceAttachmentsController> {
 
     private static final String identifier = "project/finance/attachments/{method-name}";
+
+    @Mock
+    private ProjectFinanceAttachmentService projectFinanceAttachmentServiceMock;
 
     @Test
     public void findOne() throws Exception {

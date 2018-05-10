@@ -1,21 +1,30 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.token.domain.Token;
+import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
+import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.builder.OrganisationBuilder;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.transactional.PasswordPolicyValidator;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
+import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -68,6 +77,33 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Mock
     private TermsAndConditionsService termsAndConditionsServiceMock;
+
+    @Mock
+    private TokenService tokenServiceMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private UserMapper userMapperMock;
+
+    @Mock
+    private PasswordPolicyValidator passwordPolicyValidatorMock;
+
+    @Mock
+    private IdentityProviderService idpServiceMock;
+
+    @Mock
+    private TokenRepository tokenRepositoryMock;
+
+    @Mock
+    private NotificationService notificationServiceMock;
+
+    @Mock
+    private RegistrationService registrationServiceMock;
+
+    @Mock
+    private UserOrganisationRepository userOrganisationRepositoryMock;
 
     @Override
     protected UserService supplyServiceUnderTest() {
