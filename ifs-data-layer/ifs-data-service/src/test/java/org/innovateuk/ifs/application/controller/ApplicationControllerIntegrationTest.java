@@ -207,6 +207,11 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         loginIfsAdmin();
 
         RestResult<Void> result = controller.withdrawApplication(APPLICATION_SUBMITTABLE_ID);
+
+        loginCompAdmin();
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess();
+
         assertTrue(result.isSuccess());
+        assertEquals(ApplicationState.WITHDRAWN, applicationAfter.getApplicationState());
     }
 }
