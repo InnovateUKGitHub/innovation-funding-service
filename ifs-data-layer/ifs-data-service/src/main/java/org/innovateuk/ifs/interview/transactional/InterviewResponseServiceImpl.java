@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interview.transactional;
 
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
@@ -21,13 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -62,11 +61,13 @@ public class InterviewResponseServiceImpl implements InterviewResponseService {
     @Autowired
     private InterviewAssignmentResponseOutcomeRepository interviewAssignmentResponseOutcomeRepository;
 
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+
     @Override
     @Transactional
     public ServiceResult<Void> uploadResponse(String contentType, String contentLength, String originalFilename, long applicationId, HttpServletRequest request) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
-                handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
+                fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                         (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                                 .andOnSuccessReturnVoid(created -> {
                                     InterviewAssignmentResponseOutcome outcome = new InterviewAssignmentResponseOutcome();
