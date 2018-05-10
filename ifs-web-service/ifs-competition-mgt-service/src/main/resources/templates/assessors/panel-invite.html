@@ -69,8 +69,9 @@
             <form method="POST" th:action="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
 
                 <div class="grid-row sorting">
-                    <div class="column-half">
-                        <h2 class="heading-small">Invite list</h2>
+                    <div class="column-one">
+                        <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+                        <span class="heading-small">assessors</span>
                     </div>
 
                     <div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
