@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.interview.transactional.InterviewResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.IOException;
-
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
 
 /**
  * Controller for responding to interview feedback.
@@ -21,6 +19,8 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileD
 public class InterviewResponseController {
 
     private InterviewResponseService interviewResponseService;
+
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @Autowired
     public InterviewResponseController(InterviewResponseService interviewResponseService) {
@@ -45,7 +45,7 @@ public class InterviewResponseController {
     @GetMapping(value = "/{applicationId}", produces = "application/json")
     public @ResponseBody
     ResponseEntity<Object> downloadFile(@PathVariable("applicationId") long applicationId) throws IOException {
-        return handleFileDownload(() -> interviewResponseService.downloadResponse(applicationId));
+        return fileControllerUtils.handleFileDownload(() -> interviewResponseService.downloadResponse(applicationId));
     }
 
     @GetMapping(value = "/details/{applicationId}", produces = "application/json")
