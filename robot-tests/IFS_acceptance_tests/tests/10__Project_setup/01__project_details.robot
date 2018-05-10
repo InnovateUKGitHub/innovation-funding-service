@@ -305,8 +305,7 @@ Invited project manager registration flow
     And the user cannot see a validation error in the page
     When the invited user signs in                      ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Bob  Jones
     Then the user should see the element                jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    Then the user should not see the element            css=.my-applications .in-progress  #applications in progress section
-    And the user should not see the element             jQuery=h2:contains("Application in progress")
+    And the user should not see the element             css=.my-applications .in-progress  #applications in progress section
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
