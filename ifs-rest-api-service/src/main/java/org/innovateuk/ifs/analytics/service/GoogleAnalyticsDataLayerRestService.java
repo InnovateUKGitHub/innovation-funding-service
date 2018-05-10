@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.user.resource.Role;
+
+import java.util.List;
 
 public interface GoogleAnalyticsDataLayerRestService {
 
@@ -11,4 +14,8 @@ public interface GoogleAnalyticsDataLayerRestService {
     RestResult<String> getCompetitionNameForProject(long projectId);
 
     RestResult<String> getCompetitionNameForAssessment(long assessmentId);
+
+    RestResult<List<Role>> getRolesByApplicationId(long applicationId);
+
+    RestResult<List<Role>> getRolesByProjectId(long projectId);
 }
