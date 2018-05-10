@@ -172,8 +172,8 @@ CompAdmin can access the Allocate applications to assessors screen
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery=a:contains("${assessor_joel}")
-    Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
-    Then the user should see the element     jQuery=h1:contains("Allocate applications to assessors")
+    And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
+    And the user should see the element      jQuery=h1:contains("Allocate applications to assessors")
     #TODO Further testing of functionality when IFS-3436 is completed
 
 *** Keywords ***
