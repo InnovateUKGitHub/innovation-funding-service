@@ -3,14 +3,20 @@
     border-bottom: 1px solid $secondary-text-colour;
     margin: 0;
 
-    .column-one,
-    .column-half:first-child,
-    .column-third:first-child{
+    [class^="column-"]{
       padding-left: 0;
+      padding-right: 0;
     }
 
     .multiple-choice{
       margin-left: 5px;
+    }
+
+    @include media-down(mobile) {
+      label{
+        display: block;
+        text-align: left;
+      }
     }
   }
 }

@@ -360,7 +360,7 @@ table{
 }
 /*--- Underlining ---*/
 
-.grid-row{
+/*.grid-row{
   &.sorting{
     border-bottom: 1px solid $secondary-text-colour;
 
@@ -407,7 +407,7 @@ table{
       }
     }
   }
-}
+}*/
 
 .heading-large{
   &.underline{
@@ -547,12 +547,16 @@ ul.underline{
 }
 
 .column-half{
+  padding: 0;
+
   &.select-all{
-    padding-left: 20px;
+    padding: 12px 0 0 0;
   }
 }
 
 .column-one{
+  padding: 0;
+
   &.select-all{
     padding-left: 20px;
     padding-bottom: 15px;
