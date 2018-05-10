@@ -6,14 +6,14 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class FileEntryDocs {
     public static final FieldDescriptor[] fileEntryResourceFields = {
-            fieldWithPath("id").description("Id of the Monitoring Officer"),
-            fieldWithPath("name").description("First name of the Monitoring Officer"),
-            fieldWithPath("mediaType").description("Last name of the Monitoring Officer"),
-            fieldWithPath("filesizeBytes").description("Email address of the Monitoring Officer")
+            fieldWithPath("id").type("Number").description("Id of the File Entry"),
+            fieldWithPath("name").type("String").description("Original filename of the File Entry"),
+            fieldWithPath("mediaType").type("String").description("The media type of the File Entry e.g. application/pdf"),
+            fieldWithPath("filesizeBytes").type("String").description("File size in bytes of the File Entry")
     };
 
     public static final FieldDescriptor[] fileAndContentsFields = {
-            fieldWithPath("fileEntry").description("Project file entry"),
-            fieldWithPath("contentsSupplier").description("Project file supplier input stream")
+            fieldWithPath("fileEntry").description("File entry"),
+            fieldWithPath("contentsSupplier").description("File Entry supplier input stream")
     };
 }

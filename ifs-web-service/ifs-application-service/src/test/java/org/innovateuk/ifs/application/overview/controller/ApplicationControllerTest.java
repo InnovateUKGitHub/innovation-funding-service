@@ -333,6 +333,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(restSuccess(responseResources));
+        when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
         when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
                 .thenReturn(restSuccess(aggregateResource));
 
@@ -350,6 +351,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
+        when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
 
         mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
                 .andExpect(status().is3xxRedirection())

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class CompetitionController {
     public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
-        TermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
+        GrantTermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
         return "competition/info/" + termsAndConditions.getTemplate();
     }
 }

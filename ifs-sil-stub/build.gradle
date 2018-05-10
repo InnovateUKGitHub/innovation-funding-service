@@ -18,6 +18,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile 'javax.mail:mail:1.4.7'
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
+    testCompile project(":ifs-commons").sourceSets.test.output
 }
 
 test {
@@ -32,9 +33,13 @@ test {
     finalizedBy asciidoctor
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
+    dependsOn ":ifs-commons:build"
+}
+
 
 asciidoctor {
-    dependsOn test
     attributes 'snippets': snippetsDir
     backends 'html5'
     inputs.dir snippetsDir
@@ -48,7 +53,15 @@ asciidoctor {
     }
 }
 
-
+task asciidoctorOnly(type: Test) {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
+    useJUnit {
+        includeCategories 'org.innovateuk.ifs.ControllerTest'
+    }
+    finalizedBy asciidoctor
+}
 
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerBaseInput

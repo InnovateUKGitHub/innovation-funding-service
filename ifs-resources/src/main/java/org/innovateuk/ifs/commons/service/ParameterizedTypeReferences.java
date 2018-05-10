@@ -99,6 +99,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ProcessRoleResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<Role>> roleListType() {
+        return new ParameterizedTypeReference<List<Role>>() {};
+    }
+
     public static ParameterizedTypeReference<List<UserResource>> userListType() {
         return new ParameterizedTypeReference<List<UserResource>>() {};
     }
@@ -292,6 +296,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<Map<CompetitionSetupSubsection, Optional<Boolean>>> competitionSetupSubsectionStatusMap() {
         return new ParameterizedTypeReference<Map<CompetitionSetupSubsection, Optional<Boolean>>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<GrantTermsAndConditionsResource>> grantTermsAndConditionsResourceListType() {
+        return new ParameterizedTypeReference<List<GrantTermsAndConditionsResource>>() {};
     }
 
     public static ParameterizedTypeReference<Map<Long, Boolean>> longStatusMap() {
