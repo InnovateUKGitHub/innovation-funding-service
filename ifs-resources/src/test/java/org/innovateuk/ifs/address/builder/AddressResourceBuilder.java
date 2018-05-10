@@ -16,7 +16,14 @@ public class AddressResourceBuilder extends BaseBuilder<AddressResource, Address
     }
 
     public static AddressResourceBuilder newAddressResource() {
-        return new AddressResourceBuilder(emptyList()).with(uniqueIds());
+        return new AddressResourceBuilder(emptyList()).
+                with(uniqueIds()).
+                withAddressLine1("Line 1").
+                withAddressLine2("Line 2").
+                withAddressLine3("Line 3").
+                withTown("My Town").
+                withCounty("My County").
+                withPostcode("MYP 05T");
     }
 
     @Override
