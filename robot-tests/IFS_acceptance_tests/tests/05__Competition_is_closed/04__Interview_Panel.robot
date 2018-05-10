@@ -174,6 +174,7 @@ CompAdmin Views the applications that can be allocated to the assessors
     Then the user should see the element     jQuery=a:contains("${assessor_joel}")
     Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
     Then the user should see the element     jQuery=h1:contains("Allocate applications to assessors")
+    #TODO Further testing of functionality when IFS-3436 is completed
 
 *** Keywords ***
 Custom Suite Setup
