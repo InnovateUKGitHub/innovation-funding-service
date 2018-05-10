@@ -12,8 +12,8 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
 /**
- * The {@code FeedbackResponseInterviewAssignmentAction} is used when an interview assignment has been accepted and feedback is added by the applicant.
- * For more info see {@link InterviewAssignmentWorkflow}
+ * The {@code FeedbackResponseInterviewAssignmentAction} is used when an interview assignment response has been withdrawn.
+ * For more info see {@link org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflow}
  */
 @Component
 public class WithdrawResponseInterviewAssignmentAction extends BaseInterviewAssignmentAction {

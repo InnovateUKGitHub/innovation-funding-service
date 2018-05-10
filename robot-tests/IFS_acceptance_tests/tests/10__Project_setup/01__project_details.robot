@@ -57,6 +57,7 @@ Resource          PS_Common.robot
 
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
+${pmEmailId}  ${user_ids['${PS_SP_APPLICATION_PM_EMAIL}']}
 
 *** Test Cases ***
 Internal users can see Project Details not yet completed
@@ -288,7 +289,7 @@ Lead Applicant resends the invite to the Project manager
 Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
     [Tags]  HappyPath  Email
-    Given the user accepts invitation and signs in  ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Project Manager invitation  managing the project  Bob  Jones
+    Given the user accepts invitation and signs in  ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Project Manager invitation for project ${PROJECT_SETUP_APPLICATION_1}  managing the project  Bob  Jones
     When The guest user inserts user email and password  ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the element        jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
@@ -371,7 +372,7 @@ Non lead partner invites finance contact
 Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
     [Tags]  HappyPath
-    Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
+    Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PROJECT_SETUP_APPLICATION_1}  providing finance details  Ludlow's  FinContact
     When log in as a different user       &{collaborator1_credentials}
     Then the user navigates to the page   ${project_in_setup_page}/details
     And the user should see the element   link=Ludlow's FinContact
@@ -459,7 +460,7 @@ Lead applicant resends the invite to the Finance contact
 Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
     [Tags]  HappyPath  Email
-    Given the user accepts invitation and signs in  ${invitedFinanceContact}  Finance contact invitation  providing finance details  John  Smith
+    Given the user accepts invitation and signs in  ${invitedFinanceContact}  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PROJECT_SETUP_APPLICATION_1}   providing finance details  John  Smith
     When The guest user inserts user email and password  ${invitedFinanceContact}  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the element  jQuery=.progress-list:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
@@ -626,6 +627,15 @@ Invited Finance contact is able to see the Finances
     And the user clicks the button/link   link=project finance overview
     Then the user should see the element  jQuery=h3:contains("Project cost breakdown")
     And the user should not see an error in the page
+
+User is able to accept new site terms and conditions
+    [Documentation]  IFS-3093
+    [Tags]  MySQL
+    [Setup]  Delete user from terms and conditions database   ${pmEmailId}
+    Log in as a different user             ${PS_SP_APPLICATION_PM_EMAIL}   ${short_password}
+    When the user selects the checkbox     agree
+    And the user clicks the button/link    css=button[type="submit"]
+    Then the user should see the element   jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
 the user should see a validation error

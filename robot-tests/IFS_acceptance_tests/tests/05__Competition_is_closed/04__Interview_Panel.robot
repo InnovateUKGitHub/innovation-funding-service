@@ -36,11 +36,16 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-2783 Assign Applications to Interview Panel: Add Feedback
 ...
 ...               IFS-3385 Assign applications to interview panel - Remove feedback
+...
+...               IFS-3291 Applicant dashboard - View application and assessment feedback
+...
+...               IFS-3253 Assign applications to interview panel - Applicant respond to feedback
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
+
 
 *** Test Cases ***
 User navigates to the Manage interview panel
@@ -140,16 +145,43 @@ CompAdmin resends the interview panel invite
     When the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_madeleine}
     Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user reads his email              ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.
-    When log in as a different user            ${assessor_madeleine_email}   ${short_password}
+    When log in as a different user           ${assessor_madeleine_email}   ${short_password}
     Then the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 CompAdmin Views the assessors that have accepted the interview panel invite
     [Documentation]  IFS-3201 IFS-3252
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
-    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/accepted
     Then the user checks for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
+
+Applicant can see the feedback given
+    [Documentation]  IFS-3291
+    [Tags]
+    Given log in as a different user          ${aaron_robertson_email}  ${short_password}
+    When the user should see the element      jQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + div:nth-child(2) span:contains("Invited to interview")
+    Then The user clicks the button/link      link=${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user clicks the button/link       jQuery=a:contains("Business opportunity")
+    Then the user should see the element      jQuery=p:contains("This is the business opportunity feedback")
+    And the user should see the element       jQuery=h2:contains("Average score: 8/ 10")
+
+Applicant can upload the reponse to interview panel
+    [Documentation]  IFS-3253
+    [Setup]  the user clicks the button/link    link=Feedback overview
+    When the applicant upload the response to the interview panel
+    Then the compAdmin checks the status for response uploaded applicantion
+    And the user should see the element         jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
+
+Applicant can remove the uploaded response
+    [Documentation]  IFS-3253
+    [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
+    Given the user clicks the button/link    link=${computer_vision_application_name}
+    And the applicant upload the response to the interview panel
+    When the user clicks the button/link     css=.button-secondary  #remove
+    Then the user should see the element     jQuery=p:contains("No file currently uploaded") ~ label:contains("+ Upload")
+    And the compAdmin checks the status for response uploaded applicantion
+    And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
 
 *** Keywords ***
 Custom Suite Setup
@@ -228,3 +260,11 @@ the compAdmin removes uploaded feedback for an application
     the user should see the element    link=testing_5MB.pdf
     the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
+
+the applicant upload the response to the interview panel
+    the user uploads the file              css=.inputfile   ${valid_pdf}
+    the user should see the element        link=testing.pdf (opens in a new window)
+
+the compAdmin checks the status for response uploaded applicantion
+    log in as a different user        &{Comp_admin1_credentials}
+    the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
