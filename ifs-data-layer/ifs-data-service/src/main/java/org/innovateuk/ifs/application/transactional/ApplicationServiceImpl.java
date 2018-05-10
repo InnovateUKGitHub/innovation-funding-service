@@ -26,9 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
@@ -302,7 +300,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Set<ApplicationState> unsuccessfulStates = asLinkedSet(
                 INELIGIBLE,
                 INELIGIBLE_INFORMED,
-                REJECTED);
+                REJECTED,
+                WITHDRAWN);
 
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
