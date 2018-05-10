@@ -6,7 +6,10 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
+import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -30,6 +33,15 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
 
     @Mock
     private DefaultApplicationQuestionCreator defaultApplicationQuestionCreatorMock;
+
+    @Mock
+    private QuestionRepository questionRepositoryMock;
+
+    @Mock
+    private SectionRepository sectionRepositoryMock;
+
+    @Mock
+    private QuestionPriorityOrderService questionPriorityOrderServiceMock;
 
     @Override
     protected QuestionSetupTemplateService supplyServiceUnderTest() {
