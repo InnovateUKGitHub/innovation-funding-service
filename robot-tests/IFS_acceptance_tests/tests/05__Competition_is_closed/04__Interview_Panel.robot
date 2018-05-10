@@ -170,18 +170,18 @@ Applicant can upload the reponse to interview panel
     [Documentation]  IFS-3253
     [Setup]  the user clicks the button/link    link=Feedback overview
     When the applicant upload the response to the interview panel
-    Then the compAdmin check the status for response uploaded applicantion
-    And the user should see the element   jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
+    Then the compAdmin checks the status for response uploaded applicantion
+    And the user should see the element         jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
 
 Applicant can remove the uploaded response
     [Documentation]  IFS-3253
-    [Setup]  log in as a different user     ${peter_styles_email}   ${short_password}
-    Given the user clicks the button/link   link=${computer_vision_application_name}
+    [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
+    Given the user clicks the button/link    link=${computer_vision_application_name}
     And the applicant upload the response to the interview panel
-    When the user clicks the button/link    css=.button-secondary  #remove
-    Then the user should see the element    jQuery=p:contains("No file currently uploaded") ~ label:contains("+ Upload")
-    And the compAdmin check the status for response uploaded applicantion
-    And the user should see the element   jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
+    When the user clicks the button/link     css=.button-secondary  #remove
+    Then the user should see the element     jQuery=p:contains("No file currently uploaded") ~ label:contains("+ Upload")
+    And the compAdmin checks the status for response uploaded applicantion
+    And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
 
 *** Keywords ***
 Custom Suite Setup
@@ -265,9 +265,6 @@ the applicant upload the response to the interview panel
     the user uploads the file              css=.inputfile   ${valid_pdf}
     the user should see the element        link=testing.pdf (opens in a new window)
 
-the compAdmin check the status for response uploaded applicantion
-    log in as a different user    &{Comp_admin1_credentials}
-    the user clicks the button/link   link= Machine learning for transport infrastructure
-    the user clicks the button/link   link= Manage interview panel
-    the user clicks the button/link   link=Assign applications
-    the user clicks the button/link   link=View status
+the compAdmin checks the status for response uploaded applicantion
+    log in as a different user        &{Comp_admin1_credentials}
+    the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
