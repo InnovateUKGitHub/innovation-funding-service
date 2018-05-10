@@ -12,7 +12,7 @@ import org.mockito.MockitoAnnotations;
  */
 public abstract class BaseUnitTestMocksTest extends BaseTest {
 
-    
+
     @Before
     public void setupMockInjection() {
         // Process mock annotations

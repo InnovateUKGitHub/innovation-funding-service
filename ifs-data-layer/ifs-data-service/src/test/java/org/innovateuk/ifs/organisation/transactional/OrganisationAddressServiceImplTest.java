@@ -5,14 +5,24 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder;
 import org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.junit.Test;
+import org.mockito.Mock;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class OrganisationAddressServiceImplTest extends BaseServiceUnitTest<OrganisationAddressService> {
+
+    @Mock
+    private OrganisationAddressRepository organisationAddressRepositoryMock;
+
+    @Mock
+    private OrganisationAddressMapper organisationAddressMapperMock;
 
     @Test
     public void findOne() {
