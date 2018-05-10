@@ -69,8 +69,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
                                 fieldWithPath("[]addressLine3").description("Address Line3"),
                                 fieldWithPath("[]town").description("Town"),
                                 fieldWithPath("[]county").description("County"),
-                                fieldWithPath("[]postcode").description("Postcode"),
-                                fieldWithPath("[]organisations[]").description("List of Organisations with this address")
+                                fieldWithPath("[]postcode").description("Postcode")
                         )
                 ));
     }
@@ -92,8 +91,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
                                 fieldWithPath("addressLine3").description("Address Line3"),
                                 fieldWithPath("town").description("Town"),
                                 fieldWithPath("county").description("County"),
-                                fieldWithPath("postcode").description("Postcode"),
-                                fieldWithPath("organisations[]").description("List of Organisations with this address")
+                                fieldWithPath("postcode").description("Postcode")
                         )
                 ));
     }
