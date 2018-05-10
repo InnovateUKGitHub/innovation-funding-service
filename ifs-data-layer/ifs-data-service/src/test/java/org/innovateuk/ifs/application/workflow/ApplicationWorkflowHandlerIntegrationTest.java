@@ -94,6 +94,11 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
                 applicationWorkflowHandler.approve(application));
     }
 
+    @Test
+    public void withdraw() {
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.APPROVED, ApplicationState.WITHDRAWN, application -> applicationWorkflowHandler.withdraw(application));
+    }
+
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod) {
         assertStateChangeOnWorkflowHandlerCall(initialApplicationState, expectedApplicationState, workflowHandlerMethod, null);
     }

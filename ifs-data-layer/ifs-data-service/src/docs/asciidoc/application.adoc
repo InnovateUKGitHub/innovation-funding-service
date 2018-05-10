@@ -127,6 +127,17 @@ include::{snippets}/application/inform-ineligible/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/application/inform-ineligible/curl-request.adoc[]
 
+=== Withdraw application
+==== Request
+include::{snippets}/application/withdraw/http-request.adoc[]
+include::{snippets}/application/withdraw/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/withdraw/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/application/withdraw/curl-request.adoc[]
+
 === Check if user is able to view the application team
 ==== Request
 include::{snippets}/application/show-application-team/http-request.adoc[]

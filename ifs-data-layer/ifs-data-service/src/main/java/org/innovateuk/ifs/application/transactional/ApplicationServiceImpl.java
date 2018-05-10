@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -200,7 +201,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return find(application(applicationId))
                 .andOnSuccess(application -> {
                     if (!applicationWorkflowHandler.withdraw(application)) {
-                        return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
+                        return serviceFailure(APPLICATION_MUST_BE_APPROVED);
                     }
                     applicationRepository.save(application);
                     return serviceSuccess();
