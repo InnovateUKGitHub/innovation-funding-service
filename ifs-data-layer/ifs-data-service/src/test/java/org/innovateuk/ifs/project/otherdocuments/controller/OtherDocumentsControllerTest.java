@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.otherdocuments.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -35,6 +36,12 @@ public class OtherDocumentsControllerTest extends BaseFileControllerMockMVCTest<
     private static final long projectId = 123L;
     private static final long maxFilesize = 1234L;
     private static final List<String> mediaTypes = singletonList("application/pdf");
+
+    @Mock
+    private OtherDocumentsService otherDocumentsServiceMock;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
 
     @Mock(name = "fileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
