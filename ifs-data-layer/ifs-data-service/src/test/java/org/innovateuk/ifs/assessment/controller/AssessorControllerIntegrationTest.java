@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -78,12 +78,14 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
         userRes.setModifiedOn(user.getModifiedOn());
         userRes.setModifiedBy(userRepository.findByEmail(getCompAdmin().getEmail()).get().getName());
 
+        AddressResource address = new AddressResource();
+
         AssessorProfileResource expectedAssessorProfileResource = newAssessorProfileResource()
                 .withUser(userRes)
                 .withProfile(
                         newProfileResource()
                                 .withAffiliations(affiliationMapper.mapToResource(user.getAffiliations()))
-                                .withAddress(newAddressResource().with(id(null)).build())
+                                .withAddress(address)
                                 .build()
                 )
                 .build();

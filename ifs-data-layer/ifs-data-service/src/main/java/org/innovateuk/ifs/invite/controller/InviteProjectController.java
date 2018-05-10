@@ -4,8 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +19,6 @@ import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.*;
 @RestController
 @RequestMapping(PROJECT_INVITE_BASE_URL)
 public class InviteProjectController {
-
-    private static final Log LOG = LogFactory.getLog(InviteProjectController.class);
 
     @Autowired
     private ProjectInviteService projectInviteService;

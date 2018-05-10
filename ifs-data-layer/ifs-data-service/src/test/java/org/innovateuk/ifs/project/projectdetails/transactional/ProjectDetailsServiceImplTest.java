@@ -57,7 +57,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -627,7 +627,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -689,7 +689,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -737,7 +737,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -776,7 +776,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -804,7 +804,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -957,7 +957,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
