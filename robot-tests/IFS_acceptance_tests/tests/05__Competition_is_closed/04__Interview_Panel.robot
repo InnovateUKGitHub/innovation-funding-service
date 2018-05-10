@@ -32,11 +32,18 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3251 Applicant dashboard - Assigned to interview panel box
 ...
 ...               IFS-3252 Invite Assessor to Interview Panel: Key statistics
+...
+...               IFS-2783 Assign Applications to Interview Panel: Add Feedback
+...
+...               IFS-3385 Assign applications to interview panel - Remove feedback
+...
+...               IFS-3291 Applicant dashboard - View application and assessment feedback
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
+
 
 *** Test Cases ***
 User navigates to the Manage interview panel
@@ -88,7 +95,7 @@ CompAdmin can add or remove the applications from the invite list
 
 Competition Admin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
-    [Documentation]  IFS-2782  IFS-3155   IFS-2635  IFS-3251
+    [Documentation]  IFS-2782  IFS-3155   IFS-2635  IFS-3251  IFS-2783  IFS-3385
     [Tags]
     Given the user clicks the button/link      link=Invite
     When the user clicks the button/link       link=Review and send invites
@@ -97,6 +104,8 @@ Competition Admin can send or cancel sending the invitation to the applicants
     When the user clicks the button/link       link=Cancel
     Then the user navigates to the page        ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite
     When the user clicks the button/link       link=Review and send invites
+    Then the compAdmin uploads additional feedback for an application
+    And the compAdmin removes uploaded feedback for an application
     And the user clicks the button/link        css=.button[type="submit"]     #Send invite
     Then the Competition Admin should see the assigned applications in the View status tab
     And the user checks for Key Statistics for assigned to interview panel
@@ -134,16 +143,26 @@ CompAdmin resends the interview panel invite
     When the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_madeleine}
     Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user reads his email              ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.
-    When log in as a different user            ${assessor_madeleine_email}   ${short_password}
+    When log in as a different user           ${assessor_madeleine_email}   ${short_password}
     Then the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 CompAdmin Views the assessors that have accepted the interview panel invite
     [Documentation]  IFS-3201 IFS-3252
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
-    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/accepted
     Then the user checks for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
+
+Applicant can see the feedback given
+    [Documentation]  IFS-3291
+    [Tags]
+    Given log in as a different user          ${aaron_robertson_email}  ${short_password}
+    When the user should see the element      jQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + div:nth-child(2) span:contains("Invited to interview")
+    Then The user clicks the button/link      link=${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user clicks the button/link       jQuery=a:contains("Business opportunity")
+    Then the user should see the element      jQuery=p:contains("This is the business opportunity feedback")
+    And the user should see the element       jQuery=h2:contains("Average score: 8/ 10")
 
 *** Keywords ***
 Custom Suite Setup
@@ -207,3 +226,18 @@ the user checks for the key statistics for invite assessors
     the user should see the element     jQuery=.column-quarter:contains("${invited}") small:contains("Invited")
     the user should see the element      jQuery=.column-quarter:contains("${accepted}") small:contains("Accepted")
     the user should see the element      jQuery=.column-quarter:contains("${Declined}") small:contains("Declined")
+
+the compAdmin uploads additional feedback for an application
+    the user uploads the file          id=attachment-${Neural_network_application}   ${too_large_pdf}  #checking for large file upload
+    the user should see the element    jQuery=h1:contains("Attempt to upload a large file")
+    the user goes back to the previous page
+    the user uploads the file          id=attachment-${Neural_network_application}    ${text_file}    #checking validation for worng fomrate file upload
+    the user should see a field and summary error      Your upload must be a PDF.
+    the user uploads the file          id=attachment-${Neural_network_application}   ${5mb_pdf}
+    the user should see the element    link=testing_5MB.pdf
+
+the compAdmin removes uploaded feedback for an application
+    the user uploads the file          id=attachment-${computer_vision_application}   ${5mb_pdf}
+    the user should see the element    link=testing_5MB.pdf
+    the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
+    the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")

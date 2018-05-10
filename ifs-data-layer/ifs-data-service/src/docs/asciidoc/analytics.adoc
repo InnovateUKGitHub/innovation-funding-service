@@ -41,3 +41,25 @@ include::{snippets}/analytics/get-competition-name-for-project/http-response.ado
 
 ==== Curl Example
 include::{snippets}/analytics/get-competition-name-for-project/curl-request.adoc[]
+
+=== Retrieve application specific roles for a user
+==== Request
+include::{snippets}/analytics/get-roles-by-application-id-for-current-user/http-request.adoc[]
+include::{snippets}/analytics/get-roles-by-application-id-for-current-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-roles-by-application-id-for-current-user/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/analytics/get-roles-by-application-id-for-current-user/curl-request.adoc[]
+
+=== Retrieve project specific roles for a user
+==== Request
+include::{snippets}/analytics/get-roles-by-project-id-for-current-user/http-request.adoc[]
+include::{snippets}/analytics/get-roles-by-project-id-for-current-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-roles-by-project-id-for-current-user/http-response.adoc[]
+
+==== Curl Example-
+include::{snippets}/analytics/get-roles-by-project-id-for-current-user/curl-request.adoc[]

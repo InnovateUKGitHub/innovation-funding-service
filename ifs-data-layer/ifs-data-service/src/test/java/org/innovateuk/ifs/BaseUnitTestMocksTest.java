@@ -11,12 +11,18 @@ import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.application.mapper.*;
-import org.innovateuk.ifs.application.repository.*;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
-import org.innovateuk.ifs.assessment.repository.*;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.transactional.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -35,10 +41,6 @@ import org.innovateuk.ifs.competition.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
-import org.innovateuk.ifs.interview.mapper.InterviewParticipantMapper;
-import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
-import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -59,22 +61,19 @@ import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.application.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
+import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
 import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
-import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
-import org.innovateuk.ifs.interview.repository.InterviewRepository;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
-import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
-import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
+import org.innovateuk.ifs.interview.mapper.InterviewParticipantMapper;
+import org.innovateuk.ifs.interview.repository.*;
+import org.innovateuk.ifs.interview.transactional.*;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
@@ -83,8 +82,10 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -92,6 +93,16 @@ import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
+import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
@@ -100,8 +111,6 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
-import org.innovateuk.ifs.project.mapper.ProjectMapper;
-import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
@@ -110,22 +119,12 @@ import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsSer
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
-import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
-import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
-import org.innovateuk.ifs.project.repository.ProjectRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtilTest;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
-import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
-import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
-import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
-import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateService;
 import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
@@ -156,7 +155,6 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -235,7 +233,16 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InterviewParticipantRepository interviewParticipantRepositoryMock;
 
     @Mock
+    protected InterviewAssignmentMessageOutcomeRepository interviewAssignmentMessageOutcomeRepository;
+
+    @Mock
     protected InterviewAssignmentService interviewAssignmentServiceMock;
+
+    @Mock
+    protected InterviewApplicationInviteService interviewApplicationInviteService;
+
+    @Mock
+    protected InterviewApplicationFeedbackService interviewApplicationFeedbackService;
 
     @Mock
     protected InterviewInviteService interviewInviteServiceMock;
@@ -505,6 +512,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationAddressRepository organisationAddressRepositoryMock;
 
     @Mock
+    protected OrganisationAddressMapper organisationAddressMapperMock;
+
+    @Mock
     protected FinanceCheckQueriesService financeCheckQueriesService;
 
     @Mock
@@ -515,6 +525,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectService projectServiceMock;
+
+    @Mock
+    protected OrganisationAddressService organisationAddressServiceMock;
 
     @Mock
     protected ProjectDetailsService projectDetailsServiceMock;
@@ -707,9 +720,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected NotificationTemplateRenderer notificationTemplateRendererMock;
-
-    @Mock
-    protected ActivityStateRepository activityStateRepositoryMock;
 
     @Mock
     protected UsersRolesService usersRolesServiceMock;

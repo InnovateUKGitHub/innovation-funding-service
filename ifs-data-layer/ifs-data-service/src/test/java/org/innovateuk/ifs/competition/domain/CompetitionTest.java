@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.domain;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -64,7 +63,7 @@ public class CompetitionTest {
         sections.add(new Section());
         sections.add(new Section());
 
-        TermsAndConditions termsAndConditions = new TermsAndConditions();
+        GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
         termsAndConditions.setId(1L);
 
         competition = new Competition(id, questions, sections, name, startDate, endDate, registrationDate, termsAndConditions);

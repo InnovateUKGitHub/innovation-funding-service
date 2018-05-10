@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -19,8 +19,8 @@ import java.util.function.Function;
 import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -668,6 +668,19 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
             } else {
                 assertFalse(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
             }
+        });
+    }
+
+    @Test
+    public void testUsersCanAgreeSiteTermsAndConditionsForThemselves() {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
+                if (user.equals(otherUser)) {
+                    assertTrue(rules.usersCanAgreeSiteTermsAndConditions(otherUser, user));
+                } else {
+                    assertFalse(rules.usersCanAgreeSiteTermsAndConditions(otherUser, user));
+                }
+            });
         });
     }
 
