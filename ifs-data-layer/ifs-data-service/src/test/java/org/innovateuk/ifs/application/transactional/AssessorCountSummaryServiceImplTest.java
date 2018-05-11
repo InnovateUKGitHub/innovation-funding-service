@@ -2,10 +2,12 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.PageableMatcher;
+import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
@@ -28,6 +30,9 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
     protected AssessorCountSummaryService supplyServiceUnderTest() {
         return new AssessorCountSummaryServiceImpl();
     }
+
+    @Mock
+    private ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
 
     @Test
     public void getAssessorCountSummariesByCompetitionId() {

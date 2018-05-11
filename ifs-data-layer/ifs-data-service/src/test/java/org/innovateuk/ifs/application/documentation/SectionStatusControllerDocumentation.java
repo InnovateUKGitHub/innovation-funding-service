@@ -2,7 +2,9 @@ package org.innovateuk.ifs.application.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.SectionStatusController;
+import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +25,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SectionStatusControllerDocumentation extends BaseControllerMockMVCTest<SectionStatusController> {
+
+    @Mock
+    private SectionStatusService sectionStatusServiceMock;
 
     private static final String baseURI = "/section-status";
 

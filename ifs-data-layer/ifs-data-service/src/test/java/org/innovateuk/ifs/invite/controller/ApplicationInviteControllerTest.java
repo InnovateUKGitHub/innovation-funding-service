@@ -1,13 +1,18 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -41,6 +46,18 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
     @Mock
     private AcceptApplicationInviteService acceptApplicationInviteService;
+
+    @Mock
+    private InviteOrganisationRepository inviteOrganisationRepositoryMock;
+
+    @Mock
+    private ApplicationInviteRepository applicationInviteRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
 
     @Before
     public void setUp() {

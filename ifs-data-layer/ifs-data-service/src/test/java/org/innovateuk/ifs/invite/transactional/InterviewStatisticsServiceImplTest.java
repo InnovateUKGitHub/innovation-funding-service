@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
+import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
@@ -13,6 +17,7 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -32,6 +37,18 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private InterviewStatisticsService interviewStatisticsService = new InterviewStatisticsServiceImpl();
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
+
+    @Mock
+    private InterviewInviteRepository interviewInviteRepositoryMock;
+
+    @Mock
+    private InterviewParticipantRepository interviewParticipantRepositoryMock;
 
     @Test
     public void getInterviewPanelKeyStatistics() {

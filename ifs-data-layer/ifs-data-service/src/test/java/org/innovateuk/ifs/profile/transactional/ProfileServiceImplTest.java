@@ -2,15 +2,23 @@ package org.innovateuk.ifs.profile.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.mapper.AgreementMapper;
+import org.innovateuk.ifs.user.mapper.EthnicityMapper;
+import org.innovateuk.ifs.user.repository.AgreementRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.mockito.Mock;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -46,6 +54,27 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceImpl> {
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ProfileRepository profileRepositoryMock;
+
+    @Mock
+    private InnovationAreaMapper innovationAreaMapperMock;
+
+    @Mock
+    private AgreementRepository agreementRepositoryMock;
+
+    @Mock
+    private AgreementMapper agreementMapperMock;
+
+    @Mock
+    private EthnicityMapper ethnicityMapperMock;
+
+    @Mock
+    private AddressMapper addressMapperMock;
 
     @Override
     protected ProfileServiceImpl supplyServiceUnderTest() {

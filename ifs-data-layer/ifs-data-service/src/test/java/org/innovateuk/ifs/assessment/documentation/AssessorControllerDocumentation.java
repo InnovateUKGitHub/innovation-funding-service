@@ -3,8 +3,10 @@ package org.innovateuk.ifs.assessment.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessorController;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorProfileResourceDocs.assessorProfileResourceBuilder;
@@ -24,6 +26,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<AssessorController> {
+
+    @Mock
+    private AssessorService assessorServiceMock;
+
     @Override
     protected AssessorController supplyControllerUnderTest() {
         return new AssessorController();

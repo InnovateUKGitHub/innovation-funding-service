@@ -5,10 +5,14 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -41,6 +45,18 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
     @Mock
     private CostCategoryTypeStrategy costCategoryTypeStrategyMock;
+
+    @Mock
+    private ProjectService projectServiceMock;
+
+    @Mock
+    private OrganisationService organisationServiceMock;
+
+    @Mock
+    private ProjectFinanceRowService projectFinanceRowServiceMock;
+
+    @Mock
+    private FinanceUtil financeUtilMock;
 
     @Test
     public void testGenerateSpendProfileForIndustrialOrganisation() {

@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.mapper.TermsAndConditionsMapper;
-import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.domain.SiteTermsAndConditions;
+import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
+import org.innovateuk.ifs.competition.mapper.SiteTermsAndConditionsMapper;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.SiteTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,22 +23,40 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class TermsAndConditionsServiceImpl implements TermsAndConditionsService {
 
-    @Autowired
-    TermsAndConditionsRepository termsAndConditionsRepository;
+    private GrantTermsAndConditionsMapper grantTermsAndConditionsMapper;
+    private SiteTermsAndConditionsMapper siteTermsAndConditionsMapper;
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+    private SiteTermsAndConditionsRepository siteTermsAndConditionsRepository;
 
     @Autowired
-    TermsAndConditionsMapper termsAndConditionsMapper;
+    public TermsAndConditionsServiceImpl(
+            GrantTermsAndConditionsRepository grantTermsAndConditionsRepository,
+            SiteTermsAndConditionsRepository siteTermsAndConditionsRepository,
+            GrantTermsAndConditionsMapper grantTermsAndConditionsMapper,
+            SiteTermsAndConditionsMapper siteTermsAndConditionsMapper) {
+        this.grantTermsAndConditionsRepository = grantTermsAndConditionsRepository;
+        this.siteTermsAndConditionsRepository = siteTermsAndConditionsRepository;
+        this.grantTermsAndConditionsMapper = grantTermsAndConditionsMapper;
+        this.siteTermsAndConditionsMapper = siteTermsAndConditionsMapper;
+    }
 
     @Override
-    public ServiceResult<List<TermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions() {
-        return serviceSuccess((List<TermsAndConditionsResource>)
-                termsAndConditionsMapper.mapToResource(termsAndConditionsRepository.findLatestVersions())
+    public ServiceResult<List<GrantTermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions() {
+        return serviceSuccess((List<GrantTermsAndConditionsResource>)
+                grantTermsAndConditionsMapper.mapToResource(grantTermsAndConditionsRepository.findLatestVersions())
         );
     }
 
     @Override
-    public ServiceResult<TermsAndConditionsResource> getById(Long id) {
-        return find(termsAndConditionsRepository.findOne(id), notFoundError(TermsAndConditionsResource.class, id))
-                .andOnSuccess(termsAndConditions -> serviceSuccess(termsAndConditionsMapper.mapToResource(termsAndConditions)));
+    public ServiceResult<GrantTermsAndConditionsResource> getById(Long id) {
+        return find(grantTermsAndConditionsRepository.findOne(id), notFoundError(GrantTermsAndConditionsResource.class, id))
+                .andOnSuccessReturn(grantTermsAndConditionsMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<SiteTermsAndConditionsResource> getLatestSiteTermsAndConditions() {
+        return find(siteTermsAndConditionsRepository.findTopByOrderByVersionDesc(),
+                notFoundError(SiteTermsAndConditions.class)).andOnSuccessReturn
+                (siteTermsAndConditionsMapper::mapToResource);
     }
 }

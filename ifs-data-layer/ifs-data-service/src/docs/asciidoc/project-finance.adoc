@@ -1,0 +1,62 @@
+=== Get Cost Item
+==== Request
+include::{snippets}/project/finance/get-cost-item/http-request.adoc[]
+include::{snippets}/project/finance/get-cost-item/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/finance/get-cost-item/http-response.adoc[]
+include::{snippets}/project/finance/get-cost-item/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/finance/get-cost-item/curl-request.adoc[]
+
+
+=== Add cost without persisting
+==== Request
+include::{snippets}/project/finance/add-project-cost-without-persisting/http-request.adoc[]
+include::{snippets}/project/finance/add-project-cost-without-persisting/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/finance/add-project-cost-without-persisting/http-response.adoc[]
+include::{snippets}/project/finance/add-project-cost-without-persisting/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/finance/add-project-cost-without-persisting/curl-request.adoc[]
+
+
+=== Add cost
+==== Request
+include::{snippets}/project/finance/add-project-cost/http-request.adoc[]
+include::{snippets}/project/finance/add-project-cost/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/finance/add-project-cost/http-response.adoc[]
+include::{snippets}/project/finance/add-project-cost/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/finance/add-project-cost/curl-request.adoc[]
+
+
+=== Update cost
+==== Request
+include::{snippets}/project/finance/update-cost-item/http-request.adoc[]
+include::{snippets}/project/finance/update-cost-item/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/finance/update-cost-item/http-response.adoc[]
+include::{snippets}/project/finance/update-cost-item/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/finance/update-cost-item/curl-request.adoc[]
+
+
+=== Delete cost
+==== Request
+include::{snippets}/project/finance/delete-cost-item/http-request.adoc[]
+include::{snippets}/project/finance/delete-cost-item/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/finance/delete-cost-item/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/finance/delete-cost-item/curl-request.adoc[]

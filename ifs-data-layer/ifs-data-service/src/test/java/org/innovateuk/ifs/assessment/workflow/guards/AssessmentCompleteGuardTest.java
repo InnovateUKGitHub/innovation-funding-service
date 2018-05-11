@@ -2,10 +2,12 @@ package org.innovateuk.ifs.assessment.workflow.guards;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.statemachine.StateContext;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -15,6 +17,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AssessmentCompleteGuardTest extends BaseUnitTestMocksTest {
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
 
     @InjectMocks
     private AssessmentCompleteGuard assessmentCompleteGuard = new AssessmentCompleteGuard();

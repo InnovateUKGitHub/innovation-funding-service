@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
@@ -14,6 +16,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -35,6 +38,10 @@ import static org.mockito.Mockito.when;
 public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<ProjectFinancePermissionRules> {
     private ProjectProcess projectProcess;
     private ProjectResource project;
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
+
 
     @Before
     public void setUp() throws Exception {
