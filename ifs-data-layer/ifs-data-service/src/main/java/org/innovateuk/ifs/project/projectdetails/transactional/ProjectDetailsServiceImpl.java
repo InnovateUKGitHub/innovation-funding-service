@@ -60,7 +60,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
+import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
@@ -319,20 +319,20 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postCode) {
-        return validatePostCode(postCode).
+    public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postcode) {
+        return validatePostcode(postcode).
                 andOnSuccess(() -> validateIfPartnerProjectLocationCanBeChanged(composite.getProjectId())).
                 andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
-                andOnSuccessReturnVoid(partnerOrganisation -> partnerOrganisation.setPostCode(postCode.toUpperCase()));
+                andOnSuccessReturnVoid(partnerOrganisation -> partnerOrganisation.setPostcode(postcode.toUpperCase()));
     }
 
-    private ServiceResult<Void> validatePostCode(String postCode) {
-        if (StringUtils.isBlank(postCode)) {
+    private ServiceResult<Void> validatePostcode(String postcode) {
+        if (StringUtils.isBlank(postcode)) {
             return serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST));
         }
 
-        if (StringUtils.length(postCode) > MAX_POST_CODE_LENGTH) {
-            return serviceFailure(new Error("validation.field.too.many.characters", asList("", MAX_POST_CODE_LENGTH), HttpStatus.BAD_REQUEST));
+        if (StringUtils.length(postcode) > MAX_POSTCODE_LENGTH) {
+            return serviceFailure(new Error("validation.field.too.many.characters", asList("", MAX_POSTCODE_LENGTH), HttpStatus.BAD_REQUEST));
         }
 
         return serviceSuccess();

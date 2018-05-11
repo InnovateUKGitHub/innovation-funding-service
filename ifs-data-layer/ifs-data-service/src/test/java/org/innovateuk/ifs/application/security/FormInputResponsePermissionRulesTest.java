@@ -8,6 +8,7 @@ import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -39,6 +41,9 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
     private UserResource userNotOnApplication;
     private UserResource assessorForApplication;
     private UserResource panelAssessorForApplication;
+
+    @Mock
+    private FormInputRepository formInputRepositoryMock;
 
 
     @Override

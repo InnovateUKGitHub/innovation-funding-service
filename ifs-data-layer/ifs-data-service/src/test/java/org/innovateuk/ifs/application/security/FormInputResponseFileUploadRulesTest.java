@@ -2,15 +2,18 @@ package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -36,6 +39,12 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
     @InjectMocks
     private FormInputResponseFileUploadRules fileUploadRules;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
 
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;

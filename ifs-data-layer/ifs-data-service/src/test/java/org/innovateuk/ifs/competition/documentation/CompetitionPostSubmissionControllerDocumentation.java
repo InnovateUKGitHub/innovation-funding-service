@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
+import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionController;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
@@ -30,6 +32,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionPostSubmissionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionPostSubmissionController> {
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private AssessorService assessorServiceMock;
+
+    @Mock
+    private ApplicationNotificationService applicationNotificationServiceMock;
 
     @Override
     protected CompetitionPostSubmissionController supplyControllerUnderTest() {

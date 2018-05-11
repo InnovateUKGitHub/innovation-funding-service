@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
@@ -13,6 +14,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -33,6 +35,9 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource otherApplicant;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
 
     @Override
     protected InviteOrganisationPermissionRules supplyPermissionRulesUnderTest() {

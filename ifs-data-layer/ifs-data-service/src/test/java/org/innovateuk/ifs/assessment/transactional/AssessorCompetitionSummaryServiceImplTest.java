@@ -5,14 +5,18 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -43,6 +47,18 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
 
     @InjectMocks
     private AssessorCompetitionSummaryServiceImpl service;
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    @Mock
+    private AssessorService assessorServiceMock;
 
     @Test
     public void getAssessorSummary() {
