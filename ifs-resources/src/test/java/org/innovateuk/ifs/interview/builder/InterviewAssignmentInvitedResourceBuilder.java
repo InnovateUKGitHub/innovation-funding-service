@@ -1,9 +1,8 @@
-package org.innovateuk.ifs.invite.builder;
+package org.innovateuk.ifs.interview.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentApplicationResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;

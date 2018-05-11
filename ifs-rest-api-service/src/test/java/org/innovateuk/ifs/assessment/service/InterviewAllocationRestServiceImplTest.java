@@ -6,7 +6,7 @@ import org.innovateuk.ifs.interview.service.InterviewAllocationRestServiceImpl;
 import org.junit.Test;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
 import static org.junit.Assert.assertEquals;
 
 public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitTest<InterviewAllocationRestServiceImpl> {
