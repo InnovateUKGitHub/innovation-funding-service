@@ -49,7 +49,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
@@ -603,8 +603,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
@@ -652,7 +652,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRole(PARTNER).
                 build(2);
 
-        InviteProjectResource createdInvite = newInviteProjectResource().withId(null)
+        InviteProjectResource createdInvite = newInviteProjectResource().withId()
                 .withProject(projectId).withName(invitedUserName)
                 .withEmail(invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -663,8 +663,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         createdInvite.setApplicationId(applicationId);
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
@@ -723,7 +723,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testViewAddress() throws Exception {
         OrganisationResource organisationResource = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().withOrganisationList(Collections.singletonList(organisationResource.getId())).build();
+        AddressResource addressResource = newAddressResource().build();
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
         organisationResource.setAddresses(Collections.singletonList(organisationAddressResource));
@@ -733,7 +733,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
-        when(organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0))).thenReturn(restSuccess(organisationAddressResource));
+        when(organisationAddressRestService.findByOrganisationIdAndAddressId(organisationResource.getId(), project.getAddress().getId())).thenReturn(restSuccess(organisationAddressResource));
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/project-address", project.getId())).
                 andExpect(status().isOk()).
@@ -758,7 +758,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateProjectAddressToBeSameAsRegistered() throws Exception {
         OrganisationResource leadOrganisation = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().withOrganisationList(Collections.singletonList(leadOrganisation.getId())).build();
+        AddressResource addressResource = newAddressResource().build();
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
         leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
@@ -782,8 +782,17 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testUpdateProjectAddressAddNewManually() throws Exception {
         OrganisationResource leadOrganisation = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().withPostcode("S1 2LB").withAddressLine1("Address Line 1").withTown("Sheffield").build();
-        addressResource.setId(null);
+
+        AddressResource addressResource = newAddressResource().
+                withId().
+                withAddressLine1("Address Line 1").
+                withAddressLine2().
+                withAddressLine3().
+                withTown("Sheffield").
+                withCounty().
+                withPostcode("S1 2LB").
+                build();
+
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
         leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
@@ -857,8 +866,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(2);
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(CREATED)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
@@ -906,8 +915,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(2);
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(OPENED)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
@@ -943,8 +952,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(inviteId)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(OPENED)
                 .withLeadOrganisation(leadOrganisation.getId()).build(1);
@@ -970,8 +979,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(inviteId)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(OPENED)
                 .withLeadOrganisation(leadOrganisation.getId()).build(1);

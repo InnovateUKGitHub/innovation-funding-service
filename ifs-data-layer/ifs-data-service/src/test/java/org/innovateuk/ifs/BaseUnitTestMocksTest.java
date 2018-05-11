@@ -82,8 +82,10 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -510,6 +512,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationAddressRepository organisationAddressRepositoryMock;
 
     @Mock
+    protected OrganisationAddressMapper organisationAddressMapperMock;
+
+    @Mock
     protected FinanceCheckQueriesService financeCheckQueriesService;
 
     @Mock
@@ -520,6 +525,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectService projectServiceMock;
+
+    @Mock
+    protected OrganisationAddressService organisationAddressServiceMock;
 
     @Mock
     protected ProjectDetailsService projectDetailsServiceMock;
