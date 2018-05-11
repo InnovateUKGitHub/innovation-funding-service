@@ -4,8 +4,11 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,8 +19,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -28,6 +33,9 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
 
     @Mock
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
+
+    @Mock
+    private InterviewRepository interviewRepository;
 
     @Override
     protected InterviewAllocationServiceImpl supplyServiceUnderTest() {
@@ -85,5 +93,107 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         assertEquals("Name 3", content.get(2).getName());
         assertEquals("Name 4", content.get(3).getName());
         assertEquals("Name 5", content.get(4).getName());
+    }
+
+    @Test
+    public void getAllocatedApplications() throws Exception {
+        long competitionId = 1L;
+        long userId = 2L;
+        Pageable pageable = new PageRequest(0, 5);
+
+        long allocatedApplications = 3L;
+        long unallocatedApplications = 4L;
+
+        List<InterviewApplicationResource> expectedParticipants = newInterviewApplicationResource()
+                .build(1);
+
+        Page<InterviewApplicationResource> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
+
+        when(interviewRepository.findApplicationsAssignedToAssessor(
+                competitionId,
+                userId,
+                pageable
+        )).thenReturn(pageResult);
+
+        when(interviewRepository.countAllocatedApplications(competitionId, userId)).thenReturn(allocatedApplications);
+        when(interviewRepository.countUnallocatedApplications(competitionId, userId)).thenReturn(unallocatedApplications);
+
+        ServiceResult<InterviewApplicationPageResource> result =
+                service.getAllocatedApplications(competitionId, userId, pageable);
+
+        verify(interviewRepository)
+                .findApplicationsAssignedToAssessor(competitionId, userId, pageable);
+        verify(interviewRepository).countAllocatedApplications(competitionId, userId);
+        verify(interviewRepository).countUnallocatedApplications(competitionId, userId);
+
+        assertTrue(result.isSuccess());
+
+        InterviewApplicationPageResource pageResource = result.getSuccess();
+
+        assertEquals(pageResource.getContent(), expectedParticipants);
+        assertEquals(pageResource.getUnallocatedApplications(), unallocatedApplications);
+        assertEquals(pageResource.getAllocatedApplications(), allocatedApplications);
+    }
+
+    @Test
+    public void getUnallocatedApplications() throws Exception {
+        long competitionId = 1L;
+        long userId = 2L;
+        Pageable pageable = new PageRequest(0, 5);
+
+        long allocatedApplications = 3L;
+        long unallocatedApplications = 4L;
+
+        List<InterviewApplicationResource> expectedParticipants = newInterviewApplicationResource()
+                .build(1);
+
+        Page<InterviewApplicationResource> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
+
+        when(interviewRepository.findApplicationsNotAssignedToAssessor(
+                competitionId,
+                userId,
+                pageable
+        )).thenReturn(pageResult);
+
+        when(interviewRepository.countAllocatedApplications(competitionId, userId)).thenReturn(allocatedApplications);
+        when(interviewRepository.countUnallocatedApplications(competitionId, userId)).thenReturn(unallocatedApplications);
+
+        ServiceResult<InterviewApplicationPageResource> result =
+                service.getUnallocatedApplications(competitionId, userId, pageable);
+
+        verify(interviewRepository)
+                .findApplicationsNotAssignedToAssessor(competitionId, userId, pageable);
+        verify(interviewRepository).countAllocatedApplications(competitionId, userId);
+        verify(interviewRepository).countUnallocatedApplications(competitionId, userId);
+
+        assertTrue(result.isSuccess());
+
+        InterviewApplicationPageResource pageResource = result.getSuccess();
+
+        assertEquals(pageResource.getContent(), expectedParticipants);
+        assertEquals(pageResource.getUnallocatedApplications(), unallocatedApplications);
+        assertEquals(pageResource.getAllocatedApplications(), allocatedApplications);
+    }
+
+    @Test
+    public void getUnallocatedApplicationIds() throws Exception {
+        long competitionId = 1L;
+        long userId = 2L;
+        List<Long> ids = asList(4L, 5L);
+
+        when(interviewRepository.findApplicationIdsNotAssignedToAssessor(
+                competitionId,
+                userId
+        )).thenReturn(ids);
+
+        ServiceResult<List<Long>> result =
+                service.getUnallocatedApplicationIds(competitionId, userId);
+
+        verify(interviewRepository)
+                .findApplicationIdsNotAssignedToAssessor(competitionId, userId);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(result.getSuccess(), ids);
     }
 }

@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder;
+import org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPageResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 
 public class InterviewAcceptedAssessorsPageResourceDocs extends PageResourceDocs {
 
