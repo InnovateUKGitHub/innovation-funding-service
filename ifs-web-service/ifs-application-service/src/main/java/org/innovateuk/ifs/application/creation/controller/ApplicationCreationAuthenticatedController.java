@@ -51,37 +51,19 @@ public class ApplicationCreationAuthenticatedController {
     @Autowired
     protected UserService userService;
 
-    @NotNull(message = "validation.field.confirm.new.application")
-    private Boolean createNewApplication;
-
-    public Boolean getCreateNewApplication() {
-        return createNewApplication;
-    }
-
-    public void setCreateNewApplication(Boolean createNewApplication) {
-        this.createNewApplication = createNewApplication;
-    }
-
     @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
-                       UserResource user, @RequestParam(value = FORM_RADIO_NAME, required = false)
-                           @ModelAttribute("createNewApplication")
-                           @NotNull(message = "validation.field.confirm.new.application")Boolean createNewApplication,
-                           BindingResult bindingResult) {
+                       UserResource user) {
 
         if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
 
-        if (createNewApplication==null){
-            bindingResult.rejectValue("createNewApplication","validation.field.confirm.new.application");
-            return "redirect:/application/create-authenticated/" + competitionId;
-        }
-
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
+            model.addAttribute(FORM_RADIO_NAME, false);
             return "create-application/confirm-new-application";
         } else {
             return createApplicationAndShowInvitees(user, competitionId);
@@ -97,9 +79,9 @@ public class ApplicationCreationAuthenticatedController {
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        @RequestParam(value = FORM_RADIO_NAME, required = false)
-                           @ModelAttribute("createNewApplication")
-                           @NotNull(message = "validation.field.confirm.new.application") Boolean createNewApplication,
-                       UserResource user, BindingResult bindingResult) {
+                           @ModelAttribute(FORM_RADIO_NAME)
+                           @NotNull(message = "validation.field.confirm.new.application") Boolean createNewApplication, BindingResult bindingResult,
+                       UserResource user) {
         if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
@@ -114,7 +96,7 @@ public class ApplicationCreationAuthenticatedController {
         }
 
         // user did not check one of the radio elements, show page again.
-        bindingResult.rejectValue("createNewApplication","validation.field.confirm.new.application");
+        bindingResult.rejectValue(FORM_RADIO_NAME, "validation.field.confirm.new.application");
         return "redirect:/application/create-authenticated/" + competitionId;
     }
 
