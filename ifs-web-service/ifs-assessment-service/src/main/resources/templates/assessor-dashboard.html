@@ -72,13 +72,13 @@
                                     <h3 class="heading-small"><a
                                         th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
                                         th:text="${activeCompetition.displayLabel}"/></h3>
-                                    <div th:if="${activeCompetition.progressTotal == 0 && activeCompetition.pendingAssessments == 0}">
+                                    <div th:if="${!activeCompetition.hasPendingAssessments() && !activeCompetition.hasApplicationsToAssess()}">
                                         <strong>
                                             There are currently no assessments for you to review.
                                         </strong>
                                     </div>
 
-                                    <div th:if="${activeCompetition.progressTotal == 0 && activeCompetition.pendingAssessments > 0}" class="action-required">
+                                    <div th:if="${!activeCompetition.hasApplicationsToAssess() && activeCompetition.hasPendingAssessments()}" class="action-required">
                                         <strong>
                                             <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications">
                                                 COUNT
@@ -86,13 +86,13 @@
                                         </strong>
                                     </div>
 
-                                    <div th:if="${activeCompetition.progressTotal - activeCompetition.progressAssessed > 0 && activeCompetition.pendingAssessments > 0}" class="action-required">
+                                    <div th:if="${activeCompetition.hasPendingAssessments() && activeCompetition.hasApplicationsToAssess()}" class="action-required">
                                         <strong>
                                             <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications" /> applications awaiting acceptance | <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications" /> applications to assess
                                         </strong>
                                     </div>
 
-                                    <div th:if="${activeCompetition.progressTotal - activeCompetition.progressAssessed > 0 && activeCompetition.pendingAssessments == 0}" class="action-required">
+                                    <div th:if="${activeCompetition.hasApplicationsToAssess() && !activeCompetition.hasPendingAssessments()}" class="action-required">
                                         <strong>
                                             <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications">
                                                 COUNT
