@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.util.ValidationUtil;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
@@ -33,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<FormInputResponseController> {
 
     @Mock
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseService formInputResponseServiceMock;
 
     @Mock
     private ApplicationValidationUtil validationUtilMock;
@@ -50,13 +49,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputResponseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findResponsesByApplication/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputResponseService, only()).findResponsesByApplication(applicationId);
+        verify(formInputResponseServiceMock, only()).findResponsesByApplication(applicationId);
     }
 
     @Test
@@ -66,13 +65,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", formInputId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputResponseService, only()).findResponsesByFormInputIdAndApplicationId(formInputId, applicationId);
+        verify(formInputResponseServiceMock, only()).findResponsesByFormInputIdAndApplicationId(formInputId, applicationId);
     }
 
     @Test
@@ -82,13 +81,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         FormInputResponseResource expected = newFormInputResponseResource().build();
 
-        when(formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionName(applicationId, questionName)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionName/{applicationId}/{questionName}", applicationId, questionName))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputResponseService, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
+        verify(formInputResponseServiceMock, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
     }
 
     @Test
@@ -98,13 +97,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputResponseService.findResponseByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionId/{applicationId}/{questionId}", applicationId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputResponseService, only()).findResponseByApplicationIdAndQuestionId(applicationId, questionId);
+        verify(formInputResponseServiceMock, only()).findResponseByApplicationIdAndQuestionId(applicationId, questionId);
     }
 
     @Test
@@ -118,7 +117,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         ValidationMessages expected = new ValidationMessages(bindingResult);
         when(validationUtilMock.validateResponse(formInputResponse, false)).thenReturn(bindingResult);
 
-        when(formInputResponseService.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
+        when(formInputResponseServiceMock.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
             @Override
             public boolean matches(Object argument) {
                 FormInputResponseCommand firArgument = (FormInputResponseCommand) argument;

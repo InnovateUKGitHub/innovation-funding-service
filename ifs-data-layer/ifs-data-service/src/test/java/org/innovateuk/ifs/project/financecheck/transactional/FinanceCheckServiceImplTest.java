@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.financecheck.transactional;
 
-import org.hibernate.validator.constraints.ModCheck;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -51,7 +50,6 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.MockPolicy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -136,7 +134,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private ProjectFinanceRepository projectFinanceRepositoryMock;
 
     @Mock
-    private FinanceCheckQueriesService financeCheckQueriesService;
+    private FinanceCheckQueriesService financeCheckQueriesServiceMock;
 
     @Mock
     private FinanceService financeServiceMock;
@@ -258,9 +256,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         QueryResource queryResource1 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , true, ZonedDateTime.now(), null, null);
         QueryResource queryResource2 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , false, ZonedDateTime.now(), null, null);
-        when(financeCheckQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
-        when(financeCheckQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
-        when(financeCheckQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
+        when(financeCheckQueriesServiceMock.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
+        when(financeCheckQueriesServiceMock.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
+        when(financeCheckQueriesServiceMock.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
         when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
@@ -390,7 +388,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
-        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -411,7 +409,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
-        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -432,7 +430,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -451,7 +449,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<QueryResource> queries = Collections.emptyList();
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -470,7 +468,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceFailure(internalServerErrorError()));
+        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceFailure(internalServerErrorError()));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -489,7 +487,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(null));
+        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(null));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());

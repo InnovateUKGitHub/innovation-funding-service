@@ -36,16 +36,16 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
     protected QuestionStatusService questionService = new QuestionStatusServiceImpl();
 
     @Mock
-    private SectionService sectionService;
+    private SectionService sectionServiceMock;
 
     @Mock
-    private UserService userService;
+    private UserService userServiceMock;
 
     @Mock
     private QuestionRepository questionRepositoryMock;
 
     @Mock
-    private QuestionStatusRepository questionStatusRepository;
+    private QuestionStatusRepository questionStatusRepositoryMock;
 
     @Mock
     private ProcessRoleRepository processRoleRepositoryMock;
@@ -68,7 +68,7 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
         when(competitionMock.getCompetitionStatus()).thenReturn(CompetitionStatus.OPEN);
         Application application = newApplication().withCompetition(competitionMock).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(assigneeId).build(1))));
+        when(userServiceMock.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(assigneeId).build(1))));
 
         ServiceResult<Void> result = questionService.assign(questionApplicationCompositeId, assigneeId, assignedById);
 
@@ -78,7 +78,7 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.findOne(assigneeId))
                 .thenReturn(newProcessRole().withUser(newUser().withId(2L).build()).withApplication(newApplication().withId(differentApplicationId).build()).build());
 
-        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(1L).build(1))));
+        when(userServiceMock.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(1L).build(1))));
 
         ServiceResult<Void> resultTwo = questionService.assign(questionApplicationCompositeId, assigneeId, assignedById);
 

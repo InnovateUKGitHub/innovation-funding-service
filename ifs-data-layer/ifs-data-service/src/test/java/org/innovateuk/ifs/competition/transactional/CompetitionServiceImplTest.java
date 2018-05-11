@@ -99,13 +99,13 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
 
     @Mock
-    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepositoryMock;
 
     @Mock
-    private ApplicationRepository applicationRepository;
+    private ApplicationRepository applicationRepositoryMock;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private ProjectRepository projectRepositoryMock;
 
 
     private Long competitionId = 1L;
@@ -786,7 +786,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         Competition competition = newCompetition().build();
 
-        when(grantTermsAndConditionsRepository.findOne(termsAndConditions.getId()))
+        when(grantTermsAndConditionsRepositoryMock.findOne(termsAndConditions.getId()))
                 .thenReturn(termsAndConditions);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
@@ -798,14 +798,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         //Verify that the entity is saved
         verify(competitionRepositoryMock).findOne(competition.getId());
         verify(competitionRepositoryMock).save(competition);
-        verify(grantTermsAndConditionsRepository).findOne(termsAndConditions.getId());
+        verify(grantTermsAndConditionsRepositoryMock).findOne(termsAndConditions.getId());
     }
 
     @Test
     public void updateInvalidTermsAndConditionsForCompetition() throws Exception {
         Competition competition = newCompetition().build();
 
-        when(grantTermsAndConditionsRepository.findOne(competition.getTermsAndConditions().getId())).thenReturn(null);
+        when(grantTermsAndConditionsRepositoryMock.findOne(competition.getTermsAndConditions().getId())).thenReturn(null);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
         ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competitionId, competition.getTermsAndConditions().getId());

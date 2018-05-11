@@ -22,7 +22,7 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
     private AddressLookupService addressLookupServiceMock;
 
     @Mock
-    private AddressService addressService;
+    private AddressService addressServiceMock;
 
     @Override
     protected AddressController supplyControllerUnderTest() {
@@ -58,7 +58,7 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
     @Test
     public void getByIdShouldReturnAddress() throws Exception {
         AddressResource addressResource = newAddressResource().build();
-        when(addressService.getById(addressResource.getId())).thenReturn(serviceSuccess(addressResource));
+        when(addressServiceMock.getById(addressResource.getId())).thenReturn(serviceSuccess(addressResource));
         mockMvc.perform(get("/address/{id}", addressResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(addressResource)));;

@@ -95,7 +95,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     private QuestionService questionServiceMock;
 
     @Mock
-    private FinanceRowMetaValueRepository financeRowMetaValueRepository;
+    private FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
 
     private HashMap<FinanceRowType, Question> costTypeQuestion;
 

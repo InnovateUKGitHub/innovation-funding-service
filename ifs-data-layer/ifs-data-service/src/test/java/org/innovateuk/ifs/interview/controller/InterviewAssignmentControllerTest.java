@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interview.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -47,10 +46,10 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
     private InterviewAssignmentService interviewAssignmentServiceMock;
 
     @Mock
-    private InterviewApplicationInviteService interviewApplicationInviteService;
+    private InterviewApplicationInviteService interviewApplicationInviteServiceMock;
 
     @Mock
-    private InterviewApplicationFeedbackService interviewApplicationFeedbackService;
+    private InterviewApplicationFeedbackService interviewApplicationFeedbackServiceMock;
 
     @Override
     protected InterviewAssignmentController supplyControllerUnderTest() {
@@ -178,14 +177,14 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
     public void getEmailTemplate() throws Exception {
         ApplicantInterviewInviteResource interviewInviteResource = new ApplicantInterviewInviteResource("content");
 
-        when(interviewApplicationInviteService.getEmailTemplate()).thenReturn(serviceSuccess(interviewInviteResource));
+        when(interviewApplicationInviteServiceMock.getEmailTemplate()).thenReturn(serviceSuccess(interviewInviteResource));
 
         mockMvc.perform(get("/interview-panel/email-template")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(interviewInviteResource)));
 
-        verify(interviewApplicationInviteService, only()).getEmailTemplate();
+        verify(interviewApplicationInviteServiceMock, only()).getEmailTemplate();
     }
 
     @Test
@@ -193,14 +192,14 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
         long competitionId = 1L;
         AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
 
-        when(interviewApplicationInviteService.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
+        when(interviewApplicationInviteServiceMock.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/send-invites/{competitionId}", competitionId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(sendResource)))
                 .andExpect(status().isOk());
 
-        verify(interviewApplicationInviteService, only()).sendInvites(competitionId, sendResource);
+        verify(interviewApplicationInviteServiceMock, only()).sendInvites(competitionId, sendResource);
     }
 
     @Test
@@ -219,7 +218,7 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
     @Test
     public void testUploadFeedback() throws Exception {
         final long applicationId = 77L;
-        when(interviewApplicationFeedbackService.uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+        when(interviewApplicationFeedbackServiceMock.uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/feedback/{applicationId}", applicationId)
@@ -227,19 +226,19 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
                 .headers(createFileUploadHeader("application/pdf", 1234)))
                 .andExpect(status().isCreated());
 
-        verify(interviewApplicationFeedbackService).uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+        verify(interviewApplicationFeedbackServiceMock).uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class));
     }
 
     @Test
     public void testDeleteFeedback() throws Exception {
         final long applicationId = 22L;
-        when(interviewApplicationFeedbackService.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
+        when(interviewApplicationFeedbackServiceMock.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/interview-panel/feedback/{applicationId}", applicationId))
                 .andExpect(status().isNoContent());
 
-        verify(interviewApplicationFeedbackService).deleteFeedback(applicationId);
+        verify(interviewApplicationFeedbackServiceMock).deleteFeedback(applicationId);
     }
 
     @Test
@@ -250,20 +249,20 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
                 (service) -> service.downloadFeedback(applicationId);
 
         assertGetFileContents("/interview-panel/feedback/{applicationId}", new Object[]{applicationId},
-                emptyMap(), interviewApplicationFeedbackService, serviceCallToDownload);
+                emptyMap(), interviewApplicationFeedbackServiceMock, serviceCallToDownload);
     }
 
     @Test
     public void testFindFeedback() throws Exception {
         final long applicationId = 22L;
         FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
-        when(interviewApplicationFeedbackService.findFeedback(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
+        when(interviewApplicationFeedbackServiceMock.findFeedback(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
 
         mockMvc.perform(get("/interview-panel/feedback-details/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntryResource)));
 
-        verify(interviewApplicationFeedbackService).findFeedback(applicationId);
+        verify(interviewApplicationFeedbackServiceMock).findFeedback(applicationId);
     }
 
     protected HttpHeaders createFileUploadHeader(String contentType, long contentLength) {

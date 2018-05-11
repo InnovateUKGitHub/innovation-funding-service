@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationResearchCategoryControllerTest extends BaseControllerMockMVCTest<ApplicationResearchCategoryController> {
 
     @Mock
-    private ApplicationResearchCategoryService applicationResearchCategoryService;
+    private ApplicationResearchCategoryService applicationResearchCategoryServiceMock;
 
     @Override
     protected ApplicationResearchCategoryController supplyControllerUnderTest() {
@@ -28,7 +28,7 @@ public class ApplicationResearchCategoryControllerTest extends BaseControllerMoc
         Long researchCategoryId = 1L;
         Long applicationId = 1L;
 
-        when(applicationResearchCategoryService.setResearchCategory(applicationId, researchCategoryId)).thenReturn(serviceSuccess(newApplicationResource().build()));
+        when(applicationResearchCategoryServiceMock.setResearchCategory(applicationId, researchCategoryId)).thenReturn(serviceSuccess(newApplicationResource().build()));
 
         mockMvc.perform(post("/applicationResearchCategory/researchCategory/"+applicationId)
                 .contentType(MediaType.APPLICATION_JSON)

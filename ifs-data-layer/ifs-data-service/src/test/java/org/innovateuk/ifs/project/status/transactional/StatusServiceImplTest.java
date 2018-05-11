@@ -184,7 +184,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
 
     @Mock
-    private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
+    private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
 
     @Before
     public void setUp() {

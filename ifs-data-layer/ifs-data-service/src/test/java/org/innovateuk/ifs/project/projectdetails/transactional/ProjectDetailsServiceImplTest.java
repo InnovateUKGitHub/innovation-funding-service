@@ -110,7 +110,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     private ProjectRepository projectRepositoryMock;
 
     @Mock
-    private ProjectInviteRepository projectInviteRepository;
+    private ProjectInviteRepository projectInviteRepositoryMock;
 
     @Mock
     private LoggedInUserSupplier loggedInUserSupplierMock;

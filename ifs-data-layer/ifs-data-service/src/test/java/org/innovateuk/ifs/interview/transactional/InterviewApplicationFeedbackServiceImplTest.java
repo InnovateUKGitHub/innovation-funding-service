@@ -6,7 +6,6 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentMessageOutcomeRepository;
@@ -34,7 +33,7 @@ public class InterviewApplicationFeedbackServiceImplTest extends BaseServiceUnit
     private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
 
     @Mock
-    private InterviewAssignmentMessageOutcomeRepository interviewAssignmentMessageOutcomeRepository;
+    private InterviewAssignmentMessageOutcomeRepository interviewAssignmentMessageOutcomeRepositoryMock;
 
     @Mock
     private FileEntryService fileEntryServiceMock;
@@ -105,7 +104,7 @@ public class InterviewApplicationFeedbackServiceImplTest extends BaseServiceUnit
         ServiceResult<Void> response = service.deleteFeedback(applicationId);
 
         assertTrue(response.isSuccess());
-        verify(interviewAssignmentMessageOutcomeRepository).delete(messageOutcome.getId());
+        verify(interviewAssignmentMessageOutcomeRepositoryMock).delete(messageOutcome.getId());
         verify(fileServiceMock).deleteFileIgnoreNotFound(fileId);
     }
 }

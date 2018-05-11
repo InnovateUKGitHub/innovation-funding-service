@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interview.documentation;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -66,10 +65,10 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
     private InterviewAssignmentService interviewAssignmentServiceMock;
 
     @Mock
-    private InterviewApplicationInviteService interviewApplicationInviteService;
+    private InterviewApplicationInviteService interviewApplicationInviteServiceMock;
 
     @Mock
-    private InterviewApplicationFeedbackService interviewApplicationFeedbackService;
+    private InterviewApplicationFeedbackService interviewApplicationFeedbackServiceMock;
 
     @Override
     public InterviewAssignmentController supplyControllerUnderTest() {
@@ -233,7 +232,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
     @Test
     public void getEmailTemplate() throws Exception {
-        when(interviewApplicationInviteService.getEmailTemplate()).thenReturn(serviceSuccess(new ApplicantInterviewInviteResource("Content")));
+        when(interviewApplicationInviteServiceMock.getEmailTemplate()).thenReturn(serviceSuccess(new ApplicantInterviewInviteResource("Content")));
 
         mockMvc.perform(get("/interview-panel/email-template"))
                 .andExpect(status().isOk())
@@ -241,13 +240,13 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                         responseFields(fieldWithPath("content").description("The content of the email template sent to applicants"))
                 ));
 
-        verify(interviewApplicationInviteService, only()).getEmailTemplate();
+        verify(interviewApplicationInviteServiceMock, only()).getEmailTemplate();
     }
 
     @Test
     public void sendInvites() throws Exception {
         AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
-        when(interviewApplicationInviteService.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
+        when(interviewApplicationInviteServiceMock.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/send-invites/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -260,7 +259,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                         )
                 ));
 
-        verify(interviewApplicationInviteService, only()).sendInvites(competitionId, sendResource);
+        verify(interviewApplicationInviteServiceMock, only()).sendInvites(competitionId, sendResource);
     }
 
     @Test
@@ -284,7 +283,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
     public void findFeedback() throws Exception {
         final long applicationId = 22L;
         FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
-        when(interviewApplicationFeedbackService.findFeedback(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
+        when(interviewApplicationFeedbackServiceMock.findFeedback(applicationId)).thenReturn(serviceSuccess(fileEntryResource));
 
         mockMvc.perform(get("/interview-panel/feedback-details/{applicationId}", applicationId))
                 .andExpect(status().isOk())
@@ -293,7 +292,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                         pathParameters(parameterWithName("applicationId").description("Id of the Attachment to be fetched")),
                         responseFields(fileEntryResourceFields)));
 
-        verify(interviewApplicationFeedbackService).findFeedback(applicationId);
+        verify(interviewApplicationFeedbackServiceMock).findFeedback(applicationId);
     }
 
     @Test
@@ -304,14 +303,14 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 (service) -> service.downloadFeedback(applicationId);
 
         assertGetFileContents("/interview-panel/feedback/{applicationId}", new Object[]{applicationId},
-                emptyMap(), interviewApplicationFeedbackService, serviceCallToDownload)
+                emptyMap(), interviewApplicationFeedbackServiceMock, serviceCallToDownload)
                 .andDo(documentFileGetContentsMethod("interview-panel/{method-name}"));
     }
 
     @Test
     public void deleteFeedback() throws Exception {
         final long applicationId = 22L;
-        when(interviewApplicationFeedbackService.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
+        when(interviewApplicationFeedbackServiceMock.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-panel/feedback/{applicationId}", applicationId))
                 .andExpect(status().isNoContent())
@@ -319,13 +318,13 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                         pathParameters(parameterWithName("applicationId").description("Id of the application to have attachment deleted")))
                 );
 
-        verify(interviewApplicationFeedbackService).deleteFeedback(applicationId);
+        verify(interviewApplicationFeedbackServiceMock).deleteFeedback(applicationId);
     }
 
     @Test
     public void uploadFeedback() throws Exception {
         final long applicationId = 77L;
-        when(interviewApplicationFeedbackService.uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+        when(interviewApplicationFeedbackServiceMock.uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/feedback/{applicationId}", applicationId)
@@ -340,7 +339,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                         )
                 ));
 
-        verify(interviewApplicationFeedbackService).uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+        verify(interviewApplicationFeedbackServiceMock).uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class));
     }
 

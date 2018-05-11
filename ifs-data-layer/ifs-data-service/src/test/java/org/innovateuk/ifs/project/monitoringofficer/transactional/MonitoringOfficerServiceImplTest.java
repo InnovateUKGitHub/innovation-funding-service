@@ -38,7 +38,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
     private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
-    private MonitoringOfficerMapper monitoringOfficerMapper;
+    private MonitoringOfficerMapper monitoringOfficerMappeMockr;
 
     @Mock
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;

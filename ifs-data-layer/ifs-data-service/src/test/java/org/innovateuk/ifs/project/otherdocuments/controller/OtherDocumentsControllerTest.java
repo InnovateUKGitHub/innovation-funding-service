@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -41,7 +40,7 @@ public class OtherDocumentsControllerTest extends BaseFileControllerMockMVCTest<
     private OtherDocumentsService otherDocumentsServiceMock;
 
     @Mock
-    private UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationServiceMock;
 
     @Mock(name = "fileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
@@ -183,7 +182,7 @@ public class OtherDocumentsControllerTest extends BaseFileControllerMockMVCTest<
                 .header("IFS_AUTH_TOKEN", "123abc");
 
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+        when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         mockMvc.perform(mainRequest)
                 .andExpect(status().isOk())

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.otherdocuments.documentation;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
@@ -32,7 +31,7 @@ public class OtherDocumentsControllerDocumentation extends BaseFileControllerMoc
     private OtherDocumentsService otherDocumentsServiceMock;
 
     @Mock
-    private UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationServiceMock;
 
     @Override
     protected OtherDocumentsController supplyControllerUnderTest() {
@@ -46,7 +45,7 @@ public class OtherDocumentsControllerDocumentation extends BaseFileControllerMoc
                 .withUID("123abc")
                 .build();
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+        when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
                 .andExpect(status().isOk())
@@ -65,7 +64,7 @@ public class OtherDocumentsControllerDocumentation extends BaseFileControllerMoc
                 .withUID("123abc")
                 .build();
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+        when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
                 .andExpect(status().isOk())

@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationInnovationAreaControllerTest extends BaseControllerMockMVCTest<ApplicationInnovationAreaController> {
 
     @Mock
-    private ApplicationInnovationAreaService applicationInnovationAreaService;
+    private ApplicationInnovationAreaService applicationInnovationAreaServiceMock;
 
     @Override
     protected ApplicationInnovationAreaController supplyControllerUnderTest() {
@@ -29,7 +29,7 @@ public class ApplicationInnovationAreaControllerTest extends BaseControllerMockM
         Long innovationAreaId = 1L;
         Long applicationId = 1L;
 
-        when(applicationInnovationAreaService.setInnovationArea(applicationId, innovationAreaId)).thenReturn(serviceSuccess(newApplicationResource().build()));
+        when(applicationInnovationAreaServiceMock.setInnovationArea(applicationId, innovationAreaId)).thenReturn(serviceSuccess(newApplicationResource().build()));
 
         mockMvc.perform(post("/applicationInnovationArea/innovationArea/"+applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -41,7 +41,7 @@ public class ApplicationInnovationAreaControllerTest extends BaseControllerMockM
     public void setNoInnovationAreaApplies() throws Exception {
         Long applicationId = 1L;
 
-        when(applicationInnovationAreaService.setNoInnovationAreaApplies(applicationId)).thenReturn(serviceSuccess(newApplicationResource().build()));
+        when(applicationInnovationAreaServiceMock.setNoInnovationAreaApplies(applicationId)).thenReturn(serviceSuccess(newApplicationResource().build()));
 
         mockMvc.perform(post("/applicationInnovationArea/noInnovationAreaApplicable/"+applicationId)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -52,7 +52,7 @@ public class ApplicationInnovationAreaControllerTest extends BaseControllerMockM
     public void getAvailableInnovationAreas() throws Exception {
         Long applicationId = 1L;
 
-        when(applicationInnovationAreaService.getAvailableInnovationAreas(applicationId)).thenReturn(serviceSuccess(newInnovationAreaResource().build(5)));
+        when(applicationInnovationAreaServiceMock.getAvailableInnovationAreas(applicationId)).thenReturn(serviceSuccess(newInnovationAreaResource().build(5)));
 
         mockMvc.perform(get("/applicationInnovationArea/availableInnovationAreas/"+applicationId)
                 .contentType(MediaType.APPLICATION_JSON))

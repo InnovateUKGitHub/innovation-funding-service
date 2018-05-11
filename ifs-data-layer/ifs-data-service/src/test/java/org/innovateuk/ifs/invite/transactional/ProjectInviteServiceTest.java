@@ -67,7 +67,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     private OrganisationRepository organisationRepositoryMock;
 
     @Mock
-    private ProjectUserRepository projectUserRepository;
+    private ProjectUserRepository projectUserRepositoryMock;
 
     @Test
     public void testAcceptProjectInviteSuccess() throws Exception {

@@ -48,7 +48,7 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
     private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
 
     @Mock
-    private InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
+    private InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandlerMock;
 
     @Mock
     private SystemNotificationSource systemNotificationSourceMock;
@@ -102,6 +102,6 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
 
         assertTrue(result.isSuccess());
         verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
-        verify(interviewAssignmentWorkflowHandler).notifyInterviewPanel(interviewAssignments.get(0), outcome);
+        verify(interviewAssignmentWorkflowHandlerMock).notifyInterviewPanel(interviewAssignments.get(0), outcome);
     }
 }

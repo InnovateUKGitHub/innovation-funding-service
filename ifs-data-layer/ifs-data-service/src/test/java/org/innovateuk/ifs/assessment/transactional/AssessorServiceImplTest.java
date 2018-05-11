@@ -134,7 +134,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     private NotificationSender notificationSenderMock;
 
     @Mock
-    private AffiliationMapper affliationMapper;
+    private AffiliationMapper affliationMapperMock;
 
 
 

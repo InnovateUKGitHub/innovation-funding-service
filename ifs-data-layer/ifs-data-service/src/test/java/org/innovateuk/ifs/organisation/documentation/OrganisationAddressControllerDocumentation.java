@@ -29,7 +29,7 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
 
     @Mock
     private OrganisationAddressService organisationAddressServiceMock;
-    
+
     @Override
     protected OrganisationAddressController supplyControllerUnderTest() {
         return new OrganisationAddressController();
