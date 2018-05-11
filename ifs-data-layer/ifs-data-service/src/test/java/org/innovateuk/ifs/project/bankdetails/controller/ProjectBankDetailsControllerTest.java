@@ -6,9 +6,11 @@ import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import org.junit.Test;
+  import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+  import org.junit.Test;
+  import org.mockito.Mock;
 
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
+  import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -24,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
   public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<ProjectBankDetailsController> {
+
+      @Mock
+      private BankDetailsService bankDetailsServiceMock;
 
       @Override
       protected ProjectBankDetailsController supplyControllerUnderTest() {

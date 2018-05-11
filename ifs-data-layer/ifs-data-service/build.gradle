@@ -139,13 +139,13 @@ test {
     systemProperty 'pact.rootDir', project.getProperty('pactDir')
 
     finalizedBy asciidoctor
+
     if (targetBuild == 'docker') {
         dependsOn ":docker:ifs-mysql:ifs-database:initDB"
     }
 }
 
 asciidoctor {
-    dependsOn test
     attributes 'snippets': snippetsDir
     backends 'html5'
     inputs.dir snippetsDir
@@ -157,7 +157,16 @@ asciidoctor {
             into 'static/docs'
         }
     }
+}
 
+task asciidoctorOnly(type: Test) {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
+    useJUnit {
+        includeCategories 'org.innovateuk.ifs.ControllerTest'
+    }
+    finalizedBy asciidoctor
 }
 
 task generateMainMapperClasses(type: JavaCompile) {

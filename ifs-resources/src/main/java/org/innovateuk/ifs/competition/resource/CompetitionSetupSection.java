@@ -15,6 +15,7 @@ import static java.util.Collections.emptyList;
 public enum CompetitionSetupSection {
 	HOME(1L, "home", "Home Page", emptyList(), false),
 	INITIAL_DETAILS(2L, "initial", "Initial details", emptyList(), true),
+	TERMS_AND_CONDITIONS(9L, "terms-and-conditions", "Terms and conditions", emptyList(), false),
 	ADDITIONAL_INFO(3L, "additional", "Funding information", emptyList(), true),
 	ELIGIBILITY(4L, "eligibility", "Eligibility", emptyList(), false),
 	MILESTONES(5L, "milestones", "Milestones", emptyList(), true),

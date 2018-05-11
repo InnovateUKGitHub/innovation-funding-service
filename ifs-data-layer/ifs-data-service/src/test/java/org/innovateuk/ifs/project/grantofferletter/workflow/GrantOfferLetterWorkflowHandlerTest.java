@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEven
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,6 +35,9 @@ public class GrantOfferLetterWorkflowHandlerTest extends BaseUnitTestMocksTest {
 
     @Mock
     private GrantOfferLetterProcessRepository golProcessRepositoryMock;
+
+    @Mock
+    private AuthenticationHelper authenticationHelperMock;
 
     @Test
     public void testGetGrantOfferLetterStateAsPartner() {

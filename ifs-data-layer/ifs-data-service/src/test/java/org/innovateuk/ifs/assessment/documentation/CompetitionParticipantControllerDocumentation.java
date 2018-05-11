@@ -2,10 +2,12 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionParticipantController;
+import org.innovateuk.ifs.assessment.transactional.CompetitionParticipantService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -21,6 +23,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionParticipantControllerDocumentation extends BaseControllerMockMVCTest<CompetitionParticipantController> {
+
+    @Mock
+    private CompetitionParticipantService competitionParticipantServiceMock;
 
     @Override
     protected CompetitionParticipantController supplyControllerUnderTest() {
