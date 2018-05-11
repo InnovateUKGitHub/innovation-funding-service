@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.interview.repository;
 
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
@@ -34,6 +35,22 @@ public interface InterviewParticipantRepository extends PagingAndSortingReposito
     Page<InterviewParticipant> getInterviewPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
                                                                                         @Param("status") List<ParticipantStatus> status,
                                                                                         Pageable pageable);
+
+    @Query("SELECT NEW org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource(" +
+            "  user.id, " +
+            "  concat(user.firstName, ' ', user.lastName), " +
+            "  profile.skillsAreas " +
+            ") " +
+            "FROM InterviewParticipant interviewParticipant " +
+            "JOIN User user ON interviewParticipant.user.id = user.id " +
+            "JOIN Profile profile ON profile.id = user.profileId " +
+            "WHERE " +
+            "  interviewParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
+            "  interviewParticipant.competition.id = :competitionId AND " +
+            "  interviewParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR AND" +
+            "  interviewParticipant.user.id IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")"
+    )
+    Page<InterviewAcceptedAssessorsResource> getInterviewAcceptedAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
 
     @Query(BY_COMP_AND_STATUS_ON_PANEL)
     List<InterviewParticipant> getInterviewPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
