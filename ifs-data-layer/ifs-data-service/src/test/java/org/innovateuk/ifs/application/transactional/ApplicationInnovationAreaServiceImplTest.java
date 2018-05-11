@@ -2,9 +2,12 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -26,8 +29,18 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTest<ApplicationInnovationAreaService> {
+
     @Mock
     private InnovationAreaRepository innovationAreaRepository;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private InnovationAreaMapper innovationAreaMapperMock;
+
+    @Mock
+    private ApplicationMapper applicationMapperMock;
 
     @Override
     protected ApplicationInnovationAreaService supplyServiceUnderTest() {

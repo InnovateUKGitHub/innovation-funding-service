@@ -2,7 +2,10 @@ package org.innovateuk.ifs.project.bankdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
+import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -17,6 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionsBankDetailsControllerTest extends BaseControllerMockMVCTest<CompetitionsBankDetailsController> {
+
+    @Mock
+    private BankDetailsService bankDetailsServiceMock;
 
     @Override
     protected CompetitionsBankDetailsController supplyControllerUnderTest() {

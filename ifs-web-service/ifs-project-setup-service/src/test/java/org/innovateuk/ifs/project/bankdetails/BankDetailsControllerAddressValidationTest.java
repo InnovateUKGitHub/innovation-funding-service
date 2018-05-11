@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
@@ -45,17 +46,32 @@ public class BankDetailsControllerAddressValidationTest extends BaseControllerMo
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
 
-        AddressResource addressResourceWithNullAddressLine1 = AddressResourceBuilder.newAddressResource().build();
+        AddressResourceBuilder blankAddressBuilder = newAddressResource().
+                withAddressLine1().
+                withAddressLine2().
+                withAddressLine3().
+                withTown().
+                withCounty().
+                withPostcode();
+
+        AddressResource addressResourceWithNullAddressLine1 = blankAddressBuilder.
+                build();
+
         BankDetailsForm formWithSelectedPostcodeWithNullAddressLine1 = new BankDetailsForm();
         formWithSelectedPostcodeWithNullAddressLine1.getAddressForm().setSelectedPostcode(addressResourceWithNullAddressLine1);
 
-        AddressResource addressResourceWithNullTown = AddressResourceBuilder.newAddressResource().
-                withAddressLine1("add Line1").build();
+        AddressResource addressResourceWithNullTown = blankAddressBuilder.
+                withAddressLine1("add Line1").
+                build();
+
         BankDetailsForm formWithSelectedPostcodeWithNullTown = new BankDetailsForm();
         formWithSelectedPostcodeWithNullTown.getAddressForm().setSelectedPostcode(addressResourceWithNullTown);
 
-        AddressResource addressResourceWithNullPostcode = AddressResourceBuilder.newAddressResource().
-                withAddressLine1("add Line1").withTown("Town1").build();
+        AddressResource addressResourceWithNullPostcode = blankAddressBuilder.
+                withAddressLine1("add Line1").
+                withTown("Town1").
+                build();
+
         BankDetailsForm formWithSelectedPostcodeWithNullPostcode = new BankDetailsForm();
         formWithSelectedPostcodeWithNullPostcode.getAddressForm().setSelectedPostcode(addressResourceWithNullPostcode);
 

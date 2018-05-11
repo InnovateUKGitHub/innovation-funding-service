@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.transactional.ApplicationAssessmentSummaryService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -18,6 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationAssessmentSummaryControllerTest extends BaseControllerMockMVCTest<ApplicationAssessmentSummaryController> {
+
+    @Mock
+    private ApplicationAssessmentSummaryService applicationAssessmentSummaryServiceMock;
+
 
     @Override
     protected ApplicationAssessmentSummaryController supplyControllerUnderTest() {

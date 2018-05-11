@@ -2,11 +2,15 @@ package org.innovateuk.ifs.thread.attachment.security;
 
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.project.financechecks.security.AttachmentPermissionsRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
+import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.threads.mapper.QueryMapper;
+import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -39,6 +43,18 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     @Mock
     private ProjectFinanceQueryPermissionRules queryPermissionRulesMock;
+
+    @Mock
+    private QueryRepository queryRepositoryMock;
+
+    @Mock
+    private AttachmentMapper attachmentMapperMock;
+
+    @Mock
+    private QueryMapper queryMapper;
+
+    @Mock
+    private ProjectFinanceRepository projectFinanceRepositoryMock;
 
     @Before
     public void setUp() throws Exception {
