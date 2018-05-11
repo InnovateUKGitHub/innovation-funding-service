@@ -6,11 +6,13 @@ import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -39,6 +41,9 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
     private InviteProjectResource inviteProjectResourceForOrganisationOne;
     private InviteProjectResource inviteProjectResourceForOrganisationTwo;
     private ProjectProcess projectProcess;
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Override
     protected ProjectInvitePermissionRules supplyPermissionRulesUnderTest() {

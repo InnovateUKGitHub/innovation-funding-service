@@ -5,6 +5,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
@@ -31,6 +33,12 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private CompetitionTypeRepository competitionTypeRepositoryMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private AssessorCountOptionRepository assessorCountOptionRepositoryMock;
 
     @Mock
     private CompetitionTemplatePersistorImpl competitionTemplatePersistorMock;

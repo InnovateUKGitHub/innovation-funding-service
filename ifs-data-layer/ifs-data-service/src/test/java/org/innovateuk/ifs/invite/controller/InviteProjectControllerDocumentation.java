@@ -2,7 +2,9 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -26,6 +28,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InviteProjectControllerDocumentation extends BaseControllerMockMVCTest<InviteProjectController> {
+
+    @Mock
+    private ProjectInviteService projectInviteServiceMock;
 
     @Override
     protected InviteProjectController supplyControllerUnderTest() {

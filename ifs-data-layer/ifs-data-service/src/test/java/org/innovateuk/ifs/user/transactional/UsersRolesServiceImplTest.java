@@ -3,9 +3,12 @@ package org.innovateuk.ifs.user.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -19,6 +22,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesService> {
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private ProcessRoleMapper processRoleMapperMock;
 
     @Override
     protected UsersRolesService supplyServiceUnderTest() {

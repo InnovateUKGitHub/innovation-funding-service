@@ -2,7 +2,9 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
+import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -14,6 +16,9 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class RejectionReasonControllerTest extends BaseControllerMockMVCTest<RejectionReasonController> {
+
+    @Mock
+    private RejectionReasonService rejectionReasonServiceMock;
 
     @Override
     protected RejectionReasonController supplyControllerUnderTest() {

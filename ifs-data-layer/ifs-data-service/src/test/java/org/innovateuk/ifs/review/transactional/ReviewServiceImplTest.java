@@ -3,23 +3,48 @@ package org.innovateuk.ifs.review.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
+import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
+import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.domain.ReviewRejectOutcome;
+import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
+import org.innovateuk.ifs.review.mapper.ReviewMapper;
+import org.innovateuk.ifs.review.mapper.ReviewParticipantMapper;
+import org.innovateuk.ifs.review.mapper.ReviewRejectOutcomeMapper;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
+import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.resource.ReviewState;
+import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.ZonedDateTime;
@@ -54,6 +79,27 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
     private static final long competitionId = 1L;
     private static final long userId = 2L;
     private Application application;
+
+
+    @Mock
+    private ReviewParticipantRepository reviewParticipantRepositoryMock;
+    @Mock
+    private NotificationSender notificationSenderMock;
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+    @Mock
+    private ReviewRepository reviewRepositoryMock;
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+    @Mock
+    private ReviewWorkflowHandler reviewWorkflowHandlerMock;
+    @Mock
+    private ReviewMapper reviewMapperMock;
+    @Mock
+    private ReviewRejectOutcomeMapper reviewRejectOutcomeMapperMock;
+
+
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 

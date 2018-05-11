@@ -2,8 +2,10 @@ package org.innovateuk.ifs.project.core.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.core.controller.PartnerOrganisationController;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Collections;
 
@@ -20,6 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PartnerOrganisationControllerDocumentation extends BaseControllerMockMVCTest<PartnerOrganisationController> {
+
+    @Mock
+    private PartnerOrganisationService partnerOrganisationServiceMock;
 
     @Override
     protected PartnerOrganisationController supplyControllerUnderTest() {

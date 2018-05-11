@@ -2,12 +2,15 @@ package org.innovateuk.ifs.token.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
+import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
@@ -28,6 +31,12 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private final TokenService tokenService = new TokenServiceImpl();
+
+    @Mock
+    private TokenRepository tokenRepositoryMock;
+
+    @Mock
+    private ApplicationService applicationServiceMock;
 
     @Before
     public void setUp() throws Exception {
