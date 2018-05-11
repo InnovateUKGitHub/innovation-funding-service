@@ -471,7 +471,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .build();
 
         PartnerOrganisationResource partnerOrganisation = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource()
-                .withPostCode("TW14 9QG")
+                .withPostcode("TW14 9QG")
                 .build();
         when(partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
@@ -488,7 +488,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(organisationId, model.getOrganisationId());
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
-        assertEquals("TW14 9QG", form.getPostCode());
+        assertEquals("TW14 9QG", form.getPostcode());
 
     }
 
@@ -497,27 +497,27 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "UB7 8QF";
+        String postcode = "UB7 8QF";
 
         ProjectResource projectResource = newProjectResource()
                 .withId(projectId)
                 .withName("Project 1")
                 .build();
 
-        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postCode))
+        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcode))
                 .thenReturn(serviceFailure(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
         when(projectService.getById(projectId)).thenReturn(projectResource);
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("postCode", postCode)).
+                param("postcode", postcode)).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/partner-project-location")).
                 andReturn();
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
-        assertEquals(new PartnerProjectLocationForm(postCode), form);
+        assertEquals(new PartnerProjectLocationForm(postcode), form);
     }
 
     @Test
@@ -525,20 +525,20 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "UB7 8QF";
+        String postcode = "UB7 8QF";
 
-        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postCode))
+        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcode))
                 .thenReturn(serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("postCode", postCode)).
+                param("postcode", postcode)).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId  + "/details")).
                 andReturn();
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
-        assertEquals(new PartnerProjectLocationForm(postCode), form);
+        assertEquals(new PartnerProjectLocationForm(postcode), form);
 
         verify(projectService, never()).userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId());
         verify(projectService, never()).getById(projectId);
