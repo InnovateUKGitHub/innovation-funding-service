@@ -142,12 +142,12 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         Long projectId = 1L;
         Long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
-        when(projectDetailsServiceMock.updatePartnerProjectLocation(composite, postCode)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updatePartnerProjectLocation(composite, postcode)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postCode={postCode}", projectId, organisationId, postCode))
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postcode={postcode}", projectId, organisationId, postcode))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -155,11 +155,11 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("organisationId").description("Id of the Organisation")
                         ),
                         requestParameters(
-                                parameterWithName("postCode").description("The project location which is being set for the given Project and Organisation")
+                                parameterWithName("postcode").description("The project location which is being set for the given Project and Organisation")
                         ))
                 );
 
-        verify(projectDetailsServiceMock).updatePartnerProjectLocation(composite, postCode);
+        verify(projectDetailsServiceMock).updatePartnerProjectLocation(composite, postcode);
     }
 
     @Test
