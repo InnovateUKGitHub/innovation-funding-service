@@ -64,6 +64,18 @@ include::{snippets}/project/update-project-duration/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/project/update-project-duration/curl-request.adoc[]
 
+=== Update project address
+==== Request
+include::{snippets}/project/update-project-address/http-request.adoc[]
+include::{snippets}/project/update-project-address/path-parameters.adoc[]
+include::{snippets}/project/update-project-address/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/update-project-address/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-project-address/curl-request.adoc[]
+
 === Set Project Manager
 ==== Success case
 
@@ -80,6 +92,20 @@ include::{snippets}/project/set-project-manager/curl-request.adoc[]
 ==== Failure cases
 ===== Invalid Project Manager specified
 include::{snippets}/project/set-project-manager-but-invalid-project-manager/http-request.adoc[]
+
+
+=== Invite Project Manager
+==== Success case
+
+===== Request
+include::{snippets}/project/invite-project-manager/http-request.adoc[]
+include::{snippets}/project/invite-project-manager/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/invite-project-manager/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/invite-project-manager/curl-request.adoc[]
 
 
 === Update Finance Contact for Organisation
@@ -100,6 +126,18 @@ include::{snippets}/project/update-finance-contact-but-user-is-not-on-project-fo
 
 ===== User is not a Partner on the Project
 include::{snippets}/project/update-finance-contact-but-user-is-not-partner-on-project-for-organisation/http-response.adoc[]
+
+=== Invite Finance Contact for Organisation
+==== Success
+===== Request
+include::{snippets}/project/invite-finance-contact/http-request.adoc[]
+include::{snippets}/project/invite-finance-contact/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/invite-finance-contact/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/invite-finance-contact/curl-request.adoc[]
 
 === Update project location for a partner
 ==== Request
@@ -381,6 +419,18 @@ include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents
 ===== Curl Example
 include::{snippets}/project/is-other-documents-submit-not-allowed-when-documents-not-fully-uploaded/curl-request.adoc[]
 
+=== Accept or reject Other Documents
+==== Success
+===== Request
+include::{snippets}/project/accept-or-reject-other-documents/http-request.adoc[]
+include::{snippets}/project/accept-or-reject-other-documents/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/accept-or-reject-other-documents/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/accept-or-reject-other-documents/curl-request.adoc[]
+
 === Save Documents Submitted DateTime
 
 ==== Request
@@ -465,6 +515,20 @@ include::{snippets}/project/mark-spend-profile-incomplete/http-response.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/mark-spend-profile-incomplete/curl-request.adoc[]
+
+
+=== Complete Spend Profiles review
+==== Success
+===== Request
+include::{snippets}/project/complete-spend-profiles-review/http-request.adoc[]
+include::{snippets}/project/complete-spend-profiles-review/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/complete-spend-profiles-review/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/complete-spend-profiles-review/curl-request.adoc[]
+
 
 === Get Viability
 ==== Success

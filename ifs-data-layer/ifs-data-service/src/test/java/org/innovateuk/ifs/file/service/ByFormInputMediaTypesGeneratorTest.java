@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.file.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.List;
@@ -23,6 +26,9 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private ByFormInputMediaTypesGenerator generator;
+
+    @Mock
+    private FormInputService formInputServiceMock;
 
     @Test
     public void pdf() {

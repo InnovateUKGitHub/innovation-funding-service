@@ -3,7 +3,9 @@ package org.innovateuk.ifs.form.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
@@ -19,6 +21,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInputController> {
+
+    @Mock
+    private FormInputService formInputServiceMock;
 
     @Override
     protected FormInputController supplyControllerUnderTest() {

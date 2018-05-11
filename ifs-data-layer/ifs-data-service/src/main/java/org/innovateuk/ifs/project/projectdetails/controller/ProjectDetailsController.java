@@ -69,12 +69,21 @@ public class ProjectDetailsController {
         return projectDetailsService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
     }
 
-    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
-    public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
+    @ZeroDowntime(reference = "IFS-3470", description = "To support the older request param postCode. This will be deleted in next release")
+    @PostMapping(value = "/{projectId}/organisation/{organisationId}/partner-project-location", params = "postCode")
+    public RestResult<Void> updatePartnerProjectLocationZDD(@PathVariable("projectId") final long projectId,
                                                          @PathVariable("organisationId") final long organisationId,
                                                          @RequestParam("postCode") String postCode) {
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectDetailsService.updatePartnerProjectLocation(composite, postCode).toPostResponse();
+    }
+
+    @PostMapping(value = "/{projectId}/organisation/{organisationId}/partner-project-location", params = "postcode")
+    public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
+                                                         @PathVariable("organisationId") final long organisationId,
+                                                         @RequestParam("postcode") String postcode) {
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectDetailsService.updatePartnerProjectLocation(composite, postcode).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-finance-contact")
