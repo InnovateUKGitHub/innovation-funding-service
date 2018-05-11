@@ -84,7 +84,7 @@ items:
     name: prototypes-svc
   spec:
     ports:
-    - name: 443-tcp
+    - name: 8080-tcp
       port: 8080
       targetPort: 8080
     selector:
@@ -98,7 +98,7 @@ items:
   spec:
     host: "${PROTOTYPES_ADDRESS}"
     port:
-      targetPort: 443-tcp
+      targetPort: 8080-tcp
     tls:
       termination: edge
       insecureEdgeTerminationPolicy: Redirect
