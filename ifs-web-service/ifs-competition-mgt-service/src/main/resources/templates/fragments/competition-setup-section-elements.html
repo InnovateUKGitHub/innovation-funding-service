@@ -363,7 +363,8 @@
                                        th:name="question.scored"
                                        th:checked="${question.scored != null and question.scored}"
                                        value="1"
-                                       required="required"
+                                       require
+                                       d="required"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                        type="radio"/>
                                 <label for="scored-yes">Yes</label>
@@ -530,7 +531,7 @@
                                                    th:errorclass="form-control-error"
                                                    th:id="guidanceRows[__${iteration.index}__].scoreFrom"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreFrom}"
-                                                   th:attr="data-required-errormessage=#{validation.applicationquestionform.scorefrom.required},
+                                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scorefrom.min}"/>
                                         </td>
                                         <td class="form-group"
@@ -551,7 +552,7 @@
                                                    th:id="guidanceRows[__${iteration.index}__].scoreTo"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}"
                                                    value=""
-                                                   th:attr="data-required-errormessage=#{validation.applicationquestionform.scoreto.required},
+                                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scoreto.min}"/>
                                         </td>
                                         <td class="form-group"
@@ -572,7 +573,7 @@
                                                       th:id="guidanceRows[__${iteration.index}__].justification"
                                                       th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                                       maxlength="5000"
-                                                      th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},
+                                                      th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"
                                                       rows="3"/>
                                         </td>
@@ -618,7 +619,7 @@
                                                    th:id="${'guidanceRow-'+iteration.index+'-subject'}"
                                                    th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}"
                                                    maxlength="255"
-                                                   th:attr="data-required-errormessage=#{validation.applicationquestionform.subject.required},
+                                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.subject.maxlength}"/>
                                         </td>
                                         <td class="form-group"
@@ -640,7 +641,7 @@
                                                       th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                       th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
                                                       maxlength="5000"
-                                                      th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},
+                                                      th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"/>
                                         </td>
                                         <td>

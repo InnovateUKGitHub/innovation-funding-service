@@ -274,8 +274,6 @@ public class CompetitionSetupApplicationController {
                                                Model model) {
         validateScopeGuidanceRows(competitionSetupForm, bindingResult);
 
-//        validateRadioButtons(model, competitionSetupForm);
-
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
         if(competitionResource.isNonIfs()) {
