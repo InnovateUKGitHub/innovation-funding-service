@@ -3,6 +3,7 @@ package org.innovateuk.ifs.form.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.SectionResource;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -27,6 +28,9 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     SectionMapper sectionMapper;
+
+    @Mock
+    private SectionRepository sectionRepositoryMock;
 
     @InjectMocks
     protected SectionService sectionService = new SectionServiceImpl();

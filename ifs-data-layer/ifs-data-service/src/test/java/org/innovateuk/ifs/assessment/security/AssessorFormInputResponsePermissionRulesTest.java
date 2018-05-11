@@ -2,12 +2,14 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -24,6 +26,9 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
     private Assessment assessment;
     private UserResource applicantUser;
     private UserResource assessorUser;
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
 
     @Before
     public void setUp() throws Exception {

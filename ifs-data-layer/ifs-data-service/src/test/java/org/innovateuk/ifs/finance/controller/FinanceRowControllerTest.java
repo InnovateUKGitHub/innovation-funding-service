@@ -3,8 +3,10 @@ package org.innovateuk.ifs.finance.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -22,6 +24,12 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
     @Mock
     private ApplicationValidationUtil validationUtil;
+
+    @Mock
+    private FinanceRowCostsService financeRowCostsServiceMock;
+
+    @Mock
+    private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
     
     @Test
     public void addShouldCreateNewCost() throws Exception{

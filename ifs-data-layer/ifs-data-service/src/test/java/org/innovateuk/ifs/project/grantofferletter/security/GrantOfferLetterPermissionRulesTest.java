@@ -2,11 +2,14 @@ package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -15,6 +18,8 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.MockPolicy;
 
 import java.util.Collections;
 
@@ -38,6 +43,15 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     private Role innovationLeadRole = Role.INNOVATION_LEAD;
     private UserResource innovationLeadUserResourceOnProject1;
     private ProjectProcess projectProcess;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Before
     public void setup() {
