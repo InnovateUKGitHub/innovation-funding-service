@@ -2,8 +2,10 @@ package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
@@ -12,6 +14,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -36,6 +39,12 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     private ProjectProcess projectProcessInSetup;
     private ProjectProcess projectProcessInLive;
     private ProjectProcess projectProcessInWithdrawn;
+
+    @Mock
+    private ProjectFinanceRepository projectFinanceRepositoryMock;
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Before
     public void setUp() throws Exception {

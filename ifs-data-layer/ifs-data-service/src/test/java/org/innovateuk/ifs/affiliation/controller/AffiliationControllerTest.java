@@ -2,12 +2,13 @@ package org.innovateuk.ifs.affiliation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
+import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
@@ -19,10 +20,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AffiliationControllerTest extends BaseControllerMockMVCTest<AffiliationController> {
+
+    @Mock
+    private AffiliationService affiliationServiceMock;
 
     @Override
     protected AffiliationController supplyControllerUnderTest() {

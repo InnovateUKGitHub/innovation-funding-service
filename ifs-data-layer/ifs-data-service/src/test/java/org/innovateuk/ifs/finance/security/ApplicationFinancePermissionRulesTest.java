@@ -2,7 +2,9 @@ package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -11,6 +13,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -41,6 +44,12 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     protected ApplicationFinancePermissionRules supplyPermissionRulesUnderTest() {
         return new ApplicationFinancePermissionRules();
     }
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
 
     @Before
     public void setup() throws Exception {

@@ -3,8 +3,10 @@ package org.innovateuk.ifs.project.financecheck.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
@@ -18,6 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<FinanceCheckController> {
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
 
     @Test
     public void testGetFinanceCheck() throws Exception {

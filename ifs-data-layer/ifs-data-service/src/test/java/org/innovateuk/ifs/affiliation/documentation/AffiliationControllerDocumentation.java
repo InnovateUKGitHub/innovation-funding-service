@@ -3,8 +3,10 @@ package org.innovateuk.ifs.affiliation.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.affiliation.controller.AffiliationController;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
+import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -25,6 +27,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AffiliationControllerDocumentation extends BaseControllerMockMVCTest<AffiliationController> {
+
+    @Mock
+    private AffiliationService affiliationServiceMock;
 
     @Override
     protected AffiliationController supplyControllerUnderTest() {

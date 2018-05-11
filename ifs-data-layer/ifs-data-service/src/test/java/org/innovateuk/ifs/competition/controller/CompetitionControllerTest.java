@@ -2,8 +2,10 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -20,6 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerTest extends BaseControllerMockMVCTest<CompetitionController> {
+
+    @Mock
+    private CompetitionService competitionServiceMock;
 
     @Override
     protected CompetitionController supplyControllerUnderTest() {

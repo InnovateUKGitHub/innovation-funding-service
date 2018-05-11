@@ -37,7 +37,7 @@ public class FileControllerUtils {
     /**
      * A convenience method to create a response to a file download request, given a supplier of a FileAndContents
      */
-    public static ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
+    public ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
 
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
@@ -75,7 +75,7 @@ public class FileControllerUtils {
      * The {@link MediaTypesContext} generic type refers to a context from which a valid set of Media Types can be established,
      * as used by the supplied {@link FilesizeAndTypeFileValidator}.
      */
-    public static <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
+    public <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
                                                                         FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypeContext, long maxFileSizeBytes,
                                                                         HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
 
@@ -86,7 +86,7 @@ public class FileControllerUtils {
      * A convenience method to process a file upload (as an update) request given a standard pattern of header
      * validation and processing, given a function that can perform the actual file upload
      */
-    public static <MediaTypesContext> RestResult<Void> handleFileUpdate(String contentType, String contentLength, String originalFilename,
+    public <MediaTypesContext> RestResult<Void> handleFileUpdate(String contentType, String contentLength, String originalFilename,
                                                         FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypesContext, long maxFileSizeBytes,
                                                         HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<?>> uploadFileActionFn) {
 

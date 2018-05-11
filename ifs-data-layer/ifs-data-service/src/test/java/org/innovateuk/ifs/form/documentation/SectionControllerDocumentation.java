@@ -3,7 +3,9 @@ package org.innovateuk.ifs.form.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.form.controller.SectionController;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
@@ -22,6 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SectionControllerDocumentation extends BaseControllerMockMVCTest<SectionController> {
 
     private static final String baseURI = "/section";
+
+    @Mock
+    private SectionService sectionServiceMock;
 
     @Override
     protected SectionController supplyControllerUnderTest() {

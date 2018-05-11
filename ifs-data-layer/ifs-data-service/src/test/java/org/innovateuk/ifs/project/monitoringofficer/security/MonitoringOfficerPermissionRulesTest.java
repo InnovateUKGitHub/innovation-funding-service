@@ -2,11 +2,13 @@ package org.innovateuk.ifs.project.monitoringofficer.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
@@ -19,6 +21,9 @@ import static org.mockito.Mockito.when;
 
 public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTest<MonitoringOfficerPermissionRules> {
     private ProjectProcess projectProcess;
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Before
     public void setUp() throws Exception {

@@ -2,10 +2,12 @@ package org.innovateuk.ifs.thread.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.notes.controller.ProjectFinanceNotesController;
+import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 
@@ -22,6 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectFinanceNotesControllerTest extends BaseControllerMockMVCTest<ProjectFinanceNotesController> {
+
+    @Mock
+    private FinanceCheckNotesService financeCheckNotesService;
 
     @Override
     protected ProjectFinanceNotesController supplyControllerUnderTest() {

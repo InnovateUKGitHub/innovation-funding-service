@@ -6,6 +6,7 @@ import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -106,6 +107,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private RoleInviteRepository roleInviteRepository;
 
+    @Autowired
+    private TermsAndConditionsService termsAndConditionsService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -127,8 +131,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource).
                 andOnSuccess(
-                        () -> addUserToOrganisation(newUser, organisationId).
-                                andOnSuccess(user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, APPLICANT) : ServiceResult.serviceSuccess(user))).
+                        () -> addUserToOrganisation(newUser, organisationId)).
+                andOnSuccess(
+                        user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, APPLICANT) : serviceSuccess(user)).
+                andOnSuccess(
+                        userWithRole -> userWithRole.hasRole(Role.APPLICANT) ?
+                                agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole)).
                 andOnSuccess(
                         () -> createUserWithUid(newUser, userResource.getPassword(), null)
                 );
@@ -246,6 +254,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setRoles(new HashSet<>(userResource.getRoles()));
 
         return newUser;
+    }
+
+    private ServiceResult<User> agreeLatestSiteTermsAndConditionsForUser(User user) {
+        return termsAndConditionsService.getLatestSiteTermsAndConditions().andOnSuccessReturn(termsAndConditions -> {
+            if (user.getTermsAndConditionsIds() == null) {
+                user.setTermsAndConditionsIds(new LinkedHashSet<>());
+            }
+            user.getTermsAndConditionsIds().add(termsAndConditions.getId());
+            return user;
+        });
     }
 
     @Override

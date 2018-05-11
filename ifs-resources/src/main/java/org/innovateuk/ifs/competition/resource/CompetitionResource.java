@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.resource;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -96,7 +95,7 @@ public class CompetitionResource {
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
-    private TermsAndConditionsResource termsAndConditions;
+    private GrantTermsAndConditionsResource termsAndConditions;
 
     private boolean locationPerPartner = true;
 
@@ -589,11 +588,11 @@ public class CompetitionResource {
         return !isNonFinanceType();
     }
 
-    public TermsAndConditionsResource getTermsAndConditions() {
+    public GrantTermsAndConditionsResource getTermsAndConditions() {
         return termsAndConditions;
     }
 
-    public void setTermsAndConditions(TermsAndConditionsResource termsAndConditions) {
+    public void setTermsAndConditions(GrantTermsAndConditionsResource termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
     }
 

@@ -6,7 +6,9 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateReso
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
+import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -30,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 public class AssessorFormInputResponseControllerDocumentation extends BaseControllerMockMVCTest<AssessorFormInputResponseController> {
+
+    @Mock
+    private AssessorFormInputResponseService assessorFormInputResponseServiceMock;
 
     @Override
     protected AssessorFormInputResponseController supplyControllerUnderTest() {

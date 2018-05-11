@@ -2,17 +2,21 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -51,6 +55,15 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
                                     .build()
                     )
                     .build(TOTAL_APPLICATIONS);
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
 
     @Override
     protected InterviewAssignmentServiceImpl supplyServiceUnderTest() {
