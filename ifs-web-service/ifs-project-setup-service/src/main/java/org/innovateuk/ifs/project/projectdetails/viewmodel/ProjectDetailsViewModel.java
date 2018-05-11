@@ -103,11 +103,11 @@ public class ProjectDetailsViewModel {
         return financeContactsByOrganisationId;
     }
 
-    public String getPostCodeForPartnerOrganisation(Long organisationId) {
+    public String getPostcodeForPartnerOrganisation(Long organisationId) {
         return partnerOrganisations.stream()
                 .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
                 .findFirst()
-                .map(PartnerOrganisationResource::getPostCode)
+                .map(PartnerOrganisationResource::getPostcode)
                 .orElse(null);
     }
 

@@ -156,7 +156,10 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .withAddress(newAddressResource()
                         .with(id(null))
                         .withAddressLine1(addressLine1)
+                        .withAddressLine2()
+                        .withAddressLine3()
                         .withTown(town)
+                        .withCounty()
                         .withPostcode(postcode)
                         .build())
                 .build();
@@ -327,8 +330,11 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         AddressResource address = newAddressResource()
                 .with(id(null))
                 .withAddressLine1("address1")
+                .withAddressLine2()
+                .withAddressLine3()
                 .withPostcode("postcode")
                 .withTown("town")
+                .withCounty()
                 .build();
 
         return newUserProfileResource()

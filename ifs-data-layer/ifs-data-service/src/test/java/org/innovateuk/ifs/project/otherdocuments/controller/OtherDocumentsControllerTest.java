@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsSer
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -25,15 +27,22 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
+public class OtherDocumentsControllerTest extends BaseFileControllerMockMVCTest<OtherDocumentsController> {
 
     private static final long projectId = 123L;
     private static final long maxFilesize = 1234L;
     private static final List<String> mediaTypes = singletonList("application/pdf");
+
+    @Mock
+    private OtherDocumentsService otherDocumentsServiceMock;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationServiceMock;
 
     @Mock(name = "fileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
@@ -154,14 +163,19 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
     @Test
     public void acceptOrRejectOtherDocuments() throws Exception {
-        when(otherDocumentsServiceMock.acceptOrRejectOtherDocuments(1L, true)).thenReturn(serviceSuccess());
+        when(otherDocumentsServiceMock.acceptOrRejectOtherDocuments(123L, true)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/1/partner/documents/approved/{approved}", true).
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/project/{projectId}/partner/documents/approved/{approved}", 123L, true).
                 contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-        .andDo(document("project/{method-name}"));
+        .andDo(document("project/{method-name}",
+                pathParameters(
+                    parameterWithName("projectId").description("Id of the project for which the Other Documents are being approved or rejected"),
+                    parameterWithName("approved").description("Whether the Other Documents are being approved or rejected")
+                )
+        ));
 
-        verify(otherDocumentsServiceMock).acceptOrRejectOtherDocuments(1L, true);
+        verify(otherDocumentsServiceMock).acceptOrRejectOtherDocuments(123L, true);
     }
 
     @Test
@@ -175,7 +189,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 .header("IFS_AUTH_TOKEN", "123abc");
 
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+        when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         mockMvc.perform(mainRequest)
                 .andExpect(status().isOk())

@@ -523,14 +523,10 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]
-    Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
-    And the user selects the radio button  question.appendix  1
-    Then the user clicks the button/link   css=label[for="allowed-file-types-PDF"]
-    # Unclicking the PDF checkbox in order to trigger server side validation
-    When the user clicks the button/link   css=button[type="submit"]
-    Then the user should see the server side validation working
-    Then the user is able to configure the new question  ${customQuestion}
-    And the user should be able to see the read only view of question correctly  ${customQuestion}
+    Given the user clicks the button/link                css=p button[type="submit"]  #Add question link
+    When the user is able to configure the new question  ${customQuestion}
+    And the user clicks the button/link                  jQuery=li:contains("${customQuestion}")
+    Then the user should be able to see the read only view of question correctly  ${customQuestion}
 
 Removing an Assessed Application Question
     [Documentation]  IFS-182
@@ -869,11 +865,6 @@ the user enters multiple innovation areas
 
 The user should not see the selected option again
     List Should not Contain Value    css=[id="innovationAreaCategoryIds[1]"]    Biosciences
-
-the user should see the server side validation working
-    #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-2304
-    the user should see a field and summary error  This field cannot be left blank.
-    the user should see a field error  Please enter a justification.
 
 the user marks question as complete
     [Arguments]  ${question_link}

@@ -5,8 +5,10 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -22,6 +24,12 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
 
     @Mock
     private ApplicationValidationUtil validationUtil;
+
+    @Mock
+    private ProjectFinanceRowService projectFinanceRowServiceMock;
+
+    @Mock
+    private ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
 
     @Override
     protected ProjectFinanceRowController supplyControllerUnderTest() {

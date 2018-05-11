@@ -2,10 +2,13 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.user.domain.Ethnicity;
+import org.innovateuk.ifs.user.mapper.EthnicityMapper;
+import org.innovateuk.ifs.user.repository.EthnicityRepository;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -20,6 +23,12 @@ public class EthnicityServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private EthnicityService ethnicityService = new EthnicityServiceImpl();
+
+    @Mock
+    private EthnicityRepository ethnicityRepositoryMock;
+
+    @Mock
+    private EthnicityMapper ethnicityMapperMock;
 
     @Test
     public void findAllActive() throws Exception {

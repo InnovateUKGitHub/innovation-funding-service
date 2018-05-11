@@ -3,11 +3,13 @@ package org.innovateuk.ifs.project.core.workflow.guard;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.core.workflow.configuration.guard.ProjectInSetupGuard;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.statemachine.StateContext;
 
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -21,6 +23,9 @@ public class ProjectInSetupGuardTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private ProjectInSetupGuard projectInSetupGuard = new ProjectInSetupGuard();
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Test
     public void evaluate_ProjectIsInLive() {

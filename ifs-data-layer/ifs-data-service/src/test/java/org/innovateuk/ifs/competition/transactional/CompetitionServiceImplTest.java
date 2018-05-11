@@ -2,21 +2,29 @@ package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -70,7 +78,35 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     private MilestoneService milestoneService;
 
     @Mock
-    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private CompetitionMapper competitionMapperMock;
+
+    @Mock
+    private CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
+
+    @Mock
+    private UserMapper userMapperMock;
+
+    @Mock
+    private OrganisationTypeMapper organisationTypeMapperMock;
+
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+
+    @Mock
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private ProjectRepository projectRepositoryMock;
+
 
     private Long competitionId = 1L;
 
@@ -750,7 +786,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         Competition competition = newCompetition().build();
 
-        when(grantTermsAndConditionsRepository.findOne(termsAndConditions.getId()))
+        when(grantTermsAndConditionsRepositoryMock.findOne(termsAndConditions.getId()))
                 .thenReturn(termsAndConditions);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
@@ -762,14 +798,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         //Verify that the entity is saved
         verify(competitionRepositoryMock).findOne(competition.getId());
         verify(competitionRepositoryMock).save(competition);
-        verify(grantTermsAndConditionsRepository).findOne(termsAndConditions.getId());
+        verify(grantTermsAndConditionsRepositoryMock).findOne(termsAndConditions.getId());
     }
 
     @Test
     public void updateInvalidTermsAndConditionsForCompetition() throws Exception {
         Competition competition = newCompetition().build();
 
-        when(grantTermsAndConditionsRepository.findOne(competition.getTermsAndConditions().getId())).thenReturn(null);
+        when(grantTermsAndConditionsRepositoryMock.findOne(competition.getTermsAndConditions().getId())).thenReturn(null);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
         ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competitionId, competition.getTermsAndConditions().getId());

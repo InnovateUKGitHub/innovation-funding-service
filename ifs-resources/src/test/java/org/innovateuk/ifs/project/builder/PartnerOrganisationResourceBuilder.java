@@ -46,8 +46,8 @@ public class PartnerOrganisationResourceBuilder extends BaseBuilder<PartnerOrgan
         return withArray((flag, partnerOrg) -> setField("organisationName", flag, partnerOrg), organisationNames);
     }
 
-    public PartnerOrganisationResourceBuilder withPostCode(String... postCodes) {
-        return withArray((postCode, partnerOrg) -> setField("postCode", postCode, partnerOrg), postCodes);
+    public PartnerOrganisationResourceBuilder withPostcode(String... postcodes) {
+        return withArray((postcode, partnerOrg) -> setField("postcode", postcode, partnerOrg), postcodes);
     }
 
     public PartnerOrganisationResourceBuilder withLeadOrganisation(Boolean... lead) {
