@@ -40,6 +40,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3291 Applicant dashboard - View application and assessment feedback
 ...
 ...               IFS-3253 Assign applications to interview panel - Applicant respond to feedback
+...
+...               IFS-3378 Applicant dashboard - Dynamic info banner and view of additional feedback
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -182,6 +184,13 @@ Applicant can remove the uploaded response
     Then the user should see the element     jQuery=p:contains("No file currently uploaded") ~ label:contains("+ Upload")
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
+
+Applicant can view the dynamic banner text
+    [Documentation]  IFS-3378
+    [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
+    Given the user clicks the button/link    link=${computer_vision_application_name}
+    When the user should see the element     jQuery=h1:contains("${computer_vision_application_name}")
+    Then the user should see the element     jQuery=p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")
 
 *** Keywords ***
 Custom Suite Setup
