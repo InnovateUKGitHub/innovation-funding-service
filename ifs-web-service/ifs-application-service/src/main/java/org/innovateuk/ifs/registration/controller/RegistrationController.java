@@ -37,10 +37,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
 
@@ -87,7 +87,7 @@ public class RegistrationController {
             final HttpServletRequest request, HttpServletResponse response) {
         registrationCookieService.deleteInviteHashCookie(response);
         if (referer == null || !referer.contains(request.getServerName() + "/registration/register")) {
-            throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
+            throw new ObjectNotFoundException("Attempt to access registration page directly...", emptyList());
         }
         return "registration/successful";
     }
@@ -95,7 +95,7 @@ public class RegistrationController {
     @GetMapping("/verified")
     public String verificationSuccessful(final HttpServletRequest request, final HttpServletResponse response) {
         if (!hasVerifiedCookieSet(request)) {
-            throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
+            throw new ObjectNotFoundException("Attempt to access registration page directly...", emptyList());
         } else {
             cookieFlashMessageFilter.removeFlashMessage(response);
             return "registration/verified";
@@ -165,7 +165,7 @@ public class RegistrationController {
     }
 
     /**
-     * When the current user is an invitee, use the invite email-address in the registration flow.
+     * When the current user is an invitee, use the invited email address in the registration flow.
      */
     private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);

@@ -1,17 +1,18 @@
 package org.innovateuk.ifs.threads.attachments.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
-import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,6 @@ import java.util.List;
 import static java.time.ZonedDateTime.now;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -60,6 +60,8 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+
     @Override
     public ServiceResult<AttachmentResource> findOne(Long attachmentId) {
         return find(attachmentsRepository.findOne(attachmentId), notFoundError(AttachmentResource.class, attachmentId))
@@ -71,7 +73,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
                                                     Long projectId, HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectFinanceThreadsAttachments, maxFilesizeBytesForProjectFinanceThreadsAttachments, request,
+        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectFinanceThreadsAttachments, maxFilesizeBytesForProjectFinanceThreadsAttachments, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                         .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight(), now()))
                                 .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();

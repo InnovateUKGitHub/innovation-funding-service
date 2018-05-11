@@ -33,6 +33,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -53,10 +54,10 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
+import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -513,42 +514,42 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPostCodeIsNullOrEmpty() {
+    public void testUpdatePartnerProjectLocationWhenPostcodeIsNullOrEmpty() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = null;
+        String postcode = null;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
-        postCode = "";
-        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        postcode = "";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
-        postCode = "    ";
-        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        postcode = "    ";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPostCodeEnteredExceedsMaxLength() {
+    public void testUpdatePartnerProjectLocationWhenPostcodeEnteredExceedsMaxLength() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "SOME LONG POSTCODE";
+        String postcode = "SOME LONG POSTCODE";
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POST_CODE_LENGTH), HttpStatus.BAD_REQUEST)));
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POSTCODE_LENGTH), HttpStatus.BAD_REQUEST)));
     }
 
     @Test
@@ -556,13 +557,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(new MonitoringOfficer());
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
     }
@@ -572,31 +573,31 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(notFoundError(PartnerOrganisation.class, projectId, organisationId)));
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationEnsureLowerCasePostCodeIsSavedAsUpperCase() {
+    public void testUpdatePartnerProjectLocationEnsureLowerCasePostcodeIsSavedAsUpperCase() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "tw14 9qg";
+        String postcode = "tw14 9qg";
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isSuccess());
 
-        assertEquals(postCode.toUpperCase(), partnerOrganisationInDb.getPostCode());
+        assertEquals(postcode.toUpperCase(), partnerOrganisationInDb.getPostcode());
     }
 
     @Test
@@ -604,17 +605,17 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "UB7 8QF";
+        String postcode = "UB7 8QF";
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isSuccess());
 
-        assertEquals(postCode, partnerOrganisationInDb.getPostCode());
+        assertEquals(postcode, partnerOrganisationInDb.getPostcode());
     }
 
     @Test
@@ -626,7 +627,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -688,7 +689,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -736,7 +737,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -775,7 +776,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -803,7 +804,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -850,8 +851,10 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
         assertTrue(result.isSuccess());
+        assertEquals(registeredAddress, project.getAddress());
     }
 
     @Test
@@ -869,8 +872,10 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
         assertTrue(result.isSuccess());
+        assertEquals(operatingAddress, project.getAddress());
     }
 
     @Test
@@ -907,8 +912,40 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
+        verify(organisationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationAddress.class));
+        assertEquals(newAddress, project.getAddress());
+    }
+
+    @Test
+    public void testUpdateProjectAddressToNewProjectAddressAndExistingAddressAssociatedWithOrg() {
+
+        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
+        AddressResource newAddressResource = newAddressResource().build();
+        Address newAddress = newAddress().build();
+        AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
+        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
+        when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
+        when(addressTypeRepositoryMock.findOne(PROJECT.getOrdinal())).thenReturn(projectAddressType);
+        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(singletonList(organisationAddress));
+        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        assertNull(project.getAddress());
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        assertTrue(result.isSuccess());
+        verify(organisationAddressRepositoryMock).delete(organisationAddress);
+        assertEquals(newAddress, project.getAddress());
     }
 
     @Test
@@ -920,7 +957,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
