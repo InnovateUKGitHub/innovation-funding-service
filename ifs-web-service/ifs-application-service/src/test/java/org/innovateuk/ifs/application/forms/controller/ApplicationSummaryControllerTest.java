@@ -37,6 +37,7 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -159,7 +160,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testApplicationInterviewFeedback() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(PROJECT_SETUP);
+        competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
 
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
@@ -237,7 +238,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testUpload() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(PROJECT_SETUP);
+        competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
@@ -266,7 +267,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testRemove() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(PROJECT_SETUP);
+        competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
