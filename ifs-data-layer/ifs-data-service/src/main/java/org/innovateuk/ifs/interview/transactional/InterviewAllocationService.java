@@ -34,5 +34,8 @@ public interface InterviewAllocationService {
                                                                                long assessorUserId,
                                                                                Pageable pageable);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_UNALLOCATED_APPLICATION_IDS_BY_COMPETITION",
+            description = "Competition Admins and Project Finance users can retrieve allocated applications")
     ServiceResult<List<Long>> getUnallocatedApplicationIds(long competitionId, long assessorId);
 }

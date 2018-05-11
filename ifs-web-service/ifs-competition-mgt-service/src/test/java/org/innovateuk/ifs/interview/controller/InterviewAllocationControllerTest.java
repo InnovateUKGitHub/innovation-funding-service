@@ -146,7 +146,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}", competition.getId(), user.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("competition/interview-applications"))
+                .andExpect(view().name("assessors/interview/unallocated-applications"))
                 .andReturn();
 
         InterviewAssessorApplicationsViewModel model = (InterviewAssessorApplicationsViewModel) result.getModelAndView().getModel().get("model");

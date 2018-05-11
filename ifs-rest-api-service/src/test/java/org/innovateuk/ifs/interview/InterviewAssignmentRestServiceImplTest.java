@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.service;
+package org.innovateuk.ifs.interview;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
