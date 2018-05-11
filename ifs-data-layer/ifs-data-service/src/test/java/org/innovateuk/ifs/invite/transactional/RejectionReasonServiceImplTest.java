@@ -2,10 +2,13 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.mapper.RejectionReasonMapper;
+import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -20,6 +23,12 @@ public class RejectionReasonServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private RejectionReasonService rejectionReasonService = new RejectionReasonServiceImpl();
+
+    @Mock
+    private RejectionReasonRepository rejectionReasonRepositoryMock;
+
+    @Mock
+    private RejectionReasonMapper rejectionReasonMapperMock;
 
     @Test
     public void findAllActive() throws Exception {

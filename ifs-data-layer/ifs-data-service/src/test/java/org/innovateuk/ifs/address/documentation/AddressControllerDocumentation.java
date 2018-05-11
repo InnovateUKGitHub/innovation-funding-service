@@ -3,7 +3,10 @@ package org.innovateuk.ifs.address.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.controller.AddressController;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.transactional.AddressLookupService;
+import org.innovateuk.ifs.address.transactional.AddressService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -19,6 +22,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 
 public class AddressControllerDocumentation extends BaseControllerMockMVCTest<AddressController> {
+
+    @Mock
+    private AddressLookupService addressLookupServiceMock;
+
+    @Mock
+    private AddressService addressServiceMock;
 
     @Override
     protected AddressController supplyControllerUnderTest() {
@@ -60,8 +69,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
                                 fieldWithPath("[]addressLine3").description("Address Line3"),
                                 fieldWithPath("[]town").description("Town"),
                                 fieldWithPath("[]county").description("County"),
-                                fieldWithPath("[]postcode").description("Postcode"),
-                                fieldWithPath("[]organisations[]").description("List of Organisations with this address")
+                                fieldWithPath("[]postcode").description("Postcode")
                         )
                 ));
     }
@@ -69,7 +77,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
     public void findOne() throws Exception {
         long id = 1;
         AddressResource addressResource = addressResourceBuilder.build();
-        when(addressService.getById(id)).thenReturn(serviceSuccess(addressResource));
+        when(addressServiceMock.getById(id)).thenReturn(serviceSuccess(addressResource));
 
         mockMvc.perform(get("/address/{id}", id))
                 .andDo(document("address/{method-name}",
@@ -83,8 +91,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
                                 fieldWithPath("addressLine3").description("Address Line3"),
                                 fieldWithPath("town").description("Town"),
                                 fieldWithPath("county").description("County"),
-                                fieldWithPath("postcode").description("Postcode"),
-                                fieldWithPath("organisations[]").description("List of Organisations with this address")
+                                fieldWithPath("postcode").description("Postcode")
                         )
                 ));
     }

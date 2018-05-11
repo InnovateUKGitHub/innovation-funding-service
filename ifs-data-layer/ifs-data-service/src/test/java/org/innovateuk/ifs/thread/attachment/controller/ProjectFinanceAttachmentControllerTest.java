@@ -2,12 +2,14 @@ package org.innovateuk.ifs.thread.attachment.controller;
 
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.threads.attachments.controller.ProjectFinanceAttachmentsController;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -26,7 +28,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectFinanceAttachmentControllerTest extends BaseControllerMockMVCTest<ProjectFinanceAttachmentsController> {
+public class ProjectFinanceAttachmentControllerTest extends BaseFileControllerMockMVCTest<ProjectFinanceAttachmentsController> {
+
+    @Mock
+    private ProjectFinanceAttachmentService projectFinanceAttachmentServiceMock;
 
     @Override
     protected ProjectFinanceAttachmentsController supplyControllerUnderTest() {

@@ -102,6 +102,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((affiliations, user) -> setField("affiliations", affiliations, user), affiliationsList);
     }
 
+    public UserBuilder withTermsAndConditionsIds(Set<Long>... termsAndConditionsIdList) {
+        return withArray((termsAndConditionsIds, user) -> setField("termsAndConditionsIds", termsAndConditionsIds, user), termsAndConditionsIdList);
+    }
+
     public UserBuilder withCreatedOn(ZonedDateTime... createdOns) {
         return withArray((createdOn, user) -> setField("createdOn", createdOn, user), createdOns);
     }

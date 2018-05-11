@@ -117,10 +117,19 @@ test {
 }
 
 asciidoctor {
-    dependsOn test
     attributes 'snippets': snippetsDir
     backends 'html5'
     inputs.dir snippetsDir
+}
+
+task asciidoctorOnly(type: Test) {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
+    useJUnit {
+        includeCategories 'org.innovateuk.ifs.ControllerTest'
+    }
+    finalizedBy asciidoctor
 }
 
 task generateMainMapperClasses(type: JavaCompile) {
