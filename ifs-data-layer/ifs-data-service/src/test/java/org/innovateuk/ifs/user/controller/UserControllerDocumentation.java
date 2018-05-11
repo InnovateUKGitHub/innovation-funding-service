@@ -5,7 +5,11 @@ import org.innovateuk.ifs.documentation.EditUserResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.transactional.BaseUserService;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
@@ -36,6 +40,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserController> {
+
+    @Mock
+    private UserService userServiceMock;
+
+    @Mock
+    private RegistrationService registrationServiceMock;
+
+    @Mock
+    private BaseUserService baseUserServiceMock;
 
     @Override
     protected UserController supplyControllerUnderTest() {

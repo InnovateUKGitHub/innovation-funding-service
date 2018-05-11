@@ -3,7 +3,9 @@ package org.innovateuk.ifs.review.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.transactional.ReviewService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -23,6 +25,9 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
     private static final long applicationId = 1L;
     private static final long competitionId = 5L;
     private static final long userId = 2L;
+
+    @Mock
+    private ReviewService reviewServiceMock;
 
     @Override
     public ReviewController supplyControllerUnderTest() {

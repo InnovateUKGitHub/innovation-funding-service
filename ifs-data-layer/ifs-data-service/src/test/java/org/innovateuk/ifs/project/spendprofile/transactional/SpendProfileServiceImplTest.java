@@ -11,18 +11,30 @@ import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.*;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtil;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -79,6 +91,31 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private SpendProfileValidationUtil validationUtil;
     @Mock
     private Error mockedError;
+    @Mock
+    private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
+    @Mock
+    private EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+    @Mock
+    private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
+    @Mock
+    private SpendProfileRepository spendProfileRepositoryMock;
+    @Mock
+    private ProjectUsersHelper projectUsersHelperMock;
+    @Mock
+    private ProjectService projectServiceMock;
+    @Mock
+    private ProjectRepository projectRepositoryMock;
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+    @Mock
+    private CostCategoryRepository costCategoryRepositoryMock;
+    @Mock
+    private CostCategoryTypeRepository costCategoryTypeRepositoryMock;
+    @Mock
+    private UserRepository userRepositoryMock;
+    @Mock
+    private GrantOfferLetterService grantOfferLetterServiceMock;
+
 
     @Test
     public void testGenerateSpendProfile() {

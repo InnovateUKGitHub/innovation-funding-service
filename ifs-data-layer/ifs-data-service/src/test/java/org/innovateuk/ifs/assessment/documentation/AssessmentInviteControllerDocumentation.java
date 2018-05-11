@@ -2,10 +2,12 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
+import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -52,6 +54,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessmentInviteControllerDocumentation extends BaseControllerMockMVCTest<CompetitionInviteController> {
+
+    @Mock
+    private AssessmentInviteService assessmentInviteServiceMock;
 
     @Override
     protected CompetitionInviteController supplyControllerUnderTest() {

@@ -4,11 +4,14 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.PasswordPolicyValidator.ExclusionRulePatternGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -32,6 +35,12 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private PasswordPolicyValidator validator = new PasswordPolicyValidator();
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
 
     private ExclusionRulePatternGenerator lettersForNumbersGenerator;
 

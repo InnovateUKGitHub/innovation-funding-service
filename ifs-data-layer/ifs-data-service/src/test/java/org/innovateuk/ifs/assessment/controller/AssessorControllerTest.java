@@ -6,11 +6,14 @@ import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.UnsupportedEncodingException;
@@ -42,6 +45,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorController> {
+
+    @Mock
+    private AssessorService assessorServiceMock;
 
     @Override
     protected AssessorController supplyControllerUnderTest() {
