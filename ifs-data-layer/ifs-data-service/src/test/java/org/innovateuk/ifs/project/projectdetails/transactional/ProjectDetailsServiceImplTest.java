@@ -74,10 +74,10 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
+import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -594,42 +594,42 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPostCodeIsNullOrEmpty() {
+    public void testUpdatePartnerProjectLocationWhenPostcodeIsNullOrEmpty() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = null;
+        String postcode = null;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
-        postCode = "";
-        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        postcode = "";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
-        postCode = "    ";
-        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        postcode = "    ";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPostCodeEnteredExceedsMaxLength() {
+    public void testUpdatePartnerProjectLocationWhenPostcodeEnteredExceedsMaxLength() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "SOME LONG POSTCODE";
+        String postcode = "SOME LONG POSTCODE";
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POST_CODE_LENGTH), HttpStatus.BAD_REQUEST)));
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POSTCODE_LENGTH), HttpStatus.BAD_REQUEST)));
     }
 
     @Test
@@ -637,13 +637,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(new MonitoringOfficer());
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
     }
@@ -653,31 +653,31 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(notFoundError(PartnerOrganisation.class, projectId, organisationId)));
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationEnsureLowerCasePostCodeIsSavedAsUpperCase() {
+    public void testUpdatePartnerProjectLocationEnsureLowerCasePostcodeIsSavedAsUpperCase() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "tw14 9qg";
+        String postcode = "tw14 9qg";
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isSuccess());
 
-        assertEquals(postCode.toUpperCase(), partnerOrganisationInDb.getPostCode());
+        assertEquals(postcode.toUpperCase(), partnerOrganisationInDb.getPostcode());
     }
 
     @Test
@@ -685,17 +685,17 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "UB7 8QF";
+        String postcode = "UB7 8QF";
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isSuccess());
 
-        assertEquals(postCode, partnerOrganisationInDb.getPostCode());
+        assertEquals(postcode, partnerOrganisationInDb.getPostcode());
     }
 
     @Test
@@ -707,7 +707,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -769,7 +769,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -817,7 +817,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -856,7 +856,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -884,7 +884,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -1037,7 +1037,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 

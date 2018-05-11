@@ -2,7 +2,6 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
@@ -20,6 +19,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,7 +46,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
     @Before
     public void setUp() {
 
-        inviteProjectResource = ProjectInviteResourceBuilder.newInviteProjectResource().
+        inviteProjectResource = newInviteProjectResource().
                 withId(1L).
                 withEmail("testProject-invite@mail.com").
                 withName("test-project-invitece").
@@ -107,7 +107,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         String hash = "has545967h";
 
-        InviteProjectResource inviteProjectResource = ProjectInviteResourceBuilder.newInviteProjectResource().
+        InviteProjectResource inviteProjectResource = newInviteProjectResource().
                 withId(1L).
                 withEmail("testProject-invite@mail.com").
                 withName("test-project-invitece").
@@ -146,13 +146,13 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         Long projectId = 123L;
 
-        List<InviteProjectResource> inviteProjectResources = ProjectInviteResourceBuilder.newInviteProjectResource().
-                withIds(1L).
-                withEmails("testProject-invite@mail.com").
-                withNames("test-project-invitece").
-                withStatuss(InviteStatus.CREATED).
-                withOrganisations(25L).
-                withProjects(2L).
+        List<InviteProjectResource> inviteProjectResources = newInviteProjectResource().
+                withId(1L).
+                withEmail("testProject-invite@mail.com").
+                withName("test-project-invitece").
+                withStatus(InviteStatus.CREATED).
+                withOrganisation(25L).
+                withProject(2L).
                 build(5);
 
 

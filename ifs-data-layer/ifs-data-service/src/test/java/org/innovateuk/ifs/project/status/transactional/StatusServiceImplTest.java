@@ -549,7 +549,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = asList(newPartnerOrganisation()
                 .withOrganisation(o)
-                .withPostCode("TW14 9QG")
+                .withPostcode("TW14 9QG")
                 .build());
         project.setPartnerOrganisations(po);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
@@ -1126,7 +1126,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<PartnerOrganisation> partnerOrganisations = PartnerOrganisationBuilder.newPartnerOrganisation()
                 .withProject(p)
                 .withOrganisation(leadOrganisation, partnerOrganisation1, partnerOrganisation2)
-                .withPostCode(null, "TW14 9QG", " ")
+                .withPostcode(null, "TW14 9QG", " ")
                 .build(3);
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);

@@ -3,12 +3,13 @@ package org.innovateuk.ifs.assessment.controller;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
@@ -35,7 +36,7 @@ import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -99,8 +100,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
-                .withAddress(newAddressResource()
-                        .build())
+                .withAddress(new AddressResource())
                 .build();
 
 

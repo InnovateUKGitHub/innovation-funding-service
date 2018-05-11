@@ -304,6 +304,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
         assertGetFileContents("/interview-panel/feedback/{applicationId}", new Object[]{applicationId},
                 emptyMap(), interviewApplicationFeedbackServiceMock, serviceCallToDownload)
+                .andExpect(status().isOk())
                 .andDo(documentFileGetContentsMethod("interview-panel/{method-name}"));
     }
 

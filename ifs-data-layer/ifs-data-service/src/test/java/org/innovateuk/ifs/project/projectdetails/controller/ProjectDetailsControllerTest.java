@@ -96,13 +96,13 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
-        when(projectDetailsServiceMock.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postCode)).thenReturn(serviceSuccess());
+        String postcode = "TW14 9QG";
+        when(projectDetailsServiceMock.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postCode={postCode}", projectId, organisationId, postCode))
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postcode={postcode}", projectId, organisationId, postcode))
                 .andExpect(status().isOk());
 
-        verify(projectDetailsServiceMock).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postCode);
+        verify(projectDetailsServiceMock).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode);
     }
 
     @Test
