@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.alert.security;
 
-import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.RootPermissionRulesTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class AlertPermissionRulesTest extends BasePermissionRulesTest<AlertPermissionRules> {
+public class AlertPermissionRulesTest extends RootPermissionRulesTest<AlertPermissionRules> {
 
     private AlertResource alertResource;
 

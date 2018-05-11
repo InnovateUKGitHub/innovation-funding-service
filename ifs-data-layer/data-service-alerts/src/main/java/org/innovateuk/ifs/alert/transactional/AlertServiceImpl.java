@@ -6,7 +6,7 @@ import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.alert.domain.Alert} data.
  */
 @Service
-public class AlertServiceImpl extends BaseTransactionalService implements AlertService {
+public class AlertServiceImpl extends RootTransactionalService implements AlertService {
 
     @Autowired
     private AlertRepository alertRepository;

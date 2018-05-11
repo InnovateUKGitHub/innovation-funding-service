@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.isEmptyString;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AlertDocs.alertResourceFields;
+import static org.innovateuk.ifs.alert.documentation.AlertDocs.alertResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -27,6 +27,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AlertControllerTest extends BaseControllerMockMVCTest<AlertController> {
+
 
     @Mock
     private AlertService alertServiceMock;
