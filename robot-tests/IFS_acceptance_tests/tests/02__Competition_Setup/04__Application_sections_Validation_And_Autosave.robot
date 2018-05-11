@@ -15,10 +15,12 @@ Business opportunity Server-side validations setup questions
     And The user clicks the button/link    jQuery=a:contains("Business opportunity")
     When the user leaves all the question field empty
     And The user clicks the button/link                             css=button[type="submit"]
-    Then the validation error above the question should be visible  jQuery=label:contains(Question title)  This field cannot be left blank.
-    And the validation error above the question should be visible   jQuery=label:contains(Question guidance title)  This field cannot be left blank.
-    And the validation error above the question should be visible   jQuery=label:contains(Question guidance)  This field cannot be left blank.
-    And the validation error above the question should be visible   jQuery=label:contains(Max word count)  This field cannot be left blank.
+    Then the validation error above the question should be visible  css=label[for="question.shortTitle"]        This field cannot be left blank.
+    And the validation error above the question should be visible   css=label[for="question.title"]             This field cannot be left blank.
+    And the validation error above the question should be visible   css=label[for="question.guidanceTitle"]     This field cannot be left blank.
+    And the validation error above the question should be visible   css=label[for="question.maxWords"]          This field cannot be left blank.
+    And the validation error above the question should be visible   id=question.allowedFileTypes                This field cannot be left blank.
+    And the validation error above the question should be visible   css=label[for="question.appendixGuidance"]  This field cannot be left blank.
     And the user should see a summary error                         This field cannot be left blank.
 
 Business opportunity Sever-side validations assessment questions
@@ -26,14 +28,10 @@ Business opportunity Sever-side validations assessment questions
     [Tags]    HappyPath
     [Setup]
     Given the user leaves all the assessment questions empty
-    When the user clicks the button/link    css=button[type="submit"]
-    Then the user should see a field error   Please enter a from score.
-    And the user should see a field error    Please enter a to score.
-    And the user should see a field error    Please enter a justification.
-#   TODO commented due to IFS-2621
-#    And the user should see a summary error  Please enter a from score.
-#    And the user should see a summary error  Please enter a to score.
-#    And the user should see a summary error  Please enter a justification.
+    When the user clicks the button/link                            css=button[type="submit"]
+    Then the validation error above the question should be visible  css=label[for="guidanceRows[0].scoreFrom"]      This field cannot be left blank.
+    And the validation error above the question should be visible   css=label[for="guidanceRows[0].scoreTo"]        This field cannot be left blank.
+    And the validation error above the question should be visible   css=label[for="guidanceRows[0].justification"]  This field cannot be left blank.
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
@@ -42,13 +40,16 @@ Business opportunity: Client side validations
     And the user enters text to a text field    id=question.shortTitle    Test Heading
     And the user moves focus and waits for autosave
     And the user fills the empty assessment fields
-    Then the validation error above the question should not be visible  jQuery=label:contains(Question title)    This field cannot be left blank.
-    And the validation error above the question should not be visible   jQuery=label:contains(Question guidance title)    This field cannot be left blank.
-    And the validation error above the question should not be visible   jQuery=label:contains(Question guidance)    This field cannot be left blank.
-    And the validation error above the question should not be visible   jQuery=label:contains(Max word count)    This field cannot be left blank.
-    And the user should not see the text in the page    Please enter a from score.
-    And the user should not see the text in the page    Please enter a to score.
-    And the user should not see the text in the page    Please enter a justification.
+    And the user selects the radio button                               question.appendix  0
+    Then the validation error above the question should not be visible  css=label[for="question.shortTitle"]            This field cannot be left blank.
+    And the validation error above the question should not be visible   css=label[for="question.title"]                 This field cannot be left blank.
+    And the validation error above the question should not be visible   css=label[for="question.guidanceTitle"]         This field cannot be left blank.
+    And the validation error above the question should not be visible   css=label[for="question.maxWords"]              This field cannot be left blank.
+    And the validation error above the question should not be visible   id=question.allowedFileTypes                    This field cannot be left blank.
+    #And the validation error above the question should not be visible   css=label[for="guidanceRows[0].scoreFrom"]      This field cannot be left blank.
+    #And the validation error above the question should not be visible   css=label[for="guidanceRows[0].scoreTo"]        This field cannot be left blank.
+    #And the validation error above the question should not be visible   css=label[for="guidanceRows[0].justification"]  This field cannot be left blank.
+    #TODO 2304 part 2
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629 INFUND-5685
@@ -75,12 +76,10 @@ Scope: Sever-side validations assessment questions
     Given the user clicks the button/link               link=Scope
     When the user clicks the button/link                jQuery=Button:contains("+Add guidance row")
     And the user clicks the button/link                 css=button[type="submit"]
-    Then the user should see a field and summary error  Please enter a value.
-    And the user should see a field and summary error   Please enter a justification
+    Then the user should see a field and summary error  This field cannot be left blank
     And The user clicks the button/link                 id=remove-guidance-row-2
     And the user clicks the button/link                 css=button[type="submit"]
-    And the user should not see the element             jQuery=a:contains("Please enter a value")
-    And the user should not see the element             jQuery=a:contains("Please enter a justification")
+    And the user cannot see a validation error in the page
 
 *** Keywords ***
 Custom Suite setup
@@ -94,22 +93,17 @@ the user leaves all the question field empty
     Press Key    css=.editor    \\8
     focus    css=button[type="submit"]
     wait for autosave
-    The user enters text to a text field    id=question.shortTitle    ${EMPTY}
-    the user moves focus and waits for autosave
-    The user enters text to a text field    id=question.title    ${EMPTY}
-    the user moves focus and waits for autosave
-    The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
-    the user moves focus and waits for autosave
-    The user enters text to a text field    id=question.maxWords    ${EMPTY}
-    the user moves focus and waits for autosave
+    The user enters text to a text field    id=question.shortTitle     ${EMPTY}
+    The user enters text to a text field    id=question.title          ${EMPTY}
+    The user enters text to a text field    id=question.guidanceTitle  ${EMPTY}
+    The user enters text to a text field    id=question.maxWords       ${EMPTY}
+    the user selects the radio button       question.appendix  1
+    the user clicks the button/link         css=label[for="allowed-file-types-PDF"]
 
 The user leaves all the assessment questions empty
-    The user enters text to a text field    id=guidanceRows[0].scoreFrom    ${EMPTY}
-    the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRows[0].scoreTo    ${EMPTY}
-    the user moves focus and waits for autosave
-    the user enters text to a text field    id=guidanceRows[0].justification    ${EMPTY}
-    the user moves focus and waits for autosave
+    The user enters text to a text field    id=guidanceRows[0].scoreFrom      ${EMPTY}
+    The user enters text to a text field    id=guidanceRows[0].scoreTo        ${EMPTY}
+    the user enters text to a text field    id=guidanceRows[0].justification  ${EMPTY}
 
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
