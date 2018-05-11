@@ -363,8 +363,7 @@
                                        th:name="question.scored"
                                        th:checked="${question.scored != null and question.scored}"
                                        value="1"
-                                       require
-                                       d="required"
+                                       required="required"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                        type="radio"/>
                                 <label for="scored-yes">Yes</label>
