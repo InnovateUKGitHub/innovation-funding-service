@@ -277,7 +277,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(applicationRestService.withdrawApplication(applicationId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/withdraw"))
-                .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/unsuccessful"))
+                .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
 
