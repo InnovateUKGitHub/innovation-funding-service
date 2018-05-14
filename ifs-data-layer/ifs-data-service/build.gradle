@@ -11,10 +11,6 @@ apply from: "finance-data-service-sync.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-configurations {
-    providedRuntime
-}
-
 project.version = dataServiceVersion
 tagDocker.tag = dataServiceVersion
 osStageRemote.tag = dataServiceVersion
