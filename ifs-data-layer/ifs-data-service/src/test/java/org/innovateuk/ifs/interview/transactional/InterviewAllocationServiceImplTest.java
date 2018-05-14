@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
@@ -25,6 +26,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<InterviewAllocationServiceImpl> {
+
+    @Mock
+    private InterviewParticipantRepository interviewParticipantRepositoryMock;
 
     @Mock
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;

@@ -14,3 +14,7 @@ WHERE short_name = 'Project summary';
 UPDATE question
 SET question_setup_type = 'PUBLIC_DESCRIPTION'
 WHERE short_name = 'Public description';
+
+UPDATE question
+SET question_setup_type = 'ASSESSED_QUESTION'
+WHERE question_number IS NOT NULL;
