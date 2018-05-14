@@ -33,13 +33,16 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     @Mock
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
 
+    @Mock
+    private InterviewParticipantRepository interviewParticipantRepositoryMock;
+
     @Override
     protected InterviewAllocationServiceImpl supplyServiceUnderTest() {
         return new InterviewAllocationServiceImpl();
     }
 
     @Test
-    public void getAllocateApplicationsOverview() throws Exception {
+    public void getAllocateApplicationsOverview() {
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
 

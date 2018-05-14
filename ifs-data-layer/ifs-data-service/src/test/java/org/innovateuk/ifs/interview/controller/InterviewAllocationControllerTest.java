@@ -25,7 +25,6 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     @Mock
     private InterviewAllocationService interviewAllocationServiceMock;
 
-
     @Override
     protected InterviewAllocationController supplyControllerUnderTest() {
         return new InterviewAllocationController();
