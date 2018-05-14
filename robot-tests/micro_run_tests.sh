@@ -72,50 +72,22 @@ function addTestFiles() {
     done
 }
 
-function resetDB() {
-    section "=> RESETTING DATABASE STATE and syncing shibboleth users"
-    cd ${rootDir}
-    ./gradlew ifs-data-layer:ifs-data-service:flywayClean ifs-data-layer:ifs-data-service:flywayMigrate syncShib
-}
-
-function injectRobotParameters() {
-    section "=> INJECTING ENVIRONMENT BUILD PARAMETERS"
-    cd ${rootDir}
-    echo "=> Injecting environment specific build parameters..."
-        ./gradlew robotTestsFilter
-
-}
-
-function startSeleniumGrid() {
-    section "=> STARTING SELENIUM GRID"
-
-    cd ${scriptDir}
-
-    if [[ ${parallel} -eq 1 ]]
-    then
-      declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
-    else
-      declare -i suiteCount=1
-    fi
-    if [[ ${suiteCount} -eq 0 ]]
-    then
-      suiteCount=1
-    fi
-
-    echo "=> Suite count: ${suiteCount}"
+function initialiseTestEnvironment() {
 
     cd ${rootDir}
 
-    ./gradlew deployHub deployChrome
-
-    cd ${scriptDir}
-
-    unset suiteCount
     if [[ ${quickTest} -eq 1 ]]
-    then
-      echo "=> Waiting 5 seconds for the grid to be properly started"
-      sleep 5
+      then
+        section "=> STARTING SELENIUM GRID and INJECTING ENVIRONMENT PARAMETERS"
+        ./gradlew deployHub deployChrome robotTestsFilter
+
+        echo "=> Waiting 5 seconds for the grid to be properly started"
+        sleep 5
+      else
+        section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE and syncing shibboleth users"
+        ./gradlew deployHub deployChrome robotTestsFilter ifs-data-layer:ifs-data-service:flywayClean ifs-data-layer:ifs-data-service:flywayMigrate syncShib
     fi
+
   }
 
 function stopSeleniumGrid() {
@@ -188,15 +160,7 @@ function runTests() {
 
     cd ${scriptDir}
 
-    if [[ ${parallel} -eq 1 ]]
-    then
-      for D in `find ${testDirectory}/* -maxdepth 0 -type d`
-      do
-          startPybot ${D}
-      done
-    else
-      startPybot ${testDirectory}
-    fi
+    startPybot ${testDirectory}
 
     if [[ $vnc -eq 1 ]]
     then
@@ -213,11 +177,6 @@ function runTests() {
         wait $job
     done
 
-    if [[ ${parallel} -eq 1 ]]
-    then
-      results=`find target/* -regex ".*/output\.xml"`
-      rebot -d target ${results}
-    fi
 }
 
 function deleteEmails() {
@@ -233,6 +192,7 @@ function deleteEmails() {
 
 function clearOldReports() {
   section "=> REMOVING OLD REPORTS"
+  cd ${scriptDir}
   rm -rf target
   mkdir target
 }
@@ -315,17 +275,13 @@ unset useBespokeExcludeTag
 quickTest=0
 emails=0
 rerunFailed=0
-parallel=0
 stopGrid=0
 showZapReport=0
 compress=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :r :c :w :z :d: :x :I: :E:" opt ; do
+while getopts ":q :h :t :r :c :w :z :d: :x :I: :E:" opt ; do
     case ${opt} in
-        p)
-            parallel=1
-        ;;
         q)
             quickTest=1
         ;;
@@ -346,7 +302,6 @@ while getopts ":p :q :h :t :r :c :w :z :d: :x :I: :E:" opt ; do
         ;;
     	d)
             testDirectory="$OPTARG"
-            parallel=0
         ;;
         I)
             useBespokeIncludeTags=1
@@ -383,8 +338,7 @@ while getopts ":p :q :h :t :r :c :w :z :d: :x :I: :E:" opt ; do
     esac
 done
 
-startSeleniumGrid
-injectRobotParameters
+initialiseTestEnvironment
 
 if [[ ${rerunFailed} -eq 0 ]]
 then
@@ -400,12 +354,10 @@ then
 elif [[ ${testScrub} ]]
 then
     coloredEcho "=> Using testScrub mode: this will do all the dirty work but omit the tests" blue
-    resetDB
     addTestFiles
     deleteEmails
 else
     coloredEcho "=> Using quickTest: FALSE" blue
-    resetDB
     addTestFiles
     deleteEmails
     runTests
