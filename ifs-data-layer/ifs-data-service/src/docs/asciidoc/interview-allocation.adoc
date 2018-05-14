@@ -1,0 +1,12 @@
+=== Get the overview of accepted assessors to allocate applications to
+==== Request
+include::{snippets}/interview-panel/get-interview-accepted-assessors/http-request.adoc[]
+include::{snippets}/interview-panel/get-interview-accepted-assessors/path-parameters.adoc[]
+include::{snippets}/interview-panel/get-interview-accepted-assessors/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-interview-accepted-assessors/http-response.adoc[]
+include::{snippets}/interview-panel/get-interview-accepted-assessors/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-interview-accepted-assessors/curl-request.adoc[]

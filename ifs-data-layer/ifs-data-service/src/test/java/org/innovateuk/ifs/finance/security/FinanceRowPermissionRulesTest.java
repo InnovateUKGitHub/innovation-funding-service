@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Collections;
 
@@ -48,6 +50,9 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     private ProjectResource project;
     private UserResource otherProjectUserResource;
     private ProjectResource otherProject;
+
+    @Mock
+    private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
 
     @Override
     protected ApplicationFinanceRowPermissionRules supplyPermissionRulesUnderTest() {

@@ -6,9 +6,13 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
+import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -27,6 +31,15 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     private ApplicationFinanceResource applicationFinanceResource;
     private Organisation organisation;
     private ApplicationResource application;
+
+    @Mock
+    private FinanceService financeServiceMock;
+
+    @Mock
+    private FinanceFileEntryService financeFileEntryServiceMock;
+
+    @Mock
+    private FinanceRowCostsService financeRowCostsServiceMock;
 
     @Override
     protected ApplicationFinanceController supplyControllerUnderTest() {

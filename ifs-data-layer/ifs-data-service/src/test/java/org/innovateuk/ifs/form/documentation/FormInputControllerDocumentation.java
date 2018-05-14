@@ -3,7 +3,9 @@ package org.innovateuk.ifs.form.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.form.controller.FormInputController;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -22,6 +24,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 
 public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<FormInputController> {
     private static final String baseURI = "/forminput";
+
+    @Mock
+    private FormInputService formInputServiceMock;
 
     @Override
     protected FormInputController supplyControllerUnderTest() {

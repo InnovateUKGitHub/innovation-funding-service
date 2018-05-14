@@ -7,7 +7,9 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class StatusControllerDocumentation extends BaseControllerMockMVCTest<StatusController> {
+
+    @Mock
+    private StatusService statusServiceMock;
 
     @Test
     public void getCompetitionStatus() throws Exception {

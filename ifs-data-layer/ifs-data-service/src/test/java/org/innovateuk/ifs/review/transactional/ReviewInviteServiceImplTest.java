@@ -2,8 +2,16 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
+import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
@@ -27,8 +35,16 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.review.domain.Review;
+import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
+import org.innovateuk.ifs.review.mapper.ReviewParticipantMapper;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
+import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -106,6 +122,40 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
     @Mock
     private AssessorCreatedInviteMapper assessorCreatedInviteMapperMock;
+    @Mock
+    private UserMapper userMapperMock;
+    @Mock
+    private ReviewInviteRepository reviewInviteRepositoryMock;
+    @Mock
+    private ReviewInviteMapper reviewInviteMapperMock;
+    @Mock
+    private ReviewParticipantRepository reviewParticipantRepositoryMock;
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+    @Mock
+    private UserRepository userRepositoryMock;
+    @Mock
+    private RejectionReasonRepository rejectionReasonRepositoryMock;
+    @Mock
+    private ProfileRepository profileRepositoryMock;
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+    @Mock
+    private NotificationTemplateRenderer notificationTemplateRendererMock;
+    @Mock
+    private NotificationSender notificationSenderMock;
+    @Mock
+    private ReviewParticipantMapper reviewParticipantMapperMock;
+    @Mock
+    private ParticipantStatusMapper participantStatusMapperMock;
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+    @Mock
+    private ReviewRepository reviewRepositoryMock;
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
 
     @Override
     protected ReviewInviteServiceImpl supplyServiceUnderTest() {

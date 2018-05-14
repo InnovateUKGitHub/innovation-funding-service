@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -14,6 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProcessRoleControllerTest extends BaseControllerMockMVCTest<ProcessRoleController> {
+
+    @Mock
+    private UsersRolesService usersRolesServiceMock;
+
+    @Mock
+    private ApplicationService applicationServiceMock;
 
     @Override
     protected ProcessRoleController supplyControllerUnderTest() {

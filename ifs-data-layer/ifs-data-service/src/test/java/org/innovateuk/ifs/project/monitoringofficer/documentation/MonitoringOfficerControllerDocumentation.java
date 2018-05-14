@@ -5,9 +5,11 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.controller.MonitoringOfficerController;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.SaveMonitoringOfficerResult;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
@@ -29,6 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     private MonitoringOfficerResource monitoringOfficerResource;
+
+    @Mock
+    private MonitoringOfficerService monitoringOfficerServiceMock;
 
     @Before
     public void setUp() {
