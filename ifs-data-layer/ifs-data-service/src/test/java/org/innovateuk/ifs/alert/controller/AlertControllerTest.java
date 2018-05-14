@@ -2,8 +2,10 @@ package org.innovateuk.ifs.alert.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.alert.transactional.AlertService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AlertControllerTest extends BaseControllerMockMVCTest<AlertController> {
+
+    @Mock
+    private AlertService alertServiceMock;
 
     @Before
     public void setUp() throws Exception {

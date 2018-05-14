@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.analytics.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -18,6 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 
 public class GoogleAnalyticsDataLayerControllerTest extends BaseControllerMockMVCTest<GoogleAnalyticsDataLayerController> {
+
+    @Mock
+    private GoogleAnalyticsDataLayerService googleAnalyticsDataLayerServiceMock;
+
     @Override
     protected GoogleAnalyticsDataLayerController supplyControllerUnderTest() { return new GoogleAnalyticsDataLayerController(); }
 

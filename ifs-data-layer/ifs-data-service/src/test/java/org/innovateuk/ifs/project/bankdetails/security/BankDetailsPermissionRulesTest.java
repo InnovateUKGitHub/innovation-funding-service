@@ -5,6 +5,8 @@ import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -12,6 +14,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +33,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<BankDetailsPermissionRules> {
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Override
     protected BankDetailsPermissionRules supplyPermissionRulesUnderTest() {

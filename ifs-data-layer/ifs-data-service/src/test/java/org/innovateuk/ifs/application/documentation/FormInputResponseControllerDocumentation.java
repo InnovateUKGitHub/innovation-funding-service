@@ -3,7 +3,9 @@ package org.innovateuk.ifs.application.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.FormInputResponseController;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 
 import java.util.List;
@@ -20,6 +22,9 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 
 public class FormInputResponseControllerDocumentation extends BaseControllerMockMVCTest<FormInputResponseController> {
 
+    @Mock
+    private FormInputResponseService formInputResponseServiceMock;
+
     @Override
     protected FormInputResponseController supplyControllerUnderTest() {
         return new FormInputResponseController();
@@ -32,7 +37,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputResponseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findResponsesByApplication/{applicationId}", applicationId))
                 .andDo(document("forminputresponse/{method-name}",
@@ -52,7 +57,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", formInputId, applicationId))
                 .andDo(document("forminputresponse/{method-name}",
@@ -73,7 +78,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
 
         FormInputResponseResource expected = newFormInputResponseResource().build();
 
-        when(formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionName(applicationId, questionName)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionName/{applicationId}/{questionName}", applicationId, questionName))
                 .andDo(document("forminputresponse/{method-name}",
@@ -92,7 +97,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputResponseService.findResponseByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionId/{applicationId}/{questionId}", applicationId, questionId))
                 .andDo(document("forminputresponse/{method-name}",

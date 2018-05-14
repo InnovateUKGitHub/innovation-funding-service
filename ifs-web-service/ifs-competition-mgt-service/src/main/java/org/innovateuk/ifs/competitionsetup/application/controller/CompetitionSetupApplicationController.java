@@ -26,6 +26,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
@@ -249,6 +250,8 @@ public class CompetitionSetupApplicationController {
                                          Model model) {
         validateAssessmentGuidanceRows(competitionSetupForm, bindingResult);
 
+        validateRadioButtons(competitionSetupForm, bindingResult);
+
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
@@ -362,6 +365,18 @@ public class CompetitionSetupApplicationController {
     private void validateScopeGuidanceRows(ProjectForm applicationProjectForm, BindingResult bindingResult) {
         if (Boolean.TRUE.equals(applicationProjectForm.getQuestion().getWrittenFeedback())) {
             ValidationUtils.invokeValidator(validator, applicationProjectForm, bindingResult, GuidanceRowResource.GuidanceRowGroup.class);
+        }
+    }
+
+    private void validateRadioButtons(ApplicationQuestionForm competitionSetupForm, BindingResult bindingResult) {
+        if(competitionSetupForm.getQuestion().getAppendix() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendix", "This field cannot be left blank."));
+        }
+        if(competitionSetupForm.getQuestion().getWrittenFeedback() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.writtenFeedback", "This field cannot be left blank."));
+        }
+        if(competitionSetupForm.getQuestion().getScored() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.scored", "This field cannot be left blank."));
         }
     }
 

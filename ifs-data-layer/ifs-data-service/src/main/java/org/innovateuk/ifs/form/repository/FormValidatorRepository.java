@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.form.repository;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -16,7 +15,5 @@ public interface FormValidatorRepository extends PagingAndSortingRepository<Form
     List<FormValidator> findAll();
     FormValidator findById(Long id);
 
-    @ZeroDowntime(reference = "IFS-3366", description = "Remove this method and uncomment other once there is only one clazz in database.")
-    FormValidator findByClazzNameIn(List<String> clazzez);
-    //FormValidator findByClazzName(String clazz);
+    FormValidator findByClazzName(String clazz);
 }

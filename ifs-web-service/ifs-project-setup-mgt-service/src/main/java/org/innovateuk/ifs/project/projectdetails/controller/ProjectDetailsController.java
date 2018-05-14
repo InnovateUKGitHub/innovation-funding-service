@@ -110,7 +110,7 @@ public class ProjectDetailsController {
                                   @PathVariable("projectId") final long projectId, HttpServletRequest request) {
          projectRestService.withdrawProject(projectId).getSuccess();
 
-        return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/unsuccessful");
+        return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/previous");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {

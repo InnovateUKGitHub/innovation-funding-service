@@ -12,22 +12,22 @@ import javax.validation.constraints.NotNull;
 public class PartnerProjectLocationForm extends BaseBindingResultTarget {
 
     @NotNull(message = "{validation.partnerprojectlocationform.postcode.required}")
-    private String postCode;
+    private String postcode;
 
     // for spring form binding
     public PartnerProjectLocationForm() {
     }
 
-    public PartnerProjectLocationForm(String postCode) {
-        this.postCode = postCode;
+    public PartnerProjectLocationForm(String postcode) {
+        this.postcode = postcode;
     }
 
-    public String getPostCode() {
-        return postCode;
+    public String getPostcode() {
+        return postcode;
     }
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
     }
 
     @Override
@@ -39,14 +39,14 @@ public class PartnerProjectLocationForm extends BaseBindingResultTarget {
         PartnerProjectLocationForm that = (PartnerProjectLocationForm) o;
 
         return new EqualsBuilder()
-                .append(postCode, that.postCode)
+                .append(postcode, that.postcode)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(postCode)
+                .append(postcode)
                 .toHashCode();
     }
 }

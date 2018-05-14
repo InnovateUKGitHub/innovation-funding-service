@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
 import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
 import org.junit.Test;
@@ -26,6 +27,9 @@ public class SectionTemplatePersistorImplTest extends BaseServiceUnitTest<Sectio
 
     @Mock
     private EntityManager entityManagerMock;
+
+    @Mock
+    private SectionRepository sectionRepositoryMock;
 
     @Mock
     private QuestionTemplatePersistorImpl questionTemplatePersistorMock;

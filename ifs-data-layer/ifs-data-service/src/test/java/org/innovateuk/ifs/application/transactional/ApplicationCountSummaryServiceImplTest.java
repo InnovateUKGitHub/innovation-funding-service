@@ -3,11 +3,14 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;
+import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -35,6 +38,14 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     private List<ApplicationStatistics> applicationStatistics;
     private Page<ApplicationStatistics> page;
     private ApplicationCountSummaryPageResource resource;
+
+    @Mock
+    private ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
+
+    @Mock
+    private ApplicationCountSummaryPageMapper applicationCountSummaryPageMapperMock;
+
+
 
     @Override
     protected ApplicationCountSummaryService supplyServiceUnderTest() {

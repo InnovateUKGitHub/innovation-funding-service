@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,6 +44,9 @@ import static org.mockito.Mockito.when;
  * Tests around the permissions for UserService and related services
  */
 public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermissionRules> {
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
 
     @Test
     public void testAnyoneCanViewThemselves() {
