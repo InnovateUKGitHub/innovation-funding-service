@@ -349,6 +349,63 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertTrue(appendixFormInput.getAllowedFileTypes().contains(FileTypeCategory.SPREADSHEET.getDisplayName()));
     }
 
+    @Test
+    public void test_updateShouldNotUpdateApplicationDetailsHeading() {
+        long questionId = 1L;
+        String oldShortTitle = "Application details";
+
+        List<GuidanceRowResource> guidanceRows = newFormInputGuidanceRowResourceBuilder().build(1);
+        when(guidanceRowMapper.mapToDomain(guidanceRows)).thenReturn(new ArrayList<>());
+
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+                .withAppendix(false)
+                .withGuidance(guidance)
+                .withGuidanceTitle(guidanceTitle)
+                .withMaxWords(maxWords)
+                .withNumber(number)
+                .withTitle(title)
+                .withShortTitle(newShortTitle)
+                .withSubTitle(subTitle)
+                .withQuestionId(questionId)
+                .withType(CompetitionSetupQuestionType.APPLICATION_DETAILS)
+                .withAssessmentGuidance(assessmentGuidanceAnswer)
+                .withAssessmentGuidanceTitle(assessmentGuidanceTitle)
+                .withAssessmentMaxWords(assessmentMaxWords)
+                .withGuidanceRows(guidanceRows)
+                .withScored(true)
+                .withScoreTotal(scoreTotal)
+                .withWrittenFeedback(true)
+                .build();
+
+        Question question = newQuestion().
+                withShortName(oldShortTitle)
+                .withQuestionSetupType(CompetitionSetupQuestionType.APPLICATION_DETAILS).build();
+
+        FormInput questionFormInput = newFormInput().build();
+        FormInput appendixFormInput = newFormInput().build();
+        FormInput researchCategoryQuestionFormInput = newFormInput().build();
+        FormInput scopeQuestionFormInput = newFormInput().build();
+        FormInput scoredQuestionFormInput = newFormInput().build();
+        FormInput writtenFeedbackFormInput = newFormInput().build();
+
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
+        when(questionRepository.findOne(questionId)).thenReturn(question);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
+
+        doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
+        when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        assertTrue(result.isSuccess());
+        assertNotEquals(question.getQuestionNumber(), number);
+        assertEquals(question.getShortName(), oldShortTitle);
+    }
+
     private void setMocksForSuccessfulUpdate() {
         long questionId = 1L;
         when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());

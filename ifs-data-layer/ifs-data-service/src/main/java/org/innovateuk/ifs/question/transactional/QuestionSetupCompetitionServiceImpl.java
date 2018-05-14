@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -150,7 +151,9 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);
 
-        question.setShortName(competitionSetupQuestionResource.getShortTitle());
+        if (question.getQuestionSetupType() != CompetitionSetupQuestionType.APPLICATION_DETAILS) {
+            question.setShortName(competitionSetupQuestionResource.getShortTitle());
+        }
         question.setName(competitionSetupQuestionResource.getTitle());
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
         question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
