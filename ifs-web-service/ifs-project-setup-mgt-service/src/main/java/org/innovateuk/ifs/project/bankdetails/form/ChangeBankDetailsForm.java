@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.bankdetails.form;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.form.AddressForm;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -12,7 +13,10 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_D
 
 public class ChangeBankDetailsForm {
 
+    @NotEmpty(message = "{validation.standard.registrationnumber.required}")
     private String registrationNumber;
+
+    @NotEmpty(message = "{validation.standard.organisationname.required}")
     private String organisationName;
 
     @Pattern(regexp = "\\d{6}", message = "{validation.standard.sortcode.format}")
