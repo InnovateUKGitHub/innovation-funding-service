@@ -78,20 +78,6 @@ function resetDB() {
     ./gradlew ifs-data-layer:ifs-data-service:flywayClean ifs-data-layer:ifs-data-service:flywayMigrate syncShib
 }
 
-function buildAndDeploy() {
-    section "=> BUILDING AND DEPLOYING APPLICATION"
-    cd ${rootDir}
-    if [[ ${noDeploy} -eq 0 ]]
-    then
-        echo "=> Starting build and deploy script..."
-        ./gradlew -Pcloud=development buildDocker -x test
-    else
-        coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
-    fi
-
-    ./gradlew -Pcloud=development deploy wait -x test
-}
-
 function injectRobotParameters() {
     section "=> INJECTING ENVIRONMENT BUILD PARAMETERS"
     cd ${rootDir}
@@ -214,15 +200,12 @@ function runTests() {
 
     if [[ $vnc -eq 1 ]]
     then
-      local vncport="$(docker-compose port chrome 5900)"
-      vncport=${vncport:8:5}
-
       if [ "$(uname)" == "Darwin" ];
       then
-        open "vnc://root:secret@ifs.local-dev:"${vncport}
+        open "vnc://root:secret@ifs.local-dev:5900"
       fi
       echo "**********For remote desktop please use this url in your vnc client**********"
-        echo  "vnc://root:secret@ifs.local-dev:"${vncport}
+        echo  "vnc://root:secret@ifs.local-dev:5900"
     fi
 
     for job in `jobs -p`
@@ -334,12 +317,11 @@ emails=0
 rerunFailed=0
 parallel=0
 stopGrid=0
-noDeploy=0
 showZapReport=0
 compress=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :r :c :n :w :z :d: :x :I: :E:" opt ; do
+while getopts ":p :q :h :t :r :c :w :z :d: :x :I: :E:" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -376,9 +358,6 @@ while getopts ":p :q :h :t :r :c :n :w :z :d: :x :I: :E:" opt ; do
         ;;
         c)
             stopGrid=1
-        ;;
-        n)
-            noDeploy=1
         ;;
         w)
           vnc=1
@@ -421,15 +400,11 @@ then
 elif [[ ${testScrub} ]]
 then
     coloredEcho "=> Using testScrub mode: this will do all the dirty work but omit the tests" blue
-
-    buildAndDeploy
     resetDB
     addTestFiles
     deleteEmails
 else
     coloredEcho "=> Using quickTest: FALSE" blue
-
-    buildAndDeploy
     resetDB
     addTestFiles
     deleteEmails
