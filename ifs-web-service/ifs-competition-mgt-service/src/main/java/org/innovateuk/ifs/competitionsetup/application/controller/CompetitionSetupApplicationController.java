@@ -368,7 +368,7 @@ public class CompetitionSetupApplicationController {
         }
     }
 
-    private void validateRadioButtons(ApplicationQuestionForm competitionSetupForm, BindingResult bindingResult) {
+    private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
         if(competitionSetupForm.getQuestion().getAppendix() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendix", "This field cannot be left blank."));
         }
