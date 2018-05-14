@@ -79,7 +79,7 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
         List<Error> errors = new ValidMediaTypesFileUploadErrorTranslator()
                 .translateFileUploadErrors(e -> "formInput[123]", singletonList(errorFromDataLayer));
 
-        Error expectedSpecialisedError = fieldError("formInput[123]", "application/madeup", expectedErrorKey);
+        Error expectedSpecialisedError = fieldError("formInput[123]", "application/madeup", expectedErrorKey, errorFromDataLayer.getArguments());
 
         assertArrayEquals(new Error[] {expectedSpecialisedError}, errors.toArray());
     }

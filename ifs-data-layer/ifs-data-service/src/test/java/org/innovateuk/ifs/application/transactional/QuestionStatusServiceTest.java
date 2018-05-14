@@ -2,11 +2,15 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.transactional.SectionService;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -32,10 +36,22 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
     protected QuestionStatusService questionService = new QuestionStatusServiceImpl();
 
     @Mock
-    private SectionService sectionService;
+    private SectionService sectionServiceMock;
 
     @Mock
-    private UserService userService;
+    private UserService userServiceMock;
+
+    @Mock
+    private QuestionRepository questionRepositoryMock;
+
+    @Mock
+    private QuestionStatusRepository questionStatusRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
 
     @Test
     public void assignTest() throws Exception {
@@ -52,7 +68,7 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
         when(competitionMock.getCompetitionStatus()).thenReturn(CompetitionStatus.OPEN);
         Application application = newApplication().withCompetition(competitionMock).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(assigneeId).build(1))));
+        when(userServiceMock.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(assigneeId).build(1))));
 
         ServiceResult<Void> result = questionService.assign(questionApplicationCompositeId, assigneeId, assignedById);
 
@@ -62,7 +78,7 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.findOne(assigneeId))
                 .thenReturn(newProcessRole().withUser(newUser().withId(2L).build()).withApplication(newApplication().withId(differentApplicationId).build()).build());
 
-        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(1L).build(1))));
+        when(userServiceMock.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(1L).build(1))));
 
         ServiceResult<Void> resultTwo = questionService.assign(questionApplicationCompositeId, assigneeId, assignedById);
 

@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
+import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +20,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionPostSubmissionControllerTest extends BaseControllerMockMVCTest<CompetitionPostSubmissionController> {
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    @Mock
+    private AssessorService assessorServiceMock;
+
+    @Mock
+    private ApplicationNotificationService applicationNotificationServiceMock;
 
     @Override
     protected CompetitionPostSubmissionController supplyControllerUnderTest() {

@@ -4,7 +4,12 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationCountSummaryController;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.application.transactional.ApplicationCountSummaryService;
+import org.innovateuk.ifs.application.transactional.AssessorCountSummaryService;
 import org.junit.Test;
+import org.mockito.Mock;
+
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
@@ -22,6 +27,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationCountSummaryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationCountSummaryController> {
+
+    @Mock
+    private ApplicationCountSummaryService applicationCountSummaryServiceMock;
+
     @Override
     protected ApplicationCountSummaryController supplyControllerUnderTest() {
         return new ApplicationCountSummaryController();
@@ -57,7 +66,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
         pageResource.setContent(singletonList(applicationCountSummaryResource));
 
-        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId,0, 20, empty(), "", "")).thenReturn(serviceSuccess(pageResource));
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 20, empty(), "", "")).thenReturn(serviceSuccess(pageResource));
 
         mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?assessorId={assessorId}&sortField={sortField}&filter={filter}", competitionId, assessorId, sortField, filter))
                 .andExpect(status().isOk())
@@ -72,7 +81,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
                         ),
                         responseFields(applicationCountSummaryResourcesFields)));
 
-        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId,0, 20, empty(), "", "");
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 20, empty(), "", "");
     }
 
 }

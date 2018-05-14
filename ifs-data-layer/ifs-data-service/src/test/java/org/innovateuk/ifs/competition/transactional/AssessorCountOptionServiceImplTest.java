@@ -3,9 +3,12 @@ package org.innovateuk.ifs.competition.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.competition.domain.AssessorCountOption;
 import org.innovateuk.ifs.competition.fixtures.AssessorCountOptionFixture;
+import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
+import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -18,6 +21,12 @@ public class AssessorCountOptionServiceImplTest extends BaseUnitTestMocksTest {
 
 	@InjectMocks
 	private AssessorCountOptionService assessorCountOptionService = new AssessorCountOptionServiceImpl();
+
+	@Mock
+	private AssessorCountOptionRepository assessorCountOptionRepositoryMock;
+
+	@Mock
+	private AssessorCountOptionMapper assessorCountOptionMapperMock;
 
 	@Test
 	public void testFindAllByCompetitionType() throws Exception {

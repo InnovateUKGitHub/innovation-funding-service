@@ -26,8 +26,11 @@ import java.util.List;
 public class AssessorProfileDeclarationForm implements BindingResultTarget {
 
     @NotEmpty(message = "{validation.assessorprofiledeclarationform.principalEmployer.required}")
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String principalEmployer;
+
     @NotEmpty(message = "{validation.assessorprofiledeclarationform.role.required}")
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String role;
 
     @Size(max = 5000, message = "{validation.field.too.many.characters}")

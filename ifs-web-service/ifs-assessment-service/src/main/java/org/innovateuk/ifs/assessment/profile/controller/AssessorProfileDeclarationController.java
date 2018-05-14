@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclaratio
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -130,8 +131,8 @@ public class AssessorProfileDeclarationController {
         }
     }
 
-    private List<AffiliationResource> populateAffiliationsFromForm(AssessorProfileDeclarationForm form) {
-        return combineLists(
+    private AffiliationListResource populateAffiliationsFromForm(AssessorProfileDeclarationForm form) {
+        return new AffiliationListResource(combineLists(
                 combineLists(
                         getAppointments(form),
                         getFamilyAffiliations(form)
@@ -140,7 +141,7 @@ public class AssessorProfileDeclarationController {
                 getProfessionalAffiliations(form),
                 getFinancialInterests(form),
                 getFamilyFinancialInterests(form)
-        );
+        ));
     }
 
     private AffiliationResource getPrincipalEmployer(AssessorProfileDeclarationForm form) {
