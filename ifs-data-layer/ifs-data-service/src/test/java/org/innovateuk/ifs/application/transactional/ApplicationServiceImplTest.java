@@ -6,29 +6,40 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
+import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.user.builder.OrganisationBuilder;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -78,7 +89,25 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Mock
-    private ApplicationFinanceHandler applicationFinanceHandlerMock;
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private ApplicationMapper applicationMapperMock;
+
+    @Mock
+    private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
 
     private FormInput formInput;
     private FormInputType formInputType;

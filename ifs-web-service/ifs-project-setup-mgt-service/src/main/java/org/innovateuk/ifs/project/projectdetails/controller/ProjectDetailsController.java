@@ -116,7 +116,7 @@ public class ProjectDetailsController {
          long applicationId = projectRestService.getProjectById(projectId).getSuccess().getApplication();
          applicationRestService.withdrawApplication(applicationId);
 
-        return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/unsuccessful");
+        return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/previous");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {

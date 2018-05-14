@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.user.security;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -13,6 +15,9 @@ import static org.mockito.Mockito.when;
  * Test for the lookup strategies employed by the permission system to look up entities based on keys
  */
 public class UserLookupStrategiesTest extends BaseUnitTestMocksTest {
+
+    @Mock
+    private UserMapper userMapperMock;
 
     @InjectMocks
     private UserLookupStrategies lookup;

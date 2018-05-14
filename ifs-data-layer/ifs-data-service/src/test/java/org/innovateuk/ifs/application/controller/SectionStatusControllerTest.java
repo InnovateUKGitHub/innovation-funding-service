@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.form.domain.Section;
 import org.junit.Test;
@@ -33,6 +34,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SectionStatusControllerTest extends BaseControllerMockMVCTest<SectionStatusController> {
+
+    @Mock
+    private SectionStatusService sectionStatusServiceMock;
 
     @Mock
     private BindingResult bindingResult;

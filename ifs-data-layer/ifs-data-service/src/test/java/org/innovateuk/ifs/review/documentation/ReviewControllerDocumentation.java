@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.review.controller.ReviewController;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.transactional.ReviewService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.List;
@@ -29,6 +31,9 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
     private static final long competitionId = 2L;
     private static final long userId = 3L;
     private static final long reviewId = 4L;
+
+    @Mock
+    private ReviewService reviewServiceMock;
 
     @Override
     public ReviewController supplyControllerUnderTest() {

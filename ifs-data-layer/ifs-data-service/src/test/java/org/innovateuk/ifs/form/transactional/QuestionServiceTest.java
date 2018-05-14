@@ -2,12 +2,18 @@ package org.innovateuk.ifs.form.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
+import org.innovateuk.ifs.form.mapper.SectionMapper;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
@@ -51,7 +57,25 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
     protected QuestionService questionService = new QuestionServiceImpl();
 
     @Mock
+    private QuestionRepository questionRepositoryMock;
+
+    @Mock
+    private QuestionMapper questionMapperMock;
+
+    @Mock
     private SectionService sectionService;
+
+    @Mock
+    private SectionRepository sectionRepositoryMock;
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private SectionMapper sectionMapperMock;
 
     @Mock
     private UserService userService;
