@@ -187,7 +187,7 @@ public class ApplicationQuestionFileSaverTest {
         assertTrue(result.hasFieldErrors("formInput[1000]"));
 
         Error fieldError = result.getFieldErrors("formInput[1000]").get(0);
-        Error expectedError = fieldError("formInput[1000]", "application/json", expectedErrorKey);
+        Error expectedError = fieldError("formInput[1000]", "application/json", expectedErrorKey, simpleJoiner(validMediaTypesFromDataLayer, ", "));
         assertEquals(expectedError, fieldError);
     }
 }
