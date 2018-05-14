@@ -2,16 +2,12 @@ bootRepackage {
     enabled = false
 }
 
-configurations {
-    providedRuntime
-}
 
 dependencies {
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
     compile "org.thymeleaf:thymeleaf-spring4:${thymeleafVersion}"
     compile "org.thymeleaf.extras:thymeleaf-extras-java8time"
     compile "org.springframework.boot:spring-boot-starter-security"
-    providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.springframework.boot:spring-boot-starter-aop"
