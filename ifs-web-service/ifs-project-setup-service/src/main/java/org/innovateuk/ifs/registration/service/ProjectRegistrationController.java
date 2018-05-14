@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -26,7 +25,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
 
 @Controller
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectRegistrationController.class)
+@SecuredBySpring(value = "Controller",
+        description = "All invitees with a valid hash are able to register and create an account on the invited project",
+        securedType = ProjectRegistrationController.class)
 @PreAuthorize("permitAll")
 public class ProjectRegistrationController {
 
@@ -40,14 +41,13 @@ public class ProjectRegistrationController {
     private CookieUtil cookieUtil;
 
     private final static String EMAIL_FIELD_NAME = "email";
-    public static final String REGISTER_MAPPING = "/registration/register";
+    private static final String REGISTER_MAPPING = "/registration/register";
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
     private static final String REGISTRATION_REGISTER_VIEW = "registration/register";
 
     @GetMapping(REGISTER_MAPPING)
     public String registerForm(Model model,
                                HttpServletRequest request,
-                               HttpServletResponse response,
                                UserResource loggedInUser) {
         String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
@@ -71,10 +71,16 @@ public class ProjectRegistrationController {
         String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
+            if (bindingResult.hasErrors()) {
+                model.addAttribute("failureMessageKeys", bindingResult.getAllErrors());
+                return restSuccess(REGISTRATION_REGISTER_VIEW);
+            }
+
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
             }
+
             if (emailExists(registrationForm.getEmail())) {
                 ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
                 return restSuccess(REGISTRATION_REGISTER_VIEW);

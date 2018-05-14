@@ -4,10 +4,15 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.Map;
@@ -25,6 +30,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationFundingDecisionControllerTest extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
+
+    @Mock
+    private ApplicationFundingService applicationFundingServiceMock;
+
+    @Mock
+    private ApplicationService applicationServiceMock;
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    @Mock
+    private ProjectService projectServiceMock;
 
     @Override
     protected ApplicationFundingDecisionController supplyControllerUnderTest() {

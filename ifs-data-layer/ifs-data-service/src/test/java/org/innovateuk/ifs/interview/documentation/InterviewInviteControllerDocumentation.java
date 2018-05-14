@@ -2,9 +2,11 @@ package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.interview.controller.InterviewInviteController;
+import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -50,6 +52,10 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
     protected InterviewInviteController supplyControllerUnderTest() {
         return new InterviewInviteController();
     }
+
+
+    @Mock
+    private InterviewInviteService interviewInviteServiceMock;
 
     @Test
     public void getAvailableAssessors() throws Exception {

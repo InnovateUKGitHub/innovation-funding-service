@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.project.otherdocuments.documentation;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
+import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +25,13 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OtherDocumentsControllerDocumentation extends BaseControllerMockMVCTest<OtherDocumentsController> {
+public class OtherDocumentsControllerDocumentation extends BaseFileControllerMockMVCTest<OtherDocumentsController> {
+
+    @Mock
+    private OtherDocumentsService otherDocumentsServiceMock;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationServiceMock;
 
     @Override
     protected OtherDocumentsController supplyControllerUnderTest() {
@@ -36,7 +45,7 @@ public class OtherDocumentsControllerDocumentation extends BaseControllerMockMVC
                 .withUID("123abc")
                 .build();
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+        when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
                 .andExpect(status().isOk())
@@ -55,7 +64,7 @@ public class OtherDocumentsControllerDocumentation extends BaseControllerMockMVC
                 .withUID("123abc")
                 .build();
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+        when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
                 .andExpect(status().isOk())
