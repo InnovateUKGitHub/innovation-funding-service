@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.interview.controller.InterviewAllocationController;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
+import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,6 +31,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InterviewAllocationControllerDocumentation extends BaseControllerMockMVCTest<InterviewAllocationController> {
+
+    @Mock
+    private InterviewAllocationService interviewAllocationServiceMock;
 
     @Override
     protected InterviewAllocationController supplyControllerUnderTest() {
