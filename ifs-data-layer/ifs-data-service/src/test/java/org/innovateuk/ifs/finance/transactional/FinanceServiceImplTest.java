@@ -9,10 +9,15 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
+import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -48,6 +53,22 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
 
     @Mock
     private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
+
+    @Mock
+    private ApplicationFinanceRepository applicationFinanceRepositoryMock;
+
+    @Mock
+    private ApplicationFinanceMapper applicationFinanceMapperMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private OrganisationFinanceDelegate organisationFinanceDelegateMock;
+
+    @Mock
+    private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
+
 
     @Test
     public void testFindApplicationFinanceByApplicationIdAndOrganisation() {

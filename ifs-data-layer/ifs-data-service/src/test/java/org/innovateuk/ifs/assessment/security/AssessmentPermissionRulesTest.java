@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
@@ -38,6 +40,9 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Autowired
     public AssessmentMapper assessmentMapper;
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
 
     @Override
     protected AssessmentPermissionRules supplyPermissionRulesUnderTest() {

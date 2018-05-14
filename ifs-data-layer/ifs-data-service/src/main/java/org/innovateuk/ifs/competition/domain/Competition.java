@@ -114,7 +114,7 @@ public class Competition implements ProcessActivity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
-    private TermsAndConditions termsAndConditions;
+    private GrantTermsAndConditions termsAndConditions;
 
     private boolean locationPerPartner = true;
 
@@ -122,7 +122,14 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate, TermsAndConditions termsAndConditions) {
+    public Competition(Long id,
+                       List<Question> questions,
+                       List<Section> sections,
+                       String name,
+                       ZonedDateTime startDate,
+                       ZonedDateTime endDate,
+                       ZonedDateTime registrationDate,
+                       GrantTermsAndConditions termsAndConditions) {
         this.id = id;
         this.questions = questions;
         this.sections = sections;
@@ -672,11 +679,11 @@ public class Competition implements ProcessActivity {
         this.assessorFinanceView = assessorFinanceView;
     }
 
-    public TermsAndConditions getTermsAndConditions() {
+    public GrantTermsAndConditions getTermsAndConditions() {
         return termsAndConditions;
     }
 
-    public void setTermsAndConditions(TermsAndConditions termsAndConditions) {
+    public void setTermsAndConditions(GrantTermsAndConditions termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
     }
 

@@ -107,11 +107,10 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 .andExpect(view().name("project/bank-details"));
     }
 
-
     @Test
-    public void testsubmitBankDetailsWithAddressToBeSameAsRegistered() throws Exception {
+    public void testSubmitBankDetailsWithAddressToBeSameAsRegistered() throws Exception {
         OrganisationResource organisationResource = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().withOrganisationList(Collections.singletonList(organisationResource.getId())).build();
+        AddressResource addressResource = newAddressResource().build();
         AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
         organisationResource.setAddresses(Collections.singletonList(organisationAddressResource));
@@ -149,9 +148,9 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
     }
 
     @Test
-    public void testsubmitBankDetailsWhenAddressResourceIsNull() throws Exception {
+    public void testSubmitBankDetailsWhenAddressResourceIsNull() throws Exception {
 
-        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+        ProjectResource projectResource = setUpMockingForSubmitBankDetails();
 
         mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -167,9 +166,9 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
     }
 
     @Test
-    public void testsubmitBankDetailsWhenInvalidAccountDetails() throws Exception {
+    public void testSubmitBankDetailsWhenInvalidAccountDetails() throws Exception {
 
-        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+        ProjectResource projectResource = setUpMockingForSubmitBankDetails();
 
         MvcResult result = mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -193,9 +192,9 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
     }
 
     @Test
-    public void testsubmitBankDetailsWhenInvalidSortCode() throws Exception {
+    public void testSubmitBankDetailsWhenInvalidSortCode() throws Exception {
 
-        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+        ProjectResource projectResource = setUpMockingForSubmitBankDetails();
 
         MvcResult result = mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -218,7 +217,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
 
     @Test
     public void testSearchAddressWithoutPostCode() throws Exception {
-        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+        ProjectResource projectResource = setUpMockingForSubmitBankDetails();
 
         mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -237,7 +236,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
 
     }
 
-    private ProjectResource setUpMockingForsubmitBankDetails() {
+    private ProjectResource setUpMockingForSubmitBankDetails() {
 
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.documentation;
 import org.innovateuk.ifs.address.builder.AddressResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -15,8 +14,7 @@ public class AddressDocs {
             fieldWithPath("addressLine3").description("third addressLine"),
             fieldWithPath("town").description("fourth addressLine"),
             fieldWithPath("county").description("county where requested address is located"),
-            fieldWithPath("postcode").description("postcode of the requested address"),
-            fieldWithPath("organisations").description("Ids of the organisation addresses")
+            fieldWithPath("postcode").description("postcode of the requested address")
     };
 
     public static final AddressResourceBuilder addressResourceBuilder = newAddressResource()
@@ -26,7 +24,5 @@ public class AddressDocs {
             .withAddressLine3("addressLine3")
             .withTown("regular town")
             .withCounty("regular county")
-            .withPostcode("PD65OQ")
-            .withOrganisationList(asList(1L, 2L, 3L));
-
+            .withPostcode("PD65OQ");
 }

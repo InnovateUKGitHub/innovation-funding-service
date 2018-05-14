@@ -3,7 +3,9 @@ package org.innovateuk.ifs.user.builder;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -35,7 +37,8 @@ public class UserResourceBuilderTest {
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
         Long expectedEthnicity = 1L;
-        Long expectedProfile = 1L;
+        Long expectedProfileId = 1L;
+        Set<Long> expectedTermsAndConditionsIds = new LinkedHashSet<>(asList(1L, 2L));
 
         UserResource user = newUserResource()
                 .withId(expectedId)
@@ -52,7 +55,8 @@ public class UserResourceBuilderTest {
                 .withGender(expectedGender)
                 .withDisability(expectedDisability)
                 .withEthnicity(expectedEthnicity)
-                .withProfile(expectedProfile)
+                .withProfile(expectedProfileId)
+                .withTermsAndConditionsIds(expectedTermsAndConditionsIds)
                 .build();
 
         assertEquals(expectedId, user.getId());
@@ -69,6 +73,8 @@ public class UserResourceBuilderTest {
         assertEquals(expectedGender, user.getGender());
         assertEquals(expectedDisability, user.getDisability());
         assertEquals(expectedEthnicity, user.getEthnicity());
+        assertEquals(expectedProfileId, user.getProfileId());
+        assertEquals(expectedTermsAndConditionsIds, user.getTermsAndConditionsIds());
     }
 
     @Test
@@ -87,7 +93,10 @@ public class UserResourceBuilderTest {
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Long[] expectedEthnicities = {1L, 2L};
-        Long[] expectedProfiles = {1L, 2L};
+        Long[] expectedProfileIds = {1L, 2L};
+        Set<Long>[] expectedTermsAndConditionsIds = new Set[] {(new LinkedHashSet<>(asList(1L, 2L))), new
+                LinkedHashSet<>(asList(3L, 4L))
+        };
 
         List<UserResource> users = newUserResource()
                 .withId(expectedIds)
@@ -104,7 +113,8 @@ public class UserResourceBuilderTest {
                 .withGender(expectedGenders)
                 .withDisability(expectedDisabilities)
                 .withEthnicity(expectedEthnicities)
-                .withProfile(expectedProfiles)
+                .withProfile(expectedProfileIds)
+                .withTermsAndConditionsIds(expectedTermsAndConditionsIds)
                 .build(2);
 
         UserResource first = users.get(0);
@@ -123,7 +133,8 @@ public class UserResourceBuilderTest {
         assertEquals(expectedGenders[0], first.getGender());
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
-        assertEquals(expectedProfiles[0], first.getProfileId());
+        assertEquals(expectedProfileIds[0], first.getProfileId());
+        assertEquals(expectedTermsAndConditionsIds[0], first.getTermsAndConditionsIds());
 
         UserResource second = users.get(1);
 
@@ -141,7 +152,8 @@ public class UserResourceBuilderTest {
         assertEquals(expectedGenders[1], second.getGender());
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
-        assertEquals(expectedProfiles[1], second.getProfileId());
+        assertEquals(expectedProfileIds[1], second.getProfileId());
+        assertEquals(expectedTermsAndConditionsIds[1], second.getTermsAndConditionsIds());
     }
 
 }

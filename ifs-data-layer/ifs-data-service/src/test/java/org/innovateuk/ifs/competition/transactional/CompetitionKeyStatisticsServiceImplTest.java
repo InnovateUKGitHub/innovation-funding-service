@@ -3,6 +3,13 @@ package org.innovateuk.ifs.competition.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.category.repository.CategoryRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
@@ -12,6 +19,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.EnumSet;
@@ -38,6 +46,23 @@ import static org.mockito.Mockito.when;
 
 public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest<CompetitionKeyStatisticsServiceImpl> {
 
+    @Mock
+    private AssessmentInviteRepository assessmentInviteRepositoryMock;
+
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
 
     @Override
     protected CompetitionKeyStatisticsServiceImpl supplyServiceUnderTest() {

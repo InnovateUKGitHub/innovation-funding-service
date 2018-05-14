@@ -17,6 +17,11 @@ IFS.core.conditionalForms = (function () {
         if (dataTargetContainer.attr('data-target-clear-form')) {
           targetClearForm = true
         }
+        // for clearing errors from the form elements in the hidden panel
+        var targetClearValidation = false
+        if (dataTargetContainer.attr('data-target-clear-validation')) {
+          targetClearValidation = true
+        }
         // for having inverted show/hide
         var isInverted = false
         if (dataTargetContainer.attr('data-target-inverted')) {
@@ -25,16 +30,16 @@ IFS.core.conditionalForms = (function () {
         if (inputEl && dataTarget) {
           var groupName = inputEl.attr('name')
           // execute on pageload
-          IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, isInverted)
+          IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, targetClearValidation, isInverted)
 
           // execute on click
           jQuery('input[name="' + groupName + '"]').on('click', function () {
-            IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, isInverted)
+            IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, targetClearValidation, isInverted)
           })
         }
       })
     },
-    toggleVisibility: function (input, target, clearForm, isInverted) {
+    toggleVisibility: function (input, target, clearForm, clearValidation, isInverted) {
       target = jQuery(target)
       var radioStatus = input.is(':checked')
       if (isInverted) {
@@ -45,11 +50,13 @@ IFS.core.conditionalForms = (function () {
       } else {
         target.attr('aria-hidden', 'true')
         if (clearForm) {
-          var formGroup = target.find('.form-group')
           target.find('input[type=checkbox]').prop('checked', false)
           target.find('textarea, input[type=text]').val('')
           target.find('.editor').html('')
+        }
+        if (clearForm || clearValidation) {
           // clear validation
+          var formGroup = target.find('.form-group')
           formGroup.each(function () {
             var field = jQuery(this).find('input, textarea')
             var requiredAttribute = 'required'

@@ -2,8 +2,10 @@ package org.innovateuk.ifs.profile.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
@@ -20,6 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileController> {
+
+    @Mock
+    private ProfileService profileServiceMock;
 
     @Override
     protected ProfileController supplyControllerUnderTest() {
