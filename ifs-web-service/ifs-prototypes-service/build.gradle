@@ -2,9 +2,6 @@ bootRun {
     addResources = false
 }
 
-configurations {
-    providedRuntime
-}
 project.version = prototypesServiceVersion
 tagDocker.tag = prototypesServiceVersion
 osStageRemote.tag = prototypesServiceVersion
