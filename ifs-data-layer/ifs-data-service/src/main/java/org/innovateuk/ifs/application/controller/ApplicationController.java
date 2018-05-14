@@ -132,7 +132,6 @@ public class ApplicationController {
         return applicationService.withdrawApplication(applicationId).toPostResponse();
     }
 
-
     // IFS-43 added to ease future expansion as application team members are expected to have access to the application team page, but the location of links to that page (enabled by tis method) is as yet unknown
     @GetMapping("/showApplicationTeam/{applicationId}/{userId}")
     public RestResult<Boolean> showApplicationTeam(@PathVariable("applicationId") final Long applicationId,
