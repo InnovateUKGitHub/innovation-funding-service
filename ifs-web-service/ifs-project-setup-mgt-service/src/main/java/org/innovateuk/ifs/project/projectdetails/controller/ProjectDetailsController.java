@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.RedirectUtils.redirectToCompetitionManagementService;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -111,12 +112,17 @@ public class ProjectDetailsController {
     @SecuredBySpring(value = "WITHDRAW_PROJECT", description = "Only the IFS administrator users are able to withdraw projects")
     @PostMapping("/{projectId}/withdraw")
     public String withdrawProject(@PathVariable("competitionId") final long competitionId,
-                                  @PathVariable("projectId") final long projectId, HttpServletRequest request) {
-         projectRestService.withdrawProject(projectId).getSuccess();
-         long applicationId = projectRestService.getProjectById(projectId).getSuccess().getApplication();
-         applicationRestService.withdrawApplication(applicationId);
+                                  @PathVariable("projectId") final long projectId,
+                                  HttpServletRequest request) {
 
-        return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/previous");
+        projectRestService.withdrawProject(projectId)
+                .andOnSuccess(() -> {
+                    ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
+                    applicationRestService.withdrawApplication(project.getApplication());
+                });
+
+        return redirectToCompetitionManagementService(request,
+                "competition/" + competitionId + "/applications/previous");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
