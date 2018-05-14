@@ -12,9 +12,9 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
-    <div th:if="${#fields.hasErrors('${competitionSetupForm.question.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm.question)" />
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='heading-xlarge'" />

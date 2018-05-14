@@ -640,8 +640,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         ArrayList<String> monthsRow = new ArrayList<>();
         monthsRow.add(CSV_MONTH);
         monthsRow.add(EMPTY_CELL);
-        spendProfileTableResource.getMonths().forEach(
-                value -> monthsRow.add(value.getLocalDate().toString()));
+        IntStream.rangeClosed(1, spendProfileTableResource.getMonths().size()).forEach(monthNumber -> monthsRow.add("Month " + monthNumber));
         monthsRow.add(CSV_TOTAL);
         monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
 

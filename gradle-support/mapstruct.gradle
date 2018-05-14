@@ -1,0 +1,55 @@
+apply plugin: 'java'
+
+configurations {
+    mapstruct
+}
+
+dependencies {
+    compile 'org.mapstruct:mapstruct:1.2.0.Final'
+    mapstruct 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+}
+
+
+sourceSets {
+    main {
+        ext.originalJavaSrcDirs = java.srcDirs
+        java.srcDir "${generatedMapperSourcesDir}"
+    }
+}
+
+
+repositories {
+    jcenter()
+}
+
+task generateMainMapperClasses(type: JavaCompile) {
+    ext.aptDumpDir = file("build/tmp/apt/mapstruct")
+    destinationDir = aptDumpDir
+
+    classpath = compileJava.classpath + configurations.mapstruct
+    source = sourceSets.main.originalJavaSrcDirs
+    ext.sourceDestDir = file generatedMapperSourcesDir
+
+    options.define(
+            compilerArgs: [
+                    "-nowarn",
+                    "-proc:only",
+                    "-encoding", "UTF-8",
+                    "-processor", "org.mapstruct.ap.MappingProcessor",
+                    "-s", sourceDestDir.absolutePath,
+                    "-source", 1.8,
+                    "-target", 1.8,
+            ]
+    );
+
+    inputs.dir source
+    outputs.dir generatedMapperSourcesDir
+    doFirst {
+        sourceDestDir.mkdirs()
+    }
+    doLast {
+        aptDumpDir.delete()
+    }
+}
+
+compileJava.dependsOn generateMainMapperClasses
