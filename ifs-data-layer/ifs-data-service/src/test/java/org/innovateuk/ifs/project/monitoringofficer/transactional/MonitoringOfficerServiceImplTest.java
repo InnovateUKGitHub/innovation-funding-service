@@ -3,13 +3,18 @@ package org.innovateuk.ifs.project.monitoringofficer.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
+import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -25,6 +30,18 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
     private MonitoringOfficerResource monitoringOfficerResource;
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
+
+    @Mock
+    private ProjectRepository projectRepositoryMock;
+
+    @Mock
+    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+
+    @Mock
+    private MonitoringOfficerMapper monitoringOfficerMappeMockr;
+
+    @Mock
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
 
     @Before
     public void setUp() {

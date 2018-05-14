@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.question.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
@@ -43,6 +44,9 @@ import static org.mockito.Mockito.*;
  * Tests the QuestionCompetitionServiceImpl with mocked repositories/mappers.
  */
 public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest<QuestionSetupCompetitionServiceImpl> {
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
 
     @Override
     protected QuestionSetupCompetitionServiceImpl supplyServiceUnderTest() {

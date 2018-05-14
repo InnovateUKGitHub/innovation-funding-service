@@ -5,10 +5,14 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.domain.Post;
+import org.innovateuk.ifs.threads.mapper.NoteMapper;
+import org.innovateuk.ifs.threads.mapper.PostMapper;
+import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -23,6 +27,15 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private FinanceCheckNotesServiceImpl service;
+
+    @Mock
+    private NoteRepository noteRepositoryMock;
+
+    @Mock
+    private NoteMapper noteMapper;
+
+    @Mock
+    private PostMapper postMapper;
 
     @Test
     public void test_findOne() throws Exception {

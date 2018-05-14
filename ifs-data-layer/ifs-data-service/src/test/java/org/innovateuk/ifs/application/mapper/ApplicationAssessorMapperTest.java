@@ -3,14 +3,19 @@ package org.innovateuk.ifs.application.mapper;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.EnumSet;
 
@@ -38,6 +43,18 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private ApplicationAssessorMapperImpl applicationAssessorMapper;
+
+    @Mock
+    private ProfileRepository profileRepositoryMock;
+
+    @Mock
+    private InnovationAreaMapper innovationAreaMapperMock;
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
 
     @Test
     public void mapToResource() {

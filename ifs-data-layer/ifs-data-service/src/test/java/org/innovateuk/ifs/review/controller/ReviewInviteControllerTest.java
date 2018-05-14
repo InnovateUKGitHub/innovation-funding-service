@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -42,6 +44,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<ReviewInviteController> {
 
     private static final long COMPETITION_ID = 1L;
+
+    @Mock
+    private ReviewInviteService reviewInviteServiceMock;
 
     @Override
     protected ReviewInviteController supplyControllerUnderTest() {

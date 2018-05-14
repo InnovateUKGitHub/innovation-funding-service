@@ -17,16 +17,16 @@ public class GuidanceRowForm {
     public interface GuidanceRowViewGroup {
     }
 
-    @NotEmpty(message = "{validation.applicationquestionform.justification.required}", groups=GuidanceRowViewGroup.class)
+    @NotEmpty(message = "{validation.field.must.not.be.blank}", groups=GuidanceRowViewGroup.class)
     @Size(max=5000, message = "{validation.applicationquestionform.justification.max}", groups=GuidanceRowViewGroup.class)
     private String justification;
 
     @Min(value=0, message = "{validation.applicationquestionform.scorefrom.min}", groups=GuidanceRowViewGroup.class)
-    @NotNull(message = "{validation.applicationquestionform.scorefrom.required}", groups=GuidanceRowViewGroup.class)
+    @NotNull(message = "{validation.field.must.not.be.blank}", groups=GuidanceRowViewGroup.class)
     private Integer scoreFrom;
 
     @Min(value=0, message = "{validation.applicationquestionform.scoreto.min}", groups=GuidanceRowViewGroup.class)
-    @NotNull(message = "{validation.applicationquestionform.scoreto.required}", groups=GuidanceRowViewGroup.class)
+    @NotNull(message = "{validation.field.must.not.be.blank}", groups=GuidanceRowViewGroup.class)
     private Integer scoreTo;
 
     private Integer priority;
