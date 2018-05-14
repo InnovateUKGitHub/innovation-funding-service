@@ -9,11 +9,6 @@ if (project.hasProperty("profile")) {
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 
 
-configurations {
-    providedRuntime
-    clientCompile
-}
-
 ext {
     javaLanguageLevel = 1.8
 }

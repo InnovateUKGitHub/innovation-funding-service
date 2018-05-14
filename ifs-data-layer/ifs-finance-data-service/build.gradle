@@ -2,12 +2,11 @@ def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/mapstruct.gradle")
+
 
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
-configurations {
-    providedRuntime
-}
 
 project.version = financeDataServiceVersion
 tagDocker.tag = financeDataServiceVersion
@@ -39,17 +38,6 @@ buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
-sourceSets {
-    client {
-        java {
-            srcDir 'src/main/java'
-        }
-        main {
-            ext.originalJavaSrcDirs = java.srcDirs
-            java.srcDir "${generatedMapperSourcesDir}"
-        }
-    }
-}
 
 bootRun {
     addResources = false
@@ -69,15 +57,10 @@ prepareDockerBaseInput {
 
 }
 
-configurations {
-    mapstruct
-}
-
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'mysql:mysql-connector-java'
-    compile 'org.mapstruct:mapstruct:1.2.0.Final'
-    mapstruct 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
@@ -132,36 +115,5 @@ task asciidoctorOnly(type: Test) {
     finalizedBy asciidoctor
 }
 
-task generateMainMapperClasses(type: JavaCompile) {
-    ext.aptDumpDir = file("build/tmp/apt/mapstruct")
-    destinationDir = aptDumpDir
-
-    classpath = compileJava.classpath + configurations.mapstruct
-    source = sourceSets.main.originalJavaSrcDirs
-    ext.sourceDestDir = file generatedMapperSourcesDir
-
-    options.define(
-            compilerArgs: [
-                    "-nowarn",
-                    "-proc:only",
-                    "-encoding", "UTF-8",
-                    "-processor", "org.mapstruct.ap.MappingProcessor",
-                    "-s", sourceDestDir.absolutePath,
-                    "-source", 1.8,
-                    "-target", 1.8,
-            ]
-    );
-
-    inputs.dir source
-    outputs.dir generatedMapperSourcesDir
-    doFirst {
-        sourceDestDir.mkdirs()
-    }
-    doLast {
-        aptDumpDir.delete()
-    }
-}
-
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
-compileJava.dependsOn generateMainMapperClasses

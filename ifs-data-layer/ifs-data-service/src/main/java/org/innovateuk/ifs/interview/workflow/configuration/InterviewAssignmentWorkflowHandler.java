@@ -52,6 +52,10 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
         return fireEvent(responseMessage(interviewAssignment, responseOutcome), interviewAssignment);
     }
 
+    public boolean withdrawResponse(InterviewAssignment interviewAssignment) {
+        return fireEvent(withdrawResponseMessage(interviewAssignment), interviewAssignment);
+    }
+
     @Override
     protected ProcessRepository<InterviewAssignment> getProcessRepository() {
         return interviewAssignmentRepository;
@@ -85,6 +89,10 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
     private MessageBuilder<InterviewAssignmentEvent> responseMessage(InterviewAssignment interviewAssignment, InterviewAssignmentResponseOutcome responseOutcome) {
         return interviewAssignmentMessage(interviewAssignment, InterviewAssignmentEvent.RESPOND)
                 .setHeader("response", responseOutcome);
+    }
+
+    private MessageBuilder<InterviewAssignmentEvent> withdrawResponseMessage(InterviewAssignment interviewAssignment) {
+        return interviewAssignmentMessage(interviewAssignment, InterviewAssignmentEvent.WITHDRAW_RESPONSE);
     }
 
     private static MessageBuilder<InterviewAssignmentEvent> interviewAssignmentMessage(InterviewAssignment interviewAssignment, InterviewAssignmentEvent event) {
