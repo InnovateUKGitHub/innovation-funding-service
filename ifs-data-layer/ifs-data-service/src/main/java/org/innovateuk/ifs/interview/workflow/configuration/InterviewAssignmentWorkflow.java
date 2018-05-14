@@ -71,6 +71,5 @@ public class InterviewAssignmentWorkflow extends StateMachineConfigurerAdapter<I
                 .source(SUBMITTED_FEEDBACK_RESPONSE).target(AWAITING_FEEDBACK_RESPONSE)
                 .event(WITHDRAW_RESPONSE)
                 .action(withdrawResponseInterviewAssignmentAction);
-
     }
 }
