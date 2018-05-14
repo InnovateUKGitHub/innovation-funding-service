@@ -115,7 +115,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public RestResult<Void> withdrawApplication(long applicationId) {
-        return postWithRestResult(applicationRestURL + "/withdraw/" + applicationId, Void.class);
+        return postWithRestResult(applicationRestURL + applicationId + "/withdraw/", Void.class);
     }
 
     @Override

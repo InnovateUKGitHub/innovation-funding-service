@@ -95,7 +95,7 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
                 .and()
                 .withExternal()
                     .source(ApplicationState.APPROVED)
-                    .event(ApplicationEvent.WITHDRAW_APPLICATION)
+                    .event(ApplicationEvent.WITHDRAW)
                     .target(ApplicationState.WITHDRAWN);
     }
 }

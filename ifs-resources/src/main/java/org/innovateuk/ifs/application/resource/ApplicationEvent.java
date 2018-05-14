@@ -10,7 +10,7 @@ public enum ApplicationEvent implements ProcessEvent {
     MARK_INELIGIBLE("mark-ineligible"),
     INFORM_INELIGIBLE("inform-ineligible"),
     REINSTATE_INELIGIBLE("reinstate-ineligible"),
-    WITHDRAW_APPLICATION("withdraw-application");
+    WITHDRAW("withdraw-application");
 
     private final String event;
 

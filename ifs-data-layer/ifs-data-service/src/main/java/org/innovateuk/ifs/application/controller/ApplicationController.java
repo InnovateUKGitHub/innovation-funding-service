@@ -127,7 +127,7 @@ public class ApplicationController {
         return applicationNotificationService.informIneligible(applicationId, applicationIneligibleSendResource).toPostResponse();
     }
 
-    @PostMapping("/withdraw/{applicationId}")
+    @PostMapping("/{applicationId}/withdraw")
     public RestResult<Void> withdrawApplication(@PathVariable("applicationId") final long applicationId) {
         return applicationService.withdrawApplication(applicationId).toPostResponse();
     }

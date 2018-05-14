@@ -288,7 +288,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.withdrawApplication(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/application/withdraw/{applicationId}", applicationId)
+        mockMvc.perform(post("/application/{applicationId}/withdraw", applicationId)
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",

@@ -200,7 +200,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     public void withdrawApplication() {
         long applicationId = 1L;
 
-        setupPostWithRestResultExpectations(applicationRestURL + "/withdraw/" + applicationId, Void.class, null, null, OK);
+        setupPostWithRestResultExpectations(applicationRestURL + applicationId + "/withdraw/", Void.class, null, null, OK);
         RestResult<Void> result = service.withdrawApplication(applicationId);
 
         assertTrue(result.isSuccess());

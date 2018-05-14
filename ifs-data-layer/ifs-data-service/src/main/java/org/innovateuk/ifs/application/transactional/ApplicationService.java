@@ -43,7 +43,7 @@ public interface ApplicationService {
 
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value="WITHDRAW_APPLICATION", description = "Only the IFS administrators have permission to withdraw a project")
+    @SecuredBySpring(value="WITHDRAW", description = "Only the IFS administrators have permission to withdraw an application")
     ServiceResult<Void> withdrawApplication(long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
