@@ -39,7 +39,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     }
 
     @Test
-    public void getAllocateApplicationsOverview() throws Exception {
+    public void getAllocateApplicationsOverview() {
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
 
