@@ -11,11 +11,11 @@ public class GuidanceRowResource {
 
     private Long id;
 
-    @NotEmpty(message = "{validation.applicationquestionform.subject.required}", groups = GuidanceRowResource.GuidanceRowGroup.class)
+    @NotEmpty(message = "{validation.field.must.not.be.blank}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     @Size(max=255, message = "{validation.applicationquestionform.subject.max}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     private String subject;
 
-    @NotEmpty(message = "{validation.applicationquestionform.justification.required}", groups = GuidanceRowResource.GuidanceRowGroup.class)
+    @NotEmpty(message = "{validation.field.must.not.be.blank}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     @Size(max=5000, message = "{validation.applicationquestionform.justification.max}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     private String justification;
 
