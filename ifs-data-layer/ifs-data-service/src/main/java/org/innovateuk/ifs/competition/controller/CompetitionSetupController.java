@@ -35,7 +35,7 @@ public class CompetitionSetupController {
 
     @PutMapping("/{id}/update-competition-initial-details")
     public RestResult<Void> updateCompetitionInitialDetails(@Valid @RequestBody CompetitionResource competitionResource,
-                                                            @PathVariable("id") final Long id) {
+                                                            @PathVariable("id") final long id) {
         CompetitionResource existingCompetitionResource = competitionService.getCompetitionById(id).getSuccess();
         return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource, existingCompetitionResource.getLeadTechnologist()).toPutResponse();
     }

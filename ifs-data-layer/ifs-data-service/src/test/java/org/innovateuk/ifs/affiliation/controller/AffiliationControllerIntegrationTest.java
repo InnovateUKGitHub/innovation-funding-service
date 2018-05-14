@@ -81,7 +81,7 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
                          newAffiliationResource()
                             .withId(null, null)
                             .withAffiliationType(PROFESSIONAL, FAMILY_FINANCIAL)
-                            .withExists(TRUE, TRUE)
+                            .withExists(true, true)
                             .withUser(userId, userId)
                             .build(2)
                  )

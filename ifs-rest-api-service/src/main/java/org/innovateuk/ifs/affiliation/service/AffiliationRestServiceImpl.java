@@ -19,12 +19,12 @@ public class AffiliationRestServiceImpl extends BaseRestService implements Affil
     private String profileRestURL = "/affiliation";
 
     @Override
-    public RestResult<AffiliationListResource> getUserAffiliations(Long userId) {
+    public RestResult<AffiliationListResource> getUserAffiliations(long userId) {
         return getWithRestResult(format("%s/id/%s/getUserAffiliations", profileRestURL, userId), AffiliationListResource.class);
     }
 
     @Override
-    public RestResult<Void> updateUserAffiliations(Long userId, AffiliationListResource affiliations) {
+    public RestResult<Void> updateUserAffiliations(long userId, AffiliationListResource affiliations) {
         return putWithRestResult(format("%s/id/%s/updateUserAffiliations", profileRestURL, userId), affiliations, Void.class);
     }
 }

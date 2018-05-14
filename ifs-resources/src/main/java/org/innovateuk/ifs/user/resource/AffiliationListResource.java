@@ -12,7 +12,7 @@ import java.util.List;
 public class AffiliationListResource {
 
     @Valid
-    List<AffiliationResource> affiliationResourceList;
+    private List<AffiliationResource> affiliationResourceList;
 
     public AffiliationListResource() {
     }
