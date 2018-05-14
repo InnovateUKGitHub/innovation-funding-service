@@ -3,6 +3,7 @@ package org.innovateuk.ifs.form.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -25,6 +26,10 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
     @Mock
     private BindingResult bindingResult;
+
+
+    @Mock
+    private SectionService sectionServiceMock;
 
     @Override
     protected SectionController supplyControllerUnderTest() {

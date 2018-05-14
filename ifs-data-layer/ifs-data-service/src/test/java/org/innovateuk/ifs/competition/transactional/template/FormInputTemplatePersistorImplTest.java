@@ -6,6 +6,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -43,6 +44,9 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
 
     @Mock
     private GuidanceRowTemplatePersistorImpl guidanceRowTemplatePersistorMock;
+
+    @Mock
+    private FormInputRepository formInputRepositoryMock;
 
     @Mock
     private EntityManager entityManagerMock;

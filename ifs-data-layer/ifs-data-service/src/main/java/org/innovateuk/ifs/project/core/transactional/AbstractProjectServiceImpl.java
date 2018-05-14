@@ -120,7 +120,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         boolean locationPresent = project.getPartnerOrganisations().stream()
                 .filter(partnerOrganisation -> partnerOrganisation.getOrganisation().getId().equals(organisation.getId()))
                 .findFirst()
-                .map(partnerOrganisation -> StringUtils.isNotBlank(partnerOrganisation.getPostCode()))
+                .map(partnerOrganisation -> StringUtils.isNotBlank(partnerOrganisation.getPostcode()))
                 .orElse(false);
 
         return locationPresent ? COMPLETE : ACTION_REQUIRED;

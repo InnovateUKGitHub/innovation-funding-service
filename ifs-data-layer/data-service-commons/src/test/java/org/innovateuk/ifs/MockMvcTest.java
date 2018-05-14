@@ -3,6 +3,7 @@ package org.innovateuk.ifs;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.restdocs.JUnitRestDocumentation;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
  *
  * @param <ControllerType>
  */
+@Category(ControllerTest.class)
 abstract public class MockMvcTest<ControllerType> {
 
     protected MockMvc mockMvc;
