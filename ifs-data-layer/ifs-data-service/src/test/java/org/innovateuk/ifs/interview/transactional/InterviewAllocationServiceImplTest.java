@@ -28,9 +28,6 @@ import static org.mockito.Mockito.when;
 public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<InterviewAllocationServiceImpl> {
 
     @Mock
-    private InterviewParticipantRepository interviewParticipantRepositoryMock;
-
-    @Mock
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
 
     @Mock
