@@ -48,18 +48,12 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 
 
 *** Test Cases ***
-User navigates to the Manage interview panel
-    [Documentation]  IFS-2633 IFS-2637
-    [Tags]  MySQL
-    Given the Interview Panel is activated in the db
-    When the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
-    Then the user clicks the button/link   link=Manage interview panel
-    And the user sees the Interview panel page and the Interview links
-
 CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-2778
-    Given the user clicks the button/link   link=Invite assessors
-    When the user clicks the button/link    link=Find
+    [Setup]  the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
+    Given the user clicks the button/link      link=Manage interview panel
+    When the user clicks the button/link       link=Invite assessors
+    And the user clicks the button/link        link=Find
     Then the competition admin invites assessors to the competition
 
 Cancel sending invite returns to the invite tab
@@ -179,17 +173,13 @@ CompAdmin can access the Allocate applications to assessors screen
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    the Interview Panel is activated in the db
     ${today} =  get today short month
     set suite variable  ${today}
 
 the Interview Panel is activated in the db
     Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
-
-the user sees the Interview panel page and the Interview links
-    the user should see the element    jQuery=h1:contains("Manage interview panel")
-    the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
-    #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2783
 
 the competition admin selects the applications and adds them to the invite list
 #compadmin selecting the applications checkbox
