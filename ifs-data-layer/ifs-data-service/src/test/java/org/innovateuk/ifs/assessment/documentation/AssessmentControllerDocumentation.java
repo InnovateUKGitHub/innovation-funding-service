@@ -3,7 +3,10 @@ package org.innovateuk.ifs.assessment.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentController;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -28,6 +31,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest<AssessmentController> {
+
+    @Mock
+    private AssessmentService assessmentServiceMock;
 
     @Override
     protected AssessmentController supplyControllerUnderTest() {

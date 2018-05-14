@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -31,11 +32,17 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
+public class OtherDocumentsControllerTest extends BaseFileControllerMockMVCTest<OtherDocumentsController> {
 
     private static final long projectId = 123L;
     private static final long maxFilesize = 1234L;
     private static final List<String> mediaTypes = singletonList("application/pdf");
+
+    @Mock
+    private OtherDocumentsService otherDocumentsServiceMock;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationServiceMock;
 
     @Mock(name = "fileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
@@ -182,7 +189,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 .header("IFS_AUTH_TOKEN", "123abc");
 
         when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
+        when(userAuthenticationServiceMock.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         mockMvc.perform(mainRequest)
                 .andExpect(status().isOk())

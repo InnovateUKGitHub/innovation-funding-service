@@ -1,10 +1,15 @@
 package org.innovateuk.ifs.finance.handler;
 
+import org.hibernate.validator.constraints.ModCheck;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
+import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
@@ -12,6 +17,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +51,18 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private OrganisationFinanceDelegate organisationFinanceDelegateMock;
+
+    @Mock
+    private ProjectFinanceRepository projectFinanceRepositoryMock;
+
+    @Mock
+    private ProjectFinanceMapper projectFinanceMapperMock;
 
     private Long projectId = 1L;
 

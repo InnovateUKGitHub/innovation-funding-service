@@ -4,8 +4,12 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
+import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.service.OrganisationMatchingServiceImpl;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
@@ -29,6 +33,18 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
 
     @Mock
     private OrganisationMatchingServiceImpl organisationMatchingService;
+
+    @Mock
+    private OrganisationMapper organisationMapperMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private ApplicationInviteService applicationInviteServiceMock;
+
+    @Mock
+    private InviteOrganisationRepository inviteOrganisationRepositoryMock;
 
     protected OrganisationInitialCreationService supplyServiceUnderTest() {
         return new OrganisationInitialCreationServiceImpl();

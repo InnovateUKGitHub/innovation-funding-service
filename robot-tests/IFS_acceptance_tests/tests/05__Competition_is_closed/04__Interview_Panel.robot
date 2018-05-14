@@ -40,6 +40,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3291 Applicant dashboard - View application and assessment feedback
 ...
 ...               IFS-3253 Assign applications to interview panel - Applicant respond to feedback
+...
+...               IFS-3435 Allocate applications to assessors - View
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -182,6 +184,16 @@ Applicant can remove the uploaded response
     Then the user should see the element     jQuery=p:contains("No file currently uploaded") ~ label:contains("+ Upload")
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
+
+CompAdmin can access the Allocate applications to assessors screen
+    [Documentation]  IFS-3435
+    [Tags]
+    Given log in as a different user         &{Comp_admin1_credentials}
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
+    Then the user should see the element     jQuery=a:contains("${assessor_joel}")
+    And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
+    And the user should see the element      jQuery=h1:contains("Allocate applications to assessors")
+    #TODO Further testing of functionality when IFS-3436 is completed
 
 *** Keywords ***
 Custom Suite Setup

@@ -4,12 +4,20 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
+import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
+import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -27,6 +35,27 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private final CategoryService categoryService = new CategoryServiceImpl();
+
+    @Mock
+    private InnovationAreaRepository innovationAreaRepositoryMock;
+
+    @Mock
+    private InnovationAreaMapper innovationAreaMapperMock;
+
+    @Mock
+    private QuestionMapper questionMapperMock;
+
+    @Mock
+    private InnovationSectorRepository innovationSectorRepositoryMock;
+
+    @Mock
+    private InnovationSectorMapper innovationSectorMapperMock;
+
+    @Mock
+    private ResearchCategoryRepository researchCategoryRepositoryMock;
+
+    @Mock
+    private ResearchCategoryMapper researchCategoryMapperMock;
 
     @Test
     public void getInnovationAreas() {

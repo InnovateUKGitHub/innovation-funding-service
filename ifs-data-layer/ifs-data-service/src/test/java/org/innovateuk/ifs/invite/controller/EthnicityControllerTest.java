@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.invite.transactional.EthnicityService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -14,6 +16,9 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class EthnicityControllerTest extends BaseControllerMockMVCTest<EthnicityController> {
+
+    @Mock
+    private EthnicityService ethnicityServiceMock;
 
     @Override
     protected EthnicityController supplyControllerUnderTest() {

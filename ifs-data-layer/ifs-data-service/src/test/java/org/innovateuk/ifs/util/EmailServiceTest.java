@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.Map;
@@ -15,6 +17,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class EmailServiceTest extends BaseServiceUnitTest<EmailService> {
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+
+    @Mock
+    private NotificationService notificationServiceMock;
 
     @Override
     protected EmailService supplyServiceUnderTest() {

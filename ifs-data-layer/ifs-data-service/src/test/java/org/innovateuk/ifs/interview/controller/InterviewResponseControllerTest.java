@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.interview.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.transactional.InterviewResponseService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -21,7 +22,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class InterviewResponseControllerTest extends BaseControllerMockMVCTest<InterviewResponseController> {
+public class InterviewResponseControllerTest extends BaseFileControllerMockMVCTest<InterviewResponseController> {
+
+    @Mock
+    private InterviewResponseService interviewResponseService;
 
     @Override
     protected InterviewResponseController supplyControllerUnderTest() {

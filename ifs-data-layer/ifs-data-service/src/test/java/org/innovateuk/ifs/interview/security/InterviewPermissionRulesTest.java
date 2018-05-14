@@ -3,12 +3,14 @@ package org.innovateuk.ifs.interview.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.mapper.InterviewMapper;
+import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
@@ -32,6 +34,9 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
     private UserResource assessorUser;
     private UserResource otherUser;
     private Map<InterviewState, InterviewResource> assessmentInterviews;
+
+    @Mock
+    private InterviewRepository interviewRepositoryMock;
 
     @Autowired
     public InterviewMapper interviewMapper;

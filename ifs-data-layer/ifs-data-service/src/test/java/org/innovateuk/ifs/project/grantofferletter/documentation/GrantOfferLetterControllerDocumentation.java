@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -43,13 +44,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Api documentation for grant offer letter using ASCII docs
  **/
-public class GrantOfferLetterControllerDocumentation extends BaseControllerMockMVCTest<GrantOfferLetterController> {
+public class GrantOfferLetterControllerDocumentation extends BaseFileControllerMockMVCTest<GrantOfferLetterController> {
 
     private static final long maxFilesize = 1234L;
     private static final List<String> mediaTypes = singletonList("application/pdf");
 
     @Mock(name = "fileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
+
+    @Mock
+    private GrantOfferLetterService grantOfferLetterServiceMock;
 
     @Override
     protected GrantOfferLetterController supplyControllerUnderTest() {
