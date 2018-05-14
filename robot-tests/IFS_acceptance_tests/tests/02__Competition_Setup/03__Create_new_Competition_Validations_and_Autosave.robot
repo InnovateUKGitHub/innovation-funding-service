@@ -247,16 +247,6 @@ the user moves focus and waits for autosave
     focus    link=Sign out
     Wait For Autosave
 
-the user leaves all the question field empty
-    Clear Element Text    css=.editor
-    Press Key    css=.editor    \\8
-    focus    jQuery=.button[value="Save and close"]
-    wait for autosave
-    The user enters text to a text field    id=question.title    ${EMPTY}
-    The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
-    The user enters text to a text field    id=question.maxWords    ${EMPTY}
-    the user moves focus and waits for autosave
-
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     Element Should Contain    ${QUESTION}    ${ERROR}
