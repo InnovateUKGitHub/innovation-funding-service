@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.creation.controller;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.application.creation.viewmodel.AuthenticatedNotEligibleViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -78,9 +79,7 @@ public class ApplicationCreationAuthenticatedController {
     @PostMapping("/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
-                       @RequestParam(value = FORM_RADIO_NAME, required = false)
-                           @ModelAttribute(FORM_RADIO_NAME)
-                           @NotNull(message = "validation.field.confirm.new.application") Boolean createNewApplication, BindingResult bindingResult,
+                       @ModelAttribute(FORM_RADIO_NAME) Boolean createNewApplication, BindingResult bindingResult,
                        UserResource user) {
         if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
