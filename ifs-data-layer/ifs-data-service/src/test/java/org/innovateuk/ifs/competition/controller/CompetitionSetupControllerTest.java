@@ -5,8 +5,11 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.Collections;
@@ -25,6 +28,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<CompetitionSetupController> {
+
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    @Mock
+    private CompetitionSetupService competitionSetupServiceMock;
 
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {

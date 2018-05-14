@@ -11,7 +11,9 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -49,6 +51,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTest<SpendProfileController> {
+
+
+    @Mock
+    private SpendProfileService spendProfileServiceMock;
 
     @Override
     protected SpendProfileController supplyControllerUnderTest() {
@@ -255,8 +261,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         when(spendProfileServiceMock.getSpendProfile(projectOrganisationCompositeId)).
                 thenReturn(serviceFailure(CommonErrors.notFoundError(SpendProfile.class, projectId, organisationId)));
 
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
-        )
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isNotFound())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -306,8 +311,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
-        )
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -327,13 +331,28 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(spendProfileServiceMock.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
-        )
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as incomplete"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as incomplete")
+                        )
+                ));
+    }
+
+    @Test
+    public void completeSpendProfilesReview() throws Exception {
+
+        Long projectId = 1L;
+
+        when(spendProfileServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profiles review is being completed")
                         )
                 ));
     }

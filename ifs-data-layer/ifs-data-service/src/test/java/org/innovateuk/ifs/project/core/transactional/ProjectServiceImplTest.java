@@ -2,22 +2,37 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
+import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -66,6 +81,52 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private FinanceChecksGenerator financeChecksGeneratorMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
+
+    @Mock
+    private ProjectRepository projectRepositoryMock;
+
+    @Mock
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
+
+    @Mock
+    private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
+
+    @Mock
+    private EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+
+    @Mock
+    private GrantOfferLetterWorkflowHandler golWorkflowHandlerMock;
+
+    @Mock
+    private ProjectWorkflowHandler projectWorkflowHandlerMock;
+
+    @Mock
+    private ProjectMapper projectMapperMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private ProjectUserRepository projectUserRepositoryMock;
+
+    @Mock
+    private ProjectInviteRepository projectInviteRepositoryMock;
+
+
+    @Mock
+    private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
 
     private Long applicationId = 456L;
     private Long userId = 7L;

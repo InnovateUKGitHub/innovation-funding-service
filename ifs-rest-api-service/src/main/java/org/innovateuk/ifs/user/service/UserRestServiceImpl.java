@@ -237,6 +237,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
+    public RestResult<Void> agreeNewSiteTermsAndConditions(long userId) {
+        String url = userRestURL + "/id/" + userId + "/agreeNewSiteTermsAndConditions";
+        return postWithRestResult(url, Void.class);
+    }
+
+    @Override
     public RestResult<Void> deactivateUser(Long userId) {
         String url = userRestURL + "/id/" + userId + "/deactivate";
         return getWithRestResult(url, Void.class);

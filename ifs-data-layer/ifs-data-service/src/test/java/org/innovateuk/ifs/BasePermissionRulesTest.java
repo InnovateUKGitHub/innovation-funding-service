@@ -5,14 +5,20 @@ import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPe
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepositoryIntegrationTest;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -39,6 +45,19 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();
+
+    @Mock
+    protected ProjectUserRepository projectUserRepositoryMock;
+
+    @Mock
+    protected ProjectRepository projectRepositoryMock;
+
+    @Mock
+    protected ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    protected OrganisationRepository organisationRepositoryMock;
+
 
     protected List<Role> allRoles;
 

@@ -65,6 +65,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2285 APC Competition template: BEIS Value for Money: Pro-forma Spreadsheet
 ...
 ...               IFS-2776 As an Portfolio manager I am able to set the min/max project duration for a competition
+...
+...               IFS-3086 Investigate options to support selection of grant terms and conditions in Competition setup
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -187,15 +189,26 @@ Initial details - should have a green check
     And the user should see the element      css=#compCTA[disabled]
 
 User should have access to all the sections
-    [Documentation]    INFUND-4725, IFS-1104
+    [Documentation]    INFUND-4725, IFS-1104  IFS-3086
     Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Then The user should see the element    link=Funding information
-    And The user should see the element    link=Eligibility
-    And The user should see the element    link=Milestones
-    And The user should see the element    link=Application
-    And The user should see the element    link=Assessors
-    And The user should see the element    link=Public content
-    And The user should see the element    link=Stakeholders
+    Then The user should see the element    link=Terms and conditions
+    And The user should see the element     link=Funding information
+    And The user should see the element     link=Eligibility
+    And The user should see the element     link=Milestones
+    And The user should see the element     link=Application
+    And The user should see the element     link=Assessors
+    And The user should see the element     link=Public content
+    And The user should see the element     link=Stakeholders
+
+The user must select the Terms and Conditions they want Applicants to accept
+    [Documentation]  IFS-3086
+    [Tags]  HappyPath
+    Given the user clicks the button/link    link=Terms and conditions
+    When the user selects the option from the drop-down menu    5  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
+    And the user clicks the button/link      css=button.button  #Done
+    Then the user should see the element     link=Advanced Propulsion Centre (APC)
+    And the user clicks the button/link      link=Competition setup
+    And the user should see the element      jQuery=li:contains("Terms and conditions") .task-status-complete
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
@@ -266,6 +279,7 @@ Funding information: should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(2) .task-status-complete
+    Then the user should see the element    jQuery=li:contains("Funding information") .task-status-complete
     And the user should see the element     css=#compCTA[disabled]
 
 Eligibility: Contain the correct options
@@ -509,14 +523,10 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]
-    Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
-    And the user selects the radio button  question.appendix  1
-    Then the user clicks the button/link   css=label[for="allowed-file-types-PDF"]
-    # Unclicking the PDF checkbox in order to trigger server side validation
-    When the user clicks the button/link   css=button[type="submit"]
-    Then the user should see the server side validation working
-    Then the user is able to configure the new question  ${customQuestion}
-    And the user should be able to see the read only view of question correctly  ${customQuestion}
+    Given the user clicks the button/link                css=p button[type="submit"]  #Add question link
+    When the user is able to configure the new question  ${customQuestion}
+    And the user clicks the button/link                  jQuery=li:contains("${customQuestion}")
+    Then the user should be able to see the read only view of question correctly  ${customQuestion}
 
 Removing an Assessed Application Question
     [Documentation]  IFS-182
@@ -855,11 +865,6 @@ the user enters multiple innovation areas
 
 The user should not see the selected option again
     List Should not Contain Value    css=[id="innovationAreaCategoryIds[1]"]    Biosciences
-
-the user should see the server side validation working
-    #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-2304
-    the user should see a field and summary error  This field cannot be left blank.
-    the user should see a field error  Please enter a justification.
 
 the user marks question as complete
     [Arguments]  ${question_link}

@@ -2,10 +2,13 @@ package org.innovateuk.ifs.alert.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.alert.domain.Alert;
+import org.innovateuk.ifs.alert.mapper.AlertMapper;
+import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -19,6 +22,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AlertServiceImplTest extends BaseUnitTestMocksTest {
+
+    @Mock
+    private AlertRepository alertRepositoryMock;
+
+    @Mock
+    private AlertMapper alertMapperMock;
 
     @InjectMocks
     private final AlertService alertService = new AlertServiceImpl();

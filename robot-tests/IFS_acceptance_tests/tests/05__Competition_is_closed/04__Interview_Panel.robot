@@ -36,25 +36,24 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-2783 Assign Applications to Interview Panel: Add Feedback
 ...
 ...               IFS-3385 Assign applications to interview panel - Remove feedback
+...
+...               IFS-3291 Applicant dashboard - View application and assessment feedback
+...
+...               IFS-3435 Allocate applications to assessors - View
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
 
-*** Test Cases ***
-User navigates to the Manage interview panel
-    [Documentation]  IFS-2633 IFS-2637
-    [Tags]  MySQL
-    Given the Interview Panel is activated in the db
-    When the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
-    Then the user clicks the button/link   link=Manage interview panel
-    And the user sees the Interview panel page and the Interview links
 
+*** Test Cases ***
 CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-2778
-    Given the user clicks the button/link   link=Invite assessors
-    When the user clicks the button/link    link=Find
+    [Setup]  the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
+    Given the user clicks the button/link      link=Manage interview panel
+    When the user clicks the button/link       link=Invite assessors
+    And the user clicks the button/link        link=Find
     Then the competition admin invites assessors to the competition
 
 Cancel sending invite returns to the invite tab
@@ -140,31 +139,47 @@ CompAdmin resends the interview panel invite
     When the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_madeleine}
     Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user reads his email              ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.
-    When log in as a different user            ${assessor_madeleine_email}   ${short_password}
+    When log in as a different user           ${assessor_madeleine_email}   ${short_password}
     Then the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 CompAdmin Views the assessors that have accepted the interview panel invite
     [Documentation]  IFS-3201 IFS-3252
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
-    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/accepted
     Then the user checks for the key statistics for invite assessors
     Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
+
+Applicant can see the feedback given
+    [Documentation]  IFS-3291
+    [Tags]
+    Given log in as a different user          ${aaron_robertson_email}  ${short_password}
+    When the user should see the element      jQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + div:nth-child(2) span:contains("Invited to interview")
+    Then The user clicks the button/link      link=${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user clicks the button/link       jQuery=a:contains("Business opportunity")
+    Then the user should see the element      jQuery=p:contains("This is the business opportunity feedback")
+    And the user should see the element       jQuery=h2:contains("Average score: 8/ 10")
+
+CompAdmin can access the Allocate applications to assessors screen
+    [Documentation]  IFS-3435
+    [Tags]
+    Given log in as a different user         &{Comp_admin1_credentials}
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
+    Then the user should see the element     jQuery=a:contains("${assessor_joel}")
+    And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
+    And the user should see the element      jQuery=h1:contains("Allocate applications to assessors")
+    #TODO Further testing of functionality when IFS-3436 is completed
 
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    the Interview Panel is activated in the db
     ${today} =  get today short month
     set suite variable  ${today}
 
 the Interview Panel is activated in the db
     Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
-
-the user sees the Interview panel page and the Interview links
-    the user should see the element    jQuery=h1:contains("Manage interview panel")
-    the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
-    #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2783
 
 the competition admin selects the applications and adds them to the invite list
 #compadmin selecting the applications checkbox

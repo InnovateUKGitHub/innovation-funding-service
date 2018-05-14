@@ -2,7 +2,9 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -13,6 +15,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Collections;
 
@@ -38,6 +41,12 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     private CompetitionResource competitionResource;
     private ProjectResource projectResource1;
     private UserResource innovationLeadUserResourceOnProject1;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
 
     @Before
     public void setup() {
