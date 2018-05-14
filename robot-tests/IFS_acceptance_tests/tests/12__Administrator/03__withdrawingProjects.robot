@@ -15,7 +15,7 @@ The IFS Admin withdraws a project from Project Setup
     Given the user navigates to the page           ${server}/project-setup-management/competition/${NOT_EDITABLE_COMPETITION}/status/all
     And the user clicks the button/link            jQuery=tr:contains("${INFORM_COMPETITION_NAME_2}") a:contains("Incomplete")
     When the user cancels then withdraws the project
-    Then the user should see the element           jQuery=a:contains("Previous applications")
+    Then the user should see the element           jQuery=a:contains("Previous competitions")
     #TODO IFS-3035 This may need amending with 3035 as the redirect/page will change.
 
 The internal user can see their project is withdrawn

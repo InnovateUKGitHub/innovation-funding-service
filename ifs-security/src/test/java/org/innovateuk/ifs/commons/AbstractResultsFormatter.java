@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.commons;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 
 import java.util.List;
 
