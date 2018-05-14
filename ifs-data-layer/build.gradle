@@ -8,5 +8,5 @@ ext {
     snippetsDir = file('build/generated-snippets')
     pactDir = file('ifs-data-service/build/pacts')
     javaLanguageLevel = 1.8
-    generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
+    generatedMapperSourcesDir = 'build/classes/java/main/'
 }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
-import org.innovateuk.ifs.alert.service.AlertRestService;
+import org.innovateuk.ifs.service.AlertRestService;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;

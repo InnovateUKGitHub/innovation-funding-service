@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.commons.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.resource.AlertResource;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
