@@ -10,10 +10,8 @@ apply from: "finance-data-service-sync.gradle"
 
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
-configurations {
-    providedRuntime
-}
 
 project.version = dataServiceVersion
 tagDocker.tag = dataServiceVersion
@@ -47,18 +45,6 @@ ext.companyHouseKey = ext.get('ifs.company-house.key')
 
 ext.companiesHouseLookupEnabled = ext.has('ifs.companies-house.enabled') ? ext.get('ifs.companies-house.enabled') : true
 
-sourceSets {
-    client {
-        java {
-            srcDir 'src/main/java'
-        }
-        main {
-            ext.originalJavaSrcDirs = java.srcDirs
-            java.srcDir "${generatedMapperSourcesDir}"
-        }
-    }
-}
-
 bootRun {
     addResources = false
 }
@@ -68,22 +54,22 @@ ext {
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
 }
 
-configurations {
-    mapstruct
-}
 
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-file/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-sil-resources/build/classes")
 
     dependsOn ":ifs-data-layer:data-service-commons:build"
     dependsOn ":ifs-data-layer:data-service-file:build"
+    dependsOn ":ifs-sil-resources:build"
 }
 
 
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
     compile project(":ifs-data-layer:data-service-file")
+    compile project(":ifs-sil-resources")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.security:spring-security-crypto"
@@ -99,8 +85,6 @@ dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "org.mapstruct:mapstruct:1.0.0.Final"
-    mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
     compile "org.apache.poi:poi:3.14"
     compile "org.apache.poi:poi-ooxml:3.14"
 
@@ -115,6 +99,8 @@ dependencies {
 
     testCompile project(':ifs-resources').sourceSets.test.output
     testCompile project(":ifs-commons").sourceSets.test.output
+    testCompile project(":ifs-security").sourceSets.test.output
+
     testCompile project(":ifs-data-layer:data-service-commons").sourceSets.test.output
     testCompile project(":ifs-data-layer:data-service-file").sourceSets.test.output
 
@@ -169,41 +155,10 @@ task asciidoctorOnly(type: Test) {
     finalizedBy asciidoctor
 }
 
-task generateMainMapperClasses(type: JavaCompile) {
-    ext.aptDumpDir = file("build/tmp/apt/mapstruct")
-    destinationDir = aptDumpDir
-
-    classpath = compileJava.classpath + configurations.mapstruct
-    source = sourceSets.main.originalJavaSrcDirs
-    ext.sourceDestDir = file generatedMapperSourcesDir
-
-    options.define(
-            compilerArgs: [
-                    "-nowarn",
-                    "-proc:only",
-                    "-encoding", "UTF-8",
-                    "-processor", "org.mapstruct.ap.MappingProcessor",
-                    "-s", sourceDestDir.absolutePath,
-                    "-source", 1.8,
-                    "-target", 1.8,
-            ]
-    );
-
-    inputs.dir source
-    outputs.dir generatedMapperSourcesDir
-    doFirst {
-        sourceDestDir.mkdirs()
-    }
-    doLast {
-        aptDumpDir.delete()
-    }
-}
-
 task syncShib(type:Exec) {
     commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
-compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
