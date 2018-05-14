@@ -11,14 +11,9 @@ dependencies {
 
 
 sourceSets {
-    client {
-        java {
-            srcDir 'src/main/java'
-        }
-        main {
-            ext.originalJavaSrcDirs = java.srcDirs
-            java.srcDir "${generatedMapperSourcesDir}"
-        }
+    main {
+        ext.originalJavaSrcDirs = java.srcDirs
+        java.srcDir "${generatedMapperSourcesDir}"
     }
 }
 
@@ -58,4 +53,3 @@ task generateMainMapperClasses(type: JavaCompile) {
 }
 
 compileJava.dependsOn generateMainMapperClasses
-
