@@ -51,7 +51,7 @@
                 <tr>
                     <th scope="row" class="fix-left" id="month">Month</th>
                     <th:block th:each="month,stats : ${model.table.getMonths()}">
-                        <th scope="col" th:text="${'Month ' + (stats.index+1)}" th:id="${'month'+stats.index}" />
+                        <th scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="${'month'+stats.index}" />
                     </th:block>
                     <th scope="col" class="fix-right">Total</th>
                     <th scope="col" class="fix-right">Eligible project cost</th>

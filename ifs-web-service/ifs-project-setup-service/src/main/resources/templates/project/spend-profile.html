@@ -98,7 +98,7 @@
                             <th scope="row" th:if="${model.usingJesFinances}" id="month" colspan="2">Je-S category</th>
                             <th scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
                             <th:block th:each="month,stats : ${model.table.getMonths()}">
-                                <th scope="col" th:text="${'Month ' + (stats.index+1)}" th:id="|month-${stats.index}|" />
+                                <th scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="|month-${stats.index}|" />
                             </th:block>
                             <th scope="col" class="fix-right">Total</th>
                             <th scope="col" class="fix-right">Eligible project cost</th>
