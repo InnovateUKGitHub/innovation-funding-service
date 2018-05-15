@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
+import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
@@ -31,7 +32,7 @@ public class EligibilityFormPopulatorTest {
 		
 		CompetitionResource competition = newCompetitionResource()
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-				.withMaxResearchRatio(30)
+				.withMaxResearchRatio(50)
 				.withMultiStream(true)
 				.withStreamName("streamname")
 				.withCollaborationLevel(CollaborationLevel.COLLABORATIVE)
@@ -47,5 +48,23 @@ public class EligibilityFormPopulatorTest {
 		assertEquals(null, form.getStreamName());
 		assertEquals("collaborative", form.getSingleOrCollaborative());
 		assertEquals(asList(2L), form.getLeadApplicantTypes());
+		assertEquals(2, form.getResearchParticipationAmountId());
+	}
+
+	@Test
+	public void testGetDefaultResearchParticipationAmountId() {
+		CompetitionResource competition = newCompetitionResource()
+				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+				.withMultiStream(true)
+				.withStreamName("streamname")
+				.withCollaborationLevel(CollaborationLevel.COLLABORATIVE)
+				.withLeadApplicantType(asList(2L))
+				.build();
+
+		CompetitionSetupForm result = service.populateForm(competition);
+
+		assertTrue(result instanceof EligibilityForm);
+		EligibilityForm form = (EligibilityForm) result;
+		assertEquals(1, form.getResearchParticipationAmountId());
 	}
 }
