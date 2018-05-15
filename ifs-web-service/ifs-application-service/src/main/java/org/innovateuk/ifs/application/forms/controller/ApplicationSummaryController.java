@@ -130,7 +130,7 @@ public class ApplicationSummaryController {
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
-        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
+        if (competition.getCompetitionStatus().isFeedbackReleased()) {
             addFeedbackAndScores(model, applicationId);
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {

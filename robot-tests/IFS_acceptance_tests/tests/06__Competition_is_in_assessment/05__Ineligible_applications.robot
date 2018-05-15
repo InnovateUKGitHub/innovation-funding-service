@@ -106,7 +106,7 @@ The Administrator should see the ineligible applications in unsuccessful list bu
     [Documentation]  IFS-1458 IFS-1459 IFS-50
     [Tags]  HappyPath  Administrator
     [Setup]  log in as a different user   &{ifs_admin_user_credentials}
-    Given the user navigates to the page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
+    Given the user navigates to the page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/previous
     Then the user should see the element  jQuery=td:contains("${ineligibleApplication}")
     And the user should not see the element  jQuery=td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
 
@@ -162,7 +162,7 @@ the user navigates to ineligible applications
     the user clicks the button/link    link = Ineligible applications
 
 the reinstated application in no longer shown in the unsuccessful list
-    the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
+    the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/previous
     the user should not see the element  jQuery=td:contains("${ineligibleApplication}")
 
 the user is required to enter a subject/message

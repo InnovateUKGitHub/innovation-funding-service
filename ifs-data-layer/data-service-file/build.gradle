@@ -3,69 +3,36 @@ if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile
 }
 
+apply from: rootProject.file("gradle-support/mapstruct.gradle")
+
+
 bootRepackage {
     enabled = false
 }
 
 configurations {
-    mapstruct
+    testArtifacts
 }
+task testJar (type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+artifacts {
+    testArtifacts testJar
+}
+
 
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.14"
-    compile "org.mapstruct:mapstruct:1.0.0.Final"
-    mapstruct "org.mapstruct:mapstruct-processor:1.0.0.Final"
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(":ifs-commons").sourceSets.test.output
-    testCompile project(":ifs-data-layer:data-service-commons").sourceSets.test.output
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+
 
     testCompile "com.h2database:h2:1.4.196"
 }
-
-sourceSets {
-    client {
-        java {
-            srcDir 'src/main/java'
-        }
-        main {
-            ext.originalJavaSrcDirs = java.srcDirs
-            java.srcDir "${generatedMapperSourcesDir}"
-        }
-    }
-}
-
-task generateMainMapperClasses(type: JavaCompile) {
-    ext.aptDumpDir = file( "build/tmp/apt/mapstruct" )
-    destinationDir = aptDumpDir
-
-    classpath = compileJava.classpath + configurations.mapstruct
-    source = sourceSets.main.originalJavaSrcDirs
-    ext.sourceDestDir = file generatedMapperSourcesDir
-
-    options.define(
-            compilerArgs: [
-                    "-nowarn",
-                    "-proc:only",
-                    "-encoding", "UTF-8",
-                    "-processor", "org.mapstruct.ap.MappingProcessor",
-                    "-s", sourceDestDir.absolutePath,
-                    "-source", 1.8,
-                    "-target", 1.8,
-            ]
-    );
-
-    inputs.dir source
-    outputs.dir generatedMapperSourcesDir
-    doFirst {
-        sourceDestDir.mkdirs()
-    }
-    doLast {
-        aptDumpDir.delete()
-    }
-}
-
-compileJava.dependsOn generateMainMapperClasses

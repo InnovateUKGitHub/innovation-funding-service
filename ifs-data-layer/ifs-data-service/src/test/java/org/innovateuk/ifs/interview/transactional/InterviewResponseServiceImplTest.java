@@ -27,6 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class InterviewResponseServiceImplTest extends BaseServiceUnitTest<InterviewResponseServiceImpl> {
+
     @Mock
     private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
 
