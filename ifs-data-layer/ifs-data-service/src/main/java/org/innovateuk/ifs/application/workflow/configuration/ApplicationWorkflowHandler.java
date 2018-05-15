@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,8 +121,8 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
         }
     }
 
-     public boolean withdraw(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationEvent.WITHDRAW), application);
+     public boolean withdraw(Application application, User internalUser) {
+        return fireEvent(applicationMessageWithInternalUser(application, ApplicationEvent.WITHDRAW, internalUser), application);
      }
 
     private static MessageBuilder<ApplicationEvent> markIneligibleMessage(Application application, IneligibleOutcome ineligibleOutcome) {
@@ -134,6 +135,14 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
                 .withPayload(event)
                 .setHeader("target", application)
                 .setHeader("applicationProcess", application.getApplicationProcess());
+    }
+
+    private static MessageBuilder<ApplicationEvent> applicationMessageWithInternalUser(Application application, ApplicationEvent event, User internalUser) {
+        return MessageBuilder
+                .withPayload(event)
+                .setHeader("target", application)
+                .setHeader("applicationProcess", application.getApplicationProcess())
+                .setHeader("internalParticipant", internalUser);
     }
 
     private boolean applicationStateMatches(Application application, ApplicationState... applicationStates) {

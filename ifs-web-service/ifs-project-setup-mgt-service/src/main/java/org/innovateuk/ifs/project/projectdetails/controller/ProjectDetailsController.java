@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -75,6 +77,8 @@ public class ProjectDetailsController {
     @Autowired
     private ApplicationRestService applicationRestService;
 
+    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
+
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
     @GetMapping("/{projectId}/details")
@@ -116,10 +120,15 @@ public class ProjectDetailsController {
                                   HttpServletRequest request) {
 
         projectRestService.withdrawProject(projectId)
-                .andOnSuccess(() -> {
-                    ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-                    applicationRestService.withdrawApplication(project.getApplication());
-                });
+                .andOnSuccess(
+                        () -> { projectRestService.getProjectById(projectId)
+                                .andOnSuccess(
+                                        project -> applicationRestService.withdrawApplication(project.getApplication())
+                                            .andOnFailure(
+                                                    () -> LOG.error("Application withdrawal failed")
+                                            )
+                                );
+                        });
 
         return redirectToCompetitionManagementService(request,
                 "competition/" + competitionId + "/applications/previous");

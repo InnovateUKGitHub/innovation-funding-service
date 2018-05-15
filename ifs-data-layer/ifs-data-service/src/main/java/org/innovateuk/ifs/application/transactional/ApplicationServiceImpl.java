@@ -184,26 +184,21 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> markAsIneligible(long applicationId,
                                                 IneligibleOutcome reason) {
-        return find(application(applicationId)).andOnSuccess((application) -> {
-            if (!applicationWorkflowHandler.markIneligible(application, reason)) {
-                return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
-            }
-            applicationRepository.save(application);
-            return serviceSuccess();
-        });
+        return find(application(applicationId)).andOnSuccess(application ->
+                applicationWorkflowHandler.markIneligible(application, reason) ?
+                        serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_SUBMITTED)
+        );
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> withdrawApplication(long applicationId) {
         return find(application(applicationId))
-                .andOnSuccess(application -> {
-                    if (!applicationWorkflowHandler.withdraw(application)) {
-                        return serviceFailure(APPLICATION_MUST_BE_APPROVED);
-                    }
-                    applicationRepository.save(application);
-                    return serviceSuccess();
-                });
+                .andOnSuccess(application -> getCurrentlyLoggedInUser()
+                        .andOnSuccess(user -> applicationWorkflowHandler.withdraw(application, user) ?
+                                serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_APPROVED)
+                        )
+                );
     }
 
     @Override
@@ -296,17 +291,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                                                int pageIndex,
                                                                                int pageSize,
                                                                                String sortField) {
-
-        Set<ApplicationState> unsuccessfulStates = asLinkedSet(
-                INELIGIBLE,
-                INELIGIBLE_INFORMED,
-                REJECTED,
-                WITHDRAWN);
-
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, unsuccessfulStates, pageable);
+        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, ApplicationState.unsuccessfulStates, pageable);
         List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));

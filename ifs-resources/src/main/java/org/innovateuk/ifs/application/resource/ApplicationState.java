@@ -48,6 +48,13 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum<Applicati
             INELIGIBLE
     );
 
+    public static final ImmutableSet<ApplicationState> unsuccessfulStates = Sets.immutableEnumSet(
+            INELIGIBLE,
+            INELIGIBLE_INFORMED,
+            REJECTED,
+            WITHDRAWN
+    );
+
     ApplicationState(final long id, final State backingState) {
         this.id = id;
         this.backingState = backingState;
