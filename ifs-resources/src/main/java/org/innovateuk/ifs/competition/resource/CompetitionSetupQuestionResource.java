@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
@@ -33,7 +32,7 @@ public class CompetitionSetupQuestionResource {
     private String number;
     @NotBlank
     private String shortTitle;
-    @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
+    // @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
     private Boolean shortTitleEditable;
     @NotBlank
     private String title;
@@ -181,12 +180,12 @@ public class CompetitionSetupQuestionResource {
         this.number = number;
     }
 
-    @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
+    // @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
     public Boolean getShortTitleEditable() {
         return shortTitleEditable;
     }
 
-    @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
+    // @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
     public void setShortTitleEditable(Boolean shortTitleEditable) {
         this.shortTitleEditable = shortTitleEditable;
     }
