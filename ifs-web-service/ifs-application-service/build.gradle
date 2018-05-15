@@ -2,9 +2,6 @@ bootRun {
     addResources = false
 }
 
-configurations {
-    providedRuntime
-}
 project.version = applicationServiceVersion
 tagDocker.tag = applicationServiceVersion
 osStageRemote.tag = applicationServiceVersion
@@ -29,9 +26,11 @@ prepareDockerBaseInput {
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(":ifs-commons").sourceSets.test.output
-    testCompile project(":ifs-security").sourceSets.test.output
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 
