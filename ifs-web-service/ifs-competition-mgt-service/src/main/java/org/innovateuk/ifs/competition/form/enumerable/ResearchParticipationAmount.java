@@ -47,6 +47,6 @@ public enum ResearchParticipationAmount {
                 return amount;
             }
         }
-        return null;
+        return THIRTY;
     }
 }
