@@ -18,7 +18,7 @@ public abstract class ProcessOutcome<ProcessType extends Process> extends Audita
     protected String outcome;
     protected String description;
     protected String comment;
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Process.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Process.class)
     @JoinColumn(name = "process_id", referencedColumnName = "id")
     private ProcessType process;
 

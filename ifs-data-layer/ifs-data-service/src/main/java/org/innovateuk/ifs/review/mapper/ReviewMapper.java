@@ -49,7 +49,6 @@ ReviewMapper extends BaseMapper<Review, ReviewResource, Long> {
             @Mapping(target = "participant", source = "processRole"),
             @Mapping(target = "target", source = "application"),
             @Mapping(target = "processState", source = "reviewState", ignore = true),
-            @Mapping(target = "processOutcomes", ignore = true),
             @Mapping(target = "lastModified", ignore = true)
     })
     @Override

@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
+
 /**
  * Form field model for the Assessor Profile Declaration of Interest Family affiliations/Appointments, directorships or consultancies
  */
@@ -12,9 +14,12 @@ public class AssessorProfileFamilyAffiliationForm {
     }
 
     @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.relation.required}", groups=FamilyAffiliations.class)
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String relation;
     @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.organisation.required}", groups=FamilyAffiliations.class)
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String organisation;
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.position.required}", groups=FamilyAffiliations.class)
     private String position;
 
