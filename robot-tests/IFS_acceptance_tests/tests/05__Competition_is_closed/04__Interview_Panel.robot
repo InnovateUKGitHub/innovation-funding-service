@@ -175,9 +175,9 @@ Applicant can remove the uploaded response
     [Documentation]  IFS-3253  IFS-3378
     [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
     Given the user clicks the button/link    link=${computer_vision_application_name}
-    And the user should see the element      jQuery=div p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
+    And the user should see the element      jQuery=.message-alert p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
     When the applicant upload the response to the interview panel
-    Then the user should see the element     jQuery=div p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
+    Then the user should see the element     jQuery=.message-alert p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
     When the user clicks the button/link     css=.button-secondary  #remove
     Then the user should see the element     jQuery=p:contains("No file currently uploaded") ~ label:contains("+ Upload")
     And the compAdmin checks the status for response uploaded applicantion
