@@ -23,6 +23,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
+
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
@@ -110,12 +112,13 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .withLastName("Hester")
                 .build();
 
-        InnovationAreaResource innovationArea = newInnovationAreaResource()
-                .withSectorName("Digital manufacturing")
-                .build();
+        List<InnovationAreaResource> innovationAreas = newInnovationAreaResource()
+                .withSector(1L, 2L)
+                .withSectorName("Sector1", "Sector2")
+                .build(2);
 
         ProfileResource profile = newProfileResource()
-                .withInnovationAreas(singletonList(innovationArea))
+                .withInnovationAreas(innovationAreas)
                 .withSkillsAreas("Skills")
                 .withBusinessType(BusinessType.ACADEMIC)
                 .build();

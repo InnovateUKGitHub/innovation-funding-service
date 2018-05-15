@@ -27,24 +27,23 @@
         </div>
 
         <div class="column-half">
-
-            <h3 class="heading-small">Innovation areas</h3>
-
-            <ul class="list list-bullet">
-                <li th:each="innovationSector : ${model.innovationSectors}">
-                    <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
+            <dl>
+                <dt>Innovation areas</dt>
+                <dd>
                     <ul class="list list-bullet">
-                        <li th:each="innovationArea : ${innovationSector.children}">
-                            <th:block th:text="${innovationArea.name}">digital sciences</th:block>
+                        <li th:each="innovationSector : ${model.innovationSectors}">
+                            <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
+                            <ul class="list list-bullet">
+                                <li th:each="innovationArea : ${innovationSector.children}">
+                                    <th:block th:text="${innovationArea.name}">digital sciences</th:block>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
-                </li>
-            </ul>
-            
-            <h3 class="heading-small">Skill areas</h3>
-
-            <span th:text="${model.profile.getSkillsAreas()}">skills</span>
-
+                </dd>
+                <dt>Skill areas</dt>
+                <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
+            </dl>
         </div>
     </div>
 
