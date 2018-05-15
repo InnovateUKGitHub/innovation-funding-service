@@ -3,6 +3,8 @@ package org.innovateuk.ifs.user.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.Size;
+
 /**
  * An affiliation of a User. It may be used to describe personal and family appointments held, personal affiliations, other financial interests, and family financial interests depending on the {@link AffiliationType}.
  */
@@ -12,9 +14,13 @@ public class AffiliationResource {
     private Long user;
     private AffiliationType affiliationType;
     private Boolean exists;
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String relation;
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String organisation;
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String position;
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String description;
 
     public AffiliationResource() {

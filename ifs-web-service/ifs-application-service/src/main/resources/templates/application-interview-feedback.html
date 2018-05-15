@@ -15,36 +15,85 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationName},size='heading-xlarge'" />
     </th:block>
 
-        <div class="grid-row">
-            <div class="column-half">
-                <h3 class="heading-small">Project title</h3>
-                <p th:text="${currentApplication.name}">Machine learning in robots</p>
+    <div th:if="${#fields.hasErrors('${interviewResponseForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to upload your file.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(interviewResponseForm)" />
+    </div>
 
-                <h3 class="heading-small">Application number</h3>
-                <p th:text="${currentApplication.id}">Machine learning in robots</p>
+    <div class="grid-row">
+        <div class="column-half">
+            <h3 class="heading-small">Project title</h3>
+            <p th:text="${currentApplication.name}">Machine learning in robots</p>
 
-                <h3 class="heading-small">Lead organisation</h3>
-                <p th:text="${leadOrganisation.name}">Aptrans Ltd</p>
+            <h3 class="heading-small">Application number</h3>
+            <p th:text="${currentApplication.id}">Machine learning in robots</p>
 
-                <h3 class="heading-small">Partners</h3>
-                <ul class="list list-bullet">
-                    <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
-                </ul>
-            </div>
+            <h3 class="heading-small">Lead organisation</h3>
+            <p th:text="${leadOrganisation.name}">Aptrans Ltd</p>
 
-            <div class="column-half">
-                <h3 class="heading-small">Project timescales</h3>
-                <p>Project start date: <br />
-                    <th:block
-                        th:if="${currentApplication.startDate}"
-                        th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" />
-                </p>
-                <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
-
-                <h3 class="heading-small extra-margin">Total project cost</h3>
-                <p>&pound;<th:block th:text="${totalFundingSought} ? ${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
-            </div>
+            <h3 class="heading-small">Partners</h3>
+            <ul class="list">
+                <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
+            </ul>
         </div>
+
+        <div class="column-half">
+            <h3 class="heading-small">Project timescales</h3>
+            <p>Project start date: <br />
+                <th:block
+                    th:if="${currentApplication.startDate}"
+                    th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" />
+            </p>
+            <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
+
+            <h3 class="heading-small extra-margin">Total project cost</h3>
+            <p>&pound;<th:block th:text="${totalFundingSought} ? ${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
+        </div>
+    </div>
+
+    <th:block th:if="${interviewFeedbackViewModel.leadApplicant}">
+        <form th:action="@{/application/{applicationId}/summary(applicationId=${currentApplication.id})}"
+              method="post" enctype="multipart/form-data" th:object="${interviewResponseForm}" novalidate="novalidate">
+            <h2 class="heading-medium">Your response</h2>
+            <div class="upload-section">
+                <details role="group">
+                    <summary role="button" aria-controls="details-content-0" aria-expanded="false">
+                        <span class="summary">What should I include in the response?</span>
+                    </summary>
+                    <div class="panel" id="details-content-0" aria-hidden="true">
+                        <p>You may submit a written response to this feedback. You can upload up to 3 A4 pages in a single PDF
+                            document, including charts and diagrams. The maximum file upload size is 2MB.</p>
+                    </div>
+                </details>
+                <div th:unless="${interviewFeedbackViewModel.hasAttachment()}">
+                    <p class="uploaded-file">No file currently uploaded</p>
+                    <input type="file" id="feedback-response" name="response" class="inputfile">
+                    <label for="feedback-response" class="button-secondary extra-margin">+ Upload</label>
+                    <button name="uploadResponse" class="button-secondary" data-for-file-upload="feedback-response"></button>
+                </div>
+                <div th:if="${interviewFeedbackViewModel.hasAttachment()}">
+                    <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
+                                                th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
+                                                target="_blank">File</a></p>
+                    <button name="removeResponse" class="button-secondary">Remove</button>
+                </div>
+            </div>
+        </form>
+    </th:block>
+    <th:block th:unless="${interviewFeedbackViewModel.leadApplicant}">
+        <h2 class="heading-medium">Response from lead applicant</h2>
+        <th:block th:unless="${interviewFeedbackViewModel.hasAttachment()}">
+            <p>The lead applicant has not yet uploaded a response.</p>
+        </th:block>
+        <th:block th:if="${interviewFeedbackViewModel.hasAttachment()}">
+            <div class="form-group download">
+                <h3 class="heading-small no-margin">Lead applicant response</h3>
+                <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
+                   th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
+                   target="_blank">File</a></p>
+            </div>
+        </th:block>
+    </th:block>
 
     <h2 class="heading-medium no-margin-bottom">Assessor feedback</h2>
     <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>

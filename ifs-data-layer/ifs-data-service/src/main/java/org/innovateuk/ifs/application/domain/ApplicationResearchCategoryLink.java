@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.category.domain;
+package org.innovateuk.ifs.application.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.category.domain.CategoryLink;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -20,7 +21,8 @@ public class ApplicationResearchCategoryLink extends CategoryLink<Application, R
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
     private Application application;
 
-    ApplicationResearchCategoryLink() {
+    protected ApplicationResearchCategoryLink() {
+
     }
 
     public ApplicationResearchCategoryLink(Application application, ResearchCategory researchCategory) {
