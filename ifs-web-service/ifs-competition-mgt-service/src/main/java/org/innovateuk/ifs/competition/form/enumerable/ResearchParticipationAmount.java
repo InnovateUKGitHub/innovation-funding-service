@@ -47,6 +47,7 @@ public enum ResearchParticipationAmount {
                 return amount;
             }
         }
+        // THIRTY being the default value
         return THIRTY;
     }
 }
