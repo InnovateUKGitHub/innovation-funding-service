@@ -4,6 +4,7 @@ bootRun {
 
 project.version = prototypesServiceVersion
 tagDocker.tag = prototypesServiceVersion
+osStageRemote.onlyIf { isSysIntEnvironment() }
 osStageRemote.tag = prototypesServiceVersion
 tagDockerLocal.tag = prototypesServiceVersion
 osStageLocal.tag = prototypesServiceVersion

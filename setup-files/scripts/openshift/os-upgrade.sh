@@ -45,7 +45,7 @@ function upgradeServices {
     fi
 
     # conditionally deploy prototypes service
-    if $(isSysIntEnvironment ${TARGET}) || ! $(isNamedEnvironment ${TARGET}); then
+    if $(isSysIntEnvironment ${TARGET}); then
         oc apply -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
@@ -75,7 +75,7 @@ function forceReload {
     fi
 
     # conditionally deploy prototypes service
-    if $(isSysIntEnvironment ${TARGET}) || ! $(isNamedEnvironment ${TARGET}); then
+    if $(isSysIntEnvironment ${TARGET}); then
         oc rollout latest dc/prototypes-svc ${SVC_ACCOUNT_CLAUSE}
     fi
 
@@ -99,7 +99,7 @@ function watchStatus {
     fi
 
     # conditionally check prototypes service
-    if $(isSysIntEnvironment ${TARGET}) || ! $(isNamedEnvironment ${TARGET}); then
+    if $(isSysIntEnvironment ${TARGET}); then
         rolloutStatus prototypes-svc
     fi
 }
