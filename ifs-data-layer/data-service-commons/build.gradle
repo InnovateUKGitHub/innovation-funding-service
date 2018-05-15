@@ -3,8 +3,8 @@ if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile
 }
 
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-
 
 bootRepackage {
     enabled = false
