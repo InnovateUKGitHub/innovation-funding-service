@@ -101,7 +101,7 @@
     <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
         <th:block th:if="${section.name.equals('Project details')}">
             <ul class="list-overview">
-                <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.shortName.equals('Application details')}">
+                <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
                     <li class="section-status grid-row">
                         <div class="column-two-thirds">
                             <h3 class="heading-small">
