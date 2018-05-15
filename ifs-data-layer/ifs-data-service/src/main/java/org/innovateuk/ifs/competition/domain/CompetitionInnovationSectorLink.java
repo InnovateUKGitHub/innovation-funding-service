@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.category.domain;
+package org.innovateuk.ifs.competition.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.category.domain.CategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationSector;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -17,7 +18,8 @@ public class CompetitionInnovationSectorLink extends CategoryLink<Competition, I
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
     private Competition competition;
 
-    CompetitionInnovationSectorLink() {
+    protected CompetitionInnovationSectorLink() {
+
     }
 
     public CompetitionInnovationSectorLink(Competition competition, InnovationSector category) {

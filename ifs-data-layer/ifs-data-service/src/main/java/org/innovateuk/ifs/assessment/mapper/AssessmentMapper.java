@@ -47,7 +47,6 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(target = "target", source = "application"),
             @Mapping(target = "processState", source = "assessmentState", ignore = true),
             @Mapping(target = "responses", ignore = true),
-            @Mapping(target = "processOutcomes", ignore = true),
             @Mapping(target = "lastModified", ignore = true)
     })
     @Override
