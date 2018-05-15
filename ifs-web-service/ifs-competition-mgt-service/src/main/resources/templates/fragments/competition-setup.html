@@ -46,7 +46,7 @@
                class="button no-margin-right"  id="compCTA">Complete</a>
         </div>
         <div class="extra-margin">
-            <a data-js-modal="delete-modal">Delete competition</a>
+            <a data-js-modal="delete-modal" href="#">Delete competition</a>
         </div>
     </th:block>
 </th:block>
@@ -126,11 +126,13 @@
 
 <!-- ======== Comp admin - delete modal ======= -->
 <div th:fragment="comp-setup-delete-modal">
-    <div class="delete-modal" role="dialog" aria-hidden="true">
+    <div class="delete-modal warning-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="heading-medium no-margin">Deleting this competition will remove all data</h2>
-        <p>All information entered and stored for this compeition will be removed from the service and will not be
-            accessible again.</p>
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Deleting this competition will remove all data</h2>
+            <p>All information entered and stored for this competition will be removed from the service and will not be
+                accessible again.</p>
+        </div>
         <hr />
         <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
               th:action="@{/competition/setup/{competitionId}/delete(competitionId=${model.general.competition.id})}">
