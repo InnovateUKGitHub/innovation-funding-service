@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.repository;
 
 import org.innovateuk.ifs.domain.Alert;
-import org.innovateuk.ifs.resource.AlertType;
+import org.innovateuk.ifs.alert.resource.AlertType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

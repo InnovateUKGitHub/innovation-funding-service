@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.transactional.AlertService;
-import org.innovateuk.ifs.builder.AlertResourceBuilder;
+import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.documentation.AlertDocs;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
-import static org.innovateuk.ifs.resource.AlertType.MAINTENANCE;
+import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;

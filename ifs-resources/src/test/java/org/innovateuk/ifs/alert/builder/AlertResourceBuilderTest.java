@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.builder;
+package org.innovateuk.ifs.alert.builder;
 
-import org.innovateuk.ifs.resource.AlertResource;
-import org.innovateuk.ifs.resource.AlertType;
+import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertType;
 import org.junit.Before;
 import org.junit.Test;
 

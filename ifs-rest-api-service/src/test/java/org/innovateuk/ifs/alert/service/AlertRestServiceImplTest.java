@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.service;
+package org.innovateuk.ifs.alert.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.resource.AlertResource;
-import org.innovateuk.ifs.resource.AlertType;
+import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.alert.service.AlertRestServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.interceptors;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.innovateuk.ifs.resource.AlertResource;
-import org.innovateuk.ifs.service.AlertRestService;
+import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

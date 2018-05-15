@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.domain.Alert;

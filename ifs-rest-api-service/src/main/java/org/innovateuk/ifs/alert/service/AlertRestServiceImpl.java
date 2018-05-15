@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.service;
+package org.innovateuk.ifs.alert.service;
 
-import org.innovateuk.ifs.resource.AlertType;
-import org.innovateuk.ifs.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.transactional;
 
 import org.innovateuk.ifs.domain.Alert;
-import org.innovateuk.ifs.resource.AlertType;
-import org.innovateuk.ifs.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.springframework.security.access.method.P;

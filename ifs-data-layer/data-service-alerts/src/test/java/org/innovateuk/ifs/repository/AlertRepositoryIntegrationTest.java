@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -17,7 +16,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
-import static org.innovateuk.ifs.resource.AlertType.MAINTENANCE;
+import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)

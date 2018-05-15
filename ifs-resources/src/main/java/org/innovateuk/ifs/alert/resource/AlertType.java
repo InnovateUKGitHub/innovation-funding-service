@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.resource;
+package org.innovateuk.ifs.alert.resource;
 
 /**
  * Enumeration of the possible different types of Alert.

@@ -1,7 +1,9 @@
-package org.innovateuk.ifs;
+package org.innovateuk.ifs.alert;
 
-import org.innovateuk.ifs.resource.AlertType;
-import org.innovateuk.ifs.builder.AlertResourceBuilder;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.alert.AlertController;
+import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;

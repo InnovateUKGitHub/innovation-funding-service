@@ -1,8 +1,8 @@
-package org.innovateuk.ifs;
+package org.innovateuk.ifs.alert;
 
-import org.innovateuk.ifs.resource.AlertResource;
-import org.innovateuk.ifs.resource.AlertType;
-import org.innovateuk.ifs.service.AlertRestService;
+import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

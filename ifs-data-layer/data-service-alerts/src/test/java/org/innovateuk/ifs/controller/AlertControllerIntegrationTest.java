@@ -2,9 +2,9 @@ package org.innovateuk.ifs.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.IntegrationTestConfig;
-import org.innovateuk.ifs.resource.AlertResource;
-import org.innovateuk.ifs.resource.AlertType;
-import org.innovateuk.ifs.builder.AlertResourceBuilder;
+import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.resource.AlertType.MAINTENANCE;
+import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
