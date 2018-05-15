@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
-import javax.validation.constraints.NotNull;
 
 /**
  * Bean serves as a container for form parameters.
@@ -13,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 public class ApplicationCreationAuthenticatedForm extends BaseBindingResultTarget {
 
-    @NotNull(message = "validation.field.confirm.new.application")
+    @NotBlank(message = "validation.field.confirm.new.application")
     private Boolean createNewApplication;
 
     public Boolean getCreateNewApplication() {

@@ -10,6 +10,10 @@
 
 <main tabindex="-1" id="content">
     <div class="grid-row">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
         <div class="column-two-thirds">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='heading-large'" />
             <p>You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
@@ -20,7 +24,7 @@
             <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
 
                 <fieldset>
-                    <legend class="visuallyhidden" id="|createNewApplication|">Create a new application?</legend>
+                    <legend class="visuallyhidden" id="createNewApplication">Create a new application?</legend>
                     <div class="form-group" th:classappend="${#fields.hasErrors('*{form.createNewApplication}')} ? 'form-group-error'">
                         <th:block th:if="${#fields.hasErrors('*{form.createNewApplication}')}">
                             <span class="error-message" th:each="err : ${#fields.errors('*{form.createNewApplication}')}" th:text="${err}"></span>
@@ -28,8 +32,8 @@
                         <div class="multiple-choice">
                             <input id="new-application-yes"
                                    type="radio"
-                                   name="createNewApplication"
-                                   value="Yes"
+                                   th:field="*{form.createNewApplication}"
+                                   value="1"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
                             <label for="new-application-yes">
@@ -39,8 +43,8 @@
                         <div class="multiple-choice">
                             <input type="radio"
                                    id="new-application-no"
-                                   name="createNewApplication"
-                                   value="No"
+                                   th:field="*{form.createNewApplication}"
+                                   value="0"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
                             <label for="new-application-no">

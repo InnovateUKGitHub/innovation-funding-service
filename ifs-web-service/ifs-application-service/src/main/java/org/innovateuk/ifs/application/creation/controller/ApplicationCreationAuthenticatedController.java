@@ -34,13 +34,13 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/application/create-authenticated")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationCreationAuthenticatedController {
     public static final String COMPETITION_ID = "competitionId";
     public static final String RADIO_TRUE = "true";
     public static final String RADIO_FALSE = "false";
-  //  public static final String FORM_RADIO_NAME = "create-application";
+    //  public static final String FORM_RADIO_NAME = "create-application";
 
     @Autowired
     protected ApplicationService applicationService;
@@ -56,10 +56,10 @@ public class ApplicationCreationAuthenticatedController {
 
     @GetMapping("/{competitionId}")
     public String view(Model model,
-                       @PathVariable(COMPETITION_ID) Long competitionId,@ModelAttribute(value = "form", binding = false) ApplicationCreationAuthenticatedForm form,
+                       @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user) {
 
-        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
+        if (!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
 
@@ -67,7 +67,7 @@ public class ApplicationCreationAuthenticatedController {
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
             model.addAttribute("form", new ApplicationCreationAuthenticatedForm());
-            model.addAttribute("createNewApplication", false);
+//            model.addAttribute("createNewApplication", false);
             return "create-application/confirm-new-application";
         } else {
             return createApplicationAndShowInvitees(user, competitionId);
@@ -76,7 +76,7 @@ public class ApplicationCreationAuthenticatedController {
     }
 
     private String redirectToNotEligible(Long competitionId) {
-       return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
+        return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
     }
 
     @PostMapping("/{competitionId}")
@@ -98,11 +98,9 @@ public class ApplicationCreationAuthenticatedController {
                 return "redirect:/";
             }
         }
-        // user did not check one of the radio elements, show page again.
-        bindingResult.rejectValue("createNewApplication", "validation.field.confirm.new.application");
         return "redirect:/application/create-authenticated/" + competitionId;
-
     }
+
 
     @GetMapping("/{competitionId}/not-eligible")
     public String showNotEligiblePage(Model model,
