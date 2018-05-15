@@ -32,7 +32,7 @@ Administrator can see the read only view of internal user profile
     [Documentation]  INFUND-606
     [Tags]
     When the user clicks the button/link  link=John Doe
-    Then the user should see the element  jQuery=h1:contains("View internal user's details")
+    Then the user should see the element  jQuery=h1:contains("View internal user details")
     And the user should see the element   jQuery=dt:contains("Email address") + dd:contains("${Comp_admin1_credentials["email"]}")
     And the user should see the element   jQuery=dt:contains("Role") + dd:contains("Competition Administrator")
     And the user should see the element   jQuery=.form-footer__info:contains("Created by IFS Web System User")
