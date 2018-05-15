@@ -72,64 +72,22 @@ function addTestFiles() {
     done
 }
 
-function resetDB() {
-    section "=> RESETTING DATABASE STATE and syncing shibboleth users"
-    cd ${rootDir}
-    ./gradlew ifs-data-layer:ifs-data-service:flywayClean ifs-data-layer:ifs-data-service:flywayMigrate syncShib
-}
-
-function buildAndDeploy() {
-    section "=> BUILDING AND DEPLOYING APPLICATION"
-    cd ${rootDir}
-    if [[ ${noDeploy} -eq 0 ]]
-    then
-        echo "=> Starting build and deploy script..."
-        ./gradlew -Pcloud=development buildDocker -x test
-    else
-        coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
-    fi
-
-    ./gradlew -Pcloud=development deploy wait -x test
-}
-
-function injectRobotParameters() {
-    section "=> INJECTING ENVIRONMENT BUILD PARAMETERS"
-    cd ${rootDir}
-    echo "=> Injecting environment specific build parameters..."
-        ./gradlew robotTestsFilter
-
-}
-
-function startSeleniumGrid() {
-    section "=> STARTING SELENIUM GRID"
-
-    cd ${scriptDir}
-
-    if [[ ${parallel} -eq 1 ]]
-    then
-      declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
-    else
-      declare -i suiteCount=1
-    fi
-    if [[ ${suiteCount} -eq 0 ]]
-    then
-      suiteCount=1
-    fi
-
-    echo "=> Suite count: ${suiteCount}"
+function initialiseTestEnvironment() {
 
     cd ${rootDir}
 
-    ./gradlew deployHub deployChrome
-
-    cd ${scriptDir}
-
-    unset suiteCount
     if [[ ${quickTest} -eq 1 ]]
-    then
-      echo "=> Waiting 5 seconds for the grid to be properly started"
-      sleep 5
+      then
+        section "=> STARTING SELENIUM GRID and INJECTING ENVIRONMENT PARAMETERS"
+        ./gradlew deployHub deployChrome robotTestsFilter
+
+        echo "=> Waiting 5 seconds for the grid to be properly started"
+        sleep 5
+      else
+        section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE and syncing shibboleth users"
+        ./gradlew deployHub deployChrome robotTestsFilter ifs-data-layer:ifs-data-service:flywayClean ifs-data-layer:ifs-data-service:flywayMigrate syncShib
     fi
+
   }
 
 function stopSeleniumGrid() {
@@ -202,27 +160,16 @@ function runTests() {
 
     cd ${scriptDir}
 
-    if [[ ${parallel} -eq 1 ]]
-    then
-      for D in `find ${testDirectory}/* -maxdepth 0 -type d`
-      do
-          startPybot ${D}
-      done
-    else
-      startPybot ${testDirectory}
-    fi
+    startPybot ${testDirectory}
 
     if [[ $vnc -eq 1 ]]
     then
-      local vncport="$(docker-compose port chrome 5900)"
-      vncport=${vncport:8:5}
-
       if [ "$(uname)" == "Darwin" ];
       then
-        open "vnc://root:secret@ifs.local-dev:"${vncport}
+        open "vnc://root:secret@ifs.local-dev:5900"
       fi
       echo "**********For remote desktop please use this url in your vnc client**********"
-        echo  "vnc://root:secret@ifs.local-dev:"${vncport}
+        echo  "vnc://root:secret@ifs.local-dev:5900"
     fi
 
     for job in `jobs -p`
@@ -230,11 +177,6 @@ function runTests() {
         wait $job
     done
 
-    if [[ ${parallel} -eq 1 ]]
-    then
-      results=`find target/* -regex ".*/output\.xml"`
-      rebot -d target ${results}
-    fi
 }
 
 function deleteEmails() {
@@ -250,6 +192,7 @@ function deleteEmails() {
 
 function clearOldReports() {
   section "=> REMOVING OLD REPORTS"
+  cd ${scriptDir}
   rm -rf target
   mkdir target
 }
@@ -332,18 +275,13 @@ unset useBespokeExcludeTag
 quickTest=0
 emails=0
 rerunFailed=0
-parallel=0
 stopGrid=0
-noDeploy=0
 showZapReport=0
 compress=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :r :c :n :w :z :d: :x :I: :E:" opt ; do
+while getopts ":q :h :t :r :c :w :z :d: :x :I: :E:" opt ; do
     case ${opt} in
-        p)
-            parallel=1
-        ;;
         q)
             quickTest=1
         ;;
@@ -364,7 +302,6 @@ while getopts ":p :q :h :t :r :c :n :w :z :d: :x :I: :E:" opt ; do
         ;;
     	d)
             testDirectory="$OPTARG"
-            parallel=0
         ;;
         I)
             useBespokeIncludeTags=1
@@ -376,9 +313,6 @@ while getopts ":p :q :h :t :r :c :n :w :z :d: :x :I: :E:" opt ; do
         ;;
         c)
             stopGrid=1
-        ;;
-        n)
-            noDeploy=1
         ;;
         w)
           vnc=1
@@ -404,8 +338,7 @@ while getopts ":p :q :h :t :r :c :n :w :z :d: :x :I: :E:" opt ; do
     esac
 done
 
-startSeleniumGrid
-injectRobotParameters
+initialiseTestEnvironment
 
 if [[ ${rerunFailed} -eq 0 ]]
 then
@@ -421,16 +354,10 @@ then
 elif [[ ${testScrub} ]]
 then
     coloredEcho "=> Using testScrub mode: this will do all the dirty work but omit the tests" blue
-
-    buildAndDeploy
-    resetDB
     addTestFiles
     deleteEmails
 else
     coloredEcho "=> Using quickTest: FALSE" blue
-
-    buildAndDeploy
-    resetDB
     addTestFiles
     deleteEmails
     runTests
