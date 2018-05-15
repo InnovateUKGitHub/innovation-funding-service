@@ -7,6 +7,7 @@ import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -350,6 +351,20 @@ public class CompetitionSetupController {
 
         return validationHandler.addAnyErrors(updateResult, asGlobalErrors())
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/setup/%d", competitionId));
+    }
+
+    @PostMapping("/{competitionId}/delete")
+    public String delete(Model model,
+                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                         @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
+                         @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                         ValidationHandler validationHandler) {
+        Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult);
+
+        RestResult<Void> deleteResult = competitionSetupRestService.delete(competitionId);
+
+        return validationHandler.addAnyErrors(deleteResult, asGlobalErrors())
+                .failNowOrSucceedWith(failureView, () -> "redirect:/");
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")

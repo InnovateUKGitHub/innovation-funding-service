@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
@@ -35,7 +36,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -64,6 +67,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
     @Autowired
     private GrantTermsAndConditionsMapper termsAndConditionsMapper;
+    @Autowired
+    private PublicContentRepository publicContentRepository;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -310,6 +315,32 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
         return competitionSetupTemplateService.initializeCompetitionByCompetitionTemplate(competitionId, competitionTypeId)
                 .andOnSuccess(() -> serviceSuccess());
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteCompetition(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(competition ->
+                deletePublicContentForCompetition(competition).andOnSuccess(() -> {
+                    deleteFormValidatorsForCompetitionQuestions(competition);
+                    competitionRepository.delete(competition);
+                    return serviceSuccess();
+                }));
+    }
+
+    private ServiceResult<Void> deletePublicContentForCompetition(Competition competition) {
+        return find(publicContentRepository.findByCompetitionId(competition.getId()), notFoundError(Competition.class,
+                competition.getId())).andOnSuccess(publicContent -> {
+            publicContentRepository.delete(publicContent);
+            return serviceSuccess();
+        });
+    }
+
+    private void deleteFormValidatorsForCompetitionQuestions(Competition competition) {
+        competition.getQuestions().forEach(question ->
+                question.getFormInputs().forEach(formInput ->
+                        formInput.getFormValidators().clear()));
+        competitionRepository.save(competition);
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {

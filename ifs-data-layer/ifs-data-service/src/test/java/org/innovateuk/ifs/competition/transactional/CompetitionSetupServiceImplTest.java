@@ -17,6 +17,8 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.publiccontent.domain.PublicContent;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -24,6 +26,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,11 +38,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
@@ -54,6 +59,8 @@ public class CompetitionSetupServiceImplTest {
     private CompetitionRepository competitionRepository;
     @Mock
     private FormInputRepository formInputRepository;
+    @Mock
+    private PublicContentRepository publicContentRepository;
     @Mock
     private QuestionRepository questionRepository;
 	@Mock
@@ -403,4 +410,44 @@ public class CompetitionSetupServiceImplTest {
 
         verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
 	}
+
+
+    @Test
+    public void deleteCompetition() throws Exception {
+        Competition competition = newCompetition()
+                // TODO need to add some questions with form inputs that have validators and that expect for each
+                // form input there are not validators
+                .build();
+
+        PublicContent publicContent = newPublicContent().build();
+
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
+
+        ServiceResult<Void> result = service.deleteCompetition(competition.getId());
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(competitionRepository, publicContentRepository);
+        inOrder.verify(competitionRepository).findOne(competition.getId());
+        inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
+        inOrder.verify(publicContentRepository).delete(publicContent);
+        inOrder.verify(competitionRepository).save(competition);
+        inOrder.verify(competitionRepository).delete(competition);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void deleteCompetition_competitionNotFound() throws Exception {
+        Competition competition = newCompetition().build();
+
+        when(competitionRepository.findOne(competition.getId())).thenReturn(null);
+
+        ServiceResult<Void> result = service.deleteCompetition(competition.getId());
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Competition.class, competition.getId())));
+
+        verify(competitionRepository).findOne(competition.getId());
+        verifyNoMoreInteractions(competitionRepository);
+    }
 }

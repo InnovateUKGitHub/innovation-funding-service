@@ -30,13 +30,13 @@ public class Competition implements ProcessActivity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CompetitionFunder> funders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("priority ASC")
     private List<Section> sections = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class Competition implements ProcessActivity {
     private Integer assessorCount;
     private BigDecimal assessorPay;
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "competition", cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
     private List<Milestone> milestones = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

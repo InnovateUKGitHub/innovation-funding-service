@@ -11,6 +11,7 @@
 <body class="competition-management competition-setup" th:with="currentSectionIsHome=${model.general.currentSectionIsHome()}">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/competition-setup :: comp-setup-complete-modal" th:if="${currentSectionIsHome}"/>
+<th:block th:insert="fragments/competition-setup :: comp-setup-delete-modal" th:if="${currentSectionIsHome}"/>
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 

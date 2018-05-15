@@ -75,4 +75,8 @@ public interface CompetitionSetupService {
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to competition setup")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(Long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @SecuredBySpring(value="DELETE", securedType=CompetitionResource.class, description = "Only Comp Admins are able to delete a competition")
+    ServiceResult<Void> deleteCompetition(long competitionId);
 }
