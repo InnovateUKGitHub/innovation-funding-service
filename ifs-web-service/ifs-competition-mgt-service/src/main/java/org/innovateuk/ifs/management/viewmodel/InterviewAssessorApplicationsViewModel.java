@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.List;
 import java.util.Set;
 
 public class InterviewAssessorApplicationsViewModel {
@@ -11,19 +14,19 @@ public class InterviewAssessorApplicationsViewModel {
     private final String competitionName;
     private final UserResource user;
     private final ProfileResource profile;
-    private final Set<String> innovationAreas;
+    private final List<InnovationSectorViewModel> innovationSectors;
 
     public InterviewAssessorApplicationsViewModel(long competitionId,
                                                   String competitionName,
                                                   UserResource user,
                                                   ProfileResource profile,
-                                                  Set<String> innovationAreas
+                                                  List<InnovationSectorViewModel> innovationSectors
     ) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.user = user;
         this.profile = profile;
-        this.innovationAreas = innovationAreas;
+        this.innovationSectors = innovationSectors;
     }
 
     public long getCompetitionId() {
@@ -42,7 +45,7 @@ public class InterviewAssessorApplicationsViewModel {
         return profile;
     }
 
-    public Set<String> getInnovationAreas() {
-        return innovationAreas;
+    public List<InnovationSectorViewModel> getInnovationSectors() {
+        return innovationSectors;
     }
 }

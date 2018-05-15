@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}" />
 
     <th:block th:insert="fragments/layout :: page-title"
               th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
@@ -27,18 +27,24 @@
         </div>
 
         <div class="column-half">
-            <dl>
-                <dt>Innovation areas</dt>
-                <dd>
-                    <th:block th:each="innovationArea, iterStat : ${model.innovationAreas}">
-                        <ul class="list list-bullet">
-                            <li th:text="${innovationArea}">Materials and manufacturing</li>
-                        </ul>
-                    </th:block>
-                </dd>
-                <dt>Skill areas</dt>
-                <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
-            </dl>
+
+            <h3 class="heading-small">Innovation areas</h3>
+
+            <ul class="list list-bullet">
+                <li th:each="innovationSector : ${model.innovationSectors}">
+                    <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
+                    <ul class="list list-bullet">
+                        <li th:each="innovationArea : ${innovationSector.children}">
+                            <th:block th:text="${innovationArea.name}">digital sciences</th:block>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <h3 class="heading-small">Skill areas</h3>
+
+            <span th:text="${model.profile.getSkillsAreas()}">skills</span>
+
         </div>
     </div>
 
