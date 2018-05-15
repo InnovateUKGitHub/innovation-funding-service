@@ -16,7 +16,7 @@
 
             <form method="GET" th:object="${filterForm}">
                 <div class="search-filters">
-                    <legend class="visuallyhidden">Search filters</legend>
+                    <legend class="heading-medium no-margin">Filter assessors</legend>
                     <div class="grid-row">
                         <div class="column-half">
                            <div class="form-group">
@@ -47,12 +47,13 @@
                     </div>
 
                     <div class="grid-row">
-                        <div class="column-half">
-                            <a href="?sort">Clear all filters</a>
-                        </div>
-                        <div class="column-half alignright">
+                        <div class="column-one alignright">
                             <button class="button no-margin">Filter</button>
                         </div>
+                    </div>
+
+                    <div class="clear-search-filters">
+                        <a href="?sort">Clear all filters</a>
                     </div>
 
                 </div>
