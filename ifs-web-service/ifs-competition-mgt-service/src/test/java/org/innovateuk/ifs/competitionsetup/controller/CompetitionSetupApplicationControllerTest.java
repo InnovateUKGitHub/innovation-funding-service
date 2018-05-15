@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -77,6 +78,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Mock
     private QuestionSetupRestService questionSetupRestService;
+
+    @Mock
+    private CompetitionService competitionService;
 
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }

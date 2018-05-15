@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -86,6 +88,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Mock
     private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private CompetitionService competitionService;
 
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {

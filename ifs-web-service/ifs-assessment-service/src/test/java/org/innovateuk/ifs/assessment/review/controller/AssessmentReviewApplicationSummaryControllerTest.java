@@ -1,23 +1,26 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.hamcrest.Matchers;
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +64,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AssessmentReviewApplicationSummaryControllerTest extends BaseControllerMockMVCTest<AssessmentReviewApplicationSummaryController> {
+public class AssessmentReviewApplicationSummaryControllerTest extends AbstractApplicationMockMVCTest<AssessmentReviewApplicationSummaryController> {
 
     @Spy
     @InjectMocks
@@ -81,6 +84,18 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
+    @Mock
+    private CategoryRestService categoryRestServiceMock;
+
+    @Mock
+    private UserRestService userRestServiceMock;
+
+    @Mock
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Mock
+    private AssessmentRestService assessmentRestService;
+
     @Override
     protected AssessmentReviewApplicationSummaryController supplyControllerUnderTest() {
         return new AssessmentReviewApplicationSummaryController();
@@ -93,7 +108,6 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
 

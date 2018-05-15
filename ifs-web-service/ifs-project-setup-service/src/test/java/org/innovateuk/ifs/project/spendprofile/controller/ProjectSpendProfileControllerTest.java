@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
@@ -12,11 +14,14 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
@@ -65,6 +70,21 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Spy
     public SpendProfileTableCalculator spendProfileTableCalculator;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private SpendProfileService spendProfileService;
+
+    @Mock
+    private StatusService statusService;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Override
     protected ProjectSpendProfileController supplyControllerUnderTest() {

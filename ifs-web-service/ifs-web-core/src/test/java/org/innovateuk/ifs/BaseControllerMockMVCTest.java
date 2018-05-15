@@ -76,11 +76,18 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withUID("2522-34y34ah-hrt4420").build();
 
     protected UserResource assessorAndApplicant = newUserResource().withId(4L)
-                .withFirstName("Fred")
-                .withLastName("Smith")
-                .withEmail("fred.smith@email.co.uk")
+            .withFirstName("Fred")
+            .withLastName("Smith")
+            .withEmail("fred.smith@email.co.uk")
             .withRolesGlobal(asList(Role.APPLICANT, Role.ASSESSOR))
-                .withUID("1234-abcdefgh-abc1234").build();
+            .withUID("1234-abcdefgh-abc1234").build();
+
+    protected UserResource collaborator = newUserResource().withId(2L)
+            .withFirstName("John")
+            .withLastName("Patricks")
+            .withEmail("john.patricks@email.co.uk")
+            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withUID("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource loggedInUser = applicant;
 

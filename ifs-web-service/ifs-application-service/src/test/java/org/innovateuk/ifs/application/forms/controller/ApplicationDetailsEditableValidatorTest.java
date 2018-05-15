@@ -4,10 +4,12 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -23,6 +25,9 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
     @InjectMocks
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
+
+    @Mock
+    private QuestionService questionService;
 
     @Test
     public void questionAndApplicationHaveAllowedState_shouldReturnTrueWhenApplicationIsOpenAndDetailsNotMarkedAsComplete() throws Exception {

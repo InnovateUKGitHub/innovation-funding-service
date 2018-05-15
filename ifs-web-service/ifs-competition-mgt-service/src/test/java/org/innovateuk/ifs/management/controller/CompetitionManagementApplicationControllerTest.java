@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -8,7 +8,9 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
@@ -16,7 +18,6 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.management.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.management.model.ApplicationTeamModelPopulator;
@@ -26,7 +27,11 @@ import org.innovateuk.ifs.management.viewmodel.ApplicationOverviewIneligibilityV
 import org.innovateuk.ifs.management.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.viewmodel.ReinstateIneligibleApplicationViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -48,6 +53,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -61,7 +67,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -76,7 +81,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class CompetitionManagementApplicationControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationController> {
+public class CompetitionManagementApplicationControllerTest extends AbstractApplicationMockMVCTest<CompetitionManagementApplicationController> {
 
     @Spy
     @InjectMocks
@@ -108,13 +113,21 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     @InjectMocks
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
+    @Mock
+    private CategoryRestService categoryRestServiceMock;
+
+    @Mock
+    private ApplicationSummaryRestService applicationSummaryRestService;
+
+    @Mock
+    private UserRestService userRestServiceMock;
+
     @Test
     public void displayApplicationOverviewAsCompAdmin() throws Exception {
         this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -132,7 +145,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -153,7 +165,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -176,7 +187,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupEmptyResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -209,7 +219,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupEmptyResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -275,7 +284,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -290,7 +298,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -305,7 +312,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -345,7 +351,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_invalidOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         setupApplicantResource();
@@ -361,7 +366,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
             this.setupCompetition();
             this.setupApplicationWithRoles();
-            this.loginDefaultUser();
             this.setupInvites();
             this.setupOrganisationTypes();
             setupApplicantResource();
@@ -392,7 +396,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         setupApplicantResource();
@@ -435,7 +438,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         setupApplicantResource();
@@ -464,7 +466,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void markAsIneligible() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         setupApplicantResource();
@@ -485,7 +486,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void markAsIneligible_notSubmitted() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         setupApplicantResource();
@@ -514,7 +514,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void markAsIneligible_noReason() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         setupApplicantResource();
@@ -629,7 +628,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
 
@@ -659,7 +657,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -783,7 +780,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();
@@ -802,7 +798,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
         this.setupResearchCategories();

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
 import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
-public class MilestoneFormPopulatorTest extends BaseUnitTestMocksTest {
+public class MilestoneFormPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private MilestonesFormPopulator service;

@@ -2,22 +2,24 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import com.google.common.collect.ImmutableMap;
 import org.hamcrest.Matchers;
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPopulator;
-import org.innovateuk.ifs.application.forms.populator.FeedbackNavigationPopulator;
-import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,13 +46,11 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<ApplicationSummaryController>  {
+public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVCTest<ApplicationSummaryController> {
 
     @Spy
     @InjectMocks
@@ -66,6 +66,24 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
+    @Mock
+    private CategoryRestService categoryRestServiceMock;
+
+    @Mock
+    private UserRestService userRestServiceMock;
+
+    @Mock
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Mock
+    private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Mock
+    private ProjectService projectService;
+
     @Override
     protected ApplicationSummaryController supplyControllerUnderTest() {
         return new ApplicationSummaryController();
@@ -78,7 +96,6 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
 

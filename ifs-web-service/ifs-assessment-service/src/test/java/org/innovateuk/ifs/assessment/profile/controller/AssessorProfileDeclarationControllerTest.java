@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
@@ -9,10 +10,12 @@ import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclaratio
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -53,6 +56,12 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
     @Spy
     @InjectMocks
     private AssessorProfileDeclarationFormPopulator assessorProfileDeclarationFormPopulator;
+
+    @Mock
+    private AffiliationRestService affiliationRestService;
+
+    @Mock
+    private UserService userService;
 
     @Override
     @Before

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.junit.Assert.*;
 
-public class TermsAndConditionsFormPopulatorTest extends BaseUnitTestMocksTest {
+public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private TermsAndConditionsFormPopulator service;

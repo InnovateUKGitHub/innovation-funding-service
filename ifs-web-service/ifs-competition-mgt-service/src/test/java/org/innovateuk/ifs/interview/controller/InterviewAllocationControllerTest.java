@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
+import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.model.InterviewAcceptedAssessorsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.InterviewAcceptedAssessorsRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewAcceptedAssessorsViewModel;
@@ -11,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -35,6 +38,12 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     @Spy
     @InjectMocks
     private InterviewAcceptedAssessorsModelPopulator interviewAcceptedAssessorsModelPopulator;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private InterviewAllocationRestService interviewAllocationRestService;
 
     @Override
     protected InterviewAllocationController supplyControllerUnderTest() {

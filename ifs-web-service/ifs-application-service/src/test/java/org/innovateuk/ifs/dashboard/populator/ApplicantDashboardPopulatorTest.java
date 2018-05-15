@@ -3,25 +3,38 @@ package org.innovateuk.ifs.dashboard.populator;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
@@ -38,6 +51,23 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     @InjectMocks
     private ApplicantDashboardPopulator populator;
 
+    private CompetitionResource competitionResource = newCompetitionResource()
+            .with(id(1L))
+            .with(name("Competition x"))
+            .withStartDate(ZonedDateTime.now().minusDays(2))
+            .withEndDate(ZonedDateTime.now().plusDays(5))
+            .withCompetitionStatus(CompetitionStatus.OPEN)
+            .withMinProjectDuraction(1)
+            .withMaxProjectDuraction(36)
+            .build();
+
+    protected UserResource loggedInUser = newUserResource().withId(1L)
+            .withFirstName("James")
+            .withLastName("Watts")
+            .withEmail("james.watts@email.co.uk")
+            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withUID("2aerg234-aegaeb-23aer").build();
+
     private final static Long APPLICATION_ID_IN_PROGRESS = 1L;
     private final static Long APPLICATION_ID_IN_FINISH = 10L;
     private final static Long APPLICATION_ID_SUBMITTED = 100L;
@@ -46,10 +76,24 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     private final static Long APPLICATION_ID_IN_PROJECT = 15L;
     private final static Long APPLICATION_ID_IN_PROJECT_WITHDRAWN = 150L;
 
+    @Mock
+    private ApplicationRestService applicationRestService;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private ProcessRoleService processRoleService;
+
+    @Mock
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
     @Before
     public void setup() {
         super.setup();
-        this.setupCompetition();
         CompetitionResource compInProjectSetup = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
                 .build();

@@ -26,11 +26,7 @@ import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
@@ -44,7 +40,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -53,8 +48,6 @@ import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBu
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -70,7 +63,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractApplicationMockMVCTest<ControllerType> extends BaseControllerMockMVCTest<ControllerType> {
+public abstract class AbstractApplicationMockMVCTest<ControllerType> extends AbstractInviteMockMVCTest<ControllerType> {
     @Mock
     protected ApplicationService applicationService;
     @Mock
@@ -84,11 +77,23 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Bas
     @Mock
     protected QuestionService questionService;
     @Mock
-    protected InviteRestService inviteRestService;
-    @Mock
     protected FormInputResponseRestService formInputResponseRestService;
     @Mock
     protected ProcessRoleService processRoleService;
+    @Mock
+    protected DefaultFinanceModelManager defaultFinanceModelManager;
+    @Mock
+    protected FormInputRestService formInputRestService;
+    @Mock
+    protected FinanceViewHandlerProvider financeViewHandlerProvider;
+    @Mock
+    protected FinanceService financeService;
+    @Mock
+    protected ApplicationFinanceRestService applicationFinanceRestService;
+    @Mock
+    protected DefaultFinanceFormHandler defaultFinanceFormHandler;
+    @Mock
+    protected UserService userService;
 
     @Mock
     private OrganisationTypeRestService organisationTypeRestService;
@@ -100,42 +105,16 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Bas
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private FormInputRestService formInputRestService;
-
-    @Mock
-    private UserService userService;
-
-    @Mock
     private FormInputResponseService formInputResponseService;
 
-    @Mock
-    private FinanceService financeService;
-
-    @Mock
-    private ApplicationFinanceRestService applicationFinanceRestService;
-
-    @Mock
-    private FinanceViewHandlerProvider financeViewHandlerProvider;
-
-    @Mock
-    private InviteOrganisationRestService inviteOrganisationRestService;
-
-    @Mock
-    private DefaultFinanceFormHandler defaultFinanceFormHandler;
-
-    @Mock
-    private DefaultFinanceModelManager defaultFinanceModelManager;
-
-    public List<ApplicationResource> applications;
+    public List<ApplicationResource> applications = new ArrayList<>();
     public List<SectionResource> sectionResources;
-    public Map<Long, QuestionResource> questionResources;
+    public Map<Long, QuestionResource> questionResources = new HashMap<>();
 
     public Map<Long, FormInputResponseResource> formInputsToFormInputResponses;
     public List<CompetitionResource> competitionResources;
     public CompetitionResource competitionResource;
-    private Long competitionId = 1L;
-    public List<UserResource> users;
-    public List<OrganisationResource> organisations;
+    public List<OrganisationResource> organisations = new ArrayList<>();
     TreeSet<OrganisationResource> organisationSet;
     public List<ProcessRoleResource> assessorProcessRoleResources;
     public List<ProcessRoleResource> applicantRoles;
@@ -338,6 +317,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Bas
     }
 
     public void setupApplicationWithRoles(){
+        setupOrganisationTypes();
         // Build the backing applications.
 
         applications = asList(
@@ -412,7 +392,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Bas
         when(processRoleService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn(processRole2);
         when(processRoleService.findProcessRole(applicant.getId(), applications.get(2).getId())).thenReturn(processRole3);
         when(processRoleService.findProcessRole(applicant.getId(), applications.get(3).getId())).thenReturn(processRole4);
-        when(processRoleService.findProcessRole(users.get(0).getId(), applications.get(0).getId())).thenReturn(processRole5);
+        when(processRoleService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn(processRole5);
         when(processRoleService.findProcessRole(assessor.getId(), applications.get(1).getId())).thenReturn(processRole6);
         when(processRoleService.findProcessRole(assessor.getId(), applications.get(2).getId())).thenReturn(processRole7);
         when(processRoleService.findProcessRole(assessor.getId(), applications.get(0).getId())).thenReturn(processRole8);
@@ -492,51 +472,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Bas
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
         when(financeViewHandlerProvider.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
         when(financeViewHandlerProvider.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
-    }
-
-    public void setupInvites() {
-        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", "Org type", null, null);
-
-        invite = new ApplicationInviteResource();
-        invite.setStatus(InviteStatus.SENT);
-        invite.setApplication(1L);
-        invite.setName("Some Invitee");
-        invite.setHash(INVITE_HASH);
-        String email = "invited@email.com";
-        invite.setEmail(email);
-        invite.setInviteOrganisation(inviteOrganisation.getId());
-        invite.setCompetitionId(competitionId);
-        inviteOrganisation.setInviteResources(Arrays.asList(invite));
-
-        when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
-        when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
-        when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
-        when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(restSuccess(false));
-        when(inviteRestService.checkExistingUser(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(UserResource.class, email)));
-        when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(ApplicationResource.class, INVALID_INVITE_HASH)));
-        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
-
-        acceptedInvite = new ApplicationInviteResource();
-        acceptedInvite.setStatus(InviteStatus.OPENED);
-        acceptedInvite.setApplication(1L);
-        acceptedInvite.setName("Some Invitee");
-        acceptedInvite.setHash(ACCEPTED_INVITE_HASH);
-        acceptedInvite.setEmail(email);
-        when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
-
-        existingUserInvite = new ApplicationInviteResource();
-        existingUserInvite.setStatus(InviteStatus.SENT);
-        existingUserInvite.setApplication(1L);
-        existingUserInvite.setName("Some Invitee");
-        existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);
-        existingUserInvite.setEmail("existing@email.com");
-        when(inviteRestService.checkExistingUser(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(true));
-        when(inviteRestService.getInviteByHash(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(existingUserInvite));
-
-        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH_EXISTING_USER)).thenReturn(restSuccess(new InviteOrganisationResource()));
-
     }
 
     public void setupQuestionStatus(ApplicationResource application) {

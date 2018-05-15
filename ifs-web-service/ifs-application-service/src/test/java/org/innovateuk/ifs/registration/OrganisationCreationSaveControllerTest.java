@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.controller.OrganisationCreationSaveController;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
@@ -48,6 +50,12 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
 
     @Mock
     private Validator validator;
+
+    @Mock
+    private InviteOrganisationRestService inviteOrganisationRestService;
+
+    @Mock
+    private OrganisationService organisationService;
 
     private OrganisationTypeForm organisationTypeForm;
     private OrganisationCreationForm organisationForm;

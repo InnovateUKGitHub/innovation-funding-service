@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.team.controller;
 
-import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.registration.controller.AcceptInviteController;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
@@ -8,12 +9,12 @@ import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -41,10 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AcceptInviteControllerTest extends BaseUnitTest {
-
-    @InjectMocks
-    private AcceptInviteController acceptInviteController;
+public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<AcceptInviteController> {
 
     @Mock
     private Validator validator;
@@ -58,22 +56,30 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
     @Mock
     private RegistrationCookieService registrationCookieService;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
+
     @Spy
     @InjectMocks
     private AcceptRejectApplicationInviteModelPopulator acceptRejectApplicationInviteModelPopulator;
 
+    @Override
+    protected AcceptInviteController supplyControllerUnderTest() {
+        return new AcceptInviteController();
+    }
+
     @Before
-    public void setUp() throws Exception {
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
         super.setup();
-        mockMvc = setupMockMvc(acceptInviteController, () -> null, env, messageSource);
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.setupFinances();
         this.setupInvites();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
     }
 
     @Test
