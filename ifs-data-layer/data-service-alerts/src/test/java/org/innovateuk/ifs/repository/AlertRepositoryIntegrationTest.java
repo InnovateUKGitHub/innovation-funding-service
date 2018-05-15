@@ -23,7 +23,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @EnableAutoConfiguration
-@EntityScan(basePackages = "org.innovateuk.ifs.alert.domain")
 public class AlertRepositoryIntegrationTest {
 
     @Autowired

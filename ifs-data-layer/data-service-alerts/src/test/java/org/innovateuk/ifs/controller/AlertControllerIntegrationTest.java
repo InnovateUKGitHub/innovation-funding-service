@@ -24,6 +24,8 @@ import static org.innovateuk.ifs.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
+@SpringBootTest(classes= IntegrationTestConfig.class)
+@ActiveProfiles("integration-test")
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 
     private UserResource systemMaintenanceUser;

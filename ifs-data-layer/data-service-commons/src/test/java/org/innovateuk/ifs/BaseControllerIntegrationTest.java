@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 @Rollback
-@SpringBootTest(classes= IntegrationTestConfig.class)
-@ActiveProfiles("integration-test")
 public abstract class BaseControllerIntegrationTest<ControllerType> extends BaseAuthenticationAwareIntegrationTest {
 
     public Log LOG = LogFactory.getLog(getClass());
