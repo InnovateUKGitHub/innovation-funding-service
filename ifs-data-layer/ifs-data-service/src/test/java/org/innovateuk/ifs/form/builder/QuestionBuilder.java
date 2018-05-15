@@ -45,12 +45,12 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((name, object) -> setField("priority", name, object), priority);
     }
     
-    public QuestionBuilder withQuestionType(QuestionType type) {
-        return with(question -> setField("type", type, question));
+    public QuestionBuilder withQuestionType(QuestionType... type) {
+        return withArray((name, object) -> setField("type", name, object), type);
     }
 
-    public QuestionBuilder withQuestionSetupType(CompetitionSetupQuestionType type) {
-        return with(question -> setField("questionSetupType", type, question));
+    public QuestionBuilder withQuestionSetupType(CompetitionSetupQuestionType... type) {
+        return withArray((name, object) -> setField("questionSetupType", name, object), type);
     }
 
     public QuestionBuilder withPriority(Function<Integer, Integer> prioritySetter) {

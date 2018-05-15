@@ -211,6 +211,6 @@ public class Question {
     }
 
     public boolean isScope() {
-        return this.questionSetupType != null && this.questionSetupType.equals(CompetitionSetupQuestionType.SCOPE);
+        return this.questionSetupType == CompetitionSetupQuestionType.SCOPE;
     }
 }
