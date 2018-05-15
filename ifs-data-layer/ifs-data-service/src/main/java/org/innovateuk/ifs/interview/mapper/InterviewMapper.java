@@ -45,7 +45,6 @@ public abstract class InterviewMapper extends BaseMapper<Interview, InterviewRes
             @Mapping(target = "participant", source = "processRole"),
             @Mapping(target = "target", source = "application"),
             @Mapping(target = "processState", source = "interviewState", ignore = true),
-            @Mapping(target = "processOutcomes", ignore = true),
             @Mapping(target = "lastModified", ignore = true)
     })
     @Override
