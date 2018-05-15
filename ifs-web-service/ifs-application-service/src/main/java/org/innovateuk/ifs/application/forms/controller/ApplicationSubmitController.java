@@ -135,7 +135,7 @@ public class ApplicationSubmitController {
                                    @PathVariable("applicationId") long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
 
-        if(application.getSubmittedDate() == null) {
+        if (application.getSubmittedDate() == null) {
             return "redirect:/application/" + applicationId;
         }
 
