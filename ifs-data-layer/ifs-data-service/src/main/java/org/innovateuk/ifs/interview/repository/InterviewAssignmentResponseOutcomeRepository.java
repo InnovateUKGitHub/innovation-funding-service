@@ -9,6 +9,4 @@ import org.springframework.data.repository.CrudRepository;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface InterviewAssignmentResponseOutcomeRepository extends CrudRepository<InterviewAssignmentResponseOutcome, Long> {
-
-
 }

@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InterviewResponseControllerTest extends BaseFileControllerMockMVCTest<InterviewResponseController> {
+
     @Mock
     private InterviewResponseService interviewResponseService;
 

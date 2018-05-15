@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,7 +34,7 @@ public class CompetitionResource {
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
-
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;

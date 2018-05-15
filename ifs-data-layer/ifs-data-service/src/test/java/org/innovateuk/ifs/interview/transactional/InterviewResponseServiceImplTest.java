@@ -36,6 +36,15 @@ public class InterviewResponseServiceImplTest extends BaseServiceUnitTest<Interv
     @Mock
     private InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
 
+    @Mock
+    private InterviewAssignmentRepository interviewAssignmentRepositoryMock;
+
+    @Mock
+    private FileEntryService fileEntryServiceMock;
+
+    @Mock
+    private InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
+
     @Override
     protected InterviewResponseServiceImpl supplyServiceUnderTest() {
         return new InterviewResponseServiceImpl();
