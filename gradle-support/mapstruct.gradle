@@ -1,5 +1,8 @@
 apply plugin: 'java'
 
+
+def generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
+
 configurations {
     mapstruct
 }
@@ -13,7 +16,7 @@ dependencies {
 sourceSets {
     main {
         ext.originalJavaSrcDirs = java.srcDirs
-        java.srcDir "${generatedMapperSourcesDir}"
+        java.srcDir generatedMapperSourcesDir
     }
 }
 
