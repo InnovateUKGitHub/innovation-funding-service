@@ -34,10 +34,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     @Version
     private int version = 0;
 
-    @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
-    @OrderBy("id ASC")
-    protected List<ProcessOutcome> processOutcomes = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="internal_participant_id", referencedColumnName = "id")
     protected User internalParticipant;
@@ -94,10 +90,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
 
     public void setProcessEvent(String event) {
         this.event = event;
-    }
-
-    public List<ProcessOutcome> getProcessOutcomes() {
-        return processOutcomes;
     }
 
     public abstract void setParticipant(ParticipantType participant);
