@@ -3,6 +3,7 @@ package org.innovateuk.ifs.form.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 
 import java.util.ArrayList;
@@ -25,7 +26,9 @@ public class QuestionResource {
     private Long section;
     private String questionNumber;
     private QuestionType type;
-    private CompetitionSetupQuestionType questionSetupType;
+
+    @ZeroDowntime(reference = "IFS-2833", description = "Set a default value for questionSetupType. Remove in cleanup")
+    private CompetitionSetupQuestionType questionSetupType = CompetitionSetupQuestionType.ASSESSED_QUESTION;
     private Integer assessorMaximumScore;
 
     public QuestionResource() {
