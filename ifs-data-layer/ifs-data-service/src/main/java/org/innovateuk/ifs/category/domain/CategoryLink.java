@@ -27,7 +27,7 @@ public abstract class CategoryLink<T, C extends Category> {
     @Column(name="class_name", insertable = false, updatable = false)
     private String className;
 
-    CategoryLink() {
+    public CategoryLink() {
     }
 
     protected CategoryLink(C category) {

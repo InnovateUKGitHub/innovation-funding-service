@@ -104,7 +104,7 @@ public class InterviewApplicationFeedbackServiceImplTest extends BaseServiceUnit
         ServiceResult<Void> response = service.deleteFeedback(applicationId);
 
         assertTrue(response.isSuccess());
-        verify(interviewAssignmentMessageOutcomeRepositoryMock).delete(messageOutcome.getId());
+        verify(interviewAssignmentMessageOutcomeRepositoryMock).delete(messageOutcome);
         verify(fileServiceMock).deleteFileIgnoreNotFound(fileId);
     }
 }

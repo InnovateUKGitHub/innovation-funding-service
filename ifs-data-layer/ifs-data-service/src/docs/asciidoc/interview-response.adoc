@@ -1,0 +1,47 @@
+=== Upload feedback
+==== Request
+include::{snippets}/interview-response/upload-response/http-request.adoc[]
+include::{snippets}/interview-response/upload-response/request-parameters.adoc[]
+include::{snippets}/interview-response/upload-response/path-parameters.adoc[]
+include::{snippets}/interview-response/upload-response/request-headers.adoc[]
+
+==== Response
+include::{snippets}/interview-response/upload-response/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-response/upload-response/curl-request.adoc[]
+
+=== Delete feedback
+==== Request
+include::{snippets}/interview-response/delete-response/http-request.adoc[]
+include::{snippets}/interview-response/delete-response/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-response/delete-response/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-response/delete-response/curl-request.adoc[]
+
+=== Download feedback
+==== Request
+include::{snippets}/interview-response/download-response/http-request.adoc[]
+include::{snippets}/interview-response/download-response/request-headers.adoc[]
+include::{snippets}/interview-response/download-response/request-headers.adoc[]
+
+==== Response
+include::{snippets}/interview-response/download-response/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-response/download-response/curl-request.adoc[]
+
+=== Find feedback
+==== Request
+include::{snippets}/interview-response/find-response/http-request.adoc[]
+include::{snippets}/interview-response/find-response/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-response/find-response/http-response.adoc[]
+include::{snippets}/interview-response/find-response/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-response/find-response/curl-request.adoc[]

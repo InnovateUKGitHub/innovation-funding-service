@@ -8,7 +8,8 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
  */
 public enum InterviewAssignmentEvent implements ProcessEvent {
     NOTIFY("notify"),
-    RESPOND("respond");
+    RESPOND("respond"),
+    WITHDRAW_RESPONSE("withdraw-response");
 
     String event;
 
