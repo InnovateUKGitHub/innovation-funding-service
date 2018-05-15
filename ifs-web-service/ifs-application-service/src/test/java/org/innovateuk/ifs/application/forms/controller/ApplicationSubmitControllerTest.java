@@ -2,9 +2,6 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPopulator;
-import org.innovateuk.ifs.application.forms.populator.FeedbackNavigationPopulator;
-import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
@@ -25,9 +22,11 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -203,6 +202,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void testApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
+        app.setSubmittedDate(ZonedDateTime.now());
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(competitionService.getById(anyLong())).thenReturn(competitionResource);
 
@@ -211,5 +211,18 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", competitionResource));
 
+    }
+
+    @Test
+    public void testNotSubmittedApplicationTrack() throws Exception {
+        ApplicationResource app = applications.get(0);
+        app.setSubmittedDate(null);
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(competitionService.getById(anyLong())).thenReturn(competitionResource);
+
+        mockMvc.perform(get("/application/1/track"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + app.getId()));
     }
 }
