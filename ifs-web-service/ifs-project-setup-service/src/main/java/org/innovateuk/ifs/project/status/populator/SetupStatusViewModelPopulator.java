@@ -3,26 +3,33 @@ package org.innovateuk.ifs.project.status.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.status.StatusService;
-import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
+import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -32,6 +39,12 @@ public class SetupStatusViewModelPopulator {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private FinanceCheckService financeCheckService;
 
     @Autowired
     private StatusService statusService;
@@ -88,10 +101,18 @@ public class SetupStatusViewModelPopulator {
 
         int partnerOrganisationCount = projectService.getPartnerOrganisationsForProject(projectId).size();
 
+        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisation.getId());
+
+        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
+
+        boolean pendingQueries = queriesResult.handleSuccessOrFailure(
+                noQueries -> false,
+                queries -> simpleAnyMatch(queries, query -> query.awaitingResponse));
+
         return new SetupStatusViewModel(project, competition, monitoringOfficer, organisation, isLeadPartner,
                 companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
                 projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus,
-                partnerOrganisationCount > 1, isProjectManager);
+                partnerOrganisationCount > 1, isProjectManager, pendingQueries);
     }
 
     private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean partnerProjectLocationRequired, boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {
