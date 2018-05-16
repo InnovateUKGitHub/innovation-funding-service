@@ -19,7 +19,7 @@
         <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit internal user\'s details',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit internal user details',size='heading-xlarge'" />
     <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
         <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
           <label class="form-label" th:for="${#ids.next('firstName')}">
