@@ -114,7 +114,7 @@
     </th:block>
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
         <h2 class="heading-medium">Confirm signed grant offer letter</h2>
-        <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" method="post" novalidate="novalidate">
+        <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
             <div class="form-group">
                 <fieldset>
                     <legend id="decisionGOL" class="extra-margin-bottom">
