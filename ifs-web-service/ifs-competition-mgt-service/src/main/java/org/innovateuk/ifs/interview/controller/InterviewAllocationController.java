@@ -178,8 +178,11 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                              HttpServletRequest request,
                                              HttpServletResponse response) {
         return ifSelectionFormIsNotEmpty(competitionId, userId, request, selectionForm -> {
-            selectionForm.getSelectedIds().remove(removeId);
-            saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
+            boolean removed = selectionForm.getSelectedIds().remove(removeId);
+            if (removed) {
+                selectionForm.setAllSelected(false);
+                saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
+            }
             return redirectToSend(competitionId, userId).get();
         });
     }
@@ -194,7 +197,6 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             return success.apply(maybeSelectionForm.get());
         }
     }
-
 
     private Supplier<String> redirectToAllocatedTab(long competitionId, long userId) {
         return () -> "redirect:" + UriComponentsBuilder
@@ -217,7 +219,6 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                 .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
                 .toUriString();
     }
-
 
     @PostMapping(value = "/unallocated-applications/{userId}", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToInviteList(Model model,

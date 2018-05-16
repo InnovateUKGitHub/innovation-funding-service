@@ -41,7 +41,10 @@ import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResou
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
+import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -185,15 +188,23 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         long idToRemove = 4L;
         InterviewAllocationSelectionForm selectionForm = new InterviewAllocationSelectionForm();
         selectionForm.getSelectedIds().add(idToRemove);
+        selectionForm.setAllSelected(true);
 
         String cookieContent = JsonUtil.getSerializedObject(selectionForm);
         String cookieName = String.format("%s_comp_%s_%s", InterviewAllocationController.SELECTION_FORM, competitionId, userId);
         Cookie cookie = new Cookie(cookieName, getCompressedString(cookieContent));
 
-        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}", competitionId, userId)
+        MvcResult result = mockMvc.perform(post("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}", competitionId, userId)
             .param("remove", String.valueOf(idToRemove))
             .cookie(cookie))
             .andExpect(redirectedUrl(String.format("/assessment/interview/competition/%s/assessors/allocate-applications/%s", competitionId, userId)))
             .andReturn();
+
+        Cookie resultCookie = result.getResponse().getCookie(cookieName);
+        String resultContent = getDecompressedString(resultCookie.getValue());
+        InterviewAllocationSelectionForm resultForm = JsonUtil.getObjectFromJson(resultContent, InterviewAllocationSelectionForm.class);
+
+        assertTrue(resultForm.getSelectedIds().isEmpty());
+        assertFalse(resultForm.getAllSelected());
     }
 }
