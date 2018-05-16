@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -21,6 +23,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTest<CompetitionSummaryPermissionRules> {
+
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
 
     @Override
     protected CompetitionSummaryPermissionRules supplyPermissionRulesUnderTest() {

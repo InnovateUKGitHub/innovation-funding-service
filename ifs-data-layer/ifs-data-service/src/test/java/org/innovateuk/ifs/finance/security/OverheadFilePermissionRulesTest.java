@@ -5,11 +5,13 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Collections;
 
@@ -35,6 +37,9 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     private UserResource compAdmin;
     private UserResource otherLeadApplicant;
     private UserResource internalUser;
+
+    @Mock
+    private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
 
     @Override
     protected OverheadFilePermissionRules supplyPermissionRulesUnderTest() {

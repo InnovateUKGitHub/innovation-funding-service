@@ -2,11 +2,15 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
+import org.innovateuk.ifs.review.transactional.ReviewStatisticsService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
@@ -27,6 +31,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMVCTest<CompetitionKeyStatisticsController> {
 
+    @Mock
+    private CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
+
+    @Mock
+    private InterviewStatisticsService interviewStatisticsServiceMock;
+
+    @Mock
+    private ReviewStatisticsService reviewStatisticsServiceMock;
     @Override
     protected CompetitionKeyStatisticsController supplyControllerUnderTest() {
         return new CompetitionKeyStatisticsController();
