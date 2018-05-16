@@ -214,9 +214,8 @@ the invited user fills the create account form
     the user clicks the button/link  css=button[type="submit"][name="create-account"]
 
 the user clicks the forgot psw link
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=forgot your password?
-    Run Keyword If    '${status}' == 'FAIL'    click element    jQuery=summary:contains("Need help signing in or creating an account?")
-    Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?
+    The user clicks the button/link  jQuery=summary:contains("Need help signing in or creating an account?")
+    The user clicks the button/link  link=Forgotten your password?
 
 Close browser and delete emails
     Close any open browsers

@@ -30,11 +30,16 @@
             <dl>
                 <dt>Innovation areas</dt>
                 <dd>
-                    <th:block th:each="innovationArea, iterStat : ${model.innovationAreas}">
-                        <ul class="list list-bullet">
-                            <li th:text="${innovationArea}">Materials and manufacturing</li>
-                        </ul>
-                    </th:block>
+                    <ul class="list list-bullet">
+                        <li th:each="innovationSector : ${model.innovationSectors}">
+                            <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
+                            <ul class="list list-bullet">
+                                <li th:each="innovationArea : ${innovationSector.children}">
+                                    <th:block th:text="${innovationArea.name}">digital sciences</th:block>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </dd>
                 <dt>Skill areas</dt>
                 <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
-import java.util.Set;
 
 public class InterviewAssessorApplicationsViewModel {
 
@@ -12,7 +11,7 @@ public class InterviewAssessorApplicationsViewModel {
     private final String competitionName;
     private final UserResource user;
     private final ProfileResource profile;
-    private final Set<String> innovationAreas;
+    private final List<InnovationSectorViewModel> innovationSectors;
     private final List<InterviewAllocatedApplicationRowViewModel> rows;
     private final PaginationViewModel pagination;
     private final long unallocatedApplications;
@@ -23,7 +22,7 @@ public class InterviewAssessorApplicationsViewModel {
                                                   String competitionName,
                                                   UserResource user,
                                                   ProfileResource profile,
-                                                  Set<String> innovationAreas,
+                                                  List<InnovationSectorViewModel> innovationSectors,
                                                   List<InterviewAllocatedApplicationRowViewModel> rows,
                                                   PaginationViewModel pagination,
                                                   long unallocatedApplications,
@@ -33,7 +32,7 @@ public class InterviewAssessorApplicationsViewModel {
         this.competitionName = competitionName;
         this.user = user;
         this.profile = profile;
-        this.innovationAreas = innovationAreas;
+        this.innovationSectors = innovationSectors;
         this.rows = rows;
         this.pagination = pagination;
         this.unallocatedApplications = unallocatedApplications;
@@ -57,8 +56,8 @@ public class InterviewAssessorApplicationsViewModel {
         return profile;
     }
 
-    public Set<String> getInnovationAreas() {
-        return innovationAreas;
+    public List<InnovationSectorViewModel> getInnovationSectors() {
+        return innovationSectors;
     }
 
     public List<InterviewAllocatedApplicationRowViewModel> getRows() {
