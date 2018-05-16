@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
+import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.commons.error.Error;
@@ -35,10 +37,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -46,8 +45,13 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WIT
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
+import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.junit.Assert.*;
@@ -67,6 +71,8 @@ public class CompetitionSetupServiceImplTest {
     private FormInputRepository formInputRepository;
     @Mock
     private PublicContentRepository publicContentRepository;
+    @Mock
+    private MilestoneRepository milestoneRepository;
     @Mock
     private QuestionRepository questionRepository;
 	@Mock
@@ -421,27 +427,35 @@ public class CompetitionSetupServiceImplTest {
     @Test
     public void deleteCompetition() throws Exception {
         Competition competition = newCompetition()
-                // TODO need to add some questions with form inputs that have validators and that expect for each
-                // form input there are no validators
+                .withSections(newSection()
+                        .withQuestions(newQuestion()
+                                .withFormInputs(newFormInput()
+                                        .withInputValidators(newFormValidator().buildSet(2))
+                                        .build(1))
+                                .build(1))
+                        .build(1))
                 .build();
 
+        List<Milestone> milestones = newMilestone().build(2);
         PublicContent publicContent = newPublicContent().build();
 
         when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
         when(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), EnumSet.allOf
                 (InviteStatus.class))).thenReturn(0);
         when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
+        when(milestoneRepository.findAllByCompetitionId(competition.getId())).thenReturn(milestones);
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository);
+        InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository, milestoneRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
                 EnumSet.allOf(InviteStatus.class));
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
         inOrder.verify(competitionRepository).save(competition);
+        inOrder.verify(milestoneRepository).delete(milestones);
         inOrder.verify(competitionRepository).delete(competition);
         inOrder.verifyNoMoreInteractions();
     }

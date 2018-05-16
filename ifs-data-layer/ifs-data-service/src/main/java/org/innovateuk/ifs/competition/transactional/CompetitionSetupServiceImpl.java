@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
 import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -72,6 +73,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private PublicContentRepository publicContentRepository;
     @Autowired
     private AssessmentInviteRepository assessmentInviteRepository;
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -324,17 +327,29 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> deleteCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition ->
-                asssessorInvitesExist(competition) ? serviceFailure(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED)
+                assessorInvitesExist(competition) ? serviceFailure(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED)
                         : deletePublicContentForCompetition(competition).andOnSuccess(() -> {
                     deleteFormValidatorsForCompetitionQuestions(competition);
+                    deleteMilestonesForCompetition(competition);
+                    deleteInnovationLead(competition);
                     competitionRepository.delete(competition);
                     return serviceSuccess();
                 }));
     }
 
-    private boolean asssessorInvitesExist(Competition competition) {
+    private boolean assessorInvitesExist(Competition competition) {
         return assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(),
                 EnumSet.allOf(InviteStatus.class)) > 0;
+    }
+
+    private void deleteMilestonesForCompetition(Competition competition) {
+        milestoneRepository.delete(milestoneRepository.findAllByCompetitionId(competition.getId()));
+    }
+
+    private void deleteInnovationLead(Competition competition) {
+        assessmentParticipantRepository.delete(assessmentParticipantRepository
+                .getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole
+                        .INNOVATION_LEAD));
     }
 
     private ServiceResult<Void> deletePublicContentForCompetition(Competition competition) {
