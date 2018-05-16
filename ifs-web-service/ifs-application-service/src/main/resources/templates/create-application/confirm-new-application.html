@@ -22,32 +22,38 @@
     <div class="grid-row">
         <div class="column-full">
             <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
+                <div class="form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'form-group-error'">
                 <fieldset>
-                    <legend class="visuallyhidden" id="createNewApplication">Create a new application?</legend>
+                    <legend id="createNewApplication">
+                        <span class="visuallyhidden">Create a new application?</span>
                         <th:block th:if="${#fields.hasErrors('createNewApplication')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
                          </th:block>
-                        <div class="form-group">
-                            <div class="multiple-choice">
-                                <input id="new-application-yes"
-                                       type="radio"
-                                       th:field="${form.createNewApplication}"
-                                       value="true" />
-                                <label for="new-application-yes">
-                                       Yes, I want to create a new application.
-                                </label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input type="radio"
-                                       id="new-application-no"
-                                       th:field="${form.createNewApplication}"
-                                       value="false" />
-                                <label for="new-application-no">
-                                       No, I want to continue with my existing application.
-                                </label>
-                            </div>
+                    </legend>
+                        <div class="multiple-choice">
+                            <input id="new-application-yes"
+                                   type="radio"
+                                   th:field="${form.createNewApplication}"
+                                   value="true"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
+                            <label for="new-application-yes">
+                                Yes, I want to create a new application.
+                            </label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input type="radio"
+                                   id="new-application-no"
+                                   th:field="${form.createNewApplication}"
+                                   value="false"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
+                            <label for="new-application-no">
+                                No, I want to continue with my existing application.
+                            </label>
                         </div>
                 </fieldset>
+                </div>
                 <button type="submit" name="create-application-submit" class="button">
                     Continue
                 </button>
