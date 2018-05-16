@@ -46,7 +46,7 @@
     <!--/* open */-->
     <th:block th:unless="${readonly}">
 
-      <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber')} ? 'form-group-error'">
+      <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber')} ? 'form-group-error' : (${#fields.hasErrors('${form}')} ? 'form-group-error') ">
         <label for="accountNumber">
           <span class="form-label-bold">Account number</span>
           <span class="form-hint">For example: 15481965</span>
@@ -69,7 +69,7 @@
                th:field="*{accountNumber}"/>
       </div>
 
-      <div class="form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'form-group-error'">
+      <div class="form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'form-group-error' : (${#fields.hasErrors('${form}')} ? 'form-group-error')">
         <label for="sortCode">
           <span class="form-label-bold">Sort code</span>
           <span class="form-hint">For example: 311212</span>
