@@ -241,7 +241,7 @@ public class ThreadsafeModelTest {
         Model operation1Answer = doAnswer(invocation -> {
             assertTrue(expectedLockStateDuringOperation1Test.apply(lockFromModel));
             operation2CountDownLatch.countDown();
-            operation1CountDownLatch.await(50, TimeUnit.MILLISECONDS);
+            operation1CountDownLatch.await(1000, TimeUnit.MILLISECONDS);
             operationValues.add("operation 1");
             return null;
         }).when(wrappedModel);

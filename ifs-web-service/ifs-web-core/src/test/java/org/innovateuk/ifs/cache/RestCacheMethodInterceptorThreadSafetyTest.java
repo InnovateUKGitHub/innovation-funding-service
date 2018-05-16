@@ -200,7 +200,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            writeOperationFuture.get(50, TimeUnit.MILLISECONDS);
+            writeOperationFuture.get(1000, TimeUnit.MILLISECONDS);
             fail("This write operation should have timed out because it was blocked by the read lock");
         } catch (TimeoutException e) {
             // expected behaviour - the write operation was successfully blocked from writing to the cache.  Now allow
@@ -312,7 +312,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            readOperationFuture.get(50, TimeUnit.MILLISECONDS);
+            readOperationFuture.get(1000, TimeUnit.MILLISECONDS);
             fail("This read operation should have timed out because it was blocked by the write lock");
         } catch (TimeoutException e) {
             // expected behaviour - the write operation was successfully blocked from writing to the cache.  Now allow
@@ -360,7 +360,6 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         CountDownLatch writeOperation1LatchWhenReadingFromCache = new CountDownLatch(1);
         CountDownLatch writeOperation1LatchWhenWritingToCache = new CountDownLatch(1);
         CountDownLatch writeOperation2LatchForInitialBlocking = new CountDownLatch(1);
-        CountDownLatch writeOperation2LatchForBlockingUntilWriteOperationIsWritingToCache = new CountDownLatch(1);
         CountDownLatch completeTestLatch = new CountDownLatch(2);
 
         ReadWriteLock lockFromInterceptor =
@@ -428,8 +427,8 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            writeOperation1Future.get(50, TimeUnit.MILLISECONDS);
-            writeOperation2Future.get(50, TimeUnit.MILLISECONDS);
+            writeOperation1Future.get(1000, TimeUnit.MILLISECONDS);
+            writeOperation2Future.get(1000, TimeUnit.MILLISECONDS);
             fail("One of these write operations should have timed out because it was blocked by the write lock " +
                     "aquired by the other");
         } catch (TimeoutException e) {
