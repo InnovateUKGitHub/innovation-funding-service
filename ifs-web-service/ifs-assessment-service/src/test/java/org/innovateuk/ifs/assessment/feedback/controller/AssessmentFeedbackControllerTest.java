@@ -27,7 +27,9 @@ import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -98,6 +100,10 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
     @InjectMocks
     private AssessmentFeedbackApplicationDetailsModelPopulator assessmentFeedbackApplicationDetailsModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
     @Mock
     private QuestionService questionService;
 
@@ -127,6 +133,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
     @Mock
     private FormInputResponseService formInputResponseService;
+
+    @Mock
+    private ProcessRoleService processRoleService;
 
     @Override
     protected AssessmentFeedbackController supplyControllerUnderTest() {

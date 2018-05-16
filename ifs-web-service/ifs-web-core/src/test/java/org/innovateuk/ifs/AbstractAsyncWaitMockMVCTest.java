@@ -41,7 +41,7 @@ public abstract class AbstractAsyncWaitMockMVCTest<ControllerType> extends BaseC
 
     @Before
     public void setUp() {
-        super.setup();
+        super.setUp();
         setFutureExpectations();
     }
 

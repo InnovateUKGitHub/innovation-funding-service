@@ -12,6 +12,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -65,6 +66,10 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     @Spy
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Mock
     private ApplicantRestService applicantRestService;

@@ -82,7 +82,9 @@ public class ApplicantDashboardPopulator {
                     competition.getDaysLeft(), application.getCompletion().intValue(), invitedToInterview);
         }).sorted().collect(toList());
 
-        List<PreviousDashboardRowViewModel> previousViews = allApplications.stream().filter(this::applicationFinished).map(application -> {
+        List<PreviousDashboardRowViewModel> previousViews = allApplications.stream()
+                .filter(this::applicationFinished)
+                .map(application -> {
             CompetitionResource competition = competitionsById.get(application.getCompetition());
             return new PreviousDashboardRowViewModel(application.getName(), application.getId(), competition.getName(), application.getApplicationState(), false);
         }).sorted().collect(toList());

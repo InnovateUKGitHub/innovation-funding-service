@@ -73,7 +73,8 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
 
     @Before
     public void setUp() {
-        super.setup();
+        super.setUp();
+        setLoggedInUser(null);
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();

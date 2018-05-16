@@ -28,7 +28,6 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -51,15 +50,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     @InjectMocks
     private ApplicantDashboardPopulator populator;
 
-    private CompetitionResource competitionResource = newCompetitionResource()
-            .with(id(1L))
-            .with(name("Competition x"))
-            .withStartDate(ZonedDateTime.now().minusDays(2))
-            .withEndDate(ZonedDateTime.now().plusDays(5))
-            .withCompetitionStatus(CompetitionStatus.OPEN)
-            .withMinProjectDuraction(1)
-            .withMaxProjectDuraction(36)
-            .build();
+    private CompetitionResource competitionResource;
 
     protected UserResource loggedInUser = newUserResource().withId(1L)
             .withFirstName("James")
@@ -94,9 +85,19 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     @Before
     public void setup() {
         super.setup();
+        competitionResource = newCompetitionResource()
+                .withId(1L)
+                .with(name("Competition x"))
+                .withStartDate(ZonedDateTime.now().minusDays(2))
+                .withEndDate(ZonedDateTime.now().plusDays(5))
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withMinProjectDuraction(1)
+                .withMaxProjectDuraction(36)
+                .build();
         CompetitionResource compInProjectSetup = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
                 .build();
+
 
         List<ApplicationResource> allApplications = newApplicationResource()
                 .withId(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_PROJECT)
@@ -125,6 +126,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withCompetition(competitionResource.getId()).build()));
 
         when(competitionRestService.getCompetitionById(compInProjectSetup.getId())).thenReturn(restSuccess(compInProjectSetup));
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));
 

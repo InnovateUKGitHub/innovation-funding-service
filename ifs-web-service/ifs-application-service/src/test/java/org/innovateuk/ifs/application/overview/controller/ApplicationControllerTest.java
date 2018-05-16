@@ -29,6 +29,8 @@ import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -97,6 +99,10 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -111,6 +117,9 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
     @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Mock
+    private ProjectService projectService;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {

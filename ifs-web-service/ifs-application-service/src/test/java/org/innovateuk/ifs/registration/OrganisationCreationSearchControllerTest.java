@@ -16,6 +16,7 @@ import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
+import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,6 +70,9 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     @Mock
     private ApplicationService applicationService;
 
+    @Mock
+    private OrganisationTypeRestService organisationTypeRestService;
+
     @Spy
     @InjectMocks
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
@@ -91,9 +95,10 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         return new OrganisationCreationSearchController();
     }
 
+    @Override
     @Before
     public void setUp() {
-        super.setup();
+        super.setUp();
 
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
@@ -104,6 +109,8 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(restSuccess(true));
+        when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource()));
+
 
         AddressForm addressForm = new AddressForm();
         addressForm.setPostcodeInput("");

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -59,6 +61,13 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     @Spy
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Mock
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     private ApplicantRestService applicantRestService;

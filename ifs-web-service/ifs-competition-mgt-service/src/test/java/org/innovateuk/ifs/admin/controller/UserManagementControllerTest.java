@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.admin.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
 import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * A mock MVC test for user management controller
  */
-public class UserManagementControllerTest extends BaseControllerMockMVCTest<UserManagementController>{
+public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<UserManagementController> {
 
     private UserPageResource userPageResource;
 

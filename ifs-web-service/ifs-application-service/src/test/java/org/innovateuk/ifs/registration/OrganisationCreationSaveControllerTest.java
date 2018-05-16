@@ -9,7 +9,9 @@ import org.innovateuk.ifs.registration.controller.OrganisationCreationSaveContro
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
+import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -57,16 +59,20 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     @Mock
     private OrganisationService organisationService;
 
+    @Mock
+    private OrganisationTypeRestService organisationTypeRestService;
+
     private OrganisationTypeForm organisationTypeForm;
     private OrganisationCreationForm organisationForm;
 
     @Before
     public void setup(){
-        super.setup();
+        super.setUp();
 
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
 
         when(organisationSearchRestService.getOrganisation(anyLong(), anyString())).thenReturn(restSuccess(organisationSearchResult));
+        when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource()));
 
         AddressForm addressForm = new AddressForm();
         addressForm.setPostcodeInput("ABC 12345");

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.review.controller;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -78,6 +80,10 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -95,6 +101,9 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
 
     @Mock
     private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Override
     protected AssessmentReviewApplicationSummaryController supplyControllerUnderTest() {
