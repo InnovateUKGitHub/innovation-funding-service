@@ -264,19 +264,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         assertEquals("Kieran Hester", content.get(0).getName());
     }
 
-    private InterviewParticipant saveNewInterviewParticipant(InterviewInvite invite) {
-        return repository.save(new InterviewParticipant(invite));
-    }
 
-    private List<InterviewParticipant> saveNewInterviewParticipants(List<InterviewInvite> invites) {
-        return invites.stream().map(assessmentPanelInvite ->
-                repository.save(new InterviewParticipant(assessmentPanelInvite))).collect(toList());
-    }
-
-    private void assertEqualParticipants(List<InterviewParticipant> expected, List<InterviewParticipant> actual) {
-        List<InterviewParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
-        zip(expected, subList, this::assertEqualParticipants);
-    }
 
     @Test
     public void findByUserIdAndRole() {
@@ -315,6 +303,57 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         List<InterviewParticipant> retrievedParticipants = repository.findByUserIdAndRole(user.getId(), INTERVIEW_ASSESSOR);
         assertEquals(1, retrievedParticipants.size());
         assertEqualParticipants(savedParticipants, retrievedParticipants);
+    }
+
+    @Test
+    public void findByUserIdAndCompetitionId() {
+        loginSteveSmith();
+
+        Competition competition = newCompetition()
+                .with(id(null))
+                .build();
+        competitionRepository.save(competition);
+
+        User user = newUser()
+                .with(id(null))
+                .withEmailAddress("tom@poly.io")
+                .withUid("foo")
+                .build();
+
+        userRepository.save(user);
+
+        InterviewParticipant savedParticipant = saveNewInterviewParticipant(
+                newInterviewInviteWithoutId()
+                        .withName("name1")
+                        .withHash(Invite.generateInviteHash())
+                        .withEmail("test1@test.com")
+                        .withHash(generateInviteHash())
+                        .withCompetition(competition)
+                        .withStatus(OPENED)
+                        .withUser(user)
+                        .build()
+        );
+        savedParticipant.acceptAndAssignUser(user);
+
+        interviewParticipantRepository.save(savedParticipant);
+        flushAndClearSession();
+
+        InterviewParticipant retrievedParticipant = interviewParticipantRepository.findByUserIdAndCompetitionIdAndRole(user.getId(), competition.getId(), CompetitionParticipantRole.INTERVIEW_ASSESSOR);
+        assertEqualParticipants(savedParticipant, retrievedParticipant);
+    }
+
+    private InterviewParticipant saveNewInterviewParticipant(InterviewInvite invite) {
+        return repository.save(new InterviewParticipant(invite));
+    }
+
+    private List<InterviewParticipant> saveNewInterviewParticipants(List<InterviewInvite> invites) {
+        return invites.stream().map(assessmentPanelInvite ->
+                repository.save(new InterviewParticipant(assessmentPanelInvite))).collect(toList());
+    }
+
+    private void assertEqualParticipants(List<InterviewParticipant> expected, List<InterviewParticipant> actual) {
+        List<InterviewParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
+        zip(expected, subList, this::assertEqualParticipants);
     }
 
     private void assertEqualParticipants(InterviewParticipant expected, InterviewParticipant actual) {

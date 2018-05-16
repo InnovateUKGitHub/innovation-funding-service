@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestServiceImpl;
 import org.junit.Test;
 
@@ -11,8 +12,10 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.interviewApplicationsResourceListType;
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResourceBuilder.newInterviewApplicationPageResource;
+import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
 import static org.junit.Assert.assertEquals;
 
 public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitTest<InterviewAllocationRestServiceImpl> {
@@ -56,6 +59,22 @@ public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitT
 
         InterviewApplicationPageResource actual = service.getAllocatedApplications(competitionId, userId, page)
                 .getSuccess();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAllAllocatedApplications() {
+        long competitionId = 1L;
+        List<Long> applicationIds = asList(1L, 2L, 3L);
+
+        List<InterviewApplicationResource> expected = newInterviewApplicationResource().build(3);
+
+        String expectedUrl = format("%s/%s/%s/%s/%s", restUrl, competitionId, "allocated-applications", "all", "1,2,3");
+
+        setupGetWithRestResultExpectations(expectedUrl, interviewApplicationsResourceListType(), expected);
+
+        List<InterviewApplicationResource> actual = service.getAllocatedApplications(competitionId, applicationIds).getSuccess();
 
         assertEquals(expected, actual);
     }

@@ -67,4 +67,6 @@ public interface InterviewParticipantRepository extends PagingAndSortingReposito
                                                           CompetitionParticipantRole role,
                                                           ParticipantStatus status,
                                                           List<Long> inviteIds);
+
+    InterviewParticipant findByUserIdAndCompetitionIdAndRole(long userId, long competitionId, CompetitionParticipantRole role);
 }

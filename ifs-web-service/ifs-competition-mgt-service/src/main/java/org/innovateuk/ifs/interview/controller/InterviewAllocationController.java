@@ -2,26 +2,39 @@ package org.innovateuk.ifs.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.interview.form.InterviewAllocationNotifyForm;
 import org.innovateuk.ifs.interview.form.InterviewAllocationSelectionForm;
+import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
+import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.model.AllocateInterviewApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.AllocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewAcceptedAssessorsModelPopulator;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * This controller will handle all Competition Management requests related to allocating applications to assessors for interview panel.
@@ -41,6 +54,9 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
     private UnallocatedInterviewApplicationsModelPopulator unallocatedInterviewApplicationsModelPopulator;
 
     @Autowired
+    private AllocateInterviewApplicationsModelPopulator allocateInterviewApplicationsModelPopulator;
+
+    @Autowired
     private InterviewAllocationRestService interviewAllocationRestService;
 
     @Autowired
@@ -55,7 +71,6 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
     protected Class<InterviewAllocationSelectionForm> getFormType() {
         return InterviewAllocationSelectionForm.class;
     }
-
 
     @GetMapping("/allocate-assessors")
     public String overview(Model model,
@@ -96,6 +111,74 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return "assessors/interview/unallocated-applications";
     }
 
+
+    @PostMapping("/allocate-applications/{userId}")
+    public String allocateApplications(Model model,
+                                       @ModelAttribute(name = SELECTION_FORM) InterviewAllocationSelectionForm selectionForm,
+                                       @ModelAttribute(name = "form", binding = false) InterviewAllocationNotifyForm form,
+                                       @PathVariable("competitionId") long competitionId,
+                                       @PathVariable("userId") long userId,
+                                       @RequestParam MultiValueMap<String, String> queryParams,
+                                       HttpServletRequest request) {
+
+        InterviewAllocationSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
+                .filter(f -> !f.getSelectedIds().isEmpty())
+                .orElse(selectionForm);
+
+        form.setSelectedIds(submittedSelectionForm.getSelectedIds());
+
+        model.addAttribute("model", allocateInterviewApplicationsModelPopulator.populateModel(competitionId, userId, submittedSelectionForm.getSelectedIds()));
+        model.addAttribute("form", form);
+
+        form.setSubject("Applications for interview panel for [competition name]");
+
+
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
+        model.addAttribute("originQuery", originQuery);
+
+        return "assessors/interview/allocate-applications";
+    }
+
+    @PostMapping("/allocate-applications/{userId}/notify")
+    public String notifyAssessor(Model model,
+                                 @ModelAttribute(name = "form") InterviewAllocationNotifyForm form,
+                                 @PathVariable("competitionId") long competitionId,
+                                 @PathVariable("userId") long userId,
+                                 ValidationHandler validationHandler) {
+        Supplier<String> failureView = () -> "foo";
+
+        return validationHandler
+                .failNowOrSucceedWith(
+                        failureView,
+                        () -> {
+                            RestResult<Void> sendResult =
+                                    interviewAllocationRestService.notifyAllocations(
+                                            new InterviewNotifyAllocationResource(
+                                                    competitionId,
+                                                    userId,
+                                                    form.getSubject(),
+                                                    form.getContent(),
+                                                    form.getSelectedIds()
+                                            )
+                                    );
+                            return validationHandler
+                                    .addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
+                                    .failNowOrSucceedWith(
+                                            failureView,
+                                            redirectToAllocatedTab(competitionId, userId)
+                                    );
+                        }
+                );
+    }
+
+    private Supplier<String> redirectToAllocatedTab(long competitionId, long userId) {
+        return () -> "redirect:" + UriComponentsBuilder
+                // TODO this needs to point to the allocated applications
+                .fromPath("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}")
+                .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
+                .toUriString();
+    }
+
     @PostMapping(value = "/unallocated-applications/{userId}", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToInviteList(Model model,
                                                               @PathVariable("competitionId") long competitionId,
@@ -121,9 +204,9 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             return createFailureResponse();
         }
     }
+
     @PostMapping(value = "/unallocated-applications/{userId}", params = {"selectionId"})
-    public @ResponseBody
-    JsonNode selectAssessorForInviteList(
+    public @ResponseBody JsonNode selectAssessorForInviteList(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("userId") long userId,
             @RequestParam("selectionId") long assessorId,

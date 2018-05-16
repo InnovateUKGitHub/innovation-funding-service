@@ -19,6 +19,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -300,6 +301,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<GrantTermsAndConditionsResource>> grantTermsAndConditionsResourceListType() {
         return new ParameterizedTypeReference<List<GrantTermsAndConditionsResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<InterviewApplicationResource>> interviewApplicationsResourceListType() {
+        return new ParameterizedTypeReference<List<InterviewApplicationResource>>() {};
     }
 
     public static ParameterizedTypeReference<Map<Long, Boolean>> longStatusMap() {
