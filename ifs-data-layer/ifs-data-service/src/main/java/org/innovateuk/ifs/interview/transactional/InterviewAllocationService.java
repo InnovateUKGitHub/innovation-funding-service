@@ -52,9 +52,8 @@ public interface InterviewAllocationService {
             description = "Competition Admins and Project Finance users can retrieve unallocated applications")
     ServiceResult<List<Long>> getUnallocatedApplicationIds(long competitionId, long assessorId);
 
-
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_UNALLOCATED_APPLICATION_IDS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can allocate applications")
-    ServiceResult<Void> sendInvite(InterviewNotifyAllocationResource interviewNotifyAllocationResource);
+    ServiceResult<Void> notifyAllocation(InterviewNotifyAllocationResource interviewNotifyAllocationResource);
 }

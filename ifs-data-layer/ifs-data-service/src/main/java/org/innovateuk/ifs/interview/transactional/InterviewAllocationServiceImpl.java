@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -131,7 +132,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
                             user ->
                                     serviceSuccess(
                                             new AssessorInvitesToSendResource(
-                                                Collections.singletonList(user.getName()),
+                                                singletonList(user.getName()),
                                                 competition.getId(),
                                                 competition.getName(),
                                                 getInvitePreviewContent(Collections.emptyMap())
@@ -142,38 +143,24 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     @Override
-    public ServiceResult<Void> sendInvite(InterviewNotifyAllocationResource interviewNotifyAllocationResource) {
+    public ServiceResult<Void> notifyAllocation(InterviewNotifyAllocationResource interviewNotifyAllocationResource) {
         return getUser(interviewNotifyAllocationResource.getAssessorId())
                 .andOnSuccessReturnVoid(
                         user -> interviewNotifyAllocationResource.getApplicationIds().forEach(applicationId -> getApplication(applicationId)
-                        .andOnSuccess(application -> getInterviewParticipant(interviewNotifyAllocationResource.getAssessorId(), interviewNotifyAllocationResource.getCompetitionId())
-                                .andOnSuccessReturnVoid(assessor -> {
-                                            Interview interview = new Interview(application, assessor);
-                                            workflowHandler.notifyInvitation(interview);
-                                            interviewRepository.save(interview);
-                                        }
+                                .andOnSuccess(application -> getInterviewParticipant(interviewNotifyAllocationResource.getAssessorId(), interviewNotifyAllocationResource.getCompetitionId())
+                                        .andOnSuccessReturnVoid(assessor -> {
+                                                    Interview interview = new Interview(application, assessor);
+                                                    workflowHandler.notifyInvitation(interview);
+                                                    interviewRepository.save(interview);
+                                                }
+                                        )
                                 )
                         )
-                )
-        );
-
-// i -> { workflowHandler.notifyInvitation(new Interview(application, i) ); return serviceSuccess();
-
-//       interviewNotifyAllocationResource.getApplicationIds().forEach(applicationId -> getApplication(applicationId)
-//               .andOnSuccess(application -> {new Interview(application, )})
-//
-//       );
-//
-//
-//
-//        Interview interview = new Interview(application, )
-//        workflowHandler.notifyInvitation(interview);
-//
-//        return serviceSuccess();
+                );
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
-        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId));
     }
 
     private ServiceResult<User> getUser(long userId) {
@@ -185,7 +172,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
         return renderer.renderTemplate(
                 systemNotificationSource,
                 notificationTarget,
-                "allocate_assessors_to_interview_application_text.txt",
+                "allocate_interview_applications_to_assessor_text.txt",
                 arguments
         ).getSuccess();
     }

@@ -54,7 +54,7 @@ public class InterviewAllocationController {
 
     @PostMapping("/{competitionId}/allocated-applications/{assessorId}/send-invite")
     public RestResult<Void> sendInvite(@RequestBody InterviewNotifyAllocationResource interviewNotifyAllocationResource) {
-        return interviewAllocationService.sendInvite(interviewNotifyAllocationResource).toPostResponse();
+        return interviewAllocationService.notifyAllocation(interviewNotifyAllocationResource).toPostResponse();
     }
 
     @GetMapping("/{competitionId}/unallocated-applications/{assessorId}")
