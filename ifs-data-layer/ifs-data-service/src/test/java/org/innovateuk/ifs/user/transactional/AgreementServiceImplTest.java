@@ -3,9 +3,12 @@ package org.innovateuk.ifs.user.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.mapper.AgreementMapper;
+import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.resource.AgreementResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
@@ -18,6 +21,12 @@ import static org.mockito.Mockito.*;
 public class AgreementServiceImplTest extends BaseServiceUnitTest<AgreementServiceImpl> {
     @InjectMocks
     private AgreementService agreementService = new AgreementServiceImpl();
+
+    @Mock
+    private AgreementRepository agreementRepositoryMock;
+
+    @Mock
+    private AgreementMapper agreementMapperMock;
 
     @Override
     protected AgreementServiceImpl supplyServiceUnderTest() {

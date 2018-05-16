@@ -70,6 +70,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<AffiliationResource>>() {};
     }
 
+    public static ParameterizedTypeReference<AffiliationListResource> affiliationListResourceType() {
+        return new ParameterizedTypeReference<AffiliationListResource>() {};
+    }
+
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
     }
@@ -97,6 +101,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {
         return new ParameterizedTypeReference<List<ProcessRoleResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<Role>> roleListType() {
+        return new ParameterizedTypeReference<List<Role>>() {};
     }
 
     public static ParameterizedTypeReference<List<UserResource>> userListType() {

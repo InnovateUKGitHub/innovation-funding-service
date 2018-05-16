@@ -3,11 +3,22 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.mapper.FormInputResponseMapper;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +37,24 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormInputResponseServiceImpl> {
+
+    @Mock
+    private FormInputResponseRepository formInputResponseRepositoryMock;
+
+    @Mock
+    private FormInputResponseMapper formInputResponseMapperMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private FormInputRepository formInputRepositoryMock;
 
     @Test
     public void findResponsesByFormInputIdAndQuestionName() throws Exception {

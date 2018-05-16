@@ -4,9 +4,11 @@ package org.innovateuk.ifs.commons.competitionsetup;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -24,6 +26,9 @@ public class CompetitionSetupTransactionalServiceTest extends BaseServiceUnitTes
     private FormInput yearEnd;
     private List<FormInput> overviewRows;
     private FormInput count;
+
+    @Mock
+    private FormInputRepository formInputRepositoryMock;
 
     @Override
     protected CompetitionSetupTransactionalService supplyServiceUnderTest() {

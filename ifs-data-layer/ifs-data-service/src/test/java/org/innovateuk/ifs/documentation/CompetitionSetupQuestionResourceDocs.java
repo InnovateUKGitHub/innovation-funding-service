@@ -12,6 +12,8 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("questionId").description("Id of the question"),
             fieldWithPath("number").description("The question number"),
             fieldWithPath("shortTitle").description("Short title of the question"),
+            // @ZeroDowntime(reference = "IFS-2833", description = "Set a default value for questionSetupType. Remove in cleanup")
+            fieldWithPath("shortTitleEditable").description("Boolean to check if title is editable"),
             fieldWithPath("title").description("Title of the question"),
             fieldWithPath("subTitle").description("Sub title of the question"),
             fieldWithPath("guidanceTitle").description("The title of the guidance for the question"),
@@ -29,7 +31,6 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("scope").description("Is there a scope question for the assessor"),
             fieldWithPath("researchCategoryQuestion").description("Is there a research category question for the assessor"),
             fieldWithPath("writtenFeedback").description("Should the assessor provide written feedback"),
-            fieldWithPath("shortTitleEditable").description("Can the short title be edited for this question"),
             fieldWithPath("guidanceRows[]").description("The rows of extra guidance information displayed to assessors"),
             fieldWithPath("guidanceRows[].id").description("The id of the guidance row in the database"),
             fieldWithPath("guidanceRows[].subject").description("The subject of the guidance"),

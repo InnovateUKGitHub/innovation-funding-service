@@ -28,7 +28,7 @@ public class AssessorProfileDeclarationFormPopulator extends AssessorProfileDecl
     private AffiliationRestService affiliationRestService;
 
     public AssessorProfileDeclarationForm populateForm(AssessorProfileDeclarationForm form, UserResource user) {
-        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccess());
+        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccess().getAffiliationResourceList());
 
         form.setPrincipalEmployer(getPrincipalEmployer(affiliations).map(AffiliationResource::getOrganisation).orElse(null));
         form.setRole(getPrincipalEmployer(affiliations).map(AffiliationResource::getPosition).orElse(null));

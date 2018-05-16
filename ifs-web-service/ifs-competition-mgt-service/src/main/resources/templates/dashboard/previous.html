@@ -16,7 +16,7 @@
 
     <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
         <h2 class="heading-medium"
-            th:text="'Previous ('+${model.counts.feedbackReleasedCount}+')'"></h2>
+            th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
         <ul class="list-overview">
             <li class="grid-row" th:each="competition : ${previousComps}">
                 <th:block
@@ -24,7 +24,7 @@
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
                         cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
-                        customLink='/competition/'+${competition.id}+'/applications/manage'"/>
+                        customLink='/competition/'+${competition.id}+'/applications/previous'"/>
             </li>
         </ul>
     </section>

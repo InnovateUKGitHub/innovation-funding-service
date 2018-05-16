@@ -271,7 +271,7 @@ the lead partner fills in project details
     the user selects the radio button         financeContact  financeContact2
     the user clicks the button/link           id=save  #Save finance contact button
     And the user clicks the button/link       jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
-    And the user enters text to a text field  css=#postCode  ${postcode}
+    And the user enters text to a text field  css=#postcode  ${postcode}
     And the user clicks the button/link       css=button[type="submit"]  #Save project location button
 
 internal user can see that MO can be assigned
@@ -287,7 +287,7 @@ the academic partner fills in their finance contact
     the user selects the radio button     financeContact  financeContact2
     the user clicks the button/link       id=save  #Save finance contact button
     the user clicks the button/link       jQuery=#project-details-finance td:contains("EGGS") ~ td a:contains("Select project location")
-    the user enters text to a text field  css=#postCode  ${postcode}
+    the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]  #Save project location button
 
 the industrial partner fills in their finance contact
@@ -298,5 +298,5 @@ the industrial partner fills in their finance contact
     the user selects the radio button     financeContact  financeContact1
     the user clicks the button/link       id=save  #Save finance contact button
     the user clicks the button/link       jQuery=#project-details-finance td:contains("Ludlow") ~ td a:contains("Select project location")
-    the user enters text to a text field  css=#postCode  ${postcode}
+    the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]  #Save project location button
