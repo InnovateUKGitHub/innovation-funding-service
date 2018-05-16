@@ -353,9 +353,9 @@ public class CompetitionSetupController {
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/setup/%d", competitionId));
     }
 
-    @PostMapping("/{competitionId}/delete")
+    @PostMapping("/{competitionIdToDelete}/delete")
     public String delete(Model model,
-                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                         @PathVariable("competitionIdToDelete") long competitionId,
                          @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
                          @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                          ValidationHandler validationHandler) {
