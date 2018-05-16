@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -48,6 +49,9 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     @Mock
     private AssessorRestService assessorRestService;
 
+    @Mock
+    private CompetitionService competitionService;
+
     private CompetitionResource competition;
 
     @Override
@@ -66,6 +70,8 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .withInnovationSectorName("Infrastructure systems")
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
+
+        when(competitionService.getById(any())).thenReturn(competition);
     }
 
     @Test

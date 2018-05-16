@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -31,6 +32,7 @@ import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -113,6 +115,12 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     @Mock
     private StatusService statusService;
 
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
+
+    @Mock
+    private FinanceUtil financeUtil;
+
     private OrganisationResource industrialOrganisation;
 
     private ApplicationResource application = newApplicationResource().withId(123L).build();
@@ -128,7 +136,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     @Before
     public void setUp() {
-
         super.setUp();
 
         this.setupCompetition();
@@ -169,6 +176,8 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         financeViewModel.setOrganisationGrantClaimPercentage(74);
 
         when(defaultProjectFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(loggedInUser);
     }
 
 

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
@@ -27,6 +28,7 @@ import org.innovateuk.ifs.management.viewmodel.ApplicationOverviewIneligibilityV
 import org.innovateuk.ifs.management.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.viewmodel.ReinstateIneligibleApplicationViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -99,6 +101,10 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     @InjectMocks
     private CompetitionManagementApplicationServiceImpl competitionManagementApplicationServiceImpl;
 
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -121,6 +127,9 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
     @Mock
     private UserRestService userRestServiceMock;
+
+    @Mock
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Test
     public void displayApplicationOverviewAsCompAdmin() throws Exception {

@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
@@ -126,10 +127,13 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Mock
     private FinanceCheckService financeCheckServiceMock;
 
+    @Mock
+    private FinanceUtil financeUtil;
+
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
-    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
+    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
 
 
     @Before

@@ -3,9 +3,7 @@ package org.innovateuk.ifs.project.eligibility.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
@@ -34,7 +32,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -100,22 +97,13 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
     private ProjectFinanceFormHandler projectFinanceFormHandler;
 
     @Mock
-    private UserService userService;
-
-    @Mock
     private ProjectService projectService;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
 
     @Mock
-    private FinanceViewHandlerProvider financeViewHandlerProvider;
-
-    @Mock
     private FinanceUtil financeUtilMock;
-
-    @Mock
-    private FinanceService financeService;
 
     @Mock
     private DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;

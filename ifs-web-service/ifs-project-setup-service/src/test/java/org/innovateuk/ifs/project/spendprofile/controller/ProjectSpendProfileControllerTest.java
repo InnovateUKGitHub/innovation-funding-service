@@ -23,6 +23,7 @@ import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProj
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -85,6 +86,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
+
+    @Mock
+    private FinanceUtil financeUtil;
 
     @Override
     protected ProjectSpendProfileController supplyControllerUnderTest() {

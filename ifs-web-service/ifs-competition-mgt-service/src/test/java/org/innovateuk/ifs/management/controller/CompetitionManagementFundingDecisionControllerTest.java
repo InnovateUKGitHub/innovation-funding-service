@@ -43,7 +43,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.CookieTestUtil.encryptor;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -94,7 +93,6 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Before
     public void setupMockMvc() {
         super.setUp();
-        setupCookieUtil(cookieUtil);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
