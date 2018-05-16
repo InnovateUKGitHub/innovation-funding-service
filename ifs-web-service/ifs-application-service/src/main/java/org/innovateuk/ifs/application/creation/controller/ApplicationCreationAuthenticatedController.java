@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.creation.controller;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.application.creation.form.ApplicationCreationAuthenticatedForm;
 import org.innovateuk.ifs.application.creation.viewmodel.AuthenticatedNotEligibleViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -9,7 +8,6 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -23,10 +21,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -42,9 +38,6 @@ import static java.lang.String.format;
 public class ApplicationCreationAuthenticatedController {
     public static final String COMPETITION_ID = "competitionId";
     public static final String FORM_NAME = "form";
-    public static final String RADIO_TRUE = "true";
-    public static final String RADIO_FALSE = "false";
-    //  public static final String FORM_RADIO_NAME = "create-application";
 
     @Autowired
     protected ApplicationService applicationService;
@@ -75,7 +68,6 @@ public class ApplicationCreationAuthenticatedController {
         } else {
             return createApplicationAndShowInvitees(user, competitionId);
         }
-
     }
 
     private String redirectToNotEligible(Long competitionId) {
@@ -105,7 +97,6 @@ public class ApplicationCreationAuthenticatedController {
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
-
 
     @GetMapping("/{competitionId}/not-eligible")
     public String showNotEligiblePage(Model model,
