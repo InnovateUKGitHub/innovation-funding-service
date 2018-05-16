@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.category.domain;
+package org.innovateuk.ifs.competition.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.category.domain.CategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -10,17 +11,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-@DiscriminatorValue("org.innovateuk.ifs.competition.domain.Competition#researchCategory")
-public class CompetitionResearchCategoryLink extends CategoryLink<Competition, ResearchCategory> {
+@DiscriminatorValue("org.innovateuk.ifs.competition.domain.Competition#innovationArea")
+public class CompetitionInnovationAreaLink extends CategoryLink<Competition, InnovationArea> {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
     private Competition competition;
 
-    CompetitionResearchCategoryLink() {
+    protected CompetitionInnovationAreaLink() {
+
     }
 
-    public CompetitionResearchCategoryLink(Competition competition, ResearchCategory category) {
+    public CompetitionInnovationAreaLink(Competition competition, InnovationArea category) {
         super(category);
 
         if (competition == null) {
@@ -30,7 +32,6 @@ public class CompetitionResearchCategoryLink extends CategoryLink<Competition, R
         this.competition = competition;
     }
 
-    @Override
     public Competition getEntity() {
         return competition;
     }
@@ -41,7 +42,7 @@ public class CompetitionResearchCategoryLink extends CategoryLink<Competition, R
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CompetitionResearchCategoryLink that = (CompetitionResearchCategoryLink) o;
+        CompetitionInnovationAreaLink that = (CompetitionInnovationAreaLink) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

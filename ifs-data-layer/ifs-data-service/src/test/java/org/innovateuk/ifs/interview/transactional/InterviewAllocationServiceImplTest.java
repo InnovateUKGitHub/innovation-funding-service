@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
@@ -37,13 +38,16 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     @Mock
     private InterviewRepository interviewRepository;
 
+    @Mock
+    private InterviewParticipantRepository interviewParticipantRepositoryMock;
+
     @Override
     protected InterviewAllocationServiceImpl supplyServiceUnderTest() {
         return new InterviewAllocationServiceImpl();
     }
 
     @Test
-    public void getAllocateApplicationsOverview() throws Exception {
+    public void getAllocateApplicationsOverview() {
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
 

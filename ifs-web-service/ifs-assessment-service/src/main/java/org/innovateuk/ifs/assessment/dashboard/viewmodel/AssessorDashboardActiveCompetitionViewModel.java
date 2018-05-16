@@ -10,7 +10,7 @@ import java.time.LocalDate;
  */
 public class AssessorDashboardActiveCompetitionViewModel {
 
-    private Long competitionId;
+    private long competitionId;
     private String displayLabel;
     private long progressAssessed;
     private long progressTotal;
@@ -19,7 +19,7 @@ public class AssessorDashboardActiveCompetitionViewModel {
     private long daysLeft;
     private long daysLeftPercentage;
 
-    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, long progressAssessed,
+    public AssessorDashboardActiveCompetitionViewModel(long competitionId, String displayLabel, long progressAssessed,
                                                        long progressTotal, long pendingAssessments, LocalDate submitDeadline,
                                                        long daysLeft, long daysLeftPercentage) {
         this.competitionId = competitionId;
@@ -32,11 +32,11 @@ public class AssessorDashboardActiveCompetitionViewModel {
         this.daysLeftPercentage = daysLeftPercentage;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
-    public void setCompetitionId(Long competitionId) {
+    public void setCompetitionId(long competitionId) {
         this.competitionId = competitionId;
     }
 
@@ -94,6 +94,14 @@ public class AssessorDashboardActiveCompetitionViewModel {
 
     public void setDaysLeftPercentage(long daysLeftPercentage) {
         this.daysLeftPercentage = daysLeftPercentage;
+    }
+
+    public boolean hasPendingAssessments(){
+        return pendingAssessments != 0;
+    }
+
+    public boolean hasApplicationsToAssess(){
+        return progressTotal - progressAssessed != 0;
     }
 
     @Override

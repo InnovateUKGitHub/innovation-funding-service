@@ -1,10 +1,15 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
+import org.innovateuk.ifs.interview.transactional.InterviewApplicationInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
+import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -42,6 +47,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<InterviewInviteController> {
 
     private static final long COMPETITION_ID = 1L;
+
+    @Mock
+    private InterviewInviteService interviewInviteServiceMock;
 
     @Override
     protected InterviewInviteController supplyControllerUnderTest() {

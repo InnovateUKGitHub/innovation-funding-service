@@ -44,18 +44,18 @@
     </th:block>
 
     <th:block th:unless="${model.noQueries()}">
-        <th:block th:if="${model.anyPendingQueries()}">
+        <th:block th:if="${model.anyPendingQueries() && !model.isApproved()}">
             <div class="warning-alert">
                 <p th:text="${model.onePendingQuery()} ? 'You have a pending finance query.' : 'You have pending finance queries.'"></p>
             </div>
         </th:block>
 
-        <th:block th:if="${model.noPendingAndAnyAwaitingResponseQueries()}">
+        <th:block th:if="${model.noPendingAndAnyAwaitingResponseQueries() && !model.isApproved()}">
             <div class="assigned-alert">
                 <p>Your response has been sent and will be reviewed by Innovate UK.</p>
             </div>
         </th:block>
-        <th:block th:if="${model.onlyClosedQueries()}">
+        <th:block th:if="${model.onlyClosedQueries() && !model.isApproved()}">
                 <div class="success-alert">
                     <p th:text="${model.isSingleQuery()} ? 'This query has been resolved.' : 'All queries have been resolved.'"></p>
                 </div>

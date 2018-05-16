@@ -22,7 +22,8 @@ test {
     beforeTest { desc ->
         println "Executing test ${desc.className}.${desc.name}"
     }
-    if (project.name != 'ifs-data-service') {
+
+    if (!['ifs-data-service', 'ifs-finance-data-service'].contains(project.name)) {
         maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     }
 }
