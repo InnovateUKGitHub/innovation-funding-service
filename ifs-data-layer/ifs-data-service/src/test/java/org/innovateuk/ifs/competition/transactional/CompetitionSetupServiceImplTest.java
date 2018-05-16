@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.commons.error.Error;
@@ -13,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
@@ -34,11 +36,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -57,6 +61,8 @@ public class CompetitionSetupServiceImplTest {
 	private CompetitionSetupServiceImpl service;
     @Mock
     private CompetitionRepository competitionRepository;
+    @Mock
+    private AssessmentInviteRepository assessmentInviteRepository;
     @Mock
     private FormInputRepository formInputRepository;
     @Mock
@@ -416,23 +422,47 @@ public class CompetitionSetupServiceImplTest {
     public void deleteCompetition() throws Exception {
         Competition competition = newCompetition()
                 // TODO need to add some questions with form inputs that have validators and that expect for each
-                // form input there are not validators
+                // form input there are no validators
                 .build();
 
         PublicContent publicContent = newPublicContent().build();
 
         when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), EnumSet.allOf
+                (InviteStatus.class))).thenReturn(0);
         when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepository, publicContentRepository);
+        InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
+        inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
+                EnumSet.allOf(InviteStatus.class));
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
         inOrder.verify(competitionRepository).save(competition);
         inOrder.verify(competitionRepository).delete(competition);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void deleteCompetition_assessmentInvitesExist() throws Exception {
+        Competition competition = newCompetition().build();
+
+        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), EnumSet.allOf
+                (InviteStatus.class))).thenReturn(1);
+
+        ServiceResult<Void> result = service.deleteCompetition(competition.getId());
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED));
+
+        InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository);
+        inOrder.verify(competitionRepository).findOne(competition.getId());
+        inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
+                EnumSet.allOf(InviteStatus.class));
         inOrder.verifyNoMoreInteractions();
     }
 

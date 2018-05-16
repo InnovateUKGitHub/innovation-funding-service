@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -13,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
@@ -30,13 +32,12 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -69,6 +70,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private GrantTermsAndConditionsMapper termsAndConditionsMapper;
     @Autowired
     private PublicContentRepository publicContentRepository;
+    @Autowired
+    private AssessmentInviteRepository assessmentInviteRepository;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -321,11 +324,17 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> deleteCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition ->
-                deletePublicContentForCompetition(competition).andOnSuccess(() -> {
+                asssessorInvitesExist(competition) ? serviceFailure(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED)
+                        : deletePublicContentForCompetition(competition).andOnSuccess(() -> {
                     deleteFormValidatorsForCompetitionQuestions(competition);
                     competitionRepository.delete(competition);
                     return serviceSuccess();
                 }));
+    }
+
+    private boolean asssessorInvitesExist(Competition competition) {
+        return assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(),
+                EnumSet.allOf(InviteStatus.class)) > 0;
     }
 
     private ServiceResult<Void> deletePublicContentForCompetition(Competition competition) {

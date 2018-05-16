@@ -43,6 +43,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -1178,7 +1179,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void deleteCompetition_failure() throws Exception {
         when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(
-                restFailure(new Error("competition.setup.cannot.delete", HttpStatus.BAD_REQUEST)));
+                restFailure(new Error(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED, HttpStatus.BAD_REQUEST)));
 
         // For re-display of Competition Setup following the failure
         CompetitionResource competitionResource = newCompetitionResource()
@@ -1200,6 +1201,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .get(COMPETITION_SETUP_FORM_KEY);
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(1, bindingResult.getGlobalErrorCount());
-        assertEquals("competition.setup.cannot.delete", bindingResult.getGlobalErrors().get(0).getCode());
+        assertEquals("COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED", bindingResult.getGlobalErrors().get(0).getCode());
     }
 }
