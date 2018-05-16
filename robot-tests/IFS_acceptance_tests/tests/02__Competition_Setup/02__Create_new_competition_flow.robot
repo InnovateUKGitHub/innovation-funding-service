@@ -449,10 +449,10 @@ Application: Scope
     Then the user should see the element          jQuery=h1:contains("Scope")
     And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
     When The user fills the empty question fields
-    And The user enters text to a text field    id=question.shortTitle  Test heading
-    And The user clicks the button/link    css=button[type="submit"]
-    And the user clicks the button/link    link=Test heading
-    Then The user should see the text in the page    Scope
+    And The user enters text to a text field      id=question.shortTitle  Test heading
+    And The user clicks the button/link           css=button[type="submit"]
+    And the user clicks the button/link           link=Test heading
+    Then the user should see the element          jQuery=h1:contains("Test heading")
     And the user checks the question fields
 
 Application: Scope Assessment questions
