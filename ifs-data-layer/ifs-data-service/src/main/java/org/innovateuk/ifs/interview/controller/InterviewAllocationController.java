@@ -38,7 +38,7 @@ public class InterviewAllocationController {
     public RestResult<InterviewApplicationPageResource> getAllocatedApplications(
             @PathVariable long competitionId,
             @PathVariable long assessorId,
-            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.name", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.id", direction = Sort.Direction.ASC) Pageable pageable) {
         return interviewAllocationService.getAllocatedApplications(competitionId, assessorId, pageable).toGetResponse();
     }
 
@@ -46,7 +46,7 @@ public class InterviewAllocationController {
     public RestResult<InterviewApplicationPageResource> getUnallocatedApplications(
             @PathVariable long competitionId,
             @PathVariable long assessorId,
-            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.name", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.id", direction = Sort.Direction.ASC) Pageable pageable) {
         return interviewAllocationService.getUnallocatedApplications(competitionId, assessorId, pageable).toGetResponse();
     }
 

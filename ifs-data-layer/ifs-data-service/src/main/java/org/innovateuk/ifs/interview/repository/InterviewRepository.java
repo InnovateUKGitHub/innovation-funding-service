@@ -35,7 +35,7 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " JOIN Organisation organisation ON organisation.id = processRole.organisationId " +
             " LEFT JOIN Interview interviews ON interviews.target.id = interviewAssignment.target.id" +
                     //This line is needed, it doesn't seem to add check for descriminator value.
-                    " AND interviews.class = Interview " +
+                    " AND type(interviews) = Interview " +
             " WHERE " +
             "   processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
             "   interviewAssignment.target.competition.id = :competitionId AND " +
