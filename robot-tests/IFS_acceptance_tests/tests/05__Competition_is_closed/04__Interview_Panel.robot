@@ -44,6 +44,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3378 Applicant dashboard - Dynamic info banner and view of additional feedback
 ...
 ...               IFS-3435 Allocate applications to assessors - View
+...
+...               IFS-3436 Allocate applications to assessors - Assessor profile view
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -184,14 +186,15 @@ Applicant can remove the uploaded response
     And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
 
 CompAdmin can access the Allocate applications to assessors screen
-    [Documentation]  IFS-3435
+    [Documentation]  IFS-3435  IFS-3436
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery=a:contains("${assessor_joel}")
     And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
-    And the user should see the element      jQuery=h1:contains("Allocate applications to assessors")
-    #TODO Further testing of functionality when IFS-3436 is completed
+    When the user clicks the button/link     link=Allocate
+    Then the user should see the element     jQuery=h1:contains(" Allocate applications to ${assessor_joel}")
+    And the user should see the element      jQuery=dt:contains("Email address") ~ dd:contains("${assessor_joel_email}")
 
 *** Keywords ***
 Custom Suite Setup
