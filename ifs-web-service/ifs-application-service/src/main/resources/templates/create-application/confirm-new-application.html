@@ -33,7 +33,7 @@
                         <div class="multiple-choice">
                             <input id="new-application-yes"
                                    type="radio"
-                                   th:field="${form.createNewApplication}"
+                                   th:field="*{createNewApplication}"
                                    value="true"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
@@ -44,7 +44,7 @@
                         <div class="multiple-choice">
                             <input type="radio"
                                    id="new-application-no"
-                                   th:field="${form.createNewApplication}"
+                                   th:field="*{createNewApplication}"
                                    value="false"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
