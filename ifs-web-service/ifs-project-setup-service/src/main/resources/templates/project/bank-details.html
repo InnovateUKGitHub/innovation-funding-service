@@ -65,6 +65,7 @@
                minlength="8"
                id="accountNumber"
                class="form-control width-medium"
+               th:classappend="${#fields.hasErrors('${form}')} ? 'form-control-error'"
                th:field="*{accountNumber}"/>
       </div>
 
@@ -87,6 +88,7 @@
                minlength="6"
                id="sortCode"
                class="form-control width-medium"
+               th:classappend="${#fields.hasErrors('${form}')} ? 'form-control-error'"
                th:field="*{sortCode}"/>
       </div>
 
