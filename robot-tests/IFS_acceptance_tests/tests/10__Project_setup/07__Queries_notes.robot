@@ -162,7 +162,7 @@ Finance contact receives an email when new query is posted and can see a pending
     [Setup]  log in as a different user   &{successful_applicant_credentials}
     Given the user reads his email        ${successful_applicant_credentials["email"]}  Query regarding your finances  We have raised a query around your project finances.
     When the user navigates to the page   ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
-    Then the user should see the element  jQuery=.warning-alert:contains("You have a pending finance query.")
+    Then the user should see the element  jQuery=#title-query-1:contains("Pending query")
 
 Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
@@ -204,8 +204,8 @@ Applicant - Finance contact can view the project finance user's uploads
 Applicant - Response to query server side validations
     [Documentation]  INFUND-4843 IFS-2746
     [Tags]
-    Given the user should see the element   jQuery=.warning-alert:contains("You have pending finance queries.")
-    When the user should see the element    jQuery=h2:contains("an eligibility") .section-incomplete
+    Given the user should see the element   jQuery=#title-query-2:contains("Pending query")
+    And the user should see the element     jQuery=h2:contains("an eligibility") .section-incomplete
     Then the user expands the section       an eligibility query's title
     When the user clicks the button/link    jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
     And the user clicks the button/link     jQuery=.button:contains("Post response")
@@ -256,7 +256,6 @@ Applicant - Repond to Viability query
     And the user enters text to a text field  css=.editor  This is applicant's response to the Viability query.
     And the user clicks the button/link       jQuery=.button:contains("Post response")
     Then the user should see the element      jQuery=h2:contains("viability") .section-awaiting
-    And the user should see the element       jQuery=.assigned-alert:contains("Your response has been sent and will be reviewed by Innovate UK.")
 
 IFS Admin can see queries raised column updates to 'view'
     [Documentation]    INFUND-4843, IFS-603
@@ -327,7 +326,6 @@ Applicant can see the the queries resolved
     Then the user should see the element  jQuery=h2:contains("an eligibility query's title") .section-complete
     And the user should see the element   jQuery=h2:contains("a viability query's title") .section-complete
     And the user should not be able to respond to resolved queries
-    And the user should see the element   jQuery=.success-alert:contains("All queries have been resolved.")
 
 Link to notes from viability section
     [Documentation]    INFUND-4845
