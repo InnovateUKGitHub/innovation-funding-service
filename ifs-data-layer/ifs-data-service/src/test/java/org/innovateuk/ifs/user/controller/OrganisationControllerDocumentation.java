@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Set;
 
@@ -20,6 +23,13 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class OrganisationControllerDocumentation extends BaseControllerMockMVCTest<OrganisationController> {
+
+    @Mock
+    private OrganisationService organisationServiceMock;
+
+    @Mock
+    private OrganisationInitialCreationService organisationInitialCreationServiceMock;
+
     @Override
     protected OrganisationController supplyControllerUnderTest() {
         return new OrganisationController();

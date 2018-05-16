@@ -89,8 +89,8 @@ include::{snippets}/competition/notify-assessors/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/notify-assessors/curl-request.adoc[]
 
-== Close assessment on a Competition
-=== Request
+=== Close assessment on a Competition
+==== Request
 include::{snippets}/competition/close-assessment/http-request.adoc[]
 include::{snippets}/competition/close-assessment/path-parameters.adoc[]
 
@@ -234,4 +234,14 @@ include::{snippets}/competitions/count-pending-bank-details-approvals/http-respo
 ==== Curl Example
 include::{snippets}/competitions/count-pending-bank-details-approvals/curl-request.adoc[]
 
+=== Update terms and conditions for competition
+==== Request
+include::{snippets}/competition/update-terms-and-conditions/http-request.adoc[]
+include::{snippets}/competition/update-terms-and-conditions/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/update-terms-and-conditions/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/update-terms-and-conditions/curl-request.adoc[]
 

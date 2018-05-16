@@ -199,7 +199,7 @@ IFS.competitionManagement.repeater = (function () {
                     '<div class="column-half">' +
                       '<div class="form-group">' +
                         '<input type="number" min="0" class="form-control width-x-large" id="' + idCount + '-funderBudget" name="funders[' + count + '].funderBudget" value=""><input required="required" type="hidden" id="' + idCount + '-coFunder" name="funders[' + count + '].coFunder" value="true">' +
-                        '<button class="buttonlink" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +
+                        '<button class="button button-clear" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +
                       '</div>' +
                     '</div>' +
                   '</div>'

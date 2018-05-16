@@ -3,14 +3,20 @@ package org.innovateuk.ifs.thread.attachment.service;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
+import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
+import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentsServiceImpl;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.io.InputStream;
 import java.util.function.Supplier;
@@ -28,6 +34,21 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private ProjectFinanceAttachmentsServiceImpl service;
+
+    @Mock
+    private AttachmentRepository attachmentRepositoryMock;
+
+    @Mock
+    private AttachmentMapper attachmentMapperMock;
+
+    @Mock
+    private FileEntryRepository fileEntryRepositoryMock;
+
+    @Mock
+    private FileEntryService fileEntryServiceMock;
+
+    @Mock
+    private FileService fileServiceMock;
 
     @Test
     public void test_findOne() throws Exception {

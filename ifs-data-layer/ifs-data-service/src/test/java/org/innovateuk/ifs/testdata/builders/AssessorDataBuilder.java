@@ -193,7 +193,9 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     AffiliationResourceBuilder.createFamilyFinancialInterests(!familyFinancialInterests.isEmpty(), familyFinancialInterests)
             );
 
-            doAs(data.getUser(), () -> affiliationService.updateUserAffiliations(data.getUser().getId(), allAffiliations));
+            AffiliationListResource allAffiliationsList = new AffiliationListResource(allAffiliations);
+
+            doAs(data.getUser(), () -> affiliationService.updateUserAffiliations(data.getUser().getId(), allAffiliationsList));
         });
     }
 

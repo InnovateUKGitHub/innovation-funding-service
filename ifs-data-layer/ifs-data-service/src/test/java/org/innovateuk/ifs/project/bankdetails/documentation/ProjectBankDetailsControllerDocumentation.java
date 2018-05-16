@@ -8,7 +8,9 @@ import org.innovateuk.ifs.project.bankdetails.controller.ProjectBankDetailsContr
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -36,6 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectBankDetailsControllerDocumentation extends BaseControllerMockMVCTest<ProjectBankDetailsController> {
+
+    @Mock
+    private BankDetailsService bankDetailsServiceMock;
 
     @Override
     protected ProjectBankDetailsController supplyControllerUnderTest() {

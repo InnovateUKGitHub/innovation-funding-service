@@ -2,7 +2,7 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
@@ -101,5 +101,5 @@ public class CompetitionResourceDocs {
             .withHasAssessmentPanel(false)
             .withHasInterviewStage(false)
             .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
-            .withTermsAndConditions(new TermsAndConditionsResource("T&C", "terms-and-conditions-template", "1"));
+            .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1));
 }

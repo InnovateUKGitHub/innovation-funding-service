@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.junit.Test;
@@ -27,6 +28,9 @@ public class QuestionTemplatePersistorImplTest extends BaseServiceUnitTest<Quest
 
     @Mock
     private EntityManager entityManagerMock;
+
+    @Mock
+    private QuestionRepository questionRepositoryMock;
 
     @Mock
     private FormInputTemplatePersistorImpl formInputTemplatePersistorMock;

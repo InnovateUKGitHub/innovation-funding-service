@@ -5,6 +5,7 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
@@ -28,12 +29,14 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     private UserPermissionRules userRules;
     private TokenPermissionRules tokenRules;
+    private UserLookupStrategies userLookupStrategies;
     private TokenLookupStrategies tokenLookupStrategies;
 
     @Before
     public void lookupPermissionRules() {
         userRules = getMockPermissionRulesBean(UserPermissionRules.class);
         tokenRules = getMockPermissionRulesBean(TokenPermissionRules.class);
+        userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
         tokenLookupStrategies = getMockPermissionEntityLookupStrategiesBean(TokenLookupStrategies.class);
     }
 
@@ -160,6 +163,18 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         verify(userRules, times(2))
                 .internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(userRules);
+    }
+
+    @Test
+    public void testAgreeNewTermsAndConditions() {
+        UserResource user = newUserResource().build();
+
+        when(userLookupStrategies.findById(user.getId())).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.agreeNewTermsAndConditions(user.getId()), () -> {
+            verify(userRules).usersCanAgreeSiteTermsAndConditions(user, getLoggedInUser());
+            verifyNoMoreInteractions(userRules);
+        });
     }
 
     @Override

@@ -89,7 +89,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         List<PartnerOrganisationResource> partnerOrganisations = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource()
                 .withOrganisation(1L, 2L)
-                .withPostCode("TW14 9QG", "UB7 8QF")
+                .withPostcode("TW14 9QG", "UB7 8QF")
                 .build(2);
 
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -119,8 +119,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(projectManagerProjectUser, model.getProjectManager());
         assertEquals(expectedOrganisationFinanceContactMap, model.getOrganisationFinanceContactMap());
         assertEquals(true, model.isLocationPerPartnerRequired());
-        assertEquals("TW14 9QG", model.getPostCodeForPartnerOrganisation(1L));
-        assertEquals("UB7 8QF", model.getPostCodeForPartnerOrganisation(2L));
+        assertEquals("TW14 9QG", model.getPostcodeForPartnerOrganisation(1L));
+        assertEquals("UB7 8QF", model.getPostcodeForPartnerOrganisation(2L));
 
     }
 
@@ -304,7 +304,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectRestService.withdrawProject(projectId)).thenReturn(restSuccess());
 
         MvcResult result = mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/withdraw"))
-                .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/unsuccessful"))
+                .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
                 .andReturn();
 
         verify(projectRestService).withdrawProject(projectId);

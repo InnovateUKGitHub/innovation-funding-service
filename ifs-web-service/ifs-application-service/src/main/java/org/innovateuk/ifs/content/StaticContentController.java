@@ -21,9 +21,4 @@ public class StaticContentController {
     public String cookies() {
         return "content/cookies";
     }
-
-    @GetMapping("terms-and-conditions")
-    public String termsAndConditions() {
-        return "content/terms-and-conditions";
-    }
 }

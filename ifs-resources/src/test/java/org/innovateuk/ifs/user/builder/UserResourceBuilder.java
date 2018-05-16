@@ -5,6 +5,7 @@ import org.innovateuk.ifs.user.resource.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -101,7 +102,13 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     }
 
     public UserResourceBuilder withAllowMarketingEmails(Boolean... allowMarketingEmails) {
-        return withArray((allowMarketingEmail, user) -> setField("allowMarketingEmails", allowMarketingEmail, user), allowMarketingEmails);
+        return withArray((allowMarketingEmail, user) ->
+                setField("allowMarketingEmails", allowMarketingEmail, user), allowMarketingEmails);
+    }
+
+    public UserResourceBuilder withTermsAndConditionsIds(Set<Long>... termsAndConditionsIdList) {
+        return withArray((termsAndConditionsIds, user) -> setField("termsAndConditionsIds", termsAndConditionsIds,
+                user), termsAndConditionsIdList);
     }
 
     public UserResourceBuilder withCreatedOn(ZonedDateTime... createdOns) {

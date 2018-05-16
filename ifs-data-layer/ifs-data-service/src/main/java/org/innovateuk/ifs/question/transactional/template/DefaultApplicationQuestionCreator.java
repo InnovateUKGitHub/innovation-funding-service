@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.question.transactional.template;
 
+import org.innovateuk.ifs.application.validator.NotEmptyValidator;
+import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
@@ -8,16 +11,12 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.application.validator.NotEmptyValidator;
-import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Arrays.asList;
 
 /**
  * Component that creates a Question object containing default values & validators.
@@ -33,8 +32,8 @@ public class DefaultApplicationQuestionCreator {
     private FormValidatorRepository formValidatorRepository;
 
     public Question buildQuestion(Competition competition) {
-        FormValidator notEmptyValidator = formValidatorRepository.findByClazzNameIn(asList(NotEmptyValidator.class.getName(), NotEmptyValidator.OLD_PACKAGE_NAME));
-        FormValidator wordCountValidator = formValidatorRepository.findByClazzNameIn(asList(WordCountValidator.class.getName(), NotEmptyValidator.OLD_PACKAGE_NAME));
+        FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
+        FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
 
         FormInput maxWordCountInput = buildApplicantTextInput(competition, notEmptyValidator, wordCountValidator);
         FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
@@ -43,6 +42,7 @@ public class DefaultApplicationQuestionCreator {
 
         Question question = new Question();
         question.setCompetition(competition);
+        question.setQuestionSetupType(CompetitionSetupQuestionType.ASSESSED_QUESTION);
         question.setMarkAsCompletedEnabled(true);
         question.setAssessorMaximumScore(DEFAULT_MAXIMUM_SCORE);
         question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput));

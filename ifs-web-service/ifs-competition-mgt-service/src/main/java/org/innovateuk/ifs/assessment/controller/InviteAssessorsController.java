@@ -67,9 +67,6 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     private CompetitionInviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
 
     @Autowired
-    private CompetitionInviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
-
-    @Autowired
     private CompetitionInviteAssessorsAcceptedModelPopulator inviteAssessorsAcceptedModelPopulator;
 
     protected String getCookieName() {

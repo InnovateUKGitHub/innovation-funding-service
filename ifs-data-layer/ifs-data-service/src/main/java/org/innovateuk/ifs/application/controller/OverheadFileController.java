@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.transactional.OverheadFileService;
@@ -13,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
 
 /**
  * Controller for handling the overheads calculation spreadsheet file upload
@@ -32,6 +30,8 @@ public class OverheadFileController {
 
     @Autowired
     private OverheadFileService overheadFileService;
+
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
@@ -56,14 +56,14 @@ public class OverheadFileController {
     ResponseEntity<Object> getFileContents(
             @RequestParam("overheadId") long overheadId) throws IOException {
 
-        return handleFileDownload(() -> overheadFileService.getFileEntryContents(overheadId));
+        return fileControllerUtils.handleFileDownload(() -> overheadFileService.getFileEntryContents(overheadId));
     }
 
     @GetMapping("/projectOverheadCalculationDocument")
     public @ResponseBody
     ResponseEntity<Object> getProjectFileContents(
             @RequestParam("overheadId") long overheadId) throws IOException {
-        return handleFileDownload(() -> overheadFileService.getProjectFileEntryContents(overheadId));
+        return fileControllerUtils.handleFileDownload(() -> overheadFileService.getProjectFileEntryContents(overheadId));
     }
 
     @PostMapping(value = "/overheadCalculationDocument", produces = "application/json")
@@ -74,7 +74,7 @@ public class OverheadFileController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForOverheadCalculation, maxFilesizeBytesForOverheadCalculation, request, (fileAttributes, inputStreamSupplier) ->
+        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForOverheadCalculation, maxFilesizeBytesForOverheadCalculation, request, (fileAttributes, inputStreamSupplier) ->
                 overheadFileService.createFileEntry(overheadId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
@@ -86,7 +86,7 @@ public class OverheadFileController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForOverheadCalculation, maxFilesizeBytesForOverheadCalculation, request, (fileAttributes, inputStreamSupplier) ->
+        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForOverheadCalculation, maxFilesizeBytesForOverheadCalculation, request, (fileAttributes, inputStreamSupplier) ->
                 overheadFileService.updateFileEntry(overheadId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 

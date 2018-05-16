@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.project.core.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -25,6 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
+
+    @Mock
+    private ProjectService projectServiceMock;
 
     @Override
     protected ProjectController supplyControllerUnderTest() {
