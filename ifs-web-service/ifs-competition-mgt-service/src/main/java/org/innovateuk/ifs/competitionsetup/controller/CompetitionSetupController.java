@@ -364,7 +364,7 @@ public class CompetitionSetupController {
         RestResult<Void> deleteResult = competitionSetupRestService.delete(competitionId);
 
         return validationHandler.addAnyErrors(deleteResult, asGlobalErrors())
-                .failNowOrSucceedWith(failureView, () -> "redirect:/");
+                .failNowOrSucceedWith(failureView, () -> "redirect:/dashboard");
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")

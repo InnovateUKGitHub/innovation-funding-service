@@ -1171,7 +1171,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/delete"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/management/dashboard"));
 
         verify(competitionSetupRestService, only()).delete(COMPETITION_ID);
     }
