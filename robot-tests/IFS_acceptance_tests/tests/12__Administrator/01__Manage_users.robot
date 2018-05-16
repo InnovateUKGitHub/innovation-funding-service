@@ -164,7 +164,7 @@ Administrator can navigate to edit page to edit the internal user's details
     [Tags]
     [Setup]  the user navigates to the View internal users details  New Administrator  active
     Given the user clicks the button/link         link=Edit
-    And the user should see the text in the page  Edit internal user's details
+    And the user should see the text in the page  Edit internal user details
     And the user should see the element           css=#firstName[value="New"]
     And the user should see the element           css=#lastName[value="Administrator"]
     And the user should see the element           jQuery=dt:contains("Email address") ~ dd:contains("ifs.innovationLead")
