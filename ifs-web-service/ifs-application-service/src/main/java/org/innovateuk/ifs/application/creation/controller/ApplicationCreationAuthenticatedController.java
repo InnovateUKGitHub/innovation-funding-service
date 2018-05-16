@@ -9,7 +9,9 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -25,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
@@ -38,6 +41,7 @@ import static java.lang.String.format;
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationCreationAuthenticatedController {
     public static final String COMPETITION_ID = "competitionId";
+    public static final String FORM_NAME = "form";
     public static final String RADIO_TRUE = "true";
     public static final String RADIO_FALSE = "false";
     //  public static final String FORM_RADIO_NAME = "create-application";
@@ -66,8 +70,7 @@ public class ApplicationCreationAuthenticatedController {
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
-            model.addAttribute("form", new ApplicationCreationAuthenticatedForm());
-//            model.addAttribute("createNewApplication", false);
+            model.addAttribute(FORM_NAME, new ApplicationCreationAuthenticatedForm());
             return "create-application/confirm-new-application";
         } else {
             return createApplicationAndShowInvitees(user, competitionId);
@@ -80,25 +83,27 @@ public class ApplicationCreationAuthenticatedController {
     }
 
     @PostMapping("/{competitionId}")
-    public String post(Model model,
-                       @PathVariable(COMPETITION_ID) Long competitionId,
-                       @Valid @ModelAttribute("form") ApplicationCreationAuthenticatedForm form,
+    public String post(@PathVariable(COMPETITION_ID) Long competitionId,
+                       @Valid @ModelAttribute(FORM_NAME) ApplicationCreationAuthenticatedForm form,
                        BindingResult bindingResult,
+                       ValidationHandler validationHandler,
+                       Model model,
                        UserResource user) {
 
         if (!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
 
-        if (form.getCreateNewApplication() != null) {
+        Supplier<String> failureView = () -> "create-application/confirm-new-application";
+        Supplier<String> successView = () -> {
             if (form.getCreateNewApplication()) {
                 return createApplicationAndShowInvitees(user, competitionId);
-            } else if (!form.getCreateNewApplication()) {
-                // redirect to dashboard
-                return "redirect:/";
             }
-        }
-        return "redirect:/application/create-authenticated/" + competitionId;
+            // redirect to dashboard
+            return "redirect:/";
+        };
+
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
 
