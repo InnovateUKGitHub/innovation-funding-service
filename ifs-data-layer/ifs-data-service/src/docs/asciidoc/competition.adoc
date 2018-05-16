@@ -247,11 +247,11 @@ include::{snippets}/competition/update-terms-and-conditions/curl-request.adoc[]
 
 === Delete competition by id
 ==== Request
-include::{snippets}/competition/delete/http-request.adoc[]
-include::{snippets}/competition/delete/path-parameters.adoc[]
+include::{snippets}/competition/delete-competition/http-request.adoc[]
+include::{snippets}/competition/delete-competition/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competition/delete/http-response.adoc[]
+include::{snippets}/competition/delete-competition/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/competition/delete/curl-request.adoc[]
+include::{snippets}/competition/delete-competition/curl-request.adoc[]
