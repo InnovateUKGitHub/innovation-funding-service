@@ -103,7 +103,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
         application.setId(99L);
         when(applicationService.createApplication(anyLong(), anyLong(), eq(""))).thenReturn(application);
 
-        mockMvc.perform(post("/application/create-authenticated/1"))
+        mockMvc.perform(post("/application/create-authenticated/1").param("createNewApplication", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/99/team"));
 

@@ -10,7 +10,7 @@
 
 <main tabindex="-1" id="content">
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
     <div class="grid-row">
