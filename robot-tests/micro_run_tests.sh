@@ -79,13 +79,13 @@ function initialiseTestEnvironment() {
     if [[ ${quickTest} -eq 1 ]]
       then
         section "=> STARTING SELENIUM GRID and INJECTING ENVIRONMENT PARAMETERS"
-        ./gradlew deployHub deployChrome robotTestsFilter
+        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter --configure-on-demand
 
         echo "=> Waiting 5 seconds for the grid to be properly started"
         sleep 5
       else
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE and syncing shibboleth users"
-        ./gradlew deployHub deployChrome robotTestsFilter ifs-data-layer:ifs-data-service:flywayClean ifs-data-layer:ifs-data-service:flywayMigrate syncShib
+        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate :ifs-data-layer:ifs-data-service:syncShib --configure-on-demand
     fi
 
   }
@@ -94,7 +94,7 @@ function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
     cd ${rootDir}
-    ./gradlew removeHub removeChrome
+    ./gradlew :robot-tests:removeHub :robot-tests:removeChrome --configure-on-demand
 }
 
 function startPybot() {
@@ -256,6 +256,7 @@ echo "virusScanScannedFolder:       ${virusScanScannedFolder}"
 echo
 coloredEcho "=> We are about to delete the above storage directories in Docker, make sure that they are right ones!" yellow
 echo
+
 
 if [ "${postcodeLookupKey}" = '' ]
 then
