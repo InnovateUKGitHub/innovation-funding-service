@@ -45,7 +45,8 @@
                th:disabled="${!setupReady}"
                class="button no-margin-right"  id="compCTA">Complete</a>
         </div>
-        <div class="extra-margin">
+        <div class="extra-margin"
+             th:unless="${model.general.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
             <a data-js-modal="delete-modal" href="#">Delete competition</a>
         </div>
     </th:block>
