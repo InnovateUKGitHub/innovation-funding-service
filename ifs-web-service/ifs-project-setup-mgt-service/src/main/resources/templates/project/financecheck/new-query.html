@@ -31,7 +31,7 @@
         You must confirm any finance changes with the contact before you approve.
     </p>
 
-    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
+    <form class="extra-margin" id="post-new-query-form" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
           th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
             <h2 class="heading-medium">Post a new query</h2>
             <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'form-group-error'">
