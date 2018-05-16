@@ -39,7 +39,11 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...
 ...               IFS-3291 Applicant dashboard - View application and assessment feedback
 ...
+...               IFS-3253 Assign applications to interview panel - Applicant respond to feedback
+...
 ...               IFS-3435 Allocate applications to assessors - View
+...
+...               IFS-3436 Allocate applications to assessors - Assessor profile view
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -160,15 +164,33 @@ Applicant can see the feedback given
     Then the user should see the element      jQuery=p:contains("This is the business opportunity feedback")
     And the user should see the element       jQuery=h2:contains("Average score: 8/ 10")
 
+Applicant can upload the reponse to interview panel
+    [Documentation]  IFS-3253
+    [Setup]  the user clicks the button/link    link=Feedback overview
+    When the applicant upload the response to the interview panel
+    Then the compAdmin checks the status for response uploaded applicantion
+    And the user should see the element         jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
+
+Applicant can remove the uploaded response
+    [Documentation]  IFS-3253
+    [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
+    Given the user clicks the button/link    link=${computer_vision_application_name}
+    And the applicant upload the response to the interview panel
+    When the user clicks the button/link     css=.button-secondary  #remove
+    Then the user should see the element     jQuery=p:contains("No file currently uploaded") ~ label:contains("+ Upload")
+    And the compAdmin checks the status for response uploaded applicantion
+    And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
+
 CompAdmin can access the Allocate applications to assessors screen
-    [Documentation]  IFS-3435
+    [Documentation]  IFS-3435  IFS-3436
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery=a:contains("${assessor_joel}")
     And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
-    And the user should see the element      jQuery=h1:contains("Allocate applications to assessors")
-    #TODO Further testing of functionality when IFS-3436 is completed
+    When the user clicks the button/link     link=Allocate
+    Then the user should see the element     jQuery=h1:contains(" Allocate applications to ${assessor_joel}")
+    And the user should see the element      jQuery=dt:contains("Email address") ~ dd:contains("${assessor_joel_email}")
 
 *** Keywords ***
 Custom Suite Setup
@@ -243,3 +265,11 @@ the compAdmin removes uploaded feedback for an application
     the user should see the element    link=testing_5MB.pdf
     the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
+
+the applicant upload the response to the interview panel
+    the user uploads the file              css=.inputfile   ${valid_pdf}
+    the user should see the element        link=testing.pdf (opens in a new window)
+
+the compAdmin checks the status for response uploaded applicantion
+    log in as a different user        &{Comp_admin1_credentials}
+    the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
