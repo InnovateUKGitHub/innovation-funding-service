@@ -23,7 +23,10 @@
         <span class="heading-small">applications</span>
     </div>
 
-    <div class="table-overflow">
+    <form method="POST"
+          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}"
+          th:object="${form}">
+        <div class="table-overflow">
             <table>
                 <thead>
                 <tr>
@@ -43,17 +46,13 @@
                     <td  th:text="${applicationInterview.name}">Electronics, sensors &#38; photonics, Materials</td>
                     <td th:text="${applicationInterview.leadOrganisation}">Ooba</td>
                     <td th:text="${applicationInterview.numberOfAssessors}" class="numeric">1</td>
-                    <td class="alignright"><a href="#">Remove</a></td>
+                    <td class="alignright">
+                        <button class="buttonlink" name="remove" th:value="${applicationInterview.id}">Remove</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
-    </div>
-
-
-    <form method="POST"
-          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}"
-          th:object="${form}">
-
+        </div>
         <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
             <label class="form-label-bold" th:for="${#ids.next('subject')}">
                 <span>Email subject</span>
