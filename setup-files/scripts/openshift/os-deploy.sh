@@ -33,7 +33,11 @@ function deploy() {
         oc create -f $(getBuildLocation)/mysql/3-finance-totals-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
+
+        # conditionally deploy prototypes service
+        if $(isServiceEnabled "ifs.prototypes"); then
+            oc create -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
+        fi
     fi
 
     # The SIL stub is required in all environments, in one form or another, except for production
@@ -41,7 +45,7 @@ function deploy() {
         oc create -f $(getBuildLocation)/sil-stub/ ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    # conditionally deploy prototypes service
+    # Only named environment for Prototypes is SysInt
     if $(isSysIntEnvironment ${TARGET}); then
         oc create -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi

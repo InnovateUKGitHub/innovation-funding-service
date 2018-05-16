@@ -38,6 +38,21 @@ function isSysIntEnvironment() {
     fi
 }
 
+function isServiceEnabled() {
+
+    SERVICE=$1
+    GRADLE_PROPERTIES_FILE=~/.gradle/gradle.properties
+
+    ENABLED=`cat "$GRADLE_PROPERTIES_FILE" | grep -v '^#' | grep "$SERVICE" | cut -d'=' -f2`
+
+    if [[ -n "$ENABLED" && "$ENABLED" == true ]]; then
+        exit 0
+    else
+        exit 1
+    fi
+}
+
+
 function getProjectName() {
 
     PROJECT=$1
