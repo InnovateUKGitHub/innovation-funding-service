@@ -8,13 +8,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewAllocationNotifyForm;
 import org.innovateuk.ifs.interview.form.InterviewAllocationSelectionForm;
-import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
 import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.model.AllocateInterviewApplicationsModelPopulator;
-import org.innovateuk.ifs.management.model.AllocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewAcceptedAssessorsModelPopulator;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
@@ -29,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
@@ -76,8 +75,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
     public String overview(Model model,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam MultiValueMap<String, String> queryParams,
-                           @RequestParam(value = "page", defaultValue = "0") int page
-    ) {
+                           @RequestParam(value = "page", defaultValue = "0") int page) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
         String originQuery = buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.INTERVIEW_ACCEPTED, queryParams);
@@ -98,8 +96,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                @PathVariable("userId") long userId,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                HttpServletRequest request,
-                               HttpServletResponse response
-    ) {
+                               HttpServletResponse response) {
         updateSelectionForm(request, response, competitionId, selectionForm);
 
 
@@ -111,27 +108,31 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return "assessors/interview/unallocated-applications";
     }
 
+    @PostMapping("/allocate-applications/{userId}/addSelected")
+    public String allocateApplications(@PathVariable("competitionId") long competitionId,
+                                       @PathVariable("userId") long userId) {
+        return redirectToSend(competitionId, userId).get();
+    }
 
-    @PostMapping("/allocate-applications/{userId}")
+    @GetMapping("/allocate-applications/{userId}")
     public String allocateApplications(Model model,
-                                       @ModelAttribute(name = SELECTION_FORM) InterviewAllocationSelectionForm selectionForm,
                                        @ModelAttribute(name = "form", binding = false) InterviewAllocationNotifyForm form,
                                        @PathVariable("competitionId") long competitionId,
                                        @PathVariable("userId") long userId,
                                        @RequestParam MultiValueMap<String, String> queryParams,
                                        HttpServletRequest request) {
 
-        InterviewAllocationSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
-                .filter(f -> !f.getSelectedIds().isEmpty())
-                .orElse(selectionForm);
+        Optional<InterviewAllocationSelectionForm> maybeSelectionForm = getSelectionFormFromCookie(request, competitionId)
+                .filter(f -> !f.getSelectedIds().isEmpty());
 
-        form.setSelectedIds(submittedSelectionForm.getSelectedIds());
+        if (!maybeSelectionForm.isPresent()) {
+            return redirectToUnallocatedTab(competitionId, userId).get();
+        }
 
-        model.addAttribute("model", allocateInterviewApplicationsModelPopulator.populateModel(competitionId, userId, submittedSelectionForm.getSelectedIds()));
+        model.addAttribute("model", allocateInterviewApplicationsModelPopulator.populateModel(competitionId, userId, maybeSelectionForm.get().getSelectedIds()));
         model.addAttribute("form", form);
 
         form.setSubject("Applications for interview panel for [competition name]");
-
 
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
         model.addAttribute("originQuery", originQuery);
@@ -139,13 +140,22 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return "assessors/interview/allocate-applications";
     }
 
-    @PostMapping("/allocate-applications/{userId}/notify")
+    @PostMapping("/allocate-applications/{userId}")
     public String notifyAssessor(Model model,
                                  @ModelAttribute(name = "form") InterviewAllocationNotifyForm form,
                                  @PathVariable("competitionId") long competitionId,
                                  @PathVariable("userId") long userId,
-                                 ValidationHandler validationHandler) {
+                                 ValidationHandler validationHandler,
+                                 HttpServletRequest request) {
         Supplier<String> failureView = () -> "foo";
+
+
+        Optional<InterviewAllocationSelectionForm> maybeSelectionForm = getSelectionFormFromCookie(request, competitionId)
+                .filter(f -> !f.getSelectedIds().isEmpty());
+
+        if (!maybeSelectionForm.isPresent()) {
+            return redirectToUnallocatedTab(competitionId, userId).get();
+        }
 
         return validationHandler
                 .failNowOrSucceedWith(
@@ -158,7 +168,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                                     userId,
                                                     form.getSubject(),
                                                     form.getContent(),
-                                                    form.getSelectedIds()
+                                                    maybeSelectionForm.get().getSelectedIds()
                                             )
                                     );
                             return validationHandler
@@ -178,6 +188,21 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                 .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
                 .toUriString();
     }
+
+    private Supplier<String> redirectToUnallocatedTab(long competitionId, long userId) {
+        return () -> "redirect:" + UriComponentsBuilder
+                .fromPath("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}")
+                .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
+                .toUriString();
+    }
+
+    private Supplier<String> redirectToSend(long competitionId, long userId) {
+        return () -> "redirect:" + UriComponentsBuilder
+                .fromPath("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}")
+                .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
+                .toUriString();
+    }
+
 
     @PostMapping(value = "/unallocated-applications/{userId}", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToInviteList(Model model,

@@ -51,10 +51,8 @@
 
 
     <form method="POST"
-          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}/notify(competitionId=${model.competitionId},userId=${model.user.id})}"
+          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}"
           th:object="${form}">
-
-        <input type="hidden" name="selections" th:field="*{selectedIds}"/>
 
         <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
             <label class="form-label-bold" th:for="${#ids.next('subject')}">
