@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Unsuccessful applications - ${model.competitionName}|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Previous applications - ${model.competitionName}|" />
 </head>
 
 <body class="wide-page">
@@ -10,8 +10,8 @@
     <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications/manage(competitionId=${model.competitionId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Unsuccessful applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous competitions',linkClass='link-back',linkUrl=@{/dashboard/previous}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Previous applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
 
     <div class="grid-row sorting">

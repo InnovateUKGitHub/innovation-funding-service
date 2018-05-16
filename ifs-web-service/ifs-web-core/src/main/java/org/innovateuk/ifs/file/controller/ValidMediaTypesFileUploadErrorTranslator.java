@@ -69,9 +69,9 @@ public class ValidMediaTypesFileUploadErrorTranslator implements FileUploadError
             String errorMessage = mediaTypeSetSupportingErrorConditions.map(VALID_MEDIA_TYPES_TO_ERROR_MESSAGE::get)
                     .orElse(error.getErrorKey());
 
-            return fieldError(fieldId, fieldRejectedValue, errorMessage);
+            return fieldError(fieldId, fieldRejectedValue, errorMessage, arguments);
         } else {
-            return fieldError(fieldId, fieldRejectedValue, error.getErrorKey());
+            return fieldError(fieldId, fieldRejectedValue, error.getErrorKey(), arguments);
         }
     }
 }

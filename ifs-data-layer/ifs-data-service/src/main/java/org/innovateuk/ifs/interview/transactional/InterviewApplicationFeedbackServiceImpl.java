@@ -62,24 +62,23 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
             fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                         .andOnSuccessReturnVoid(created -> {
-                            InterviewAssignmentMessageOutcome outcome = new InterviewAssignmentMessageOutcome();
-                            outcome.setAssessmentInterviewPanel(interviewAssignment);
-                            outcome.setFeedback(created.getValue());
-                            interviewAssignment.setMessage(outcome);
+                            InterviewAssignmentMessageOutcome messageOutcome = new InterviewAssignmentMessageOutcome();
+                            messageOutcome.setAssessmentInterviewPanel(interviewAssignment);
+                            messageOutcome.setFeedback(created.getValue());
+                            interviewAssignment.setMessage(messageOutcome);
                         })).toServiceResult());
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> deleteFeedback(long applicationId) {
-        return findAssignmentByApplicationId(applicationId).andOnSuccessReturnVoid(interviewAssignment -> {
+        return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment -> {
             long fileId = interviewAssignment.getMessage().getFeedback().getId();
-            long outcomeId = interviewAssignment.getMessage().getId();
-            interviewAssignment.getMessage().setFeedback(null);
-            interviewAssignmentMessageOutcomeRepository.save(interviewAssignment.getMessage());
-            interviewAssignment.setMessage(null);
-            interviewAssignmentMessageOutcomeRepository.delete(outcomeId);
-            fileService.deleteFileIgnoreNotFound(fileId);
+            return fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() -> {
+                InterviewAssignmentMessageOutcome messageOutcome = interviewAssignment.getMessage();
+                interviewAssignment.removeMessage();
+                interviewAssignmentMessageOutcomeRepository.delete(messageOutcome);
+            });
         });
     }
 

@@ -26,10 +26,6 @@ bootRun {
     addResources = false
 }
 
-configurations {
-    providedRuntime
-}
-
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 

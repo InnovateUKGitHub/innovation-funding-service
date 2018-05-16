@@ -78,7 +78,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                            @RequestParam(value = "page", defaultValue = "0") int page) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        String originQuery = buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.INTERVIEW_ACCEPTED, queryParams);
+        String originQuery = buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.INTERVIEW_ALLOCATION, queryParams);
 
         model.addAttribute("model", interviewAcceptedAssessorsModelPopulator.populateModel(
                 competitionResource,

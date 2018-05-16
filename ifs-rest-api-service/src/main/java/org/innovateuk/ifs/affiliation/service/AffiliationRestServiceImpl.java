@@ -2,13 +2,11 @@ package org.innovateuk.ifs.affiliation.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 
 /**
  * AffiliationRestServiceImpl is a utility for CRUD operations on {@link AffiliationResource}.
@@ -21,12 +19,12 @@ public class AffiliationRestServiceImpl extends BaseRestService implements Affil
     private String profileRestURL = "/affiliation";
 
     @Override
-    public RestResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
-        return getWithRestResult(format("%s/id/%s/getUserAffiliations", profileRestURL, userId), affiliationResourceListType());
+    public RestResult<AffiliationListResource> getUserAffiliations(long userId) {
+        return getWithRestResult(format("%s/id/%s/getUserAffiliations", profileRestURL, userId), AffiliationListResource.class);
     }
 
     @Override
-    public RestResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
+    public RestResult<Void> updateUserAffiliations(long userId, AffiliationListResource affiliations) {
         return putWithRestResult(format("%s/id/%s/updateUserAffiliations", profileRestURL, userId), affiliations, Void.class);
     }
 }

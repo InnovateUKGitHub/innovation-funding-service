@@ -1,6 +1,8 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
@@ -10,10 +12,8 @@ apply from: "finance-data-service-sync.gradle"
 
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
-configurations {
-    providedRuntime
-}
 
 project.version = dataServiceVersion
 tagDocker.tag = dataServiceVersion
@@ -47,18 +47,6 @@ ext.companyHouseKey = ext.get('ifs.company-house.key')
 
 ext.companiesHouseLookupEnabled = ext.has('ifs.companies-house.enabled') ? ext.get('ifs.companies-house.enabled') : true
 
-sourceSets {
-    client {
-        java {
-            srcDir 'src/main/java'
-        }
-        main {
-            ext.originalJavaSrcDirs = java.srcDirs
-            java.srcDir "${generatedMapperSourcesDir}"
-        }
-    }
-}
-
 bootRun {
     addResources = false
 }
@@ -68,9 +56,6 @@ ext {
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
 }
 
-configurations {
-    mapstruct
-}
 
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
@@ -102,8 +87,6 @@ dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "org.mapstruct:mapstruct:1.0.0.Final"
-    mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
     compile "org.apache.poi:poi:3.14"
     compile "org.apache.poi:poi-ooxml:3.14"
 
@@ -116,12 +99,11 @@ dependencies {
     compile "org.xhtmlrenderer:flying-saucer-core:9.1.6"
     compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.6"
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(":ifs-commons").sourceSets.test.output
-    testCompile project(":ifs-security").sourceSets.test.output
-
-    testCompile project(":ifs-data-layer:data-service-commons").sourceSets.test.output
-    testCompile project(":ifs-data-layer:data-service-file").sourceSets.test.output
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"
@@ -141,7 +123,9 @@ test {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
 
-    systemProperty 'pact.rootDir', project.getProperty('pactDir')
+    if (project.hasProperty('pactDir')) {
+        systemProperty 'pact.rootDir', project.getProperty('pactDir')
+    }
 
     finalizedBy asciidoctor
 
@@ -174,41 +158,10 @@ task asciidoctorOnly(type: Test) {
     finalizedBy asciidoctor
 }
 
-task generateMainMapperClasses(type: JavaCompile) {
-    ext.aptDumpDir = file("build/tmp/apt/mapstruct")
-    destinationDir = aptDumpDir
-
-    classpath = compileJava.classpath + configurations.mapstruct
-    source = sourceSets.main.originalJavaSrcDirs
-    ext.sourceDestDir = file generatedMapperSourcesDir
-
-    options.define(
-            compilerArgs: [
-                    "-nowarn",
-                    "-proc:only",
-                    "-encoding", "UTF-8",
-                    "-processor", "org.mapstruct.ap.MappingProcessor",
-                    "-s", sourceDestDir.absolutePath,
-                    "-source", 1.8,
-                    "-target", 1.8,
-            ]
-    );
-
-    inputs.dir source
-    outputs.dir generatedMapperSourcesDir
-    doFirst {
-        sourceDestDir.mkdirs()
-    }
-    doLast {
-        aptDumpDir.delete()
-    }
-}
-
 task syncShib(type:Exec) {
     commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
-compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 

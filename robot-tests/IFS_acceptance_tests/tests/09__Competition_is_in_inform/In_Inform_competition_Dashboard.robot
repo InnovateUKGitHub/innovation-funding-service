@@ -219,6 +219,5 @@ The user checks the ineligible and unsuccessful applications in the Previous tab
     log in as a different user             ${email}  ${password}
     the user clicks the button/link        jQuery=a:contains("Previous")
     the user clicks the button/link        link=${NOT_EDITABLE_COMPETITION_NAME}
-    the user clicks the button/link        link=Unsuccessful applications
     the user should see the element        jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
     the user should not see the element    jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
