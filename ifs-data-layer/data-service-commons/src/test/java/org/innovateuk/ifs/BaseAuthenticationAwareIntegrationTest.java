@@ -48,7 +48,9 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
         return getByEmail("felix.wilson@gmail.com");
     }
 
-    protected UserResource getIfsAdmin() { return getByEmail("ifsadmin@innovateuk.test"); }
+    protected UserResource getIfsAdmin() {
+        return getByEmail("ifsadmin@innovateuk.test");
+    }
 
     protected UserResource getAnonUser() {
         return SecurityRuleUtil.getAnonymous();

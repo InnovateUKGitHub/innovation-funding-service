@@ -261,10 +261,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void withdrawProject() throws Exception {
         long competitionId = 1L;
-        long projectId = 2L;
         long applicationId = 3L;
         ProjectResource project = newProjectResource()
-                .withId(projectId)
                 .withApplication(applicationId)
                 .build();
 
@@ -272,17 +270,17 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                                 .withRolesGlobal(singletonList(IFS_ADMINISTRATOR))
                                 .build());
 
-        when(projectRestService.withdrawProject(projectId)).thenReturn(restSuccess());
-        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+        when(projectRestService.withdrawProject(project.getId())).thenReturn(restSuccess());
+        when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
         when(applicationRestService.withdrawApplication(applicationId)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/withdraw"))
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/withdraw"))
                 .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
 
-        verify(projectRestService).withdrawProject(projectId);
-        verify(projectRestService).getProjectById(projectId);
+        verify(projectRestService).withdrawProject(project.getId());
+        verify(projectRestService).getProjectById(project.getId());
         verify(applicationRestService).withdrawApplication(applicationId);
     }
 
