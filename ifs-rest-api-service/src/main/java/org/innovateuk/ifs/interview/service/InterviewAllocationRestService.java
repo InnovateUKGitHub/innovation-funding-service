@@ -7,7 +7,7 @@ import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
 import java.util.List;
 
 /**
- * REST service for allocating application to assessors in interview panels
+ * REST service for allocating applications to assessors in interview panels
  */
 public interface InterviewAllocationRestService {
 

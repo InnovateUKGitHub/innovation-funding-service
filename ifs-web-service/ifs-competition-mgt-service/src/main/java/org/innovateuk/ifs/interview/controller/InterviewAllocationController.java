@@ -56,7 +56,6 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return InterviewAllocationSelectionForm.class;
     }
 
-
     @GetMapping("/allocate-assessors")
     public String overview(Model model,
                            @PathVariable("competitionId") long competitionId,
@@ -121,6 +120,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             return createFailureResponse();
         }
     }
+
     @PostMapping(value = "/unallocated-applications/{userId}", params = {"selectionId"})
     public @ResponseBody
     JsonNode selectAssessorForInviteList(
