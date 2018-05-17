@@ -2,6 +2,7 @@ package org.innovateuk.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.form.resource.QuestionType;
 
@@ -14,9 +15,6 @@ import java.util.List;
  */
 @Entity
 public class Question {
-
-    private static final String SCOPE = "Scope";
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -53,6 +51,9 @@ public class Question {
     @Enumerated(EnumType.STRING)
     @Column(name="question_type")
     private QuestionType type = QuestionType.GENERAL;
+
+    @Enumerated(EnumType.STRING)
+    private CompetitionSetupQuestionType questionSetupType;
 
     private Integer assessorMaximumScore;
 
@@ -201,7 +202,15 @@ public class Question {
     	return queriedType.equals(type);
     }
 
+    public CompetitionSetupQuestionType getQuestionSetupType() {
+        return questionSetupType;
+    }
+
+    public void setQuestionSetupType(CompetitionSetupQuestionType questionSetupType) {
+        this.questionSetupType = questionSetupType;
+    }
+
     public boolean isScope() {
-        return this.shortName != null && this.shortName.equals(SCOPE);
+        return this.questionSetupType == CompetitionSetupQuestionType.SCOPE;
     }
 }

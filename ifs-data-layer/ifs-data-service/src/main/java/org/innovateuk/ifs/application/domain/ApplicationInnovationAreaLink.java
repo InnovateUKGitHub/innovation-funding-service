@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.category.domain;
+package org.innovateuk.ifs.application.domain;
 
-import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.category.domain.CategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -18,7 +19,9 @@ public class ApplicationInnovationAreaLink extends CategoryLink<Application, Inn
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
     private Application application;
 
-    ApplicationInnovationAreaLink() { }
+    protected ApplicationInnovationAreaLink() {
+
+    }
 
     public ApplicationInnovationAreaLink(Application application, InnovationArea category) {
         super(category);
