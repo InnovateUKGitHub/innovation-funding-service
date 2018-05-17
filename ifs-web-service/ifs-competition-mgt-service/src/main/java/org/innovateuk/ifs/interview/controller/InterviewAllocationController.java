@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_APPLICATION_ALLOCATION;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
@@ -75,22 +77,24 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return "assessors/interview/allocate-accepted-assessors";
     }
 
-    @GetMapping("/unallocated-applications/{userId}")
+    @GetMapping("/unallocated-applications/{assessorId}")
     public String applications(@ModelAttribute(name = SELECTION_FORM, binding = false) InterviewAllocationSelectionForm selectionForm,
                                Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @PathVariable("userId") long userId,
+                               @RequestParam MultiValueMap<String, String> queryParams,
+                               @PathVariable("assessorId") long assessorId,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                HttpServletRequest request,
                                HttpServletResponse response
     ) {
         updateSelectionForm(request, response, competitionId, selectionForm);
-
-
+        queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
+        String originQuery = buildOriginQueryString(INTERVIEW_APPLICATION_ALLOCATION, queryParams);
         model.addAttribute("model", unallocatedInterviewApplicationsModelPopulator.populateModel(
                 competitionId,
-                userId,
-                page
+                assessorId,
+                page,
+                originQuery
         ));
         return "assessors/interview/unallocated-applications";
     }

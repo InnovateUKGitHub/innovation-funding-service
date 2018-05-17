@@ -37,7 +37,7 @@ public abstract class AbstractInterviewApplicationsModelPopulator {
     @Autowired
     protected InterviewAllocationRestService interviewAllocateRestService;
 
-    public InterviewAssessorApplicationsViewModel populateModel(long competitionId, long userId, int page) {
+    public InterviewAssessorApplicationsViewModel populateModel(long competitionId, long userId, int page, String originQuery) {
 
         UserResource user = userService.retrieveUserById(userId).getSuccess();
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
@@ -55,7 +55,8 @@ public abstract class AbstractInterviewApplicationsModelPopulator {
                 new PaginationViewModel(interviewApplicationPageResource, ""),
                 interviewApplicationPageResource.getUnallocatedApplications(),
                 interviewApplicationPageResource.getAllocatedApplications(),
-                interviewApplicationPageResource.getTotalElements() > SELECTION_LIMIT
+                interviewApplicationPageResource.getTotalElements() > SELECTION_LIMIT,
+                originQuery
         );
 
         return model;
