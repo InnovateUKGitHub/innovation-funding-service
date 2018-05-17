@@ -343,6 +343,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void deleteMilestonesForCompetition(Competition competition) {
+        competition.getMilestones().clear();
         milestoneRepository.deleteByCompetitionId(competition.getId());
     }
 
