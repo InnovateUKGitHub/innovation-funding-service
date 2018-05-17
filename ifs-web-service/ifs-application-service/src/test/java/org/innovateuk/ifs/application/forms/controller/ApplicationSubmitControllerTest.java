@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -202,7 +201,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void testApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
-        app.setSubmittedDate(ZonedDateTime.now());
+        app.setApplicationState(ApplicationState.SUBMITTED);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(competitionService.getById(anyLong())).thenReturn(competitionResource);
 
@@ -216,7 +215,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void testNotSubmittedApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
-        app.setSubmittedDate(null);
+        app.setApplicationState(ApplicationState.OPEN);
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(competitionService.getById(app.getCompetition())).thenReturn(competitionResource);
