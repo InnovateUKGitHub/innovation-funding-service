@@ -38,6 +38,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<InterviewRepository> {
 
@@ -231,5 +232,17 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         assertEquals(2, interviewApplicationResources.size());
         // TODO
+    }
+
+    @Test
+    public void unallocateApplicationFromAssessor() {
+
+        List<Interview> allocated = repository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(assessor.getId(), competition.getId());
+        assertEquals(1, allocated.size());
+
+        repository.deleteOneByParticipantUserIdAndTargetCompetitionIdAndTargetId(assessor.getId(), competition.getId(), application2.getId());
+
+        List<Interview> allocatedAfterDeletion = repository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(assessor.getId(), competition.getId());
+        assertTrue(allocatedAfterDeletion.isEmpty());
     }
 }

@@ -70,5 +70,9 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 
-
+    @Test
+    public void unallocateApplications() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unallocateApplication(1L, 2L, 3l),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
 }
