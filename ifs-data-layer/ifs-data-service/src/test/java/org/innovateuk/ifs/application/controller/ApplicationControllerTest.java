@@ -202,6 +202,18 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
+    public void withdraw() throws Exception {
+        long applicationId = 1L;
+        when(applicationServiceMock.withdrawApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/{applicationId}/withdraw", applicationId)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(applicationServiceMock).withdrawApplication(applicationId);
+    }
+
+    @Test
     public void showApplicationTeam() throws Exception {
         long applicationId = 1L;
         long userId = 2L;

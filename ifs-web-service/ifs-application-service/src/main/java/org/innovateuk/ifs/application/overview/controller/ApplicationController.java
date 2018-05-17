@@ -74,6 +74,10 @@ public class ApplicationController {
             return format("redirect:/application/%s/summary", application.getId());
         }
 
+        if (application.isSubmitted()) {
+            return format("redirect:/application/%s/track", application.getId());
+        }
+
         if (form == null) {
             form = new ApplicationForm();
         }

@@ -3,11 +3,23 @@ if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile
 }
 
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
 
 bootRepackage {
     enabled = false
+}
+
+configurations {
+    testArtifacts
+}
+task testJar (type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+artifacts {
+    testArtifacts testJar
 }
 
 
@@ -17,9 +29,11 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.14"
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(":ifs-commons").sourceSets.test.output
-    testCompile project(":ifs-data-layer:data-service-commons").sourceSets.test.output
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+
 
     testCompile "com.h2database:h2:1.4.196"
 }

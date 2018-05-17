@@ -1,6 +1,8 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
@@ -97,12 +99,11 @@ dependencies {
     compile "org.xhtmlrenderer:flying-saucer-core:9.1.6"
     compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.6"
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(":ifs-commons").sourceSets.test.output
-    testCompile project(":ifs-security").sourceSets.test.output
-
-    testCompile project(":ifs-data-layer:data-service-commons").sourceSets.test.output
-    testCompile project(":ifs-data-layer:data-service-file").sourceSets.test.output
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"
@@ -122,7 +123,9 @@ test {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
 
-    systemProperty 'pact.rootDir', project.getProperty('pactDir')
+    if (project.hasProperty('pactDir')) {
+        systemProperty 'pact.rootDir', project.getProperty('pactDir')
+    }
 
     finalizedBy asciidoctor
 
