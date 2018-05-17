@@ -117,4 +117,6 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " GROUP BY interviewAssignment.target.id "
     )
     List<InterviewApplicationResource> findAll(List<Long> applicationIds);
+
+    void deleteOneByParticipantUserIdAndTargetCompetitionIdAndTargetId(long userId, long competitionId, long applicationId);
 }

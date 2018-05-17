@@ -72,6 +72,16 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
+    public RestResult<Void> unallocateApplication(long competitionId, long assessorId, long applicationId) {
+        String baseUrl = format("%s/%d/%s/%s/%s/%s", INTERVIEW_PANEL_REST_URL,
+                competitionId, "allocated-applications",
+                assessorId, "unallocate",
+                applicationId);
+
+        return postWithRestResult(baseUrl, Void.class);
+    }
+
+    @Override
     public RestResult<InterviewApplicationPageResource> getUnallocatedApplications(long competitionId, long assessorId, int page) {
         String baseUrl = format("%s/%s/%s/%s", INTERVIEW_PANEL_REST_URL, competitionId, "unallocated-applications", assessorId);
 
