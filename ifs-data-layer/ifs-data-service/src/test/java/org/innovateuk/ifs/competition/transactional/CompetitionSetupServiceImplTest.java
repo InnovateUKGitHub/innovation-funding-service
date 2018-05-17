@@ -437,14 +437,12 @@ public class CompetitionSetupServiceImplTest {
                         .build(1))
                 .build();
 
-        List<Milestone> milestones = newMilestone().build(2);
         PublicContent publicContent = newPublicContent().build();
 
         when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
         when(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), EnumSet.allOf
                 (InviteStatus.class))).thenReturn(0);
         when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
-        when(milestoneRepository.findAllByCompetitionId(competition.getId())).thenReturn(milestones);
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
@@ -457,7 +455,7 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(publicContentRepository).delete(publicContent);
         // Test that the competition is saved without the form validators, deleting them
         inOrder.verify(competitionRepository).save(createCompetitionExpectationsWithoutFormValidators(competition));
-        inOrder.verify(milestoneRepository).delete(milestones);
+        inOrder.verify(milestoneRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(competitionRepository).delete(competition);
         inOrder.verifyNoMoreInteractions();
     }
