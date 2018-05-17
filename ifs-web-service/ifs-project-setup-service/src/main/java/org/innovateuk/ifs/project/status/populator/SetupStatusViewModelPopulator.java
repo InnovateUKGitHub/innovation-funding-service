@@ -4,12 +4,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.async.util.AsyncAdaptor;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.ProjectFinanceService;
-import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -22,7 +18,6 @@ import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelpe
 import org.innovateuk.ifs.project.status.viewmodel.SectionAccessList;
 import org.innovateuk.ifs.project.status.viewmodel.SectionStatusList;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
-import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +28,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -43,12 +37,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private ProjectFinanceService projectFinanceService;
-
-    @Autowired
-    private FinanceCheckService financeCheckService;
 
     @Autowired
     private StatusService statusService;
@@ -66,7 +54,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
         CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()));
-        CompletableFuture<Boolean> pendingQueriesRequest = awaitAll(organisationRequest).thenApply(organisation -> getPendingQueries(projectId, organisation));
 
         CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
         CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application -> competitionService.getById(application.getCompetition()));
@@ -77,22 +64,24 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         CompletableFuture<Optional<MonitoringOfficerResource>> monitoringOfficerRequest = async(() -> monitoringOfficerService.getMonitoringOfficerForProject(projectId));
         CompletableFuture<List<OrganisationResource>> partnerOrganisationsRequest = async(() -> projectService.getPartnerOrganisationsForProject(projectId));
 
-        return awaitAll(basicDetailsRequest, teamStatusRequest, monitoringOfficerRequest, pendingQueriesRequest, isProjectManagerRequest, partnerOrganisationsRequest).thenApply(futureResults -> {
+        return awaitAll(basicDetailsRequest, teamStatusRequest, monitoringOfficerRequest, isProjectManagerRequest, partnerOrganisationsRequest).thenApply(futureResults -> {
 
             BasicDetails basicDetails = basicDetailsRequest.get();
             ProjectTeamStatusResource teamStatus = teamStatusRequest.get();
             Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRequest.get();
-            boolean pendingQueries = pendingQueriesRequest.get();
             boolean isProjectManager = isProjectManagerRequest.get();
             List<OrganisationResource> partnerOrganisations = partnerOrganisationsRequest.get();
 
-            return getSetupStatusViewModel(basicDetails, teamStatus, monitoringOfficer, pendingQueries, isProjectManager, partnerOrganisations);
+            return getSetupStatusViewModel(basicDetails, teamStatus, monitoringOfficer, isProjectManager, partnerOrganisations);
         });
     }
 
-    private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean pendingQueries, boolean isProjectManager, List<OrganisationResource> partnerOrganisations) {
+    private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager, List<OrganisationResource> partnerOrganisations) {
         SectionAccessList sectionAccesses = getSectionAccesses(basicDetails, teamStatus);
         SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager);
+
+        boolean pendingQueries = SectionStatus.FLAG.equals(sectionStatuses.getFinanceChecksStatus());
+
         boolean leadPartner = isLeadPartner(teamStatus, basicDetails.getOrganisation());
         int partnerOrganisationsCount = partnerOrganisations.size();
         boolean collaborationAgreementRequired = partnerOrganisationsCount > 1;
@@ -108,17 +97,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 collaborationAgreementRequired,
                 isProjectManager,
                 pendingQueries);
-    }
-
-    private Boolean getPendingQueries(long projectId, OrganisationResource organisation) {
-
-        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisation.getId());
-
-        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
-
-        return queriesResult.handleSuccessOrFailure(
-                noQueries -> false,
-                queries -> simpleAnyMatch(queries, query -> query.awaitingResponse));
     }
 
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager) {
