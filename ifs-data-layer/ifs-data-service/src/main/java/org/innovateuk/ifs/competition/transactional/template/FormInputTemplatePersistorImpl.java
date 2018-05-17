@@ -61,11 +61,14 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
             formInput.setQuestion(question);
             formInput.setId(null);
             formInput.setFormValidators(formValidatorsCopy);
-            formInput.setGuidanceRows(guidanceRowsCopy);
+            formInput.setGuidanceRows(new ArrayList<>());
             formInput.setActive(!isSectorCompetitionWithScopeQuestion(question.getCompetition(), question, formInput)
                     && formInput.getActive());
             formInputRepository.save(formInput);
-            formInput.setGuidanceRows(guidanceRowTemplateService.persistByParentEntity(formInput));
+
+            formInput.setGuidanceRows(guidanceRowsCopy);
+            guidanceRowTemplateService.persistByParentEntity(formInput);
+
             return formInput;
         };
     }
