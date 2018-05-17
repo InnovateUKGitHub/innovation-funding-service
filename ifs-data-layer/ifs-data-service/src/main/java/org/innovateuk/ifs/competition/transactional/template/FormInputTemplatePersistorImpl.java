@@ -54,7 +54,10 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
             // Extract the validators into a new Set as the hibernate Set contains persistence information which alters
             // the original FormValidator
             Set<FormValidator> formValidatorsCopy = new HashSet<>(formInput.getFormValidators());
-            List<GuidanceRow> guidanceRowsCopy = new ArrayList<>(formInput.getGuidanceRows());
+            List<GuidanceRow> guidanceRowsCopy = new ArrayList<>();
+            if (formInput.getGuidanceRows() != null) {
+                guidanceRowsCopy.addAll(formInput.getGuidanceRows());
+            }
 
             entityManager.detach(formInput);
             formInput.setCompetition(question.getCompetition());

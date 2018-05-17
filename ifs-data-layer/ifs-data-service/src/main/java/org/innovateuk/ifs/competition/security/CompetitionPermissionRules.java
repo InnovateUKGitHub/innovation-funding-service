@@ -4,11 +4,14 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import java.util.EnumSet;
+
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -20,7 +23,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "External users cannot view competitions in setup")
     public boolean externalUsersCannotViewCompetitionsInSetup(CompetitionResource competition, UserResource user) {
-        return !CompetitionStatus.COMPETITION_SETUP.equals(competition.getCompetitionStatus());
+        return !COMPETITION_SETUP.equals(competition.getCompetitionStatus());
     }
 
     @PermissionRule(value = "READ", description = "Internal users other than innovation lead users can see all competitions")
@@ -55,5 +58,12 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_UNSUCCESSFUL_APPLICATIONS", description = "Innovation leads for the competitin can view unsuccessful applications")
     public boolean innovationLeadForCompetitionCanViewUnsuccessfulApplications(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "DELETE",
+            description = "Comp admins are able to delete competitions in preparation prior to them being in the Open state",
+            particularBusinessState = "Competition is in preparation")
+    public boolean compAdminCanDeleteCompetitionInPreparation(CompetitionResource competition, UserResource user) {
+        return isCompAdmin(user) && EnumSet.of(COMPETITION_SETUP, READY_TO_OPEN).contains(competition.getCompetitionStatus());
     }
 }

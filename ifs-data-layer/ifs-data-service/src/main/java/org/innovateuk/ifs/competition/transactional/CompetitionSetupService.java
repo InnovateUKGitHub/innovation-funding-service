@@ -76,7 +76,7 @@ public interface CompetitionSetupService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(Long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
-    @SecuredBySpring(value="DELETE", securedType=CompetitionResource.class, description = "Only Comp Admins are able to delete a competition")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'DELETE')")
+    @SecuredBySpring(value="DELETE", securedType=CompetitionResource.class, description = "Comp admins are able to delete competitions in preparation prior to them being in the Open state")
     ServiceResult<Void> deleteCompetition(long competitionId);
 }
