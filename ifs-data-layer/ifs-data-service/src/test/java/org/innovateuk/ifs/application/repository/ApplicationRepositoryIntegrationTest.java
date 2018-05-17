@@ -69,7 +69,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Stream<Application> applications = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates);
 
-        assertEquals(initial + 5, applications.count());
+        assertEquals(initial + 6, applications.count());
     }
 
     @Test

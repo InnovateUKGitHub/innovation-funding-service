@@ -1,0 +1,2 @@
+ -- Create a backing state for withdrawn applications, to be used for state machine application processes: IFS-3472
+INSERT INTO `activity_state` (id, activity_type, state) VALUES (49, 'APPLICATION', 'WITHDRAWN');
