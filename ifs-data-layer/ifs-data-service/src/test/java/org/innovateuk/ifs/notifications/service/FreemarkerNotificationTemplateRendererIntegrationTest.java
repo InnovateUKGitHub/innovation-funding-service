@@ -80,6 +80,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
             "projectName", "My Project",
+            "competitionName", "Competition 1",
+            "applicationId", "123",
             "leadOrganisation", "Lead Organisation 123",
             "projectManagerName", "ABC",
             "projectManagerEmail", "abc.xyz@gmail.com",
@@ -96,6 +98,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
             "projectName", "My Project",
+            "competitionName", "Competition 1",
+            "applicationId", "123",
             "monitoringOfficerName", "DEF",
             "monitoringOfficerEmail", "def.ghi@gmail.com",
             "monitoringOfficerTelephone", "0123456789"
