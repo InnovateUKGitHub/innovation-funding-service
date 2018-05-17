@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.async.util.AsyncAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -18,6 +19,8 @@ import org.innovateuk.ifs.project.sections.SectionStatus;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
+import org.innovateuk.ifs.project.status.viewmodel.SectionAccessList;
+import org.innovateuk.ifs.project.status.viewmodel.SectionStatusList;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
@@ -35,7 +39,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
  * Populator for creating the {@link SetupStatusViewModel}
  */
 @Service
-public class SetupStatusViewModelPopulator {
+public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private ProjectService projectService;
@@ -58,29 +62,113 @@ public class SetupStatusViewModelPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    public SetupStatusViewModel populateViewModel(Long projectId, UserResource loggedInUser) {
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+    public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId, UserResource loggedInUser) {
 
-        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
-        Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
-        OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
+        CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
+        CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()));
+        CompletableFuture<Boolean> pendingQueriesRequest = awaitAll(organisationRequest).thenApply(organisation -> getPendingQueries(projectId, organisation));
+
+        CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
+        CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application -> competitionService.getById(application.getCompetition()));
+        CompletableFuture<BasicDetails> basicDetailsRequest = awaitAll(projectRequest, competitionRequest, organisationRequest).thenApply(BasicDetails::new);
+
+        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(projectId, Optional.empty()));
+        CompletableFuture<Boolean> isProjectManagerRequest = async(() -> projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false));
+        CompletableFuture<Optional<MonitoringOfficerResource>> monitoringOfficerRequest = async(() -> monitoringOfficerService.getMonitoringOfficerForProject(projectId));
+        CompletableFuture<List<OrganisationResource>> partnerOrganisationsRequest = async(() -> projectService.getPartnerOrganisationsForProject(projectId));
+
+        return awaitAll(basicDetailsRequest, teamStatusRequest, monitoringOfficerRequest, pendingQueriesRequest, isProjectManagerRequest, partnerOrganisationsRequest).thenApply(futureResults -> {
+
+            BasicDetails basicDetails = basicDetailsRequest.get();
+            ProjectTeamStatusResource teamStatus = teamStatusRequest.get();
+            Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRequest.get();
+            boolean pendingQueries = pendingQueriesRequest.get();
+            boolean isProjectManager = isProjectManagerRequest.get();
+            List<OrganisationResource> partnerOrganisations = partnerOrganisationsRequest.get();
+
+            return getSetupStatusViewModel(basicDetails, teamStatus, monitoringOfficer, pendingQueries, isProjectManager, partnerOrganisations);
+        });
+    }
+
+    private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean pendingQueries, boolean isProjectManager, List<OrganisationResource> partnerOrganisations) {
+        SectionAccessList sectionAccesses = getSectionAccesses(basicDetails, teamStatus);
+        SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager);
+        boolean leadPartner = isLeadPartner(teamStatus, basicDetails.getOrganisation());
+        int partnerOrganisationsCount = partnerOrganisations.size();
+        boolean collaborationAgreementRequired = partnerOrganisationsCount > 1;
+
+        return new SetupStatusViewModel(
+                basicDetails.getProject(),
+                basicDetails.getCompetition(),
+                monitoringOfficer,
+                basicDetails.getOrganisation(),
+                leadPartner,
+                sectionAccesses,
+                sectionStatuses,
+                collaborationAgreementRequired,
+                isProjectManager,
+                pendingQueries);
+    }
+
+    private Boolean getPendingQueries(long projectId, OrganisationResource organisation) {
+
+        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisation.getId());
+
+        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
+
+        return queriesResult.handleSuccessOrFailure(
+                noQueries -> false,
+                queries -> simpleAnyMatch(queries, query -> query.awaitingResponse));
+    }
+
+    private SectionStatusList getSectionStatuses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager) {
+
+        CompetitionResource competition = basicDetails.getCompetition();
+        OrganisationResource organisation = basicDetails.getOrganisation();
+        ProjectResource project = basicDetails.getProject();
+
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-        SetupSectionStatus sectionStatus = new SetupSectionStatus();
 
-        boolean isLeadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
-        boolean isProjectManager = projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false);
-        boolean isProjectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
+        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
+
+        boolean isLeadPartner = isLeadPartner(teamStatus, organisation);
 
         boolean isProjectDetailsProcessCompleted = isLeadPartner ? checkLeadPartnerProjectDetailsProcessCompleted(teamStatus, partnerProjectLocationRequired)
                 : partnerProjectDetailsComplete(statusAccessor, organisation, partnerProjectLocationRequired);
 
+        boolean isProjectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
+
         boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(teamStatus, partnerProjectLocationRequired);
 
         boolean requiredProjectDetailsForMonitoringOfficerComplete = requiredProjectDetailsForMonitoringOfficerComplete(partnerProjectLocationRequired, isProjectDetailsSubmitted, teamStatus);
+
+        SetupSectionStatus sectionStatus = new SetupSectionStatus();
+
+        SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(isProjectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners, isLeadPartner);
+        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), requiredProjectDetailsForMonitoringOfficerComplete);
+        SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus());
+        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
+        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
+        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
+        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
+        SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), isLeadPartner);
+
+        return new SectionStatusList(projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus);
+    }
+
+    private boolean isLeadPartner(ProjectTeamStatusResource teamStatus, OrganisationResource organisation) {
+        return teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
+    }
+
+    private SectionAccessList getSectionAccesses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus) {
+
+        CompetitionResource competition = basicDetails.getCompetition();
+        OrganisationResource organisation = basicDetails.getOrganisation();
+
+        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
+
+        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
 
         SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
         SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
@@ -91,28 +179,7 @@ public class SetupStatusViewModelPopulator {
         SectionAccess otherDocumentsAccess = statusAccessor.canAccessOtherDocumentsSection(organisation);
         SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
 
-        SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(isProjectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners, isLeadPartner);
-        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), requiredProjectDetailsForMonitoringOfficerComplete);
-        SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus());
-        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
-        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
-        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
-        SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), isLeadPartner);
-
-        int partnerOrganisationCount = projectService.getPartnerOrganisationsForProject(projectId).size();
-
-        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisation.getId());
-
-        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
-
-        boolean pendingQueries = queriesResult.handleSuccessOrFailure(
-                noQueries -> false,
-                queries -> simpleAnyMatch(queries, query -> query.awaitingResponse));
-
-        return new SetupStatusViewModel(project, competition, monitoringOfficer, organisation, isLeadPartner,
-                companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
-                projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus,
-                partnerOrganisationCount > 1, isProjectManager, pendingQueries);
+        return new SectionAccessList(companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess);
     }
 
     private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean partnerProjectLocationRequired, boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {
@@ -141,8 +208,8 @@ public class SetupStatusViewModelPopulator {
                 && allOtherPartnersFinanceContactStatusComplete(teamStatus);
 
         return partnerProjectLocationRequired ? projectDetailsAndAllFinanceContactComplete
-                                                && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
-                                                && allOtherPartnersProjectLocationStatusComplete(teamStatus)
+                && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
+                && allOtherPartnersProjectLocationStatusComplete(teamStatus)
                 : projectDetailsAndAllFinanceContactComplete;
     }
 
@@ -177,5 +244,30 @@ public class SetupStatusViewModelPopulator {
 
     private boolean allPartnersProjectLocationStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
+    }
+
+    private class BasicDetails {
+
+        private ProjectResource project;
+        private CompetitionResource competition;
+        private OrganisationResource organisation;
+
+        public BasicDetails(ProjectResource project, CompetitionResource competition, OrganisationResource organisation) {
+            this.project = project;
+            this.competition = competition;
+            this.organisation = organisation;
+        }
+
+        public ProjectResource getProject() {
+            return project;
+        }
+
+        public CompetitionResource getCompetition() {
+            return competition;
+        }
+
+        public OrganisationResource getOrganisation() {
+            return organisation;
+        }
     }
 }
