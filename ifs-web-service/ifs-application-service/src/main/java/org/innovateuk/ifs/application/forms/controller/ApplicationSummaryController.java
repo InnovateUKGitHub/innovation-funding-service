@@ -198,4 +198,14 @@ public class ApplicationSummaryController {
         return getFileResponseEntity(interviewResponseRestService.downloadResponse(applicationId).getSuccess(),
                 interviewResponseRestService.findResponse(applicationId).getSuccess());
     }
+
+    @GetMapping("/{applicationId}/summary/download-feedback")
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAuthority('applicant')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+        return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
+                interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
+    }
 }
