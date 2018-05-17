@@ -5,7 +5,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
 public enum InterviewState implements ProcessState, IdentifiableEnum<InterviewState> {
-    ASSIGNED(49, State.ASSIGNED);
+    ASSIGNED(50, State.ASSIGNED);
 
     private final long id;
     private final State backingState;
