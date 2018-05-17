@@ -6,7 +6,6 @@ import javax.validation.constraints.NotNull;
 /**
  * Form field model for the screen asking whether the user wishes to continue with an existing application.
  */
-
 public class ApplicationCreationAuthenticatedForm extends BaseBindingResultTarget {
 
     @NotNull(message = "{validation.field.confirm.new.application}")

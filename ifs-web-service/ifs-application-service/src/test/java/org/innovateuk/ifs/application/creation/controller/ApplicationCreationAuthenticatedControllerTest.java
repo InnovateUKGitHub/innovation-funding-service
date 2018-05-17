@@ -91,7 +91,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
     @Test
     public void testPostEmptyFormShouldThrowError() throws Exception {
         mockMvc.perform(post("/application/create-authenticated/1"))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "createNewApplication"))
                 .andReturn();
