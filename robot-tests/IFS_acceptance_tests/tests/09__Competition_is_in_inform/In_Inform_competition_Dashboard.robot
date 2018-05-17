@@ -72,7 +72,7 @@ Filtering on the Manage funding applications page
     When the user clicks the button/link                       jQuery=button:contains("Filter")
     Then the user should see the element                       jQuery=td:nth-child(2):contains("${application_ids['Climate control solution']}")
     And the user should not see the element                    jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
-    And the user clicks the button/link                        jQuery=.button:contains("Clear all filters")
+    And the user clicks the button/link                        jQuery=a:contains("Clear all filters")
     And the user should see the element                        jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
     [Teardown]    The user clicks the button/link              link=Competition
 
