@@ -8,12 +8,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 
 public class ChangeBankDetailsForm {
 
-    @NotEmpty(message = "{validation.standard.registrationnumber.required}")
+    @Size.List ({
+            @Size(min=8, message="{validation.standard.registrationnumber.format}"),
+            @Size(max=8, message="{validation.standard.registrationnumber.format}"),
+    })
     private String registrationNumber;
 
     @NotEmpty(message = "{validation.standard.organisationname.required}")
