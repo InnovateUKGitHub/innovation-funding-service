@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.invite.builder;
+package org.innovateuk.ifs.interview.builder;
 
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.junit.Assert.assertEquals;
 
 public class InterviewAcceptedAssessorsResourceBuilderTest {

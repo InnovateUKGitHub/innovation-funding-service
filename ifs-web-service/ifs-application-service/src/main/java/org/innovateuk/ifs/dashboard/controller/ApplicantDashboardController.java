@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * This controller will handle requests related to the current applicants dashboard. So pages that are relative to that user,
- * are implemented here. For example the my-applications page.
+ * This controller will handle requests related to the current applicant's dashboard. So pages that are relative to that user
+ * are implemented here, for example the my-applications page.
  */
 @Controller
 @RequestMapping("/applicant")
