@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.interview.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 
 public class InterviewNotifyAllocationResource {
@@ -10,7 +13,7 @@ public class InterviewNotifyAllocationResource {
     private final String content;
     private final List<Long> applicationIds;
 
-    InterviewNotifyAllocationResource() {
+    public InterviewNotifyAllocationResource() {
         competitionId = 0;
         assessorId = 0;
         subject = null;
@@ -51,5 +54,33 @@ public class InterviewNotifyAllocationResource {
 
     public long getAssessorId() {
         return assessorId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InterviewNotifyAllocationResource that = (InterviewNotifyAllocationResource) o;
+
+        return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(assessorId, that.assessorId)
+                .append(subject, that.subject)
+                .append(content, that.content)
+                .append(applicationIds, that.applicationIds)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(assessorId)
+                .append(subject)
+                .append(content)
+                .append(applicationIds)
+                .toHashCode();
     }
 }

@@ -50,7 +50,7 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
     public void getAllocatedApplications() {
         Pageable pageable = new PageRequest(0, 20);
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllocatedApplications(1L, 2L, pageable),
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllocatedApplicationsById(1L, 2L, pageable),
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 

@@ -112,7 +112,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     @Override
-    public ServiceResult<InterviewApplicationPageResource> getAllocatedApplications(long competitionId, long assessorUserId, Pageable pageable) {
+    public ServiceResult<InterviewApplicationPageResource> getAllocatedApplicationsById(long competitionId, long assessorUserId, Pageable pageable) {
         Page<InterviewApplicationResource> pagedResult = interviewRepository.findApplicationsAssignedToAssessor(
                 competitionId,
                 assessorUserId, pageable);
@@ -132,7 +132,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     @Override
-    public ServiceResult<List<InterviewApplicationResource>> getAllocatedApplications(List<Long> applicationIds) {
+    public ServiceResult<List<InterviewApplicationResource>> getAllocatedApplicationsById(List<Long> applicationIds) {
         return serviceSuccess(interviewRepository.findAll(applicationIds));
     }
 
