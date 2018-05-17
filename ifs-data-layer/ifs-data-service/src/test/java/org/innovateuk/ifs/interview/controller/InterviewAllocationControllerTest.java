@@ -61,7 +61,6 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         verify(interviewAllocationServiceMock, only()).getInterviewAcceptedAssessors(competitionId, pageable);
     }
 
-
     @Test
     public void getAllocatedApplications() throws Exception {
         long competitionId = 1L;
