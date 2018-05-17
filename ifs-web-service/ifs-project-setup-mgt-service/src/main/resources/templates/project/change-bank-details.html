@@ -73,9 +73,7 @@
                    th:attr="data-required-errormessage=#{validation.standard.registrationnumber.required},
                             data-minlength-errormessage=#{validation.standard.registrationnumber.format}"
                    th:errorclass="form-control-error"
-                   required="required"
-                   pattern="[0-9]{8,}"
-                   data-prevent-input-regex="[^0-9]"
+                   required="required" 
                    maxlength="8"
                    minlength="8"
                    name="companies-house-number"
