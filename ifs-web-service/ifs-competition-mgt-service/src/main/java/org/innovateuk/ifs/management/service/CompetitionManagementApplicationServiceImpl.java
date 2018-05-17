@@ -217,7 +217,8 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         INTERVIEW_PANEL_INVITE("/assessment/interview/competition/{competitionId}/applications/invite"),
         INTERVIEW_PANEL_SEND("/assessment/interview/competition/{competitionId}/applications/send"),
         INTERVIEW_PANEL_STATUS("/assessment/interview/competition/{competitionId}/applications/view-status"),
-        INTERVIEW_PANEL_ALLOCATE("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{assessorId}");
+        INTERVIEW_PANEL_ALLOCATE("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{assessorId}"),
+        INTERVIEW_APPLICATION_ALLOCATION("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{assessorId}");
 
         private String baseOriginUrl;
 
