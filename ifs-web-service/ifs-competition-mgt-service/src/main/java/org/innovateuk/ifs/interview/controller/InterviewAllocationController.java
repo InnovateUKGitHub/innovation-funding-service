@@ -103,7 +103,6 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                HttpServletResponse response) {
         updateSelectionForm(request, response, competitionId, selectionForm);
 
-
         model.addAttribute("model", unallocatedInterviewApplicationsModelPopulator.populateModel(
                 competitionId,
                 userId,
@@ -121,7 +120,6 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                HttpServletRequest request,
                                HttpServletResponse response) {
         updateSelectionForm(request, response, competitionId, selectionForm);
-
 
         model.addAttribute("model", allocatedInterviewApplicationsModelPopulator.populateModel(
                 competitionId,
