@@ -1,15 +1,18 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.form.*;
+import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
+import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
+import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.SendNotificationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.stream.Collectors.toList;
 
 
 @Controller
@@ -86,7 +88,11 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     }
 
     private String getFundingDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
-        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, applicationIds));
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(competitionId, applicationIds);
+        if (viewModel.getApplications().isEmpty()) {
+            return "redirect:" + getManageFundingApplicationsPage(competitionId);
+        }
+        model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
         return FUNDING_DECISION_NOTIFICATION_VIEW;
     }

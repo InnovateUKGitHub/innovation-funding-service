@@ -2,9 +2,9 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
+import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
@@ -163,10 +163,11 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
-                .andExpect(MockMvcResultMatchers.status().is5xxServerError())
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(model().attribute("exception", new InstanceOf(IncorrectStateForPageException.class)))
                 .andReturn();
 
-        IllegalStateException exception = (IllegalStateException) result.getModelAndView().getModel().get("exception");
+        IncorrectStateForPageException exception = (IncorrectStateForPageException) result.getModelAndView().getModel().get("exception");
         assertEquals(format("Unexpected competition state for competition: %s", competitionId), exception.getMessage());
 
         InOrder inOrder = inOrder(competitionService);

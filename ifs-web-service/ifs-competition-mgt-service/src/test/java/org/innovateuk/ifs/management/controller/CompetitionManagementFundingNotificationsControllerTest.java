@@ -263,10 +263,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     public void getSendNotificationsPageTest() throws Exception {
 
         List<Long> applicationsIds = singletonList(APPLICATION_ID_ONE);
-        List<ApplicationSummaryResource> resourceList = singletonList(new ApplicationSummaryResource());
-
-        SendNotificationsViewModel viewModel = new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName");
-        when(sendNotificationsModelPopulator.populate(COMPETITION_ID, applicationsIds)).thenReturn(viewModel);
+        when(sendNotificationsModelPopulator.populate(COMPETITION_ID, applicationsIds)).thenReturn(emptyViewModel());
         mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-send-notifications"));
@@ -307,7 +304,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void sendNotificationsTestWithInvalidMessage() throws Exception {
         when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
-
+        when(sendNotificationsModelPopulator.populate(anyLong(), any())).thenReturn(emptyViewModel());
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
@@ -320,8 +317,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     @Test
     public void sendNotificationsWithInvalidFundingDecisions() throws Exception {
-
         when(applicationFundingDecisionService.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
+        when(sendNotificationsModelPopulator.populate(anyLong(), any())).thenReturn(emptyViewModel());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -352,5 +349,10 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         } else {
             return Optional.empty();
         }
+    }
+
+    private SendNotificationsViewModel emptyViewModel() {
+        List<ApplicationSummaryResource> resourceList = singletonList(new ApplicationSummaryResource());
+        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName");
     }
 }
