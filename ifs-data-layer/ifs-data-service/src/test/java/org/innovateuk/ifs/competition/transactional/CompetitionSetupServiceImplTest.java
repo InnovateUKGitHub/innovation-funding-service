@@ -39,6 +39,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.*;
 
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
@@ -454,10 +455,22 @@ public class CompetitionSetupServiceImplTest {
                 EnumSet.allOf(InviteStatus.class));
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
-        inOrder.verify(competitionRepository).save(competition);
+        // Test that the competition is saved without the form validators, deleting them
+        inOrder.verify(competitionRepository).save(createCompetitionExpectationsWithoutFormValidators(competition));
         inOrder.verify(milestoneRepository).delete(milestones);
         inOrder.verify(competitionRepository).delete(competition);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    private Competition createCompetitionExpectationsWithoutFormValidators(Competition competition) {
+        return createLambdaMatcher(comp -> {
+            assertEquals(competition.getId(), comp.getId());
+            comp.getSections().forEach(section ->
+                    section.getQuestions().forEach(question -> {
+                        question.getFormInputs().forEach(formInput ->
+                                assertTrue(formInput.getFormValidators().isEmpty()));
+                    }));
+        });
     }
 
     @Test

@@ -361,9 +361,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void deleteFormValidatorsForCompetitionQuestions(Competition competition) {
-        competition.getQuestions().forEach(question ->
-                question.getFormInputs().forEach(formInput ->
-                        formInput.getFormValidators().clear()));
+        competition.getSections().forEach(section ->
+                section.getQuestions().forEach(question ->
+                        question.getFormInputs().forEach(formInput ->
+                                formInput.getFormValidators().clear())));
         competitionRepository.save(competition);
     }
 
