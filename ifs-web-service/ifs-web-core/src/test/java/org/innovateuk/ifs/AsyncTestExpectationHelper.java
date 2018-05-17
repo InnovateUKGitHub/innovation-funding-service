@@ -24,7 +24,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * TODO DW - document this class
+ * A helper class to set up Mockito expectations when tested code is to be interacting with a mock
+ * AsyncFuturesGenerator.
  */
 public class AsyncTestExpectationHelper {
 

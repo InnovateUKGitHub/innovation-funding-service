@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.sections.SectionStatus;
 import static org.innovateuk.ifs.project.sections.SectionStatus.TICK;
 
 /**
- * TODO DW - document this class
+ * A convenient container for multiple Project Setup sections' current statuses
  */
 public class SectionStatusList {
 

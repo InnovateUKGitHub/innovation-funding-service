@@ -224,6 +224,10 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
     }
 
+    /**
+     * Simple class to bunch and contain some of the basic information gathered from the top-level API calls to improve
+     * readability of the code
+     */
     private class BasicDetails {
 
         private ProjectResource project;

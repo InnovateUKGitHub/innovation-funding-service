@@ -15,14 +15,14 @@ import java.util.concurrent.Executor;
  * chained Future with {@link AsyncFuturesHolder} to prevent the Controller from rendering any
  * templates until the new Future has completed.
  *
- * This subclass handles the chaining of 3 futures e.g in combination with
- * {@link AsyncFuturesGenerator#awaitAll(CompletableFuture,CompletableFuture,CompletableFuture)}:
+ * This subclass handles the chaining of 4 futures e.g in combination with
+ * {@link AsyncFuturesGenerator#awaitAll(CompletableFuture,CompletableFuture,CompletableFuture,CompletableFuture)}:
  *
  * <pre>
  * {@code
  *
- * awaitAll(future1, future2, future3).thenApply((future1Result, future2Result, future3Result) ->
- *          doSomethingWith(future1Result, future2Result, future3Result));
+ * awaitAll(future1, future2, future3, future4).thenApply((future1Result, future2Result, future3Result, future4Result) ->
+ *          doSomethingWith(future1Result, future2Result, future3Result, future4Result));
  * }
  * </pre>
  */

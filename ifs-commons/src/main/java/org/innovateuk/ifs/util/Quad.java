@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * TODO DW - document this class
+ * An immutable 4-tuple, akin to {@link org.apache.commons.lang3.tuple.Pair} or {@link org.apache.commons.lang3.tuple.Triple}
  */
 public class Quad<T1, T2, T3, T4> {
 
