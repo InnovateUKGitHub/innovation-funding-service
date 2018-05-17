@@ -13,13 +13,16 @@ import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,10 +32,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
+import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 /**
  * Service for allocating applications to assessors in interview panels
@@ -57,6 +65,15 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     private InterviewWorkflowHandler workflowHandler;
     @Autowired
     private ApplicationRepository applicationRepository;
+    @Autowired
+    private NotificationSender notificationSender;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
+    enum Notifications {
+        NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS
+    }
 
     @Override
     public ServiceResult<InterviewAcceptedAssessorsPageResource> getInterviewAcceptedAssessors(long competitionId,
@@ -144,19 +161,31 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
 
     @Override
     public ServiceResult<Void> notifyAllocation(InterviewNotifyAllocationResource interviewNotifyAllocationResource) {
-        return getUser(interviewNotifyAllocationResource.getAssessorId())
-                .andOnSuccessReturnVoid(
-                        user -> interviewNotifyAllocationResource.getApplicationIds().forEach(applicationId -> getApplication(applicationId)
-                                .andOnSuccess(application -> getInterviewParticipant(interviewNotifyAllocationResource.getAssessorId(), interviewNotifyAllocationResource.getCompetitionId())
-                                        .andOnSuccessReturnVoid(assessor -> {
-                                                    Interview interview = new Interview(application, assessor);
-                                                    workflowHandler.notifyInvitation(interview);
-                                                    interviewRepository.save(interview);
-                                                }
-                                        )
-                                )
-                        )
-                );
+        return getInterviewParticipant(interviewNotifyAllocationResource.getAssessorId(), interviewNotifyAllocationResource.getCompetitionId())
+                .andOnSuccess(assessor -> createInterviews(interviewNotifyAllocationResource, assessor))
+                .andOnSuccess(assessor -> sendAllocationNotification(
+                        interviewNotifyAllocationResource.getSubject(),
+                        interviewNotifyAllocationResource.getContent(),
+                        assessor,
+                        NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS
+
+                ))
+                .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<InterviewParticipant> createInterviews(InterviewNotifyAllocationResource interviewNotifyAllocationResource, InterviewParticipant interviewParticipant) {
+        interviewNotifyAllocationResource.getApplicationIds().forEach(
+                applicationId -> getApplication(applicationId)
+                        .andOnSuccess(application -> createInterview(application, interviewParticipant))
+        );
+        return serviceSuccess(interviewParticipant);
+    }
+
+    private ServiceResult<Void> createInterview(Application application, InterviewParticipant interviewParticipant) {
+        Interview interview = new Interview(application, interviewParticipant);
+        workflowHandler.notifyInvitation(interview);
+        interviewRepository.save(interview);
+        return serviceSuccess();
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
@@ -183,5 +212,29 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
 
     private ServiceResult<InterviewParticipant> getInterviewParticipant(long userId, long competitionId) {
         return find(interviewParticipantRepository.findByUserIdAndCompetitionIdAndRole(userId, competitionId, CompetitionParticipantRole.INTERVIEW_ASSESSOR), notFoundError(InterviewParticipant.class, userId));
+    }
+
+    private ServiceResult<Void> sendAllocationNotification(String subject,
+                                                       String customContent,
+                                                       InterviewParticipant interviewParticipant,
+                                                       Notifications notificationType) {
+        String customTextPlain = stripHtml(customContent);
+        String customTextHtml = plainTextToHtml(customTextPlain);
+        User assessorUser = interviewParticipant.getUser();
+        NotificationTarget recipient = new UserNotificationTarget(assessorUser.getName(), assessorUser.getEmail());
+
+        Notification notification = new Notification(
+                systemNotificationSource,
+                recipient,
+                notificationType,
+                asMap(
+                        "subject", subject,
+                        "name", assessorUser.getName(),
+                        "competitionName", interviewParticipant.getProcess(),
+                        "customTextPlain", customTextPlain,
+                        "customTextHtml", customTextHtml
+                ));
+
+        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
     }
 }
