@@ -151,8 +151,16 @@ ol {
     overflow: hidden;
     position: relative;
 
+    @include media-down(mobile) {
+      padding-bottom: 20px;
+    }
+
     li {
       float: left;
+
+      @include media-down(mobile) {
+        float: none;
+      }
 
       &.selected {
         a,
@@ -162,6 +170,10 @@ ol {
           z-index:1;
           margin: 0;
           border-radius: 0;
+
+          @include media-down(mobile) {
+            border-bottom: 1px solid $border-colour;
+          }
         }
       }
 
