@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
+import org.innovateuk.ifs.management.model.AllocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.InterviewAssessorApplicationsViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -53,6 +54,10 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     @Spy
     @InjectMocks
     private UnallocatedInterviewApplicationsModelPopulator interviewApplicationsModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private AllocatedInterviewApplicationsModelPopulator allocatedInterviewApplicationsModelPopulator;
 
     @Override
     protected InterviewAllocationController supplyControllerUnderTest() {
@@ -147,6 +152,72 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/interview/unallocated-applications"))
+                .andReturn();
+
+        InterviewAssessorApplicationsViewModel model = (InterviewAssessorApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        InOrder inOrder = inOrder(competitionRestService, userRestServiceMock, assessorRestService);
+        inOrder.verify(userRestServiceMock).retrieveUserById(user.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(assessorRestService).getAssessorProfile(user.getId());
+        inOrder.verifyNoMoreInteractions();
+
+        assertEquals((long) competition.getId(), model.getCompetitionId());
+        assertEquals(competition.getName(), model.getCompetitionName());
+        assertEquals(profile.getBusinessType(), model.getProfile().getBusinessType());
+        assertEquals(profile.getSkillsAreas(), model.getProfile().getSkillsAreas());
+        assertEquals(pageResource.getAllocatedApplications(), model.getAllocatedApplications());
+        assertEquals(pageResource.getUnallocatedApplications(), model.getUnallocatedApplications());
+        assertEquals(pageResource.getContent().size(), model.getRows().size());
+    }
+
+    @Test
+    public void allocated() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withId(1L)
+                .withName("Competition x")
+                .build();
+
+        UserResource user = newUserResource()
+                .withId(1L)
+                .withFirstName("Kieran")
+                .withLastName("Hester")
+                .build();
+
+        InnovationAreaResource innovationArea = newInnovationAreaResource()
+                .withSectorName("Digital manufacturing")
+                .build();
+
+        ProfileResource profile = newProfileResource()
+                .withInnovationAreas(singletonList(innovationArea))
+                .withSkillsAreas("Skills")
+                .withBusinessType(BusinessType.ACADEMIC)
+                .build();
+
+        AssessorProfileResource assessorProfile = newAssessorProfileResource()
+                .withUser(user)
+                .withProfile(profile)
+                .build();
+
+        InterviewApplicationPageResource pageResource = newInterviewApplicationPageResource()
+                .withAllocatedApplications(1L)
+                .withUnallocatedApplications(2L)
+                .withContent(newInterviewApplicationResource()
+                        .withId(1L, 2L)
+                        .withLeadOrganisation("Lead 1", "Lead 2")
+                        .withNumberOfAssessors(1L, 2L)
+                        .build(2))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(assessorRestService.getAssessorProfile(user.getId())).thenReturn(restSuccess(assessorProfile));
+        when(interviewAllocationRestService.getAllocatedApplications(competition.getId(), user.getId(), 0)).thenReturn(restSuccess(pageResource));
+
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}", competition.getId(), user.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/interview/allocated-applications"))
                 .andReturn();
 
         InterviewAssessorApplicationsViewModel model = (InterviewAssessorApplicationsViewModel) result.getModelAndView().getModel().get("model");
