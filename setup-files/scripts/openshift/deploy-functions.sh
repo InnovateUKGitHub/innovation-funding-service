@@ -330,12 +330,6 @@ function createProject() {
     done
 }
 
-function createProjectIfNecessaryForNonNamedEnvs() {
-    if ! $(isNamedEnvironment $TARGET); then
-        createProject
-    fi
-}
-
 function getClusterAddress() {
     echo "prod.ifs-test-clusters.com"
 #     echo "dev-nige-1.dev.ifs-test-clusters.com"

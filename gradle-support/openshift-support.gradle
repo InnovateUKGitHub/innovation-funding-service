@@ -19,6 +19,22 @@ if (!isNamedEnv()) {
 }
 
 
+
+
+def getSvcAccountToken() {
+    "oc whoami -t".execute().text.trim()
+}
+
+def getSvcAccountClauseServer(target) {
+    if(target == 'local') {
+        return "https://localhost:8443"
+    } else if (target == 'remote') {
+        return "https://console.prod.ifs-test-clusters.com:443"
+    }
+}
+
+
+
 task prepareDeployment(type: Copy) {
 
     destinationDir = file('build/resources/main')
@@ -248,9 +264,20 @@ task dbAnonymisedDumpLocal(type: Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
-task createProjectLocal(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-create-project.sh'
-    args = [openshiftEnv, "local"]
+task deleteProjectLocal(type: Exec) {
+    executable 'oc'
+    args 'delete', 'project', openshiftEnv, "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('local')}", "--insecure-skip-tls-verify=true"
+
+    ignoreExitValue true
+
+    doLast {
+        sleep 10_000L
+    }
+}
+
+task createProjectLocal(type: Exec, dependsOn: deleteProjectLocal) {
+    executable 'oc'
+    args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('local')}", "--insecure-skip-tls-verify=true"
 }
 
 task importAnonDataIntoLocal(type:Exec) {
@@ -261,10 +288,20 @@ task importAnonDataIntoLocal(type:Exec) {
 
 // Remote tasks
 
+task deleteProject(type: Exec) {
+    executable 'oc'
+    args 'delete', 'project', openshiftEnv, "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
 
-task createProject(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-create-project.sh'
-    args = [openshiftEnv, "remote"]
+    ignoreExitValue true
+
+    doLast {
+        sleep 10_000L
+    }
+}
+
+task createProject(type: Exec, dependsOn: deleteProject) {
+    executable 'oc'
+    args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
 }
 
 task osDeployFractalRemote(type: Exec) {
