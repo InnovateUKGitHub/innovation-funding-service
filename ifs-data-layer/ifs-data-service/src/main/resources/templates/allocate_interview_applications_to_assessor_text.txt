@@ -1,6 +1,6 @@
-Dear [recipient name]
+Dear ${name},
 
-Thank you for accepting the invite to the interview panel for the [competition name] competition.
+Thank you for accepting the invite to the interview panel for the '${competitionName}' competition.
 
 You have now been assigned applications.
 

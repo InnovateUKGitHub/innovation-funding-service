@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_APPLICATION_ALLOCATION;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
@@ -136,7 +137,9 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         model.addAttribute("model", allocateInterviewApplicationsModelPopulator.populateModel(competitionId, userId, maybeSelectionForm.get().getSelectedIds()));
         model.addAttribute("form", form);
 
-        form.setSubject("Applications for interview panel for [competition name]");
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        form.setSubject(format("Applications for interview panel for '%s'", competition.getName()));
 
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
         model.addAttribute("originQuery", originQuery);

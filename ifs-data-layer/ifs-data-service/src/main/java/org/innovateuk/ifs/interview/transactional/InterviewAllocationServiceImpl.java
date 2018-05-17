@@ -152,7 +152,11 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
                                                 singletonList(user.getName()),
                                                 competition.getId(),
                                                 competition.getName(),
-                                                getInvitePreviewContent(Collections.emptyMap())
+                                                getInvitePreviewContent(asMap(
+                                                        "name", user.getName(),
+                                                        "competitionName", competition.getName()
+                                                        )
+                                                )
                                             )
                                     )
             )
