@@ -125,7 +125,11 @@
                     <p class="no-margin">We will review your financial information.</p>
                 </div>
                 <th:block th:if="${!model.showFinanceChecksPendingQueryWarning}" th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
-                <div th:if="${model.showFinanceChecksPendingQueryWarning}">Pending query</div>
+                <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning}">
+                    <div class="status-msg msg-progress">
+                        <span class="status-warning">Pending query</span>
+                    </div>
+                </div>
             </li>
             <!--/* ========================= Spend Profile ========================= */-->
             <li th:class="${model.spendProfileSection.notAccessible} ? 'read-only'" th:classappend="${model.spendProfileStatus.getSectionStatus()}">
