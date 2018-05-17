@@ -199,7 +199,8 @@ CompAdmin can access the Allocate applications to assessors screen
     And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
     When the user clicks the button/link     link=Allocate
     Then the user should see the element     jQuery=h1:contains(" Allocate applications to ${assessor_joel}")
-    And the user should see the element      jQuery=a:contains("Applications")
+    ${applications_Assiged}=  Get text       css=div:nth-child(6) div span:nth-child(1)
+    And the user should see the element      link=Applications (${applications_Assiged})
     And the user should see the element      jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
 
 *** Keywords ***
