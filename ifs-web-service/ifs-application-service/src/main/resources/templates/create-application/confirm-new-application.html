@@ -30,11 +30,11 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
                          </th:block>
                     </legend>
-                    <div class="multiple-choice" th:each="value : ${{true, false}}">
+                    <div class="multiple-choice" th:each="value : ${'${true, false}'}">
                             <input id="new-application-yes"
                                    type="radio"
                                    th:field="*{createNewApplication}"
-                                   th:value="${value}"
+                                   th:value="${true}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
                             <label for="new-application-yes">
@@ -45,7 +45,7 @@
                             <input type="radio"
                                    id="new-application-no"
                                    th:field="*{createNewApplication}"
-                                   th:value="${value}"
+                                   th:value="${false}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
                             <label for="new-application-no">
