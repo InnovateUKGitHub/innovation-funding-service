@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite.builder;
+package org.innovateuk.ifs.interview.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;

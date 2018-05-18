@@ -1,29 +1,27 @@
 package org.innovateuk.ifs.interview.builder;
 
 import org.innovateuk.ifs.interview.domain.Interview;
-import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.interview.resource.InterviewState.ACCEPTED;
-import static org.innovateuk.ifs.interview.resource.InterviewState.PENDING;
+import static org.innovateuk.ifs.interview.resource.InterviewState.ASSIGNED;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertEquals;
 
 public class InterviewBuilderTest {
 
     @Test
-    public void buildOne() throws Exception {
+    public void buildOne() {
         Long expectedId = 1L;
-        ProcessState expectedStatus = ACCEPTED;
+        ProcessState expectedStatus = ASSIGNED;
         ProcessRole expectedProcessRole = newProcessRole().build();
 
         Interview interview = InterviewBuilder.newInterview()
                 .withId(expectedId)
-                .withState(ACCEPTED)
+                .withState(ASSIGNED)
                 .withParticipant(expectedProcessRole)
                 .build();
 
@@ -35,12 +33,12 @@ public class InterviewBuilderTest {
     @Test
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
-        ProcessState[] expectedStatuses = {InterviewState.PENDING, ACCEPTED};
+        ProcessState[] expectedStatuses = {ASSIGNED, ASSIGNED};
         ProcessRole[] expectedProcessRoles = newProcessRole().buildArray(2, ProcessRole.class);
 
         List<Interview> interviews = InterviewBuilder.newInterview()
                 .withId(expectedIds)
-                .withState(PENDING, ACCEPTED)
+                .withState(ASSIGNED, ASSIGNED)
                 .withParticipant(expectedProcessRoles)
                 .build(2);
 

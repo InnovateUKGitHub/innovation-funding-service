@@ -37,7 +37,8 @@
                 <td th:text="${assessor.skillAreas}">skill areas</td>
                 <td class="numeric">0</td>
                 <td class="alignright">
-                    <a class="button-secondary no-margin disabled"
+                    <a class="button-secondary no-margin"
+                       th:href="@{/assessment/interview/competition/{cid}/assessors/unallocated-applications/{aid}(cid=${model.competitionId},aid=${assessor.id})}"
                        th:text="Allocate">
                         Allocate
                     </a>
