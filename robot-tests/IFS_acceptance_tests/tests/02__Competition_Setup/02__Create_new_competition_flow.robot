@@ -67,6 +67,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-2776 As an Portfolio manager I am able to set the min/max project duration for a competition
 ...
 ...               IFS-3086 Investigate options to support selection of grant terms and conditions in Competition setup
+...
+...               IFS-2833 As a Portfolio manager I am able to edit the 'Question heading' in Project details
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -447,25 +449,26 @@ Application: Scope
     Then the user should see the element          jQuery=h1:contains("Scope")
     And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
     When The user fills the empty question fields
-    And The user clicks the button/link    css=button[type="submit"]
-    And the user clicks the button/link    link=Scope
-    Then The user should see the text in the page    Scope
+    And The user enters text to a text field      id=question.shortTitle  Test heading
+    And The user clicks the button/link           css=button[type="submit"]
+    And the user clicks the button/link           link=Test heading
+    Then the user should see the element          jQuery=h1:contains("Test heading")
     And the user checks the question fields
 
 Application: Scope Assessment questions
     [Documentation]    INFUND-5631    INFUND-6044  INFUND-6283
     [Tags]  HappyPath
-    Given the user clicks the button/link    link=Edit this question
-    And the user selects the radio button    question.writtenFeedback    1
+    Given the user clicks the button/link  link=Edit this question
+    And the user selects the radio button  question.writtenFeedback    1
     And the user fills the scope assessment questions
-    When the user clicks the button/link    css=button[type="submit"]
-    And the user clicks the button/link    link=Scope
+    When the user clicks the button/link   css=button[type="submit"]
+    And the user clicks the button/link    link=Test heading
     Then the user checks the scope assessment questions
     And the user clicks the button/link    link=Edit this question
-    And the user selects the radio button    question.writtenFeedback    0
+    And the user selects the radio button  question.writtenFeedback    0
     And the user should not be able to edit the scope feedback
     And the user clicks the button/link    css=button[type="submit"]
-    And the user clicks the button/link    link=Scope
+    And the user clicks the button/link    link=Test heading
     Then the user should not see the scope feedback
     [Teardown]    The user clicks the button/link    link=Application
 

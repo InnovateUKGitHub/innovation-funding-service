@@ -31,7 +31,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_APPLICATION_ALLOCATION;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATED;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -82,7 +85,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                            @RequestParam(value = "page", defaultValue = "0") int page) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        String originQuery = buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.INTERVIEW_ACCEPTED, queryParams);
+        String originQuery = buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.INTERVIEW_ALLOCATION, queryParams);
 
         model.addAttribute("model", interviewAcceptedAssessorsModelPopulator.populateModel(
                 competitionResource,
@@ -93,20 +96,24 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return "assessors/interview/allocate-accepted-assessors";
     }
 
-    @GetMapping("/unallocated-applications/{userId}")
+    @GetMapping("/unallocated-applications/{assessorId}")
     public String applications(@ModelAttribute(name = SELECTION_FORM, binding = false) InterviewAllocationSelectionForm selectionForm,
                                Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @PathVariable("userId") long userId,
+                               @RequestParam MultiValueMap<String, String> queryParams,
+                               @PathVariable("assessorId") long assessorId,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                HttpServletRequest request,
                                HttpServletResponse response) {
         updateSelectionForm(request, response, competitionId, selectionForm);
 
+queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
+        String originQuery = buildOriginQueryString(INTERVIEW_APPLICATION_ALLOCATION, queryParams);
         model.addAttribute("model", unallocatedInterviewApplicationsModelPopulator.populateModel(
                 competitionId,
-                userId,
-                page
+                assessorId,
+                page,
+                originQuery
         ));
         return "assessors/interview/unallocated-applications";
     }
@@ -115,16 +122,21 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
     public String allocated(@ModelAttribute(name = SELECTION_FORM, binding = false) InterviewAllocationSelectionForm selectionForm,
                                Model model,
                                @PathVariable("competitionId") long competitionId,
+                               @RequestParam MultiValueMap<String, String> queryParams,
                                @PathVariable("userId") long userId,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                HttpServletRequest request,
                                HttpServletResponse response) {
         updateSelectionForm(request, response, competitionId, selectionForm);
 
+        queryParams.put("assessorId", singletonList(String.valueOf(userId)));
+        String originQuery = buildOriginQueryString(INTERVIEW_PANEL_ALLOCATED, queryParams);
+
         model.addAttribute("model", allocatedInterviewApplicationsModelPopulator.populateModel(
                 competitionId,
                 userId,
-                page
+                page,
+                originQuery
         ));
         return "assessors/interview/allocated-applications";
     }

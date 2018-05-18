@@ -46,10 +46,9 @@ Business opportunity: Client side validations
     And the validation error above the question should not be visible   css=label[for="question.guidanceTitle"]         This field cannot be left blank.
     And the validation error above the question should not be visible   css=label[for="question.maxWords"]              This field cannot be left blank.
     And the validation error above the question should not be visible   id=question.allowedFileTypes                    This field cannot be left blank.
-    #And the validation error above the question should not be visible   css=label[for="guidanceRows[0].scoreFrom"]      This field cannot be left blank.
-    #And the validation error above the question should not be visible   css=label[for="guidanceRows[0].scoreTo"]        This field cannot be left blank.
-    #And the validation error above the question should not be visible   css=label[for="guidanceRows[0].justification"]  This field cannot be left blank.
-    #TODO 2304 part 2
+    And the validation error above the question should not be visible   css=label[for="guidanceRows[0].scoreFrom"]      This field cannot be left blank.
+    And the validation error above the question should not be visible   css=label[for="guidanceRows[0].scoreTo"]        This field cannot be left blank.
+    And the validation error above the question should not be visible   css=label[for="guidanceRows[0].justification"]  This field cannot be left blank.
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629 INFUND-5685

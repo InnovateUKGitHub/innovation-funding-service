@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
-import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;

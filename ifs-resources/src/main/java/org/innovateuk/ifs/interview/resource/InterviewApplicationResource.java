@@ -4,6 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * The resource to describe applications that are assigned to an interview panel in the context of allocating to assessors.
+ */
 public class InterviewApplicationResource {
 
     private long id;

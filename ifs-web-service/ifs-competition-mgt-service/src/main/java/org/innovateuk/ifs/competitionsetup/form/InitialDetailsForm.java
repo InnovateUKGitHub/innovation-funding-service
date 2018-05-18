@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.DateTimeException;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -31,6 +32,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     private Integer openingDateYear;
 
     @NotEmpty(message = "{validation.standard.title.required}")
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String title;
 
     @NotNull(message = "{validation.initialdetailsform.innovationsectorcategoryid.required}")

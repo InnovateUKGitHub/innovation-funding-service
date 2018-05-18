@@ -71,6 +71,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<AffiliationResource>>() {};
     }
 
+    public static ParameterizedTypeReference<AffiliationListResource> affiliationListResourceType() {
+        return new ParameterizedTypeReference<AffiliationListResource>() {};
+    }
+
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
     }

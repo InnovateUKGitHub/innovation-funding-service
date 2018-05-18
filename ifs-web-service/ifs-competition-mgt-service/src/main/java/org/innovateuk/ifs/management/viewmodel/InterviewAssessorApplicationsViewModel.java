@@ -4,7 +4,6 @@ import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
-import java.util.Set;
 
 public class InterviewAssessorApplicationsViewModel {
 
@@ -12,33 +11,36 @@ public class InterviewAssessorApplicationsViewModel {
     private final String competitionName;
     private final UserResource user;
     private final ProfileResource profile;
-    private final Set<String> innovationAreas;
+    private final List<InnovationSectorViewModel> innovationSectors;
     private final List<InterviewAllocatedApplicationRowViewModel> rows;
     private final PaginationViewModel pagination;
     private final long unallocatedApplications;
     private final long allocatedApplications;
     private final boolean selectAllDisabled;
+    private final String originQuery;
 
     public InterviewAssessorApplicationsViewModel(long competitionId,
                                                   String competitionName,
                                                   UserResource user,
                                                   ProfileResource profile,
-                                                  Set<String> innovationAreas,
+                                                  List<InnovationSectorViewModel> innovationSectors,
                                                   List<InterviewAllocatedApplicationRowViewModel> rows,
                                                   PaginationViewModel pagination,
                                                   long unallocatedApplications,
                                                   long allocatedApplications,
-                                                  boolean selectAllDisabled) {
+                                                  boolean selectAllDisabled,
+                                                  String originQuery) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.user = user;
         this.profile = profile;
-        this.innovationAreas = innovationAreas;
+        this.innovationSectors = innovationSectors;
         this.rows = rows;
         this.pagination = pagination;
         this.unallocatedApplications = unallocatedApplications;
         this.allocatedApplications = allocatedApplications;
         this.selectAllDisabled = selectAllDisabled;
+        this.originQuery = originQuery;
     }
 
     public long getCompetitionId() {
@@ -57,8 +59,8 @@ public class InterviewAssessorApplicationsViewModel {
         return profile;
     }
 
-    public Set<String> getInnovationAreas() {
-        return innovationAreas;
+    public List<InnovationSectorViewModel> getInnovationSectors() {
+        return innovationSectors;
     }
 
     public List<InterviewAllocatedApplicationRowViewModel> getRows() {
@@ -79,5 +81,9 @@ public class InterviewAssessorApplicationsViewModel {
 
     public boolean isSelectAllDisabled() {
         return selectAllDisabled;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
     }
 }

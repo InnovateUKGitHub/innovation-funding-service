@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.category.domain;
+package org.innovateuk.ifs.profile.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.category.domain.CategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -20,7 +21,8 @@ public class ProfileInnovationAreaLink extends CategoryLink<Profile, InnovationA
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
     private Profile profile;
 
-    ProfileInnovationAreaLink() {
+    protected ProfileInnovationAreaLink(){
+
     }
 
     public ProfileInnovationAreaLink(Profile profile, InnovationArea innovationArea) {
