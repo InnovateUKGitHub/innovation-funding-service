@@ -13,6 +13,8 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class AsyncExecutionTestHelper {
 
+    public static final long BLOCKING_TIMEOUT_MILLIS = 1000L;
+
     @Async
     public <T> CompletableFuture<T> executeAsync(ExceptionThrowingSupplier<T> supplier) {
         try {
