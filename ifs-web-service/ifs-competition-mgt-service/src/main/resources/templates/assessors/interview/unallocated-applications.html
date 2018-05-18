@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${'Allocate applications to ' + model.user.getName()}" />
+</head>
+
+<body class="competition-management competition-overview">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}" />
+
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+
+    <div class="grid-row">
+        <div class="column-half">
+            <dl>
+                <dt>Assessor type</dt>
+                <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
+                <dt>Phone number</dt>
+                <dd th:text="${model.user.getPhoneNumber()}">01234 567891</dd>
+                <dt>Email address</dt>
+                <dd th:text="${model.user.getEmail()}">Felix.Wilson@gmail.com</dd>
+            </dl>
+        </div>
+
+        <div class="column-half">
+            <dl>
+                <dt>Innovation areas</dt>
+                <dd>
+                    <ul class="list list-bullet">
+                        <li th:each="innovationSector : ${model.innovationSectors}">
+                            <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
+                            <ul class="list list-bullet">
+                                <li th:each="innovationArea : ${innovationSector.children}">
+                                    <th:block th:text="${innovationArea.name}">digital sciences</th:block>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </dd>
+                <dt>Skill areas</dt>
+                <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
+            </dl>
+        </div>
+    </div>
+
+    <ul class="inline-nav extra-margin">
+        <li class="selected">
+            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+               th:text="${'Applications (' + model.unallocatedApplications + ')' }"></a>
+        </li>
+        <li class="not-selected">
+            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+               th:text="${'Allocated (' + model.allocatedApplications + ')' }"></a>
+        </li>
+    </ul>
+
+    <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+        <p th:text="#{competition.management.limit.warning}"></p>
+    </div>
+    <div data-selection-limit-exceeded-block=""></div>
+
+    <div class="grid-row sorting">
+        <div class="column-one">
+            <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+            <span class="heading-small">applications</span>
+        </div>
+    </div>
+
+    <form method="POST"
+          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+          th:object="${interviewAllocationSelectionForm}"
+          data-multipage-select=""
+          th:attr="data-total-checkboxes=${model.pagination.totalCount}">
+
+        <div class="grid-row sorting">
+            <div class="column-half select-all">
+                <div class="multiple-choice">
+                    <input type="checkbox"
+                           data-select-all=""
+                           id="select-all-check"
+                           th:checked="${interviewAllocationSelectionForm.getAllSelected()}"
+                           th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
+                    <label for="select-all-check">
+                        Select all applications
+                    </label>
+                </div>
+                <span class="form-hint">
+                    <span data-count-selected="" th:text="${#lists.size(interviewAllocationSelectionForm.selectedIds)}"></span> applications selected
+                </span>
+            </div>
+            <div class="column-half select-all alignright">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAllocationSelectionForm.selectedIds)}">
+                    Allocate
+                </button>
+            </div>
+        </div>
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Select</th>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col">Project title</th>
+                    <th scope="col">Lead organisation</th>
+                    <th class="alignright" scope="col">Assessors</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row, index : ${model.rows}">
+                    <td>
+                        <div class="multiple-choice">
+                            <input type="checkbox"
+                                   th:id="|assessor-row-${index.count}|"
+                                   th:field="*{selectedIds}"
+                                   th:value="${row.id}"/>
+                            <label th:for="|assessor-row-${index.count}|">
+                                <span class="invisible">Add</span>
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
+                           th:text="${row.id}">123
+                        </a>
+                    </td>
+                    <td>
+                        <span th:text="${row.name}">project name</span>
+                    </td>
+                    <td>
+                        <span th:text="${row.leadOrganisation}">Lead organisation</span>
+                    </td>
+                    <td class="alignright">
+                        <span th:text="${row.numberOfAssessors}">1</span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(model.rows)}">
+                    <td colspan="5">No available applications found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

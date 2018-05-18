@@ -49,7 +49,7 @@ Funding level validations
 
 Other funding validations
     [Documentation]    INFUND-6794
-    [Tags]
+    [Tags]  HappyPath
     Given the user enters text to a text field          css=[name*=other_funding-securedDate]    20
     And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    txt
     And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
