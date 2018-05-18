@@ -34,13 +34,79 @@ def getSvcAccountClauseServer(target) {
 }
 
 
-
 task prepareDeployment(type: Copy) {
 
     destinationDir = file('build/resources/main')
 
     from('os-files/') {
         include '**/*.yml'
+    }
+    filesMatching("**/**.*") {
+        expand project.properties
+    }
+}
+
+
+task setDatabaseDefaults {
+    if (!project.hasProperty('DB_PORT')) {
+        project.ext.DB_PORT = 3306
+    }
+}
+
+task setFinanceDataServiceSyncDefaults {
+    if (!project.hasProperty('DATA_SERVICE_PORT')) {
+        project.ext.DATA_SERVICE_PORT = 8080
+    }
+}
+
+task setDbResetDefaults {
+    if (!project.hasProperty('LDAP_PORT')) {
+        project.ext.LDAP_PORT = 389
+    }
+
+    if (!project.hasProperty('ONLY_SYNC_LDAP')) {
+        project.ext.ONLY_SYNC_LDAP = false
+    }
+}
+
+task prepareFinanceDataServiceSync(type: Copy, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults]) {
+    destinationDir = file('build/resources/main/finance-data-service-sync')
+
+    from('os-files/finance-data-service-sync/') {
+        include '*.yml'
+    }
+    filesMatching("**/**.*") {
+        expand project.properties
+    }
+}
+
+task prepareDbReset(type: Copy, dependsOn:[setDatabaseDefaults, setDbResetDefaults]) {
+    destinationDir = file('build/resources/main/db-reset')
+
+    from('os-files/db-reset/') {
+        include '*.yml'
+    }
+    filesMatching("**/**.*") {
+        expand project.properties
+    }
+}
+
+task prepareDbBaseline(type: Copy, dependsOn:setDatabaseDefaults) {
+    destinationDir = file('build/resources/main/db-baseline')
+
+    from('os-files/db-baseline/') {
+        include '*.yml'
+    }
+    filesMatching("**/**.*") {
+        expand project.properties
+    }
+}
+
+task prepareDbAnonymisedData(type: Copy, dependsOn:setDatabaseDefaults) {
+    destinationDir = file('build/resources/main/db-anonymised-data')
+
+    from('os-files/db-anonymised-data/') {
+        include '*.yml'
     }
     filesMatching("**/**.*") {
         expand project.properties
@@ -61,18 +127,21 @@ task osUpgradeProduction(type: Exec) {
 
 task dbAnonymisedDumpProduction(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbAnonymisedData
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
 task dbBaselineProduction(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbBaseline
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
 task financeDataSyncProduction(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareFinanceDataServiceSync
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "production", project.version]
 }
@@ -94,24 +163,28 @@ task osUpgradeUat(type: Exec) {
 
 task dbResetUat(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbReset
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task dbBaselineUat(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbBaseline
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task financeDataSyncUat(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareFinanceDataServiceSync
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task dbAnonymisedDumpUat(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbAnonymisedData
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "uat", project.version]
 }
@@ -139,12 +212,14 @@ task osUpgradeDemo(type: Exec) {
 
 task dbBaselineDemo(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbBaseline
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
 task financeDataSyncDemo(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareFinanceDataServiceSync
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "demo", project.version]
 }
@@ -166,18 +241,21 @@ task osUpgradeSysint(type: Exec) {
 
 task dbResetSysint(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbReset
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
 task dbBaselineSysint(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbBaseline
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
 task financeDataSyncSysint(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareFinanceDataServiceSync
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
@@ -205,18 +283,21 @@ task osUpgradePerf(type: Exec) {
 
 task dbResetPerf(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbReset
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
 task dbBaselinePerf(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbBaseline
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
 task financeDataSyncPerf(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareFinanceDataServiceSync
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "perf", project.version]
 }
@@ -242,24 +323,28 @@ task osUpgradeLocal(type: Exec) {
 
 task dbResetLocal(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbReset
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task dbBaselineLocal(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbBaseline
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task financeDataSyncLocal(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareFinanceDataServiceSync
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task dbAnonymisedDumpLocal(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbAnonymisedData
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "local", project.version]
 }
@@ -324,6 +409,7 @@ task osUpgradeRemote(type: Exec) {
 
 task dbAnonymisedDumpRemote(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbAnonymisedData
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "remote", project.version]
 }
@@ -336,18 +422,21 @@ task importAnonDataIntoRemote(type: Exec) {
 
 task dbResetRemote(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbReset
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task dbBaselineRemote(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareDbBaseline
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task financeDataSyncRemote(type: Exec) {
     dependsOn prepareDeployment
+    dependsOn prepareFinanceDataServiceSync
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "remote", project.version]
 }
