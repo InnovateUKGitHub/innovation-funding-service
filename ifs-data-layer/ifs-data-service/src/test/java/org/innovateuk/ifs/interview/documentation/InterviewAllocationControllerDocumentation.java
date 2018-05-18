@@ -31,6 +31,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -190,5 +191,24 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 ));
 
         verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationIds(competitionId, userId);
+    }
+
+    @Test
+    public void unallocateApplication() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long applicationId = 3L;
+
+        when(interviewAllocationServiceMock.unallocateApplication(competitionId, assessorId, applicationId)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/interview-panel/{competitionId}/allocated-applications/{assessorId}/unallocate/{applicationId}", competitionId, assessorId, applicationId))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition"),
+                                parameterWithName("assessorId").description("Id of the assessor"),
+                                parameterWithName("applicationId").description("Id of the application to unassign from interview panel")
+                                )));
+
+        verify(interviewAllocationServiceMock, only()).unallocateApplication(competitionId, assessorId, applicationId);
     }
 }
