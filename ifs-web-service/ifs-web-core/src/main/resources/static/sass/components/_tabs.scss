@@ -146,34 +146,34 @@
 ul,
 ol {
   &.inline-nav {
+    @include media-down(mobile) {
+      padding-bottom: 20px;
+    }
+
     padding: 0 10px;
     margin-bottom: 30px;
     overflow: hidden;
     position: relative;
 
-    @include media-down(mobile) {
-      padding-bottom: 20px;
-    }
-
     li {
-      float: left;
-
       @include media-down(mobile) {
         float: none;
       }
 
+      float: left;
+
       &.selected {
         a,
         .buttonlink {
+          @include media-down(mobile) {
+            border-bottom: 1px solid $border-colour;
+          }
+
           border: 1px solid $border-colour;
           border-bottom: 1px solid $white;
           z-index:1;
           margin: 0;
           border-radius: 0;
-
-          @include media-down(mobile) {
-            border-bottom: 1px solid $border-colour;
-          }
         }
       }
 
