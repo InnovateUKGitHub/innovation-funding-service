@@ -195,14 +195,13 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void unAssignApplication() throws Exception {
-        long competitionId = 1L;
-        long assessorId = 2L;
-        long applicationId = 3L;
+        long assessorId = 1L;
+        long applicationId = 2L;
 
-        when(interviewAllocationServiceMock.unallocateApplication(competitionId, assessorId, applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/interview-panel/{competitionId}/allocated-applications/{assessorId}/unallocate/{applicationId}", competitionId, assessorId, applicationId))
+        when(interviewAllocationServiceMock.unallocateApplication(assessorId, applicationId)).thenReturn(serviceSuccess());
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/interview-panel/allocated-applications/{assessorId}/unallocate/{applicationId}", assessorId, applicationId))
                 .andExpect(status().isOk());
 
-        verify(interviewAllocationServiceMock, only()).unallocateApplication(competitionId, assessorId, applicationId);
+        verify(interviewAllocationServiceMock, only()).unallocateApplication(assessorId, applicationId);
     }
 }

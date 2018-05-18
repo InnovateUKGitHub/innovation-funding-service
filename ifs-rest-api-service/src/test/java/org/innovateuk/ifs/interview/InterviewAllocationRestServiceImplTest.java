@@ -118,12 +118,11 @@ public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void unallocatedApplications() {
+    public void unallocateApplications() {
         long applicationId = 1L;
-        long competitionId = 1L;
         long assessorId = 1L;
 
-        setupPostWithRestResultExpectations(format("%s/%d/%s/%s/%s/%s", restUrl, competitionId, "allocated-applications", assessorId, "unallocate", applicationId), OK);
+        setupPostWithRestResultExpectations(format("%s/%s/%d/%s/%d", restUrl, "allocated-applications", assessorId, "unallocate", applicationId), OK);
 
         RestResult<Void> restResult = service.unallocateApplication(assessorId, applicationId);
         assertTrue(restResult.isSuccess());
