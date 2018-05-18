@@ -26,6 +26,8 @@ import static org.innovateuk.ifs.documentation.InterviewAssignmentKeyStatisticsR
 import static org.innovateuk.ifs.documentation.InterviewAssignmentKeyStatisticsResourceDocs.interviewAssignmentKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewInviteStatisticsResourceDocs.interviewInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewInviteStatisticsResourceDocs.interviewInviteStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewStatisticsResourceDocs.interviewStatisticsResourceBuilder;
+import static org.innovateuk.ifs.documentation.InterviewStatisticsResourceDocs.interviewStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.ReviewInviteStatisticsResourceDocs.reviewInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.ReviewInviteStatisticsResourceDocs.reviewInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.ReviewKeyStatisticsResourceDocs.reviewKeyStatisticsResourceBuilder;
@@ -184,11 +186,11 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     }
 
     @Test
-    public void getInterviewStatistics() throws Exception {
+    public void getInterviewAssignmentStatistics() throws Exception {
         long competitionId = 1L;
-        when(interviewStatisticsServiceMock.getInterviewPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(interviewAssignmentKeyStatisticsResourceBuilder.build()));
+        when(interviewStatisticsServiceMock.getInterviewAssignmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(interviewAssignmentKeyStatisticsResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition-statistics/{id}/interview", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/interview-assignment", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -197,7 +199,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         responseFields(interviewAssignmentKeyStatisticsResourceFields)
                 ));
 
-        verify(interviewStatisticsServiceMock, only()).getInterviewPanelKeyStatistics(competitionId);
+        verify(interviewStatisticsServiceMock, only()).getInterviewAssignmentPanelKeyStatistics(competitionId);
     }
 
     @Test
@@ -215,5 +217,22 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                 ));
 
         verify(interviewStatisticsServiceMock, only()).getInterviewInviteStatistics(competitionId);
+    }
+
+    @Test
+    public void getInterviewStatistics() throws Exception {
+        long competitionId = 1L;
+        when(interviewStatisticsServiceMock.getInterviewStatistics(competitionId)).thenReturn(serviceSuccess(interviewStatisticsResourceBuilder.build()));
+
+        mockMvc.perform(get("/competition-statistics/{id}/interview", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("competition-statistics/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition")
+                        ),
+                        responseFields(interviewStatisticsResourceFields)
+                ));
+
+        verify(interviewStatisticsServiceMock, only()).getInterviewStatistics(competitionId);
     }
 }

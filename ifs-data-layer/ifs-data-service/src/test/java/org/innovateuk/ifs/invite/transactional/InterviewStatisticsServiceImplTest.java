@@ -11,6 +11,7 @@ import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.interview.transactional.InterviewStatisticsServiceImpl;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -68,7 +69,7 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
                 asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES)))
                 .thenReturn(applicationsAssigned);
 
-        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = interviewStatisticsService.getInterviewPanelKeyStatistics(COMPETITION_ID).getSuccess();
+        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = interviewStatisticsService.getInterviewAssignmentPanelKeyStatistics(COMPETITION_ID).getSuccess();
 
         assertEquals(expectedKeyStatisticsResource, keyStatisticsResource);
 
@@ -111,6 +112,43 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(interviewInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
         inOrder.verify(interviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.INTERVIEW_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
         inOrder.verify(interviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.INTERVIEW_ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getInterviewStatistics() {
+        long competitionId = 1L;
+
+        InterviewStatisticsResource expectedInviteStatisticsResource =
+                new InterviewStatisticsResource(12, 5, 7);
+
+        List<InterviewInvite> panelInvites = newInterviewInvite().build(expectedInviteStatisticsResource.getAssessorsAccepted());
+
+        List<Long> panelInviteIds = simpleMap(panelInvites, InterviewInvite::getId);
+
+        when(interviewInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
+
+        when(interviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
+                competitionId, CompetitionParticipantRole.INTERVIEW_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
+                .thenReturn(expectedInviteStatisticsResource.getAssessorsAccepted());
+        when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
+                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES)))
+                .thenReturn(expectedInviteStatisticsResource.getApplicationsAssigned());
+        when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
+                asLinkedSet(InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE)))
+                .thenReturn(expectedInviteStatisticsResource.getRespondedToFeedback());
+
+        InterviewStatisticsResource inviteStatisticsResource = interviewStatisticsService.getInterviewStatistics(competitionId).getSuccess();
+
+        assertEquals(expectedInviteStatisticsResource, inviteStatisticsResource);
+
+        InOrder inOrder = inOrder(interviewInviteRepositoryMock, interviewParticipantRepositoryMock, interviewAssignmentRepositoryMock);
+        inOrder.verify(interviewInviteRepositoryMock).getByCompetitionId(competitionId);
+        inOrder.verify(interviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.INTERVIEW_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
+        inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
+                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
+        inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
+                asLinkedSet(InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE));
         inOrder.verifyNoMoreInteractions();
     }
 }

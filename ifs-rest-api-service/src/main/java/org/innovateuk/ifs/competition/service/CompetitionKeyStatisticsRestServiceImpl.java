@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.springframework.stereotype.Service;
@@ -58,12 +59,17 @@ public class CompetitionKeyStatisticsRestServiceImpl extends BaseRestService imp
     }
 
     @Override
-    public RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewKeyStatisticsByCompetition(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "interview"), InterviewAssignmentKeyStatisticsResource.class);
+    public RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewAssignmentStatisticsByCompetition(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "interview-assignment"), InterviewAssignmentKeyStatisticsResource.class);
     }
 
     @Override
     public RestResult<InterviewInviteStatisticsResource> getInterviewInviteStatisticsByCompetition(long competitionId) {
         return getWithRestResult(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "interview-invites"), InterviewInviteStatisticsResource.class);
+    }
+
+    @Override
+    public RestResult<InterviewStatisticsResource> getInterviewStatisticsByCompetition(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "interview"), InterviewStatisticsResource.class);
     }
 }
