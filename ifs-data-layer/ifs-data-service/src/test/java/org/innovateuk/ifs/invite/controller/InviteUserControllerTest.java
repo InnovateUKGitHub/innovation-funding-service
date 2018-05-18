@@ -5,11 +5,13 @@ import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
+import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.PageRequest;
 
@@ -31,6 +33,9 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     private InviteUserResource inviteUserResource;
 
+
+    @Mock
+    private InviteUserService inviteUserServiceMock;
     @Override
     protected InviteUserController supplyControllerUnderTest() {
         return new InviteUserController();

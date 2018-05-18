@@ -12,7 +12,7 @@ import javax.persistence.*;
 @DiscriminatorValue(value = "assessment-interview-panel-response")
 public class InterviewAssignmentResponseOutcome extends ProcessOutcome<InterviewAssignment> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="file_entry_id", referencedColumnName="id")
     private FileEntry fileResponse;
 

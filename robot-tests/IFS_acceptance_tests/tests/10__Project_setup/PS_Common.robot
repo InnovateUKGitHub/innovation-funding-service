@@ -266,7 +266,7 @@ navigate to external finance contact page, choose finance contact and save
 Select project location
     [Arguments]  ${org_id}  ${projectId}
     the user navigates to the page        ${server}/project-setup/project/${projectId}/organisation/${org_id}/partner-project-location
-    the user enters text to a text field  css=#postCode  ${postcode}
+    the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
 
@@ -362,19 +362,19 @@ Login and submit partners spend profile
     [Arguments]  ${email}  ${org_id}  ${project}
     log in as a different user       ${email}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
-    the user clicks the button/link  jQuery=a:contains("Submit to lead partner")
-    the user clicks the button/link  jQuery=.button:contains("Submit")
+    the user clicks the button/link  link=Submit to lead partner
+    the user clicks the button/link  jQuery=button.button:contains("Submit")
 
 Login and submit leads spend profile
     [Arguments]  ${email}  ${org_id}  ${org_name}  ${project}
     log in as a different user       ${email}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  link=${org_name}
-    the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link  css=[name="mark-as-complete"]
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  jQuery=.button:contains("Review and send total project spend profile")
-    the user clicks the button/link  jQuery=.button:contains("Send project spend profile")
-    the user clicks the button/link  css=.modal-confirm-spend-profile-totals .button[value="Send"]
+    the user clicks the button/link  link=Send project spend profile
+    the user clicks the button/link  id=submit-send-all-spend-profiles
 
 project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     log in as a different user                          &{internal_finance_credentials}

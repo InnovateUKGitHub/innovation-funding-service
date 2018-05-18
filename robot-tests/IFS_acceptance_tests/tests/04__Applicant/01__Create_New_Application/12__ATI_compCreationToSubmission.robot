@@ -22,6 +22,7 @@ Comp Admin creates an ATI competition
     And the user navigates to the page             ${CA_UpcomingComp}
     When the user clicks the button/link           link=Create competition
     Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute
+    And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${business_type_id}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}

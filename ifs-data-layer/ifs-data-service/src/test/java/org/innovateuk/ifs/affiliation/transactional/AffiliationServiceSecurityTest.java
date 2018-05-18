@@ -2,6 +2,7 @@ package org.innovateuk.ifs.affiliation.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.eq;
@@ -39,24 +41,34 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
     public void getUserAffiliations() {
         Long userId = 1L;
 
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(
+                        newAffiliationResource()
+                                .build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)
+                )
+                .build();
+
         when(classUnderTestMock.getUserAffiliations(userId))
-                .thenReturn(serviceSuccess(newAffiliationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
+                .thenReturn(serviceSuccess(affiliationListResource));
 
         classUnderTest.getUserAffiliations(userId);
-        verify(rules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
-                .usersCanViewTheirOwnAffiliations(isA(AffiliationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(rules);
+
     }
 
     @Test
     public void updateUserAffiliations() {
         Long userId = 1L;
         List<AffiliationResource> affiliations = newAffiliationResource().build(2);
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(affiliations)
+                .build();
+
 
         UserResource user = newUserResource().build();
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
-        assertAccessDenied(() -> classUnderTest.updateUserAffiliations(userId, affiliations), () -> {
+        assertAccessDenied(() -> classUnderTest.updateUserAffiliations(userId, affiliationListResource), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });

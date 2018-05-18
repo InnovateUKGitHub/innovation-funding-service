@@ -1,25 +1,22 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.application.validator.NotEmptyValidator;
+import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
-import org.innovateuk.ifs.application.validator.NotEmptyValidator;
-import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<DefaultApplicationQuestionCreator> {
@@ -40,9 +37,9 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
         notEmptyValidator = newFormValidator().withClazzName(NotEmptyValidator.class.getName()).build();
         wordCountValidator = newFormValidator().withClazzName(WordCountValidator.class.getName()).build();
 
-        when(formValidatorRepositoryMock.findByClazzNameIn(asList(NotEmptyValidator.class.getName(), NotEmptyValidator.OLD_PACKAGE_NAME)))
+        when(formValidatorRepositoryMock.findByClazzName(NotEmptyValidator.class.getName()))
                 .thenReturn(notEmptyValidator);
-        when(formValidatorRepositoryMock.findByClazzNameIn(asList(WordCountValidator.class.getName(), NotEmptyValidator.OLD_PACKAGE_NAME)))
+        when(formValidatorRepositoryMock.findByClazzName(WordCountValidator.class.getName()))
                 .thenReturn(wordCountValidator);
     }
 

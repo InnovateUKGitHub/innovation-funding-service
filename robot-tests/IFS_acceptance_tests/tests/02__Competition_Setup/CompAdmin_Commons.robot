@@ -40,6 +40,12 @@ the user fills in the CS Initial details
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
 
+the user selects the Terms and Conditions
+    the user clicks the button/link      link=Terms and conditions
+    the user clicks the button/link      css=button.button  #Done
+    the user clicks the button/link      link=Competition setup
+    the user should see the element      jQuery=li:contains("Terms and conditions") .task-status-complete
+
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
     the user enters text to a text field  id=funders[0].funder  FunderName FamilyName
@@ -93,13 +99,19 @@ the user marks the Application as done
     the user marks the Application details section as complete    ${comp_type}
     the user marks the Assessed questions as complete  ${growthTable}  ${comp_type}
 
+The user removes the Project details questions and marks the Application section as done
+    [Arguments]  ${growthTable}  ${comp_type}
+    the user clicks the button/link  link=Application
+    the user marks each question as complete  Application details
+    the user removes some of the Project details questions
+    the user marks the Assessed questions as complete  ${growthTable}  ${comp_type}
+
 the user marks the Assessed questions as complete
     [Arguments]  ${growthTable}  ${comp_type}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
-    #No need to mark generic competition assessed question as complete as they already are.
     Run keyword If  '${comp_type}'!='${compType_EOI}'   the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup

@@ -3,12 +3,14 @@ package org.innovateuk.ifs.review.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.mapper.ReviewMapper;
+import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
@@ -33,6 +35,9 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
     private UserResource assessorUser;
     private UserResource otherUser;
     private Map<ReviewState, ReviewResource> assessmentReviews;
+
+    @Mock
+    private ReviewRepository reviewRepositoryMock;
 
     @Autowired
     public ReviewMapper reviewMapper;

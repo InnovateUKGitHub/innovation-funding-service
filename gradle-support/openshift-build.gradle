@@ -21,7 +21,15 @@ task buildDocker(type: DockerBuildImage) {
     tag = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
     inputDir = project.projectDir
 
-    outputs.upToDateWhen { "docker images".execute().text.contains(tag) }
+    outputs.upToDateWhen {
+
+        def image = tag
+        if(image.contains(":")) {
+            image = image.substring(0, image.indexOf(":"))
+        }
+
+        "docker images".execute().text.contains(image)
+    }
 }
 
 task tagDocker(type: DockerTagImage) {

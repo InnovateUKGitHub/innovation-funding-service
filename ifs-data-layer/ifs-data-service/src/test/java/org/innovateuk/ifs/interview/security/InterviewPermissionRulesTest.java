@@ -3,12 +3,14 @@ package org.innovateuk.ifs.interview.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.mapper.InterviewMapper;
+import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
@@ -19,7 +21,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.interview.builder.InterviewBuilder.newInterview;
 import static org.innovateuk.ifs.interview.builder.InterviewResourceBuilder.newInterviewResource;
-import static org.innovateuk.ifs.interview.resource.InterviewState.PENDING;
+import static org.innovateuk.ifs.interview.resource.InterviewState.ASSIGNED;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -32,6 +34,9 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
     private UserResource assessorUser;
     private UserResource otherUser;
     private Map<InterviewState, InterviewResource> assessmentInterviews;
+
+    @Mock
+    private InterviewRepository interviewRepositoryMock;
 
     @Autowired
     public InterviewMapper interviewMapper;
@@ -56,7 +61,7 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
 
     @Test
     public void ownersCanReadAssessmentsOnDashboard() {
-        EnumSet<InterviewState> allowedStates = EnumSet.of(PENDING);
+        EnumSet<InterviewState> allowedStates = EnumSet.of(ASSIGNED);
 
         allowedStates.forEach(state ->
                 assertTrue("the owner of an assessment Interview should be able to read that assessment Interview on the dashboard",

@@ -2,7 +2,9 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.InviteOrganisationDocs.inviteOrganisationFields;
@@ -16,6 +18,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InviteOrganisationControllerDocumentation extends BaseControllerMockMVCTest<InviteOrganisationController> {
+
+    @Mock
+    private InviteOrganisationService inviteOrganisationServiceMock;
 
     @Override
     protected InviteOrganisationController supplyControllerUnderTest() {
