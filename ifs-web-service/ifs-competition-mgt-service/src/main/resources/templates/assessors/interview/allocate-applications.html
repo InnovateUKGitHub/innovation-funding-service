@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications allocated for interview',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications allocated for interview',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" />
 
     <th:block th:insert="fragments/layout :: page-title"
               th:with="pageTitle=${'Notify assessor'},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
@@ -92,7 +92,9 @@
 
         <input type="submit" class="button" value="Notify"/>
 
-        <a href="#">Cancel</a>
+        <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}">
+            Cancel
+        </a>
     </form>
 
 
