@@ -60,10 +60,8 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
     }
 
 
-    //         return postWithRestResult(format("%s/%s/%s", interviewPanelInviteRestUrl, "send-all-invites", competitionId), assessorInviteSendResource, Void.class);
     @Override
     public RestResult<Void> notifyAllocations(InterviewNotifyAllocationResource interviewNotifyAllocationResource) {
-        //     @PostMapping("/{competitionId}/allocated-applications/{assessorId}/send-invite")
         String baseUrl = format("%s/%d/%s/%s/%s", INTERVIEW_PANEL_REST_URL,
                 interviewNotifyAllocationResource.getCompetitionId(), "allocated-applications",
                 interviewNotifyAllocationResource.getAssessorId(), "send-invite");

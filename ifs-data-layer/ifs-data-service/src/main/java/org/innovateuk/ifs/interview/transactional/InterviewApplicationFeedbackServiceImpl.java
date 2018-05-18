@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -92,7 +94,11 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
     @Override
     public ServiceResult<FileEntryResource> findFeedback(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
-                fileEntryService.findOne(interviewAssignment.getMessage().getFeedback().getId()));
+                ofNullable(interviewAssignment.getMessage())
+                    .map(InterviewAssignmentMessageOutcome::getFeedback)
+                    .map(FileEntry::getId)
+                    .map(fileEntryService::findOne)
+                    .orElse(ServiceResult.serviceSuccess(null)));
     }
 
     private ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {

@@ -29,8 +29,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_APPLICATION_ALLOCATION;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
@@ -48,7 +50,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewAllocationController extends CompetitionManagementCookieController<InterviewAllocationSelectionForm> {
 
-    private static final String SELECTION_FORM = "interviewAllocationSelectionForm";
+    static final String SELECTION_FORM = "interviewAllocationSelectionForm";
 
     @Autowired
     private InterviewAcceptedAssessorsModelPopulator interviewAcceptedAssessorsModelPopulator;
@@ -105,9 +107,8 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-        updateSelectionForm(request, response, competitionId, selectionForm);
-
-queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
+        updateSelectionForm(request, response, competitionId, assessorId, selectionForm);
+        queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
         String originQuery = buildOriginQueryString(INTERVIEW_APPLICATION_ALLOCATION, queryParams);
         model.addAttribute("model", unallocatedInterviewApplicationsModelPopulator.populateModel(
                 competitionId,
@@ -127,7 +128,7 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-        updateSelectionForm(request, response, competitionId, selectionForm);
+        updateSelectionForm(request, response, competitionId, userId, selectionForm);
 
         queryParams.put("assessorId", singletonList(String.valueOf(userId)));
         String originQuery = buildOriginQueryString(INTERVIEW_PANEL_ALLOCATED, queryParams);
@@ -155,22 +156,16 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                                        @RequestParam MultiValueMap<String, String> queryParams,
                                        HttpServletRequest request) {
 
-        Optional<InterviewAllocationSelectionForm> maybeSelectionForm = getSelectionFormFromCookie(request, competitionId)
-                .filter(f -> !f.getSelectedIds().isEmpty());
+        return ifSelectionFormIsNotEmpty(competitionId, userId, request, selectionForm -> {
+            model.addAttribute("model", allocateInterviewApplicationsModelPopulator.populateModel(competitionId, userId, selectionForm.getSelectedIds()));
+            model.addAttribute("form", form);
+            CompetitionResource competition = competitionService.getById(competitionId);
+            form.setSubject(format("Applications for interview panel for '%s'", competition.getName()));
+            String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
+            model.addAttribute("originQuery", originQuery);
 
-        if (!maybeSelectionForm.isPresent()) {
-            return redirectToUnallocatedTab(competitionId, userId).get();
-        }
-
-        model.addAttribute("model", allocateInterviewApplicationsModelPopulator.populateModel(competitionId, userId, maybeSelectionForm.get().getSelectedIds()));
-        model.addAttribute("form", form);
-
-        form.setSubject("Applications for interview panel for [competition name]");
-
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
-        model.addAttribute("originQuery", originQuery);
-
-        return "assessors/interview/allocate-applications";
+            return "assessors/interview/allocate-applications";
+        });
     }
 
 
@@ -192,16 +187,8 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                                  ValidationHandler validationHandler,
                                  HttpServletRequest request) {
         Supplier<String> failureView = () -> "foo";
-
-
-        Optional<InterviewAllocationSelectionForm> maybeSelectionForm = getSelectionFormFromCookie(request, competitionId)
-                .filter(f -> !f.getSelectedIds().isEmpty());
-
-        if (!maybeSelectionForm.isPresent()) {
-            return redirectToUnallocatedTab(competitionId, userId).get();
-        }
-
-        return validationHandler
+        return ifSelectionFormIsNotEmpty(competitionId, userId, request, selectionForm ->
+            validationHandler
                 .failNowOrSucceedWith(
                         failureView,
                         () -> {
@@ -212,7 +199,7 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                                                     userId,
                                                     form.getSubject(),
                                                     form.getContent(),
-                                                    maybeSelectionForm.get().getSelectedIds()
+                                                    selectionForm.getSelectedIds()
                                             )
                                     );
                             return validationHandler
@@ -222,12 +209,40 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                                             redirectToAllocatedTab(competitionId, userId)
                                     );
                         }
-                );
+                )
+        );
+    }
+
+    @PostMapping(value = "/allocate-applications/{userId}", params = {"remove"})
+    public String removeInviteFromInviteView(Model model,
+                                             @PathVariable("competitionId") long competitionId,
+                                             @PathVariable("userId") long userId,
+                                             @RequestParam(name = "remove") long removeId,
+                                             HttpServletRequest request,
+                                             HttpServletResponse response) {
+        return ifSelectionFormIsNotEmpty(competitionId, userId, request, selectionForm -> {
+            boolean removed = selectionForm.getSelectedIds().remove(removeId);
+            if (removed) {
+                selectionForm.setAllSelected(false);
+                saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
+            }
+            return redirectToSend(competitionId, userId).get();
+        });
+    }
+
+    private String ifSelectionFormIsNotEmpty(long competitionId, long userId, HttpServletRequest request, Function<InterviewAllocationSelectionForm, String> success) {
+        Optional<InterviewAllocationSelectionForm> maybeSelectionForm = getSelectionFormFromCookie(request, combineIds(competitionId, userId))
+                .filter(f -> !f.getSelectedIds().isEmpty());
+
+        if (!maybeSelectionForm.isPresent()) {
+            return redirectToUnallocatedTab(competitionId, userId).get();
+        } else {
+            return success.apply(maybeSelectionForm.get());
+        }
     }
 
     private Supplier<String> redirectToAllocatedTab(long competitionId, long userId) {
         return () -> "redirect:" + UriComponentsBuilder
-                // TODO this needs to point to the allocated applications
                 .fromPath("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}")
                 .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
                 .toUriString();
@@ -247,7 +262,6 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                 .toUriString();
     }
 
-
     @PostMapping(value = "/unallocated-applications/{userId}", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToInviteList(Model model,
                                                               @PathVariable("competitionId") long competitionId,
@@ -256,7 +270,7 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                                                               HttpServletRequest request,
                                                               HttpServletResponse response) {
         try {
-            InterviewAllocationSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewAllocationSelectionForm());
+            InterviewAllocationSelectionForm selectionForm = getSelectionFormFromCookie(request, combineIds(competitionId, userId)).orElse(new InterviewAllocationSelectionForm());
 
             if (addAll) {
                 selectionForm.setSelectedIds(getAllSelectableApplicationIds(competitionId, userId));
@@ -266,7 +280,7 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                 selectionForm.setAllSelected(false);
             }
 
-            saveFormToCookie(response, competitionId, selectionForm);
+            saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
@@ -286,7 +300,7 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
         boolean limitExceeded = false;
         try {
             List<Long> assessorIds = getAllSelectableApplicationIds(competitionId, userId);
-            InterviewAllocationSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewAllocationSelectionForm());
+            InterviewAllocationSelectionForm selectionForm = getSelectionFormFromCookie(request, combineIds(competitionId, userId)).orElse(new InterviewAllocationSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedIds().size() + 1;
                 if(limitIsExceeded(predictedSize)){
@@ -301,7 +315,7 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
                 selectionForm.getSelectedIds().remove(assessorId);
                 selectionForm.setAllSelected(false);
             }
-            saveFormToCookie(response, competitionId, selectionForm);
+            saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
             return createFailureResponse();
@@ -315,12 +329,17 @@ queryParams.put("assessorId", singletonList(String.valueOf(assessorId)));
     private void updateSelectionForm(HttpServletRequest request,
                                      HttpServletResponse response,
                                      long competitionId,
+                                     long userId,
                                      InterviewAllocationSelectionForm selectionForm) {
-        InterviewAllocationSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewAllocationSelectionForm());
+        InterviewAllocationSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, combineIds(competitionId, userId)).orElse(new InterviewAllocationSelectionForm());
 
         selectionForm.setSelectedIds(storedSelectionForm.getSelectedIds());
         selectionForm.setAllSelected(storedSelectionForm.getAllSelected());
 
-        saveFormToCookie(response, competitionId, selectionForm);
+        saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
+    }
+
+    private String combineIds(long competitionId, long userId) {
+        return String.format("%d_%d", competitionId, userId);
     }
 }

@@ -43,7 +43,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.newInterviewParticipant;
-import static org.innovateuk.ifs.interview.resource.InterviewState.ASSIGNED;
 import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
@@ -52,18 +51,15 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<InterviewAllocationServiceImpl> {
 
     @Mock
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
     @Mock
-    private InterviewRepository interviewRepository;
+    private InterviewRepository interviewRepositoryMock;
     @Mock
     private InterviewParticipantRepository interviewParticipantRepositoryMock;
     @Mock
@@ -80,8 +76,6 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     private ApplicationRepository applicationRepositoryMock;
     @Mock
     private InterviewWorkflowHandler interviewWorkflowHandlerMock;
-    @Mock
-    private InterviewRepository interviewRepositoryMock;
 
     @Override
     protected InterviewAllocationServiceImpl supplyServiceUnderTest() {
@@ -155,22 +149,22 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
 
         Page<InterviewApplicationResource> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(interviewRepository.findApplicationsAssignedToAssessor(
+        when(interviewRepositoryMock.findApplicationsAssignedToAssessor(
                 competitionId,
                 userId,
                 pageable
         )).thenReturn(pageResult);
 
-        when(interviewRepository.countAllocatedApplications(competitionId, userId)).thenReturn(allocatedApplications);
-        when(interviewRepository.countUnallocatedApplications(competitionId, userId)).thenReturn(unallocatedApplications);
+        when(interviewRepositoryMock.countAllocatedApplications(competitionId, userId)).thenReturn(allocatedApplications);
+        when(interviewRepositoryMock.countUnallocatedApplications(competitionId, userId)).thenReturn(unallocatedApplications);
 
         ServiceResult<InterviewApplicationPageResource> result =
-                service.getAllocatedApplications(competitionId, userId, pageable);
+                service.getAllocatedApplicationsById(competitionId, userId, pageable);
 
-        verify(interviewRepository)
+        verify(interviewRepositoryMock)
                 .findApplicationsAssignedToAssessor(competitionId, userId, pageable);
-        verify(interviewRepository).countAllocatedApplications(competitionId, userId);
-        verify(interviewRepository).countUnallocatedApplications(competitionId, userId);
+        verify(interviewRepositoryMock).countAllocatedApplications(competitionId, userId);
+        verify(interviewRepositoryMock).countUnallocatedApplications(competitionId, userId);
 
         assertTrue(result.isSuccess());
 
@@ -195,22 +189,22 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
 
         Page<InterviewApplicationResource> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(interviewRepository.findApplicationsNotAssignedToAssessor(
+        when(interviewRepositoryMock.findApplicationsNotAssignedToAssessor(
                 competitionId,
                 userId,
                 pageable
         )).thenReturn(pageResult);
 
-        when(interviewRepository.countAllocatedApplications(competitionId, userId)).thenReturn(allocatedApplications);
-        when(interviewRepository.countUnallocatedApplications(competitionId, userId)).thenReturn(unallocatedApplications);
+        when(interviewRepositoryMock.countAllocatedApplications(competitionId, userId)).thenReturn(allocatedApplications);
+        when(interviewRepositoryMock.countUnallocatedApplications(competitionId, userId)).thenReturn(unallocatedApplications);
 
         ServiceResult<InterviewApplicationPageResource> result =
                 service.getUnallocatedApplications(competitionId, userId, pageable);
 
-        verify(interviewRepository)
+        verify(interviewRepositoryMock)
                 .findApplicationsNotAssignedToAssessor(competitionId, userId, pageable);
-        verify(interviewRepository).countAllocatedApplications(competitionId, userId);
-        verify(interviewRepository).countUnallocatedApplications(competitionId, userId);
+        verify(interviewRepositoryMock).countAllocatedApplications(competitionId, userId);
+        verify(interviewRepositoryMock).countUnallocatedApplications(competitionId, userId);
 
         assertTrue(result.isSuccess());
 
@@ -227,7 +221,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         long userId = 2L;
         List<Long> ids = asList(4L, 5L);
 
-        when(interviewRepository.findApplicationIdsNotAssignedToAssessor(
+        when(interviewRepositoryMock.findApplicationIdsNotAssignedToAssessor(
                 competitionId,
                 userId
         )).thenReturn(ids);
@@ -235,7 +229,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         ServiceResult<List<Long>> result =
                 service.getUnallocatedApplicationIds(competitionId, userId);
 
-        verify(interviewRepository)
+        verify(interviewRepositoryMock)
                 .findApplicationIdsNotAssignedToAssessor(competitionId, userId);
 
         assertTrue(result.isSuccess());
@@ -250,7 +244,10 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         String content = "content";
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
         String templatePath = "allocate_interview_applications_to_assessor_text.txt";
-        Map<String, Object> notificationArguments = emptyMap();
+        Map<String, Object> notificationArguments = asMap(
+                "name", user.getName(),
+                "competitionName", competition.getName()
+        );
 
         AssessorInvitesToSendResource expectedInvitesToSendResource =
                 new AssessorInvitesToSendResource(singletonList(user.getName()), competition.getId(), competition.getName(), content);
@@ -310,5 +307,19 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         inOrder.verify(interviewWorkflowHandlerMock).notifyInvitation(interview);
         inOrder.verify(notificationSenderMock).sendNotification(expectedNotification);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getAllocatedApplicationsById() {
+        Long[] applicationIds = {1L, 2L};
+        List<InterviewApplicationResource> expectedInterviewApplications = newInterviewApplicationResource().build(2);
+
+        when(interviewRepositoryMock.findAll(asList(applicationIds))).thenReturn(expectedInterviewApplications);
+
+        List<InterviewApplicationResource> actualInterviewApplications = service.getAllocatedApplicationsById(asList(applicationIds)).getSuccess();
+
+        assertEquals(expectedInterviewApplications, actualInterviewApplications);
+
+        verify(interviewRepositoryMock, only()).findAll(asList(applicationIds));
     }
 }

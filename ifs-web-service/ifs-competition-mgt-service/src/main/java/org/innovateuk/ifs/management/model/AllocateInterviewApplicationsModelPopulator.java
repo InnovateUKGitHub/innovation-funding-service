@@ -33,7 +33,6 @@ public class AllocateInterviewApplicationsModelPopulator {
         CompetitionResource competitionResource = competitionService.getCompetitionById(competitionId).getSuccess();
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
         List<InterviewApplicationResource> interviewApplications = interviewAllocationRestService.getAllocatedApplications(competitionId, applicationIds).getSuccess();
-
         AssessorInvitesToSendResource invitesToSendResource = interviewAllocationRestService.getInviteToSend(competitionId, userId).getSuccess();
 
         return new InterviewAllocateApplicationsViewModel(
