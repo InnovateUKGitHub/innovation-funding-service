@@ -13,11 +13,10 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId})" />
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                    <input type="text"
+                    <input type="number"
                            min="0"
                            required="required"
                            class="form-control width-small"
-                           maxlength="3"
                            th:max="${model.maximumGrantClaimPercentage}"
                            th:readonly="${model.readonly}"
                            th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-control-error'"
