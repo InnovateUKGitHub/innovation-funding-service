@@ -53,7 +53,7 @@ include::{snippets}/interview-panel/get-unallocated-application-ids/response-fie
 include::{snippets}/interview-panel/get-unallocated-application-ids/curl-request.adoc[]
 
 
-=== unallocat application from an assessor
+=== unallocate application from an assessor
 ==== Request
 include::{snippets}/interview-panel/unallocate-application/http-request.adoc[]
 include::{snippets}/interview-panel/unallocate-application/path-parameters.adoc[]

@@ -60,5 +60,5 @@ public interface InterviewAllocationService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_UNALLOCATED_APPLICATION_IDS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can unallocate applications")
-    ServiceResult<Void> unallocateApplication(long competitionId, long assessorId, long applicationId);
+    ServiceResult<Void> unallocateApplication(long assessorId, long applicationId);
 }

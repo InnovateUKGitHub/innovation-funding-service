@@ -174,7 +174,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                        @PathVariable("userId") long userId,
                                        @RequestParam("removeApplication") long applicationId) {
 
-        interviewAllocationRestService.unallocateApplication(competitionId, userId, applicationId);
+        interviewAllocationRestService.unallocateApplication(userId, applicationId);
 
         return redirectToAllocatedTab(competitionId, userId).get();
     }
