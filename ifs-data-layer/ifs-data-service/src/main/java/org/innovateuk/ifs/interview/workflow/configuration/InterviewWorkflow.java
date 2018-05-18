@@ -14,8 +14,7 @@ import java.util.LinkedHashSet;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.interview.resource.InterviewEvent.NOTIFY;
-import static org.innovateuk.ifs.interview.resource.InterviewState.CREATED;
-import static org.innovateuk.ifs.interview.resource.InterviewState.PENDING;
+import static org.innovateuk.ifs.interview.resource.InterviewState.ASSIGNED;
 
 /**
  * Describes the workflow for assessment interviews.
@@ -31,7 +30,7 @@ public class InterviewWorkflow extends StateMachineConfigurerAdapter<InterviewSt
 
     @Override
     public void configure(StateMachineStateConfigurer<InterviewState, InterviewEvent> states) throws Exception {
-        states.withStates().initial(CREATED)
+        states.withStates().initial(ASSIGNED)
                 .states(new LinkedHashSet<>(asList(InterviewState.values())));
     }
 
@@ -43,8 +42,8 @@ public class InterviewWorkflow extends StateMachineConfigurerAdapter<InterviewSt
     private void configureNotifyInvitation(StateMachineTransitionConfigurer<InterviewState, InterviewEvent> transitions) throws Exception {
         transitions
                 .withExternal()
-                .source(CREATED)
+                .source(ASSIGNED)
                 .event(NOTIFY)
-                .target(PENDING);
+                .target(ASSIGNED); // TODO this might now be pointless
     }
 }
