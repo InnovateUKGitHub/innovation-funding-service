@@ -165,6 +165,4 @@ public class CompetitionManagementApplicationsController {
             throw new IncorrectStateForPageException("Competition is not yet open.");
         }
     }
-
-
 }
