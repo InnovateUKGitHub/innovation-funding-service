@@ -48,23 +48,23 @@
             </ul>
             <form method="GET">
                 <div class="search-filters extra-margin">
-
                     <fieldset>
-                        <legend class="heading-medium">Filter applications</legend>
+                        <legend class="heading-medium no-margin-top">Filter applications</legend>
                         <div class="grid-row">
                             <div class="column-two-thirds">
                                 <label class="form-label" for="filterSearch">Search by application number.</label>
-                                <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
-                                <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                                <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                             </div>
+
                             <div class="column-third">
                                 <button class="button">Filter</button>
                             </div>
                         </div>
                     </fieldset>
-
+                    <div class="extra-margin">
+                        <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                    </div>
                 </div>
-
                 <div class="grid-row sorting">
                     <div class="column-half">
                         <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
