@@ -68,7 +68,7 @@
                   <span class="error-message" th:each="err : ${#fields.errors('registrationNumber')}" th:text="${err}"></span>
                 </th:block>
             </label>
-            <p class="form-hint">For example: 1548965</p>
+            <p class="form-hint">For example: 15489657</p>
             <input type="text"
                    th:attr="data-required-errormessage=#{validation.standard.registrationnumber.required},
                             data-minlength-errormessage=#{validation.standard.registrationnumber.format}"
@@ -91,7 +91,7 @@
                   <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
               </th:block>
             </label>
-            <p class="form-hint">For example: 1548965</p>
+            <p class="form-hint">For example: 15489657</p>
             <input type="text"
                    th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},
                             data-minlength-errormessage=#{validation.standard.accountnumber.format}"
