@@ -56,7 +56,7 @@
             <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
                 <th:block th:if="${section.name.equals('Project details')}">
                     <ul class="list-overview extra-margin">
-                        <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.shortName.equals('Application details')}">
+                        <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
                             <li class="section-status">
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
@@ -66,13 +66,13 @@
                                         </h3>
                                     </div>
                                     <div class="column-third">
-                                        <th:block th:if="${question.shortName.equals('Scope')}">
+                                        <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
                                             <p th:unless="${scores.scopeAssessed}" class="form-hint no-margin">No feedback provided</p>
                                             <p th:if="${scores.scopeAssessed}">
                                                 In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span>
                                             </p>
                                         </th:block>
-                                        <th:block th:unless="${question.shortName.equals('Scope')}">
+                                        <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
                                             <p class="form-hint no-margin">No feedback provided</p>
                                         </th:block>
                                     </div>

@@ -33,11 +33,8 @@ public class ApplicantDashboardViewModel {
 
     /* View logic */
     public String getApplicationInProgressText() {
-        if(inProgress.size() > 1) {
-            return "Applications in progress";
-        } else {
-            return "Application in progress";
-        }
-    }
 
+        return inProgress.size() == 1 ?
+                "Application in progress" : "Applications in progress";
+    }
 }
