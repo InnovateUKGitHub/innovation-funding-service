@@ -30,28 +30,14 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
                          </th:block>
                     </legend>
-                    <div class="multiple-choice" th:each="value : ${'${true, false}'}">
-                            <input id="new-application-yes"
-                                   type="radio"
-                                   th:field="*{createNewApplication}"
-                                   th:value="${true}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
-                            <label for="new-application-yes">
-                                Yes, I want to create a new application.
-                            </label>
-                        </div>
-                        <div class="multiple-choice">
+                    <div class="multiple-choice" th:each="value : ${ {true, false} }">
                             <input type="radio"
-                                   id="new-application-no"
                                    th:field="*{createNewApplication}"
-                                   th:value="${false}"
+                                   th:value="${value}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
-                            <label for="new-application-no">
-                                No, I want to continue with my existing application.
-                            </label>
-                        </div>
+                        <label th:for="${#ids.prev('createNewApplication')}" th:text="${value} ? 'Yes, I want to create a new application.' : 'No, I want to continue with my existing application.'"/>
+                    </div>
                 </fieldset>
                 </div>
                 <button type="submit" name="create-application-submit" class="button">
