@@ -242,7 +242,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
         List<Interview> allocated = repository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(assessor.getId(), competition.getId());
         assertEquals(1, allocated.size());
 
-        repository.deleteOneByParticipantUserIdAndTargetCompetitionIdAndTargetId(assessor.getId(), competition.getId(), application2.getId());
+        repository.deleteOneByParticipantUserIdAndTargetId(assessor.getId(), application2.getId());
 
         List<Interview> allocatedAfterDeletion = repository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(assessor.getId(), competition.getId());
         assertTrue(allocatedAfterDeletion.isEmpty());

@@ -118,5 +118,5 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
     )
     List<InterviewApplicationResource> findAll(List<Long> applicationIds);
 
-    void deleteOneByParticipantUserIdAndTargetCompetitionIdAndTargetId(long userId, long competitionId, long applicationId);
+    void deleteOneByParticipantUserIdAndTargetId(long userId, long applicationId);
 }
