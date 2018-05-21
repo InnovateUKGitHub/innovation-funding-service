@@ -18,6 +18,8 @@ import java.util.List;
  */
 public interface CompetitionRepository extends PagingAndSortingRepository<Competition, Long> {
 
+    String EOI = "'Expression of interest'";
+
     /* Filters competitions to those in live state */
     String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
@@ -29,7 +31,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String PROJECT_SETUP_WHERE_CLAUSE = "WHERE ( " +
             "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE " +
-            "AND ct.name != 'Expression of interest'";
+            "AND ct.name != " + EOI;
 
     /* Filters competitions to those in upcoming state */
     String UPCOMING_CRITERIA = "FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
