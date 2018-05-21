@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.innovateuk.ifs.async.AsyncExecutionTestHelper.BLOCKING_TIMEOUT_MILLIS;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isReadLocked;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isWriteLocked;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -200,7 +201,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            writeOperationFuture.get(50, TimeUnit.MILLISECONDS);
+            writeOperationFuture.get(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             fail("This write operation should have timed out because it was blocked by the read lock");
         } catch (TimeoutException e) {
             // expected behaviour - the write operation was successfully blocked from writing to the cache.  Now allow
@@ -312,7 +313,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            readOperationFuture.get(50, TimeUnit.MILLISECONDS);
+            readOperationFuture.get(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             fail("This read operation should have timed out because it was blocked by the write lock");
         } catch (TimeoutException e) {
             // expected behaviour - the write operation was successfully blocked from writing to the cache.  Now allow
@@ -360,7 +361,6 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         CountDownLatch writeOperation1LatchWhenReadingFromCache = new CountDownLatch(1);
         CountDownLatch writeOperation1LatchWhenWritingToCache = new CountDownLatch(1);
         CountDownLatch writeOperation2LatchForInitialBlocking = new CountDownLatch(1);
-        CountDownLatch writeOperation2LatchForBlockingUntilWriteOperationIsWritingToCache = new CountDownLatch(1);
         CountDownLatch completeTestLatch = new CountDownLatch(2);
 
         ReadWriteLock lockFromInterceptor =
@@ -428,8 +428,8 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            writeOperation1Future.get(50, TimeUnit.MILLISECONDS);
-            writeOperation2Future.get(50, TimeUnit.MILLISECONDS);
+            writeOperation1Future.get(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+            writeOperation2Future.get(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             fail("One of these write operations should have timed out because it was blocked by the write lock " +
                     "aquired by the other");
         } catch (TimeoutException e) {

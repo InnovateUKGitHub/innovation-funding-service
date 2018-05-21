@@ -22,7 +22,7 @@
     <form method="GET" th:object="${fundingNotificationFilterForm}">
         <div class="search-filters extra-margin">
             <fieldset>
-                <legend class="heading-medium">Filter applications</legend>
+                <legend class="heading-medium no-margin-top">Filter applications</legend>
                 <div class="grid-row">
                     <div class="column-third">
                         <div class="form-group">
@@ -52,14 +52,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="grid-row">
+                    <div class="column-one alignright">
+                        <button class="button no-margin">Filter</button>
+                    </div>
+                </div>
             </fieldset>
-            <div class="grid-row">
-                <div class="column-half">
-                    <a href="?filterChanged=1" class="button button-clear no-margin">Clear all filters</a>
-                </div>
-                <div class="column-half alignright">
-                    <button class="button no-margin">Filter</button>
-                </div>
+            <div class="clear-search-filters">
+                <a href="?filterChanged=1">Clear all filters</a>
             </div>
         </div>
         <input type="hidden" name="filterChanged" value="1"/>

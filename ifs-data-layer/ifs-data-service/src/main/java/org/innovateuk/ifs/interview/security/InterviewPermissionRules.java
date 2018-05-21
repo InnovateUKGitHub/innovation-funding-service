@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static org.innovateuk.ifs.interview.resource.InterviewState.PENDING;
+import static org.innovateuk.ifs.interview.resource.InterviewState.ASSIGNED;
 
 /**
  * Provides the permissions around CRUD operations for {@link Interview} resources.
@@ -24,7 +24,7 @@ public class InterviewPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_INTERVIEW_DASHBOARD", description = "Assessors can view all Assessment Interviews on the competition " +
             "dashboard")
     public boolean userCanReadInterviewOnDashboard(InterviewResource interview, UserResource user) {
-        Set<InterviewState> allowedStates = EnumSet.of(PENDING);
+        Set<InterviewState> allowedStates = EnumSet.of(ASSIGNED);
         return isAssessorForInterview(interview, user, allowedStates);
     }
 

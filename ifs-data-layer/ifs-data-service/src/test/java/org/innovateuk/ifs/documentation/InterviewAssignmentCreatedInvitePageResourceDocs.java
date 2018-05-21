@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder;
+import org.innovateuk.ifs.interview.builder.InterviewAssignmentStagedApplicationPageResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 
 public class InterviewAssignmentCreatedInvitePageResourceDocs extends PageResourceDocs {
         public static final FieldDescriptor[] interviewAssignmentCreatedInvitePageResourceFields = pageResourceFields;

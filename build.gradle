@@ -30,6 +30,10 @@ def isNotProductionEnv() {
     !"production".equals(openshiftEnv)
 }
 
+def isSysIntEnv() {
+    "sysint".equals(openshiftEnv)
+}
+
 apply from: "gradle-support/openshift-support.gradle"
 apply from: "gradle-support/zipkin-support.gradle"
 
