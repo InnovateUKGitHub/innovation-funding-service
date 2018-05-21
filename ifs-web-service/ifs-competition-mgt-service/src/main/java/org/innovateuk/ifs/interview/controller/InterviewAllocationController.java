@@ -145,10 +145,12 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                  @ModelAttribute(name = "form") InterviewAllocationNotifyForm form,
                                  @PathVariable("competitionId") long competitionId,
                                  @PathVariable("userId") long userId,
+                                 @RequestParam MultiValueMap<String, String> queryParams,
                                  ValidationHandler validationHandler,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
-        Supplier<String> failureView = () -> "foo";
+        Supplier<String> failureView = () -> allocateApplications(model, form, competitionId, userId, queryParams, request);
+
         Supplier<String> successView = () -> {
             removeCookie(response, combineIds(competitionId, userId));
             return redirectToAllocatedTab(competitionId, userId);
@@ -306,7 +308,6 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
 
         saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
     }
-
 
     private String combineIds(long competitionId, long userId) {
         return String.format("%d_%d", competitionId, userId);
