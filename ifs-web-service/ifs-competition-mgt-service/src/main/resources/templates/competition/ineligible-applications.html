@@ -21,7 +21,7 @@
             <form method="GET" th:object="${filterForm}">
                 <div class="search-filters extra-margin">
                     <fieldset>
-                        <legend class="heading-medium">Filter applications</legend>
+                        <legend class="heading-medium no-margin-top">Filter applications</legend>
                         <div class="grid-row">
                             <div class="column-half">
                                 <label class="form-label" for="filterSearch">Search by application number.</label>
@@ -29,23 +29,22 @@
                             </div>
                             <div class="column-half">
                                 <label class="form-label" for="filterInform">Informed</label>
-                                <select name="filterInform" id="filterInform" class="form-control" th:field="*{filterInform}">
+                                <select name="filterInform" id="filterInform" class="form-control extra-margin-bottom" th:field="*{filterInform}">
                                     <option value="">All</option>
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </select>
                             </div>
                         </div>
+                        <div class="grid-row">
+                            <div class="column-one alignright">
+                                <button class="button no-margin" type="submit">Filter</button>
+                            </div>
+                        </div>
                     </fieldset>
-                    <div class="grid-row">
-                        <div class="column-half">
-                            <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
-                        </div>
-                        <div class="column-half alignright">
-                            <button class="button no-margin" type="submit">Filter</button>
-                        </div>
+                    <div class="clear-search-filters">
+                        <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
                     </div>
-
                 </div>
                 <div class="grid-row sorting">
                     <div class="column-half">
