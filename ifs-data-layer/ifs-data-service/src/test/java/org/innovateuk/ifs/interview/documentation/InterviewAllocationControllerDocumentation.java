@@ -195,32 +195,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
 
         verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationIds(competitionId, userId);
     }
-/*
-    @Test
-    public void sendAllInvites() throws Exception {
-        long competitionId = 2L;
 
-        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
-        when(interviewInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/interview-panel-invite/send-all-invites/{competitionId}", competitionId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(assessorInviteSendResource)))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel-invite/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition to send assessor panel invites for")
-                        ),
-                        requestFields(
-                                fieldWithPath("subject").description("The subject of the invitation"),
-                                fieldWithPath("content").description("The custom content for this invitation")
-                        )
-                ));
-
-        verify(interviewInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
-    }
-
- */
     @Test
     public void getInviteToSend() throws Exception {
         long competitionId = 1L;
