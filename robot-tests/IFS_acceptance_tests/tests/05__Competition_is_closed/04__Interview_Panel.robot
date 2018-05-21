@@ -229,7 +229,7 @@ CompAdmin allocates applications to assessors
     And the user clicks the button/link      jQuery=h1:contains("Allocate applications to ${assessor_joel}")
     Then the user clicks the button/link     jQuery=a:contains("Allocated")
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION}")
-    And the user should see the element      jQuery=td:contains("${Neural_network_application}") ~ td:contains("Neural Industries") ~ td:contains("Remove")
+    Then the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Neural Industries") ~ td:contains("Remove")
 
 *** Keywords ***
 Custom Suite Setup
