@@ -703,7 +703,7 @@ Innovation leads can be added to a competition
     When the user clicks the button/link      jQuery=.inline-nav a:contains("Find")
     Then the user should see the element      jQuery=td:contains(${peter_freeman}) button:contains("Add")
 
-Delete competition
+User deletes the competition
     [Documentation]  IFS-1084
     Given the user navigates to the page      ${CA_UpcomingComp}
     And The user clicks the button/link       link=No competition title defined
