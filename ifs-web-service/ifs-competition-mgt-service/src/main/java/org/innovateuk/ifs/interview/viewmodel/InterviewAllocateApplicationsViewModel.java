@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.interview.viewmodel;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -44,5 +46,33 @@ public class InterviewAllocateApplicationsViewModel {
 
     public List<InterviewApplicationResource> getApplications() {
         return interviewApplications;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InterviewAllocateApplicationsViewModel that = (InterviewAllocateApplicationsViewModel) o;
+
+        return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(user, that.user)
+                .append(content, that.content)
+                .append(interviewApplications, that.interviewApplications)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(competitionName)
+                .append(user)
+                .append(content)
+                .append(interviewApplications)
+                .toHashCode();
     }
 }
