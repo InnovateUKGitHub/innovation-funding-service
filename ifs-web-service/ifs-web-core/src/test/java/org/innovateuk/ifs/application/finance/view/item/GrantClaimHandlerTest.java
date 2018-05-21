@@ -30,6 +30,21 @@ public class GrantClaimHandlerTest {
     }
 
     @Test
+    public void testHappyPathNineDigits() {
+
+        String value = "123456789";
+
+        FinanceFormField field = new FinanceFormField("field1", value, "field-1-id", "456", "grant-claim", "key-type");
+        FinanceRowItem item = handler.toFinanceRowItem(123L, singletonList(field));
+
+        assertThat(item.getCostType()).isEqualTo(FinanceRowType.FINANCE);
+        assertThat(item.getId()).isEqualTo(123L);
+        assertThat(item.getMinRows()).isEqualTo(0);
+        assertThat(item.getName()).isEqualTo(FinanceRowType.FINANCE.getType());
+        assertThat(item.getTotal()).isEqualTo(BigDecimal.valueOf(123456789));
+    }
+    
+    @Test
     public void testTooManyDigitsTruncatesInputToNineDigits() {
 
         String value = "123456789012";
