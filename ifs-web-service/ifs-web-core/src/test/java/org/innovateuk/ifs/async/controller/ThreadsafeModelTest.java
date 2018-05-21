@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.async.AsyncExecutionTestHelper.BLOCKING_TIMEOUT_MILLIS;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isReadLocked;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -241,7 +242,7 @@ public class ThreadsafeModelTest {
         Model operation1Answer = doAnswer(invocation -> {
             assertTrue(expectedLockStateDuringOperation1Test.apply(lockFromModel));
             operation2CountDownLatch.countDown();
-            operation1CountDownLatch.await(50, TimeUnit.MILLISECONDS);
+            operation1CountDownLatch.await(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             operationValues.add("operation 1");
             return null;
         }).when(wrappedModel);
