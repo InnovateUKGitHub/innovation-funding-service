@@ -89,7 +89,6 @@ public class InternalUserRegistrationController {
         }
     }
 
-
     @GetMapping(value = "/{inviteHash}/register/account-created")
     public String accountCreated(@PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;

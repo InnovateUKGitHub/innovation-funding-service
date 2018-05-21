@@ -56,8 +56,6 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
 
         if (bindingResult.hasFieldErrors("password")) {
 
-            LOG.warn("before exception", bindingResult.getFieldErrors("password"));
-
             List<String> errors = bindingResult.getFieldErrors("password")
                     .stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
