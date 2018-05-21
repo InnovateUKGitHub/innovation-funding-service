@@ -133,6 +133,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             model.addAttribute("form", form);
             CompetitionResource competition = competitionService.getById(competitionId);
             form.setSubject(format("Applications for interview panel for '%s'", competition.getName()));
+            queryParams.put("assessorId", singletonList(String.valueOf(userId)));
             String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
             model.addAttribute("originQuery", originQuery);
 
