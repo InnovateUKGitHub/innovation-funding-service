@@ -3,6 +3,8 @@ package org.innovateuk.ifs.shibboleth.api.models.validators;
 import org.innovateuk.ifs.shibboleth.api.PasswordPolicyProperties;
 import org.innovateuk.ifs.shibboleth.api.exceptions.InvalidPasswordException;
 
+import static java.util.Collections.singletonList;
+
 public class PasswordValidator implements Validator<String, InvalidPasswordException> {
 
     private final PasswordPolicyProperties passwordPolicy;
@@ -17,7 +19,7 @@ public class PasswordValidator implements Validator<String, InvalidPasswordExcep
         final String passwordLowerCase = password.toLowerCase();
         
         if(passwordPolicy.getBlacklist().stream().anyMatch(passwordLowerCase::contains)) {
-            throw new InvalidPasswordException("blacklisted");
+            throw new InvalidPasswordException(singletonList("INVALID_PASSWORD"));
         }
 
     }
