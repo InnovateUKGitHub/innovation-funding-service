@@ -2,14 +2,16 @@ package org.innovateuk.ifs.user.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,8 +21,8 @@ import java.util.function.Function;
 import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -42,6 +44,9 @@ import static org.mockito.Mockito.when;
  * Tests around the permissions for UserService and related services
  */
 public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermissionRules> {
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
 
     @Test
     public void testAnyoneCanViewThemselves() {
@@ -668,6 +673,19 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
             } else {
                 assertFalse(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
             }
+        });
+    }
+
+    @Test
+    public void testUsersCanAgreeSiteTermsAndConditionsForThemselves() {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
+                if (user.equals(otherUser)) {
+                    assertTrue(rules.usersCanAgreeSiteTermsAndConditions(otherUser, user));
+                } else {
+                    assertFalse(rules.usersCanAgreeSiteTermsAndConditions(otherUser, user));
+                }
+            });
         });
     }
 

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
+import org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
@@ -53,14 +53,14 @@ public class ProjectDetailsServiceImplTest {
     public void testUpdatePartnerProjectLocation() {
         Long projectId = 1L;
         Long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
-        when(projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postCode)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postcode)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postCode);
+        ServiceResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postcode);
         assertTrue(result.isSuccess());
 
-        verify(projectDetailsRestService).updatePartnerProjectLocation(projectId, organisationId, postCode);
+        verify(projectDetailsRestService).updatePartnerProjectLocation(projectId, organisationId, postcode);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testInviteProjectFinanceUser() throws Exception {
 
-        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+        InviteProjectResource invite = InviteProjectResourceBuilder.newInviteProjectResource().build();
 
         when(projectDetailsRestService.inviteFinanceContact(anyLong(), any())).thenReturn(restSuccess());
 
@@ -132,7 +132,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testInviteProjectManagerUser() throws Exception {
 
-        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+        InviteProjectResource invite = InviteProjectResourceBuilder.newInviteProjectResource().build();
 
         when(projectDetailsRestService.inviteProjectManager(anyLong(), any())).thenReturn(restSuccess());
 
@@ -146,7 +146,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testSaveProjectInvite() throws Exception {
 
-        InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
+        InviteProjectResource invite = InviteProjectResourceBuilder.newInviteProjectResource().build();
 
         when(projectInviteRestService.saveProjectInvite(invite)).thenReturn(restSuccess());
 

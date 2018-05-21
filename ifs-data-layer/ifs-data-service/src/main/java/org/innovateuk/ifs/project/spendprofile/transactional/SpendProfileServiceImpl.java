@@ -12,9 +12,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
@@ -38,9 +38,9 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtil;
-import org.innovateuk.ifs.project.transactional.EmailService;
-import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.util.EmailService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -640,8 +640,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         ArrayList<String> monthsRow = new ArrayList<>();
         monthsRow.add(CSV_MONTH);
         monthsRow.add(EMPTY_CELL);
-        spendProfileTableResource.getMonths().forEach(
-                value -> monthsRow.add(value.getLocalDate().toString()));
+        IntStream.rangeClosed(1, spendProfileTableResource.getMonths().size()).forEach(monthNumber -> monthsRow.add("Month " + monthNumber));
         monthsRow.add(CSV_TOTAL);
         monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
 

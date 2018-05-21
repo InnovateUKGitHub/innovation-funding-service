@@ -260,10 +260,11 @@ users upload signed grant offer letter and submit
     the user clicks the button/link  link=Grant offer letter
     choose file                      signedGrantOfferLetter    ${upload_folder}/testing.pdf
     the user clicks the button/link  jQuery=a:contains("Send to Innovate UK")
-    the user clicks the button/link  jQuery=button:contains("Send to Innovate UK")
+    the user clicks the button/link  id=submit-gol-for-review
 
 grant offer letter is approved
-    log in as a different user       &{internal_finance_credentials}
-    the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    the user clicks the button/link  jQuery=h2:contains("Confirm") ~ .button:contains("Accept signed grant offer letter")  # to differantiate from the modal button
-    the user clicks the button/link  jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")
+    log in as a different user         &{internal_finance_credentials}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    the user selects the radio button  approvalType  acceptGOL
+    the user clicks the button/link    id=submit-button
+    the user clicks the button/link    jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")

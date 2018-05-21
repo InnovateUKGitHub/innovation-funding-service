@@ -36,7 +36,7 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(source = "target", target = "application"),
             @Mapping(source = "target.name", target = "applicationName"),
             @Mapping(source = "target.competition", target = "competition"),
-            @Mapping(source = "activityState", target = "assessmentState")
+            @Mapping(source = "processState", target = "assessmentState")
     })
     @Override
     public abstract AssessmentResource mapToResource(Assessment domain);
@@ -45,9 +45,8 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(target = "processEvent", source = "event"),
             @Mapping(target = "participant", source = "processRole"),
             @Mapping(target = "target", source = "application"),
-            @Mapping(target = "activityState", source = "assessmentState", ignore = true),
+            @Mapping(target = "processState", source = "assessmentState", ignore = true),
             @Mapping(target = "responses", ignore = true),
-            @Mapping(target = "processOutcomes", ignore = true),
             @Mapping(target = "lastModified", ignore = true)
     })
     @Override

@@ -231,8 +231,10 @@ include::formInputResponse.adoc[]
 include::project.adoc[]
 include::project-grant-offer.adoc[]
 include::bank-details.adoc[]
+include::project-finance.adoc[]
 include::project-finance-queries.adoc[]
 include::project-finance-attachments.adoc[]
+include::invite-project.adoc[]
 
 [[applicationCountSummary]]
 == ApplicationCountSummary
@@ -245,3 +247,7 @@ include::competitionKeyStatistics.adoc[]
 [[applicationSummary]]
 == ApplicationSummary
 include::application-summary.adoc[]
+
+[[TermsAndConditions]]
+== Terms And Conditions
+include::terms-and-conditions.adoc[]

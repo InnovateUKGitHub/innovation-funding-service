@@ -2,10 +2,13 @@ package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceController;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
@@ -21,6 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<ProjectFinanceController> {
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    private ProjectFinanceRowService projectFinanceRowServiceMock;
 
     @Test
     public void testGetViability() throws Exception {
@@ -61,7 +70,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        EligibilityResource expectedEligibilityResource = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource expectedEligibilityResource = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         expectedEligibilityResource.setEligibilityApprovalDate(LocalDate.now());
         expectedEligibilityResource.setEligibilityApprovalUserFirstName("Lee");
         expectedEligibilityResource.setEligibilityApprovalUserLastName("Bowman");
@@ -80,7 +89,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        Eligibility eligibility = Eligibility.APPROVED;
+        EligibilityState eligibility = EligibilityState.APPROVED;
         EligibilityRagStatus eligibilityRagStatus = EligibilityRagStatus.GREEN;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);

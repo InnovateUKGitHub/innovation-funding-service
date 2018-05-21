@@ -3,14 +3,15 @@ package org.innovateuk.ifs.assessment.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
@@ -27,7 +28,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -40,6 +40,9 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Autowired
     public AssessmentMapper assessmentMapper;
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
 
     @Override
     protected AssessmentPermissionRules supplyPermissionRulesUnderTest() {
@@ -252,7 +255,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     private AssessmentResource setupAssessment(ProcessRole participant, AssessmentState state) {
         Assessment assessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, state.getBackingState()))
+                .withProcessState(state)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);

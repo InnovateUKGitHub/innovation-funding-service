@@ -15,9 +15,6 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -39,9 +36,6 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private InterviewAssignmentRepository interviewAssignmentRepository;
@@ -127,7 +121,7 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(false)
-                .withActivityState(activityState(ApplicationState.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build(2);
         applicationRepository.save(applications);
 
@@ -141,7 +135,7 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
 
         InterviewAssignment interviewAssignment = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE))
+                .withState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE)
                 .withTarget(applications.get(0))
                 .withParticipant(processRoles.get(0))
                 .build();
@@ -152,19 +146,5 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
 
         assertEquals(2, keyStatisticsResource.getApplicationsInCompetition());
         assertEquals(1, keyStatisticsResource.getApplicationsAssigned());
-    }
-
-    private ActivityState activityState(InterviewAssignmentState interviewAssignmentState) {
-        return activityStateRepository.findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                interviewAssignmentState.getBackingState()
-        );
-    }
-
-    private ActivityState activityState(ApplicationState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(
-                ActivityType.APPLICATION,
-                applicationState.getBackingState()
-        );
     }
 }

@@ -116,7 +116,7 @@
         <p>Your bank details will now be submitted to Innovate UK.</p>
         <hr />
         <div method="post">
-            <button class="button" name="submit-app-details">Submit</button>
+            <button class="button" id="submit-bank-details" name="submit-app-details">Submit</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -147,7 +147,7 @@
         <hr />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
-                <button class="button" name="submit-other-documents" type="submit">Submit</button>
+                <button class="button" id="submit-other-documents" name="submit-other-documents" type="submit">Submit</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
@@ -178,7 +178,7 @@
         <p>Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
         <hr />
         <div>
-            <button class="button" name="submit-change-bank-details">Update bank account details</button>
+            <button class="button" id="submit-change-bank-details" name="submit-change-bank-details">Update bank account details</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -191,7 +191,7 @@
         <p>This step should only be done after the bank account for the organisation has been checked and meets the requirements of Innovate UK</p>
         <hr />
         <div>
-            <button class="button" name="submit-approve-bank-details">Approve account</button>
+            <button class="button" id="submit-approve-bank-details" name="submit-approve-bank-details">Approve account</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -205,7 +205,7 @@
         <p>Once accepted the project team can complete any remaining stages of project setup.</p>
         <hr />
         <div>
-            <button class="button" name="approved" value="true">Accept documents</button>
+            <button class="button" id="accept-documents" name="approved" value="true">Accept documents</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -219,7 +219,7 @@
         <p>Once accepted the project team can complete any remaining stages of project setup.</p>
         <hr />
         <div>
-            <button class="button" name="approved" value="true">Accept document</button>
+            <button class="button" id="accept-document" name="approved" value="true">Accept document</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -236,7 +236,7 @@
         </div>
         <hr />
         <div>
-            <button class="button" name="approved" value="false">Reject documents</button>
+            <button class="button" id="reject-documents" name="approved" value="false">Reject documents</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -253,7 +253,7 @@
         </div>
         <hr />
         <div>
-            <button class="button" name="approved" value="false">Reject document</button>
+            <button class="button" id="reject-document" name="approved" value="false">Reject document</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -280,7 +280,7 @@
         <p>Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
         <hr />
         <div>
-            <button class="button" name="confirmSubmit">Send to Innovate UK</button>
+            <button class="button" id="submit-gol-for-review" name="confirmSubmit">Send to Innovate UK</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -294,7 +294,7 @@
         <p>The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
         <hr />
         <div>
-            <input type="submit" tabindex="0" class="button" value="Send"/>
+            <input type="submit" id="submit-send-all-spend-profiles" tabindex="0" class="button" value="Send"/>
             <button type="button" tabindex="1" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
@@ -376,7 +376,7 @@
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
             <div>
-                <button class="button" type="submit">Publish to project team</button>
+                <button class="button" id="modal-send-gol" type="submit">Publish to project team</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
@@ -393,7 +393,7 @@
         <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed'}" method="post">
             <input type="hidden" name="approvalType" value="APPROVED" />
             <div>
-                <button class="button" type="submit">Accept signed grant offer letter</button>
+                <button class="button" id="accept-signed-gol" type="submit">Accept signed grant offer letter</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
@@ -414,7 +414,7 @@
             <input type="hidden" name="approvalType" value="REJECTED" />
             <input type="hidden" name="rejectionReason" data-mirror="#gol-reject-reason" value="" />
             <div>
-                <button class="button" type="submit">Reject signed grant offer letter</button>
+                <button class="button" id="reject-signed-gol" type="submit">Reject signed grant offer letter</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>

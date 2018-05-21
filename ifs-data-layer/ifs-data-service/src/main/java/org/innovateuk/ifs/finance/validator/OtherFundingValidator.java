@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
@@ -48,10 +49,14 @@ public class OtherFundingValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         OtherFunding otherFunding = (OtherFunding) target;
+
+        String otherFundingSelection = otherFunding.getOtherPublicFunding();
+        validateOtherPublicFunding(otherFundingSelection, errors);
+
         boolean userHasSelectedYesToOtherFunding = userHasSelectedYes(otherFunding);
         String fundingSource = otherFunding.getFundingSource();
         BigDecimal fundingAmount = otherFunding.getFundingAmount();
-        if(userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals(OTHER_FUNDING)){
+        if (userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals(OTHER_FUNDING)) {
             validateDate(otherFunding, errors);
             validateFundingSource(fundingSource, errors);
             validateFundingAmount(fundingAmount, errors);
@@ -60,8 +65,15 @@ public class OtherFundingValidator implements Validator {
         }
     }
 
+    private void validateOtherPublicFunding(String otherPublicFunding, Errors errors) {
+        List<String> allowedStrings = asList(null, "", "Yes", "No");
+        if (!allowedStrings.contains(otherPublicFunding)) {
+            rejectValue(errors, "otherPublicFunding", "validation.finance.other.funding.required");
+        }
+    }
+
     private void validateFundingAmount(BigDecimal fundingAmount, Errors errors) {
-        if(fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) != 1){
+        if (fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) != 1) {
             rejectValue(errors, "fundingAmount", "validation.field.max.value.or.higher", 1);
 
         }

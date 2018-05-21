@@ -20,7 +20,14 @@ public class SelectFinanceContactViewModel {
     private String projectName;
     private boolean inviteAction;
 
-    public SelectFinanceContactViewModel(final List<ProjectUserInviteModel> organisationUsers, final List<ProjectUserInviteModel> invitedUsers, final Long organisationId, final ProjectResource project, final Long currentUser, final ApplicationResource app, final CompetitionResource competition, final boolean inviteAction) {
+    public SelectFinanceContactViewModel(final List<ProjectUserInviteModel> organisationUsers,
+                                         final List<ProjectUserInviteModel> invitedUsers,
+                                         final Long organisationId,
+                                         final ProjectResource project,
+                                         final Long currentUser,
+                                         final ApplicationResource app,
+                                         final CompetitionResource competition,
+                                         final boolean inviteAction) {
         this.organisationUsers = organisationUsers;
         this.invitedUsers = invitedUsers;
         this.organisationId = organisationId;

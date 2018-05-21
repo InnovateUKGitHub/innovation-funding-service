@@ -1,13 +1,14 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
+
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/mapstruct.gradle")
+
 
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
-configurations {
-    providedRuntime
-}
 
 project.version = financeDataServiceVersion
 tagDocker.tag = financeDataServiceVersion
@@ -21,7 +22,8 @@ def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.
 }
 createContainer.portBindings = ['9012:8000']
 
-deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:deploy"
+deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:wait"
+deploy.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deploy"
 
 createContainer.networkAliases=["ifs-finance-data-service"]
 
@@ -38,46 +40,44 @@ buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
-sourceSets {
-    client {
-        java {
-            srcDir 'src/main/java'
-        }
-        main {
-            ext.originalJavaSrcDirs = java.srcDirs
-            java.srcDir "${generatedMapperSourcesDir}"
-        }
-    }
-}
 
 bootRun {
     addResources = false
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-resources/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-security/build/classes")
 
-configurations {
-    mapstruct
+
+    dependsOn ":ifs-commons:build"
+    dependsOn ":ifs-resources:build"
+    dependsOn ":ifs-data-layer:data-service-commons:build"
+    dependsOn ":ifs-security:build"
+
 }
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'mysql:mysql-connector-java'
-    compile 'org.mapstruct:mapstruct:1.2.0.Final'
-    mapstruct 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
+    compile project(':ifs-security')
+
     compile project(':ifs-data-layer:data-service-commons')
 
     testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile project(':ifs-resources')
-    testCompile project(':ifs-commons')
-    testCompile project(':ifs-data-layer:data-service-commons')
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(':ifs-commons').sourceSets.test.output
-    testCompile project(':ifs-data-layer:data-service-commons').sourceSets.test.output
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+
     testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }
 
@@ -99,42 +99,20 @@ test {
 }
 
 asciidoctor {
-    dependsOn test
     attributes 'snippets': snippetsDir
     backends 'html5'
     inputs.dir snippetsDir
 }
 
-task generateMainMapperClasses(type: JavaCompile) {
-    ext.aptDumpDir = file("build/tmp/apt/mapstruct")
-    destinationDir = aptDumpDir
-
-    classpath = compileJava.classpath + configurations.mapstruct
-    source = sourceSets.main.originalJavaSrcDirs
-    ext.sourceDestDir = file generatedMapperSourcesDir
-
-    options.define(
-            compilerArgs: [
-                    "-nowarn",
-                    "-proc:only",
-                    "-encoding", "UTF-8",
-                    "-processor", "org.mapstruct.ap.MappingProcessor",
-                    "-s", sourceDestDir.absolutePath,
-                    "-source", 1.8,
-                    "-target", 1.8,
-            ]
-    );
-
-    inputs.dir source
-    outputs.dir generatedMapperSourcesDir
-    doFirst {
-        sourceDestDir.mkdirs()
+task asciidoctorOnly(type: Test) {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
     }
-    doLast {
-        aptDumpDir.delete()
+    useJUnit {
+        includeCategories 'org.innovateuk.ifs.ControllerTest'
     }
+    finalizedBy asciidoctor
 }
 
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
-compileJava.dependsOn generateMainMapperClasses

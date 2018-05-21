@@ -12,16 +12,10 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
-import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +24,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -40,6 +34,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -52,15 +47,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
 
-    public static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
-            .stream().map(ApplicationState::getBackingState).collect(toSet());
-
     private AssessmentRepository assessmentRepository;
     private AssessmentMapper assessmentMapper;
     private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
     private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
-    private ActivityStateRepository activityStateRepository;
 
     public AssessmentServiceImpl() {
     }
@@ -70,14 +61,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                  AssessmentMapper assessmentMapper,
                                  AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
                                  AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
-                                 AssessmentWorkflowHandler assessmentWorkflowHandler,
-                                 ActivityStateRepository activityStateRepository) {
+                                 AssessmentWorkflowHandler assessmentWorkflowHandler) {
         this.assessmentRepository = assessmentRepository;
         this.assessmentMapper = assessmentMapper;
         this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;
         this.assessmentFundingDecisionOutcomeMapper = assessmentFundingDecisionOutcomeMapper;
         this.assessmentWorkflowHandler = assessmentWorkflowHandler;
-        this.activityStateRepository = activityStateRepository;
     }
 
     @Override
@@ -88,7 +77,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentResource> findAssignableById(long id) {
         return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
-            if (WITHDRAWN == found.getActivityState()) {
+            if (WITHDRAWN == found.getProcessState()) {
                 return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
             }
             return serviceSuccess(assessmentMapper.mapToResource(found));
@@ -98,7 +87,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentResource> findRejectableById(long id) {
         return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
-            if (WITHDRAWN == found.getActivityState()) {
+            if (WITHDRAWN == found.getProcessState()) {
                 return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
             }
             return serviceSuccess(assessmentMapper.mapToResource(found));
@@ -107,7 +96,14 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
-        return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId), assessmentMapper::mapToResource));
+        return serviceSuccess(
+                simpleMap(
+                        sort(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId),
+                                comparing(Assessment::getProcessState)
+                        ),
+                        assessmentMapper::mapToResource
+                )
+        );
     }
 
     @Override
@@ -117,13 +113,13 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentState state, long competitionId) {
-        List<AssessmentResource> assessmentResources = simpleMap(assessmentRepository.findByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId), assessmentMapper::mapToResource);
+        List<AssessmentResource> assessmentResources = simpleMap(assessmentRepository.findByActivityStateAndTargetCompetitionId(state, competitionId), assessmentMapper::mapToResource);
         return serviceSuccess(assessmentResources);
     }
 
     @Override
     public ServiceResult<Integer> countByStateAndCompetition(AssessmentState state, long competitionId) {
-        return serviceSuccess(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId));
+        return serviceSuccess(assessmentRepository.countByActivityStateAndTargetCompetitionId(state, competitionId));
     }
 
     @Override
@@ -225,19 +221,16 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return getAssessor(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
-                        .andOnSuccess(application -> getAssessmentActivityState(AssessmentState.CREATED)
-                                        .andOnSuccess(activityState -> createAssessment(assessor, application, ASSESSOR, activityState))
-                        )
+                        .andOnSuccess(application ->  createAssessment(assessor, application, ASSESSOR))
                 );
     }
 
 
-    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, Role role, ActivityState activityState) {
+    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, Role role) {
 
         ProcessRole processRole = getExistingOrCreateNewProcessRole(assessor, application, role);
 
         Assessment assessment = new Assessment(application, processRole);
-        assessment.setActivityState(activityState);
 
         return serviceSuccess(assessmentRepository.save(assessment))
                 .andOnSuccessReturn(assessmentMapper::mapToResource);
@@ -263,7 +256,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {
         boolean noAssessmentOrWithdrawn = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId())
-                .map(assessment -> assessment.getActivityState().equals(WITHDRAWN))
+                .map(assessment -> assessment.getProcessState().equals(WITHDRAWN))
                 .orElse(true);
 
         if (noAssessmentOrWithdrawn) {
@@ -271,14 +264,5 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         }
 
         return serviceFailure(new Error(ASSESSMENT_CREATE_FAILED, assessor.getId(), application.getId()));
-    }
-
-    private ServiceResult<ActivityState> getAssessmentActivityState(AssessmentState assessmentState) {
-        return find(
-                activityStateRepository.findOneByActivityTypeAndState(
-                        ActivityType.APPLICATION_ASSESSMENT,
-                        assessmentState.getBackingState()
-                ),
-                notFoundError(ActivityState.class, assessmentState));
     }
 }

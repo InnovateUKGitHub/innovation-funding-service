@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.documentation;
 
+import org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder;
+import org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder;
 import org.innovateuk.ifs.user.builder.AffiliationResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
+import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PERSONAL;
 import static java.lang.Boolean.TRUE;
@@ -31,4 +35,7 @@ public class AffiliationDocs {
             .withExists(TRUE)
             .withOrganisation("Big Name Corporation")
             .withPosition("Financial Accountant");
+
+    public static final AffiliationListResourceBuilder affiliationListResourceBuilder = newAffiliationListResource()
+            .withAffiliationList(affiliationResourceBuilder.build(1));
 }

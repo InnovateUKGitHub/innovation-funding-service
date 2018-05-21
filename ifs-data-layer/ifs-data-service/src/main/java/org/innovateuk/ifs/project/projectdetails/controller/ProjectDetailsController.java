@@ -7,8 +7,10 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,11 @@ public class ProjectDetailsController {
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
+
+    @GetMapping("/{projectId}/project-manager")
+    public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
+        return projectDetailsService.getProjectManager(projectId).toGetResponse();
+    }
 
     @PostMapping(value="/{id}/project-manager/{projectManagerId}")
     public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
@@ -62,12 +69,21 @@ public class ProjectDetailsController {
         return projectDetailsService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
     }
 
-    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
-    public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
+    @ZeroDowntime(reference = "IFS-3470", description = "To support the older request param postCode. This will be deleted in next release")
+    @PostMapping(value = "/{projectId}/organisation/{organisationId}/partner-project-location", params = "postCode")
+    public RestResult<Void> updatePartnerProjectLocationZDD(@PathVariable("projectId") final long projectId,
                                                          @PathVariable("organisationId") final long organisationId,
                                                          @RequestParam("postCode") String postCode) {
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectDetailsService.updatePartnerProjectLocation(composite, postCode).toPostResponse();
+    }
+
+    @PostMapping(value = "/{projectId}/organisation/{organisationId}/partner-project-location", params = "postcode")
+    public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
+                                                         @PathVariable("organisationId") final long organisationId,
+                                                         @RequestParam("postcode") String postcode) {
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectDetailsService.updatePartnerProjectLocation(composite, postcode).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-finance-contact")

@@ -99,7 +99,15 @@ table {
   }
 
   .multiple-choice{
-    margin-left: 5px;
+    margin-left: 3px;
+
+    // The invisible label causes alignment issues with checkboxes within tables, restricting width and height cures this issue
+    .invisible{
+      display: inline-block;
+      max-width: 50px;
+      max-height: 20px;
+      overflow: hidden;
+    }
   }
 
   .empty-table-cell-select {
@@ -128,9 +136,11 @@ table {
     max-width: 100%;
 
     td {
-      &:first-child input,
-      &:first-child textarea {
-        margin-left: 3px;
+      &:first-child{
+        input,
+        textarea {
+          margin-left: 3px;
+        }
       }
     }
   }

@@ -3,26 +3,47 @@ package org.innovateuk.ifs.project.projectdetails.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
+import org.innovateuk.ifs.address.mapper.AddressMapper;
+import org.innovateuk.ifs.address.repository.AddressRepository;
+import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
+import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.project.builder.ProjectBuilder;
-import org.innovateuk.ifs.project.builder.SpendProfileBuilder;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
+import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.transactional.EmailService;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -32,6 +53,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -52,15 +74,16 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
+import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
+import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -76,6 +99,66 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Mock
     private EmailService projectEmailService;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private ProjectRepository projectRepositoryMock;
+
+    @Mock
+    private ProjectInviteRepository projectInviteRepositoryMock;
+
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
+
+    @Mock
+    private ProjectUserMapper projectUserMapperMock;
+
+    @Mock
+    private ProjectUserRepository projectUserRepositoryMock;
+
+    @Mock
+    private StatusService statusServiceMock;
+
+    @Mock
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
+
+    @Mock
+    private SpendProfileRepository spendProfileRepositoryMock;
+
+    @Mock
+    private ProjectWorkflowHandler projectWorkflowHandlerMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+
+    @Mock
+    private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
+
+    @Mock
+    private InviteProjectMapper inviteProjectMapperMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private AddressRepository addressRepositoryMock;
+
+    @Mock
+    private AddressMapper addressMapperMock;
+
+    @Mock
+    private OrganisationAddressRepository organisationAddressRepositoryMock;
+
+    @Mock
+    private AddressTypeRepository addressTypeRepositoryMock;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -141,8 +224,26 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
+    public void testGetProjectManager() {
+        final Long projectId = 123L;
+        final Project project = newProject().withId(projectId).build();
+        final ProjectUser projectManager = newProjectUser().withProject(project).withRole(PROJECT_MANAGER).build();
+        final ProjectUserResource projectManagerResource = newProjectUserResource().withProject(projectId).withRoleName(PROJECT_MANAGER.getName()).build();
+
+        when(projectUserMapperMock.mapToResource(projectManager)).thenReturn(projectManagerResource);
+        when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(projectManager);
+
+        ServiceResult<ProjectUserResource> foundProjectManager = service.getProjectManager(projectId);
+        assertTrue(foundProjectManager.isSuccess());
+        assertTrue(foundProjectManager.getSuccess().getRoleName().equals(PROJECT_MANAGER.getName()));
+        assertTrue(foundProjectManager.getSuccess().getProject().equals(projectId));
+    }
+
+    @Test
     public void testInvalidProjectManagerProvided() {
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                .build()));
         ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
         assertFalse(result.isSuccess());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
@@ -157,7 +258,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertTrue(existingProject.getProjectUsers().isEmpty());
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.COMPLETE)
+                .build()));
 
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isFailure());
@@ -171,7 +274,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                .build()));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -206,7 +311,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                .build()));
 
         setLoggedInUser(newUserResource().withId(leadPartnerProjectUser.getId()).build());
 
@@ -487,42 +594,42 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPostCodeIsNullOrEmpty() {
+    public void testUpdatePartnerProjectLocationWhenPostcodeIsNullOrEmpty() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = null;
+        String postcode = null;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
-        postCode = "";
-        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        postcode = "";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
-        postCode = "    ";
-        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        postcode = "    ";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPostCodeEnteredExceedsMaxLength() {
+    public void testUpdatePartnerProjectLocationWhenPostcodeEnteredExceedsMaxLength() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "SOME LONG POSTCODE";
+        String postcode = "SOME LONG POSTCODE";
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POST_CODE_LENGTH), HttpStatus.BAD_REQUEST)));
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POSTCODE_LENGTH), HttpStatus.BAD_REQUEST)));
     }
 
     @Test
@@ -530,13 +637,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(new MonitoringOfficer());
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
     }
@@ -546,31 +653,31 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
+        String postcode = "TW14 9QG";
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(notFoundError(PartnerOrganisation.class, projectId, organisationId)));
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationEnsureLowerCasePostCodeIsSavedAsUpperCase() {
+    public void testUpdatePartnerProjectLocationEnsureLowerCasePostcodeIsSavedAsUpperCase() {
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "tw14 9qg";
+        String postcode = "tw14 9qg";
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isSuccess());
 
-        assertEquals(postCode.toUpperCase(), partnerOrganisationInDb.getPostCode());
+        assertEquals(postcode.toUpperCase(), partnerOrganisationInDb.getPostcode());
     }
 
     @Test
@@ -578,17 +685,17 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "UB7 8QF";
+        String postcode = "UB7 8QF";
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isSuccess());
 
-        assertEquals(postCode, partnerOrganisationInDb.getPostCode());
+        assertEquals(postcode, partnerOrganisationInDb.getPostcode());
     }
 
     @Test
@@ -600,7 +707,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -656,38 +763,46 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testInviteProjectManagerWhenUnableToSendNotification() {
 
-        Long projectId = 1L;
-
         InviteProjectResource inviteResource = newInviteProjectResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withLeadOrganisation(organisation.getId())
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
         Project projectInDB = ProjectBuilder.newProject()
-                .withId(projectId)
                 .withName("Project 1")
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
-        Map<String, Object> globalArgs = new HashMap<>();
-        globalArgs.put("projectName", "Project 1");
-        globalArgs.put("leadOrganisation", organisation.getName());
-        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
-        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
+
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", projectInDB.getName());
+        globalArguments.put("competitionName", "Competition 1");
+        globalArguments.put("leadOrganisation", organisation.getName());
+        globalArguments.put("applicationId", application.getId());
+        globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+
+        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+                .withEmail("a@b.com")
+                .withName("A B")
+                .build());
 
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
+                .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                .build()));
 
-        ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+        ServiceResult<Void> result = service.inviteProjectManager(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
@@ -696,37 +811,38 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testInviteProjectManagerSuccess() {
 
-        Long projectId = 1L;
-
         InviteProjectResource inviteResource = newInviteProjectResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withLeadOrganisation(organisation.getId())
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
         Project projectInDB = ProjectBuilder.newProject()
-                .withId(projectId)
                 .withName("Project 1")
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
-        Map<String, Object> globalArgs = new HashMap<>();
-        globalArgs.put("projectName", "Project 1");
-        globalArgs.put("leadOrganisation", organisation.getName());
-        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
-        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", projectInDB.getName());
+        globalArguments.put("competitionName", "Competition 1");
+        globalArguments.put("leadOrganisation", organisation.getName());
+        globalArguments.put("applicationId", application.getId());
+        globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
-        ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+        ServiceResult<Void> result = service.inviteProjectManager(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
     }
@@ -740,7 +856,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -762,13 +878,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testInviteFinanceContactSuccess() {
 
-        Long projectId = 1L;
-
         InviteProjectResource inviteResource = newInviteProjectResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation(17L)
-                .withInviteOrganisationName("Invite Organisation 1")
+                .withLeadOrganisation(organisation.getId())
+                .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
 
@@ -779,18 +895,23 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
-        Map<String, Object> globalArgs = new HashMap<>();
-        globalArgs.put("projectName", "Project 1");
-        globalArgs.put("leadOrganisation", organisation.getName());
-        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
-        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", projectInDB.getName());
+        globalArguments.put("competitionName", "Competition 1");
+        globalArguments.put("leadOrganisation", organisation.getName());
+        globalArguments.put("applicationId", application.getId());
+        globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withName("A B").withEmail("a@b.com").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+                .withName("A B")
+                .withEmail("a@b.com")
+                .build());
 
-        ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
+        ServiceResult<Void> result = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
     }
@@ -810,8 +931,10 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
         assertTrue(result.isSuccess());
+        assertEquals(registeredAddress, project.getAddress());
     }
 
     @Test
@@ -829,18 +952,32 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
         assertTrue(result.isSuccess());
+        assertEquals(operatingAddress, project.getAddress());
     }
 
     @Test
     public void testUpdateProjectAddressToNewProjectAddress() {
 
-        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
+        Organisation leadOrganisation = newOrganisation()
+                .withId(organisation.getId())
+                .build();
+
         AddressResource newAddressResource = newAddressResource().build();
-        Address newAddress = newAddress().build();
-        AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
-        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+        Address newAddress = newAddress()
+                .build();
+
+        AddressType projectAddressType = newAddressType()
+                .withId((long) PROJECT.getOrdinal())
+                .withName(PROJECT.name())
+                .build();
+
+        OrganisationAddress organisationAddress = newOrganisationAddress()
+                .withOrganisation(leadOrganisation)
+                .withAddress(newAddress).withAddressType(projectAddressType)
+                .build();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
@@ -855,35 +992,90 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
+        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
+        verify(organisationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationAddress.class));
+        assertEquals(newAddress, project.getAddress());
+    }
+
+    @Test
+    public void testUpdateProjectAddressToNewProjectAddressAndExistingAddressAssociatedWithOrg() {
+
+        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
+        AddressResource newAddressResource = newAddressResource().build();
+        Address newAddress = newAddress().build();
+        AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
+        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
+        when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
+        when(addressTypeRepositoryMock.findOne(PROJECT.getOrdinal())).thenReturn(projectAddressType);
+        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(singletonList(organisationAddress));
+        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        assertNull(project.getAddress());
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        assertTrue(result.isSuccess());
+        verify(organisationAddressRepositoryMock).delete(organisationAddress);
+        assertEquals(newAddress, project.getAddress());
     }
 
     @Test
     public void testInviteProjectFinanceUser(){
-        InviteProjectResource invite = newInviteProjectResource().withInviteOrganisationName("Invite Organisation 1").build();
+
+        InviteProjectResource inviteResource = newInviteProjectResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation(organisation.getId())
+                .withOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
         ProcessRole[] roles = newProcessRole()
-                .withOrganisationId(o.getId())
+                .withOrganisationId(organisation.getId())
                 .withRole(Role.LEADAPPLICANT)
                 .build(1)
                 .toArray(new ProcessRole[0]);
-        Application a = newApplication().withProcessRoles(roles).build();
 
-        Project project = newProject().withId(projectId).withName("Project 1").withApplication(a).build();
+        Application a = newApplication()
+                .withProcessRoles(roles)
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .withApplication(a)
+                .build();
+
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
-        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        Map<String, Object> globalArgs = new HashMap<>();
-        globalArgs.put("projectName", "Project 1");
-        globalArgs.put("leadOrganisation", organisation.getName());
-        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
-        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + invite.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
-        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", projectInDB.getName());
+        globalArguments.put("competitionName", "Competition 1");
+        globalArguments.put("leadOrganisation", organisation.getName());
+        globalArguments.put("applicationId", application.getId());
+        globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
+        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
+                .withEmail("a@b.com")
+                .withName("A B")
+                .build());
+
+        ServiceResult<Void> success = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
         assertTrue(success.isSuccess());
     }

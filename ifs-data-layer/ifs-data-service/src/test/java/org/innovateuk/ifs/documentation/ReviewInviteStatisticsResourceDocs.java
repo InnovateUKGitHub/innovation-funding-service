@@ -10,8 +10,7 @@ public class ReviewInviteStatisticsResourceDocs {
     public static final FieldDescriptor[] reviewInviteStatisticsResourceFields = {
             fieldWithPath("invited").description("The number of assessors invited to the assessment panel"),
             fieldWithPath("accepted").description("The number of assessors who have accepted an invitation to the assessment panel"),
-            fieldWithPath("declined").description("The number of assessors who have rejected an invitation to the assessment panel"),
-            fieldWithPath("pending").description("Deprecated. Will be removed in the next release")
+            fieldWithPath("declined").description("The number of assessors who have rejected an invitation to the assessment panel")
     };
 
     public static final ReviewInviteStatisticsResourceBuilder reviewInviteStatisticsResourceBuilder =

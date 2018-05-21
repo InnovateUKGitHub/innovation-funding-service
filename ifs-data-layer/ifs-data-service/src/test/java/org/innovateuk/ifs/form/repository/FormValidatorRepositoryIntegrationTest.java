@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.commons.ZeroDowntime;
-import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.application.validator.EmailValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
-import org.junit.Ignore;
+import org.innovateuk.ifs.form.domain.FormValidator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,8 +13,6 @@ import static org.junit.Assert.assertFalse;
 /**
  * Repository Integration tests for Form Inputs.
  */
-@Ignore("Ignored until zero downtime deployment is done.")
-@ZeroDowntime(reference = "IFS-3366", description = "Unignore test.")
 public class FormValidatorRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<FormValidatorRepository> {
 
     @Autowired

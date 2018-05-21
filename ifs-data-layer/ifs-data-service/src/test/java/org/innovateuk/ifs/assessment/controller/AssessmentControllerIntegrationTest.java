@@ -12,9 +12,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,7 +32,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -52,20 +48,13 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     private UserRepository userRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @Autowired
     @Override
     protected void setControllerUnderTest(final AssessmentController controller) {
         this.controller = controller;
     }
 
     @Test
-    public void findById() throws Exception {
+    public void findById() {
         Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
 
         loginFelixWilson();
@@ -76,7 +65,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findById_notFound() throws Exception {
+    public void findById_notFound() {
         long assessmentId = 999L;
 
         loginPaulPlum();
@@ -86,7 +75,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findById_notTheAssessmentOwner() throws Exception {
+    public void findById_notTheAssessmentOwner() {
         Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
 
         loginPaulPlum();
@@ -96,7 +85,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findAssignableById() throws Exception {
+    public void findAssignableById() {
         Assessment assessment = setUpAssessment(getPaulPlum(), PENDING);
 
         loginPaulPlum();
@@ -106,7 +95,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findAssignableById_notFound() throws Exception {
+    public void findAssignableById_notFound() {
         long assessmentId = 999L;
 
         loginPaulPlum();
@@ -116,7 +105,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findAssignableById_notTheAssessmentOwner() throws Exception {
+    public void findAssignableById_notTheAssessmentOwner() {
         Assessment assessment = setUpAssessment(getFelixWilson(), PENDING);
 
         loginSteveSmith();
@@ -126,7 +115,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findAssignableById_notAssignable() throws Exception {
+    public void findAssignableById_notAssignable() {
         Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
 
         loginFelixWilson();
@@ -136,7 +125,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findAssignableById_withdrawn() throws Exception {
+    public void findAssignableById_withdrawn() {
         Assessment assessment = setUpAssessment(getFelixWilson(), WITHDRAWN);
 
         loginFelixWilson();
@@ -147,7 +136,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findRejectableById() throws Exception {
+    public void findRejectableById() {
         Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
 
         loginFelixWilson();
@@ -157,7 +146,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findRejectableById_notFound() throws Exception {
+    public void findRejectableById_notFound() {
         long assessmentId = 999L;
 
         loginPaulPlum();
@@ -167,7 +156,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findRejectableById_notTheAssessmentOwner() throws Exception {
+    public void findRejectableById_notTheAssessmentOwner() {
         Assessment assessment = setUpAssessment(getFelixWilson(), PENDING);
 
         loginSteveSmith();
@@ -177,7 +166,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findRejectableById_notRejectable() throws Exception {
+    public void findRejectableById_notRejectable() {
         Assessment assessment = setUpAssessment(getFelixWilson(), SUBMITTED);
 
         loginFelixWilson();
@@ -187,7 +176,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findRejectableById_withdrawn() throws Exception {
+    public void findRejectableById_withdrawn() {
         Assessment assessment = setUpAssessment(getFelixWilson(), WITHDRAWN);
 
         loginFelixWilson();
@@ -198,7 +187,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findByUserAndCompetition() throws Exception {
+    public void findByUserAndCompetition() {
         Long userId = 3L;
         Long competitionId = 1L;
 
@@ -210,7 +199,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void countByStateAndCompetition() throws Exception {
+    public void countByStateAndCompetition() {
         Long competitionId = 1L;
 
         loginCompAdmin();
@@ -222,7 +211,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void getTotalScore() throws Exception {
+    public void getTotalScore() {
         loginPaulPlum();
 
         AssessmentTotalScoreResource result = controller.getTotalScore(1L).getSuccess();
@@ -231,7 +220,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void recommend() throws Exception {
+    public void recommend() {
         Long assessmentId = 2L;
 
         loginPaulPlum();
@@ -254,7 +243,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void getApplicationFeedback() throws Exception {
+    public void getApplicationFeedback() {
         long applicationId = 4L;
 
         AssessmentFundingDecisionOutcome outcome1 = new AssessmentFundingDecisionOutcome();
@@ -328,7 +317,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void accept() throws Exception {
+    public void accept() {
         Long assessmentId = 4L;
         Long processRole = 17L;
 
@@ -345,7 +334,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void withdrawAssessment() throws Exception {
+    public void withdrawAssessment() {
         Long assessmentId = 4L;
 
         loginPaulPlum();
@@ -362,7 +351,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void withdrawCreatedAssessment() throws Exception {
+    public void withdrawCreatedAssessment() {
         Long assessmentId = 9L;
 
         loginCompAdmin();
@@ -384,12 +373,9 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
                 .withUser(user)
                 .build());
 
-        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT,
-                state.getBackingState());
-
         return assessmentRepository.save(newAssessment()
                 .with(id(null))
-                .withActivityState(activityState)
+                .withProcessState(state)
                 .withParticipant(processRole)
                 .build());
     }

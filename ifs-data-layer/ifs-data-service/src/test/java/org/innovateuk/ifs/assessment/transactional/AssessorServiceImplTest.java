@@ -2,32 +2,52 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
+import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.AffiliationMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.resource.State;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -67,13 +87,56 @@ import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ProfileRepository profileRepositoryMock;
+
+    @Mock
+    private InnovationAreaMapper innovationAreaMapperMock;
+
+    @Mock
+    private AssessmentInviteService assessmentInviteServiceMock;
+
+    @Mock
+    private RegistrationService registrationServiceMock;
+
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+
+    @Mock
+    private UserMapper userMapperMock;
+
+    @Mock
+    private AssessorProfileMapper assessorProfileMapperMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+
+    @Mock
+    private NotificationSender notificationSenderMock;
+
+    @Mock
+    private AffiliationMapper affliationMapperMock;
+
+
 
     @InjectMocks
     private AssessorService assessorService = new AssessorServiceImpl();
@@ -84,7 +147,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void registerAssessorByHash_callCorrectServicesAndHaveSuccessfulOutcome() throws Exception {
+    public void registerAssessorByHash_callCorrectServicesAndHaveSuccessfulOutcome() {
         String hash = "testhash";
         String email = "email@example.com";
 
@@ -154,7 +217,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void registerAssessorByHash_inviteDoesNotExistResultsInFailureAndSkippingUserRegistrationAndInviteAcceptance() throws Exception {
+    public void registerAssessorByHash_inviteDoesNotExistResultsInFailureAndSkippingUserRegistrationAndInviteAcceptance() {
         String hash = "inviteHashNotExists";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
@@ -183,7 +246,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void registerAssessorByHash_userValidationFailureResultsInFailureAndNotAcceptingInvite() throws Exception {
+    public void registerAssessorByHash_userValidationFailureResultsInFailureAndNotAcceptingInvite() {
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
@@ -217,7 +280,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getAssessorProfile() throws Exception {
+    public void getAssessorProfile() {
         long assessorId = 7L;
         long profileId = 11L;
 
@@ -254,10 +317,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessorsByCompetition() throws Exception {
-        Long competitionId = 1L;
+    public void notifyAssessorsByCompetition() {
+        long competitionId = 1L;
 
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .withName("Test Competition")
@@ -271,7 +333,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2);
         List<Assessment> assessments = newAssessment()
                 .withId(2L, 3L)
-                .withActivityState(activityState)
+                .withProcessState(AssessmentState.CREATED)
                 .withApplication(
                         newApplication().withCompetition(competition).build(),
                         newApplication().withCompetition(competition).build()
@@ -317,7 +379,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         );
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
-        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId)).thenReturn(assessments);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
@@ -334,7 +396,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
-        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
         inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification1);
@@ -348,10 +410,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessorsByCompetition_oneEmailPerUser() throws Exception {
+    public void notifyAssessorsByCompetition_oneEmailPerUser() {
         Long competitionId = 1L;
 
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .withName("Test Competition")
@@ -362,7 +423,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         List<Assessment> assessments = newAssessment()
                 .withId(2L, 3L)
-                .withActivityState(activityState)
+                .withProcessState(AssessmentState.CREATED)
                 .withApplication(
                         newApplication().withCompetition(competition).build(),
                         newApplication().withCompetition(competition).build()
@@ -390,7 +451,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         );
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
-        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId)).thenReturn(assessments);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
@@ -403,7 +464,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
-        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
         inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification);
@@ -412,11 +473,10 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
         assertTrue(serviceResult.getErrors().isEmpty());
-
     }
 
     @Test
-    public void notifyAssessorsByCompetition_competitionNotFound() throws Exception {
+    public void notifyAssessorsByCompetition_competitionNotFound() {
         long competitionId = 1L;
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
@@ -432,20 +492,18 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessorsByCompetition_oneTransitionFails() throws Exception {
-        Long competitionId = 1L;
-
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+    public void notifyAssessorsByCompetition_oneTransitionFails() {
+        long competitionId = 1L;
 
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .build();
         List<Assessment> assessments = newAssessment()
-                .withActivityState(activityState)
+                .withProcessState(AssessmentState.CREATED)
                 .withId(2L, 3L)
                 .build(2);
 
-        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
+        when(assessmentRepositoryMock.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId))
                 .thenReturn(assessments);
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
@@ -455,7 +513,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
-        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
         inOrder.verifyNoMoreInteractions();
@@ -466,20 +524,18 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessorsByCompetition_allTransitionsFail() throws Exception {
-        Long competitionId = 1L;
-
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+    public void notifyAssessorsByCompetition_allTransitionsFail() {
+        long competitionId = 1L;
 
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .build();
         List<Assessment> assessments = newAssessment()
-                .withActivityState(activityState)
+                .withProcessState(AssessmentState.CREATED)
                 .withId(2L, 3L)
                 .build(2);
 
-        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
+        when(assessmentRepositoryMock.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId))
                 .thenReturn(assessments);
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(false);
@@ -489,7 +545,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
-        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
         inOrder.verifyNoMoreInteractions();

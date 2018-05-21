@@ -2,9 +2,6 @@ bootRun {
     addResources = false
 }
 
-configurations {
-    providedRuntime
-}
 project.version = applicationServiceVersion
 tagDocker.tag = applicationServiceVersion
 osStageRemote.tag = applicationServiceVersion
@@ -21,12 +18,20 @@ def enabled = project.hasProperty('ifs.application-service.enabled') ? project.p
     task.enabled = enabled
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(":ifs-commons").sourceSets.test.output
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 
     testCompile "com.openpojo:openpojo:0.8.6"
@@ -34,5 +39,6 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
+jar.dependsOn ":ifs-web-service:gulp_default"
 
 

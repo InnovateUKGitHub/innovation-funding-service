@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interview.transactional;
 
-
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
@@ -269,7 +268,6 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
         ));
     }
 
-
     @Override
     public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
         List<InterviewParticipant> participants = interviewParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
@@ -451,15 +449,15 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     private void determineStatusOfPanelApplications(InterviewParticipantResource interviewParticipantResource) {
 
         List<Interview> reviews = interviewRepository.
-                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                         interviewParticipantResource.getUserId(),
                         interviewParticipantResource.getCompetitionId());
 
         interviewParticipantResource.setAwaitingApplications(getApplicationsPendingForPanelCount(reviews));
     }
 
-    private Long getApplicationsPendingForPanelCount(List<Interview> reviews) {
-        return reviews.stream().filter(review -> review.getActivityState().equals(InterviewState.PENDING)).count();
+    private long getApplicationsPendingForPanelCount(List<Interview> interviews) {
+        return (long) interviews.size();
     }
 
     private void updateParticipantStatus(InterviewInvite invite){

@@ -3,24 +3,14 @@ package org.innovateuk.ifs.application.forms.controller;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.service.FormInputResponseRestService;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -46,90 +36,36 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidati
 @RequestMapping("/application")
 public class ApplicationSubmitController {
 
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
-    private SectionService sectionService;
-
-    @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
     private ApplicationRestService applicationRestService;
-
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
-
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    @Autowired
-    private FormInputResponseService formInputResponseService;
+    public ApplicationSubmitController() {
+    }
 
     @Autowired
-    private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
-    @Autowired
-    private UserRestService userRestService;
-
-    @Autowired
-    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-
-    @Autowired
-    private AssessmentRestService assessmentRestService;
-
-    @Autowired
-    private ProjectService projectService;
+    public ApplicationSubmitController(QuestionService questionService,
+                                       ProcessRoleService processRoleService,
+                                       ApplicationService applicationService,
+                                       ApplicationRestService applicationRestService,
+                                       CompetitionService competitionService,
+                                       ApplicationModelPopulator applicationModelPopulator,
+                                       CookieFlashMessageFilter cookieFlashMessageFilter) {
+        this.questionService = questionService;
+        this.processRoleService = processRoleService;
+        this.applicationService = applicationService;
+        this.applicationRestService = applicationRestService;
+        this.competitionService = competitionService;
+        this.applicationModelPopulator = applicationModelPopulator;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+    }
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
-    }
-
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
-    @GetMapping("/{applicationId}/summary")
-    public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     UserResource user) {
-        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
-        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
-
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.of(Boolean.FALSE));
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-
-        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
-
-        ProjectResource project = projectService.getByApplicationId(applicationId);
-        boolean projectWithdrawn = (project != null && project.isWithdrawn());
-        model.addAttribute("projectWithdrawn", projectWithdrawn);
-
-        if (competition.getCompetitionStatus().isFeedbackReleased()) {
-            model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
-            model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
-                    .getSuccess()
-                    .getFeedback()
-            );
-
-            return "application-feedback-summary";
-        } else {
-            return "application-summary";
-        }
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
@@ -168,7 +104,7 @@ public class ApplicationSubmitController {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
+        applicationModelPopulator.addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
         return "application-confirm-submit";
     }
 
@@ -198,17 +134,15 @@ public class ApplicationSubmitController {
     public String applicationTrack(Model model,
                                    @PathVariable("applicationId") long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
+
+        if (!application.isSubmitted()) {
+            return "redirect:/application/" + applicationId;
+        }
+
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
         return "application-track";
     }
-
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, final Model model, final ApplicationForm form, List<ProcessRoleResource> userApplicationRoles, final Optional<Boolean> markAsCompleteEnabled) {
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
-    }
-
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form, List<ProcessRoleResource> userApplicationRoles, final Optional<Boolean> markAsCompleteEnabled) {
-        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
-        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
-    }
 }
+
+

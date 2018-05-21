@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.threads.attachments.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.threads.attachments.service.AttachmentsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
-
 public abstract class AttachmentController<R> {
 
     private final AttachmentsService<R> service;
+
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     public AttachmentController(AttachmentsService<R> service) {
         this.service = service;
@@ -40,6 +41,6 @@ public abstract class AttachmentController<R> {
 
     @GetMapping(value = "/download/{attachmentId}", produces = "application/json")
     public @ResponseBody ResponseEntity<Object> downloadFile(@PathVariable("attachmentId") Long attachmentId) throws IOException {
-        return handleFileDownload(() -> service.attachmentFileAndContents(attachmentId));
+        return fileControllerUtils.handleFileDownload(() -> service.attachmentFileAndContents(attachmentId));
     }
 }

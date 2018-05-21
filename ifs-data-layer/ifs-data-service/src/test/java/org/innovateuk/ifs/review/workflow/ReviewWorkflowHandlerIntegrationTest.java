@@ -8,9 +8,6 @@ import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -31,21 +28,15 @@ import static org.mockito.Mockito.when;
 
 @Transactional
 public class ReviewWorkflowHandlerIntegrationTest
-        extends BaseWorkflowHandlerIntegrationTest<
-        ReviewWorkflowHandler,
-        ReviewRepository, TestableTransitionWorkflowAction> {
-
-    private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_REVIEW;
+        extends BaseWorkflowHandlerIntegrationTest<ReviewWorkflowHandler, ReviewRepository, TestableTransitionWorkflowAction> {
 
     @Autowired
     private ReviewWorkflowHandler workflowHandler;
 
-    private ActivityStateRepository activityStateRepositoryMock;
     private ReviewRepository repositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         repositoryMock = (ReviewRepository) mockSupplier.apply(ReviewRepository.class);
     }
 
@@ -127,10 +118,6 @@ public class ReviewWorkflowHandlerIntegrationTest
         return ReviewRepository.class;
     }
 
-    private ActivityType getActivityType() {
-        return ACTIVITY_TYPE;
-    }
-
     private ReviewRepository getRepositoryMock() {
         return repositoryMock;
     }
@@ -148,14 +135,10 @@ public class ReviewWorkflowHandlerIntegrationTest
         Review workflowProcess = buildWorkflowProcessWithInitialState(initialState);
         when(getRepositoryMock().findOneByTargetId(workflowProcess.getId())).thenReturn(workflowProcess);
 
-        ActivityState expectedActivityState = new ActivityState(getActivityType(), expectedState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(getActivityType(), expectedState.getBackingState())).thenReturn(expectedActivityState);
-
         assertTrue(workflowHandlerMethod.apply(workflowProcess));
 
-        assertEquals(expectedState, workflowProcess.getActivityState());
+        assertEquals(expectedState, workflowProcess.getProcessState());
 
-        verify(activityStateRepositoryMock).findOneByActivityTypeAndState(getActivityType(), expectedState.getBackingState());
         verify(getRepositoryMock()).save(workflowProcess);
 
         if (additionalVerifications != null) {

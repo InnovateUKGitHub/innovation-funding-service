@@ -61,7 +61,7 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testGetEligibility() {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
 
         when(projectFinanceRestService.getEligibility(123L, 456L)).thenReturn(restSuccess(eligibility));
 
@@ -72,12 +72,12 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testSaveEligibility() {
 
-        when(projectFinanceRestService.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityRagStatus.GREEN)).thenReturn(restSuccess());
+        when(projectFinanceRestService.saveEligibility(123L, 456L, EligibilityState.APPROVED, EligibilityRagStatus.GREEN)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        ServiceResult<Void> result = service.saveEligibility(123L, 456L, EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
 
         assertTrue(result.isSuccess());
 
-        verify(projectFinanceRestService).saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        verify(projectFinanceRestService).saveEligibility(123L, 456L, EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
     }
 }

@@ -214,7 +214,7 @@ get organisation id by name
 get table id by name
     [Arguments]  ${table}  ${name}
     Connect to Database  @{database}
-    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`='${name}';
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`="${name}";
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0
@@ -231,13 +231,22 @@ verify first date is greater than or equal to second
     Should be true  '${date1}'>='${date2}'
 
 Set predefined date variables
+    ${status}  ${value} =  run keyword and ignore error  Variable Should Exist  ${tomorrowday}
+    Run Keyword If  '${status}' == 'FAIL'  Set global date variables
+
+Set global date variables
     ${month} =          get tomorrow month
-    set suite variable  ${month}
+    set global variable  ${month}
     ${nextMonth} =  get next month
-    set suite variable  ${nextMonth}
+    set global variable  ${nextMonth}
     ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
+    Set global variable  ${nextyear}
     ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
+    Set global variable  ${tomorrowday}
     ${monthWord} =      get month as word
-    set suite variable  ${monthWord}
+    set global variable  ${monthWord}
+
+Delete user from terms and conditions database
+    [Arguments]    ${user_id}
+    Connect to Database  @{database}
+    execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}';
