@@ -33,7 +33,7 @@ public interface InterviewAllocationService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_ALLOCATED_APPLICATIONS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve allocated applications")
-    ServiceResult<InterviewApplicationPageResource> getAllocatedApplicationsById(long competition,
+    ServiceResult<InterviewApplicationPageResource> getAllocatedApplications(long competition,
                                                                                  long assessorUserId,
                                                                                  Pageable pageable);
 

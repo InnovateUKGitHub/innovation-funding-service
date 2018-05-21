@@ -197,7 +197,6 @@ Applicant can remove the uploaded response
 CompAdmin can access the Allocate applications to assessors screen
     [Documentation]  IFS-3435  IFS-3436  IFS-3450
     [Tags]
-    Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery=a:contains("${assessor_joel}")
     And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
@@ -212,9 +211,10 @@ CompAdmin allocate applications to assessor
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
     And the user clicks the button/link      jQuery=tr:contains("${computer_vision_application}") label
-    When the user clicks the button/link     css=.button  #Allocat
+    When the user clicks the button/link     css=.button[name="addSelected"]  #Allocate
     Then the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Remove")
-    And the compAdmin remove aaplication from notify assessor list
+    And the compAdmin can cancel allocating applications to assessor
+    And the compAdmin removes the application from notify list
     When the user clicks the button/link     css=input[type="submit"]   #Notify
     Then the user reads his email            ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
 
@@ -300,8 +300,14 @@ the compAdmin checks the status for response uploaded applicantion
     log in as a different user        &{Comp_admin1_credentials}
     the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
 
-the compAdmin remove aaplication from notify assessor list
+the compAdmin removes the application from notify list
     the user clicks the button/link   jQuery=td:contains("${computer_vision_application}") ~ td:contains("Remove")
     the user clicks the button/link   link=Applications allocated for interview
     the user should see the element   jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
-    the user clicks the button/link   css=.button  #Allocat
+    the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
+
+the compAdmin can cancel allocating applications to assessor
+    the user clicks the button/link    link= Cancel
+    the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/unallocated-applications/${assessor_joel_id}
+    the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
+

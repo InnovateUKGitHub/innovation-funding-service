@@ -22,7 +22,7 @@ public interface InterviewAllocationRestService {
 
     RestResult<InterviewApplicationPageResource> getUnallocatedApplications(long competitionId, long assessorId, int page);
 
-    RestResult<List<InterviewApplicationResource>> getAllocatedApplications(long competitionId, List<Long> applicationIds);
+    RestResult<List<InterviewApplicationResource>> getAllocatedApplicationsById(long competitionId, List<Long> applicationIds);
 
     RestResult<List<Long>> getUnallocatedApplicationIds(long competitionId, long assessorId);
 
