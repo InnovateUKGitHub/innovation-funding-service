@@ -281,7 +281,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         FileTypeCategory allowedFileTypes = FileTypeCategory.fromDisplayName("XLSX");
 
         resource.setAppendix(false);
-        resource.setAllowedFileTypes(asSet((PDF)));
+        resource.setAllowedFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput()
