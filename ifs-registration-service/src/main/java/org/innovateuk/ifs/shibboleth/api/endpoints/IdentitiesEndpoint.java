@@ -126,9 +126,9 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
                                                BindingResult bindingResult)
             throws InvalidPasswordException {
 
-        if (bindingResult.hasFieldErrors("change")) {
+        if (bindingResult.hasFieldErrors("password")) {
 
-            List<String> errors = bindingResult.getFieldErrors("change")
+            List<String> errors = bindingResult.getFieldErrors("password")
                     .stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList());
