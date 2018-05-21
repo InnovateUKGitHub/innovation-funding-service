@@ -111,7 +111,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
 
                             Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
                             if (financeContact.isPresent()) {
-                                ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), project.getId(), project);
+                                ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), project);
 
                                 if (!notificationResult.isSuccess()) {
                                     return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
@@ -150,7 +150,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
 
     }
 
-    private ServiceResult<Void> sendNewQueryNotification(User financeContact, Long projectId, Project project) {
+    private ServiceResult<Void> sendNewQueryNotification(User financeContact, Project project) {
 
         NotificationSource from = systemNotificationSource;
         String fullName = financeContact.getName();
@@ -158,7 +158,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         NotificationTarget pmTarget = new UserNotificationTarget(fullName, financeContact.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
+        notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + project.getId());
         notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
         notificationArguments.put("applicationId", project.getApplication().getId());
 
