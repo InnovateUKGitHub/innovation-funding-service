@@ -145,7 +145,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
     @PostMapping("/allocate-applications/{userId}/addSelected")
     public String allocateApplications(@PathVariable("competitionId") long competitionId,
                                        @PathVariable("userId") long userId) {
-        return redirectToSend(competitionId, userId).get();
+        return redirectToSend(competitionId, userId);
     }
 
     @GetMapping("/allocate-applications/{userId}")
@@ -185,8 +185,14 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                  @PathVariable("competitionId") long competitionId,
                                  @PathVariable("userId") long userId,
                                  ValidationHandler validationHandler,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
         Supplier<String> failureView = () -> "foo";
+        Supplier<String> successView = () -> {
+            removeCookie(response, combineIds(competitionId, userId));
+            return redirectToAllocatedTab(competitionId, userId);
+        };
+
         return ifSelectionFormIsNotEmpty(competitionId, userId, request, selectionForm ->
             validationHandler
                 .failNowOrSucceedWith(
@@ -206,7 +212,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                     .addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
                                     .failNowOrSucceedWith(
                                             failureView,
-                                            redirectToAllocatedTab(competitionId, userId)
+                                            successView
                                     );
                         }
                 )
@@ -226,7 +232,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                 selectionForm.setAllSelected(false);
                 saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
             }
-            return redirectToSend(competitionId, userId).get();
+            return redirectToSend(competitionId, userId);
         });
     }
 
@@ -235,28 +241,28 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                 .filter(f -> !f.getSelectedIds().isEmpty());
 
         if (!maybeSelectionForm.isPresent()) {
-            return redirectToUnallocatedTab(competitionId, userId).get();
+            return redirectToUnallocatedTab(competitionId, userId);
         } else {
             return success.apply(maybeSelectionForm.get());
         }
     }
 
-    private Supplier<String> redirectToAllocatedTab(long competitionId, long userId) {
-        return () -> "redirect:" + UriComponentsBuilder
+    private String redirectToAllocatedTab(long competitionId, long userId) {
+        return "redirect:" + UriComponentsBuilder
                 .fromPath("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}")
                 .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
                 .toUriString();
     }
 
-    private Supplier<String> redirectToUnallocatedTab(long competitionId, long userId) {
-        return () -> "redirect:" + UriComponentsBuilder
+    private String redirectToUnallocatedTab(long competitionId, long userId) {
+        return  "redirect:" + UriComponentsBuilder
                 .fromPath("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}")
                 .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
                 .toUriString();
     }
 
-    private Supplier<String> redirectToSend(long competitionId, long userId) {
-        return () -> "redirect:" + UriComponentsBuilder
+    private String redirectToSend(long competitionId, long userId) {
+        return  "redirect:" + UriComponentsBuilder
                 .fromPath("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}")
                 .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
                 .toUriString();

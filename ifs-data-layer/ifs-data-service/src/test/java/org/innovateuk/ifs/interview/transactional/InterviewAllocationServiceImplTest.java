@@ -36,16 +36,15 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.newInterviewParticipant;
 import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -272,7 +271,9 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     public void notifyAllocation() {
         Competition competition = newCompetition().build();
         User user = newUser().withFirstName("tom").withLastName("baldwin").withEmailAddress("tom@poly.io").build();
-        InterviewParticipant interviewParticipant = newInterviewParticipant().withUser(user).build();
+        InterviewParticipant interviewParticipant = newInterviewParticipant().withUser(user)
+                .withCompetition(newCompetition().build())
+                .build();
         String subject = "subject";
         String content = "content";
         List<Application> applications = newApplication().build(1);
@@ -280,7 +281,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         InterviewNotifyAllocationResource interviewNotifyAllocationResource =
                 new InterviewNotifyAllocationResource(competition.getId(), user.getId(), subject, content, simpleMap(applications, Application::getId));
 
-        Interview interview = new Interview(applications.get(0), interviewParticipant);
+        Interview interview = new Interview(applications.get(0), interviewParticipant);     
 
         Notification expectedNotification = new Notification(
                 systemNotificationSourceMock,
@@ -289,7 +290,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
                 asMap(
                         "subject", subject,
                         "name", user.getName(),
-                        "competitionName", interviewParticipant.getProcess(),
+                        "competitionName", interviewParticipant.getProcess().getName(),
                         "customTextPlain", content,
                         "customTextHtml", content
                 ));

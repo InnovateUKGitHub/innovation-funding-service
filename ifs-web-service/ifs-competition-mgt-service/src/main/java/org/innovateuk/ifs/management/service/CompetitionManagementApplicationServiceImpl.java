@@ -114,13 +114,18 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("showApplicationTeamLink", applicationService.showApplicationTeam(application.getId(), user.getId()));
 
         model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, assessorId, queryParams));
-        String params = UriComponentsBuilder.newInstance()
+        UriComponentsBuilder builder =  UriComponentsBuilder.newInstance()
                 .queryParam("origin", origin)
-                .queryParams(queryParams)
+                .queryParams(queryParams);
+
+        if (assessorId.isPresent()) {
+            builder.queryParam("assessorId", assessorId.get());
+        }
+
+        model.addAttribute("queryParams", builder
                 .build()
                 .encode()
-                .toUriString();
-        model.addAttribute("queryParams", params);
+                .toUriString());
 
         return "competition-mgt-application-overview";
     }

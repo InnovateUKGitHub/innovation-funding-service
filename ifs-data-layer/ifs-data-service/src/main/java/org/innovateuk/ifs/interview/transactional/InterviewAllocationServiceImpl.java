@@ -28,11 +28,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -240,7 +238,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
                 asMap(
                         "subject", subject,
                         "name", assessorUser.getName(),
-                        "competitionName", interviewParticipant.getProcess(),
+                        "competitionName", interviewParticipant.getProcess().getName(),
                         "customTextPlain", customTextPlain,
                         "customTextHtml", customTextHtml
                 ));
