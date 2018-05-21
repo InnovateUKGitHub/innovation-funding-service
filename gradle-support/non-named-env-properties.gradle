@@ -50,6 +50,8 @@ ext.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+proje
 
 ext.FILE_UPLOAD_CLAIM="file-upload-claim"
 
+ext.PROTOTYPES_ADDRESS="prototypes-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+
 //for db reset
 ext.DB_NAME="ifs"
 ext.DB_USER="root"
@@ -73,3 +75,4 @@ ext.FINANCE_DB_HOST="ifs-finance-database"
 ext.FINANCE_DB_PORT=3306
 
 ext.DATA_SERVICE_HOST="data-service"
+

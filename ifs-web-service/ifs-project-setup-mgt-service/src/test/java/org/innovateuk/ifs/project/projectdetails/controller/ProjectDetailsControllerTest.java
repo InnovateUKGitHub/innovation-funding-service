@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -40,7 +41,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(Collections.singletonList(IFS_ADMINISTRATOR)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(IFS_ADMINISTRATOR)).build());
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(competitionId)
@@ -256,6 +257,33 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         verify(projectDetailsService).updateProjectDuration(projectId, 18L);
     }
 
+
+    @Test
+    public void withdrawProject() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 3L;
+        ProjectResource project = newProjectResource()
+                .withApplication(applicationId)
+                .build();
+
+        setLoggedInUser(newUserResource()
+                                .withRolesGlobal(singletonList(IFS_ADMINISTRATOR))
+                                .build());
+
+        when(projectRestService.withdrawProject(project.getId())).thenReturn(restSuccess());
+        when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
+        when(applicationRestService.withdrawApplication(applicationId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/withdraw"))
+                .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        verify(projectRestService).withdrawProject(project.getId());
+        verify(projectRestService).getProjectById(project.getId());
+        verify(applicationRestService).withdrawApplication(applicationId);
+    }
+
     private  List<ProjectUserResource> buildProjectUsers(OrganisationResource leadOrganisation, OrganisationResource partnerOrganisation) {
 
         ProjectUserResource leadPartnerProjectUser = newProjectUserResource().
@@ -294,20 +322,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
         return new ProjectDetailsController();
-    }
-
-    @Test
-    public void withdrawProject() throws Exception {
-        long competitionId = 1L;
-        long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(Collections.singletonList(IFS_ADMINISTRATOR)).build());
-        when(projectRestService.withdrawProject(projectId)).thenReturn(restSuccess());
-
-        MvcResult result = mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/withdraw"))
-                .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
-                .andReturn();
-
-        verify(projectRestService).withdrawProject(projectId);
     }
 }
 

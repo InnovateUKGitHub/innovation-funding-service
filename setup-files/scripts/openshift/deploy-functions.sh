@@ -27,6 +27,32 @@ function isProductionEnvironment() {
     fi
 }
 
+function isSysIntEnvironment() {
+
+    TARGET=$1
+
+    if [[ ${TARGET} != "sysint" ]]; then
+        exit 1
+    else
+        exit 0
+    fi
+}
+
+function isServiceEnabled() {
+
+    SERVICE=$1
+    GRADLE_PROPERTIES_FILE=~/.gradle/gradle.properties
+
+    ENABLED=`cat "$GRADLE_PROPERTIES_FILE" | grep -v '^#' | grep "$SERVICE" | cut -d'=' -f2`
+
+    if [[ -n "$ENABLED" && "$ENABLED" == true ]]; then
+        exit 0
+    else
+        exit 1
+    fi
+}
+
+
 function getProjectName() {
 
     PROJECT=$1
@@ -173,6 +199,7 @@ function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/mysql/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/prototypes/*.yml
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/sil-stub/*.yml
@@ -186,6 +213,7 @@ function useContainerRegistry() {
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mail/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/prototypes/*.yml
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-baseline/*.yml

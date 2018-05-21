@@ -196,4 +196,22 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         RestResult<Void> result = controller.informIneligible(APPLICATION_SUBMITTABLE_ID, applicationIneligibleSendResource);
         assertTrue(result.isSuccess());
     }
+
+    @Rollback
+    @Test
+    public void withdrawApplication() {
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.APPROVED);
+
+        loginIfsAdmin();
+
+        RestResult<Void> result = controller.withdrawApplication(APPLICATION_SUBMITTABLE_ID);
+
+        loginCompAdmin();
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess();
+
+        assertTrue(result.isSuccess());
+        assertEquals(ApplicationState.WITHDRAWN, applicationAfter.getApplicationState());
+    }
 }
