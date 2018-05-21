@@ -23,6 +23,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,7 +38,9 @@ import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.CRE
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<InterviewRepository> {
 
@@ -224,4 +228,23 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     }
 
+    @Test
+    public void findAll() {
+        List<InterviewApplicationResource> interviewApplicationResources = repository.findAll( asList(application1.getId(), application2.getId()) );
+
+        assertEquals(2, interviewApplicationResources.size());
+        // TODO
+    }
+
+    @Test
+    public void unallocateApplicationFromAssessor() {
+
+        List<Interview> allocated = repository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(assessor.getId(), competition.getId());
+        assertEquals(1, allocated.size());
+
+        repository.deleteOneByParticipantUserIdAndTargetId(assessor.getId(), application2.getId());
+
+        List<Interview> allocatedAfterDeletion = repository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(assessor.getId(), competition.getId());
+        assertTrue(allocatedAfterDeletion.isEmpty());
+    }
 }

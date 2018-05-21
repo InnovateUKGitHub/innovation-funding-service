@@ -20,8 +20,10 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " FROM InterviewAssignment interviewAssignment " +
             " WHERE " +
             " interviewAssignment.target.competition.id = :competitionId AND " +
-            " interviewAssignment.activityState IN (org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE) ";
-
+            " interviewAssignment.activityState IN (" +
+            "   org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, " +
+            "   org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE " +
+            " ) ";
 
     String INTERVIEW_PAGE_RESOURCE_QUERY =
             " SELECT NEW org.innovateuk.ifs.interview.resource.InterviewApplicationResource(" +
@@ -92,4 +94,29 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " AND NOT EXISTS " +
             ASSIGNED_INTERVIEW_SUB_QUERY)
     List<Long> findApplicationIdsNotAssignedToAssessor(long competitionId, long assessorId);
+
+    @Query(
+            " SELECT NEW org.innovateuk.ifs.interview.resource.InterviewApplicationResource( " +
+            "   interviewAssignment.target.id, " +
+            "   interviewAssignment.target.name, " +
+            "   organisation.name, " +
+            "   count(interviews) " +
+            " ) " +
+            " FROM InterviewAssignment interviewAssignment " +
+            " JOIN ProcessRole processRole ON processRole.applicationId = interviewAssignment.target.id " +
+            " JOIN Organisation organisation ON organisation.id = processRole.organisationId " +
+            " LEFT JOIN Interview interviews ON interviews.target.id = interviewAssignment.target.id" +
+            " AND interviews.class = Interview " +
+            " WHERE " +
+            "   processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
+            "   processRole.applicationId IN (:applicationIds) AND " +
+            "   interviewAssignment.activityState IN (" +
+            "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, " +
+            "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE " +
+            " ) " +
+            " GROUP BY interviewAssignment.target.id "
+    )
+    List<InterviewApplicationResource> findAll(List<Long> applicationIds);
+
+    void deleteOneByParticipantUserIdAndTargetId(long userId, long applicationId);
 }

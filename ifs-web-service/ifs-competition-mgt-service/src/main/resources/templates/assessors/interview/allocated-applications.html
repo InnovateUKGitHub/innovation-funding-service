@@ -48,11 +48,11 @@
     </div>
 
     <ul class="inline-nav extra-margin">
-        <li class="selected">
+        <li class="not-selected">
             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
                th:text="${'Applications (' + model.unallocatedApplications + ')' }"></a>
         </li>
-        <li class="not-selected">
+        <li class="selected">
             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
                th:text="${'Allocated (' + model.allocatedApplications + ')' }"></a>
         </li>
@@ -66,63 +66,28 @@
     <div class="grid-row sorting">
         <div class="column-one">
             <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-            <span class="heading-small">applications</span>
+            <span class="heading-small">applications allocated to this assessor</span>
         </div>
     </div>
 
-    <form method="POST"
-          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}/addSelected(competitionId=${model.competitionId}, userId=${model.user.id})}"
-          th:object="${interviewAllocationSelectionForm}"
-          data-multipage-select=""
-          th:attr="data-total-checkboxes=${model.pagination.totalCount}">
-
-        <div class="grid-row sorting">
-            <div class="column-half select-all">
-                <div class="multiple-choice">
-                    <input type="checkbox"
-                           data-select-all=""
-                           id="select-all-check"
-                           th:checked="${interviewAllocationSelectionForm.getAllSelected()}"
-                           th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
-                    <label for="select-all-check">
-                        Select all applications
-                    </label>
-                </div>
-                <span class="form-hint">
-                    <span data-count-selected="" th:text="${#lists.size(interviewAllocationSelectionForm.selectedIds)}"></span> applications selected
-                </span>
-            </div>
-            <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAllocationSelectionForm.selectedIds)}">
-                    Allocate
-                </button>
-            </div>
-        </div>
+    <form
+          method="POST"
+          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+          th:object="${form}">
 
         <div class="table-overflow">
             <table>
                 <thead>
                 <tr>
-                    <th scope="col">Select</th>
                     <th scope="col" class="width-small">Application number</th>
                     <th scope="col">Project title</th>
                     <th scope="col">Lead organisation</th>
-                    <th class="alignright" scope="col">Assessors</th>
+                    <th scope="col" class="numeric">Assessors</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="row, index : ${model.rows}">
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox"
-                                   th:id="|assessor-row-${index.count}|"
-                                   th:field="*{selectedIds}"
-                                   th:value="${row.id}"/>
-                            <label th:for="|assessor-row-${index.count}|">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
                     <td>
                         <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
                            th:text="${row.id}">123
@@ -134,12 +99,17 @@
                     <td>
                         <span th:text="${row.leadOrganisation}">Lead organisation</span>
                     </td>
-                    <td class="alignright">
+                    <td class="numeric">
                         <span th:text="${row.numberOfAssessors}">1</span>
                     </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(model.rows)}">
-                    <td colspan="5">No available applications found.</td>
+                    <td class="alignright">
+                        <button class="buttonlink"
+                                name="removeApplication"
+                                th:value="${row.id}"
+                                type="submit">
+                            Remove
+                        </button>
+                    </td>
                 </tr>
                 </tbody>
             </table>

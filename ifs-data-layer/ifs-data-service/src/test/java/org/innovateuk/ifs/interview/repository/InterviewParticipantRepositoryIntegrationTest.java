@@ -1,19 +1,25 @@
 package org.innovateuk.ifs.interview.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
+import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +33,11 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.interview.builder.InterviewBuilder.newInterview;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -37,6 +45,7 @@ import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
@@ -65,6 +74,15 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
     @Autowired
     private InterviewParticipantRepository interviewParticipantRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private InterviewRepository interviewRepository;
 
     @Autowired
     @Override
@@ -236,6 +254,18 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
                 .withStatus(SENT)
                 .build(1);
 
+        Application application = newApplication().withCompetition(competition).build();
+
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole().withApplication(application).withUser(user).build();
+
+        processRoleRepository.save(processRole);
+
+        Interview interview = newInterview().withTarget(application).withState(InterviewState.ASSIGNED).withParticipant(processRole).build();
+
+        interviewRepository.save(interview);
+
         List<InterviewParticipant> InterviewParticipants = saveNewInterviewParticipants(newAssessorInvites);
 
         InterviewParticipants.get(0).getInvite().open();
@@ -262,21 +292,10 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         assertEquals(1, content.size());
         assertEquals("Kieran Hester", content.get(0).getName());
+        assertEquals(1L, content.get(0).getNumberOfAllocatedApplications());
     }
 
-    private InterviewParticipant saveNewInterviewParticipant(InterviewInvite invite) {
-        return repository.save(new InterviewParticipant(invite));
-    }
 
-    private List<InterviewParticipant> saveNewInterviewParticipants(List<InterviewInvite> invites) {
-        return invites.stream().map(assessmentPanelInvite ->
-                repository.save(new InterviewParticipant(assessmentPanelInvite))).collect(toList());
-    }
-
-    private void assertEqualParticipants(List<InterviewParticipant> expected, List<InterviewParticipant> actual) {
-        List<InterviewParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
-        zip(expected, subList, this::assertEqualParticipants);
-    }
 
     @Test
     public void findByUserIdAndRole() {
@@ -315,6 +334,57 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         List<InterviewParticipant> retrievedParticipants = repository.findByUserIdAndRole(user.getId(), INTERVIEW_ASSESSOR);
         assertEquals(1, retrievedParticipants.size());
         assertEqualParticipants(savedParticipants, retrievedParticipants);
+    }
+
+    @Test
+    public void findByUserIdAndCompetitionId() {
+        loginSteveSmith();
+
+        Competition competition = newCompetition()
+                .with(id(null))
+                .build();
+        competitionRepository.save(competition);
+
+        User user = newUser()
+                .with(id(null))
+                .withEmailAddress("tom@poly.io")
+                .withUid("foo")
+                .build();
+
+        userRepository.save(user);
+
+        InterviewParticipant savedParticipant = saveNewInterviewParticipant(
+                newInterviewInviteWithoutId()
+                        .withName("name1")
+                        .withHash(Invite.generateInviteHash())
+                        .withEmail("test1@test.com")
+                        .withHash(generateInviteHash())
+                        .withCompetition(competition)
+                        .withStatus(OPENED)
+                        .withUser(user)
+                        .build()
+        );
+        savedParticipant.acceptAndAssignUser(user);
+
+        interviewParticipantRepository.save(savedParticipant);
+        flushAndClearSession();
+
+        InterviewParticipant retrievedParticipant = interviewParticipantRepository.findByUserIdAndCompetitionIdAndRole(user.getId(), competition.getId(), CompetitionParticipantRole.INTERVIEW_ASSESSOR);
+        assertEqualParticipants(savedParticipant, retrievedParticipant);
+    }
+
+    private InterviewParticipant saveNewInterviewParticipant(InterviewInvite invite) {
+        return repository.save(new InterviewParticipant(invite));
+    }
+
+    private List<InterviewParticipant> saveNewInterviewParticipants(List<InterviewInvite> invites) {
+        return invites.stream().map(assessmentPanelInvite ->
+                repository.save(new InterviewParticipant(assessmentPanelInvite))).collect(toList());
+    }
+
+    private void assertEqualParticipants(List<InterviewParticipant> expected, List<InterviewParticipant> actual) {
+        List<InterviewParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
+        zip(expected, subList, this::assertEqualParticipants);
     }
 
     private void assertEqualParticipants(InterviewParticipant expected, InterviewParticipant actual) {
