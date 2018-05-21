@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -100,7 +102,7 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return withArraySetFieldByReflection("active", active);
     }
 
-    public FormInputBuilder withAllowedFileTypes(String... allowedFileTypes) {
+    public FormInputBuilder withAllowedFileTypes(Collection<FileTypeCategory>... allowedFileTypes) {
         return withArraySetFieldByReflection("allowedFileTypes", allowedFileTypes);
     }
 }

@@ -45,25 +45,4 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
 
         return object.getId();
     }
-
-    public Set<FileTypeCategory> mapToFileTypeEnums(String allowedFileTypes) {
-        if (allowedFileTypes == null) {
-            return emptySet();
-        }
-
-        return simpleMapSet(
-                StringUtils.commaDelimitedListToStringArray(allowedFileTypes),
-                FileTypeCategory::fromDisplayName
-        );
-    }
-
-    public String mapToFileTypesString(Set<FileTypeCategory> allowedFileTypes) {
-        if (allowedFileTypes == null) {
-            return null;
-        }
-
-        return String.join(",",
-                simpleMap(allowedFileTypes,
-                        FileTypeCategory::getDisplayName));
-    }
 }

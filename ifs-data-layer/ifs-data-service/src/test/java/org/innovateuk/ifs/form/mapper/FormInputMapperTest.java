@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -48,7 +49,7 @@ public class FormInputMapperTest {
 
         FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
 
-        assertEquals(result.getAllowedFileTypes(), "PDF");
+        assertEquals(result.getAllowedFileTypes(), singletonList(FileTypeCategory.PDF));
     }
 
     @Test
@@ -64,29 +65,13 @@ public class FormInputMapperTest {
 
         FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
 
-        assertEquals(result.getAllowedFileTypes(), "Spreadsheet");
-    }
-
-    @Test
-    public void mapToDomain_multipleFileTypeCategoriesShouldBeConcatenated() {
-        FormInput formInput = newFormInput()
-                .withId(1L)
-                .build();
-        when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
-
-        FormInputResource formInputResource = newFormInputResource()
-                .withAllowedFileTypes(asList(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF))
-                .build();
-
-        FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
-
-        assertEquals(result.getAllowedFileTypes(), "Spreadsheet,PDF");
+        assertEquals(result.getAllowedFileTypes(), singletonList(FileTypeCategory.SPREADSHEET));
     }
 
     @Test
     public void mapToResource() {
         FormInput formInput = newFormInput()
-                .withAllowedFileTypes("PDF")
+                .withAllowedFileTypes(singletonList(FileTypeCategory.PDF))
                 .withId(1L)
                 .build();
 
@@ -96,21 +81,9 @@ public class FormInputMapperTest {
     }
 
     @Test
-    public void mapToResource_displayNameShouldMapToFileCategory() {
-        FormInput formInput = newFormInput()
-                .withAllowedFileTypes("Spreadsheet")
-                .withId(1L)
-                .build();
-
-        FormInputResource result = formInputMapperImpl.mapToResource(formInput);
-
-        assertTrue(result.getAllowedFileTypes().contains(FileTypeCategory.SPREADSHEET));
-    }
-
-    @Test
     public void mapToResource_concatenatedFileTypesShouldBeMappedToCollection() {
         FormInput formInput = newFormInput()
-                .withAllowedFileTypes("PDF,Spreadsheet")
+                .withAllowedFileTypes(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET))
                 .withId(1L)
                 .build();
 
@@ -123,7 +96,7 @@ public class FormInputMapperTest {
     @Test
     public void mapToResource_emptyFileTypeStringShouldResultInEmptyList() {
         FormInput formInput = newFormInput()
-                .withAllowedFileTypes("")
+                .withAllowedFileTypes(emptySet())
                 .withId(1L)
                 .build();
 

@@ -92,7 +92,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                         newFormInput()
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withAllowedFileTypes("PDF,Spreadsheet")
+                                .withAllowedFileTypes(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET))
                                 .withGuidanceAnswer(fileUploadGuidance)
                                 .build(),
                         newFormInput()
@@ -251,12 +251,12 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         boolean appendixEnabled = true;
         String guidanceAnswer = "Only excel files with spaghetti VB macros allowed";
-        String allowedFileTypes = "XLSX";
+        FileTypeCategory allowedFileTypes = FileTypeCategory.fromDisplayName("XLSX");
 
         FormInput appendixFormInput = newFormInput()
                 .withActive(appendixEnabled)
                 .withGuidanceAnswer(guidanceAnswer)
-                .withAllowedFileTypes(allowedFileTypes)
+                .withAllowedFileTypes(asSet(allowedFileTypes))
                 .build();
         //Override repository response set in prerequisites test prep function
         when(formInputRepository.findByQuestionIdAndScopeAndType(
@@ -278,6 +278,8 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
+        FileTypeCategory allowedFileTypes = FileTypeCategory.fromDisplayName("XLSX");
+
         resource.setAppendix(false);
         resource.setAllowedFileTypes(asSet((FileTypeCategory.PDF)));
         resource.setAppendixGuidance(fileUploadGuidance);
@@ -285,7 +287,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         FormInput appendixFormInput = newFormInput()
                 .withActive(true)
                 .withGuidanceAnswer("Only excel files with spaghetti VB macros allowed")
-                .withAllowedFileTypes("XLSX")
+                .withAllowedFileTypes(asSet(allowedFileTypes))
                 .build();
 
         //Override repository response set in prerequisites test prep function
