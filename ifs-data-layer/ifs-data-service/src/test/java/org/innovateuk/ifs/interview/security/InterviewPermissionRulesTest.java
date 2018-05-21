@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.interview.builder.InterviewBuilder.newInterview;
 import static org.innovateuk.ifs.interview.builder.InterviewResourceBuilder.newInterviewResource;
-import static org.innovateuk.ifs.interview.resource.InterviewState.PENDING;
+import static org.innovateuk.ifs.interview.resource.InterviewState.ASSIGNED;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -61,7 +61,7 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
 
     @Test
     public void ownersCanReadAssessmentsOnDashboard() {
-        EnumSet<InterviewState> allowedStates = EnumSet.of(PENDING);
+        EnumSet<InterviewState> allowedStates = EnumSet.of(ASSIGNED);
 
         allowedStates.forEach(state ->
                 assertTrue("the owner of an assessment Interview should be able to read that assessment Interview on the dashboard",

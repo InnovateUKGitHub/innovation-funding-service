@@ -43,36 +43,38 @@
     <form method="GET">
         <div class="search-filters extra-margin">
             <fieldset>
+                <legend class="heading-medium no-margin-top">Filter applications</legend>
                 <div class="grid-row">
-                    <legend class="visuallyhidden">Filter applications</legend>
                     <div class="column-two-thirds">
                         <label class="form-label" for="filterSearch">Search by application number</label>
-                        <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
-                        <a href="?" th:href="'?sort=' + ${model.sorting}">Clear</a>
+                        <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                     </div>
                     <div class="column-third">
                         <button class="button" type="submit">Filter</button>
                     </div>
                 </div>
             </fieldset>
+            <div class="extra-margin">
+                <a href="?" th:href="'?sort=' + ${model.sorting}">Clear</a>
             </div>
-            <div class="grid-row sorting">
-                <div class="column-two-thirds">
-                    <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
-                        <span class="heading-small">applications</span>
-                    </p>
-                </div>
-                <div class="column-third alignright">
-                    <label for="sort-by">Sort by</label>
-                    <select id="sort-by" name="sort" class="js-auto-submit form-control">
-                        <option value="id" th:selected="${(model.sorting == 'id')}">Application number</option>
-                        <option value="title" th:selected="${(model.sorting == 'title')}">Title</option>
-                        <option value="innovationArea" th:selected="${(model.sorting == 'innovationArea')}">Innovation area</option>
-                        <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead organisation</option>
-                    </select>
-                    <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
-                </div>
+        </div>
+        <div class="grid-row sorting">
+            <div class="column-two-thirds">
+                <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
+                    <span class="heading-small">applications</span>
+                </p>
             </div>
+            <div class="column-third alignright">
+                <label for="sort-by">Sort by</label>
+                <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                    <option value="id" th:selected="${(model.sorting == 'id')}">Application number</option>
+                    <option value="title" th:selected="${(model.sorting == 'title')}">Title</option>
+                    <option value="innovationArea" th:selected="${(model.sorting == 'innovationArea')}">Innovation area</option>
+                    <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead organisation</option>
+                </select>
+                <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+            </div>
+        </div>
     </form>
     <div class="table-overflow">
         <table>

@@ -9,7 +9,8 @@ public enum ApplicationEvent implements ProcessEvent {
     REJECTED("rejected"),
     MARK_INELIGIBLE("mark-ineligible"),
     INFORM_INELIGIBLE("inform-ineligible"),
-    REINSTATE_INELIGIBLE("reinstate-ineligible");
+    REINSTATE_INELIGIBLE("reinstate-ineligible"),
+    WITHDRAW("withdraw-application");
 
     private final String event;
 
