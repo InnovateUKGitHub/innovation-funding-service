@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,6 +31,18 @@ public class GrantClaimHandlerTest {
     }
 
     @Test
+    public void testHappyPathNoFieldsProvided() {
+
+        FinanceRowItem item = handler.toFinanceRowItem(123L, emptyList());
+
+        assertThat(item.getCostType()).isEqualTo(FinanceRowType.FINANCE);
+        assertThat(item.getId()).isEqualTo(123L);
+        assertThat(item.getMinRows()).isEqualTo(0);
+        assertThat(item.getName()).isEqualTo(FinanceRowType.FINANCE.getType());
+        assertThat(item.getTotal()).isEqualTo(BigDecimal.ZERO);
+    }
+
+    @Test
     public void testHappyPathNineDigits() {
 
         String value = "123456789";
@@ -43,7 +56,7 @@ public class GrantClaimHandlerTest {
         assertThat(item.getName()).isEqualTo(FinanceRowType.FINANCE.getType());
         assertThat(item.getTotal()).isEqualTo(BigDecimal.valueOf(123456789));
     }
-    
+
     @Test
     public void testTooManyDigitsTruncatesInputToNineDigits() {
 
