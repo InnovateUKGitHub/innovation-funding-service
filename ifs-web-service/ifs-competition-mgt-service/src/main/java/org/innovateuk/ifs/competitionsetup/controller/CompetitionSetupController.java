@@ -343,7 +343,7 @@ public class CompetitionSetupController {
     public String setAsReadyToOpen(Model model,
                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                    @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
-                                   @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                   BindingResult bindingResult,
                                    ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult);
 
@@ -357,7 +357,7 @@ public class CompetitionSetupController {
     public String delete(Model model,
                          @PathVariable("competitionIdToDelete") long competitionId,
                          @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
-                         @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                         BindingResult bindingResult,
                          ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult);
 
