@@ -82,7 +82,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
             "projectName", "My Project",
             "competitionName", "Competition 1",
-            "applicationId", "123",
+            "applicationId", 1234L,
             "leadOrganisation", "Lead Organisation 123",
             "projectManagerName", "ABC",
             "projectManagerEmail", "abc.xyz@gmail.com",
@@ -100,7 +100,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
             "projectName", "My Project",
             "competitionName", "Competition 1",
-            "applicationId", "123",
+            "applicationId", 1234L,
             "monitoringOfficerName", "DEF",
             "monitoringOfficerEmail", "def.ghi@gmail.com",
             "monitoringOfficerTelephone", "0123456789"
@@ -116,7 +116,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "projectName", "My Project",
-                "applicationId", "123",
+                "applicationId", 1234L,
                 "leadOrganisation", "Lead Organisation 123",
                 "inviteOrganisationName", "Invite Organisation Name",
                 "competitionName", "Competition 1",
@@ -147,7 +147,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "dashboardUrl", "https://ifs-local-dev/project",
                 "applicationName", "Application 1",
                 "competitionName", "Competition 1",
-                "applicationId", "123"
+                "applicationId", 1234L
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_response_subject.txt", templateArguments);
@@ -161,7 +161,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/project",
                 "competitionName", "Competition 1",
-                "applicationId", "123"
+                "applicationId", 1234L
 
         );
 
@@ -174,7 +174,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "projectName", "My Project<>\"&",
-                "applicationId", "123",
+                "applicationId", 1234L,
                 "leadOrganisation", "Lead Organisation 123",
                 "competitionName", "Competition 1",
                 "inviteUrl", "https://ifs-local-dev/invite"

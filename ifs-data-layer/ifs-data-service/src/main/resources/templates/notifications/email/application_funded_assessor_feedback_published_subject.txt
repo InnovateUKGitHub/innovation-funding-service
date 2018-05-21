@@ -1,1 +1,1 @@
-${competitionName}: Feedback for application ${applicationId} is now available.
+${competitionName}: Feedback for application ${applicationId?c} is now available.

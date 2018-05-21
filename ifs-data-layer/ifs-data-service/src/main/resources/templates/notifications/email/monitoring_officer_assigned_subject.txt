@@ -1,1 +1,1 @@
-${competitionName}: New Monitoring Officer assignment for project ${applicationId}
+${competitionName}: New Monitoring Officer assignment for project ${applicationId?c}

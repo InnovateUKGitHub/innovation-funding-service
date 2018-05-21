@@ -1,1 +1,1 @@
-${competitionName}: You have a reply to your query for project ${applicationId}
+${competitionName}: You have a reply to your query for project ${applicationId?c}

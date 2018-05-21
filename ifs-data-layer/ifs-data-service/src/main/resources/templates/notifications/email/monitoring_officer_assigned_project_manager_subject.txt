@@ -1,1 +1,1 @@
-${competitionName}: Your Monitoring Officer for project ${applicationId}
+${competitionName}: Your Monitoring Officer for project ${applicationId?c}

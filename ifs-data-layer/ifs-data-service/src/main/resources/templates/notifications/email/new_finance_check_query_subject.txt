@@ -1,1 +1,1 @@
-${competitionName}: Query regarding your finances for project ${applicationId}
+${competitionName}: Query regarding your finances for project ${applicationId?c}
