@@ -50,7 +50,7 @@ public class PasswordValidatorTest extends Mocked {
             assertThat("Service failed to throw expected exception.", false);
         } catch (final InvalidPasswordException exception) {
             assertThat(exception.toErrorResponse().getKey(), is(equalTo("INVALID_PASSWORD")));
-            assertThat(exception.toErrorResponse().getArguments(), hasItem(equalTo("blacklisted")));
+            assertThat(exception.toErrorResponse().getArguments(), hasItem(equalTo("INVALID_PASSWORD")));
         }
     }
 

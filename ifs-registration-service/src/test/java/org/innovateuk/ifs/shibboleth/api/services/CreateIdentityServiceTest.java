@@ -64,7 +64,7 @@ public class CreateIdentityServiceTest extends MockedService<CreateIdentityServi
 
             assertThat("Service failed to throw expected exception.", false);
         } catch (final Exception exception) {
-            assertThatExceptionIsInvalidPasswordOfType(exception, "blacklisted");
+            assertThatExceptionIsInvalidPasswordOfType(exception, "INVALID_PASSWORD");
         }
 
         verifyFindingIdentityByEmail();
