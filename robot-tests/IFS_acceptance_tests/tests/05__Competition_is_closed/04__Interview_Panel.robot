@@ -52,6 +52,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3451 Allocate applications to assessors - Notify assessors
 ...
 ...               IFS-3485 Remove applications before allocating (notifying) to assessor
+...
+...               IFS-3452 Allocate applications to assessors - Allocated tab
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -217,6 +219,20 @@ CompAdmin allocate applications to assessor
     And the compAdmin removes the application from notify list
     When the user clicks the button/link     css=input[type="submit"]   #Notify
     Then the user reads his email            ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
+
+CompAdmin allocates applications to assessors
+    [Documentation]  IFS-3452
+    [Tags]
+    Given log in as a different user         &{Comp_admin1_credentials}
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
+    And the user clicks the button/link      jQuery=a:contains("Allocate")
+    And the user clicks the button/link      jQuery=h1:contains("Allocate applications to Joel George")
+    And the user selects the checkbox        assessor-row-1
+    And the user clicks the button/link      link=addSelected
+    And the user clicks the button/link      link=submit
+    And the user clicks the button/link      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Computer vision and machine learning for transport networks")
+
+#https://ifs.local-dev/management/assessment/interview/competition/18/assessors/allocated-applications/269
 
 *** Keywords ***
 Custom Suite Setup
