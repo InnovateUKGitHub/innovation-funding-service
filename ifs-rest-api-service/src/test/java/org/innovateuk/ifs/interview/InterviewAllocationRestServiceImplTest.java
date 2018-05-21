@@ -77,7 +77,7 @@ public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(expectedUrl, interviewApplicationsResourceListType(), expected);
 
-        List<InterviewApplicationResource> actual = service.getAllocatedApplications(competitionId, applicationIds).getSuccess();
+        List<InterviewApplicationResource> actual = service.getAllocatedApplicationsById(competitionId, applicationIds).getSuccess();
 
         assertEquals(expected, actual);
     }

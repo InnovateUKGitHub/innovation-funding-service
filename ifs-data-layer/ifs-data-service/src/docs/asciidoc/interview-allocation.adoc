@@ -53,6 +53,42 @@ include::{snippets}/interview-panel/get-unallocated-application-ids/response-fie
 include::{snippets}/interview-panel/get-unallocated-application-ids/curl-request.adoc[]
 
 
+=== Get allocated applications by id
+==== Request
+include::{snippets}/interview-panel/get-allocated-applications-by-id/http-request.adoc[]
+include::{snippets}/interview-panel/get-allocated-applications-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-allocated-applications-by-id/http-response.adoc[]
+include::{snippets}/interview-panel/get-allocated-applications-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-allocated-applications-by-id/curl-request.adoc[]
+
+
+=== Get the invite to be sent to an assessor
+==== Request
+include::{snippets}/interview-panel/get-invite-to-send/http-request.adoc[]
+include::{snippets}/interview-panel/get-invite-to-send/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-invite-to-send/http-response.adoc[]
+include::{snippets}/interview-panel/get-invite-to-send/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-invite-to-send/curl-request.adoc[]
+
+
+=== Notify assessor of their allocations
+==== Request
+include::{snippets}/interview-panel/send-invite/http-request.adoc[]
+include::{snippets}/interview-panel/send-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/send-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/send-invite/curl-request.adoc[]
 === unallocate application from an assessor
 ==== Request
 include::{snippets}/interview-panel/unallocate-application/http-request.adoc[]

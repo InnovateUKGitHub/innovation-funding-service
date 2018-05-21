@@ -39,7 +39,7 @@ public class InterviewAllocationController {
             @PathVariable long competitionId,
             @PathVariable long assessorId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return interviewAllocationService.getAllocatedApplicationsById(competitionId, assessorId, pageable).toGetResponse();
+        return interviewAllocationService.getAllocatedApplications(competitionId, assessorId, pageable).toGetResponse();
     }
 
     @GetMapping("/{competitionId}/allocated-applications/all/{applicationIds}")

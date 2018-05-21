@@ -158,7 +158,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         when(interviewRepositoryMock.countUnallocatedApplications(competitionId, userId)).thenReturn(unallocatedApplications);
 
         ServiceResult<InterviewApplicationPageResource> result =
-                service.getAllocatedApplicationsById(competitionId, userId, pageable);
+                service.getAllocatedApplications(competitionId, userId, pageable);
 
         verify(interviewRepositoryMock)
                 .findApplicationsAssignedToAssessor(competitionId, userId, pageable);

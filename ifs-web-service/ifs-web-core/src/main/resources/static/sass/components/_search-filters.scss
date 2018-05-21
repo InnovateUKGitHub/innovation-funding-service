@@ -17,4 +17,10 @@
       margin: 0;
     }
   }
+
+  @include media-down(mobile) {
+    .clear-search-filters{
+      margin-top: 30px;
+    }
+  }
 }

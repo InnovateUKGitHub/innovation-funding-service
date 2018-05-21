@@ -32,7 +32,7 @@ public class AllocateInterviewApplicationsModelPopulator {
     public InterviewAllocateApplicationsViewModel populateModel(long competitionId, long userId, List<Long> applicationIds) {
         CompetitionResource competitionResource = competitionService.getCompetitionById(competitionId).getSuccess();
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
-        List<InterviewApplicationResource> interviewApplications = interviewAllocationRestService.getAllocatedApplications(competitionId, applicationIds).getSuccess();
+        List<InterviewApplicationResource> interviewApplications = interviewAllocationRestService.getAllocatedApplicationsById(competitionId, applicationIds).getSuccess();
         AssessorInvitesToSendResource invitesToSendResource = interviewAllocationRestService.getInviteToSend(competitionId, userId).getSuccess();
 
         return new InterviewAllocateApplicationsViewModel(
