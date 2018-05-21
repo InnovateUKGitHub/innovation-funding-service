@@ -46,8 +46,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "AND ap.role = 'INNOVATION_LEAD' " +
             "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = ap.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
-//            +
-//            "AND ap.competition.competition_type_id != 7";
 
     /* Filters by innovation lead and in feedback released state */
     String INNOVATION_LEAD_FEEDBACK_RELEASED_WHERE_CLAUSE = "WHERE ap.user.id = :userId AND " +
