@@ -69,6 +69,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-3086 Investigate options to support selection of grant terms and conditions in Competition setup
 ...
 ...               IFS-2833 As a Portfolio manager I am able to edit the 'Question heading' in Project details
+...
+...               IFS-1084 As a comp exec I am able to delete a competition prior to the competition opens date
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
