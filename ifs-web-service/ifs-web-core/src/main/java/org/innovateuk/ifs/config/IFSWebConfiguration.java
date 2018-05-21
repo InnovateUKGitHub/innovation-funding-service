@@ -2,7 +2,6 @@ package org.innovateuk.ifs.config;
 
 import org.innovateuk.ifs.controller.LoggedInUserMethodArgumentResolver;
 import org.innovateuk.ifs.controller.ValidationHandlerMethodArgumentResolver;
-import org.innovateuk.ifs.interceptors.AlertMessageHandlerInterceptor;
 import org.innovateuk.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
 import org.innovateuk.ifs.interceptors.MenuLinksHandlerInterceptor;
 import org.innovateuk.ifs.invite.formatter.RejectionReasonFormatter;
@@ -36,7 +35,6 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
         registry.addInterceptor(getMenuLinksHandlerInterceptor());
-        registry.addInterceptor(getAlertMessageHandlerInterceptor());
         registry.addInterceptor(getGoogleAnalyticsHandlerInterceptor());
     }
 
@@ -84,11 +82,6 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public HandlerInterceptor getMenuLinksHandlerInterceptor() {
         return new MenuLinksHandlerInterceptor();
-    }
-
-    @Bean
-    public HandlerInterceptor getAlertMessageHandlerInterceptor() {
-        return new AlertMessageHandlerInterceptor();
     }
 
     @Bean
