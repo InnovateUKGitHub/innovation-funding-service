@@ -63,7 +63,8 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "DELETE",
             description = "Comp admins are able to delete competitions in preparation prior to them being in the Open state",
             particularBusinessState = "Competition is in preparation")
-    public boolean compAdminCanDeleteCompetitionInPreparation(CompetitionResource competition, UserResource user) {
-        return isCompAdmin(user) && EnumSet.of(COMPETITION_SETUP, READY_TO_OPEN).contains(competition.getCompetitionStatus());
+    public boolean internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(CompetitionResource competition, UserResource user) {
+        return (isInternalAdmin(user) || isIFSAdmin(user)) &&
+                EnumSet.of(COMPETITION_SETUP, READY_TO_OPEN).contains(competition.getCompetitionStatus());
     }
 }

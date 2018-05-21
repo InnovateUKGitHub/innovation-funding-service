@@ -151,11 +151,12 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
                 .build(CompetitionStatus.values().length);
 
         allGlobalRoleUsers.forEach(user -> competitions.forEach(competitionResource -> {
-            if (user.hasRole(COMP_ADMIN) && (competitionResource.getCompetitionStatus() == COMPETITION_SETUP ||
+            if ((user.hasRole(COMP_ADMIN) || user.hasRole(PROJECT_FINANCE) || user.hasRole(IFS_ADMINISTRATOR)) &&
+                    (competitionResource.getCompetitionStatus() == COMPETITION_SETUP ||
                     competitionResource.getCompetitionStatus() == READY_TO_OPEN)) {
-                assertTrue(rules.compAdminCanDeleteCompetitionInPreparation(competitionResource, user));
+                assertTrue(rules.internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(competitionResource, user));
             } else {
-                assertFalse(rules.compAdminCanDeleteCompetitionInPreparation(competitionResource, user));
+                assertFalse(rules.internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(competitionResource, user));
             }
         }));
     }
