@@ -210,7 +210,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                     return Pair.of(pair.getValue(), perNotificationTargetArguments);
                 });
 
-
         globalArguments.put("message", fundingNotificationResource.getMessageBody());
 
         List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
