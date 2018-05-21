@@ -226,13 +226,9 @@ CompAdmin allocates applications to assessors
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     And the user clicks the button/link      jQuery=a:contains("Allocate")
-    And the user clicks the button/link      jQuery=h1:contains("Allocate applications to Joel George")
-    And the user selects the checkbox        assessor-row-1
-    And the user clicks the button/link      link=addSelected
-    And the user clicks the button/link      link=submit
-    And the user clicks the button/link      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Computer vision and machine learning for transport networks")
-
-#https://ifs.local-dev/management/assessment/interview/competition/18/assessors/allocated-applications/269
+    And the user clicks the button/link      jQuery=h1:contains("Allocate applications to ${assessor_joel}")
+    And the user clicks the button/link      jQuery=a:contains("Allocated")
+    Then the user should see the element     jQuery=jQuery=td:contains("${Neural_network_application}") ~ td:contains("Remove")
 
 *** Keywords ***
 Custom Suite Setup
