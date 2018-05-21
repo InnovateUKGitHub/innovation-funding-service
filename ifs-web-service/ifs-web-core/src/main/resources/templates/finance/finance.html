@@ -487,12 +487,12 @@
         </th:block>
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
-    <th:block th:fragment="overheads (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
+    <th:block th:fragment="overheads (costViewModel, internalView)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p th:if="${viewmode == 'edit'}" ifs:utext="${question.description}" />
-        <th:block th:insert="finance/finance :: overheads_finances" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
+        <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
     </th:block>
 
-    <th:block th:fragment="overheads_finances">
+    <th:block th:fragment="overheads_finances (internalView)">
         <th:block th:if="${viewmode == 'readonly'}">
             <th:block th:switch="${overheadRate.name()}">
                 <th:block th:case="'NONE'">
@@ -631,13 +631,13 @@
 
             <div class="form-group" id="overhead-none">
                 <h3 class="heading-medium">No overhead costs</h3>
-                <p>You are not currently applying for overhead costs</p>
+                <p th:if="${!internalView}">You are not currently applying for overhead costs</p>
                 <input type="hidden" value="£0" data-calculation-rawvalue="0" th:id="${'section-total-'+subSection.id+'-labour-cost-none'}"/>
             </div>
 
             <div class="form-group" id="overhead-default-percentage">
                 <h3 class="heading-medium">20% of labour costs</h3>
-                <p>There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
+                <p th:if="${!internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
                 <h4 class="alignright section-total-summary">
                     Total overhead costs
                     <span class="heading-small"
@@ -692,57 +692,103 @@
                 </div>
             </div>
             <div class="form-group" th:if="${overheadCosts?.useTotalOption}" id="overhead-total">
-                <h3 class="heading-medium">Calculate overheads</h3>
-                <p>
-                    If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below.
-                    The model shows you which types of indirect costs associated with your project you may claim.
-                    For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review.
-                    This will assess the appropriateness of your claim if your grant application is successful.
-                </p>
-                <div class="form-group download">
-                    <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
-                    <ul>
-                        <li>Download as an Excel document <a href="/files/overheads.xlsx">overhead calculation spreadsheet.xlsx (16KB)</a></li>
-                        <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
-                    </ul>
-                </div>
-                <div class="upload-section extra-margin">
-                    <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
-                    <div class="form-group">
-                        <input type="hidden"
-                               name="fileoverheadid"
-                               th:value="${overheadCosts?.id}"/>
-                        <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'readonly' : 'edit') : 'edit',
-                                           downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
-                                           filename=${overheadCosts?.calculationFile?.get()?.name},
-                                           inputField='overheadfile',
-                                           validationField=${'formInput[cost-'+ overheadCosts?.id +'-calculationFile]'},
-                                           mayRemove=${viewmode != 'readonly'},
-                                           removeName='overheadfiledelete',
-                                           saveName='overheadfilesubmit'">
-                            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-                        </th:block>
+
+                <!--/* Applicants' view of Overheads */-->
+                <th:block th:if="${!internalView}">
+                    <h3 class="heading-medium">Calculate overheads</h3>
+                    <p>
+                        If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below.
+                        The model shows you which types of indirect costs associated with your project you may claim.
+                        For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review.
+                        This will assess the appropriateness of your claim if your grant application is successful.
+                    </p>
+                    <div class="form-group download">
+                        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+                        <ul>
+                            <li>Download as an Excel document <a href="/files/overheads.xlsx">overhead calculation spreadsheet.xlsx (16KB)</a></li>
+                            <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
+                        </ul>
                     </div>
-                </div>
-                <div class="form-group alignright inline">
-                    <label th:for="${'cost-overheads-'+overheadCosts?.id+'-calculate'}">
-                        <span>Enter the total cost of overheads as calculated in the spreadsheet &pound;</span>
-                    </label>
-                    <input type="number"
-                           th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"
-                           class="form-control form-control-1-4 alignright"
-                           th:id="${'cost-overheads-'+overheadCosts?.id+'-calculate'}"
-                           th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? ${costCategory?.total} : '0'"
-                           min="0"
-                           max="999999999"
-                           step="1"/>
-                    <input type="hidden"
-                           readonly="readonly"
-                           th:id="${'section-total-'+subSection.id+'-calculate-formatted'}"
-                           th:attr="data-calculation-fields='#'+${'cost-overheads-'+overheadCosts?.id+'-calculate'}+',1',data-calculation-rawvalue=${overheadCosts?.total}"
-                           data-calculation-operations="*"
-                           th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? '£' + ${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')} : '£0'"/>
-                </div>
+                    <div class="upload-section extra-margin">
+                        <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+                        <div class="form-group">
+                            <input type="hidden"
+                                   name="fileoverheadid"
+                                   th:value="${overheadCosts?.id}"/>
+                            <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'readonly' : 'edit') : 'edit',
+                                               downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
+                                               filename=${overheadCosts?.calculationFile?.get()?.name},
+                                               inputField='overheadfile',
+                                               validationField=${'formInput[cost-'+ overheadCosts?.id +'-calculationFile]'},
+                                               mayRemove=${viewmode != 'readonly'},
+                                               removeName='overheadfiledelete',
+                                               saveName='overheadfilesubmit'">
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                            </th:block>
+                        </div>
+                    </div>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'cost-overheads-'+overheadCosts?.id+'-calculate'}">
+                            <span>Enter the total cost of overheads as calculated in the spreadsheet &pound;</span>
+                        </label>
+                        <input type="number"
+                               th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               th:id="${'cost-overheads-'+overheadCosts?.id+'-calculate'}"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? ${costCategory?.total} : '0'"
+                               min="0"
+                               max="999999999"
+                               step="1"/>
+                        <input type="hidden"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id+'-calculate-formatted'}"
+                               th:attr="data-calculation-fields='#'+${'cost-overheads-'+overheadCosts?.id+'-calculate'}+',1',data-calculation-rawvalue=${overheadCosts?.total}"
+                               data-calculation-operations="*"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? '£' + ${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')} : '£0'"/>
+                    </div>
+                </th:block>
+
+                <!--/* Internal users' view of Overheads */-->
+                <th:block th:if="${internalView}">
+                    <h3 class="heading-medium">Overheads calculation</h3>
+                    <th:block th:if="${overheadCosts?.calculationFile == null || !overheadCosts.calculationFile.present}">
+                        <p>The applicant has not uploaded a file.</p>
+                    </th:block>
+                    <th:block th:if="${overheadCosts?.calculationFile?.present}">
+                        <p>The applicant has uploaded a completed overhead costs spreadsheet.</p>
+                        <div class="upload-section extra-margin form-group download">
+                            <th:block th:with="uploadViewmode='readonly',
+                                           downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts.id}},
+                                           filename=${overheadCosts.calculationFile.get()?.name},
+                                           inputField='overheadfile',
+                                           validationField=${'formInput[cost-'+ overheadCosts.id +'-calculationFile]'},
+                                           mayRemove=false,
+                                           removeName='',
+                                           saveName=''">
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                            </th:block>
+                        </div>
+                    </th:block>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'cost-overheads-'+overheadCosts?.id+'-calculate'}">
+                            <span>Total cost of overheads &pound;</span>
+                        </label>
+                        <input type="number"
+                               th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               th:id="${'cost-overheads-'+overheadCosts?.id+'-calculate'}"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? ${costCategory?.total} : '0'"
+                               min="0"
+                               max="999999999"
+                               step="1"/>
+                        <input type="hidden"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id+'-calculate-formatted'}"
+                               th:attr="data-calculation-fields='#'+${'cost-overheads-'+overheadCosts?.id+'-calculate'}+',1',data-calculation-rawvalue=${overheadCosts?.total}"
+                               data-calculation-operations="*"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? '£' + ${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')} : '£0'"/>
+                    </div>
+                </th:block>
             </div>
         </th:block>
     </th:block>

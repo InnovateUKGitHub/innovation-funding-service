@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.finance.handler;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.*;
@@ -10,16 +10,16 @@ import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import static java.util.stream.Collectors.toList;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COSTS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -63,8 +63,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
                     c.setQuestion(question);
                     c.setTarget(applicationFinance);
                 });
-                return cost.isEmpty() ? new ArrayList<>() : applicationFinanceRowRepository.save(cost);
-            }catch (IllegalArgumentException e){
+                return applicationFinanceRowRepository.save(cost);
+            } catch (IllegalArgumentException e){
                 LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }
         }
