@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.form.mapper;
 
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -11,9 +10,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.HashSet;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.junit.Assert.assertEquals;
@@ -44,12 +47,12 @@ public class FormInputMapperTest {
         when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
 
         FormInputResource formInputResource = newFormInputResource()
-                .withAllowedFileTypes(singletonList(FileTypeCategory.PDF))
+                .withAllowedFileTypes(new HashSet<>(singletonList(PDF)))
                 .build();
 
         FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
 
-        assertEquals(result.getAllowedFileTypes(), singletonList(FileTypeCategory.PDF));
+        assertEquals(result.getAllowedFileTypes(), new HashSet<>(singletonList(PDF)));
     }
 
     @Test
@@ -60,37 +63,37 @@ public class FormInputMapperTest {
         when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
 
         FormInputResource formInputResource = newFormInputResource()
-                .withAllowedFileTypes(singletonList(FileTypeCategory.SPREADSHEET))
+                .withAllowedFileTypes(new HashSet<>(singletonList(SPREADSHEET)))
                 .build();
 
         FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
 
-        assertEquals(result.getAllowedFileTypes(), singletonList(FileTypeCategory.SPREADSHEET));
+        assertEquals(result.getAllowedFileTypes(), new HashSet<>(singletonList(SPREADSHEET)));
     }
 
     @Test
     public void mapToResource() {
         FormInput formInput = newFormInput()
-                .withAllowedFileTypes(singletonList(FileTypeCategory.PDF))
+                .withAllowedFileTypes(new HashSet<>(singletonList(PDF)))
                 .withId(1L)
                 .build();
 
         FormInputResource result = formInputMapperImpl.mapToResource(formInput);
 
-        assertTrue(result.getAllowedFileTypes().contains(FileTypeCategory.PDF));
+        assertTrue(result.getAllowedFileTypes().contains(PDF));
     }
 
     @Test
     public void mapToResource_concatenatedFileTypesShouldBeMappedToCollection() {
         FormInput formInput = newFormInput()
-                .withAllowedFileTypes(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET))
+                .withAllowedFileTypes(new HashSet<>(asList(PDF, SPREADSHEET)))
                 .withId(1L)
                 .build();
 
         FormInputResource result = formInputMapperImpl.mapToResource(formInput);
 
-        assertTrue(result.getAllowedFileTypes().contains(FileTypeCategory.PDF));
-        assertTrue(result.getAllowedFileTypes().contains(FileTypeCategory.SPREADSHEET));
+        assertTrue(result.getAllowedFileTypes().contains(PDF));
+        assertTrue(result.getAllowedFileTypes().contains(SPREADSHEET));
     }
 
     @Test

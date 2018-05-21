@@ -69,10 +69,10 @@ public class FormInput {
 
     private boolean active = true;
 
-    @ElementCollection(targetClass = FileTypeCategory.class)
-    @CollectionTable(name = "appendix_file_types",
-                     joinColumns = @JoinColumn(name = "form_input_id"))
+    @ElementCollection
+    @CollectionTable(name = "appendix_file_types")
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private Set<FileTypeCategory> allowedFileTypes;
 
     public FormInput() {

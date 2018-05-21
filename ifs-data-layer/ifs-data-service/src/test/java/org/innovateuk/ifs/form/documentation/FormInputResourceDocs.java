@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.form.documentation;
 
-import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import java.util.HashSet;
+
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -33,5 +36,5 @@ public class FormInputResourceDocs {
             .withId(1L)
             .withType(TEXTAREA)
             .withWordCount(140)
-            .withAllowedFileTypes(asList(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF));
+            .withAllowedFileTypes(new HashSet<>(asList(SPREADSHEET, PDF)));
 }

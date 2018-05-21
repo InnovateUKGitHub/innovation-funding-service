@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.file.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
@@ -10,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -65,11 +65,11 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     }
 
     private void assertExpectedMediaTypesForFileTypeCategory(
-            List<FileTypeCategory> FileTypeCategory,
+            List<FileTypeCategory> fileTypeCategories,
             String... expectedMediaTypes
     ) {
         FormInputResource formInput = newFormInputResource()
-                .withAllowedFileTypes(FileTypeCategory)
+                .withAllowedFileTypes(new HashSet<>(fileTypeCategories))
                 .build();
         when(formInputServiceMock.findFormInput(formInput.getId())).thenReturn(serviceSuccess(formInput));
 
