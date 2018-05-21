@@ -315,12 +315,12 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         Long[] applicationIds = {1L, 2L};
         List<InterviewApplicationResource> expectedInterviewApplications = newInterviewApplicationResource().build(2);
 
-        when(interviewRepositoryMock.findAll(asList(applicationIds))).thenReturn(expectedInterviewApplications);
+        when(interviewRepositoryMock.findAllNotified(asList(applicationIds))).thenReturn(expectedInterviewApplications);
 
         List<InterviewApplicationResource> actualInterviewApplications = service.getUnallocatedApplicationsById(asList(applicationIds)).getSuccess();
 
         assertEquals(expectedInterviewApplications, actualInterviewApplications);
 
-        verify(interviewRepositoryMock, only()).findAll(asList(applicationIds));
+        verify(interviewRepositoryMock, only()).findAllNotified(asList(applicationIds));
     }
 }

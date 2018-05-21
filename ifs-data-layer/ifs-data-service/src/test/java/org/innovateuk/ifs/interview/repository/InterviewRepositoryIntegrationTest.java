@@ -74,50 +74,6 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
         this.repository = repository;
     }
 
-    @Test
-    public void findApplicationsNotAssignedToAssessor() {
-        Pageable pageable = new PageRequest(0, 20);
-
-        Page<InterviewApplicationResource> page = repository.findApplicationsNotAssignedToAssessor(competition.getId(), assessor.getId(), pageable);
-
-        assertThat(page.getTotalElements(), is(equalTo(1L)));
-
-        InterviewApplicationResource content = page.getContent().get(0);
-
-        assertThat(content.getId(), is(equalTo(application1.getId())));
-        assertThat(content.getLeadOrganisation(), is(equalTo(organisation.getName())));
-        assertThat(content.getNumberOfAssessors(), is(equalTo(1L)));
-    }
-
-    @Test
-    public void findApplicationsAssignedToAssessor() {
-        Pageable pageable = new PageRequest(0, 20);
-
-        Page<InterviewApplicationResource> page = repository.findApplicationsAssignedToAssessor(competition.getId(), assessor.getId(), pageable);
-
-        assertThat(page.getTotalElements(), is(equalTo(1L)));
-
-        InterviewApplicationResource content = page.getContent().get(0);
-
-        assertThat(content.getId(), is(equalTo(application2.getId())));
-        assertThat(content.getLeadOrganisation(), is(equalTo(organisation.getName())));
-        assertThat(content.getNumberOfAssessors(), is(equalTo(1L)));
-    }
-
-    @Test
-    public void countUnallocatedApplications() {
-        long count = repository.countUnallocatedApplications(competition.getId(), assessor.getId());
-
-        assertThat(count, is(equalTo(1L)));
-    }
-
-    @Test
-    public void countAllocatedApplications() {
-        long count = repository.countAllocatedApplications(competition.getId(), assessor.getId());
-
-        assertThat(count, is(equalTo(1L)));
-    }
-
     @Before
     public void setup() {
         assessor = userRepository.findByEmail("paul.plum@gmail.com")
@@ -158,6 +114,11 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withApplication(application1)
                 .build();
         ProcessRole assessorRole2 = newProcessRole()
+                .with(id(null))
+                .withUser(assessor)
+                .withApplication(application2)
+                .build();
+        ProcessRole assessorRole3 = newProcessRole()
                 .with(id(null))
                 .withUser(assessor)
                 .withApplication(application2)
@@ -214,6 +175,13 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withTarget(application2)
                 .build();
 
+        Interview assignedInterview2 = newInterview()
+                .with(id(null))
+                .withState(InterviewState.ASSIGNED)
+                .withParticipant(assessorRole3)
+                .withTarget(application2)
+                .build();
+
         Interview notAssignedInterview = newInterview()
                 .with(id(null))
                 .withState(InterviewState.ASSIGNED)
@@ -221,17 +189,64 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withTarget(application1)
                 .build();
 
-        repository.save(asList(assignedInterview, notAssignedInterview));
+        repository.save(asList(assignedInterview, notAssignedInterview, assignedInterview2));
 
         flushAndClearSession();
-
     }
 
     @Test
-    public void findAll() {
-        List<InterviewApplicationResource> interviewApplicationResources = repository.findAll( asList(application1.getId(), application2.getId()) );
+    public void findApplicationsNotAssignedToAssessor() {
+        Pageable pageable = new PageRequest(0, 20);
+
+        Page<InterviewApplicationResource> page = repository.findApplicationsNotAssignedToAssessor(competition.getId(), assessor.getId(), pageable);
+
+        assertThat(page.getTotalElements(), is(equalTo(1L)));
+
+        InterviewApplicationResource content = page.getContent().get(0);
+
+        assertThat(content.getId(), is(equalTo(application1.getId())));
+        assertThat(content.getLeadOrganisation(), is(equalTo(organisation.getName())));
+        assertThat(content.getNumberOfAssessors(), is(equalTo(1L)));
+    }
+
+    @Test
+    public void findApplicationsAssignedToAssessor() {
+        Pageable pageable = new PageRequest(0, 20);
+
+        Page<InterviewApplicationResource> page = repository.findApplicationsAssignedToAssessor(competition.getId(), assessor.getId(), pageable);
+
+        assertThat(page.getTotalElements(), is(equalTo(1L)));
+
+        InterviewApplicationResource content = page.getContent().get(0);
+
+        assertThat(content.getId(), is(equalTo(application2.getId())));
+        assertThat(content.getLeadOrganisation(), is(equalTo(organisation.getName())));
+        assertThat(content.getNumberOfAssessors(), is(equalTo(2L)));
+    }
+
+    @Test
+    public void countUnallocatedApplications() {
+        long count = repository.countUnallocatedApplications(competition.getId(), assessor.getId());
+
+        assertThat(count, is(equalTo(1L)));
+    }
+
+    @Test
+    public void countAllocatedApplications() {
+        long count = repository.countAllocatedApplications(competition.getId(), assessor.getId());
+
+        assertThat(count, is(equalTo(1L)));
+    }
+
+    @Test
+    public void findAllNotified() {
+        List<InterviewApplicationResource> interviewApplicationResources = repository.findAllNotified( asList(application1.getId(), application2.getId()) );
+
+        InterviewApplicationResource expectedInterviewApplicationResource1 = new InterviewApplicationResource(application1.getId(), application1.getName(), organisation.getName(), 1);
+        InterviewApplicationResource expectedInterviewApplicationResource2 = new InterviewApplicationResource(application2.getId(), application2.getName(), organisation.getName(), 2);
 
         assertEquals(2, interviewApplicationResources.size());
-        // TODO
+        assertEquals(expectedInterviewApplicationResource1, interviewApplicationResources.get(0));
+        assertEquals(expectedInterviewApplicationResource2, interviewApplicationResources.get(1));
     }
 }
