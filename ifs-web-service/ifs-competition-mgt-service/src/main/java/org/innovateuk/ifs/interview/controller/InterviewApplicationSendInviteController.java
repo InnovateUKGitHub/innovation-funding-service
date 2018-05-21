@@ -4,9 +4,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
+import org.innovateuk.ifs.interview.model.InterviewApplicationSentInviteModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
+import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSentInviteViewModel;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class InterviewApplicationSendInviteController {
 
     @Autowired
     private InterviewApplicationsSendModelPopulator interviewApplicationsSendModelPopulator;
+
+    @Autowired
+    private InterviewApplicationSentInviteModelPopulator interviewApplicationSentInviteModelPopulator;
 
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -132,6 +137,18 @@ public class InterviewApplicationSendInviteController {
 
         return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
                 interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
+    }
+
+    @GetMapping(value = "/{applicationId}/view")
+    public String viewInvite(Model model,
+                             @PathVariable("competitionId") long competitionId,
+                             @PathVariable("applicationId") long applicationId,
+                             @RequestParam MultiValueMap<String, String> queryParams) {
+        queryParams.add("applicationId", String.valueOf(applicationId));
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_VIEW_INVITE, queryParams);
+        InterviewAssignmentApplicationsSentInviteViewModel viewModel = interviewApplicationSentInviteModelPopulator.populate(competitionId, applicationId, originQuery);
+        model.addAttribute("model", viewModel);
+        return "assessors/interview/application-view-invite";
     }
 
     private String redirectToStatusTab(long competitionId) {

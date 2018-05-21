@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to interview panel'" />
+</head>
+
+<body th:with="context='comp-management'" class="competition-management competition-overview">
+    <th:block th:insert="fragments/layout :: body-start" />
+    <th:block th:insert="fragments/layout :: global-header" />
+
+    <main tabindex="-1" id="content">
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assign applications to interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Review invite email',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'" />
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                <tr>
+                    <th class="width-small">Application number</th>
+                    <th>Project title</th>
+                    <th>Lead organisation</th>
+                    <th>Date assigned</th>
+                    <th>Additional feedback</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${model.applicationId})} + ${model.originQuery}"
+                            th:text="${model.applicationId}">114
+                        </a>
+                    </td>
+                    <td th:text="${model.title}">Electronics, sensors &amp; photonics, Materials</td>
+                    <td th:text="${model.leadOrganisation}">Ooba</td>
+                    <td th:text="${#temporals.format(model.dateAssigned, 'dd/MM/yyyy')}">01/09/2017</td>
+                    <td>
+                        <div th:if="${model.hasAttachment()}" class="upload-section">
+                            <a th:text="${model.feedbackFilename}"
+                               th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
+                               target="_blank">Uploaded-file.pdf</a>
+                            <p class="form-hint">(opens in a new window)</p>
+                        </div>
+                        <th:block th:unless="${model.hasAttachment()}">No feedback uploaded</th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="heading-medium">Email subject</h2>
+
+        <p th:text="${model.subject}">Invitation to assess 'Sustainable living models for the future'.</p>
+
+        <h3 class="heading-small">Message</h3>
+
+        <p th:utext="${model.content}" style="white-space: pre-wrap">Read-only email content</p>
+
+        <h3 class="heading-small">Additional text</h3>
+
+        <p th:utext="${model.additionalText}" style="white-space: pre-wrap">Additional text</p>
+
+        <p>Yours sincerely,</p>
+
+        <p class=" extra-margin">
+            Innovate UK <br>
+            Tel: 0300 321 4357 <br>
+            Email: competitions@innovateuk.gov.uk
+        </p>
+
+        <div class="extra-margin">
+            <a href="#" class="button">Edit and resend invite</a>
+            <a href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="button button-clear">Cancel</a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="fragments/layout :: body-end" />
+    <th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

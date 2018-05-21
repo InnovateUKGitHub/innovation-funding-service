@@ -5,10 +5,12 @@ import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<InterviewAssignmentMessageOutcome, InterviewAssignmentMessageOutcomeBuilder> {
 
@@ -44,6 +46,10 @@ public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<Interv
 
     public InterviewAssignmentMessageOutcomeBuilder withFeedback(FileEntry... feedbacks) {
         return withArray((feedback, assessmentInterviewPanelMessageOutcome) -> assessmentInterviewPanelMessageOutcome.setFeedback(feedback), feedbacks);
+    }
+
+    public InterviewAssignmentMessageOutcomeBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArray((modifiedOn, user) -> setField("modifiedOn", modifiedOn, user), modifiedOns);
     }
 
 }
