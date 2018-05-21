@@ -160,7 +160,7 @@ Finance contact receives an email when new query is posted and can see a pending
     [Documentation]  INFUND-4841 IFS-2746
     [Tags]  Email
     [Setup]  log in as a different user   &{successful_applicant_credentials}
-    Given the user reads his email        ${successful_applicant_credentials["email"]}  Query regarding your finances  We have raised a query around your project finances.
+    Given the user reads his email        ${successful_applicant_credentials["email"]}  ${PROJECT_SETUP_COMPETITION_NAME}: Query regarding your finances for project ${PROJECT_SETUP_APPLICATION_1}  We have raised a query around your project finances.
     When the user navigates to the page   ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
     Then the user should see the element  jQuery=#title-query-1:contains("Pending query")
 
@@ -298,7 +298,7 @@ Project finance user can continue the conversation
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753
     [Tags]    Email
-    Then the user reads his email    ${successful_applicant_credentials["email"]}    You have a reply to your query    We have replied to a query regarding your finances
+    Then the user reads his email    ${successful_applicant_credentials["email"]}    ${PROJECT_SETUP_COMPETITION_NAME}: You have a reply to your query for project ${PROJECT_SETUP_APPLICATION_1}    We have replied to a query regarding your finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752
