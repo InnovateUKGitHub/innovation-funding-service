@@ -47,7 +47,7 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
-    public RestResult<List<InterviewApplicationResource>> getAllocatedApplications(long competitionId, List<Long> applicationIds) {
+    public RestResult<List<InterviewApplicationResource>> getAllocatedApplicationsById(long competitionId, List<Long> applicationIds) {
         String baseUrl = format("%s/%d/%s/%s/%s", INTERVIEW_PANEL_REST_URL, competitionId, "allocated-applications", "all", join(applicationIds, ','));
 
         return getWithRestResult(baseUrl, interviewApplicationsResourceListType());
