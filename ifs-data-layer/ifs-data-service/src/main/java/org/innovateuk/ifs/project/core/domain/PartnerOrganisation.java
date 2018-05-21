@@ -27,12 +27,12 @@ public class PartnerOrganisation implements ProcessActivity {
 
     private boolean leadOrganisation;
 
-    @ZeroDowntime(reference = "IFS-3470", description = "This will be removed in subsequent release")
+/*    @ZeroDowntime(reference = "IFS-3470", description = "This will be removed in subsequent release")
     @Column(name = "post_code")
-    private String postCode;
+    private String postCode;*/
 
-    @ZeroDowntime(reference = "IFS-3470", description = "Remove the Column annotation. Its just added to satisfy Hibernate at the moment")
-    @Column(name = "postcode")
+    //@ZeroDowntime(reference = "IFS-3470", description = "Remove the Column annotation. Its just added to satisfy Hibernate at the moment")
+    //@Column(name = "postcode")
     private String postcode;
 
     public PartnerOrganisation() {
@@ -61,14 +61,15 @@ public class PartnerOrganisation implements ProcessActivity {
         return leadOrganisation;
     }
 
-    @ZeroDowntime(reference = "IFS-3470", description = "Currently this will read the old column.")
+    //@ZeroDowntime(reference = "IFS-3470", description = "Currently this will read the old column.")
     public String getPostcode() {
-        return postCode; // returns the old column postCode (not postcode)
+        //return postCode; // returns the old column postCode (not postcode)
+        return postcode;
     }
 
-    @ZeroDowntime(reference = "IFS-3470", description = "Currently this will write to both old and new.")
+    //@ZeroDowntime(reference = "IFS-3470", description = "Currently this will write to both old and new.")
     public void setPostcode(String postcode) {
-        this.postCode = postcode; // Writes to old
+        //this.postCode = postcode; // Writes to old
         this.postcode = postcode; // Writes to new
     }
 }
