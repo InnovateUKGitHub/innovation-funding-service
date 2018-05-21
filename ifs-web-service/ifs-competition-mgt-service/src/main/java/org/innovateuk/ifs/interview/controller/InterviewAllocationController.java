@@ -210,7 +210,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
 
     private String redirectToAllocatedTab(long competitionId, long userId) {
         return "redirect:" + UriComponentsBuilder
-                // TODO this needs to point to the allocated applications
+                // TODO IFS-3452 this needs to point to the allocated applications
                 .fromPath("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}")
                 .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
                 .toUriString();
