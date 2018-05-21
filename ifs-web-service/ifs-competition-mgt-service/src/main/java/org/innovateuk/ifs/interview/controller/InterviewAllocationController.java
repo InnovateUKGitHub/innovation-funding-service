@@ -176,7 +176,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
 
         interviewAllocationRestService.unallocateApplication(userId, applicationId);
 
-        return redirectToAllocatedTab(competitionId, userId).get();
+        return redirectToAllocatedTab(competitionId, userId);
     }
 
     @PostMapping("/allocate-applications/{userId}")
