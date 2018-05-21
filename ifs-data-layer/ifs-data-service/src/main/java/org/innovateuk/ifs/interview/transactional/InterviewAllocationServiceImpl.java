@@ -130,7 +130,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     @Override
-    public ServiceResult<List<InterviewApplicationResource>> getAllocatedApplicationsById(List<Long> applicationIds) {
+    public ServiceResult<List<InterviewApplicationResource>> getUnallocatedApplicationsById(List<Long> applicationIds) {
         return serviceSuccess(interviewRepository.findAll(applicationIds));
     }
 
