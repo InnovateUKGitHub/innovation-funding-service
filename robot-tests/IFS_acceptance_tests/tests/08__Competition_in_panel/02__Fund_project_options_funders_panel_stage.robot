@@ -23,7 +23,7 @@ Resource          ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
-${application1Subject}  Notification regarding your application ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
+${application1Subject}  ${FUNDERS_PANEL_COMPETITION_NAME}: Notification regarding your application ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
 ${application2Subject}  Notification regarding your application ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: ${FUNDERS_PANEL_APPLICATION_2_TITLE}
 ${onHoldMessage}  We have put your project on hold because our Assessment department is very busy at the moment.
 ${unsuccMessage}  We are sorry to annouce that your application has failed the assessment procedure.
