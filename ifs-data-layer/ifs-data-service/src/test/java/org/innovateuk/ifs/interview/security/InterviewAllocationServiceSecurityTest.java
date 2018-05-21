@@ -46,4 +46,27 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 
+    @Test
+    public void getAllocatedApplications() {
+        Pageable pageable = new PageRequest(0, 20);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllocatedApplications(1L, 2L, pageable),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void getUnallocatedApplications() {
+        Pageable pageable = new PageRequest(0, 20);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getUnallocatedApplications(1L,  2L, pageable),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void getUnallocatedApplicationIds() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getUnallocatedApplicationIds(1L, 2L),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+
 }
