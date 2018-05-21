@@ -8,6 +8,7 @@ ${assessor_madeleine}        Madeleine Martin
 ${assessor_riley}            Riley Butler
 ${assessor_ben_email}        benjamin.nixon@gmail.com
 ${assessor_joel_email}       joel.george@gmail.com
+${assessor_joel_id}          ${user_ids['${assessor_joel_email}']}
 ${assessor_madeleine_email}  madeleine.martin@gmail.com
 ${assessor_riley_email}      riley.butler@gmail.com
 ${aaron_robertson_email}     aaron.robertson@load.example.com

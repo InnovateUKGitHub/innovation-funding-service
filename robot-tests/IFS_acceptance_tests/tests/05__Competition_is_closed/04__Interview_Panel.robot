@@ -308,6 +308,6 @@ the compAdmin removes the application from notify list
 
 the compAdmin can cancel allocating applications to assessor
     the user clicks the button/link    link= Cancel
-    the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/unallocated-applications/269
+    the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/unallocated-applications/${assessor_joel_id}
     the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
 
