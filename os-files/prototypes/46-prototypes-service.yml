@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: prototypes-svc
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: prototypes-svc
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: prototypes-svc
+      spec:
+        containers:
+        - image: innovateuk/prototypes-service:${prototypesServiceVersion}
+          name: prototypes-svc
+          livenessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 100
+            periodSeconds: 31
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 100
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          imagePullPolicy: Always
+          env:
+          - name: JAVA_OPTS
+            value: -Xms300m -Xmx300m
+          - name: IFS_WEB_REST_CONNECTIONS_MAX_TOTAL
+            value: "1000"
+          - name: IFS_WEB_REST_CONNECTIONS_MAX_PER_ROUTE
+            value: "1000"
+          ports:
+          - containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 50m
+              memory: 300M
+    test: false
+    triggers:
+    - type: ConfigChange
+    status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: prototypes-svc
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    selector:
+      deploymentconfig: prototypes-svc
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: prototypes
+  spec:
+    host: "${PROTOTYPES_ADDRESS}"
+    port:
+      targetPort: 8080-tcp
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+    to:
+      kind: Service
+      name: prototypes-svc
