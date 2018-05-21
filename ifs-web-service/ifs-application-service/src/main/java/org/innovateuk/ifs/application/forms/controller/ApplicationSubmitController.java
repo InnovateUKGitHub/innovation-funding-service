@@ -134,6 +134,11 @@ public class ApplicationSubmitController {
     public String applicationTrack(Model model,
                                    @PathVariable("applicationId") long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
+
+        if (!application.isSubmitted()) {
+            return "redirect:/application/" + applicationId;
+        }
+
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
         return "application-track";
