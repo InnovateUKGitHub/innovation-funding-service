@@ -202,7 +202,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         FormInput researchCategoryQuestionFormInput = newFormInput().build();
         FormInput scopeQuestionFormInput = newFormInput().build();
         FormInput scoredQuestionFormInput = newFormInput().build();
-        FormInput writtenFeedbackFormInput = newFormInput().build();
+        FormInput writtenFeedbackFormInput = newFormInput()
+                .withGuidanceRows(newFormInputGuidanceRow().build(2))
+                .build();
 
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
@@ -386,7 +388,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         FormInput researchCategoryQuestionFormInput = newFormInput().build();
         FormInput scopeQuestionFormInput = newFormInput().build();
         FormInput scoredQuestionFormInput = newFormInput().build();
-        FormInput writtenFeedbackFormInput = newFormInput().build();
+        FormInput writtenFeedbackFormInput = newFormInput()
+                .withGuidanceRows(newFormInputGuidanceRow().build(2))
+                .build();
 
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
@@ -418,7 +422,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         FormInput researchCategoryQuestionFormInput = newFormInput().build();
         FormInput scopeQuestionFormInput = newFormInput().build();
         FormInput scoredQuestionFormInput = newFormInput().build();
-        FormInput writtenFeedbackFormInput = newFormInput().build();
+        FormInput writtenFeedbackFormInput = newFormInput()
+                .withGuidanceRows(newFormInputGuidanceRow().build(2))
+                .build();
 
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);

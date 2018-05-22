@@ -3,12 +3,16 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
+import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
+import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -18,11 +22,16 @@ import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPag
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResourceBuilder.newInterviewApplicationPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewNotifyAllocationResourceBuilder.newInterviewNotifyAllocationResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -131,5 +140,55 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .andExpect(content().json(toJson(ids)));
 
         verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationIds(competitionId, userId);
+    }
+
+    @Test
+    public void getUnallocatedApplicationsById() throws Exception {
+        long competitionId = 1L;
+        List<Long> applicationIds = asList(1L,2L,3L);
+
+        List<InterviewApplicationResource> interviewApplicationResources = newInterviewApplicationResource().build(2);
+
+        when(interviewAllocationServiceMock.getUnallocatedApplicationsById(applicationIds)).thenReturn(serviceSuccess(interviewApplicationResources));
+
+        mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-applications/all/{applicationIds}",
+                                    competitionId, String.join(",", simpleJoiner(applicationIds, ","))))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(interviewApplicationResources)));
+
+        verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationsById(applicationIds);
+    }
+
+    @Test
+    public void getInviteToSend() throws Exception {
+        long competitionId = 1L;
+        long userId = 2L;
+
+        AssessorInvitesToSendResource assessorInvitesToSendResource = newAssessorInvitesToSendResource().build();
+
+        when(interviewAllocationServiceMock.getInviteToSend(competitionId, userId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
+
+        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications/{userId}/invite-to-send", competitionId, userId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(assessorInvitesToSendResource)));
+
+        verify(interviewAllocationServiceMock, only()).getInviteToSend(competitionId, userId);
+    }
+
+    @Test
+    public void sendInvite() throws Exception {
+        long competitionId = 1L;
+        long userId = 2L;
+
+        InterviewNotifyAllocationResource allocationResource = newInterviewNotifyAllocationResource().build();
+
+        when(interviewAllocationServiceMock.notifyAllocation(allocationResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/{competitionId}/allocated-applications/{assessorId}/send-invite", competitionId, userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(allocationResource)))
+                .andExpect(status().isOk());
+
+        verify(interviewAllocationServiceMock).notifyAllocation(allocationResource);
     }
 }
