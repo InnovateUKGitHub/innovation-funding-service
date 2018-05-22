@@ -5,10 +5,12 @@ import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.form.InterviewAllocationNotifyForm;
 import org.innovateuk.ifs.interview.form.InterviewAllocationSelectionForm;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
+import org.innovateuk.ifs.interview.resource.*;
+import org.innovateuk.ifs.interview.viewmodel.InterviewAllocateApplicationsViewModel;
+import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.innovateuk.ifs.management.model.AllocateInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewAcceptedAssessorsModelPopulator;
 import org.innovateuk.ifs.management.model.AllocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
@@ -31,6 +33,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import javax.servlet.http.Cookie;
 import java.util.List;
 
+import static com.google.common.primitives.Longs.asList;
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
@@ -41,12 +45,14 @@ import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPag
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResourceBuilder.newInterviewApplicationPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewNotifyAllocationResourceBuilder.newInterviewNotifyAllocationResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -61,7 +67,11 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
 
     @Spy
     @InjectMocks
-    private UnallocatedInterviewApplicationsModelPopulator interviewApplicationsModelPopulator;
+    private UnallocatedInterviewApplicationsModelPopulator unallocatedInterviewApplicationsModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private AllocateInterviewApplicationsModelPopulator allocateInterviewApplicationsModelPopulator;
 
     @Spy
     @InjectMocks
@@ -263,13 +273,13 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         selectionForm.setAllSelected(true);
 
         String cookieContent = JsonUtil.getSerializedObject(selectionForm);
-        String cookieName = String.format("%s_comp_%s_%s", InterviewAllocationController.SELECTION_FORM, competitionId, userId);
+        String cookieName = format("%s_comp_%s_%s", InterviewAllocationController.SELECTION_FORM, competitionId, userId);
         Cookie cookie = new Cookie(cookieName, getCompressedString(cookieContent));
 
         MvcResult result = mockMvc.perform(post("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}", competitionId, userId)
             .param("remove", String.valueOf(idToRemove))
             .cookie(cookie))
-            .andExpect(redirectedUrl(String.format("/assessment/interview/competition/%s/assessors/allocate-applications/%s", competitionId, userId)))
+            .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/assessors/allocate-applications/%s", competitionId, userId)))
             .andReturn();
 
         Cookie resultCookie = result.getResponse().getCookie(cookieName);
@@ -278,5 +288,109 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
 
         assertTrue(resultForm.getSelectedIds().isEmpty());
         assertFalse(resultForm.getAllSelected());
+    }
+
+    @Test
+    public void allocateApplications() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withName("Competition")
+                .build();
+        UserResource user = newUserResource()
+                .withFirstName("Kieran")
+                .withLastName("Hester")
+                .build();
+        List<Long> selectedApplicationIds = asList(1L);
+        AssessorInvitesToSendResource assessorInvitesToSendResource = newAssessorInvitesToSendResource().withContent("content").build();
+        List<InterviewApplicationResource> interviewApplicationResources = newInterviewApplicationResource().build(1);
+
+        InterviewAllocationSelectionForm selectionForm = new InterviewAllocationSelectionForm();
+        selectionForm.setSelectedIds(selectedApplicationIds);
+        String cookieContent = JsonUtil.getSerializedObject(selectionForm);
+        String cookieName = format("%s_comp_%s_%s", InterviewAllocationController.SELECTION_FORM, competition.getId(), user.getId());
+        Cookie cookie = new Cookie(cookieName, getCompressedString(cookieContent));
+
+        when(userRestServiceMock.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(interviewAllocationRestService.getUnallocatedApplicationsById(competition.getId(), selectedApplicationIds))
+                .thenReturn(restSuccess(interviewApplicationResources));
+        when(interviewAllocationRestService.getInviteToSend(competition.getId(), user.getId())).thenReturn(restSuccess(assessorInvitesToSendResource));
+        when(competitionService.getById(competition.getId())).thenReturn(competition);
+
+
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}", competition.getId(), user.getId())
+                .cookie(cookie))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/interview/allocate-applications"))
+                .andReturn();
+
+        InterviewAllocateApplicationsViewModel model = (InterviewAllocateApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        InterviewAllocateApplicationsViewModel expectedViewModel = new InterviewAllocateApplicationsViewModel(
+                competition.getId(),
+                competition.getName(),
+                user,
+                assessorInvitesToSendResource.getContent(),
+                interviewApplicationResources
+        );
+
+        assertEquals(expectedViewModel, model);
+
+        InterviewAllocationNotifyForm form = (InterviewAllocationNotifyForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(format("Applications for interview panel for '%s'", competition.getName()), form.getSubject());
+
+        String originQuery = (String) result.getModelAndView().getModel().get("originQuery");
+        assertEquals("?origin=INTERVIEW_PANEL_ALLOCATE&assessorId=14", originQuery);
+
+        InOrder inOrder = inOrder(userRestServiceMock, competitionRestService, interviewAllocationRestService, competitionService);
+        inOrder.verify(userRestServiceMock).retrieveUserById(user.getId());
+        inOrder.verify(interviewAllocationRestService).getUnallocatedApplicationsById(competition.getId(), selectedApplicationIds);
+        inOrder.verify(interviewAllocationRestService).getInviteToSend(competition.getId(), user.getId());
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void notifyAssessor() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withName("Competition")
+                .build();
+        UserResource user = newUserResource()
+                .withFirstName("Kieran")
+                .withLastName("Hester")
+                .build();
+        List<Long> selectedApplicationIds = asList(1L);
+
+        InterviewAllocationNotifyForm form = new InterviewAllocationNotifyForm();
+        form.setSubject("subject");
+        form.setContent("content");
+
+        InterviewAllocationSelectionForm selectionForm = new InterviewAllocationSelectionForm();
+        selectionForm.setSelectedIds(selectedApplicationIds);
+        String cookieContent = JsonUtil.getSerializedObject(selectionForm);
+        String cookieName = format("%s_comp_%s_%s", InterviewAllocationController.SELECTION_FORM, competition.getId(), user.getId());
+        Cookie cookie = new Cookie(cookieName, getCompressedString(cookieContent));
+
+        InterviewNotifyAllocationResource interviewNotifyAllocationResource = newInterviewNotifyAllocationResource()
+                .withCompetitionId(competition.getId())
+                .withAssessorId(user.getId())
+                .withSubject(form.getSubject())
+                .withContent(form.getContent())
+                .withApplicationIds(selectionForm.getSelectedIds())
+                .build();
+
+        when(interviewAllocationRestService.notifyAllocations(interviewNotifyAllocationResource)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}", competition.getId(), user.getId())
+                .cookie(cookie)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("subject", form.getSubject())
+                .param("content", form.getContent()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/assessors/allocated-applications/%s", competition.getId(), user.getId())))
+                .andReturn();
+
+        verify(interviewAllocationRestService, only()).notifyAllocations(interviewNotifyAllocationResource);
     }
 }

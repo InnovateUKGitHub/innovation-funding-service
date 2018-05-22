@@ -213,32 +213,6 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         verify(interviewAllocationServiceMock, only()).unallocateApplication(assessorId, applicationId);
     }
 
-/*
-    @Test
-    public void sendAllInvites() throws Exception {
-        long competitionId = 2L;
-
-        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
-        when(interviewInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/interview-panel-invite/send-all-invites/{competitionId}", competitionId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(assessorInviteSendResource)))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel-invite/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition to send assessor panel invites for")
-                        ),
-                        requestFields(
-                                fieldWithPath("subject").description("The subject of the invitation"),
-                                fieldWithPath("content").description("The custom content for this invitation")
-                        )
-                ));
-
-        verify(interviewInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
-    }
-
- */
     @Test
     public void getInviteToSend() throws Exception {
         long competitionId = 1L;
@@ -286,26 +260,26 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
     }
 
     @Test
-    public void getAllocatedApplicationsById() throws Exception {
+    public void getUnallocatedApplicationsById() throws Exception {
         long competitionId = 1L;
         List<Long> applicationIds = asList(3L, 5L);
 
         List<InterviewApplicationResource> interviewApplicationResources = newInterviewApplicationResource().build(2);
 
-        when(interviewAllocationServiceMock.getAllocatedApplicationsById(applicationIds))
+        when(interviewAllocationServiceMock.getUnallocatedApplicationsById(applicationIds))
                 .thenReturn(serviceSuccess(interviewApplicationResources));
 
-        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications/all/{applicationIds}", competitionId, join(applicationIds, ',')))
+        mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-applications/all/{applicationIds}", competitionId, join(applicationIds, ',')))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition"),
                                 parameterWithName("applicationIds").description("Ids of applications")
                         ),
-                        responseFields(fieldWithPath("[]").description("List of allocated applications"))
+                        responseFields(fieldWithPath("[]").description("List of unallocated applications"))
                 ));
 
-        verify(interviewAllocationServiceMock, only()).getAllocatedApplicationsById(applicationIds);
+        verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationsById(applicationIds);
 
     }
 }
