@@ -45,7 +45,7 @@ public class OverheadFileSaver {
 
             handleRestResultUpload(fileEntryResult, messages);
         } catch(NumberFormatException | IOException e) {
-            LOG.error("Overheadfile cannot be saved :"  + e.getMessage());
+            LOG.error("Overheadfile cannot be saved :"  + e.getMessage(), e);
         }
 
         return messages;

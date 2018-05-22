@@ -101,9 +101,7 @@ public class AssessorInviteOverviewMapper {
         if (participant.getStatus() == REJECTED) {
             RejectionReason rejectionReason = participant.getRejectionReason();
             if (rejectionReason != null) {
-                details = format(
-                        "Invite declined: %s",
-                        rejectionReason != null ? lowerCase(rejectionReason.getReason()) : "");
+                details = format("Invite declined: %s", lowerCase(rejectionReason.getReason()));
             } else {
                 details = format("Invite declined: %s", participant.getInvite().getSentOn().format(detailsFormatter));
             }

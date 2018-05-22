@@ -69,11 +69,10 @@ public class OrganisationPatternMatcher {
             return true;
         }
 
-        try {
-            return string1.trim().equalsIgnoreCase(string2.trim());
-        } catch(NullPointerException e) {
+        if(string1 == null || string2 == null) {
             return false;
         }
+        return string1.trim().equalsIgnoreCase(string2.trim());
     }
 
     private Optional<OrganisationAddress> getOrganisationAddressByType(Organisation organisation, OrganisationAddressType addressType) {
