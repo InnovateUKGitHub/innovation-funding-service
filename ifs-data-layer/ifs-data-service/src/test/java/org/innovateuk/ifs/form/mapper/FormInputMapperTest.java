@@ -44,28 +44,12 @@ public class FormInputMapperTest {
         when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
 
         FormInputResource formInputResource = newFormInputResource()
-                .withAllowedFileTypes(asSet(PDF))
+                .withAllowedFileTypes(asSet(PDF, SPREADSHEET))
                 .build();
 
         FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
 
-        assertEquals(result.getAllowedFileTypes(), asSet(PDF));
-    }
-
-    @Test
-    public void mapToDomain_fileTypeCategoryShouldMapToDisplayName() {
-        FormInput formInput = newFormInput()
-                .withId(1L)
-                .build();
-        when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
-
-        FormInputResource formInputResource = newFormInputResource()
-                .withAllowedFileTypes(asSet(SPREADSHEET))
-                .build();
-
-        FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
-
-        assertEquals(result.getAllowedFileTypes(), asSet(SPREADSHEET));
+        assertEquals(result.getAllowedFileTypes(), asSet(PDF, SPREADSHEET));
     }
 
     @Test
