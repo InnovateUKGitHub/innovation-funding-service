@@ -21,13 +21,13 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.form.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
@@ -92,7 +92,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                         newFormInput()
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withAllowedFileTypes(asSet(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET))
+                                .withAllowedFileTypes(asSet(PDF, SPREADSHEET))
                                 .withGuidanceAnswer(fileUploadGuidance)
                                 .build(),
                         newFormInput()
@@ -163,8 +163,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getGuidance(), guidance);
         assertEquals(resource.getType(), CompetitionSetupQuestionType.SCOPE);
         assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
-        assertEquals(resource.getAllowedFileTypes(), asSet(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET));
-
+        assertEquals(resource.getAllowedFileTypes(), asSet(PDF, SPREADSHEET));
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }
 
@@ -245,7 +244,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
-        resource.setAllowedFileTypes(asSet(FileTypeCategory.PDF));
+        resource.setAllowedFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
 
@@ -269,8 +268,8 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         assertEquals(true, result.isSuccess());
         assertNotEquals(appendixEnabled, appendixFormInput.getActive());
-        assertNotEquals(guidanceAnswer, appendixFormInput.getAllowedFileTypes());
-        assertNotEquals(asSet(allowedFileTypes), appendixFormInput.getGuidanceAnswer());
+        assertNotEquals(allowedFileTypes, appendixFormInput.getAllowedFileTypes());
+        assertNotEquals(guidanceAnswer, appendixFormInput.getGuidanceAnswer());
     }
 
     @Test
@@ -281,7 +280,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         FileTypeCategory allowedFileTypes = FileTypeCategory.fromDisplayName("PDF");
 
         resource.setAppendix(false);
-        resource.setAllowedFileTypes(asSet((FileTypeCategory.PDF)));
+        resource.setAllowedFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput()
@@ -311,7 +310,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
-        resource.setAllowedFileTypes(asSet(FileTypeCategory.PDF));
+        resource.setAllowedFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -326,7 +325,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         assertEquals(true, result.isSuccess());
         assertTrue(appendixFormInput.getActive());
-        assertEquals(asSet(FileTypeCategory.PDF), appendixFormInput.getAllowedFileTypes());
+        assertEquals(asSet(PDF), appendixFormInput.getAllowedFileTypes());
         assertEquals(fileUploadGuidance, appendixFormInput.getGuidanceAnswer());
     }
 
@@ -338,7 +337,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
-        resource.setAllowedFileTypes(newLinkedHashSet(asSet(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET)));
+        resource.setAllowedFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -347,8 +346,8 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         service.update(resource);
 
-        assertTrue(appendixFormInput.getAllowedFileTypes().contains(FileTypeCategory.PDF));
-        assertTrue(appendixFormInput.getAllowedFileTypes().contains(FileTypeCategory.SPREADSHEET));
+        assertTrue(appendixFormInput.getAllowedFileTypes().contains(PDF));
+        assertTrue(appendixFormInput.getAllowedFileTypes().contains(SPREADSHEET));
     }
 
     @Test

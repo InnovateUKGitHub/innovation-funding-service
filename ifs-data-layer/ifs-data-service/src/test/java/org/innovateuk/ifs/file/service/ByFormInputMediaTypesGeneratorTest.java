@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +17,8 @@ import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Mockito.verify;
@@ -32,7 +35,7 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     @Test
     public void pdf() {
         assertExpectedMediaTypesForFileTypeCategory(
-                asSet(FileTypeCategory.PDF),
+                asSet(PDF),
                 "application/pdf"
         );
     }
@@ -40,7 +43,7 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     @Test
     public void spreadsheet() {
         assertExpectedMediaTypesForFileTypeCategory(
-                asSet(FileTypeCategory.SPREADSHEET),
+                asSet(SPREADSHEET),
                 "application/vnd.ms-excel",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "application/vnd.oasis.opendocument.spreadsheet"
@@ -50,7 +53,7 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     @Test
     public void pdfAndSpreadsheet() {
         assertExpectedMediaTypesForFileTypeCategory(
-                asSet(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET),
+                asSet(PDF, SPREADSHEET),
                 "application/pdf",
                 "application/vnd.ms-excel",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -64,11 +67,11 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     }
 
     private void assertExpectedMediaTypesForFileTypeCategory(
-            Set<FileTypeCategory> FileTypeCategory,
+            Set<FileTypeCategory> fileTypeCategories,
             String... expectedMediaTypes
     ) {
         FormInputResource formInput = newFormInputResource()
-                .withAllowedFileTypes(FileTypeCategory)
+                .withAllowedFileTypes(new HashSet<>(fileTypeCategories))
                 .build();
         when(formInputServiceMock.findFormInput(formInput.getId())).thenReturn(serviceSuccess(formInput));
 

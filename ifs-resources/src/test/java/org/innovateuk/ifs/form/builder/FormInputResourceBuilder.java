@@ -6,8 +6,8 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
@@ -64,7 +64,7 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
     }
 
-    public FormInputResourceBuilder withAllowedFileTypes(Collection<FileTypeCategory>... fileTypes) {
+    public FormInputResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {
         return withArray((types, formInput) -> setField("allowedFileTypes", newLinkedHashSet(types), formInput), fileTypes);
     }
 }
