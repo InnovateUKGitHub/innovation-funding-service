@@ -45,6 +45,10 @@
                th:disabled="${!setupReady}"
                class="button no-margin-right"  id="compCTA">Complete</a>
         </div>
+        <div class="extra-margin"
+             th:unless="${model.general.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
+            <a data-js-modal="delete-modal" href="#">Delete competition</a>
+        </div>
     </th:block>
 </th:block>
 
@@ -115,6 +119,26 @@
               th:action="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}">
             <div>
                 <button type="submit" class="button">Done</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ======== Comp admin - delete modal ======= -->
+<div th:fragment="comp-setup-delete-modal">
+    <div class="delete-modal warning-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Deleting this competition will remove all data</h2>
+            <p>All information entered and stored for this competition will be removed from the service and will not be
+                accessible again.</p>
+        </div>
+        <hr />
+        <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
+              th:action="@{/competition/setup/{competitionId}/delete(competitionId=${model.general.competition.id})}">
+            <div>
+                <button type="submit" class="button">Delete</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>

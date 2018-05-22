@@ -23,4 +23,6 @@ public interface SetupStatusRepository extends PagingAndSortingRepository<SetupS
     Optional<SetupStatus> findByClassNameAndClassPkAndTargetClassNameAndTargetId(String className, Long classPk, String targetClassName, Long targetId);
 
     void deleteByClassNameAndClassPk(String className, Long classPk);
+
+    void deleteByTargetClassNameAndTargetId(String className, long targetId);
 }

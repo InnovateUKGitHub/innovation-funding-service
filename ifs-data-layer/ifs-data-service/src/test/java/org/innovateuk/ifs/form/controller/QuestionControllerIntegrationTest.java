@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
-import org.innovateuk.ifs.commons.security.SecuritySetter;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -22,6 +20,7 @@ import org.springframework.test.annotation.Rollback;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -30,9 +29,6 @@ import static org.junit.Assert.*;
 @Rollback
 public class QuestionControllerIntegrationTest extends BaseControllerIntegrationTest<QuestionController> {
 
-
-    @Autowired
-    private QuestionStatusRepository questionStatusRepository;
     @Autowired
     private FormInputRepository formInputRepository;
     @Autowired
@@ -42,17 +38,10 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     @Autowired
     private QuestionMapper questionMapper;
 
-
-    private final Long userId = SecuritySetter.basicSecurityUser.getId();
-    private final Long applicationId = 1L;
     private final Long questionId = 13L;
     private QuestionResource questionResource;
     private Question question;
-    private Long newAssigneeProcessRoleId = 5L;
-    private Long organisationId = 3L;
     private Long competitionId = 1L;
-    public static final long QUESTION_ID_WITH_MULTIPLE = 35L;
-
 
     @Before
     public void setup(){
@@ -82,6 +71,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         //Create an inactive form input for the question.
         Question question = questionRepository.findOne(questionId);
         FormInputBuilder baseInput = newFormInput()
+                .with(id(null))
                 .withQuestion(question)
                 .withPriority(1)
                 .withType(FormInputType.TEXTAREA)
