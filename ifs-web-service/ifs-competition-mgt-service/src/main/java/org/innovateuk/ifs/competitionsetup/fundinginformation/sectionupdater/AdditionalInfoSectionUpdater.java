@@ -50,7 +50,7 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 		try {
 			competitionSetupRestService.update(competition).getSuccess();
 		} catch (RuntimeException e) {
-			LOG.error("Competition object not available");
+			LOG.error("Competition object not available", e);
 			return serviceFailure(asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST)));
 		}
 
