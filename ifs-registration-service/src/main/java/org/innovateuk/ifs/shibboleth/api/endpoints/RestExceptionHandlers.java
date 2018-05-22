@@ -47,8 +47,7 @@ public interface RestExceptionHandlers {
         final HttpMessageNotReadableException exception) {
 
         final Logger logger = LoggerFactory.getLogger(RestExceptionHandlers.class);
-        logger.warn("Invalid request body on [{}] for [{}]", request.getRequestURL(), exception.getMessage());
-        logger.debug("Invalid request body - stacktrace.", exception);
+        logger.warn("Invalid request body on [{}] for [{}]", request.getRequestURL(), exception);
 
         return ResponseEntity.unprocessableEntity().body(new ExceptionResponse(exception));
     }

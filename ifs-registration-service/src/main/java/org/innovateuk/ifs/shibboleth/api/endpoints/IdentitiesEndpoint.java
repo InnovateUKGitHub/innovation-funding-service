@@ -55,12 +55,7 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
         throws DuplicateEmailException, InvalidPasswordException {
 
         if (bindingResult.hasFieldErrors("password")) {
-
-            List<String> errors = bindingResult.getFieldErrors("password")
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            throw new InvalidPasswordException(errors);
+            throwExceptionOnInvalidPassword(bindingResult);
         }
 
         if (bindingResult.hasFieldErrors("email")) {
@@ -125,12 +120,7 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
             throws InvalidPasswordException {
 
         if (bindingResult.hasFieldErrors("password")) {
-
-            List<String> errors = bindingResult.getFieldErrors("password")
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            throw new InvalidPasswordException(errors);
+            throwExceptionOnInvalidPassword(bindingResult);
         }
 
         updateService.changePassword(uuid, change.getPassword());
@@ -170,5 +160,13 @@ public class IdentitiesEndpoint implements RestExceptionHandlers, LdapExceptionH
     public Boolean getAccountLockStatus(@PathVariable final UUID uuid) throws PasswordPolicyException {
         LOG.debug("get account lock request: UUID [{}]", uuid);
         return userAccountLockoutService.getAccountLockStatus(uuid);
+    }
+
+    private void throwExceptionOnInvalidPassword (BindingResult bindingResult) throws InvalidPasswordException {
+        List<String> errors = bindingResult.getFieldErrors("password")
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+        throw new InvalidPasswordException(errors);
     }
 }

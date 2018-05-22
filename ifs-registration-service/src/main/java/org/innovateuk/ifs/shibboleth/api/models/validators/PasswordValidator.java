@@ -19,7 +19,7 @@ public class PasswordValidator implements Validator<String, InvalidPasswordExcep
         final String passwordLowerCase = password.toLowerCase();
         
         if(passwordPolicy.getBlacklist().stream().anyMatch(passwordLowerCase::contains)) {
-            throw new InvalidPasswordException(singletonList("INVALID_PASSWORD"));
+            throw new InvalidPasswordException(singletonList(InvalidPasswordException.ERROR_KEY));
         }
 
     }
