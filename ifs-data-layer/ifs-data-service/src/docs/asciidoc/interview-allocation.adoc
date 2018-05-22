@@ -10,3 +10,82 @@ include::{snippets}/interview-panel/get-interview-accepted-assessors/response-fi
 
 ==== Curl Example
 include::{snippets}/interview-panel/get-interview-accepted-assessors/curl-request.adoc[]
+
+
+=== Get the allocated applications for an assessor
+==== Request
+include::{snippets}/interview-panel/get-allocated-applications/http-request.adoc[]
+include::{snippets}/interview-panel/get-allocated-applications/path-parameters.adoc[]
+include::{snippets}/interview-panel/get-allocated-applications/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-allocated-applications/http-response.adoc[]
+include::{snippets}/interview-panel/get-allocated-applications/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-allocated-applications/curl-request.adoc[]
+
+
+=== Get the unallocated applications for an assessor
+==== Request
+include::{snippets}/interview-panel/get-unallocated-applications/http-request.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications/path-parameters.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-unallocated-applications/http-response.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-unallocated-applications/curl-request.adoc[]
+
+
+=== Get the unallocated application ids for an assessor
+==== Request
+include::{snippets}/interview-panel/get-unallocated-application-ids/http-request.adoc[]
+include::{snippets}/interview-panel/get-unallocated-application-ids/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-unallocated-application-ids/http-response.adoc[]
+include::{snippets}/interview-panel/get-unallocated-application-ids/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-unallocated-application-ids/curl-request.adoc[]
+
+
+=== Get unallocated applications by id
+==== Request
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/http-request.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/http-response.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/curl-request.adoc[]
+
+
+=== Get the invite to be sent to an assessor
+==== Request
+include::{snippets}/interview-panel/get-invite-to-send/http-request.adoc[]
+include::{snippets}/interview-panel/get-invite-to-send/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-invite-to-send/http-response.adoc[]
+include::{snippets}/interview-panel/get-invite-to-send/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-invite-to-send/curl-request.adoc[]
+
+
+=== Notify assessor of their allocations
+==== Request
+include::{snippets}/interview-panel/send-invite/http-request.adoc[]
+include::{snippets}/interview-panel/send-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/send-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/send-invite/curl-request.adoc[]

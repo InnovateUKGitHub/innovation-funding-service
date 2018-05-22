@@ -13,9 +13,9 @@ import static org.junit.Assert.assertEquals;
 public class InterviewResourceBuilderTest {
 
     @Test
-    public void buildOne() throws Exception {
+    public void buildOne() {
         Long expectedId = 1L;
-        InterviewState expectedStatus = InterviewState.PENDING;
+        InterviewState expectedStatus = InterviewState.ASSIGNED;
         LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         LocalDate expectedEndDate = LocalDate.now().minusDays(1);
         Long expectedProcessRole = 2L;
@@ -47,7 +47,7 @@ public class InterviewResourceBuilderTest {
     @Test
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
-        InterviewState[] expectedStatuses = {InterviewState.PENDING, InterviewState.ACCEPTED};
+        InterviewState[] expectedStatuses = {InterviewState.ASSIGNED, InterviewState.ASSIGNED};
         LocalDate[] expectedStartDates = {LocalDate.now().minusDays(2), LocalDate.now().minusDays(3)};
         LocalDate[] expectedEndDates = {LocalDate.now().minusDays(1), LocalDate.now().minusDays(2)};
         Long[] expectedProcessRoles = {1L, 2L};

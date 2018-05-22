@@ -39,6 +39,7 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,6 +62,7 @@ import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.ne
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -73,6 +75,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
@@ -167,7 +170,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         roles = newProcessRole().withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
         section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
-        comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
+        comp = newCompetition().withSections(singletonList(section)).withMaxResearchRatio(30).build();
         app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
 
         when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
@@ -233,7 +236,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void applicationServiceShouldReturnApplicationByUserId() throws Exception {
+    public void applicationServiceShouldReturnApplicationByUserId() {
         User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "testToken123abc", "my-uid");
         User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", "my-uid");
 
@@ -289,7 +292,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void wildcardSearchByIdWithResultsOnSinglePage() throws Exception {
+    public void wildcardSearchByIdWithResultsOnSinglePage() {
 
         String searchString = "12";
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
@@ -303,7 +306,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void wildcardSearchByIdWithResultsAcrossMultiplePages() throws Exception {
+    public void wildcardSearchByIdWithResultsAcrossMultiplePages() {
 
         String searchString = "12";
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
@@ -343,7 +346,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void applicationControllerCanCreateApplication() throws Exception {
+    public void applicationControllerCanCreateApplication() {
         Long competitionId = 1L;
         Long organisationId = 2L;
         Long userId = 3L;
@@ -387,7 +390,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
 
     @Test
-    public void setApplicationFundingEmailDateTime() throws Exception {
+    public void setApplicationFundingEmailDateTime() {
 
         Long applicationId = 1L;
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
@@ -404,7 +407,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void setApplicationFundingEmailDateTime_Failure() throws Exception {
+    public void setApplicationFundingEmailDateTime_Failure() {
 
         Long applicationId = 1L;
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
@@ -421,7 +424,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void markAsIneligible() throws Exception {
+    public void markAsIneligible() {
         long applicationId = 1L;
         String reason = "reason";
 
@@ -444,11 +447,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
-        verify(applicationRepositoryMock).save(application);
     }
 
     @Test
-    public void markAsIneligible_applicationNotSubmitted() throws Exception {
+    public void markAsIneligible_applicationNotSubmitted() {
         long applicationId = 1L;
         String reason = "reason";
 
@@ -471,6 +473,69 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
+    }
+
+    @Test
+    public void withdraw() {
+        long applicationId = 1L;
+        long userId = 2L;
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.APPROVED)
+                .withId(applicationId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(applicationWorkflowHandlerMock.withdraw(application, user)).thenReturn(true);
+
+        ServiceResult<Void> result = service.withdrawApplication(applicationId);
+
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(applicationWorkflowHandlerMock).withdraw(application, user);
+    }
+
+    @Test
+    public void withdraw_applicationNotApproved() {
+        long applicationId = 1L;
+        long userId = 2L;
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.REJECTED)
+                .withId(applicationId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(applicationWorkflowHandlerMock.withdraw(application, user)).thenReturn(false);
+
+        ServiceResult<Void> result = service.withdrawApplication(applicationId);
+
+        assertTrue(result.isFailure());
+        assertEquals(APPLICATION_MUST_BE_APPROVED.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(applicationWorkflowHandlerMock).withdraw(application, user);
     }
 
     @Test

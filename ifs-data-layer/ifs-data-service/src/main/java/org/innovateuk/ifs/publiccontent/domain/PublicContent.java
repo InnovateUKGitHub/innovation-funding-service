@@ -36,13 +36,13 @@ public class PublicContent {
     @Enumerated(EnumType.STRING)
     private FundingType fundingType;
 
-    @OneToMany(mappedBy="publicContent")
+    @OneToMany(mappedBy="publicContent", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ContentSection> contentSections;
 
-    @OneToMany(mappedBy="publicContent")
+    @OneToMany(mappedBy="publicContent", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Keyword> keywords;
 
-    @OneToMany(mappedBy="publicContent")
+    @OneToMany(mappedBy="publicContent", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ContentEvent> contentEvents;
 
     public Long getId() {

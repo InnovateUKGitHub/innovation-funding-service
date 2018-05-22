@@ -6,6 +6,7 @@ import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
@@ -20,6 +21,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
@@ -59,7 +61,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
 
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess();
+        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess().getAffiliationResourceList();
         assertEquals(affiliationResources, response);
 
         InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
@@ -72,7 +74,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
     public void getUserAffiliations_userDoesNotExist() throws Exception {
         Long userIdNotExists = 1L;
 
-        ServiceResult<List<AffiliationResource>> response = service.getUserAffiliations(userIdNotExists);
+        ServiceResult<AffiliationListResource> response = service.getUserAffiliations(userIdNotExists);
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
         verify(userRepositoryMock, only()).findOne(userIdNotExists);
@@ -91,7 +93,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
 
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess();
+        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess().getAffiliationResourceList();
         assertTrue(response.isEmpty());
 
         verify(userRepositoryMock, only()).findOne(userId);
@@ -102,6 +104,9 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
     public void updateUserAffiliations() throws Exception {
         Long userId = 1L;
         List<AffiliationResource> affiliationResources = newAffiliationResource().build(2);
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(affiliationResources)
+                .build();
         List<Affiliation> affiliations = newAffiliation().build(2);
 
         User existingUser = newUser()
@@ -114,7 +119,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
 
         when(userRepositoryMock.save(createUserExpectations(existingUser.getId(), affiliations))).thenReturn(newUser().build());
 
-        ServiceResult<Void> response = service.updateUserAffiliations(userId, affiliationResources);
+        ServiceResult<Void> response = service.updateUserAffiliations(userId, affiliationListResource);
         assertTrue(response.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
@@ -128,7 +133,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
     public void updateUserAffiliations_userDoesNotExist() throws Exception {
         Long userIdNotExists = 1L;
 
-        ServiceResult<Void> result = service.updateUserAffiliations(userIdNotExists, new ArrayList<>());
+        ServiceResult<Void> result = service.updateUserAffiliations(userIdNotExists, new AffiliationListResource());
         assertTrue(result.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
         verify(userRepositoryMock, only()).findOne(userIdNotExists);

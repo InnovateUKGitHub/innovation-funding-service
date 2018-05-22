@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.form.domain;
 
-import org.innovateuk.ifs.form.domain.FormInput;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 

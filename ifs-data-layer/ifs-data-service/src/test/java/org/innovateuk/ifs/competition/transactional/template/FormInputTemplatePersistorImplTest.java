@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -40,7 +41,6 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
     }
 
     private static final String COMPETIITON_TYPE_SECTOR_NAME = "Sector";
-    private static final String SCOPE = "Scope";
 
     @Mock
     private GuidanceRowTemplatePersistorImpl guidanceRowTemplatePersistorMock;
@@ -56,17 +56,16 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
         Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(COMPETIITON_TYPE_SECTOR_NAME).build()).build();
         Set<FormValidator> formValidators = new HashSet<>(newFormValidator().build(2));
 
+        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
         List<FormInput> formInputsList = newFormInput()
                 .withInputValidators(formValidators)
                 .withDescription()
-                .withGuidanceRows()
+                .withGuidanceRows(guidanceRows)
                 .withId(1L,2L)
                 .build(2);
         Question question = newQuestion()
                 .withCompetition(competition)
                 .withFormInputs(formInputsList).build();
-
-        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
 
         when(guidanceRowTemplatePersistorMock.persistByParentEntity(any())).thenReturn(guidanceRows);
 
@@ -91,21 +90,22 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
         Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(COMPETIITON_TYPE_SECTOR_NAME).build()).build();
         Set<FormValidator> formValidators = new HashSet<>(newFormValidator().build(2));
 
+        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
+
         List<FormInput> formInputsList = newFormInput()
                 .withInputValidators(formValidators)
                 .withDescription()
-                .withGuidanceRows()
+                .withGuidanceRows(guidanceRows)
                 .withId(1L,2L)
                 .withType(ASSESSOR_APPLICATION_IN_SCOPE)
                 .withDescription(FEEDBACK.getType())
                 .build(2);
         Question question = newQuestion()
-                .withShortName(SCOPE)
-                .withSection(newSection().withName(SCOPE).build())
+                .withShortName(CompetitionSetupQuestionType.SCOPE.getShortName())
+                .withQuestionSetupType(CompetitionSetupQuestionType.SCOPE)
+                .withSection(newSection().withName(CompetitionSetupQuestionType.SCOPE.getShortName()).build())
                 .withCompetition(competition)
                 .withFormInputs(formInputsList).build();
-
-        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
 
         when(guidanceRowTemplatePersistorMock.persistByParentEntity(any())).thenReturn(guidanceRows);
 
@@ -134,7 +134,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
         List<FormInput> formInputsList = newFormInput()
                 .withInputValidators(formValidators)
                 .withDescription()
-                .withGuidanceRows()
+                .withGuidanceRows(Collections.emptyList())
                 .withId(1L,2L)
                 .build(2);
         Question question = newQuestion()

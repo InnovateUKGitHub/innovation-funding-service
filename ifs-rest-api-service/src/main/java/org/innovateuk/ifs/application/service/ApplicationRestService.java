@@ -29,6 +29,7 @@ public interface ApplicationRestService {
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
     RestResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
     RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource);
+    RestResult<Void> withdrawApplication(long applicationId);
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
     RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
     RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField);
