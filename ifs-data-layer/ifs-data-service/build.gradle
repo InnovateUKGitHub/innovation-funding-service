@@ -69,6 +69,7 @@ prepareDockerBaseInput {
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
     compile project(":ifs-data-layer:data-service-file")
+    compile project(":ifs-data-layer:data-service-alerts")
     compile project(":ifs-sil-resources")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
