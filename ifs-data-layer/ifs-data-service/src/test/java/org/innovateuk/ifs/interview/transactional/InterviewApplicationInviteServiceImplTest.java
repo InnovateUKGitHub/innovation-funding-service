@@ -139,8 +139,5 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
         assertTrue(result.isSuccess());
 
         assertEquals(expected, result.getSuccess());
-
-
-
     }
 }
