@@ -220,7 +220,7 @@ CompAdmin allocate applications to assessor
     When the user clicks the button/link     css=input[type="submit"]   #Notify
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION}")
     Then the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Neural Industries") ~ td:contains("Remove")
-    Then the user reads his email            ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
+    And the user reads his email             ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
 
 *** Keywords ***
 Custom Suite Setup
