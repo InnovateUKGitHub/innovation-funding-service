@@ -8,7 +8,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.management.viewmodel.AssessorsProfileViewModel;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;

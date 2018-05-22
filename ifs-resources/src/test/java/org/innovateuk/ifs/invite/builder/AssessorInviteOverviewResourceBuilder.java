@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 
 import java.util.List;
 import java.util.function.BiConsumer;

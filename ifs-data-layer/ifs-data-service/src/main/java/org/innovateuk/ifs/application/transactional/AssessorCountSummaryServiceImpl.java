@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

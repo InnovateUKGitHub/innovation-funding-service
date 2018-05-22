@@ -13,9 +13,9 @@ import org.innovateuk.ifs.commons.error.exception.SummaryDataUnavailableExceptio
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;

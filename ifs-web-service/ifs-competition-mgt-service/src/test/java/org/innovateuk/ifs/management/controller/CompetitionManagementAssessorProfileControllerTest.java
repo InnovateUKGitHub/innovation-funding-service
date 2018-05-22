@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;

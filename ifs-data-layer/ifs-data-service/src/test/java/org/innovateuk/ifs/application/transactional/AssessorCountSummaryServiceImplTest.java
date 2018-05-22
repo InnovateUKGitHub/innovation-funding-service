@@ -5,7 +5,7 @@ import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;

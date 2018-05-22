@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourc
 import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;

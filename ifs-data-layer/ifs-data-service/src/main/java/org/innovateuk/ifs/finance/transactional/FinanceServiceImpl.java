@@ -17,7 +17,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

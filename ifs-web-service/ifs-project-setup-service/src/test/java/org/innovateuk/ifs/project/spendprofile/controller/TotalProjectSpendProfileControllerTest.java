@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResourc
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalProjectSpendProfileTableViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalSpendProfileViewModel;
-import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;

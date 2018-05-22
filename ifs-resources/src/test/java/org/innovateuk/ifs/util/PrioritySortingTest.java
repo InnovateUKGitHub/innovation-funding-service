@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.util;
 
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 

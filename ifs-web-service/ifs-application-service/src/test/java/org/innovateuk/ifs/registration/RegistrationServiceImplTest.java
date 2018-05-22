@@ -18,7 +18,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
 

@@ -57,7 +57,6 @@ import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
-import static org.innovateuk.ifs.interview.builder.InterviewInviteStatisticsResourceBuilder.newInterviewInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
@@ -66,8 +65,8 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.review.builder.ReviewInviteStatisticsResourceBuilder.newReviewInviteStatisticsResource;
-import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;

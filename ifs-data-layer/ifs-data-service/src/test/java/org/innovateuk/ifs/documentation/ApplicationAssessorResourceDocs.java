@@ -8,8 +8,8 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValu
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.TOO_MANY_ASSESSMENTS;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SUBMIT;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
-import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.BUSINESS;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ApplicationAssessorResourceDocs {

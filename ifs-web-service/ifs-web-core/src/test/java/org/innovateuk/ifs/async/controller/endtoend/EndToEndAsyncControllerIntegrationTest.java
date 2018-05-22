@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxy;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.fail;

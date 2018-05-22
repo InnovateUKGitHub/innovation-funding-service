@@ -24,7 +24,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;

@@ -14,7 +14,7 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.AcademicRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;

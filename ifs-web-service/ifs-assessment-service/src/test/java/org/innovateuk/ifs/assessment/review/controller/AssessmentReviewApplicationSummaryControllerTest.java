@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -48,7 +47,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;

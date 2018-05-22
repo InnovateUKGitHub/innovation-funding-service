@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import com.google.gson.Gson;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

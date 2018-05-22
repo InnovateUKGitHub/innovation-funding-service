@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.builder;
+package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import javax.persistence.*;
 

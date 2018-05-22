@@ -2,28 +2,20 @@ package org.innovateuk.ifs.application.service;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertFalse;
-import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;

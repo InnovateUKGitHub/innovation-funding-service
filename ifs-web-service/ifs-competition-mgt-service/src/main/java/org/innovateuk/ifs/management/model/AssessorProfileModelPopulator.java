@@ -8,7 +8,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.management.viewmodel.AssessorsProfileViewModel;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

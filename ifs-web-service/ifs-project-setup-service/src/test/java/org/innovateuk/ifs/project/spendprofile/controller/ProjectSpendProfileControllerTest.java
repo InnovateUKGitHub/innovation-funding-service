@@ -19,7 +19,7 @@ import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProj
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
-import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
@@ -48,7 +48,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder.newSpendProfileResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;

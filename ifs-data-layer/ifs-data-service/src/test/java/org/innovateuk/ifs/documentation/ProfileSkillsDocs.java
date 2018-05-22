@@ -2,7 +2,7 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder;
 import org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;

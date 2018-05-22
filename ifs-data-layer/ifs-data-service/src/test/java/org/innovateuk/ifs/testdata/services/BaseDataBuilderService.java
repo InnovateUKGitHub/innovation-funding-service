@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;

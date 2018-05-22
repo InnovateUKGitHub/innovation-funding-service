@@ -13,7 +13,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;

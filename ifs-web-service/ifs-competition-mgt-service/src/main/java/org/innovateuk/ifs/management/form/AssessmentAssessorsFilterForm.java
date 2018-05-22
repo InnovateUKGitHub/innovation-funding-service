@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 
 /**
  * Form for filtering assessors by {@link BusinessType} and {@link org.innovateuk.ifs.category.resource.InnovationSectorResource}.

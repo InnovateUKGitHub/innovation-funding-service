@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;

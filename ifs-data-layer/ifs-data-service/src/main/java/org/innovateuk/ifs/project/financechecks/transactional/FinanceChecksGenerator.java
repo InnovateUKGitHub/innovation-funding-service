@@ -16,7 +16,7 @@ import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.util.FinanceUtil;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -42,8 +42,8 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBu
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
-import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;

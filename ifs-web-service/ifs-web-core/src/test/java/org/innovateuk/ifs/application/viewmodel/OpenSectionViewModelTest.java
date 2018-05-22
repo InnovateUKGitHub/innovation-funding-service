@@ -16,7 +16,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;

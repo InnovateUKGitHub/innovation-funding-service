@@ -2,18 +2,17 @@ package org.innovateuk.ifs.user.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Title;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -35,28 +33,26 @@ public class CrmServiceImpl implements CrmService {
     private UserRepository userRepository;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
+    private OrganisationService organisationService;
 
     @Autowired
     private SilCrmEndpoint silCrmEndpoint;
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess((user) -> {
+         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
             if (!user.isInternalUser()) {
-                List<Organisation> organisations = organisationRepository.findByUsersId(userId);
-                if (organisations.size() != 1) {
-                    return serviceFailure(CommonErrors.notFoundError(Organisation.class));
-                }
-                SilContact silContact = toSilContact(user, organisations.get(0));
-                LOG.info("Updating CRM contact " + silContact.getEmail());
-                return silCrmEndpoint.updateContact(silContact);
+                return find(organisationService.getPrimaryForUser(userId), notFoundError(OrganisationResource.class)).andOnSuccess(organisation -> {
+                    SilContact silContact = toSilContact(user, organisation.getSuccess());
+                    LOG.info("Updating CRM contact " + silContact.getEmail());
+                    return silCrmEndpoint.updateContact(silContact);
+                });
             }
             return serviceSuccess();
-        });
+         });
     }
 
-    private SilContact toSilContact(User user, Organisation organisation) {
+    private SilContact toSilContact(User user, OrganisationResource organisation) {
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
         silContact.setFirstName(user.getFirstName());
@@ -76,13 +72,13 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private SilAddress silRegisteredAddress(Organisation organisation) {
+    private SilAddress silRegisteredAddress(OrganisationResource organisation) {
         return organisation.getAddresses().stream()
                 .filter(organisationAddress -> Arrays.asList(OrganisationAddressType.OPERATING.getOrdinal(), OrganisationAddressType.REGISTERED.getOrdinal())
                         .contains(organisationAddress.getAddressType().getId()))
                 .findAny()
                 .map(organisationAddress -> {
-                    Address address = organisationAddress.getAddress();
+                    AddressResource address = organisationAddress.getAddress();
                     SilAddress silAddress = new SilAddress();
                     silAddress.setBuildingName(address.getAddressLine1());
                     silAddress.setStreet(address.getAddressLine2());

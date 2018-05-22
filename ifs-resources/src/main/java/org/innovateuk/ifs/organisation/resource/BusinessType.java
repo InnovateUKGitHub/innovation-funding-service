@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.resource;
+package org.innovateuk.ifs.organisation.resource;
 
 /**
  * A {User}'s main area of business. For User registration we only need to distinguish between business and

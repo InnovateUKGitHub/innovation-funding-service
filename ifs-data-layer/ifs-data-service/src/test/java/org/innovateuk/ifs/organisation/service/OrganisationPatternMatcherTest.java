@@ -8,7 +8,7 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
@@ -22,8 +22,8 @@ import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressTy
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

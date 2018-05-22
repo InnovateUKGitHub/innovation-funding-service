@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.InterviewAssessorApplicationsViewModel;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;

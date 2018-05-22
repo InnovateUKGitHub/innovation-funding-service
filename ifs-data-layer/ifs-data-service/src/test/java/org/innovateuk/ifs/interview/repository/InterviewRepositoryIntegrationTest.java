@@ -9,10 +9,10 @@ import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.resource.InterviewState;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.interview.builder.InterviewBuilder.newInterview
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.CREATED;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertThat;
 

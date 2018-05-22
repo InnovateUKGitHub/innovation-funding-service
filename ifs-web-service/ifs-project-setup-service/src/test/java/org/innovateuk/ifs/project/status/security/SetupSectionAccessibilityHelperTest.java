@@ -11,7 +11,7 @@ import org.mockito.Mock;
 
 import java.util.function.BiFunction;
 
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Mockito.when;
 
 public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {

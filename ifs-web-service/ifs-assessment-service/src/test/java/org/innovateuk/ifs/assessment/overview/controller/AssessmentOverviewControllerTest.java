@@ -79,7 +79,7 @@ import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestio
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.*;

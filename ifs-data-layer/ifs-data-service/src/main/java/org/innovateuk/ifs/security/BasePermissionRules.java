@@ -14,9 +14,9 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 

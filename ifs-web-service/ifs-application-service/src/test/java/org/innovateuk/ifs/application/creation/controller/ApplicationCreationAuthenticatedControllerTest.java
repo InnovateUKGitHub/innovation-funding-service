@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.creation.controller.ApplicationCreationAuthenticatedController.FORM_RADIO_NAME;
 import static org.innovateuk.ifs.application.creation.controller.ApplicationCreationAuthenticatedController.RADIO_TRUE;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RTO;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;

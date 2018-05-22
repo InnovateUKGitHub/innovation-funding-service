@@ -2,7 +2,7 @@ package org.innovateuk.ifs.user.builder;
 
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.ProfileSkillsBaseResource;
 
 import java.util.List;

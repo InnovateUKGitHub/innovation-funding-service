@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.organisation.service;
 
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
+import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;

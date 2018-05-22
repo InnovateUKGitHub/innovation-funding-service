@@ -64,7 +64,7 @@ import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;

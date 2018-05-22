@@ -5,7 +5,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 
 import java.util.List;
 import java.util.function.BiConsumer;

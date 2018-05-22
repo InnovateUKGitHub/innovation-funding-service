@@ -2,7 +2,7 @@ package org.innovateuk.ifs.interview.viewmodel;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsRowViewModel;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 
 import java.util.List;
 

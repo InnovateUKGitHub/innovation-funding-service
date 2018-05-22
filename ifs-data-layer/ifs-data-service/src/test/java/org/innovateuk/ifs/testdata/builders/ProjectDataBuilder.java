@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.testdata.builders.data.ProjectData;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;

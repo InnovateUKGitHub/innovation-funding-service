@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.n
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.when;

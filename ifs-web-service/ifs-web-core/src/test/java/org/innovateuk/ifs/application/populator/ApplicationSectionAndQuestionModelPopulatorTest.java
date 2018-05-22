@@ -21,7 +21,7 @@ import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;

@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.user.builder;
+package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 
@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 
 /**
  * Builder for Organisation entities.

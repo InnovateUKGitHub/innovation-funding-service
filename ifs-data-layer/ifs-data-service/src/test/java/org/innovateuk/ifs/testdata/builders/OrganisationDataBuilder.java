@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 
 /**
  * Creates Organisations

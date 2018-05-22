@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Optional;

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.review.controller.AssessmentReviewController;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewModelPopulator;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
@@ -27,7 +26,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;

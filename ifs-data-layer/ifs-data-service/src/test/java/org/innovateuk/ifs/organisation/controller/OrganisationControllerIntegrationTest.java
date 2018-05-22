@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.user.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.address.repository.AddressRepository;
-import org.innovateuk.ifs.user.domain.OrganisationType;
-import org.innovateuk.ifs.user.repository.OrganisationTypeRepository;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.repository.OrganisationTypeRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.Set;
 
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

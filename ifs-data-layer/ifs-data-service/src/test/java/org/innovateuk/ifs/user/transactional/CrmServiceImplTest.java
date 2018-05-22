@@ -3,21 +3,20 @@ package org.innovateuk.ifs.user.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.function.Predicate;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -33,7 +32,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     private UserRepository userRepository;
 
     @Mock
-    private OrganisationRepository organisationRepository;
+    private OrganisationService organisationService;
 
     @Mock
     private SilCrmEndpoint silCrmEndpoint;
@@ -47,9 +46,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     public void testSycCrmContact() {
         Long userId = 1L;
         User user = newUser().build();
-        Organisation organisation = newOrganisation().withCompanyHouseNumber("Something").build();
+        OrganisationResource organisation = newOrganisationResource().withCompanyHouseNumber("Something").build();
         when(userRepository.findOne(userId)).thenReturn(user);
-        when(organisationRepository.findByUsersId(userId)).thenReturn(asList(organisation));
+        when(organisationService.getPrimaryForUser(userId)).thenReturn(serviceSuccess(organisation));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.syncCrmContact(userId);
@@ -59,7 +58,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
     }
 
-    private Predicate<SilContact> matchSilContact(User user, Organisation organisation) {
+    private Predicate<SilContact> matchSilContact(User user, OrganisationResource organisation) {
         return silContact -> {
             assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
             assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(organisation.getCompanyHouseNumber()));

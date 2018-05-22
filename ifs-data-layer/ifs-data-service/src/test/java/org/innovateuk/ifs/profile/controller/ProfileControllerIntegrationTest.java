@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUser
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
 import static org.innovateuk.ifs.user.resource.AffiliationType.FAMILY;
-import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.organisation.resource.BusinessType.BUSINESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

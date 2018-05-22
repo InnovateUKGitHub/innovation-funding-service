@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 
 import java.util.Set;
 

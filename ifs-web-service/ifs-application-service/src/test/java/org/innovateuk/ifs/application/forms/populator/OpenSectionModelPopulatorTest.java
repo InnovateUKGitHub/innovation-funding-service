@@ -22,7 +22,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;

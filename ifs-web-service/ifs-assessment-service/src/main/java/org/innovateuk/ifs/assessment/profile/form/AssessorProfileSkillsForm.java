@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.profile.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.BusinessType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

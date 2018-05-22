@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.transactional.CompanyHouseApiService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.transactional.OrganisationTypeService;
+import org.innovateuk.ifs.organisation.transactional.OrganisationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

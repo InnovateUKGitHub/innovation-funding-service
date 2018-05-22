@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.user.transactional;
+package org.innovateuk.ifs.organisation.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.OrganisationType;
-import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
-import org.innovateuk.ifs.user.repository.OrganisationTypeRepository;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.organisation.repository.OrganisationTypeRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

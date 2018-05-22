@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupB
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.spendprofile.transactional.ByProjectFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;

@@ -48,11 +48,11 @@ import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResou
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
@@ -90,8 +90,8 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;

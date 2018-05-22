@@ -24,7 +24,7 @@ import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.builder.UserBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
@@ -56,7 +56,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;

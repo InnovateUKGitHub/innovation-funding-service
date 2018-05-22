@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilde
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;

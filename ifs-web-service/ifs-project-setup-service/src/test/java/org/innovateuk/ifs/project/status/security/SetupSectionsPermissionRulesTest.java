@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
