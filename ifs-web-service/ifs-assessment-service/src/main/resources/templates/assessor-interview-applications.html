@@ -12,7 +12,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Interviews you have agreed to attend',subTitle=|${model.competitionId}: ${model.competitionTitle}|,size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Interviews you have agreed to attend',subTitle=|${model.competitionTitle}|,size='heading-xlarge'" />
 
     <div class="grid-row">
         <div class="column-one-half competition details">
@@ -43,7 +43,6 @@
                         <th:block>
                             <div class="task">
                                 <a class="heading-small disabled" th:text="${app.displayLabel}">Application name</a>
-                                <!--<h3 th:unless="${app.accepted}" class="heading-small" th:text="${app.displayLabel}">Application name</h3>-->
                                 <p th:text="${app.leadOrganisation}" class="no-margin"/>
                             </div>
                         </th:block>
