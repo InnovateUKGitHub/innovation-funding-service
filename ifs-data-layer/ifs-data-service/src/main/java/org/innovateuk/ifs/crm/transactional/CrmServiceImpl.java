@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.transactional;
+package org.innovateuk.ifs.crm.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,14 +11,14 @@ import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Title;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -30,7 +30,7 @@ public class CrmServiceImpl implements CrmService {
 
     private static final Log LOG = LogFactory.getLog(CrmServiceImpl.class);
     @Autowired
-    private UserRepository userRepository;
+    private BaseUserService userService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -40,10 +40,10 @@ public class CrmServiceImpl implements CrmService {
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
-         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
-            if (!user.isInternalUser()) {
+         return find(userService.getUserById(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
+            if (!user.getSuccess().isInternalUser()) {
                 return find(organisationService.getPrimaryForUser(userId), notFoundError(OrganisationResource.class)).andOnSuccess(organisation -> {
-                    SilContact silContact = toSilContact(user, organisation.getSuccess());
+                    SilContact silContact = toSilContact(user.getSuccess(), organisation.getSuccess());
                     LOG.info("Updating CRM contact " + silContact.getEmail());
                     return silCrmEndpoint.updateContact(silContact);
                 });
@@ -52,7 +52,7 @@ public class CrmServiceImpl implements CrmService {
          });
     }
 
-    private SilContact toSilContact(User user, OrganisationResource organisation) {
+    private SilContact toSilContact(UserResource user, OrganisationResource organisation) {
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
         silContact.setFirstName(user.getFirstName());
