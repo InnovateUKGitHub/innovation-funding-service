@@ -21,6 +21,7 @@ public class QuestionDocs {
             fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
             fieldWithPath("competition").description("Id of the competition"),
             fieldWithPath("type").description("The type of question"),
+            fieldWithPath("questionSetupType").description("The setup type of question"),
             fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor")
     };
 

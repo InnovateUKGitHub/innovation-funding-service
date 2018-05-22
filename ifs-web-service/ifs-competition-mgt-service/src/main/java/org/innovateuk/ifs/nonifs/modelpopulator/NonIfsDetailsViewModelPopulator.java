@@ -2,7 +2,7 @@ package org.innovateuk.ifs.nonifs.modelpopulator;
 
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.competitionsetup.utils.CompetitionSpecialSectors;
+import org.innovateuk.ifs.competitionsetup.core.util.CompetitionSpecialSectors;
 import org.innovateuk.ifs.nonifs.viewmodel.NonIfsDetailsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

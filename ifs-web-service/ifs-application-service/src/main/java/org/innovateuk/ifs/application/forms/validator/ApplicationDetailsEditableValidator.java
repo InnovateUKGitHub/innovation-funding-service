@@ -21,7 +21,7 @@ public class ApplicationDetailsEditableValidator {
 
     public boolean questionAndApplicationHaveAllowedState(Long questionId, ApplicationResource applicationResource) {
         QuestionResource questionResource = questionService.getById(questionId);
-        if (!questionResource.getShortName().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS.getShortName())) {
+        if (!questionResource.getQuestionSetupType().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS)) {
             return false;
         }
         return applicationResource.isOpen() && !applicationDetailsIsMarkedAsComplete(questionId, applicationResource.getId());
