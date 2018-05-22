@@ -48,6 +48,10 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3436 Allocate applications to assessors - Assessor profile view
 ...
 ...               IFS-3450 Allocate applications to assessors - Applications tab
+...
+...               IFS-3451 Allocate applications to assessors - Notify assessors
+...
+...               IFS-3485 Remove applications before allocating (notifying) to assessor
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -193,7 +197,6 @@ Applicant can remove the uploaded response
 CompAdmin can access the Allocate applications to assessors screen
     [Documentation]  IFS-3435  IFS-3436  IFS-3450
     [Tags]
-    Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery=a:contains("${assessor_joel}")
     And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
@@ -202,6 +205,18 @@ CompAdmin can access the Allocate applications to assessors screen
     ${applications_Assiged}=  Get text       css=div:nth-child(6) div span:nth-child(1)
     And the user should see the element      link=Applications (${applications_Assiged})
     And the user should see the element      jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+
+CompAdmin allocate applications to assessor
+    [Documentation]  IFS-3451  IFS-3485
+    [Tags]
+    Given the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
+    And the user clicks the button/link      jQuery=tr:contains("${computer_vision_application}") label
+    When the user clicks the button/link     css=.button[name="addSelected"]  #Allocate
+    Then the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Remove")
+    And the compAdmin can cancel allocating applications to assessor
+    And the compAdmin removes the application from notify list
+    When the user clicks the button/link     css=input[type="submit"]   #Notify
+    Then the user reads his email            ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
 
 *** Keywords ***
 Custom Suite Setup
@@ -284,3 +299,15 @@ the applicant upload the response to the interview panel
 the compAdmin checks the status for response uploaded applicantion
     log in as a different user        &{Comp_admin1_credentials}
     the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
+
+the compAdmin removes the application from notify list
+    the user clicks the button/link   jQuery=td:contains("${computer_vision_application}") ~ td:contains("Remove")
+    the user clicks the button/link   link=Applications allocated for interview
+    the user should see the element   jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
+    the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
+
+the compAdmin can cancel allocating applications to assessor
+    the user clicks the button/link    link= Cancel
+    the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/unallocated-applications/${assessor_joel_id}
+    the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
+

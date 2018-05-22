@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${'Allocate applications to ' + model.user.getName()}" />
+</head>
+
+<body class="competition-management competition-overview">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications allocated for interview',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" />
+
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle=${'Notify assessor'},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+
+    <h2 class="heading-medium no-margin" th:text="${model.user.getName()}">Felix Wilson</h2>
+
+    <p>Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor.</p>
+
+    <div class="grid-row sorting extra-margin">
+        <span class="heading-xlarge no-margin" th:text="${#lists.size(model.applications)}">4</span>
+        <span class="heading-small">applications</span>
+    </div>
+
+    <form method="POST"
+          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}"
+          th:object="${form}">
+        <div class="table-overflow">
+            <table>
+                <thead>
+                <tr>
+                    <th class="width-small">Application number</th>
+                    <th>Project title</th>
+                    <th>Lead organisation</th>
+                    <th class="numeric">Assessors</th>
+                    <th class="alignright"><span class="visuallyhidden">Remove</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="applicationInterview : ${model.applications}">
+                    <td>
+                        <a th:text="${applicationInterview.id}"
+                           th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${applicationInterview.id})} + ${originQuery}">114</a>
+                    </td>
+                    <td th:text="${applicationInterview.name}">Electronics, sensors &#38; photonics, Materials</td>
+                    <td th:text="${applicationInterview.leadOrganisation}">Ooba</td>
+                    <td th:text="${applicationInterview.numberOfAssessors}" class="numeric">1</td>
+                    <td class="alignright">
+                        <button class="buttonlink" name="remove" th:value="${applicationInterview.id}">Remove</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <fieldset class="extra-margin">
+            <legend class="visuallyhidden">Email assessor</legend>
+            <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+                <label class="form-label-bold" th:for="${#ids.next('subject')}">
+                    <span>Email subject</span>
+                    <th:block th:if="${#fields.hasErrors('subject')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                    </th:block>
+                </label>
+                <input class="form-control width-full"
+                       id="subject"
+                       type="text"
+                       th:field="*{subject}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
+            </div>
+
+            <h3 class="heading-small">Message</h3>
+
+            <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
+
+            <div class="form-group extra-margin">
+                <label class="form-label-bold" for="message">Additional text</label>
+                <div class="textarea-wrapped">
+                    <textarea id="message" rows="8" data-editor="html" class="width-full" th:field="*{content}">
+                    </textarea>
+                </div>
+            </div>
+
+            <p class="form-hint extra-margin">
+                Yours sincerely,
+            </p>
+
+            <p class="form-hint extra-margin">
+                Innovate UK, part of UK Research and Innovation <br />
+                Tel: 0300 321 4357 <br />
+                Email: competitions@innovateuk.ukri.org
+            </p>
+
+            <input type="submit" class="button" value="Notify"/>
+
+            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" class="button button-clear">
+                Cancel
+            </a>
+        </fieldset>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>
