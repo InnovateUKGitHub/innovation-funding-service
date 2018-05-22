@@ -720,7 +720,7 @@ User cannot delete competition with assessors
    And The user clicks the button/link       link=View and update competition setup
    When the user clicks the button/link      link=Delete competition
    And the user clicks the button/link       css=.delete-modal button[type="submit"]
-   Then The user should see a summary error  The competition has assessors and cannot be deleted.
+   Then The user should see a summary error  You cannot delete this competition as assessors have been invited.
 
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
