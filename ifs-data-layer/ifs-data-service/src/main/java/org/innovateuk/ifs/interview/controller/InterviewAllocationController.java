@@ -35,7 +35,7 @@ public class InterviewAllocationController {
     }
 
     @GetMapping("/{competitionId}/allocated-applications/{assessorId}")
-    public RestResult<InterviewApplicationPageResource> getUnallocatedApplicationsById(
+    public RestResult<InterviewApplicationPageResource> getAllocatedApplications(
             @PathVariable long competitionId,
             @PathVariable long assessorId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.id", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -43,7 +43,7 @@ public class InterviewAllocationController {
     }
 
     @GetMapping("/{competitionId}/unallocated-applications/all/{applicationIds}")
-    public RestResult<List<InterviewApplicationResource>> getUnallocatedApplicationsById(@PathVariable List<Long> applicationIds) {
+    public RestResult<List<InterviewApplicationResource>> getAllocatedApplications(@PathVariable List<Long> applicationIds) {
         return interviewAllocationService.getUnallocatedApplicationsById(applicationIds).toGetResponse();
     }
 
