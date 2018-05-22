@@ -22,6 +22,8 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -60,7 +62,7 @@ public class ApplicationQuestionSectionSaverTest {
 
     @Test
     public void test_doSaveSectionShouldTriggerIrregularSaveActionAndAppendFileTypes() {
-        List<FileTypeCategory> fileTypeCategories = asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET);
+        List<FileTypeCategory> fileTypeCategories = asList(PDF, SPREADSHEET);
         Set<String> fileTypeCategoriesStringList = simpleMapSet(fileTypeCategories, FileTypeCategory::name);
         String fileTypeCategoriesString = String.join(",", fileTypeCategoriesStringList);
 

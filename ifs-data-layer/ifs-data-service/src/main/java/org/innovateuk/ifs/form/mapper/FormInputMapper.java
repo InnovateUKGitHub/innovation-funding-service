@@ -3,19 +3,11 @@ package org.innovateuk.ifs.form.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.springframework.util.StringUtils;
-
-import java.util.Set;
-
-import static java.util.Collections.emptySet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Mapper(
     config = GlobalMapperConfig.class,

@@ -56,6 +56,10 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((question, formInput) -> setField("question", question, formInput), questions);
     }
 
+    public FormInputResourceBuilder withCompetition(Long... competitions) {
+        return withArray((competition, formInput) -> setField("competition", competition, formInput), competitions);
+    }
+
     public FormInputResourceBuilder withPriority(Integer... priorities) {
         return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
     }
@@ -66,5 +70,10 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
 
     public FormInputResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {
         return withArray((types, formInput) -> setField("allowedFileTypes", newLinkedHashSet(types), formInput), fileTypes);
+    }
+
+    public FormInputResourceBuilder withInputValidators(Set<Long>... inputValidators) {
+        return withArray((inputValidator, formInput) -> setField("inputValidators",
+                newLinkedHashSet(inputValidator), formInput), inputValidators);
     }
 }
