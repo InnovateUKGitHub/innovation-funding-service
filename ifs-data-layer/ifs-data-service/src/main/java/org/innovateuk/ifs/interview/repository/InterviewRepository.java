@@ -73,7 +73,7 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
     )
     Page<InterviewApplicationResource> findApplicationsNotAssignedToAssessor(long competitionId, long assessorId, Pageable pageable);
 
-      @Query(INTERVIEW_PAGE_RESOURCE_QUERY +
+    @Query(INTERVIEW_PAGE_RESOURCE_QUERY +
             " AND EXISTS " +
             ASSIGNED_INTERVIEW_SUB_QUERY +
             GROUP_BY_TARGET_ID

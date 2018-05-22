@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 import java.util.List;
 
 /**
- * Holder of model attributes for the Assessor Competition for Panel Dashboard.
+ * Holder of model attributes for the Assessor Competition for interview Dashboard.
  */
 public class AssessorCompetitionForInterviewDashboardViewModel {
 
