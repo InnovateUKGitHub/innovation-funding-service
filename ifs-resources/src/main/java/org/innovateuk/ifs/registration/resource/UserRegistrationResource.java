@@ -2,7 +2,7 @@ package org.innovateuk.ifs.registration.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.user.resource.*;
 
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class UserRegistrationResource extends UserProfileBaseResource{
 
-    @NotEmpty(message = "{validation.standard.password.required}")
+    @NotBlank(message = "{validation.standard.password.required}")
     @Size.List({
             @Size(min = 8, message = "{validation.standard.password.length.min}"),
     })
