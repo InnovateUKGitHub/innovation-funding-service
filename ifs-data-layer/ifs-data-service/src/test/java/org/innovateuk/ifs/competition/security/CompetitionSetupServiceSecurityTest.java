@@ -73,6 +73,9 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
                 verifyNoMoreInteractions(rules);
             });
+            assertAccessDenied(() -> classUnderTest.deleteCompetition(competitionId), () -> {
+                verifyNoMoreInteractions(rules);
+            });
         });
     }
 
@@ -104,7 +107,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.create();
         classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L);
         classUnderTest.createNonIfs();
-        Long sectionId = 3L;
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
         classUnderTest.markSectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
     }

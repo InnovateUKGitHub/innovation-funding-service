@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -9,14 +10,18 @@ import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
 import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -29,13 +34,15 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -61,9 +68,17 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private SetupStatusService setupStatusService;
     @Autowired
+    private SetupStatusRepository setupStatusRepository;
+    @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
     @Autowired
     private GrantTermsAndConditionsMapper termsAndConditionsMapper;
+    @Autowired
+    private PublicContentRepository publicContentRepository;
+    @Autowired
+    private AssessmentInviteRepository assessmentInviteRepository;
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -140,7 +155,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
             AssessmentParticipant competitionParticipant =
                     assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
-                            existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
+                            existingLeadTechnologistId, INNOVATION_LEAD);
 
             if (competitionParticipant != null) {
                 assessmentParticipantRepository.delete(competitionParticipant);
@@ -161,7 +176,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 AssessmentParticipant competitionParticipant = new AssessmentParticipant();
                 competitionParticipant.setProcess(competition);
                 competitionParticipant.setUser(leadTechnologist);
-                competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+                competitionParticipant.setRole(INNOVATION_LEAD);
                 competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
                 assessmentParticipantRepository.save(competitionParticipant);
@@ -175,7 +190,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         CompetitionParticipant existingCompetitionParticipant =
                 assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competition.getId(),
-                        competition.getLeadTechnologist().getId(), CompetitionParticipantRole.INNOVATION_LEAD);
+                        competition.getLeadTechnologist().getId(), INNOVATION_LEAD);
 
         return existingCompetitionParticipant != null;
     }
@@ -310,6 +325,55 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
         return competitionSetupTemplateService.initializeCompetitionByCompetitionTemplate(competitionId, competitionTypeId)
                 .andOnSuccess(() -> serviceSuccess());
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteCompetition(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(competition ->
+                assessorInvitesExist(competition) ? serviceFailure(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED)
+                        : deletePublicContentForCompetition(competition).andOnSuccess(() -> {
+                    deleteFormValidatorsForCompetitionQuestions(competition);
+                    deleteMilestonesForCompetition(competition);
+                    deleteInnovationLead(competition);
+                    deleteSetupStatus(competition);
+                    competitionRepository.delete(competition);
+                    return serviceSuccess();
+                }));
+    }
+
+    private boolean assessorInvitesExist(Competition competition) {
+        return assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(),
+                EnumSet.allOf(InviteStatus.class)) > 0;
+    }
+
+    private void deleteSetupStatus(Competition competition) {
+        setupStatusRepository.deleteByTargetClassNameAndTargetId(Competition.class.getName(), competition.getId());
+    }
+
+    private void deleteMilestonesForCompetition(Competition competition) {
+        competition.getMilestones().clear();
+        milestoneRepository.deleteByCompetitionId(competition.getId());
+    }
+
+    private void deleteInnovationLead(Competition competition) {
+        assessmentParticipantRepository.deleteByCompetitionIdAndRole(competition.getId(), INNOVATION_LEAD);
+    }
+
+    private ServiceResult<Void> deletePublicContentForCompetition(Competition competition) {
+        return find(publicContentRepository.findByCompetitionId(competition.getId()), notFoundError(Competition.class,
+                competition.getId())).andOnSuccess(publicContent -> {
+            publicContentRepository.delete(publicContent);
+            return serviceSuccess();
+        });
+    }
+
+    private void deleteFormValidatorsForCompetitionQuestions(Competition competition) {
+        competition.getSections().forEach(section ->
+                section.getQuestions().forEach(question ->
+                        question.getFormInputs().forEach(formInput ->
+                                formInput.getFormValidators().clear())));
+        competitionRepository.save(competition);
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {

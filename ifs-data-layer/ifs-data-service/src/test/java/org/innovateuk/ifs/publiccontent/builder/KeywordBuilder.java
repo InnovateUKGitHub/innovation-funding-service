@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class KeywordBuilder extends BaseBuilder<Keyword, KeywordBuilder> {
-
 
     private KeywordBuilder(List<BiConsumer<Integer, Keyword>> newMultiActions) {
         super(newMultiActions);
@@ -22,16 +20,16 @@ public class KeywordBuilder extends BaseBuilder<Keyword, KeywordBuilder> {
         return new KeywordBuilder(emptyList()).with(uniqueIds());
     }
 
-    public KeywordBuilder withId(Long id) {
-        return with(keyword -> setField("id", id, keyword));
+    public KeywordBuilder withId(Long... id) {
+        return withArraySetFieldByReflection("id", id);
     }
 
-    public KeywordBuilder withPublicContent(PublicContent publicContent) {
-        return with(keyword -> setField("publicContent", publicContent, keyword));
+    public KeywordBuilder withPublicContent(PublicContent... publicContent) {
+        return withArraySetFieldByReflection("publicContent", publicContent);
     }
 
-    public KeywordBuilder withKeyword(String keywordString) {
-        return with(keyword -> setField("keyword", keywordString, keyword));
+    public KeywordBuilder withKeyword(String... keyword) {
+        return withArraySetFieldByReflection("keyword", keyword);
     }
 
     @Override
