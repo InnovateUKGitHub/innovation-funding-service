@@ -102,8 +102,8 @@ Bank account number and sort code validations client side
 Bank account number and sort code validations server side
     [Documentation]    INFUND-4054
     [Tags]
-     When the user enters text to a text field      id=accountNumber  abcdefgh
-     And the user enters text to a text field       id=sortCode  abcdef
+     When the user enters text to a text field      id=accountNumber  123
+     And the user enters text to a text field       id=sortCode  123
      And the user clicks the button/link            id=modal-change-bank-details
      And the user clicks the button/link            id=submit-change-bank-details
      Then the user should see the text in the page  Please enter a valid account number
