@@ -53,17 +53,17 @@ include::{snippets}/interview-panel/get-unallocated-application-ids/response-fie
 include::{snippets}/interview-panel/get-unallocated-application-ids/curl-request.adoc[]
 
 
-=== Get allocated applications by id
+=== Get unallocated applications by id
 ==== Request
-include::{snippets}/interview-panel/get-allocated-applications-by-id/http-request.adoc[]
-include::{snippets}/interview-panel/get-allocated-applications-by-id/path-parameters.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/http-request.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/interview-panel/get-allocated-applications-by-id/http-response.adoc[]
-include::{snippets}/interview-panel/get-allocated-applications-by-id/response-fields.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/http-response.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/interview-panel/get-allocated-applications-by-id/curl-request.adoc[]
+include::{snippets}/interview-panel/get-unallocated-applications-by-id/curl-request.adoc[]
 
 
 === Get the invite to be sent to an assessor
