@@ -37,7 +37,7 @@ public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<Interv
     }
 
     public InterviewAssignmentMessageOutcomeBuilder withSubject(String... subjects) {
-        return withArray((subject, assessmentInterviewPanelMessageOutcome) -> assessmentInterviewPanelMessageOutcome.setMessage(subject), subjects);
+        return withArray((subject, assessmentInterviewPanelMessageOutcome) -> assessmentInterviewPanelMessageOutcome.setSubject(subject), subjects);
     }
 
     public InterviewAssignmentMessageOutcomeBuilder withMessage(String... messages) {
