@@ -367,9 +367,9 @@
     </th:block>
 
                     <!-- ===========================Form: empty / no question =========================== -->
-    <th:block th:fragment="empty(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <th:block th:fragment="empty(costViewModel, internalView)" th:with="formInput=${costViewModel.formInput}, question=${costViewModel.question}">
         <th:block ifs:utext="${question.description}" />
-        <th:block th:unless="${model.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:unless="${costViewModel.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
     </th:block>
 
 </html>

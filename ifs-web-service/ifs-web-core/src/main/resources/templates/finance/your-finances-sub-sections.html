@@ -204,8 +204,8 @@
         </div>
     </th:block>
 
-    <th:block th:fragment="project_cost_finances(model)">
-        <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model})" />
+    <th:block th:fragment="project_cost_finances (model, internalView)">
+        <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model}, ${internalView})" />
         <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:if="${model.showTerms}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>

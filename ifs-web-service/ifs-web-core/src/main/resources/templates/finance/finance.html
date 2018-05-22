@@ -224,7 +224,7 @@
     </div>
 
     <!-- ===========================Form: your_finance =========================== -->
-    <th:block th:fragment="your_finance(model)">
+    <th:block th:fragment="your_finance (model, internalView)">
         <h2 class="heading-medium no-margin" th:text="${#strings.replace(model.question.name,'{organisationName}',
         model.currentApplicant.organisation.name)}" />
         <p ifs:utext="${model.question.description}" />
@@ -237,10 +237,10 @@
             <div class="collapsible-content">
                 <th:block th:each="costViewModel : ${projectCostSection.costViews}">
                     <th:block th:if="${costViewModel.formInput.type.displayableFinanceType}">
-                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
+                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel}, ${internalView})" ></th:block>
                     </th:block>
                     <th:block th:if="${costViewModel.formInput.type.displayableQuestionType}">
-                        <th:block th:insert="question-type/types :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
+                        <th:block th:insert="question-type/types :: ${costViewModel.formInput.type.nameLower} (${costViewModel}, ${internalView})" ></th:block>
                     </th:block>
                 </th:block>
             </div>
@@ -297,7 +297,7 @@
     </th:block>
 
     <!-- ===========================Form: labour =========================== -->
-    <th:block th:fragment="labour (costViewModel)">
+    <th:block th:fragment="labour (costViewModel, internalView)">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: labour_finances" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -794,7 +794,7 @@
     </th:block>
 
     <!-- ===========================Form: materials =========================== -->
-    <th:block th:fragment="materials (costViewModel)" th:with="question=${costViewModel.question}">
+    <th:block th:fragment="materials (costViewModel, internalView)" th:with="question=${costViewModel.question}">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${question.description}">description</p>
         <th:block th:insert="finance/finance :: materials_finances" th:with="costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -956,7 +956,7 @@
 
     <!-- ===========================Form: capital usage =========================== -->
 
-    <th:block th:fragment="capital_usage (costViewModel)" >
+    <th:block th:fragment="capital_usage (costViewModel, internalView)" >
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: capital_usage_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -1175,7 +1175,7 @@
     </th:block>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
-    <th:block th:fragment="subcontracting (costViewModel)">
+    <th:block th:fragment="subcontracting (costViewModel, internalView)">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: subcontracting_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -1310,7 +1310,7 @@
 
     <!-- ===========================Form: travel cost =========================== -->
 
-    <th:block th:fragment="travel (costViewModel)">
+    <th:block th:fragment="travel (costViewModel, internalView)">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: travel_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -1473,7 +1473,7 @@
     </th:block>
 
     <!-- ===========================Form: other cost =========================== -->
-    <th:block th:fragment="other_costs (costViewModel)">
+    <th:block th:fragment="other_costs (costViewModel, internalView)">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}" />
         <th:block th:insert="finance/finance :: other_costs_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
