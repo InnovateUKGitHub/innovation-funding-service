@@ -23,9 +23,10 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.junit.Assert.*;
 @SpringBootTest(classes= IntegrationTestConfig.class)
-@ActiveProfiles("integration-test")
+//@ActiveProfiles("integration-test")
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 
     private UserResource systemMaintenanceUser;
@@ -51,13 +52,14 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         ZonedDateTime oneDayAhead = now.plusDays(1);
 
         setLoggedInUser(systemMaintenanceUser);
-        AlertResource created1 = controller.create(AlertResourceBuilder.newAlertResource()
-                .withValidFromDate(oneDayAgo)
+        AlertResource created1 = controller.create(newAlertResource()
+                .withValidFromDate(oneDayAgo).withId(12L)
                 .withValidToDate(oneDayAhead)
                 .build()).getSuccess();
 
-        AlertResource created2 = controller.create(AlertResourceBuilder.newAlertResource()
-                .withValidFromDate(oneSecondAgo)
+
+        AlertResource created2 = controller.create(newAlertResource()
+                .withValidFromDate(oneSecondAgo).withId(13L)
                 .withValidToDate(oneHourAhead)
                 .build()).getSuccess();
 
@@ -79,12 +81,14 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         ZonedDateTime oneDayAhead = now.plusDays(1);
 
         setLoggedInUser(systemMaintenanceUser);
-        AlertResource created1 = controller.create(AlertResourceBuilder.newAlertResource()
+        AlertResource created1 = controller.create(newAlertResource()
                 .withValidFromDate(oneDayAgo)
                 .withValidToDate(oneDayAhead)
                 .build()).getSuccess();
 
-        AlertResource created2 = controller.create(AlertResourceBuilder.newAlertResource()
+
+
+        AlertResource created2 = controller.create(newAlertResource()
                 .withValidFromDate(oneSecondAgo)
                 .withValidToDate(oneHourAhead)
                 .build()).getSuccess();
@@ -97,17 +101,6 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         assertEquals(created2, found.get(1));
     }
 
-    @Test
-    public void test_findById() throws Exception {
-        setLoggedInUser(basicSecurityUser);
-        AlertResource found = controller.findById(1L).getSuccess();
-
-        assertEquals(Long.valueOf(1L), found.getId());
-        assertEquals("Sample message", found.getMessage());
-        assertEquals(MAINTENANCE, found.getType());
-        assertEquals(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), found.getValidFromDate());
-        assertEquals(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()), found.getValidToDate());
-    }
 
     @Test
     public void test_create() throws Exception {
