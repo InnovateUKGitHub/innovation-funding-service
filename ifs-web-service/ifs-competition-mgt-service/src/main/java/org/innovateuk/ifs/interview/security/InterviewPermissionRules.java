@@ -23,14 +23,19 @@ public class InterviewPermissionRules {
             "if the competition is in the correct state.")
     public boolean interviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isInternalAdmin(loggedInUser) && competitionHasInterviewPanel(competition);
+        return isInternalAdmin(loggedInUser) &&
+                competitionHasInterviewPanel(competition) &&
+                !competitionIsInInform(competition);
     }
 
     @PermissionRule(value = "INTERVIEW_APPLICATIONS", description = "Only project finance or competition admin can " +
             "see interview panel applications if the competition is in the correct state.")
     public boolean interviewPanelApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isInternalAdmin(loggedInUser) && competitionHasInterviewPanel(competition) && competitionIsInFundersPanel(competition);
+        return isInternalAdmin(loggedInUser) &&
+                competitionHasInterviewPanel(competition) &&
+                competitionIsInFundersPanel(competition) &&
+                !competitionIsInInform(competition);
     }
 
     private boolean competitionHasInterviewPanel(CompetitionResource competition) {
@@ -39,5 +44,9 @@ public class InterviewPermissionRules {
 
     private boolean competitionIsInFundersPanel(CompetitionResource competition) {
         return competition.getCompetitionStatus().equals(CompetitionStatus.FUNDERS_PANEL);
+    }
+
+    private boolean competitionIsInInform(CompetitionResource competition) {
+        return competition.getCompetitionStatus().equals(CompetitionStatus.ASSESSOR_FEEDBACK);
     }
 }
