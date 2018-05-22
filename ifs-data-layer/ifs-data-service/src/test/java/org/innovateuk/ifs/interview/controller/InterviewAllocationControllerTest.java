@@ -144,20 +144,20 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
-    public void getAllocatedApplicationsById() throws Exception {
+    public void getUnallocatedApplicationsById() throws Exception {
         long competitionId = 1L;
         List<Long> applicationIds = asList(1L,2L,3L);
 
         List<InterviewApplicationResource> interviewApplicationResources = newInterviewApplicationResource().build(2);
 
-        when(interviewAllocationServiceMock.getAllocatedApplicationsById(applicationIds)).thenReturn(serviceSuccess(interviewApplicationResources));
+        when(interviewAllocationServiceMock.getUnallocatedApplicationsById(applicationIds)).thenReturn(serviceSuccess(interviewApplicationResources));
 
-        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications/all/{applicationIds}",
+        mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-applications/all/{applicationIds}",
                                     competitionId, String.join(",", simpleJoiner(applicationIds, ","))))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(interviewApplicationResources)));
 
-        verify(interviewAllocationServiceMock, only()).getAllocatedApplicationsById(applicationIds);
+        verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationsById(applicationIds);
     }
 
     @Test

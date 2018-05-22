@@ -161,6 +161,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             model.addAttribute("form", form);
             CompetitionResource competition = competitionService.getById(competitionId);
             form.setSubject(format("Applications for interview panel for '%s'", competition.getName()));
+            queryParams.put("assessorId", singletonList(String.valueOf(userId)));
             String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
             model.addAttribute("originQuery", originQuery);
 
@@ -184,10 +185,12 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                                  @ModelAttribute(name = "form") InterviewAllocationNotifyForm form,
                                  @PathVariable("competitionId") long competitionId,
                                  @PathVariable("userId") long userId,
+                                 @RequestParam MultiValueMap<String, String> queryParams,
                                  ValidationHandler validationHandler,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
-        Supplier<String> failureView = () -> "foo";
+        Supplier<String> failureView = () -> allocateApplications(model, form, competitionId, userId, queryParams, request);
+
         Supplier<String> successView = () -> {
             removeCookie(response, combineIds(competitionId, userId));
             return redirectToAllocatedTab(competitionId, userId);

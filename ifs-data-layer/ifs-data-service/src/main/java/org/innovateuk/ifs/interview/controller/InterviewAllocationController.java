@@ -32,7 +32,7 @@ public class InterviewAllocationController {
     }
 
     @GetMapping("/{competitionId}/allocated-applications/{assessorId}")
-    public RestResult<InterviewApplicationPageResource> getAllocatedApplicationsById(
+    public RestResult<InterviewApplicationPageResource> getAllocatedApplications(
             @PathVariable long competitionId,
             @PathVariable long assessorId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.id", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -47,9 +47,9 @@ public class InterviewAllocationController {
         return interviewAllocationService.getAllocatedApplicationsByAssessorId(competitionId, assessorId).toGetResponse();
     }
 
-    @GetMapping("/{competitionId}/allocated-applications/all/{applicationIds}")
-    public RestResult<List<InterviewApplicationResource>> getAllocatedApplicationsById(@PathVariable List<Long> applicationIds) {
-        return interviewAllocationService.getAllocatedApplicationsById(applicationIds).toGetResponse();
+    @GetMapping("/{competitionId}/unallocated-applications/all/{applicationIds}")
+    public RestResult<List<InterviewApplicationResource>> getAllocatedApplications(@PathVariable List<Long> applicationIds) {
+        return interviewAllocationService.getUnallocatedApplicationsById(applicationIds).toGetResponse();
     }
 
     @GetMapping("/{competitionId}/allocated-applications/{assessorId}/invite-to-send")
