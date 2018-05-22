@@ -5,6 +5,7 @@ import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static java.util.Arrays.asList;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -26,12 +27,12 @@ public class FormInputResourceDocs {
             fieldWithPath("guidanceRows").description("breakdown of guidance by score"),
             fieldWithPath("priority").description("priority of the input, used for rendering purposes only"),
             fieldWithPath("scope").description("the scope for which the input should be rendered"),
-            fieldWithPath("allowedFileTypes").description("a comma separated list of allowed file types")
+            fieldWithPath("allowedFileTypes").description("a set of allowed file types")
     };
 
     public static final FormInputResourceBuilder formInputResourceBuilder = newFormInputResource()
             .withId(1L)
             .withType(TEXTAREA)
             .withWordCount(140)
-            .withAllowedFileTypes(asList(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF));
+            .withAllowedFileTypes(asSet(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF));
 }
