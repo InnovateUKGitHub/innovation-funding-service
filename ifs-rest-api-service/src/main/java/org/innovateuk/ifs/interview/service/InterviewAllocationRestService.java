@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
-import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
+import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 
 import java.util.List;
@@ -17,6 +14,8 @@ public interface InterviewAllocationRestService {
     RestResult<InterviewAcceptedAssessorsPageResource> getInterviewAcceptedAssessors(long competitionId, int page);
 
     RestResult<InterviewApplicationPageResource> getAllocatedApplications(long competitionId, long assessorId, int page);
+
+    RestResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(long competitionId, long assessorId);
 
     RestResult<AssessorInvitesToSendResource> getInviteToSend(long competitionId, long assessorId);
 
