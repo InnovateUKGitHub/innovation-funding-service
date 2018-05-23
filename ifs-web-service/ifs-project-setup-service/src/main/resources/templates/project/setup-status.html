@@ -48,14 +48,6 @@
         </div>
     </th:block>
 
-    <!--/*TODO INFUND-3008 INFUND-4622 Not being implemented in the current release, tickets in backlog for creation of the companies house pages.-->
-    <!--<div class="warning-alert extra-margin-bottom" th:unless="${model.hasCompanyHouse}">-->
-    <!--<h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>-->
-    <!--<p>For your project to be funded by Innovate UK [Business Name] must be registered with Companies House. </p>-->
-    <!--<p><a href="/prototypes/2537-partner-add-companies-house">Provide companies house details</a></p>-->
-    <!--<p><a href="/prototypes/4242-register-no-companies-house">Business has no legal responsibility to register with Companies House</a></p>-->
-    <!--</div>*/-->
-
     <div class="progress-list progress-list--individual-blocks">
         <ul>
             <!--/* ========================= Project Details ========================= */-->
@@ -132,7 +124,12 @@
                     </h2>
                     <p class="no-margin">We will review your financial information.</p>
                 </div>
-                <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
+                <th:block th:if="${!model.showFinanceChecksPendingQueryWarning}" th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
+                <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning}">
+                    <div class="status-msg msg-progress">
+                        <span class="status-warning">Pending query</span>
+                    </div>
+                </div>
             </li>
             <!--/* ========================= Spend Profile ========================= */-->
             <li th:class="${model.spendProfileSection.notAccessible} ? 'read-only'" th:classappend="${model.spendProfileStatus.getSectionStatus()}">
