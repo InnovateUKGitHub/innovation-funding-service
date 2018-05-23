@@ -20,7 +20,7 @@ Documentation
 ...
 ...               IFS-2746 External queries redesign: query statuses and banner messages
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+#Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
