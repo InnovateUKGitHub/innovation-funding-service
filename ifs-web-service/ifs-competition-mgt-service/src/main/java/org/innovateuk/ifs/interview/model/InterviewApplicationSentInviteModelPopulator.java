@@ -29,7 +29,6 @@ public class InterviewApplicationSentInviteModelPopulator {
         this.applicationService = applicationService;
     }
 
-
     public InterviewAssignmentApplicationsSentInviteViewModel populate(long competitionId, long applicationId, String originQuery) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();

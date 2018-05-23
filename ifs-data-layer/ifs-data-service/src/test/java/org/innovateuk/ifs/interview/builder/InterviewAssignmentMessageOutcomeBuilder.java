@@ -49,7 +49,6 @@ public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<Interv
     }
 
     public InterviewAssignmentMessageOutcomeBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
-        return withArray((modifiedOn, user) -> setField("modifiedOn", modifiedOn, user), modifiedOns);
+        return withArraySetFieldByReflection("modifiedOn", modifiedOns);
     }
-
 }
