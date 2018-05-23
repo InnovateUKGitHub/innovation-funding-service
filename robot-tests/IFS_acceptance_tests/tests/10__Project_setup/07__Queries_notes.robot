@@ -159,10 +159,12 @@ Query Section dropdown filters the queries displayed
 Finance contact receives an email when new query is posted and can see a pending query
     [Documentation]  INFUND-4841 IFS-2746
     [Tags]  Email
-    [Setup]  log in as a different user   &{successful_applicant_credentials}
-    Given the user reads his email        ${successful_applicant_credentials["email"]}  ${PROJECT_SETUP_COMPETITION_NAME}: Query regarding your finances for project ${PROJECT_SETUP_APPLICATION_1}  We have raised a query around your project finances.
-    When the user navigates to the page   ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
-    Then the user should see the element  jQuery=#title-query-1:contains("Pending query")
+    [Setup]  log in as a different user     &{successful_applicant_credentials}
+    Given the user reads his email          ${successful_applicant_credentials["email"]}  ${PROJECT_SETUP_COMPETITION_NAME}: Query regarding your finances for project ${PROJECT_SETUP_APPLICATION_1}  We have raised a query around your project finances.
+    When the user navigates to the page     ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    Then the user should see the element    css=.status-warning  #Pending query
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the element    jQuery=#title-query-1:contains("Pending query")
 
 Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
