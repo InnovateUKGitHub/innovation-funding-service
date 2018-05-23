@@ -2,8 +2,6 @@ package org.innovateuk.ifs.finance.validator;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -22,7 +20,6 @@ public class MinRowCountValidator implements Validator {
     public boolean supports(Class<?> clazz) {
         return ArrayList.class.equals(clazz);
     }
-    private static final Log LOG = LogFactory.getLog(MinRowCountValidator.class);
 
     @Override
     public void validate(Object target, Errors errors) {

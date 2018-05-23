@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -19,7 +17,6 @@ import java.util.List;
  * or for sending it over.
  */
 public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
-    private static final Log LOG = LogFactory.getLog(LabourCostHandler.class);
     public static final String COST_KEY = "labour";
     public static final Integer DEFAULT_WORKING_DAYS = 232;
 

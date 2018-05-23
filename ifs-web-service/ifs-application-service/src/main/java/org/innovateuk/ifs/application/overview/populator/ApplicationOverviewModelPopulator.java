@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.overview.populator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
@@ -51,8 +49,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ApplicationOverviewModelPopulator {
-
-    private static final Log LOG = LogFactory.getLog(ApplicationOverviewModelPopulator.class);
 
     @Autowired
     private AssignButtonsPopulator assignButtonsPopulator;

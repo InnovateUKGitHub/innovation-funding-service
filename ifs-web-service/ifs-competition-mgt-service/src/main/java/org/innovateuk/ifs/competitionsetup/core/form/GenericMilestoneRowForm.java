@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.core.form;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -16,8 +14,6 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
  * Default Milestone Form Entry without any validations for the Milestones form.
  */
 public class GenericMilestoneRowForm {
-
-    private static final Log LOG = LogFactory.getLog(GenericMilestoneRowForm.class);
 
     protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
     protected static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
