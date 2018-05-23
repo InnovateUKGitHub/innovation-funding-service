@@ -102,7 +102,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber) {
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
-            if (organisationName.length() < MAX_CHARACTER_DB_LENGTH) {
+            if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
                 organisation.setName(decodeOrganisationName(organisationName));
                 organisation.setCompanyHouseNumber(registrationNumber);
                 return serviceSuccess(organisationMapper.mapToResource(organisation));
@@ -159,7 +159,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         try {
             organisationNameDecoded = UriUtils.decode(encodedName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            log.error("Unable to decode company name " + encodedName + " . Saving original encoded value.", e);
+            log.error("Unable to decode company name " + encodedName + ". Saving original encoded value.", e);
             organisationNameDecoded = encodedName;
         }
         return organisationNameDecoded;
