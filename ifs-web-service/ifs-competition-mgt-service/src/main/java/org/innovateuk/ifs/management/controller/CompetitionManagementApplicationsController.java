@@ -71,7 +71,7 @@ public class CompetitionManagementApplicationsController {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
-        isCompetitionOpen(competitionId);
+        checkCompetitionIsOpen(competitionId);
         model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId, user));
         return "competition/applications-menu";
     }
@@ -86,7 +86,7 @@ public class CompetitionManagementApplicationsController {
                                   @RequestParam(value = "sort", defaultValue = "") String sort,
                                   @RequestParam(value = "filterSearch") Optional<String> filter,
                                   UserResource user) {
-        isCompetitionOpen(competitionId);
+        checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.ALL_APPLICATIONS, queryParams);
         model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter, user));
         model.addAttribute("originQuery", originQuery);
@@ -103,7 +103,7 @@ public class CompetitionManagementApplicationsController {
                                         @RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "sort", defaultValue = "") String sort,
                                         @RequestParam(value = "filterSearch") Optional<String> filter) {
-        isCompetitionOpen(competitionId);
+        checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.SUBMITTED_APPLICATIONS, queryParams);
         model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filter));
         model.addAttribute("originQuery", originQuery);
@@ -121,7 +121,7 @@ public class CompetitionManagementApplicationsController {
                                          @RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "sort", defaultValue = "") String sort,
                                          UserResource user) {
-        isCompetitionOpen(competitionId);
+        checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INELIGIBLE_APPLICATIONS, queryParams);
         model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filterForm, user));
         model.addAttribute("originQuery", originQuery);
@@ -139,7 +139,7 @@ public class CompetitionManagementApplicationsController {
                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
                                            UserResource loggedInUser) {
-        isCompetitionOpen(competitionId);
+        checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
         model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
@@ -153,14 +153,14 @@ public class CompetitionManagementApplicationsController {
     public String markApplicationAsSuccessful(
                                               @PathVariable("competitionId") long competitionId,
                                               @PathVariable("applicationId") long applicationId)  {
-        isCompetitionOpen(competitionId);
+        checkCompetitionIsOpen(competitionId);
         applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
         projectService.createProjectFromApplicationId(applicationId).getSuccess();
 
         return "redirect:/competition/{competitionId}/applications/previous";
     }
 
-    private void isCompetitionOpen(long competitionId) {
+    private void checkCompetitionIsOpen(long competitionId) {
         if (!competitionService.getById(competitionId).getCompetitionStatus().isLaterThan(CompetitionStatus.READY_TO_OPEN)) {
             throw new IncorrectStateForPageException("Competition is not yet open.");
         }
