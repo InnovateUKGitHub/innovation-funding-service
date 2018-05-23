@@ -119,7 +119,13 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Transactional
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
         Address address = toExperianAddressFormat(bankDetailsResource.getOrganisationAddress().getAddress());
-        AccountDetails accountDetails = new AccountDetails(bankDetailsResource.getSortCode(), bankDetailsResource.getAccountNumber(), bankDetailsResource.getCompanyName(), bankDetailsResource.getRegistrationNumber(), address);
+        AccountDetails accountDetails = new AccountDetails(
+                bankDetailsResource.getSortCode(),
+                bankDetailsResource.getAccountNumber(),
+                bankDetailsResource.getCompanyName(),
+                bankDetailsResource.getRegistrationNumber(),
+                address
+        );
         return updateExistingBankDetails(accountDetails, bankDetailsResource).andOnSuccessReturnVoid();
     }
 

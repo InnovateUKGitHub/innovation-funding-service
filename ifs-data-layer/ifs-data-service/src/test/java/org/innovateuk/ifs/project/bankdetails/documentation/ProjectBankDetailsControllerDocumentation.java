@@ -57,6 +57,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                 .withAccountNumber("12345678")
                 .withOrganisation(organisationId)
                 .withOrganiationAddress(organisationAddressResource)
+                .withCompanyName("Company name")
                 .build();
 
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
@@ -79,18 +80,26 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
     public void submitInvalidBankDetails() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
+        String longCompanyName = "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
+                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
+                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
+                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
+                "Hello my name BREAK Hello my name BREAK";
+
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource()
                 .withProject(projectId).withSortCode("123")
                 .withAccountNumber("1234567")
                 .withOrganisation(organisationId)
                 .withOrganiationAddress(organisationAddressResource)
+                .withCompanyName(longCompanyName)
                 .build();
 
         Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
         Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
+        Error organisationNameWrongFormat = fieldError("companyName", longCompanyName, "validation.field.too.many.characters", "", "255", "0");
 
-        RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
+        RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError, organisationNameWrongFormat));
 
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
         mockMvc.perform(

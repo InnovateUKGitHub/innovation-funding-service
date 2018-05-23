@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
 import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
@@ -39,6 +40,8 @@ public class BankDetailsResource {
 
     private String organisationTypeName;
 
+    @NotBlank(message = "{validation.standard.organisationname.required}")
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String companyName;
 
     private String registrationNumber;
