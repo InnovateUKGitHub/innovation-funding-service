@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.junit.Assert.*;
 @SpringBootTest(classes= IntegrationTestConfig.class)
-//@ActiveProfiles("integration-test")
+@ActiveProfiles("integration-test")
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 
     private UserResource systemMaintenanceUser;
