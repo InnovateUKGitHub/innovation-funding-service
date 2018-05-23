@@ -79,7 +79,7 @@ public class RegistrationController {
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
-    public final static String EMAIL_FIELD_NAME = "email";
+    private final static String EMAIL_FIELD_NAME = "email";
 
     @GetMapping("/success")
     public String registrationSuccessful(
@@ -145,20 +145,16 @@ public class RegistrationController {
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
-        boolean success = true;
-
         OrganisationResource organisation = getOrganisation(request);
         if (organisation != null) {
             addOrganisationNameToModel(model, organisation);
-        } else {
-            success = false;
+            return true;
         }
-
-        return success;
+        return false;
     }
 
     private void addRegistrationFormToModel(RegistrationForm registrationForm, Model model, HttpServletRequest request, HttpServletResponse response) {
-        setOrganisationIdCookie(registrationForm, request, response);
+        setOrganisationIdCookie(request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
@@ -286,7 +282,7 @@ public class RegistrationController {
         }
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, long organisationId, long competitionId) {
         return userService.createLeadApplicantForOrganisationWithCompetitionId(
                 registrationForm.getFirstName(),
                 registrationForm.getLastName(),
@@ -310,7 +306,7 @@ public class RegistrationController {
         return registrationCookieService.getOrganisationIdCookieValue(request).orElse(null);
     }
 
-    private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
+    private void setOrganisationIdCookie(HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
         if (organisationId != null) {
             registrationCookieService.saveToOrganisationIdCookie(organisationId, response);

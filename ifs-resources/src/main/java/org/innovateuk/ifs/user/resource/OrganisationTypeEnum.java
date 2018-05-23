@@ -12,10 +12,10 @@ public enum OrganisationTypeEnum {
     
     private static final EnumSet<OrganisationTypeEnum> researchParticipationTypes = EnumSet.of(RESEARCH, RTO, PUBLICSECTOR_OR_CHARITY);
 
-    private final Long id;
+    private final long id;
 
     OrganisationTypeEnum(int organisationTypeId){
-        this.id = Long.valueOf(organisationTypeId);
+        this.id = organisationTypeId;
     }
 
     public Long getId() {
@@ -29,7 +29,7 @@ public enum OrganisationTypeEnum {
     }
 
     public static boolean isResearch(OrganisationTypeEnum organisationType){
-        return organisationType.equals(RESEARCH);
+        return RESEARCH.equals(organisationType);
     }
 
     public static boolean isResearch(Long organisationTypeId){

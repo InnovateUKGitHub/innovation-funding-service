@@ -32,6 +32,7 @@ import java.net.URLEncoder;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -74,7 +75,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUser));
         when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
     }
 
