@@ -52,7 +52,6 @@ bootRun {
 }
 
 ext {
-    snippetsDir = file('build/generated-snippets')
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
 }
 
@@ -115,7 +114,6 @@ dependencies {
 }
 
 test {
-    outputs.dir snippetsDir // why????
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
@@ -135,11 +133,9 @@ test {
 }
 
 
-
 task syncShib(type:Exec) {
     commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
-
