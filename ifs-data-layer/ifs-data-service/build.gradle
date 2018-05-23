@@ -114,6 +114,8 @@ dependencies {
 }
 
 test {
+    finalizedBy asciidoctor
+
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }

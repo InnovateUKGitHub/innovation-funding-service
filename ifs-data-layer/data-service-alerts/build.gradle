@@ -12,6 +12,8 @@ bootRepackage {
     enabled = false
 }
 
+test.finalizedBy asciidoctor
+
 dependencies {
     compile project(":ifs-commons")
     compile project(":ifs-data-layer:data-service-commons")
