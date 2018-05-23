@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -147,6 +148,19 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
                         ),
                         requestFields(CompetitionResourceDocs.competitionResourceFields)
                         )
+                );
+    }
+
+    @Test
+    public void deleteCompetition() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionSetupService.deleteCompetition(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/competition/setup/{id}", competitionId))
+                .andExpect(status().isNoContent())
+                .andDo(document("competition/{method-name}",
+                        pathParameters(parameterWithName("id").description("Id of the competition to delete")))
                 );
     }
 }

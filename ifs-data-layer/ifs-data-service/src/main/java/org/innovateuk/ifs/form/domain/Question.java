@@ -32,7 +32,7 @@ public class Question {
 
     private Integer priority;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FormInput> formInputs = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

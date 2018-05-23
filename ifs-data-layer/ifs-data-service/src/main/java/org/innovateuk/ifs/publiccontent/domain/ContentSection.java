@@ -26,7 +26,7 @@ public class ContentSection {
     @Enumerated(EnumType.STRING)
     private PublicContentStatus status;
 
-    @OneToMany(mappedBy="contentSection")
+    @OneToMany(mappedBy="contentSection", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ContentGroup> contentGroups;
 
     public PublicContent getPublicContent() {

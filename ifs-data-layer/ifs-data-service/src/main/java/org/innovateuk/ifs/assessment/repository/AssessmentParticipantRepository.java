@@ -183,4 +183,6 @@ public interface AssessmentParticipantRepository extends PagingAndSortingReposit
 
     @Query(PARTICIPANTS_NOT_ON_INTERVIEW_PANEL)
     List<AssessmentParticipant> findParticipantsNotOnInterviewPanel(@Param("competitionId") long competitionId);
+
+    void deleteByCompetitionIdAndRole(long competitionId, CompetitionParticipantRole competitionParticipantRole);
 }

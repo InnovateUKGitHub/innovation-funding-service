@@ -74,7 +74,9 @@ the user should see the change in the view team members page
 Existing user creates a new application and invites a user from the same organisation
     the user navigates to the page        ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link       jQuery=a:contains("Start new application")
-    the user clicks the button/link       jQuery=Label:contains("Yes, I want to create a new application.")
+    the user clicks the button/link       jQuery=.button:contains("Continue")
+    the user should see a field and summary error   Please select an option to continue.
+    the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
     the user clicks the button/link       jQuery=.button:contains("Continue")
     the user clicks the button/link       jQuery=a:contains("Update and add contributors from INNOVATE LTD")
     The user clicks the button/link       jQuery=button:contains("Add another contributor")

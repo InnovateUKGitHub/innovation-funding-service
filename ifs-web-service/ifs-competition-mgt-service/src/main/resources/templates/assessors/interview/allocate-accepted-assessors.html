@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications to assessors'" />
+</head>
+
+<body class="competition-management competition-overview">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
+
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle='Allocate applications to assessors',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+
+    <div class="grid-row sorting">
+        <div class="column-half">
+            <span class="heading-xlarge" th:text="${model.pagination.totalCount}">20</span>
+            <span class="heading-small">assessors</span>
+        </div>
+    </div>
+
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Assessor</th>
+                <th scope="col">Skill areas</th>
+                <th class="numeric width-small" scope="col">Allocated</th>
+                <th scope="col"><span class="visuallyhidden">button</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="assessor : ${model.assessors}">
+                <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
+                <td th:text="${assessor.skillAreas}">skill areas</td>
+                <td th:text="${assessor.numberOfAllocatedApplications}" class="numeric"></td>
+                <td class="alignright">
+                    <a class="button-secondary no-margin"
+                       th:href="@{/assessment/interview/competition/{cid}/assessors/unallocated-applications/{aid}(cid=${model.competitionId},aid=${assessor.id})}"
+                       th:text="Allocate">
+                        Allocate
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>
