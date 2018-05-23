@@ -21,6 +21,7 @@ import java.util.List;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
@@ -34,6 +35,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     @Before
     public void setUp() throws Exception {
         systemMaintenanceUser = newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_MAINTAINER)).build();
+        clearUniqueIds();
     }
 
     @Autowired
@@ -53,13 +55,13 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
         setLoggedInUser(systemMaintenanceUser);
         AlertResource created1 = controller.create(newAlertResource()
-                .withValidFromDate(oneDayAgo).withId(12L)
+                .withValidFromDate(oneDayAgo)
                 .withValidToDate(oneDayAhead)
                 .build()).getSuccess();
 
 
         AlertResource created2 = controller.create(newAlertResource()
-                .withValidFromDate(oneSecondAgo).withId(13L)
+                .withValidFromDate(oneSecondAgo)
                 .withValidToDate(oneHourAhead)
                 .build()).getSuccess();
 
