@@ -14,7 +14,7 @@ public class EncodingUtils {
         try {
             encodedSearchString = URLEncoder.encode(encodedSearchString, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            LOG.info("Unsupported Encoding.  Skipping encoding and using original search string.");
+            LOG.info("Unsupported Encoding.  Skipping encoding and using original search string.", e);
         }
         return encodedSearchString;
     }

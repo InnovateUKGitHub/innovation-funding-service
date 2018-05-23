@@ -103,7 +103,7 @@ public class CookieUtil {
             try {
                 return decodeCookieValue(cookie.get().getValue());
             } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException ignore) {
-                LOG.error("Failing cookie (" + cookieName + "):" + ignore.getMessage(), e);
+                LOG.error("Failing cookie (" + cookieName + "):" + ignore.getMessage(), ignore);
             }
         }
         return "";
