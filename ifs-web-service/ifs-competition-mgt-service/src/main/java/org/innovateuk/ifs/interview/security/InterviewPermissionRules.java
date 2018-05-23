@@ -34,8 +34,7 @@ public class InterviewPermissionRules {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
                 competitionHasInterviewPanel(competition) &&
-                competitionIsInFundersPanel(competition) &&
-                !competitionIsInInform(competition);
+                competitionIsInFundersPanel(competition);
     }
 
     private boolean competitionHasInterviewPanel(CompetitionResource competition) {
