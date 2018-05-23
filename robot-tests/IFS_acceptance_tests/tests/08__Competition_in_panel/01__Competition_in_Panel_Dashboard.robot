@@ -24,3 +24,12 @@ Milestones for In Panel Competitions
     Then the user should see the element  jQuery=.disabled[aria-disabled="true"]:contains("Manage funding notifications")
     And the user should see the element   css=li:nth-child(8).done    #Verify that 8. Line draw is done
     And the user should see the element   css=li:nth-child(9).not-done    #Verify that 9. Assessment panel is not done
+
+Internal user can see grant terms and conditions
+    [Documentation]  IFS-3036
+    [Tags]
+    Given The user clicks the button/link  link=Applications: All, submitted, ineligible
+    And The user clicks the button/link    link=All applications
+    When the user clicks the button/link   link=${application_ids["SISM - Smart Internet Security Monitor"]}
+    And the user clicks the button/link    link=view the grant terms and conditions
+    Then the user should see the element   jQuery=h1:contains("Terms and conditions of an Innovate UK grant award")
