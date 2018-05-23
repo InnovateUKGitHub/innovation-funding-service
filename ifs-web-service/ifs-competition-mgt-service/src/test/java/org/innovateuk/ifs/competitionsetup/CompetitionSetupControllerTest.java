@@ -43,7 +43,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -1161,5 +1163,44 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         verify(competitionService).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
         verify(manageInnovationLeadsModelPopulator).populateModel(any());
+    }
+
+    @Test
+    public void deleteCompetition() throws Exception {
+        when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(restSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard"));
+
+        verify(competitionSetupRestService, only()).delete(COMPETITION_ID);
+    }
+
+    @Test
+    public void deleteCompetition_failure() throws Exception {
+        when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(
+                restFailure(new Error(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED, HttpStatus.BAD_REQUEST)));
+
+        // For re-display of Competition Setup following the failure
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withId(COMPETITION_ID)
+                .build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/delete"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(view().name("competition/setup"))
+                .andReturn();
+
+        verify(competitionSetupRestService, only()).delete(COMPETITION_ID);
+
+        CompetitionSetupSummaryForm form = (CompetitionSetupSummaryForm) result.getModelAndView().getModel()
+                .get(COMPETITION_SETUP_FORM_KEY);
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(1, bindingResult.getGlobalErrorCount());
+        assertEquals("COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED", bindingResult.getGlobalErrors().get(0).getCode());
     }
 }

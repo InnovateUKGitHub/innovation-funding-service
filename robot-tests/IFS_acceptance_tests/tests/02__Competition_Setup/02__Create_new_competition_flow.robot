@@ -69,6 +69,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-3086 Investigate options to support selection of grant terms and conditions in Competition setup
 ...
 ...               IFS-2833 As a Portfolio manager I am able to edit the 'Question heading' in Project details
+...
+...               IFS-1084 As a comp exec I am able to delete a competition prior to the competition opens date
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -703,6 +705,23 @@ Innovation leads can be added to a competition
     When the user clicks the button/link      jQuery=.inline-nav a:contains("Find")
     Then the user should see the element      jQuery=td:contains(${peter_freeman}) button:contains("Add")
 
+User deletes the competition
+    [Documentation]  IFS-1084
+    Given the user navigates to the page      ${CA_UpcomingComp}
+    And The user clicks the button/link       link=No competition title defined
+    When the user clicks the button/link      link=Delete competition
+    And the user clicks the button/link       css=.delete-modal button[type="submit"]
+    And the user navigates to the page        ${CA_UpcomingComp}
+    Then The user should not see the element  link=No competition title defined
+
+User cannot delete competition with assessors
+   [Documentation]  IFS-1084
+   Given the user clicks the button/link     link=Photonics for health
+   And The user clicks the button/link       link=View and update competition setup
+   When the user clicks the button/link      link=Delete competition
+   And the user clicks the button/link       css=.delete-modal button[type="submit"]
+   Then The user should see a summary error  You cannot delete this competition as assessors have been invited.
+
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
     [Tags]  HappyPath  MySQL
@@ -875,6 +894,3 @@ the user marks question as complete
     the user clicks the button/link      jQuery=a:contains("${question_link}")
     the user clicks the button/link      css=button[type="submit"]
     the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
-
-the user unchecks the resubmission radio button
-    Run Keyword And Ignore Error Without Screenshots  Execute Javascript  jQuery('#use-resubmission-question-yes').get(0).removeAttribute('checked');
