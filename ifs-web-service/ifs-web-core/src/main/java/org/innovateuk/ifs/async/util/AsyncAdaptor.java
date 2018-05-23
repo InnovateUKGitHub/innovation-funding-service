@@ -46,8 +46,12 @@ public abstract class AsyncAdaptor {
         return asyncFuturesGenerator.awaitAll(future1, future2, future3);
     }
 
-    protected CompletableFutureTupleNHandler awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?>... moreFutures) {
-        return asyncFuturesGenerator.awaitAll(future1, future2, future3, moreFutures);
+    protected <R1, R2, R3, R4> CompletableFutureTuple4Handler<R1, R2, R3, R4> awaitAll(CompletableFuture<R1> future1, CompletableFuture<R2> future2, CompletableFuture<R3> future3, CompletableFuture<R4> future4) {
+        return asyncFuturesGenerator.awaitAll(future1, future2, future3, future4);
+    }
+
+    protected CompletableFutureTupleNHandler awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
+        return asyncFuturesGenerator.awaitAll(future1, future2, future3, future4, moreFutures);
     }
 
     protected CompletableFutureTupleNHandler awaitAll(List<? extends CompletableFuture<?>> futures) {
@@ -66,8 +70,8 @@ public abstract class AsyncAdaptor {
         return asyncFuturesGenerator.awaitAll(futureName, future1, future2, future3);
     }
 
-    protected CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?>... moreFutures) {
-        return asyncFuturesGenerator.awaitAll(futureName, future1, future2, future3, moreFutures);
+    protected CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
+        return asyncFuturesGenerator.awaitAll(futureName, future1, future2, future3, future4, moreFutures);
     }
 
     protected void waitForFuturesAndChildFuturesToCompleteFrom(List<? extends CompletableFuture<?>> futures) {
