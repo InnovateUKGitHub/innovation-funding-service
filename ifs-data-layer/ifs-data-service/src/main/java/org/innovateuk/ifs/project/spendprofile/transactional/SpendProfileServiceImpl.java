@@ -446,6 +446,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         try {
             return serviceSuccess(generateSpendProfileCSVData(spendProfileTableResource, projectOrganisationCompositeId));
         } catch (IOException ioe) {
+            LOG.error("exception thrown getting spend profile", ioe);
             return serviceFailure(SPEND_PROFILE_CSV_GENERATION_FAILURE);
         }
     }

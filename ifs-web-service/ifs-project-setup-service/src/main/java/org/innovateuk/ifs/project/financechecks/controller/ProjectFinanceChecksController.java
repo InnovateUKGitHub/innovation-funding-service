@@ -452,7 +452,7 @@ public class ProjectFinanceChecksController {
             try {
                 attachments = mapper.readValue(json, listType);
                 return attachments;
-            } catch (IOException e) {
+            } catch (IOException ignored) {
                 //ignored
             }
         }

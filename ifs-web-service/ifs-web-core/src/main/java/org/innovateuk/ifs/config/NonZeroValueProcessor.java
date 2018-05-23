@@ -94,7 +94,7 @@ public final class NonZeroValueProcessor
         BigDecimal decimal = BigDecimal.ZERO;
         try{
             decimal = NumberUtils.getBigDecimalValue(newValue, new Double(0));
-        }catch (IntegerNumberFormatException e ){
+        }catch (IntegerNumberFormatException ignored ){
             // Ignore number format exceptions..
         }
 

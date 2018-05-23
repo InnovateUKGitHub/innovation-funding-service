@@ -93,12 +93,16 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<SectionResource> filterParentSections(List<SectionResource> sections) {
         List<SectionResource> childSections = getChildSections(sections, new ArrayList<>());
-        sections = sections.stream()
+
+        if(sections == null) {
+            return new ArrayList<>();
+        }
+
+        return sections.stream()
                 .filter(s -> !childSections.stream()
                         .anyMatch(c -> c.getId().equals(s.getId())))
                 .sorted(Comparator.comparing(SectionResource::getPriority))
                 .collect(toList());
-        return sections;
     }
 
     @Override

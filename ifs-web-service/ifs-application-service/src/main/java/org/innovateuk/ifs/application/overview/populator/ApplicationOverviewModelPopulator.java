@@ -94,7 +94,7 @@ public class ApplicationOverviewModelPopulator {
         ProjectResource projectResource = projectService.getByApplicationId(application.getId());
 
         ApplicationOverviewUserViewModel userViewModel = getUserDetails(application, userId);
-        ApplicationOverviewAssignableViewModel assignableViewModel = getAssignableDetails(application, userOrganisation.orElse(null), userId);
+        ApplicationOverviewAssignableViewModel assignableViewModel = getAssignableDetails(application, userOrganisation, userId);
         ApplicationOverviewCompletedViewModel completedViewModel = getCompletedDetails(application, userOrganisation);
         ApplicationOverviewSectionViewModel sectionViewModel = getSections(competition, application, userId);
         Long yourFinancesSectionId = getYourFinancesSectionId(application);
@@ -157,11 +157,6 @@ public class ApplicationOverviewModelPopulator {
         return simpleFilter(allSections, section -> childSections.contains(section.getId()));
     }
 
-    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, List<QuestionResource> questions) {
-        questions.sort(Comparator.comparing(QuestionResource::getPriority, Comparator.nullsLast(Comparator.naturalOrder())));
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
-    }
-
     private ApplicationOverviewUserViewModel getUserDetails(ApplicationResource application, Long userId) {
         Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
@@ -171,13 +166,13 @@ public class ApplicationOverviewModelPopulator {
                 userIsLeadApplicant && application.isSubmittable());
     }
 
-    private ApplicationOverviewAssignableViewModel getAssignableDetails(ApplicationResource application, OrganisationResource userOrganisation,
+    private ApplicationOverviewAssignableViewModel getAssignableDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation,
                                                                         Long userId) {
         if (isApplicationInViewMode(application, userOrganisation)) {
             return new ApplicationOverviewAssignableViewModel();
         }
 
-        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
+        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.get().getId());
 
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
@@ -188,8 +183,8 @@ public class ApplicationOverviewModelPopulator {
         return new ApplicationOverviewAssignableViewModel(assignableUsers, pendingAssignableUsers, questionAssignees, notifications);
     }
 
-    private boolean isApplicationInViewMode(ApplicationResource application, OrganisationResource userOrganisation) {
-        return !application.isOpen() || userOrganisation == null;
+    private boolean isApplicationInViewMode(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+        return !application.isOpen() || !userOrganisation.isPresent();
     }
 
     private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -47,6 +49,8 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can assign application to assessors for an Interview Panel", securedType = InterviewAllocationController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewAllocationController extends CompetitionManagementCookieController<InterviewAllocationSelectionForm> {
+
+    private static final Log LOG = LogFactory.getLog(InterviewAllocationController.class);
 
     static final String SELECTION_FORM = "interviewAllocationSelectionForm";
 
@@ -255,6 +259,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown adding assessors to invite list", e);
             return createFailureResponse();
         }
     }
@@ -289,6 +294,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown selecting assessors for invite list", e);
             return createFailureResponse();
         }
     }

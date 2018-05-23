@@ -145,7 +145,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            LOG.warn("Unable to decode searchstring");
+            LOG.warn("Unable to decode searchstring", e);
         }
 
         keywords.forEach(keyword -> publicContentIds.add(keyword.getPublicContent().getId()));

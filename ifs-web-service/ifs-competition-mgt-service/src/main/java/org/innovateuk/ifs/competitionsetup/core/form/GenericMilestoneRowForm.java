@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.core.form;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -14,7 +16,10 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
  * Default Milestone Form Entry without any validations for the Milestones form.
  */
 public class GenericMilestoneRowForm {
-	protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
+
+    private static final Log LOG = LogFactory.getLog(GenericMilestoneRowForm.class);
+
+    protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
     protected static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
     @Range(min=2000, max = 9999, message = "{validation.standard.date.format}")
@@ -144,7 +149,7 @@ public class GenericMilestoneRowForm {
         else {
             try {
                 dayOfWeek = dayName.substring(0, 1) + dayName.substring(1, 3).toLowerCase();
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
             }
         }
         return dayOfWeek;
@@ -154,7 +159,7 @@ public class GenericMilestoneRowForm {
         if (day != null && month != null && year != null) {
             try {
                 return TimeZoneUtil.fromUkTimeZone(year, month, day).getDayOfWeek().name();
-            } catch (DateTimeException ex) {
+            } catch (DateTimeException ignored) {
             }
         }
 
