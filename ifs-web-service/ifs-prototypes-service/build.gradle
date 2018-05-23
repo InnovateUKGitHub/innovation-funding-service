@@ -1,0 +1,39 @@
+bootRun {
+    addResources = false
+}
+
+def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+
+project.version = prototypesServiceVersion
+tagDocker.onlyIf { (isSysIntEnv() || !isNamedEnv()) && enabled }
+tagDocker.tag = prototypesServiceVersion
+osStageRemote.onlyIf { (isSysIntEnv() || !isNamedEnv()) && enabled }
+osStageRemote.tag = prototypesServiceVersion
+tagDockerLocal.tag = prototypesServiceVersion
+osStageLocal.tag = prototypesServiceVersion
+
+createContainer.hostName="prototypes-svc"
+createContainer.containerName="prototypes-svc"
+createContainer.containerId="prototypes-svc"
+createContainer.portBindings = ['1234:8080']
+
+
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
+
+jar {
+    baseName = 'ifs-prototypes-service'
+}
+
+dependencies {
+    compile project(':ifs-web-service:ifs-web-core')
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+}

@@ -18,6 +18,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -41,7 +43,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void testExternalUsersCannotViewACompetitionInSetup() {
         //null user cannot see competition in setup.
-        assertFalse(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build(), null));
+        assertFalse(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(COMPETITION_SETUP).build(), null));
         //null user can see open competitions
         assertTrue(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build(), null));
     }
@@ -125,7 +127,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void  testOnlyInnovationLeadUsersAssignedToCompWithoutFeedbackReleasedCanAccessComp(){
+    public void testOnlyInnovationLeadUsersAssignedToCompWithoutFeedbackReleasedCanAccessComp() {
         List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
@@ -140,5 +142,22 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(openCompetition, innovationLeadNotAssignedToCompetition));
         assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThem(feedbackReleasedCompetition, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(feedbackReleasedCompetition, innovationLeadNotAssignedToCompetition));
+    }
+
+    @Test
+    public void testOnlyCompAdminsCanDeleteCompetitionsInPreparation() {
+        List<CompetitionResource> competitions = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.values())
+                .build(CompetitionStatus.values().length);
+
+        allGlobalRoleUsers.forEach(user -> competitions.forEach(competitionResource -> {
+            if ((user.hasRole(COMP_ADMIN) || user.hasRole(PROJECT_FINANCE) || user.hasRole(IFS_ADMINISTRATOR)) &&
+                    (competitionResource.getCompetitionStatus() == COMPETITION_SETUP ||
+                    competitionResource.getCompetitionStatus() == READY_TO_OPEN)) {
+                assertTrue(rules.internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(competitionResource, user));
+            } else {
+                assertFalse(rules.internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(competitionResource, user));
+            }
+        }));
     }
 }

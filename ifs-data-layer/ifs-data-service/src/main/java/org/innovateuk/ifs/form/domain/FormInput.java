@@ -63,7 +63,7 @@ public class FormInput {
     @Enumerated(EnumType.STRING)
     private FormInputScope scope;
 
-    @OneToMany(mappedBy = "formInput")
+    @OneToMany(mappedBy = "formInput", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("priority")
     private List<GuidanceRow> guidanceRows;
 
