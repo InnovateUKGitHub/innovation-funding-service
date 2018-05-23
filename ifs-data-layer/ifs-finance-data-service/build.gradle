@@ -115,4 +115,3 @@ task asciidoctorOnly(type: Test) {
 }
 
 flywayMigrate.dependsOn processResources
-flywayClean.dependsOn processResources

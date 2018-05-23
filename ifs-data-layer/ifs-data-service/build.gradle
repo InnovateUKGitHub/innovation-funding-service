@@ -138,4 +138,3 @@ task syncShib(type:Exec) {
 }
 
 flywayMigrate.dependsOn processResources
-flywayClean.dependsOn processResources
