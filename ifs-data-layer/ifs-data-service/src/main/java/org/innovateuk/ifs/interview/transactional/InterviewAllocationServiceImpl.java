@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.interview.mapper.InterviewMapper;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.*;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -65,6 +67,8 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     private ApplicationRepository applicationRepository;
     @Autowired
     private NotificationSender notificationSender;
+    @Autowired
+    private InterviewMapper interviewMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -130,6 +134,19 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     @Override
+    public ServiceResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(long competitionId, long assessorUserId) {
+        List<Interview> interviews = interviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
+                assessorUserId,
+                competitionId);
+
+        List<InterviewResource> interviewResources = interviews.stream()
+                .map(interview -> interviewMapper.mapToResource(interview))
+                .collect(Collectors.toList());
+
+        return serviceSuccess(interviewResources);
+    }
+
+    @Override
     public ServiceResult<List<InterviewApplicationResource>> getUnallocatedApplicationsById(List<Long> applicationIds) {
         return serviceSuccess(interviewRepository.findAllNotified(applicationIds));
     }
@@ -159,6 +176,12 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
                                     )
             )
         );
+    }
+
+    @Override
+    public ServiceResult<Void> unallocateApplication(long assessorId, long applicationId) {
+        interviewRepository.deleteOneByParticipantUserIdAndTargetId(assessorId, applicationId);
+        return serviceSuccess();
     }
 
     @Override

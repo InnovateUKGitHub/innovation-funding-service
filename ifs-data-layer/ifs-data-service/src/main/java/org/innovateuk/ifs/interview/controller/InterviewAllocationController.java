@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
-import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
+import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +39,14 @@ public class InterviewAllocationController {
         return interviewAllocationService.getAllocatedApplications(competitionId, assessorId, pageable).toGetResponse();
     }
 
+    @GetMapping("/{competitionId}/allocated-applications-assessorId/{assessorId}")
+    public RestResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(
+            @PathVariable long competitionId,
+            @PathVariable long assessorId
+    ) {
+        return interviewAllocationService.getAllocatedApplicationsByAssessorId(competitionId, assessorId).toGetResponse();
+    }
+
     @GetMapping("/{competitionId}/unallocated-applications/all/{applicationIds}")
     public RestResult<List<InterviewApplicationResource>> getAllocatedApplications(@PathVariable List<Long> applicationIds) {
         return interviewAllocationService.getUnallocatedApplicationsById(applicationIds).toGetResponse();
@@ -55,6 +60,11 @@ public class InterviewAllocationController {
     @PostMapping("/{competitionId}/allocated-applications/{assessorId}/send-invite")
     public RestResult<Void> sendInvite(@RequestBody InterviewNotifyAllocationResource interviewNotifyAllocationResource) {
         return interviewAllocationService.notifyAllocation(interviewNotifyAllocationResource).toPostResponse();
+    }
+
+    @PostMapping("/allocated-applications/{assessorId}/unallocate/{applicationId}")
+    public RestResult<Void> unallocateApplication(@PathVariable long assessorId, @PathVariable long applicationId) {
+        return interviewAllocationService.unallocateApplication(assessorId, applicationId).toPostResponse();
     }
 
     @GetMapping("/{competitionId}/unallocated-applications/{assessorId}")

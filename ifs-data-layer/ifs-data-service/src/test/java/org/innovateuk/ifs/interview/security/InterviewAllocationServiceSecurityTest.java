@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
@@ -55,6 +56,12 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
+    public void getAllocatedApplicationsByAssessorId() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllocatedApplicationsByAssessorId(1L, 2L),
+                COMP_ADMIN, PROJECT_FINANCE, ASSESSOR);
+    }
+
+    @Test
     public void getUnallocatedApplications() {
         Pageable pageable = new PageRequest(0, 20);
 
@@ -68,5 +75,9 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 
-
+    @Test
+    public void unallocateApplications() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unallocateApplication(1L, 2L),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
 }

@@ -2,11 +2,9 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
-import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
+import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -15,6 +13,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.interviewApplicationsResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.interviewResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 /**
@@ -47,6 +46,13 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
+    public RestResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(long competitionId, long assessorId) {
+        String baseUrl = format("%s/%s/%s/%s", INTERVIEW_PANEL_REST_URL, competitionId, "allocated-applications-assessorId", assessorId);
+
+        return getWithRestResult(baseUrl,  interviewResourceListType());
+    }
+
+    @Override
     public RestResult<List<InterviewApplicationResource>> getUnallocatedApplicationsById(long competitionId, List<Long> applicationIds) {
         String baseUrl = format("%s/%d/%s/%s/%s", INTERVIEW_PANEL_REST_URL, competitionId, "unallocated-applications", "all", join(applicationIds, ','));
 
@@ -67,6 +73,16 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
                 interviewNotifyAllocationResource.getAssessorId(), "send-invite");
 
         return postWithRestResult(baseUrl, interviewNotifyAllocationResource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> unallocateApplication(long assessorId, long applicationId) {
+        String baseUrl = format("%s/%s/%d/%s/%d", INTERVIEW_PANEL_REST_URL,
+                "allocated-applications",
+                assessorId, "unallocate",
+                applicationId);
+
+        return postWithRestResult(baseUrl, Void.class);
     }
 
     @Override
