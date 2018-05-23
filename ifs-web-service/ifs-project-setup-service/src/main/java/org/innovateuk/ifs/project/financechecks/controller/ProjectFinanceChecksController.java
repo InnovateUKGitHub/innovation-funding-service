@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
@@ -92,6 +94,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 @Controller
 @RequestMapping(ProjectFinanceChecksController.PROJECT_FINANCE_CHECKS_BASE_URL)
 public class ProjectFinanceChecksController {
+
+    private static final Log LOG = LogFactory.getLog(ProjectFinanceChecksController.class);
 
     static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks";
 
@@ -452,8 +456,9 @@ public class ProjectFinanceChecksController {
             try {
                 attachments = mapper.readValue(json, listType);
                 return attachments;
-            } catch (IOException ignored) {
+            } catch (IOException e) {
                 //ignored
+                LOG.trace(e);
             }
         }
         return attachments;

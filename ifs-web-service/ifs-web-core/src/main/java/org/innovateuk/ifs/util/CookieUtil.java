@@ -126,6 +126,7 @@ public class CookieUtil {
                 return Optional.of(mapper.readValue(jsonValue, cookieType));
             } catch (IOException ignored) {
                 //ignored
+                LOG.trace(ignored);
             }
         }
         return Optional.empty();
@@ -140,6 +141,7 @@ public class CookieUtil {
                 return mapper.readValue(jsonValue, cookieType);
             } catch (IOException ignored) {
                 //ignored
+                LOG.trace(ignored);
             }
         }
         return new ArrayList<>();

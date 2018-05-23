@@ -49,7 +49,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED));
 
-    public static final Set<ApplicationState> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES;
+    public static final Set<ApplicationState> SUBMITTED_STATES = unmodifiableSet(SUBMITTED_APPLICATION_STATES);
 
     public static final Set<ApplicationState> NOT_SUBMITTED_STATES = unmodifiableSet(asLinkedSet(
             ApplicationState.CREATED,
