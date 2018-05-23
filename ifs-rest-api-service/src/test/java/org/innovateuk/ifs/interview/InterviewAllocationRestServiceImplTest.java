@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
@@ -17,6 +18,8 @@ import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPag
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResourceBuilder.newInterviewApplicationPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.OK;
 
 public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitTest<InterviewAllocationRestServiceImpl> {
 
@@ -112,5 +115,16 @@ public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitT
                 .getSuccess();
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void unallocateApplications() {
+        long applicationId = 1L;
+        long assessorId = 1L;
+
+        setupPostWithRestResultExpectations(format("%s/%s/%d/%s/%d", restUrl, "allocated-applications", assessorId, "unallocate", applicationId), OK);
+
+        RestResult<Void> restResult = service.unallocateApplication(assessorId, applicationId);
+        assertTrue(restResult.isSuccess());
     }
 }

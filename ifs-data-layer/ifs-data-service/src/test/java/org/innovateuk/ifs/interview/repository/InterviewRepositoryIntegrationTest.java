@@ -40,6 +40,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<InterviewRepository> {
 
@@ -67,6 +68,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
     private Competition competition;
     private Application application1;
     private Application application2;
+    private Application application3;
 
     @Autowired
     @Override
@@ -101,35 +103,44 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .with(id(null))
                 .withCompetition(competition)
                 .build();
+        application3 = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .build();
         Application unassignedApplication = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
                 .build();
 
-        applicationRepository.save(asList(application1, application2, unassignedApplication));
+        applicationRepository.save(asList(application1, application2, application3, unassignedApplication));
 
         ProcessRole assessorRole1 = newProcessRole()
                 .with(id(null))
+                .withRole(Role.INTERVIEW_ASSESSOR)
                 .withUser(assessor)
                 .withApplication(application1)
                 .build();
         ProcessRole assessorRole2 = newProcessRole()
                 .with(id(null))
+                .withRole(Role.INTERVIEW_ASSESSOR)
                 .withUser(assessor)
                 .withApplication(application2)
                 .build();
         ProcessRole assessorRole3 = newProcessRole()
                 .with(id(null))
+                .withRole(Role.INTERVIEW_ASSESSOR)
                 .withUser(assessor)
                 .withApplication(application2)
                 .build();
         ProcessRole otherAssessorRole1 = newProcessRole()
                 .with(id(null))
+                .withRole(Role.INTERVIEW_ASSESSOR)
                 .withUser(otherAssessor)
                 .withApplication(application1)
                 .build();
         ProcessRole otherAssessorRole2 = newProcessRole()
                 .with(id(null))
+                .withRole(Role.INTERVIEW_ASSESSOR)
                 .withUser(otherAssessor)
                 .withApplication(application2)
                 .build();
@@ -146,7 +157,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withOrganisationId(organisation.getId())
                 .build();
 
-        processRoleRepository.save(asList(assessorRole1, assessorRole2, otherAssessorRole1, otherAssessorRole2, lead1, lead2));
+        processRoleRepository.save(asList(assessorRole1, assessorRole2, assessorRole3, otherAssessorRole1, otherAssessorRole2, lead1, lead2));
 
         InterviewAssignment created = newInterviewAssignment()
                 .with(id(null))
@@ -248,5 +259,17 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
         assertEquals(2, interviewApplicationResources.size());
         assertEquals(expectedInterviewApplicationResource1, interviewApplicationResources.get(0));
         assertEquals(expectedInterviewApplicationResource2, interviewApplicationResources.get(1));
+    }
+
+    @Test
+    public void unallocateApplicationFromAssessor() {
+
+        List<Interview> allocated = repository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(assessor.getId(), competition.getId());
+        assertEquals(2, allocated.size());
+
+        repository.deleteOneByParticipantUserIdAndTargetId(assessor.getId(), application2.getId());
+
+        List<Interview> allocatedAfterDeletion = repository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(assessor.getId(), competition.getId());
+        assertTrue(allocatedAfterDeletion.isEmpty());
     }
 }
