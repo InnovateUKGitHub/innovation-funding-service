@@ -8,10 +8,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileTemplateRenderer;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
@@ -31,17 +28,17 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.EmailService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -822,6 +819,11 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         String rejectionReason = "No signature";
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.REJECTED, rejectionReason);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "competitionName", project.getApplication().getCompetition().getName(),
+                "applicationId", project.getApplication().getId()
+        );
 
         verify(projectRepositoryMock).findOne(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);

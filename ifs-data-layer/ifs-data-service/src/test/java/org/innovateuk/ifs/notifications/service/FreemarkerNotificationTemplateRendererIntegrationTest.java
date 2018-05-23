@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.io.File.separator;
-import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
@@ -201,9 +200,14 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     @Test
     public void testSendProjectLiveEmail() throws URISyntaxException, IOException {
 
-        assertRenderedEmailTemplateContainsExpectedLines("project_live_subject.txt", emptyMap());
-        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_plain.txt", emptyMap());
-        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_html.html", emptyMap());
+        Map<String, Object> templateArguments = asMap(
+                "applicationId", 1234L,
+                "competitionName", "Competition 1"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_html.html", templateArguments);
     }
 
     @Test
