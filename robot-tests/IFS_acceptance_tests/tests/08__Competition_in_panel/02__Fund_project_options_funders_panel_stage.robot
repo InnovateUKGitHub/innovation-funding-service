@@ -59,7 +59,7 @@ Proj Finance user can send Fund Decision notification
     And the user should see the element      jQuery=button[disabled]:contains("Write and send email")
     When the user selects the checkbox       app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     Then the user clicks the button/link     jQuery=button:contains("Write and send email")
-    And the user should see the element      css=#subject[value^="Notification regarding your application"]
+    And the user should see the element      css=#subject[value^="<competition name>: Notification regarding your application <application number>: <application title>"]
     When the user clicks the button/link     jQuery=summary:contains("Review list of recipients")[aria-expanded="false"]
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     And the user should not see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
