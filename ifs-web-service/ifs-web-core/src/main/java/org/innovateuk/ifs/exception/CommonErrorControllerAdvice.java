@@ -7,6 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -83,6 +84,13 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     @ExceptionHandler(value = IncorrectStateForPageException.class)
     public ModelAndView incorrectStateForPageHandler(HttpServletRequest req, IncorrectStateForPageException e) {
         LOG.debug("ErrorController  incorrectStateForPageHandler", e);
+        return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.NOT_FOUND, "404");
+    }
+
+    @ResponseStatus(value= HttpStatus.METHOD_NOT_ALLOWED)  // 405
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    public ModelAndView httpRequestMethodNotSupportedHandler(HttpServletRequest req, HttpRequestMethodNotSupportedException e) {
+        LOG.debug("ErrorController  httpRequestMethodNotSupportedHandler", e);
         return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.NOT_FOUND, "404");
     }
 

@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
@@ -54,6 +57,9 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
+    @Autowired
+    private CompetitionService competitionService;
+
     protected String getCookieName() {
         return "applicationSelectionForm";
     }
@@ -66,6 +72,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     public String sendNotifications(Model model,
                                @PathVariable("competitionId") Long competitionId,
                                @RequestParam("application_ids") List<Long> applicationIds) {
+        checkCompetitionIsOpen(competitionId);
 
         NotificationEmailsForm form = new NotificationEmailsForm();
         return getFundingDecisionPage(model, form, competitionId, applicationIds);
@@ -77,6 +84,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                     @ModelAttribute("form") @Valid NotificationEmailsForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
+        checkCompetitionIsOpen(competitionId);
 
         FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(form.getMessage(), form.getFundingDecisions());
 
@@ -108,6 +116,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                ValidationHandler validationHandler,
                                HttpServletRequest request,
                                HttpServletResponse response) {
+        checkCompetitionIsOpen(competitionId);
 
         updateSelectionForm(request,
                 response,
@@ -186,6 +195,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                      ValidationHandler idsValidationHandler,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
+        checkCompetitionIsOpen(competitionId);
 
         FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingNotificationSelectionCookie(selectionForm));
@@ -214,6 +224,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
             @RequestParam("isSelected") boolean isSelected,
             HttpServletRequest request,
             HttpServletResponse response) {
+        checkCompetitionIsOpen(competitionId);
 
         boolean limitIsExceeded = false;
 
@@ -258,6 +269,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                            @RequestParam("addAll") boolean addAll,
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
+        checkCompetitionIsOpen(competitionId);
         try {
             FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
             FundingNotificationSelectionForm applicationsForEmailForm = selectionCookie.getFundingNotificationSelectionForm();
@@ -318,5 +330,11 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 .build()
                 .encode()
                 .toUriString();
+    }
+
+    private void checkCompetitionIsOpen(long competitionId) {
+        if (!competitionService.getById(competitionId).getCompetitionStatus().isLaterThan(CompetitionStatus.READY_TO_OPEN)) {
+            throw new IncorrectStateForPageException("Competition is not yet open.");
+        }
     }
 }

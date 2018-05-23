@@ -9,8 +9,8 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -91,12 +91,16 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     public static final Long APPLICATION_ID_ONE = 1L;
     public static final Long APPLICATION_ID_TWO = 2L;
 
+    CompetitionResource competitionResource;
 
     @Override
     @Before
     public void setUp() {
         super.setUp();
         this.setupCookieUtil();
+
+        competitionResource = newCompetitionResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
     }
 
     @Test
@@ -113,9 +117,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         String queryParams = "";
         // Mock setup
         Cookie formCookie = createFormCookie(new FundingNotificationSelectionCookie());
-
-        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
 
         List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(pageSize);
         ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
@@ -143,18 +144,17 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     @Test
     public void testSelectApplications() throws Exception {
-        long competitionId = 1L;
         List<Long> applicationIds = asList(1L, 2L, 3L, 4L);
 
         when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
-                competitionId, empty(), empty(), empty())).thenReturn(restSuccess(applicationIds));
+                competitionResource.getId(), empty(), empty(), empty())).thenReturn(restSuccess(applicationIds));
 
-        mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", competitionId).
+        mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", competitionResource.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("ids[0]", "18")
                 .param("ids[1]", "21"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/1/funding/send?application_ids=18,21"));
+                .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/funding/send?application_ids=18,21"));
     }
 
     private Matcher<ManageFundingApplicationViewModel> manageFundingApplicationViewModelMatcher(ManageFundingApplicationViewModel toMatch) {
