@@ -12,11 +12,13 @@ public class InterviewAcceptedAssessorsRowViewModel {
     private final long id;
     private final String name;
     private final String skillAreas;
+    private final long numberOfAllocatedApplications;
 
     public InterviewAcceptedAssessorsRowViewModel(InterviewAcceptedAssessorsResource interviewAcceptedAssessorsResource) {
         this.id = interviewAcceptedAssessorsResource.getId();
         this.name = interviewAcceptedAssessorsResource.getName();
         this.skillAreas = interviewAcceptedAssessorsResource.getSkillAreas();
+        this.numberOfAllocatedApplications = interviewAcceptedAssessorsResource.getNumberOfAllocatedApplications();
     }
 
     public long getId() {
@@ -31,6 +33,10 @@ public class InterviewAcceptedAssessorsRowViewModel {
         return skillAreas;
     }
 
+    public long getNumberOfAllocatedApplications() {
+        return numberOfAllocatedApplications;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,6 +47,7 @@ public class InterviewAcceptedAssessorsRowViewModel {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(numberOfAllocatedApplications, that.numberOfAllocatedApplications)
                 .append(name, that.name)
                 .append(skillAreas, that.skillAreas)
                 .isEquals();
@@ -52,6 +59,7 @@ public class InterviewAcceptedAssessorsRowViewModel {
                 .append(id)
                 .append(name)
                 .append(skillAreas)
+                .append(numberOfAllocatedApplications)
                 .toHashCode();
     }
 }

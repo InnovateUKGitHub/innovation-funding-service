@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -35,6 +36,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -79,6 +81,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     @Mock
     private StatusService statusService;
 
+    @Mock
+    private AsyncFuturesGenerator futuresGeneratorMock;
+
     private static final boolean monitoringOfficerExpected = true;
 
     private CompetitionResource competition = newCompetitionResource().withLocationPerPartner(false).build();
@@ -115,6 +120,11 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         partnerStatusFlagChecks.put("spendProfileStatus", SectionStatus.EMPTY);
         partnerStatusFlagChecks.put("otherDocumentsStatus", SectionStatus.HOURGLASS);
         partnerStatusFlagChecks.put("grantOfferLetterStatus", SectionStatus.EMPTY);
+    }
+
+    @Before
+    public void setupExpectations() {
+        setupAsyncExpectations(futuresGeneratorMock);
     }
 
     @Test
@@ -791,6 +801,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", SectionStatus.FLAG));
 
         assertFalse(viewModel.isProjectComplete());
+        assertTrue(viewModel.isShowFinanceChecksPendingQueryWarning());
     }
 
     @Test
@@ -840,6 +851,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", SectionStatus.FLAG));
 
         assertFalse(viewModel.isProjectComplete());
+        assertTrue(viewModel.isShowFinanceChecksPendingQueryWarning());
     }
 
     @Test
@@ -1128,7 +1140,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser).get();
         assertStandardViewModelValuesCorrect(viewModel, monitoringOfficerExpected);
 
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -1291,7 +1303,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     }
 
     private SetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) throws Exception {
-        return populator.populateViewModel(projectId, loggedInUser);
+        return populator.populateViewModel(projectId, loggedInUser).get();
     }
 
     private void setupLookupProjectDetailsExpectations(Optional<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {

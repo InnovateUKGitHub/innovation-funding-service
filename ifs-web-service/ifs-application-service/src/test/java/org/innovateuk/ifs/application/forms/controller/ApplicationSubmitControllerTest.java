@@ -24,6 +24,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -162,7 +163,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        mockMvc.perform(get("/application/1/confirm-submit"))
+        mockMvc.perform(get("/application/" + app.getId() + "/confirm-submit"))
                 .andExpect(view().name("application-confirm-submit"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
@@ -180,7 +181,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-        mockMvc.perform(post("/application/1/submit")
+        mockMvc.perform(post("/application/" + app.getId() + "/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app));
@@ -198,7 +199,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-        mockMvc.perform(post("/application/1/submit")
+        mockMvc.perform(post("/application/" + app.getId() + "/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 
@@ -209,13 +210,27 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     @Test
     public void testApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.SUBMITTED);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(competitionService.getById(anyLong())).thenReturn(competitionResource);
 
-        mockMvc.perform(get("/application/1/track"))
+        mockMvc.perform(get("/application/" + app.getId() + "/track"))
                 .andExpect(view().name("application-track"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", competitionResource));
 
+    }
+
+    @Test
+    public void testNotSubmittedApplicationTrack() throws Exception {
+        ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.OPEN);
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(competitionService.getById(app.getCompetition())).thenReturn(competitionResource);
+
+        mockMvc.perform(get("/application/" + app.getId() + "/track"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + app.getId()));
     }
 }

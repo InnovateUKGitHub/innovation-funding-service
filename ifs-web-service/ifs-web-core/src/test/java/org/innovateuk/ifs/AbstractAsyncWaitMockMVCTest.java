@@ -207,8 +207,8 @@ public abstract class AbstractAsyncWaitMockMVCTest<ControllerType> extends BaseC
             return createTupleNHandlerMockFromFutureList(futures);
         };
 
-        when(futuresGeneratorMock.awaitAll(isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture[].class))).thenAnswer(tupleNFromVarargsAnswer);
-        when(futuresGeneratorMock.awaitAll(isA(String.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture[].class))).thenAnswer(tupleNFromVarargsAnswer);
+        when(futuresGeneratorMock.awaitAll(isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture[].class))).thenAnswer(tupleNFromVarargsAnswer);
+        when(futuresGeneratorMock.awaitAll(isA(String.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture[].class))).thenAnswer(tupleNFromVarargsAnswer);
 
         // expectations for when awaitAll() is called with n futures with a List
         Answer<Object> tupleNFromListAnswer = invocation -> {

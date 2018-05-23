@@ -10,9 +10,6 @@ the user selects the checkbox
     Run Keyword If    '${status}' == 'PASS'    Click Element    css=[id="${checkbox}"] ~ label, [name="${checkbox}"] ~ label
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
@@ -21,36 +18,24 @@ the user unselects the checkbox
     Run Keyword If    '${status}' == 'PASS'    Click Element    css=[id="${checkbox}"] ~ label,[name="${checkbox}"] ~ label
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user should see that the checkbox is disabled
     [Arguments]    ${checkbox}
     Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}"][disabled="disabled"]:checked ~ label, [name="${checkbox}"][disabled="disabled"]:checked ~ label
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user should see that the checkbox is selected
     [Arguments]    ${checkbox}
      Wait Until Element Is Visible Without Screenshots    css=[id="${checkbox}"][checked="checked"]:checked ~ label, [name="${checkbox}"][checked="checked"]:checked ~ label
      # Error checking
      the user should not see an error in the page
-     # Header checking (INFUND-1892)
-     Element Should Be Visible    id=global-header
-     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user should not see the checkbox
     [Arguments]    ${checkbox}
     Wait Until Element Is Not Visible Without Screenshots    css=[id="${checkbox}"]:checked ~ label, [name="${checkbox}"]:checked ~ label
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 # Radio Buttons
 the user selects the radio button
@@ -59,9 +44,6 @@ the user selects the radio button
     Click Element     css=[name^="${RADIO_BUTTON}"][value="${RADIO_BUTTON_OPTION}"] ~ label, [id="${RADIO_BUTTON_OPTION}"] ~ label
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
@@ -69,18 +51,12 @@ the user sees that the radio button is selected
     #[contains(@class,"selected")]
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 # Focus
 the user moves focus to the element
     [Arguments]    ${element}
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
     Wait Until Element Is Visible Without Screenshots    ${element}
     focus    ${element}
 
@@ -88,9 +64,6 @@ the user moves the mouse away from the element
     [Arguments]    ${element}
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
     Wait Until Element Is Visible Without Screenshots    ${element}
     mouse out    ${element}
 
@@ -123,9 +96,6 @@ the user clears the text from the element
     Wait Until Element Is Visible Without Screenshots    ${element}
     clear element text    ${element}
     the user should not see an error in the page
-    # Header checking    (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
@@ -150,9 +120,6 @@ the user selects the option from the drop-down menu
     mouse out    ${drop-down}
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -161,9 +128,6 @@ the user selects the index from the drop-down menu
     mouse out    ${drop-down}
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user should see the option in the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -173,18 +137,13 @@ the user should see the option in the drop-down menu
     mouse out    ${drop-down}
     # Error checking
     the user should not see an error in the page
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
+
 
 the user should see the dropdown option selected
     [Arguments]    ${option}    ${drop-down}
     List Selection Should Be    ${drop-down}    ${option}
     # Error checking
     the user should not see an error in the page
-    # Header checking    (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 Remove previous rows
     [Arguments]  ${element}

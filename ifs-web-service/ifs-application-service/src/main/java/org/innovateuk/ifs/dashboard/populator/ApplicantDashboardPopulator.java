@@ -57,10 +57,6 @@ public class ApplicantDashboardPopulator {
         List<ProjectResource> allProjects = projectService.findByUser(userId).getSuccess();
         Map<Long, CompetitionResource> competitionsById = getAllCompetitionsForUser(userId);
         List<ProjectResource> projectsInSetup = getNonWithdrawnProjects(allProjects);
-        List<ProjectResource> withdrawnProjects = allProjects.stream()
-                .filter(((Predicate<ProjectResource>) projectsInSetup::contains).negate())
-                .collect(toList());
-        List<Long> withdrawnProjectApplications = withdrawnProjects.stream().map(ProjectResource::getApplication).collect(toList());
 
         List<ProjectDashboardRowViewModel> projectViews = projectsInSetup.stream().map(project -> {
             ApplicationResource application = applicationRestService.getApplicationById(project.getApplication()).getSuccess();
@@ -70,7 +66,6 @@ public class ApplicantDashboardPopulator {
 
         List<InProgressDashboardRowViewModel> inProgressViews = allApplications.stream()
                 .filter(this::applicationInProgress)
-                .filter(application -> !withdrawnProjectApplications.contains(application.getId()))
                 .map(application -> {
             CompetitionResource competition = competitionsById.get(application.getCompetition());
             Optional<ProcessRoleResource> role = usersProcessRoles.stream()
@@ -82,18 +77,16 @@ public class ApplicantDashboardPopulator {
                     competition.getDaysLeft(), application.getCompletion().intValue(), invitedToInterview);
         }).sorted().collect(toList());
 
-        List<PreviousDashboardRowViewModel> previousViews = allApplications.stream()
-                .filter(this::applicationFinished)
-                .map(application -> {
-            CompetitionResource competition = competitionsById.get(application.getCompetition());
-            return new PreviousDashboardRowViewModel(application.getName(), application.getId(), competition.getName(), application.getApplicationState(), false);
-        }).sorted().collect(toList());
-
-        previousViews.addAll(withdrawnProjects.stream().map(project -> {
-            ApplicationResource application = applicationRestService.getApplicationById(project.getApplication()).getSuccess();
-            CompetitionResource competition = competitionsById.get(application.getCompetition());
-            return new PreviousDashboardRowViewModel(project.getName(), project.getApplication(), competition.getName(), ApplicationState.SUBMITTED, true);
-        }).sorted().collect(toList()));
+        List<PreviousDashboardRowViewModel> previousViews =
+                allApplications
+                        .stream()
+                        .filter(this::applicationFinished)
+                        .map(application -> new PreviousDashboardRowViewModel(application.getName(),
+                                                                          application.getId(),
+                                                                          application.getCompetitionName(),
+                                                                          application.getApplicationState()))
+                        .sorted()
+                        .collect(toList());
 
         return new ApplicantDashboardViewModel(projectViews, inProgressViews, previousViews);
     }

@@ -20,8 +20,6 @@ import org.springframework.validation.Validator;
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.creation.controller.ApplicationCreationAuthenticatedController.FORM_RADIO_NAME;
-import static org.innovateuk.ifs.application.creation.controller.ApplicationCreationAuthenticatedController.RADIO_TRUE;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -110,13 +108,13 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         verify(userService).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
     }
 
-
-
     @Test
-    public void testPostEmptyForm() throws Exception {
+    public void testPostEmptyFormShouldThrowError() throws Exception {
         mockMvc.perform(post("/application/create-authenticated/1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/application/create-authenticated/1"));
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "createNewApplication"))
+                .andReturn();
     }
 
     @Test
@@ -125,7 +123,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         application.setId(99L);
         when(applicationService.createApplication(anyLong(), anyLong(), eq(""))).thenReturn(application);
 
-        mockMvc.perform(post("/application/create-authenticated/1").param(FORM_RADIO_NAME, RADIO_TRUE))
+        mockMvc.perform(post("/application/create-authenticated/1").param("createNewApplication", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/99/team"));
 
@@ -136,7 +134,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     @Test
     public void testPostNoNewApplication() throws Exception {
         // This should just redirect to the dashboard.
-        mockMvc.perform(post("/application/create-authenticated/1").param(FORM_RADIO_NAME, ApplicationCreationAuthenticatedController.RADIO_FALSE))
+        mockMvc.perform(post("/application/create-authenticated/1").param("createNewApplication", "0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
     }
@@ -145,7 +143,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     public void testGetCreateNewApplicationNotEligible() throws Exception {
         when(competitionService.getById(1L)).thenReturn(newCompetitionResource().withLeadApplicantType(asList(1L)).build());
         mockMvc.perform(get("/application/create-authenticated/1")
-                .param(FORM_RADIO_NAME, ApplicationCreationAuthenticatedController.RADIO_FALSE))
+                .param("createNewApplication", "0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/create-authenticated/1/not-eligible"));
     }
@@ -154,7 +152,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     public void testPostCreateNewApplicationNotEligible() throws Exception {
         when(competitionService.getById(1L)).thenReturn(newCompetitionResource().withLeadApplicantType(asList(1L)).build());
         mockMvc.perform(post("/application/create-authenticated/1")
-                .param(FORM_RADIO_NAME, ApplicationCreationAuthenticatedController.RADIO_FALSE))
+                .param("createNewApplication", "0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/create-authenticated/1/not-eligible"));
     }
@@ -162,7 +160,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     @Test
     public void testGetShowEligiblePage() throws Exception {
         mockMvc.perform(get("/application/create-authenticated/1/not-eligible")
-                .param(FORM_RADIO_NAME, ApplicationCreationAuthenticatedController.RADIO_FALSE))
+                .param("createNewApplication", "0"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("create-application/authenticated-not-eligible"));
     }
