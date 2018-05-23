@@ -41,14 +41,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW_APPLICATIONS')")
 public class InterviewApplicationSendInviteController {
 
-    @Autowired
     private InterviewApplicationsSendModelPopulator interviewApplicationsSendModelPopulator;
-
-    @Autowired
     private InterviewApplicationSentInviteModelPopulator interviewApplicationSentInviteModelPopulator;
+    private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Autowired
-    private InterviewAssignmentRestService interviewAssignmentRestService;
+    public InterviewApplicationSendInviteController(InterviewApplicationsSendModelPopulator interviewApplicationsSendModelPopulator,
+                                                    InterviewApplicationSentInviteModelPopulator interviewApplicationSentInviteModelPopulator,
+                                                    InterviewAssignmentRestService interviewAssignmentRestService) {
+        this.interviewApplicationsSendModelPopulator = interviewApplicationsSendModelPopulator;
+        this.interviewApplicationSentInviteModelPopulator = interviewApplicationSentInviteModelPopulator;
+        this.interviewAssignmentRestService = interviewAssignmentRestService;
+    }
 
     @GetMapping("/send")
     public String getInvitesToSend(Model model,

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.interview.model.InterviewApplicationSentInviteModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteSendRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSentInviteViewModel;
@@ -20,8 +21,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
@@ -68,7 +71,11 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
     @Override
     protected InterviewApplicationSendInviteController supplyControllerUnderTest() {
-        return new InterviewApplicationSendInviteController();
+        return new InterviewApplicationSendInviteController(
+                interviewApplicationsSendModelPopulator,
+                interviewApplicationSentInviteModelPopulator,
+                interviewAssignmentRestService
+        );
     }
 
     @Override
