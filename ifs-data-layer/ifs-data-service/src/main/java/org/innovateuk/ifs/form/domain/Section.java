@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -139,6 +140,11 @@ public class Section implements Comparable<Section> {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public Integer getPriority() {

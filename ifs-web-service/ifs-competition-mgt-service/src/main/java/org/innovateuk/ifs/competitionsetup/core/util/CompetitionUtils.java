@@ -3,7 +3,9 @@ package org.innovateuk.ifs.competitionsetup.core.util;
 /**
  * Utility class to keep common re-usable methods
  */
-public class CompetitionUtils {
+public final class CompetitionUtils {
+
+    private CompetitionUtils() {}
 
     public final static Long ALL_INNOVATION_AREAS = -1L;
 

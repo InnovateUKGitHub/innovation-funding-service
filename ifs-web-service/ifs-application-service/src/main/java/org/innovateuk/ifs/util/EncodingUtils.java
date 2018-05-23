@@ -6,8 +6,10 @@ import org.apache.commons.logging.LogFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class EncodingUtils {
+public final class EncodingUtils {
     private static final Log LOG = LogFactory.getLog(EncodingUtils.class);
+
+    private EncodingUtils() {}
 
     public static String urlEncode(final String string){
         String encodedSearchString = string;

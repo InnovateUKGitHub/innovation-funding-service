@@ -11,6 +11,8 @@ import static java.util.Arrays.asList;
 /**
  * Holder of model attributes for the selection of role by a user
  */
-public class RoleSelectionViewModel {
+public final class RoleSelectionViewModel {
     public static final List<Role> ACCEPTED_ROLES = asList(ASSESSOR, APPLICANT);
+
+    private RoleSelectionViewModel() {}
 }

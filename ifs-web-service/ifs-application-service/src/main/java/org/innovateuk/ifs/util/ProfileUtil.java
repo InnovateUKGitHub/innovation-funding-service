@@ -11,9 +11,11 @@ import java.util.Optional;
 /**
  * Util for common function in the profile section
  */
-public class ProfileUtil {
+public final class ProfileUtil {
 
     private static final Log LOG = LogFactory.getLog(ProfileUtil.class);
+
+    private ProfileUtil() {}
 
     public static Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation) {
         Optional<OrganisationAddressResource> registeredAddress = getAddress(organisation, OrganisationAddressType.OPERATING);

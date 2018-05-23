@@ -17,7 +17,10 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
-public class ValidationUtil {
+public final class ValidationUtil {
+
+    private ValidationUtil() {}
+
     /**
      * This method is needed because we want to add validator Group to validation.
      * Because we can't use the spring validators for this, we need to convert the validation messages.

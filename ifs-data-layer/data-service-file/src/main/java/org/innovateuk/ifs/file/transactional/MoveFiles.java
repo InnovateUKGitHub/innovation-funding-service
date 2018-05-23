@@ -22,6 +22,8 @@ public final class MoveFiles {
 
     private static final Log LOG = LogFactory.getLog(MoveFiles.class);
 
+    private MoveFiles() {}
+
     public static ServiceResult<List<File>> moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to, final boolean ignoreAlreadyMovedErrors) {
         if (ignoreAlreadyMovedErrors) {
             return aggregate(filterErrors(moveAllFiles(from, to), f -> !f.is(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT)));
