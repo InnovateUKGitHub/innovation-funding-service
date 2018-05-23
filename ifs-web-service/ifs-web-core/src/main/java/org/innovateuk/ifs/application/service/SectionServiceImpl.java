@@ -111,7 +111,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     private List<SectionResource> getChildSections(List<SectionResource> sections, List<SectionResource>children) {
-        if(sections!= null && sections.size()>0) {
+        if(sections!= null && !sections.isEmpty()) {
             List<SectionResource> allSections = this.getAllByCompetitionId(sections.get(0).getCompetition());
             getChildSectionsFromList(sections, children, allSections);
         }

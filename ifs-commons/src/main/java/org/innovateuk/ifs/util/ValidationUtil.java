@@ -33,7 +33,7 @@ public final class ValidationUtil {
         javax.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Object>> violations = validator.validate(o, classes);
         addValidationMessages(result, violations);
-        return violations.size() == 0;
+        return violations.isEmpty();
     }
 
     public static void addValidationMessages(Errors result, Set<ConstraintViolation<Object>> violations) {

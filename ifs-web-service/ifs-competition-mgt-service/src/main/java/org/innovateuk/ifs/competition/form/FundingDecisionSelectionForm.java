@@ -29,7 +29,7 @@ public class FundingDecisionSelectionForm {
 
     public boolean anySelectionIsMade() {
         return this.isAllSelected() != false ||
-                this.getApplicationIds().size() > 0;
+                !this.getApplicationIds().isEmpty();
     }
 
     public boolean containsAll(List<Long> applicationIds) {

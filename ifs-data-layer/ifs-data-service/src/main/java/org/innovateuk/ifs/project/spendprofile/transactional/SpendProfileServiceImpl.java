@@ -662,7 +662,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             if (monthsRow.size() > byCategory.size() && monthsRow.contains(EMPTY_CELL)) {
                 monthsRow.remove(EMPTY_CELL);
                 rows.add(monthsRow.stream().toArray(String[]::new));
-            } else if (monthsRow.size() > 0) {
+            } else if (!monthsRow.isEmpty()) {
                 rows.add(monthsRow.stream().toArray(String[]::new));
             }
             monthsRow.clear();

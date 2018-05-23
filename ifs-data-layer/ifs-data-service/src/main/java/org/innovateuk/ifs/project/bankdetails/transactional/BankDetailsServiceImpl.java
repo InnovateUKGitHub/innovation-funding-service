@@ -199,7 +199,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
             List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
 
             OrganisationAddress newOrganisationAddress;
-            if (bankOrganisationAddresses != null && bankOrganisationAddresses.size() > 0) {
+            if (bankOrganisationAddresses != null && !bankOrganisationAddresses.isEmpty()) {
                 newOrganisationAddress = bankOrganisationAddresses.get(0);
                 newOrganisationAddress.getAddress().updateFrom(addressResource);
             } else {
@@ -254,7 +254,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
                     List<Condition> conditions = verificationResult.getConditions();
 
-                    if (conditions != null && conditions.size() > 0) {
+                    if (conditions != null && !conditions.isEmpty()) {
                         bankDetails.setVerificationConditions(conditions.stream().map(silCondition -> {
                             VerificationCondition verificationCondition = new VerificationCondition();
                             verificationCondition.setCode(silCondition.getCode());
