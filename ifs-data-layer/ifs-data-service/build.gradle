@@ -2,9 +2,9 @@ def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: "../flyway.gradle"
-apply plugin: 'org.asciidoctor.convert'
 
 apply from: "db-reset.gradle"
 apply from: "db-baseline.gradle"
@@ -115,7 +115,7 @@ dependencies {
 }
 
 test {
-    outputs.dir snippetsDir
+    outputs.dir snippetsDir // why????
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
@@ -128,36 +128,13 @@ test {
         systemProperty 'pact.rootDir', project.getProperty('pactDir')
     }
 
-    finalizedBy asciidoctor
 
     if (targetBuild == 'docker') {
         dependsOn ":docker:ifs-mysql:ifs-database:initDB"
     }
 }
 
-asciidoctor {
-    attributes 'snippets': snippetsDir
-    backends 'html5'
-    inputs.dir snippetsDir
-    outputs.dir file("static/docs")
 
-    doLast {
-        copy {
-            from "build/asciidoc/html5"
-            into 'static/docs'
-        }
-    }
-}
-
-task asciidoctorOnly(type: Test) {
-    beforeTest { desc ->
-        println "Executing test ${desc.className}.${desc.name}"
-    }
-    useJUnit {
-        includeCategories 'org.innovateuk.ifs.ControllerTest'
-    }
-    finalizedBy asciidoctor
-}
 
 task syncShib(type:Exec) {
     commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'

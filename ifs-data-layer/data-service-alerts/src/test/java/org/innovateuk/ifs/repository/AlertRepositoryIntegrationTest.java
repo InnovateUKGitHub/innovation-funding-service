@@ -80,18 +80,6 @@ public class AlertRepositoryIntegrationTest {
         assertEquals(expected2, found.get(1));
     }
 
-//    @Test
-//    public void test_findOne() throws Exception {
-//        Long id = 1L;
-//        Alert alert = repository.findOne(id);
-//
-//        assertEquals(id, alert.getId());
-//        assertEquals("Sample message", alert.getMessage());
-//        assertEquals(MAINTENANCE, alert.getType());
-//        assertEquals(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), alert.getValidFromDate());
-//        assertEquals(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()), alert.getValidToDate());
-//    }
-
     @Test
     @Rollback
     public void test_save() throws Exception {

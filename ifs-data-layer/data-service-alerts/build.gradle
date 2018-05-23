@@ -3,8 +3,13 @@ if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
+apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 
 bootRepackage {

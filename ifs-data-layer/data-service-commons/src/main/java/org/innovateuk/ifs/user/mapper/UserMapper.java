@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.mapper;
 
-
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.user.domain.User;
