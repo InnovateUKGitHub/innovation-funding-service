@@ -9,13 +9,11 @@ import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
 import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
@@ -51,7 +49,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
-    private AssessmentParticipantRepository assessmentParticipantRepository;
+    private InnovationLeadRepository innovationLeadRepository;
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
@@ -81,7 +79,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         } else if (openingSameMonth.isEmpty()) {
             unusedCode = datePart + "-1";
         } else {
-            List<String> codes = openingSameMonth.stream().map(c -> c.getCode()).sorted().peek(c -> LOG.info("Codes : " + c)).collect(Collectors.toList());
+            List<String> codes = openingSameMonth.stream().map(Competition::getCode).sorted().peek(c -> LOG.info("Codes : " + c)).collect(Collectors.toList());
             for (int i = 1; i < 10000; i++) {
                 unusedCode = datePart + "-" + i;
                 if (!codes.contains(unusedCode)) {
@@ -111,12 +109,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
+    public ServiceResult<Void> updateCompetitionInitialDetails(final Long competitionId, final CompetitionResource
+            competitionResource, final Long existingInnovationLeadId) {
 
-        return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
+        return deleteExistingInnovationLead(competitionId, existingInnovationLeadId)
                 .andOnSuccess(() -> attachCorrectTermsAndConditions(competitionResource))
                 .andOnSuccess(() -> save(competitionId, competitionResource))
-                .andOnSuccess(this::saveLeadTechnologist);
+                .andOnSuccess(this::saveInnovationLead);
     }
 
     private ServiceResult<Void> attachCorrectTermsAndConditions(CompetitionResource competitionResource) {
@@ -134,50 +133,31 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> deleteExistingLeadTechnologist(Long competitionId, Long existingLeadTechnologistId) {
+    private ServiceResult<Void> deleteExistingInnovationLead(Long competitionId, Long existingInnovationLeadId) {
 
-        if (existingLeadTechnologistId != null) {
-
-            AssessmentParticipant competitionParticipant =
-                    assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
-                            existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
-
-            if (competitionParticipant != null) {
-                assessmentParticipantRepository.delete(competitionParticipant);
-            }
+        if (existingInnovationLeadId != null) {
+            innovationLeadRepository.deleteInnovationLead(competitionId, existingInnovationLeadId);
         }
 
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> saveLeadTechnologist(CompetitionResource competitionResource) {
+    private ServiceResult<Void> saveInnovationLead(CompetitionResource competitionResource) {
 
         if (competitionResource.getLeadTechnologist() != null) {
             Competition competition = competitionMapper.mapToDomain(competitionResource);
 
-            if (!doesLeadTechnologistAlreadyExist(competition)) {
-                User leadTechnologist = competition.getLeadTechnologist();
-
-                AssessmentParticipant competitionParticipant = new AssessmentParticipant();
-                competitionParticipant.setProcess(competition);
-                competitionParticipant.setUser(leadTechnologist);
-                competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
-                competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
-
-                assessmentParticipantRepository.save(competitionParticipant);
+            if (!doesInnovationLeadAlreadyExist(competition)) {
+                User innovationLead = competition.getLeadTechnologist();
+                innovationLeadRepository.save(new InnovationLead(competition, innovationLead));
             }
         }
 
         return serviceSuccess();
     }
 
-    private boolean doesLeadTechnologistAlreadyExist(Competition competition) {
-
-        CompetitionParticipant existingCompetitionParticipant =
-                assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competition.getId(),
-                        competition.getLeadTechnologist().getId(), CompetitionParticipantRole.INNOVATION_LEAD);
-
-        return existingCompetitionParticipant != null;
+    private boolean doesInnovationLeadAlreadyExist(Competition competition) {
+        return innovationLeadRepository.existsInnovationLead(competition.getId(), competition.getLeadTechnologist().getId());
     }
 
     @Override
@@ -219,7 +199,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 .filter(setupStatusResource ->
                         setupStatusResource.getClassName().equals(className) &&
                         setupStatusResource.getClassPk().equals(classPk))
-                .map(setupStatusResource -> setupStatusResource.getCompleted())
+                .map(SetupStatusResource::getCompleted)
                 .findAny();
     }
 

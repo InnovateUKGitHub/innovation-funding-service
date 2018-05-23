@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.competition.mapper;
+package org.innovateuk.ifs.assessment.mapper;
 
-import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.commons.mapper.BaseMapper;
-import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+        import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
+        import org.innovateuk.ifs.commons.mapper.BaseMapper;
+        import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+        import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+        import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
+        import org.mapstruct.Mapper;
+        import org.mapstruct.Mapping;
+        import org.mapstruct.Mappings;
 
 /**
  * Mapper between {@link AssessmentInvite} and {@link CompetitionInviteResource}.
@@ -16,7 +16,7 @@ import org.mapstruct.Mappings;
         config = GlobalMapperConfig.class,
         uses = { InnovationAreaMapper.class }
 )
-public abstract class CompetitionInviteMapper extends BaseMapper<AssessmentInvite, CompetitionInviteResource, Long> {
+public abstract class AssessmentInviteMapper extends BaseMapper<AssessmentInvite, CompetitionInviteResource, Long> {
 
     @Mappings({
             @Mapping(source = "target.id", target = "competitionId"),

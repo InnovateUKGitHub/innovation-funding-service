@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
@@ -192,13 +191,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void notifyAssessors() throws Exception {
         long competitionId = 1L;
 
-        when(competitionPostSubmissionRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
+        when(assessorRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
-        verify(competitionPostSubmissionRestService).notifyAssessors(competitionId);
+        verify(assessorRestService).notifyAssessors(competitionId);
         verifyNoMoreInteractions(competitionService);
     }
 

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.assessment.resource.AssessmentEvent.FEEDBACK;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -42,8 +41,8 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
     public void cleanForParentEntity(Question question) {
         List<FormInput> formInputs = question.getFormInputs();
 
-        formInputs.stream().forEach(formInput -> guidanceRowTemplateService.cleanForParentEntity(formInput));
-        formInputs.stream().forEach(formInput -> entityManager.detach(formInput));
+        formInputs.forEach(formInput -> guidanceRowTemplateService.cleanForParentEntity(formInput));
+        formInputs.forEach(formInput -> entityManager.detach(formInput));
         formInputRepository.delete(formInputs);
     }
 
@@ -66,11 +65,8 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
     }
 
     private boolean isSectorCompetitionWithScopeQuestion(Competition competition, Question question, FormInput formInput) {
-        if (competition.getCompetitionType().isSector() && question.isScope()) {
-            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK)) {
-                return true;
-            }
-        }
-        return false;
+        return competition.getCompetitionType().isSector() &&
+                question.isScope() &&
+                formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE;
     }
 }

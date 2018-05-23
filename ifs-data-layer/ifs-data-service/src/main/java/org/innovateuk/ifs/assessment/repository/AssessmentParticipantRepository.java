@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.assessment.repository;
 
+import org.innovateuk.ifs.competition.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface AssessmentParticipantRepository extends PagingAndSortingRepository<AssessmentParticipant, Long> {
+public interface AssessmentParticipantRepository extends CompetitionParticipantRepository<AssessmentParticipant> {
 
     String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
             "FROM ReviewInvite invite " +
@@ -123,8 +123,6 @@ public interface AssessmentParticipantRepository extends PagingAndSortingReposit
     List<AssessmentParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
 
     List<AssessmentParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
-
-    AssessmentParticipant getByCompetitionIdAndUserIdAndRole(Long competitionId, Long userId, CompetitionParticipantRole role);
 
     @Query(BY_COMP_AND_STATUS)
     Page<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
