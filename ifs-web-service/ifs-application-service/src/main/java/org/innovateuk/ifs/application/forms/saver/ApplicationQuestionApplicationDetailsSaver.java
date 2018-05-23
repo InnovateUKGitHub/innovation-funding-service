@@ -26,7 +26,7 @@ public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicat
                         .filter(Objects::nonNull)
                         .filter(e -> hasText(e.getErrorKey()))
                         .forEach(e -> {
-                            if (validationMessage.getObjectName().equals("target")) {
+                            if ("target".equals(validationMessage.getObjectName())) {
                                 if (hasText(e.getErrorKey())) {
                                     toFieldErrors.addError(fieldError("application." + e.getFieldName(), e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
                                 }

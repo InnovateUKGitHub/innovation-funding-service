@@ -53,7 +53,7 @@ public class OverheadFileSaver {
 
     private void handleRestResultUpload(RestResult<FileEntryResource> fileEntryResult, ValidationMessages messages) {
         if(fileEntryResult.isFailure()) {
-            if(fileEntryResult.getErrors().stream().anyMatch(error -> error.getErrorKey().equals("UNSUPPORTED_MEDIA_TYPE"))) {
+            if(fileEntryResult.getErrors().stream().anyMatch(error -> "UNSUPPORTED_MEDIA_TYPE".equals(error.getErrorKey()))) {
                 Error error = new Error("validation.finance.overhead.file.type",UNSUPPORTED_MEDIA_TYPE);
                 messages.addError(error);
             }
