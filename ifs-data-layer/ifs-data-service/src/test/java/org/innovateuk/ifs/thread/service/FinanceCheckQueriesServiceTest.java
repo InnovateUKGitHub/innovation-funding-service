@@ -171,7 +171,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        List<ProjectUser> projectUser = newProjectUser()
+        List<ProjectUser> projectUsers = newProjectUser()
                 .withRole(PROJECT_FINANCE_CONTACT, PROJECT_FINANCE_CONTACT)
                 .withUser(user, user2)
                 .withOrganisation(organisation, organisation2)
@@ -187,7 +187,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 .build();
 
         Project project = newProject()
-                .withProjectUsers(projectUser)
+                .withProjectUsers(projectUsers)
                 .withPartnerOrganisations(newPartnerOrganisation()
                 .withOrganisation(organisation)
                 .build(1))
