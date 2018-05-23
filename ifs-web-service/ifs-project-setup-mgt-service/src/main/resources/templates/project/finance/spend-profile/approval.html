@@ -4,11 +4,10 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile summary'" />
 </head>
 <body class="competition-management project-management finance-checks-overview">
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-accept-profile" />
 <th:block th:insert="fragments/modals :: modal-reject-profile" />
-
-<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
