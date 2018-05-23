@@ -14,5 +14,4 @@ import static java.util.Arrays.asList;
 public final class RoleSelectionViewModel {
     public static final List<Role> ACCEPTED_ROLES = asList(ASSESSOR, APPLICANT);
 
-    private RoleSelectionViewModel() {}
 }
