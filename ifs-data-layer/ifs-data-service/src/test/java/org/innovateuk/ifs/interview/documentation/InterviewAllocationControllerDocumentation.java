@@ -197,6 +197,23 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
     }
 
     @Test
+    public void unallocateApplication() throws Exception {
+        long assessorId = 1L;
+        long applicationId = 2L;
+
+        when(interviewAllocationServiceMock.unallocateApplication(assessorId, applicationId)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/interview-panel/allocated-applications/{assessorId}/unallocate/{applicationId}", assessorId, applicationId))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("assessorId").description("Id of the assessor"),
+                                parameterWithName("applicationId").description("Id of the application to unassign from interview panel")
+                                )));
+
+        verify(interviewAllocationServiceMock, only()).unallocateApplication(assessorId, applicationId);
+    }
+
+    @Test
     public void getInviteToSend() throws Exception {
         long competitionId = 1L;
         long userId = 2L;
