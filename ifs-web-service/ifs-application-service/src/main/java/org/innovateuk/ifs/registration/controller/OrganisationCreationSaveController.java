@@ -63,7 +63,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                    HttpServletResponse response) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, "organisationForm");
+        BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
         validator.validate(organisationForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
