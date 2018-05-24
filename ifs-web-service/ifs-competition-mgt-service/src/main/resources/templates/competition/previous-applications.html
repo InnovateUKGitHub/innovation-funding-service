@@ -10,9 +10,34 @@
     <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
+
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous competitions',linkClass='link-back',linkUrl=@{/dashboard/previous}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Previous applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
+    <form method="GET">
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <legend class="heading-medium no-margin-top">Filter applications</legend>
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <label class="form-label" for="filter">Status</label>
+                        <select class="form-control" id="filter" name="filter">
+                            <option id="all" th:href="@{/competition/{cid}/applications/previous?filter=}" value="ALL" th:selected="${(param.filter != null) and (param.filter[0] == 'ALL')}">All</option>
+                            <option id="unsuccessful" th:href="@{/competition/{cid}/applications/previous?filter=}" value="REJECTED" th:selected="${(param.filter != null) and (param.filter[0] == 'REJECTED')}">Unsuccessful</option>
+                            <option id="withdrawn" th:href="@{/competition/{cid}/applications/previous?filter=}" value="WITHDRAWN" th:selected="${(param.filter != null) and (param.filter[0] == 'WITHDRAWN')}">Withdrawn</option>
+                            <option id="ineligable" th:href="@{/competition/{cid}/applications/previous?filter=}" value="INELIGIBLE" th:selected="${(param.filter != null) and (param.filter[0] == 'INELIGIBLE')}">Ineligible</option>
+                        </select>
+                    </div>
+                    <div class="column-third">
+                        <button class="button">Filter</button>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="extra-margin">
+                <a href="?">Clear all filters</a>
+            </div>
+        </div>
+    </form>
 
     <div class="grid-row sorting">
         <div class="column-full">
