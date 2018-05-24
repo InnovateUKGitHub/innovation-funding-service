@@ -284,7 +284,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                 LOG.error(e.getMessage(), e);
                 return serviceFailure(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
             }
-        } else if(fieldName.equals("autosaveInnovationAreaIds")) {
+        } else if("autosaveInnovationAreaIds".equals(fieldName)) {
             processInnovationAreas(value, competitionResource);
             return competitionSetupRestService.update(competitionResource).toServiceResult();
         }

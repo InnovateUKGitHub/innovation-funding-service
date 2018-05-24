@@ -76,17 +76,17 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
                 filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.USE_TOTAL_META_FIELD)).
                 findFirst();
 
-        if (useTotalOptionMetaValue.isPresent() && useTotalOptionMetaValue.get().getValue().equals("false")) {
+        if (useTotalOptionMetaValue.isPresent() && "false".equals(useTotalOptionMetaValue.get().getValue())) {
             overhead.setUseTotalOption(false);
         } else {
             overhead.setUseTotalOption(true);
-            addOptionalCalculationFile(cost, financeRowMetaValues, overhead);
+            addOptionalCalculationFile(financeRowMetaValues, overhead);
         }
 
         return overhead;
     }
 
-    private void addOptionalCalculationFile(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues, Overhead overhead) {
+    private void addOptionalCalculationFile(List<FinanceRowMetaValue> financeRowMetaValues, Overhead overhead) {
         Optional<FinanceRowMetaValue> overheadFileMetaValue = financeRowMetaValues.stream().
                 filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.CALCULATION_FILE_FIELD)).
                 findFirst();

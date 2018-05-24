@@ -159,7 +159,7 @@ public class RegistrationController {
     }
 
     private void addRegistrationFormToModel(RegistrationForm registrationForm, Model model, HttpServletRequest request, HttpServletResponse response) {
-        setOrganisationIdCookie(registrationForm, request, response);
+        setOrganisationIdCookie(request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
@@ -312,7 +312,7 @@ public class RegistrationController {
         return registrationCookieService.getOrganisationIdCookieValue(request).orElse(null);
     }
 
-    private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
+    private void setOrganisationIdCookie(HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
         if (organisationId != null) {
             registrationCookieService.saveToOrganisationIdCookie(organisationId, response);

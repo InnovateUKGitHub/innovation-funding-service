@@ -101,7 +101,7 @@ public class OtherFundingValidator implements Validator {
         Long competitionId = applicationFinance.getApplication().getCompetition().getId();
         ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FinanceRowType.OTHER_FUNDING.getFormInputType());
         List<ApplicationFinanceRow> otherFundingRows = financeRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinance.getId(), COST_KEY, question.getSuccess().getId());
-        return !otherFundingRows.isEmpty() && otherFundingRows.get(0).getItem().equals("Yes");
+        return !otherFundingRows.isEmpty() && "Yes".equals(otherFundingRows.get(0).getItem());
     }
 
     private boolean isValidDate(final String input){

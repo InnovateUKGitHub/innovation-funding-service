@@ -466,7 +466,7 @@ public class ProjectFinanceChecksController {
 
     private String doViewEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult) {
 
-        populateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
+        populateProjectFinanceDetails(competition, application, project, allSections, user, form, bindingResult, model);
 
         EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
 
@@ -489,7 +489,7 @@ public class ProjectFinanceChecksController {
         return "project/financecheck/eligibility";
     }
 
-    private void populateProjectFinanceDetails(CompetitionResource competition, ApplicationResource application, ProjectResource project, Long organisationId, List<SectionResource> allSections, UserResource user, ApplicationForm form, BindingResult bindingResult, Model model) {
+    private void populateProjectFinanceDetails(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, ApplicationForm form, BindingResult bindingResult, Model model) {
 
         SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
 

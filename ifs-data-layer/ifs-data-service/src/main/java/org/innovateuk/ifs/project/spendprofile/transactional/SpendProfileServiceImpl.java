@@ -146,7 +146,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                     List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                                     return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                                 }))
-                                .andOnSuccess(() -> {
+                                .andOnSuccess(() ->
                                     getCurrentlyLoggedInUser().andOnSuccess(user -> {
                                         if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
                                             return serviceSuccess();
@@ -154,8 +154,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                             LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
                                             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
                                         }
-                                    });
-                                })
+                                    })
+                                )
                 );
     }
 
@@ -434,9 +434,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private Map<String, List<Map<Long, List<BigDecimal>>>> orderResearchCategoryMap(Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap) {
         Map<String, List<Map<Long, List<BigDecimal>>>> orderedCatGroupMap = new LinkedHashMap<>();
-        RESEARCH_CAT_GROUP_ORDER.forEach(groupName -> {
-            orderedCatGroupMap.put(groupName, catGroupMap.get(groupName));
-        });
+        RESEARCH_CAT_GROUP_ORDER.forEach(groupName ->
+            orderedCatGroupMap.put(groupName, catGroupMap.get(groupName))
+        );
         return orderedCatGroupMap;
     }
 
@@ -653,9 +653,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 byCategory.add(cc.getLabel());
             }
             byCategory.add(String.valueOf(cc.getName()));
-            values.forEach(val -> {
-                byCategory.add(val.toString());
-            });
+            values.forEach(val ->
+                byCategory.add(val.toString())
+            );
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
 

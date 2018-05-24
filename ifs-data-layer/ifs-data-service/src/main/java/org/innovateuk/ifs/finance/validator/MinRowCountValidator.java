@@ -38,7 +38,7 @@ public class MinRowCountValidator implements Validator {
         if(rowCount < response.get(0).getMinRows()){
             switch(response.get(0).getCostType()) {
                 case OTHER_FUNDING:
-                    if(((OtherFunding)response.get(0)).getOtherPublicFunding().equals("Yes")) {
+                    if("Yes".equals(((OtherFunding)response.get(0)).getOtherPublicFunding())) {
                         if(response.get(0).getMinRows() == 1){
                             reject(errors, "validation.finance.min.row.other.funding.single");
                         }else{
