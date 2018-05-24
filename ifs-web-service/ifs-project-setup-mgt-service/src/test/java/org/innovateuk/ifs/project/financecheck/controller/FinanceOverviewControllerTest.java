@@ -1,12 +1,16 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.viewmodel.FinanceCheckOverviewViewModel;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceOverviewController;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -28,6 +32,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<FinanceOverviewController> {
+
+    @Mock
+    private PartnerOrganisationRestService partnerOrganisationRestService;
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    private ProjectFinanceService projectFinanceService;
 
     @Test
     public void testView() throws Exception {

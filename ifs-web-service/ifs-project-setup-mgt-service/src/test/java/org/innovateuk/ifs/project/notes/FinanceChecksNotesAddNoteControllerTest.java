@@ -4,9 +4,13 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesAddNoteController;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
@@ -14,6 +18,7 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
@@ -21,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -33,6 +39,9 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.CookieTestUtil.getDecryptedCookieValue;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -68,9 +77,24 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Captor
     ArgumentCaptor<NoteResource> saveNoteArgumentCaptor;
 
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private ProjectFinanceService projectFinanceService;
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    private CookieUtil cookieUtil;
+
     @Before public void setup() {
         super.setUp();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);

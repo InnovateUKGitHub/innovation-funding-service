@@ -1,10 +1,16 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
+import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.interview.form.InterviewAllocationNotifyForm;
 import org.innovateuk.ifs.interview.form.InterviewAllocationSelectionForm;
 import org.innovateuk.ifs.interview.resource.*;
@@ -19,12 +25,15 @@ import org.innovateuk.ifs.management.viewmodel.InterviewAcceptedAssessorsViewMod
 import org.innovateuk.ifs.management.viewmodel.InterviewAssessorApplicationsViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -36,6 +45,7 @@ import java.util.List;
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -65,6 +75,21 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     @InjectMocks
     private InterviewAcceptedAssessorsModelPopulator interviewAcceptedAssessorsModelPopulator;
 
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private InterviewAllocationRestService interviewAllocationRestService;
+
+    @Mock
+    private UserRestService userRestServiceMock;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private AssessorRestService assessorRestService;
+
     @Spy
     @InjectMocks
     private UnallocatedInterviewApplicationsModelPopulator unallocatedInterviewApplicationsModelPopulator;
@@ -82,10 +107,13 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         return new InterviewAllocationController();
     }
 
+    @Mock
+    private CookieUtil cookieUtil;
+
     @Before
     public void setUp() {
         super.setUp();
-        setupCookieUtil();
+        setupCookieUtil(cookieUtil);
     }
 
     @Test

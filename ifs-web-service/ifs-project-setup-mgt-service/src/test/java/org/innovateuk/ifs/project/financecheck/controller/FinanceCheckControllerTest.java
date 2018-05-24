@@ -1,15 +1,19 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
@@ -22,6 +26,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<FinanceCheckController> {
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private FinanceService financeService;
 
     @Test
     public void testDownloadJesFileWhenFinanceFileEntryNotPresent() throws Exception {

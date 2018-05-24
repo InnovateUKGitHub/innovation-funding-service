@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.registration.form.InternalUserRegistrationForm;
 import org.innovateuk.ifs.registration.populator.InternalUserRegistrationModelPopulator;
 import org.innovateuk.ifs.registration.service.InternalUserService;
@@ -28,6 +29,9 @@ public class InternalUserRegistrationControllerTest  extends BaseControllerMockM
 
     @Mock
     private InternalUserService internalUserServiceMock;
+
+    @Mock
+    private InviteUserRestService inviteUserRestServiceMock;
 
     @Override
     protected InternalUserRegistrationController supplyControllerUnderTest() {

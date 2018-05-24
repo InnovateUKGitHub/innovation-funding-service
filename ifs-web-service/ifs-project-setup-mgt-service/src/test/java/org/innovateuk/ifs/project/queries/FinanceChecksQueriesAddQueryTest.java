@@ -3,10 +3,15 @@ package org.innovateuk.ifs.project.queries;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.CookieTestUtil;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
@@ -14,6 +19,7 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
@@ -22,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -33,6 +40,9 @@ import java.net.URLEncoder;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static org.innovateuk.ifs.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.CookieTestUtil.getDecryptedCookieValue;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -48,6 +58,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<FinanceChecksQueriesAddQueryController> {
+
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    private ProjectFinanceService projectFinanceService;
 
     private Long projectId = 3L;
     private Long applicantOrganisationId = 22L;
@@ -69,7 +94,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Before
     public void setup() {
         super.setUp();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
         when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -368,7 +393,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
-        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
+        String encryptedData = CookieTestUtil.encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
         Cookie cookie = new Cookie("finance_checks_queries_new_query_attachments" + "_" + projectId + "_" + applicantOrganisationId, encryptedData);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
                 .cookie(cookie))

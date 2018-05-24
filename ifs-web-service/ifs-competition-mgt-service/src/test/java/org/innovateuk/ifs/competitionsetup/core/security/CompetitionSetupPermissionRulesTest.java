@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.core.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -16,6 +17,9 @@ public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest
 
     @Mock
     private CompetitionSetupService competitionSetupService;
+
+    @Mock
+    private CompetitionService competitionServiceMock;
 
     @Test
     public void manageInnovationLeads() {
