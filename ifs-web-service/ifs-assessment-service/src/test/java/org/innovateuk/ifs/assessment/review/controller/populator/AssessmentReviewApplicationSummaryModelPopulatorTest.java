@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.review.controller.populator;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -43,12 +43,10 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUnitTestMocksTest {
+public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private AssessmentReviewApplicationSummaryModelPopulator populator;

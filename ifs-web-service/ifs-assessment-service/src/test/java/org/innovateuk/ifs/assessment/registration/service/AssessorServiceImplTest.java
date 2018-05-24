@@ -2,8 +2,6 @@ package org.innovateuk.ifs.assessment.registration.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
-import org.innovateuk.ifs.assessment.registration.service.AssessorService;
-import org.innovateuk.ifs.assessment.registration.service.AssessorServiceImpl;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -32,7 +30,7 @@ public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService
 
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
     }
 
     @Test

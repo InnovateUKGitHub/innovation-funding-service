@@ -4,7 +4,9 @@ import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -12,6 +14,7 @@ import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -46,7 +49,17 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
         return new ProfileController();
     }
 
-    @Mock EthnicityRestService ethnicityRestService;
+    @Mock
+    private EthnicityRestService ethnicityRestService;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
+
+    @Mock
+    private UserService userService;
 
     private UserResource user;
 

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.registration.controller.OrganisationCreationLeadTypeController;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypeP
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -33,6 +36,12 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     @Mock
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private CompetitionService competitionService;
+
     private OrganisationTypeForm organisationTypeForm;
 
     private OrganisationCreationForm organisationForm;
@@ -40,7 +49,7 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     @Before
     public void setup(){
         super.setup();
-        setupCookieUtil();
+        setupCookieUtil(cookieUtil);
 
         when(registrationCookieService.getCompetitionIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
         when(registrationCookieService.getOrganisationTypeCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
