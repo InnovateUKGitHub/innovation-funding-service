@@ -1,5 +1,4 @@
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
-buildDocker.dependsOn ":docker:oracle-jre:downloadOracleJreImage"
 
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = false

@@ -1,3 +1,5 @@
+
+
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = false
@@ -6,12 +8,15 @@ apply from: rootProject.file("gradle-support/openshift-build.gradle")
 def buildJreDockerEnabled = project.hasProperty('buildJreDocker') ? project.property('buildJreDocker').toBoolean() : false
 buildDocker.enabled = buildJreDockerEnabled
 
-task downloadOracleJreImage {
+buildDocker {
+    tag = "innovateuk/infrastructure/oracle-jre"
+}
 
-    outputs.upToDateWhen {
-        "docker images".execute().text.contains("innovateuk/oracle-jre")
-    }
+tagDocker {
+    imageId = "innovateuk/infrastructure/oracle-jre"
+    repository = project.dockerRegistry + "/innovateuk/infrastructure/oracle-jre"
+}
 
-    //TODO download and load image
-    //docker load < oracle-jre-docker.tar
+osStageRemote {
+    imageName = registryCredentials.url + "/innovateuk/infrastructure/oracle-jre"
 }

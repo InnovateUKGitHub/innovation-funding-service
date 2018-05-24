@@ -1,4 +1,4 @@
-FROM innovateuk/oracle-jre
+FROM innovateuk/infrastructure/oracle-jre
 EXPOSE 8009
 EXPOSE 8000
 EXPOSE 8080

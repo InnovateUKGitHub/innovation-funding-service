@@ -43,7 +43,6 @@ task prepareDockerInputRegService {
     }
 }
 
-buildDocker.dependsOn ":docker:oracle-jre:downloadOracleJreImage"
 buildDocker.dependsOn prepareDockerInputRegService
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
