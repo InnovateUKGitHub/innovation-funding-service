@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.competition.resource;
 
-
 import java.util.List;
 
 public class CompetitionTypeResource {
     private Long id;
     private String name;
     private List<Long> competitions;
-    private Boolean stateAid;
     private Boolean active;
 
     public CompetitionTypeResource() {
@@ -36,14 +34,6 @@ public class CompetitionTypeResource {
 
     public void setCompetitions(List<Long> competitions) {
         this.competitions = competitions;
-    }
-
-    public Boolean getStateAid() {
-        return stateAid;
-    }
-
-    public void setStateAid(Boolean stateAid) {
-        this.stateAid = stateAid;
     }
 
     public Boolean getActive() {
