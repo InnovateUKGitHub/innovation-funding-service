@@ -58,11 +58,6 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
     public void submitBankDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
-        String longCompanyName = "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
-                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
-                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
-                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
-                "Hello my name BREAK Hello my name BREAK";
 
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource()
@@ -70,7 +65,6 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withAccountNumber("1234567")
                 .withOrganisation(organisationId)
                 .withOrganiationAddress(organisationAddressResource)
-                .withCompanyName(longCompanyName)
                 .build();
 
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
@@ -82,13 +76,10 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
         Error organisationAddressNotProvided = fieldError("organisationAddress", null, "validation.bankdetailsresource.organisationaddress.required", "");
         Error organisationIdNotProvided = fieldError("organisation", null, "validation.bankdetailsresource.organisation.required", "");
         Error projectIdNotProvided = fieldError("project", null, "validation.bankdetailsresource.project.required", "");
-        Error organisationNameNotProvided = fieldError("companyName", null, "validation.standard.organisationname.required", "");
-        Error organisationNameWrongFormat = fieldError("companyName", longCompanyName, "validation.field.too.many.characters", "", "255", "0");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(
                 invalidSortCodeError,
-                invalidAccountNumberError,
-                organisationNameWrongFormat
+                invalidAccountNumberError
         ) );
 
         mockMvc.perform(put("/project/{projectId}/bank-details", projectId)
@@ -105,8 +96,7 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
                 accountNumberNotProvided,
                 organisationAddressNotProvided,
                 organisationIdNotProvided,
-                projectIdNotProvided,
-                organisationNameNotProvided
+                projectIdNotProvided
         ));
 
         mockMvc.perform(put("/project/{projectId}/bank-details", projectId)
@@ -138,11 +128,6 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
     public void updateBankDetailsWithInvalidAccountDetailsReturnsError() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
-        String longCompanyName = "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
-                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
-                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
-                "Hello my name BREAK Hello my name BREAK Hello my name BREAK " +
-                "Hello my name BREAK Hello my name BREAK";
 
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
                 .withOrganisation()
@@ -151,7 +136,6 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withProject(projectId).withSortCode("123")
                 .withAccountNumber("1234567")
                 .withOrganisation(organisationId)
-                .withCompanyName(longCompanyName)
                 .withOrganiationAddress(organisationAddressResource)
                 .build();
 
@@ -164,14 +148,10 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
         Error organisationAddressNotProvided = fieldError("organisationAddress", null, "validation.bankdetailsresource.organisationaddress.required", "");
         Error organisationIdNotProvided = fieldError("organisation", null, "validation.bankdetailsresource.organisation.required", "");
         Error projectIdNotProvided = fieldError("project", null, "validation.bankdetailsresource.project.required", "");
-        Error organisationNameNotProvided = fieldError("companyName", null, "validation.standard.organisationname.required", "");
-        Error organisationNameWrongFormat = fieldError("companyName", longCompanyName, "validation.field.too.many.characters", "", "255", "0");
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(
                 invalidSortCodeError,
-                invalidAccountNumberError,
-                organisationNameWrongFormat
-        ));
+                invalidAccountNumberError));
 
         mockMvc.perform(post("/project/{projectId}/bank-details", projectId)
                 .contentType(APPLICATION_JSON)
@@ -187,8 +167,7 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
                 accountNumberNotProvided,
                 organisationAddressNotProvided,
                 organisationIdNotProvided,
-                projectIdNotProvided,
-                organisationNameNotProvided
+                projectIdNotProvided
         ));
 
         mockMvc.perform(post("/project/{projectId}/bank-details", projectId)
