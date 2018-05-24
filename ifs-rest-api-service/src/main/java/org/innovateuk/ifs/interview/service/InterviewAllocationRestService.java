@@ -27,4 +27,6 @@ public interface InterviewAllocationRestService {
     RestResult<List<Long>> getUnallocatedApplicationIds(long competitionId, long assessorId);
 
     RestResult<Void> notifyAllocations(InterviewNotifyAllocationResource interviewNotifyAllocationResource);
+
+    RestResult<Void> unallocateApplication(long assessorId, long applicationId);
 }

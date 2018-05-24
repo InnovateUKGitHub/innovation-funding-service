@@ -162,6 +162,12 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     @Override
+    public ServiceResult<Void> unallocateApplication(long assessorId, long applicationId) {
+        interviewRepository.deleteOneByParticipantUserIdAndTargetId(assessorId, applicationId);
+        return serviceSuccess();
+    }
+
+    @Override
     public ServiceResult<Void> notifyAllocation(InterviewNotifyAllocationResource interviewNotifyAllocationResource) {
         return getInterviewParticipant(interviewNotifyAllocationResource.getAssessorId(), interviewNotifyAllocationResource.getCompetitionId())
                 .andOnSuccess(assessor -> createInterviews(interviewNotifyAllocationResource, assessor))

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResour
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.model.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ManageApplicationsViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -29,6 +30,9 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
 
     @Mock
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @InjectMocks
     @Spy
