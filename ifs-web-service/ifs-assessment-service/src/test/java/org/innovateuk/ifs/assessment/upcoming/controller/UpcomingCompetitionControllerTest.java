@@ -1,14 +1,15 @@
 package org.innovateuk.ifs.assessment.upcoming.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.upcoming.populator.UpcomingCompetitionModelPopulator;
-import org.innovateuk.ifs.assessment.upcoming.controller.UpcomingCompetitionController;
 import org.innovateuk.ifs.assessment.upcoming.viewmodel.UpcomingCompetitionViewModel;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -29,6 +30,9 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
     @Spy
     @InjectMocks
     private UpcomingCompetitionModelPopulator upcomingCompetitionModelPopulator;
+
+    @Mock
+    private CompetitionService competitionService;
 
     private static final String restUrl = "/competition";
 

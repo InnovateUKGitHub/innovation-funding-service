@@ -158,7 +158,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(null);
         ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Competition.class, competitionId)));
+        assertTrue(result.getFailure().is(notFoundError(Competition.class, competitionId)));
     }
 
     @Test
@@ -185,7 +185,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(innovationLeadRepositoryMock.findInnovationLead(competitionId, innovationLeadUserId)).thenReturn(null);
         ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(InnovationLead.class, competitionId,
+        assertTrue(result.getFailure().is(notFoundError(InnovationLead.class, competitionId,
                 innovationLeadUserId)));
     }
 
@@ -808,7 +808,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competitionId, competition.getTermsAndConditions().getId());
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(GrantTermsAndConditions.class,
+        assertTrue(result.getFailure().is(notFoundError(GrantTermsAndConditions.class,
                 competition.getTermsAndConditions().getId())));
 
     }

@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
@@ -18,12 +19,12 @@ import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,12 +49,12 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
-import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -69,7 +70,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest<ApplicationQuestionController> {
+public class ApplicationQuestionControllerTest extends AbstractApplicationMockMVCTest<ApplicationQuestionController> {
 
     @Spy
     @InjectMocks
@@ -119,6 +120,9 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
     @Mock
     private ApplicationQuestionSaver applicationSaver;
 
+    @Mock
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
+
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -142,8 +146,6 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
-        this.setupUserRoles();
         this.setupFinances();
         this.setupInvites();
         this.setupQuestionStatus(applications.get(0));

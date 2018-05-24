@@ -9,6 +9,10 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
     <div class="grid-row">
         <div class="column-two-thirds">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='heading-large'" />
@@ -17,32 +21,25 @@
     </div>
     <div class="grid-row">
         <div class="column-full">
-            <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
-
+            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
+                <div class="form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'form-group-error'">
                 <fieldset>
-                    <legend class="visuallyhidden">Create a new application?</legend>
-                    <div class="form-group">
-                        <div class="multiple-choice">
-                            <input id="new-application-yes"
-                                   type="radio"
-                                   th:name="create-application"
-                                   value="true" />
-                            <label for="new-application-yes">
-                                Yes, I want to create a new application.
-                            </label>
-                        </div>
-                        <div class="multiple-choice">
+                    <legend id="createNewApplication">
+                        <span class="visuallyhidden">Create a new application?</span>
+                        <th:block th:if="${#fields.hasErrors('createNewApplication')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
+                         </th:block>
+                    </legend>
+                    <div class="multiple-choice" th:each="value : ${ {true, false} }">
                             <input type="radio"
-                                   id="new-application-no"
-                                   name="create-application"
-                                   value="false" />
-                            <label for="new-application-no">
-                                No, I want to continue with my existing application.
-                            </label>
-                        </div>
+                                   th:field="*{createNewApplication}"
+                                   th:value="${value}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
+                        <label th:for="${#ids.prev('createNewApplication')}" th:text="${value} ? 'Yes, I want to create a new application.' : 'No, I want to continue with my existing application.'"/>
                     </div>
                 </fieldset>
-
+                </div>
                 <button type="submit" name="create-application-submit" class="button">
                     Continue
                 </button>

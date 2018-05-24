@@ -2,6 +2,9 @@ package org.innovateuk.ifs.assessment.summary.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -15,6 +18,7 @@ import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryViewMode
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,6 +67,18 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Spy
     @InjectMocks
     private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
+
+    @Mock
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Mock
+    private FormInputRestService formInputRestService;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private QuestionService questionService;
 
     private List<FormInputResource> formInputsForQuestion4;
     private List<FormInputResource> formInputsForQuestion3;

@@ -8,8 +8,11 @@ import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentVi
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,6 +74,15 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
 
     @Mock
     private AssessmentService assessmentService;
+
+    @Mock
+    private FormInputResponseRestService formInputResponseRestService;
+
+    @Mock
+    private ProcessRoleService processRoleService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     @Override
     protected AssessmentAssignmentController supplyControllerUnderTest() {

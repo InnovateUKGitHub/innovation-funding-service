@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 public class Interview extends Process<ProcessRole, Application, InterviewState> {
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 

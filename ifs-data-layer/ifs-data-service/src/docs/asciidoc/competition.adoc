@@ -234,3 +234,13 @@ include::{snippets}/competition/update-terms-and-conditions/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/update-terms-and-conditions/curl-request.adoc[]
 
+=== Delete competition by id
+==== Request
+include::{snippets}/competition/delete-competition/http-request.adoc[]
+include::{snippets}/competition/delete-competition/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/delete-competition/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/delete-competition/curl-request.adoc[]

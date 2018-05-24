@@ -27,13 +27,15 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -59,9 +61,17 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private SetupStatusService setupStatusService;
     @Autowired
+    private SetupStatusRepository setupStatusRepository;
+    @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
     @Autowired
     private GrantTermsAndConditionsMapper termsAndConditionsMapper;
+    @Autowired
+    private PublicContentRepository publicContentRepository;
+    @Autowired
+    private AssessmentInviteRepository assessmentInviteRepository;
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -290,6 +300,55 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
         return competitionSetupTemplateService.initializeCompetitionByCompetitionTemplate(competitionId, competitionTypeId)
                 .andOnSuccess(() -> serviceSuccess());
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteCompetition(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(competition ->
+                assessorInvitesExist(competition) ? serviceFailure(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED)
+                        : deletePublicContentForCompetition(competition).andOnSuccess(() -> {
+                    deleteFormValidatorsForCompetitionQuestions(competition);
+                    deleteMilestonesForCompetition(competition);
+                    deleteInnovationLead(competition);
+                    deleteSetupStatus(competition);
+                    competitionRepository.delete(competition);
+                    return serviceSuccess();
+                }));
+    }
+
+    private boolean assessorInvitesExist(Competition competition) {
+        return assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(),
+                EnumSet.allOf(InviteStatus.class)) > 0;
+    }
+
+    private void deleteSetupStatus(Competition competition) {
+        setupStatusRepository.deleteByTargetClassNameAndTargetId(Competition.class.getName(), competition.getId());
+    }
+
+    private void deleteMilestonesForCompetition(Competition competition) {
+        competition.getMilestones().clear();
+        milestoneRepository.deleteByCompetitionId(competition.getId());
+    }
+
+    private void deleteInnovationLead(Competition competition) {
+        assessmentParticipantRepository.deleteByCompetitionIdAndRole(competition.getId(), INNOVATION_LEAD);
+    }
+
+    private ServiceResult<Void> deletePublicContentForCompetition(Competition competition) {
+        return find(publicContentRepository.findByCompetitionId(competition.getId()), notFoundError(Competition.class,
+                competition.getId())).andOnSuccess(publicContent -> {
+            publicContentRepository.delete(publicContent);
+            return serviceSuccess();
+        });
+    }
+
+    private void deleteFormValidatorsForCompetitionQuestions(Competition competition) {
+        competition.getSections().forEach(section ->
+                section.getQuestions().forEach(question ->
+                        question.getFormInputs().forEach(formInput ->
+                                formInput.getFormValidators().clear())));
+        competitionRepository.save(competition);
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {

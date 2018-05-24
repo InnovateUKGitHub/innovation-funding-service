@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.dashboard.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.dashboard.populator.ApplicantDashboardPopulator;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicantDashboardControllerTest extends BaseControllerMockMVCTest<ApplicantDashboardController> {
+public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVCTest<ApplicantDashboardController> {
 
     @Override
     protected ApplicantDashboardController supplyControllerUnderTest() {
@@ -29,13 +29,11 @@ public class ApplicantDashboardControllerTest extends BaseControllerMockMVCTest<
     @Before
     public void setUp() {
         super.setUp();
-
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
     }
-    
+
     @Test
     public void testDashboard() throws Exception {
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
@@ -69,7 +67,7 @@ public class ApplicantDashboardControllerTest extends BaseControllerMockMVCTest<
      */
     @Test
     public void testDashboardCollaborator() throws Exception {
-        UserResource collabUsers = this.users.get(1);
+        UserResource collabUsers = collaborator;
         setLoggedInUser(collabUsers);
 
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
