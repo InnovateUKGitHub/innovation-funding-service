@@ -59,10 +59,9 @@
                     required="required"
                     name="company-name"
                     class="form-control"
-                    maxlength="256"
+                    maxlength="255"
                     th:field="*{organisationName}"
-                    th:attr="data-required-errormessage=#{validation.standard.organisationname.required},
-                             data-maxlength-errormessage=#{validation.field.too.many.characters(null,255)}" />
+                    th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'form-group-error'">
             <label class="form-label" for="registrationNumber">
