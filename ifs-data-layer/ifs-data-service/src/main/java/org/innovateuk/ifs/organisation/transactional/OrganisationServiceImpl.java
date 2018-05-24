@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_COMPANY_NAME_TOO_LONG;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -41,6 +42,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class OrganisationServiceImpl extends BaseTransactionalService implements OrganisationService {
 
     private static final Log log = LogFactory.getLog(OrganisationServiceImpl.class);
+    private static final Integer MAX_CHARACTER_DB_LENGTH = 255;
 
     @Autowired
     private AcademicRepository academicRepository;
@@ -100,16 +102,12 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber) {
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
-            String organisationNameDecoded;
-            try {
-                organisationNameDecoded = UriUtils.decode(organisationName, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                log.error("Unable to decode company name " + organisationName + " . Saving original encoded value.", e);
-                organisationNameDecoded = organisationName;
+            if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
+                organisation.setName(decodeOrganisationName(organisationName));
+                organisation.setCompanyHouseNumber(registrationNumber);
+                return serviceSuccess(organisationMapper.mapToResource(organisation));
             }
-            organisation.setName(organisationNameDecoded);
-            organisation.setCompanyHouseNumber(registrationNumber);
-            return serviceSuccess(organisationMapper.mapToResource(organisation));
+            return serviceFailure(BANK_DETAILS_COMPANY_NAME_TOO_LONG);
         });
     }
 
@@ -154,5 +152,16 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
             organisationResults = serviceSuccess(new OrganisationSearchResult(academic.getId().toString(), academic.getName()));
         }
         return organisationResults;
+    }
+
+    private String decodeOrganisationName(String encodedName) {
+        String organisationNameDecoded;
+        try {
+            organisationNameDecoded = UriUtils.decode(encodedName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("Unable to decode company name " + encodedName + ". Saving original encoded value.", e);
+            organisationNameDecoded = encodedName;
+        }
+        return organisationNameDecoded;
     }
 }

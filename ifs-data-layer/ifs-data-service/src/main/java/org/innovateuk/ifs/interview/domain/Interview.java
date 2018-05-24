@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @Entity
 public class Interview extends Process<ProcessRole, Application, InterviewState> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 
@@ -30,7 +31,16 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
         super();
     }
 
+    public Interview(Application application, InterviewParticipant interviewParticipant) {
+        this.participant = new ProcessRole(interviewParticipant.getUser(), application.getId(), Role.INTERVIEW_ASSESSOR);
+        this.target = application;
+    }
+
+    @Deprecated
     public Interview(Application application, ProcessRole processRole) {
+        if (!application.getId().equals(processRole.getApplicationId())) {
+            throw new IllegalArgumentException("application.id must equal processRole.id");
+        }
         this.participant = processRole;
         this.target = application;
     }
