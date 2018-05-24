@@ -105,10 +105,8 @@ public class AssessorInviteOverviewMapper {
             } else {
                 details = format("Invite declined: %s", participant.getInvite().getSentOn().format(detailsFormatter));
             }
-        } else if (participant.getStatus() == PENDING) {
-            if (participant.getInvite().getSentOn() != null) {
-                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
-            }
+        } else if (participant.getStatus() == PENDING && participant.getInvite().getSentOn() != null) {
+            details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
         }
 
         return details;

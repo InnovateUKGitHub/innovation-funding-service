@@ -75,16 +75,12 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             Integer month = milestone.getMonth();
             Integer year = milestone.getYear();
 
-            if(!validTimeOfMiddayMilestone(milestone)) {
-                if(errors.isEmpty()) {
-                    errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
-                }
+            if(!validTimeOfMiddayMilestone(milestone) && errors.isEmpty()) {
+                errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
             }
 
-            if(day == null || month == null || year == null || !isMilestoneDateValid(day, month, year)) {
-                if(errors.isEmpty()) {
-                    errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
-                }
+            if((day == null || month == null || year == null || !isMilestoneDateValid(day, month, year)) && errors.isEmpty()) {
+                errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
             }
         });
         return errors;
