@@ -82,8 +82,10 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
         InterviewAssignment assignment = interviewAssignmentRepository.findOneByTargetId(applicationId);
         return ofNullable(assignment.getMessage())
                 .map(message ->
-                        serviceSuccess(new InterviewApplicationSentInviteResource(message.getSubject(),
-                                message.getMessage(), message.getModifiedOn())))
+                        serviceSuccess(
+                                new InterviewApplicationSentInviteResource(message.getSubject(), message.getMessage(), message.getCreatedOn())
+                        )
+                )
                 .orElse(serviceFailure(GENERAL_NOT_FOUND));
     }
 

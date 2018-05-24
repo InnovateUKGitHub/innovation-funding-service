@@ -48,6 +48,10 @@ public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<Interv
         return withArray((feedback, assessmentInterviewPanelMessageOutcome) -> assessmentInterviewPanelMessageOutcome.setFeedback(feedback), feedbacks);
     }
 
+    public InterviewAssignmentMessageOutcomeBuilder withCreatedOn(ZonedDateTime... createdOns) {
+        return withArraySetFieldByReflection("createdOn", createdOns);
+    }
+
     public InterviewAssignmentMessageOutcomeBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
         return withArraySetFieldByReflection("modifiedOn", modifiedOns);
     }

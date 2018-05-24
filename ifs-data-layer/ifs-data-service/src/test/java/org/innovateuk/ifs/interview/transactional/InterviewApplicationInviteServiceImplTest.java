@@ -125,7 +125,7 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
         InterviewAssignmentMessageOutcome message = newInterviewAssignmentMessageOutcome()
                 .withSubject(subject)
                 .withMessage(content)
-                .withModifiedOn(assigned)
+                .withCreatedOn(assigned)
                 .build();
 
         InterviewAssignment interviewAssignment = newInterviewAssignment()
