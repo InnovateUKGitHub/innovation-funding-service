@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +27,7 @@ public class SetupStatusControllerTest extends BaseControllerMockMVCTest<SetupSt
 
         Long projectId = 1L;
 
-        when(populator.populateViewModel(projectId, loggedInUser)).thenReturn(new SetupStatusViewModel());
+        when(populator.populateViewModel(projectId, loggedInUser)).thenReturn(completedFuture(new SetupStatusViewModel()));
 
         mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())

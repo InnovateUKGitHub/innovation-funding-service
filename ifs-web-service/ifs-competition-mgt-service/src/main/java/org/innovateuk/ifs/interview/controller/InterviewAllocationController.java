@@ -15,6 +15,7 @@ import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.model.AllocateInterviewApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.AllocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewAcceptedAssessorsModelPopulator;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
@@ -37,6 +38,7 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_APPLICATION_ALLOCATION;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATED;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -59,6 +61,9 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
 
     @Autowired
     private UnallocatedInterviewApplicationsModelPopulator unallocatedInterviewApplicationsModelPopulator;
+
+    @Autowired
+    private AllocatedInterviewApplicationsModelPopulator allocatedInterviewApplicationsModelPopulator;
 
     @Autowired
     private AllocateInterviewApplicationsModelPopulator allocateInterviewApplicationsModelPopulator;
@@ -118,6 +123,29 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return "assessors/interview/unallocated-applications";
     }
 
+    @GetMapping("/allocated-applications/{userId}")
+    public String allocated(@ModelAttribute(name = SELECTION_FORM, binding = false) InterviewAllocationSelectionForm selectionForm,
+                               Model model,
+                               @PathVariable("competitionId") long competitionId,
+                               @RequestParam MultiValueMap<String, String> queryParams,
+                               @PathVariable("userId") long userId,
+                               @RequestParam(value = "page", defaultValue = "0") int page,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        updateSelectionForm(request, response, competitionId, userId, selectionForm);
+
+        queryParams.put("assessorId", singletonList(String.valueOf(userId)));
+        String originQuery = buildOriginQueryString(INTERVIEW_PANEL_ALLOCATED, queryParams);
+
+        model.addAttribute("model", allocatedInterviewApplicationsModelPopulator.populateModel(
+                competitionId,
+                userId,
+                page,
+                originQuery
+        ));
+        return "assessors/interview/allocated-applications";
+    }
+
     @PostMapping("/allocate-applications/{userId}/addSelected")
     public String allocateApplications(@PathVariable("competitionId") long competitionId,
                                        @PathVariable("userId") long userId) {
@@ -143,6 +171,17 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
 
             return "assessors/interview/allocate-applications";
         });
+    }
+
+
+    @PostMapping("/allocated-applications/{userId}")
+    public String removeApplication(@PathVariable("competitionId") long competitionId,
+                                       @PathVariable("userId") long userId,
+                                       @RequestParam("removeApplication") long applicationId) {
+
+        interviewAllocationRestService.unallocateApplication(userId, applicationId);
+
+        return redirectToAllocatedTab(competitionId, userId);
     }
 
     @PostMapping("/allocate-applications/{userId}")
@@ -217,8 +256,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
 
     private String redirectToAllocatedTab(long competitionId, long userId) {
         return "redirect:" + UriComponentsBuilder
-                // TODO IFS-3452 this needs to point to the allocated applications
-                .fromPath("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}")
+                .fromPath("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}")
                 .buildAndExpand(asMap("competitionId", competitionId, "userId", userId))
                 .toUriString();
     }

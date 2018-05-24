@@ -52,6 +52,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3451 Allocate applications to assessors - Notify assessors
 ...
 ...               IFS-3485 Remove applications before allocating (notifying) to assessor
+...
+...               IFS-3452 Allocate applications to assessors - Allocated tab
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -207,7 +209,7 @@ CompAdmin can access the Allocate applications to assessors screen
     And the user should see the element      jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
 
 CompAdmin allocate applications to assessor
-    [Documentation]  IFS-3451  IFS-3485
+    [Documentation]  IFS-3451  IFS-3485  IFS-3451
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
     And the user clicks the button/link      jQuery=tr:contains("${computer_vision_application}") label
@@ -216,7 +218,9 @@ CompAdmin allocate applications to assessor
     And the compAdmin can cancel allocating applications to assessor
     And the compAdmin removes the application from notify list
     When the user clicks the button/link     css=input[type="submit"]   #Notify
-    Then the user reads his email            ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
+    And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION}")
+    Then the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Neural Industries") ~ td:contains("Remove")
+    And the user reads his email             ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
 
 *** Keywords ***
 Custom Suite Setup
