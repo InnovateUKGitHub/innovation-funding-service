@@ -53,7 +53,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
 
     @Override
     public void updateFinancePosition(Long userId, Long projectId, String fieldName, String value, Long competitionId) {
-
+        // do nothing.
     }
 
     @Override

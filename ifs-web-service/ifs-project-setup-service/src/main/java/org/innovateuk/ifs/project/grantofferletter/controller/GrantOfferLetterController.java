@@ -102,7 +102,7 @@ public class GrantOfferLetterController {
             Model model,
             UserResource loggedInUser) {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () ->
-            grantOfferLetterService.removeSignedGrantOfferLetter(projectId);
+            grantOfferLetterService.removeSignedGrantOfferLetter(projectId)
         );
     }
 
