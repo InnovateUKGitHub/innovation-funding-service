@@ -209,7 +209,6 @@ public class ApplicationModelPopulator {
         model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
         model.addAttribute("applicationTitle", application.getName());
         model.addAttribute("applicationDuration", String.valueOf(application.getDurationInMonths()));
-        model.addAttribute("applicationStartDate", application.getStartDate());
     }
 
     public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,

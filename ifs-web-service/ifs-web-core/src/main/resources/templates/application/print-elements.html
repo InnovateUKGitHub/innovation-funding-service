@@ -17,7 +17,7 @@
 
     <h2 class="heading-small">Estimated timescales</h2>
     <p>Project start date:<br/>
-       [[${#temporals.format(applicationStartDate, 'd MMMM yyyy')}]]
+       [[${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}]]
     </p>
     <p>Duration in months:<br/>
       <th:block th:text="${applicationDuration}" />
