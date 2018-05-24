@@ -28,7 +28,7 @@ modules:
 
 execution:
 - iterations: 1
-  concurrency: 1
+  concurrency: 80
   scenario: with_script
 
 
