@@ -47,8 +47,14 @@
                         id="competitionTypeId"
                         required="required"
                         th:attr="data-required-errormessage=#{validation.initialdetailsform.competitiontypeid.required}">
-                    <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
-                    <option th:each="(competitionType : ${model.competitionTypes})" th:if="${competitionType.active}" th:text="${competitionType.name}" th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
+                    <option value=""
+                            disabled="disabled"
+                            th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
+                    <option th:each="(competitionType : ${model.competitionTypes})"
+                            th:if="${competitionType.active}"
+                            th:text="${competitionType.name}"
+                            th:value="${competitionType.id}"
+                            th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
                 <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or model.general.competition.setupAndLive}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
             </div>
@@ -229,7 +235,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend class="heading-small">
+                    <legend id="stateAid" class="heading-small">
                         State aid
                         <th:block th:if="${#fields.hasErrors('stateAid')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('stateAid')}" th:text="${err}"></span>
