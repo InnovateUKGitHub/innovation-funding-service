@@ -9,14 +9,15 @@ def buildJreDockerEnabled = project.hasProperty('buildJreDocker') ? project.prop
 buildDocker.enabled = buildJreDockerEnabled
 
 buildDocker {
-    tag = "innovateuk/infrastructure/oracle-jre"
+    tag = "infrastructure/oracle-jre"
 }
 
 tagDocker {
-    imageId = "innovateuk/infrastructure/oracle-jre"
-    repository = project.dockerRegistry + "/innovateuk/infrastructure/oracle-jre"
+    imageId = "infrastructure/oracle-jre"
+    repository = project.dockerRegistry + "/infrastructure/oracle-jre"
+    tag = "latest"
 }
 
 osStageRemote {
-    imageName = registryCredentials.url + "/innovateuk/infrastructure/oracle-jre"
+    imageName = registryCredentials.url + "/infrastructure/oracle-jre"
 }
