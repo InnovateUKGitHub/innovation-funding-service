@@ -1,10 +1,16 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
+import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
+import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.interview.form.InterviewAllocationNotifyForm;
 import org.innovateuk.ifs.interview.form.InterviewAllocationSelectionForm;
 import org.innovateuk.ifs.interview.resource.*;
@@ -12,18 +18,22 @@ import org.innovateuk.ifs.interview.viewmodel.InterviewAllocateApplicationsViewM
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.management.model.AllocateInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewAcceptedAssessorsModelPopulator;
+import org.innovateuk.ifs.management.model.AllocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.InterviewAcceptedAssessorsRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewAcceptedAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewAssessorApplicationsViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -35,6 +45,7 @@ import java.util.List;
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -64,6 +75,21 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     @InjectMocks
     private InterviewAcceptedAssessorsModelPopulator interviewAcceptedAssessorsModelPopulator;
 
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private InterviewAllocationRestService interviewAllocationRestService;
+
+    @Mock
+    private UserRestService userRestServiceMock;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private AssessorRestService assessorRestService;
+
     @Spy
     @InjectMocks
     private UnallocatedInterviewApplicationsModelPopulator unallocatedInterviewApplicationsModelPopulator;
@@ -72,15 +98,22 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     @InjectMocks
     private AllocateInterviewApplicationsModelPopulator allocateInterviewApplicationsModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private AllocatedInterviewApplicationsModelPopulator allocatedInterviewApplicationsModelPopulator;
+
     @Override
     protected InterviewAllocationController supplyControllerUnderTest() {
         return new InterviewAllocationController();
     }
 
+    @Mock
+    private CookieUtil cookieUtil;
+
     @Before
     public void setUp() {
         super.setUp();
-        setupCookieUtil();
+        setupCookieUtil(cookieUtil);
     }
 
     @Test
@@ -192,6 +225,73 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void allocated() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withId(1L)
+                .withName("Competition x")
+                .build();
+
+        UserResource user = newUserResource()
+                .withId(1L)
+                .withFirstName("Kieran")
+                .withLastName("Hester")
+                .build();
+
+        InnovationAreaResource innovationArea = newInnovationAreaResource()
+                .withSector(1l)
+                .withSectorName("Digital manufacturing")
+                .build();
+
+        ProfileResource profile = newProfileResource()
+                .withInnovationAreas(singletonList(innovationArea))
+                .withSkillsAreas("Skills")
+                .withBusinessType(BusinessType.ACADEMIC)
+                .build();
+
+        AssessorProfileResource assessorProfile = newAssessorProfileResource()
+                .withUser(user)
+                .withProfile(profile)
+                .build();
+
+        InterviewApplicationPageResource pageResource = newInterviewApplicationPageResource()
+                .withAllocatedApplications(1L)
+                .withUnallocatedApplications(2L)
+                .withContent(newInterviewApplicationResource()
+                        .withId(1L, 2L)
+                        .withLeadOrganisation("Lead 1", "Lead 2")
+                        .withNumberOfAssessors(1L, 2L)
+                        .build(2))
+                .build();
+
+        when(userRestServiceMock.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(assessorRestService.getAssessorProfile(user.getId())).thenReturn(restSuccess(assessorProfile));
+        when(interviewAllocationRestService.getAllocatedApplications(competition.getId(), user.getId(), 0)).thenReturn(restSuccess(pageResource));
+
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}", competition.getId(), user.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/interview/allocated-applications"))
+                .andReturn();
+
+        InterviewAssessorApplicationsViewModel model = (InterviewAssessorApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        InOrder inOrder = inOrder(competitionRestService, userRestServiceMock, assessorRestService);
+        inOrder.verify(userRestServiceMock).retrieveUserById(user.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(assessorRestService).getAssessorProfile(user.getId());
+        inOrder.verifyNoMoreInteractions();
+
+        assertEquals((long) competition.getId(), model.getCompetitionId());
+        assertEquals(competition.getName(), model.getCompetitionName());
+        assertEquals(profile.getBusinessType(), model.getProfile().getBusinessType());
+        assertEquals(profile.getSkillsAreas(), model.getProfile().getSkillsAreas());
+        assertEquals(pageResource.getAllocatedApplications(), model.getAllocatedApplications());
+        assertEquals(pageResource.getUnallocatedApplications(), model.getUnallocatedApplications());
+        assertEquals(pageResource.getContent().size(), model.getRows().size());
+    }
+
+    @Test
     public void testRemove() throws Exception {
         long competitionId = 2L;
         long userId = 3L;
@@ -269,7 +369,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         assertEquals(format("Applications for interview panel for '%s'", competition.getName()), form.getSubject());
 
         String originQuery = (String) result.getModelAndView().getModel().get("originQuery");
-        assertEquals("?origin=INTERVIEW_PANEL_ALLOCATE&assessorId=14", originQuery);
+        assertEquals(format("?origin=INTERVIEW_PANEL_ALLOCATE&assessorId=%d", user.getId()), originQuery);
 
         InOrder inOrder = inOrder(userRestServiceMock, competitionRestService, interviewAllocationRestService, competitionService);
         inOrder.verify(userRestServiceMock).retrieveUserById(user.getId());
@@ -316,8 +416,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .param("subject", form.getSubject())
                 .param("content", form.getContent()))
                 .andExpect(status().is3xxRedirection())
-                // TODO IFS-3452 redirect to allocate tab
-                .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/assessors/unallocated-applications/%s", competition.getId(), user.getId())))
+                .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/assessors/allocated-applications/%s", competition.getId(), user.getId())))
                 .andReturn();
 
         verify(interviewAllocationRestService, only()).notifyAllocations(interviewNotifyAllocationResource);

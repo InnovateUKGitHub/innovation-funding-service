@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.junit.Test;
@@ -40,6 +41,8 @@ public class QuestionModelPopulatorTest extends BaseUnitTest {
     private ApplicationNavigationPopulator applicationNavigationPopulator;
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
+    @Mock
+    private QuestionService questionService;
 
     @Test
     public void testPopulate() {
