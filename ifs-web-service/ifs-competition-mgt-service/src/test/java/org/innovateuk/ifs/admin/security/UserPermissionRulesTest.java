@@ -6,8 +6,10 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserCompositeId;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
@@ -18,6 +20,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermissionRules> {
+
+    @Mock
+    private UserService userServiceMock;
 
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
@@ -106,7 +111,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
         UserResource user = newUserResource().withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR)).build();
         setLoggedInUser(user);
     }

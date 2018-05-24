@@ -89,3 +89,13 @@ include::{snippets}/interview-panel/send-invite/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/send-invite/curl-request.adoc[]
+=== unallocate application from an assessor
+==== Request
+include::{snippets}/interview-panel/unallocate-application/http-request.adoc[]
+include::{snippets}/interview-panel/unallocate-application/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/unallocate-application/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/unallocate-application/curl-request.adoc[]

@@ -5,11 +5,14 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.team.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -17,6 +20,12 @@ import static org.mockito.Mockito.when;
 
 
 public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<ApplicationPermissionRules> {
+
+    @Mock
+    private ApplicationService applicationServiceMock;
+
+    @Mock
+    private UserService userServiceMock;
 
     @Test
     public void addApplicantWhenNotLoggedInAsLeadAndApplicationNotSubmitted() {
