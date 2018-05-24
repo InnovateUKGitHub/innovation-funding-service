@@ -133,11 +133,11 @@ public class ApplicationOverviewModelPopulator {
         }
 
         Map<Long, AssignButtonsViewModel> assignButtonViewModels = new HashMap<>();
-        parentApplicantSections.forEach(applicantSectionResource -> {
-            applicantSectionResource.getApplicantQuestions().forEach(questionResource -> {
-                assignButtonViewModels.put(questionResource.getQuestion().getId(), assignButtonsPopulator.populate(applicantSectionResource, questionResource, questionResource.isCompleteByApplicant(applicantSectionResource.getCurrentApplicant())));
-            });
-        });
+        parentApplicantSections.forEach(applicantSectionResource ->
+            applicantSectionResource.getApplicantQuestions().forEach(questionResource ->
+                assignButtonViewModels.put(questionResource.getQuestion().getId(), assignButtonsPopulator.populate(applicantSectionResource, questionResource, questionResource.isCompleteByApplicant(applicantSectionResource.getCurrentApplicant())))
+            )
+        );
 
         return new ApplicationOverviewSectionViewModel(sections, subSections, sectionQuestions, financeSections, hasFinanceSection, financeSectionId, assignButtonViewModels);
     }
