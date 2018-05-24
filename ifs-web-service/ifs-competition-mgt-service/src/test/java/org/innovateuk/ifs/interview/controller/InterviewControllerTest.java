@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.interview.model.InterviewModelPopulator;
@@ -26,12 +28,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class InterviewControllerTest extends BaseControllerMockMVCTest<InterviewController> {
 
+    private CompetitionResource competitionResource;
+
     @Spy
     @InjectMocks
     private InterviewModelPopulator interviewModelPopulator;
 
     @Mock
     private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+
+    @Mock
+    private CompetitionService competitionService;
 
     @Override
     protected InterviewController supplyControllerUnderTest() {

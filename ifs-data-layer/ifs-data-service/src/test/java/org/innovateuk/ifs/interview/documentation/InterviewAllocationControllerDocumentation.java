@@ -2,36 +2,40 @@ package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.interview.controller.InterviewAllocationController;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
+import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.AssessorInviteToSendDocs.ASSESSOR_INVITES_TO_SEND_FIELDS;
 import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsPageResourceDocs.interviewAssessorAllocateApplicationsPageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsResourceDocs.interviewAcceptedAssessorsResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewApplicationPageResourceDocs.InterviewApplicationPageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewApplicationResourceDocs.InterviewApplicationResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewNotifyAllocationResourceDocs.INTERVIEW_ALLOCATION_RESOURCE_FIELDS;
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResourceBuilder.newInterviewApplicationPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.innovateuk.ifs.interview.builder.InterviewNotifyAllocationResourceBuilder.newInterviewNotifyAllocationResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -190,5 +194,92 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 ));
 
         verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationIds(competitionId, userId);
+    }
+
+    @Test
+    public void unallocateApplication() throws Exception {
+        long assessorId = 1L;
+        long applicationId = 2L;
+
+        when(interviewAllocationServiceMock.unallocateApplication(assessorId, applicationId)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/interview-panel/allocated-applications/{assessorId}/unallocate/{applicationId}", assessorId, applicationId))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("assessorId").description("Id of the assessor"),
+                                parameterWithName("applicationId").description("Id of the application to unassign from interview panel")
+                                )));
+
+        verify(interviewAllocationServiceMock, only()).unallocateApplication(assessorId, applicationId);
+    }
+
+    @Test
+    public void getInviteToSend() throws Exception {
+        long competitionId = 1L;
+        long userId = 2L;
+
+        when(interviewAllocationServiceMock.getInviteToSend(competitionId, userId))
+                .thenReturn(serviceSuccess(newAssessorInvitesToSendResource().build()));
+
+        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications/{userId}/invite-to-send", competitionId, userId))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition"),
+                                parameterWithName("userId").description("Id of the assessor")
+                        ),
+                        responseFields(ASSESSOR_INVITES_TO_SEND_FIELDS)
+                ));
+
+        verify(interviewAllocationServiceMock, only()).getInviteToSend(competitionId, userId);
+    }
+
+    @Test
+    public void sendInvite() throws Exception {
+        long competitionId = 1L;
+        long userId = 2L;
+
+        InterviewNotifyAllocationResource interviewNotifyAllocationResource = newInterviewNotifyAllocationResource().build();
+
+        when(interviewAllocationServiceMock.notifyAllocation(interviewNotifyAllocationResource))
+                .thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/{competitionId}/allocated-applications/{userId}/send-invite", competitionId, userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(interviewNotifyAllocationResource)))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition"),
+                                parameterWithName("userId").description("Id of the assessor")
+                        ),
+                        requestFields(INTERVIEW_ALLOCATION_RESOURCE_FIELDS)
+                ));
+
+        verify(interviewAllocationServiceMock, only()).notifyAllocation(interviewNotifyAllocationResource);
+    }
+
+    @Test
+    public void getUnallocatedApplicationsById() throws Exception {
+        long competitionId = 1L;
+        List<Long> applicationIds = asList(3L, 5L);
+
+        List<InterviewApplicationResource> interviewApplicationResources = newInterviewApplicationResource().build(2);
+
+        when(interviewAllocationServiceMock.getUnallocatedApplicationsById(applicationIds))
+                .thenReturn(serviceSuccess(interviewApplicationResources));
+
+        mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-applications/all/{applicationIds}", competitionId, join(applicationIds, ',')))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition"),
+                                parameterWithName("applicationIds").description("Ids of applications")
+                        ),
+                        responseFields(fieldWithPath("[]").description("List of unallocated applications"))
+                ));
+
+        verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationsById(applicationIds);
+
     }
 }

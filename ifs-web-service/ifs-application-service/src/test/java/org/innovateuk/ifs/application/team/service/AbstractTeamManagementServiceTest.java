@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.application.team.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -17,6 +19,8 @@ public class AbstractTeamManagementServiceTest extends BaseServiceUnitTest<Abstr
     protected AbstractTeamManagementService supplyServiceUnderTest() {
         return new ExtendedAbstractTeamManagementService();
     }
+    @Mock
+    private ApplicationService applicationServiceMock;
 
     @Test
     public void removeInvite_shouldCallRemoveCollaboratorAndReturnResult() throws Exception {
