@@ -4,16 +4,23 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
@@ -84,6 +91,23 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
             withAddress(projectAddress).
             withTargetStartDate(LocalDate.of(2017, 01, 05));
 
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private StatusService statusService;
+
+    @Mock
+    private MonitoringOfficerService monitoringOfficerService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private ApplicationSummaryRestService applicationSummaryRestService;
     @Test
     public void testViewMonitoringOfficerPage() throws Exception {
 

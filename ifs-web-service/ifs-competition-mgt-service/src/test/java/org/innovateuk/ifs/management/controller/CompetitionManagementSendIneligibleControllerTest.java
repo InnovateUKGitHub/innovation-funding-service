@@ -3,13 +3,16 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.management.model.InformIneligibleModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
@@ -36,7 +39,13 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
 
     @Spy
     @InjectMocks
-    InformIneligibleModelPopulator informIneligibleModelPopulator;
+    private InformIneligibleModelPopulator informIneligibleModelPopulator;
+
+    @Mock
+    private ApplicationRestService applicationRestService;
+
+    @Mock
+    private ProcessRoleService processRoleService;
 
     @Override
     protected CompetitionManagementSendIneligibleController supplyControllerUnderTest() {

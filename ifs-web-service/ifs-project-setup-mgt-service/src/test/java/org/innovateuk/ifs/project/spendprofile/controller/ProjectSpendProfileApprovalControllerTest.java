@@ -3,13 +3,19 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
+import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.Collections;
 
@@ -21,11 +27,27 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileApprovalController> {
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private ApplicationSummaryRestService applicationSummaryRestService;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private SpendProfileService spendProfileService;
 
     @Test
     public void viewSpendProfileApprovalSuccess() throws Exception {
