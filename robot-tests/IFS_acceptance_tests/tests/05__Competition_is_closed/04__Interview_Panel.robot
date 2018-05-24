@@ -127,7 +127,7 @@ Competition Admin can send or cancel sending the invitation to the applicants
     When log in as a different user            ${aaron_robertson_email}   ${short_password}
     Then the user should see the element       jQuery=.progress-list div:contains("Neural networks to optimise freight train routing") ~ div span:contains("Invited to interview")
 
-CompAdmin resend the invitation to the applicant
+CompAdmin view invite sent to the applicant
     [Documentation]  IFS-3535
     [Tags]
     [Setup]  log in as a different user     &{Comp_admin1_credentials}
