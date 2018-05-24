@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -10,11 +11,15 @@ import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -34,7 +39,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -332,7 +336,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void deleteInnovationLead(Competition competition) {
-        assessmentParticipantRepository.deleteByCompetitionIdAndRole(competition.getId(), INNOVATION_LEAD);
+        innovationLeadRepository.deleteAllInnovationLeads(competition.getId());
     }
 
     private ServiceResult<Void> deletePublicContentForCompetition(Competition competition) {

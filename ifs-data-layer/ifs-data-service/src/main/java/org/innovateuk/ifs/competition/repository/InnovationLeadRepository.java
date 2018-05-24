@@ -25,6 +25,10 @@ public interface InnovationLeadRepository extends CompetitionParticipantReposito
         deleteByCompetitionIdAndUserIdAndRole(competitionId, userId, INNOVATION_LEAD);
     }
 
+    default void deleteAllInnovationLeads(long competitionId) {
+        deleteByCompetitionIdAndRole(competitionId, INNOVATION_LEAD);
+    }
+
     default boolean existsInnovationLead(long competitionId, long userId) {
         return existsByCompetitionIdAndUserIdAndRole(competitionId, userId, INNOVATION_LEAD);
     }

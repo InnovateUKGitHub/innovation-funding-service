@@ -18,6 +18,8 @@ public interface CompetitionParticipantRepository<ParticipantType extends Compet
 
     void deleteByCompetitionIdAndUserIdAndRole(long competitionId, long userId, CompetitionParticipantRole role);
 
+    void deleteByCompetitionIdAndRole(long competitionId, CompetitionParticipantRole role);
+
     boolean existsByCompetitionIdAndUserIdAndRole(long competitionId, long userId, CompetitionParticipantRole role);
 
 }

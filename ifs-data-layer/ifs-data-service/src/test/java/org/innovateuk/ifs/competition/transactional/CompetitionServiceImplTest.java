@@ -3,8 +3,6 @@ package org.innovateuk.ifs.competition.transactional;
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
@@ -43,6 +41,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -96,9 +95,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Mock
     private InnovationLeadRepository innovationLeadRepositoryMock;
-
-    @Mock
-    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
 
     @Mock
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepositoryMock;

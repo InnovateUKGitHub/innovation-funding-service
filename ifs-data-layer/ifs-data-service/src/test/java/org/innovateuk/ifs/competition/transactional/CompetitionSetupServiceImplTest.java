@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.commons.error.Error;
@@ -15,6 +17,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.publiccontent.domain.PublicContent;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.user.domain.User;
@@ -132,7 +138,7 @@ public class CompetitionSetupServiceImplTest {
 
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(1L)
-				.withLeadTechnologist(newLeadTechnologistId)
+				.withLeadTechnologist(newInnovationLeadId)
 				.build();
 		Competition competition = CompetitionBuilder.newCompetition()
 				.withId(competitionId)
@@ -430,7 +436,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository,
-                assessmentParticipantRepository, setupStatusRepository, milestoneRepository);
+                innovationLeadRepository, setupStatusRepository, milestoneRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
                 EnumSet.allOf(InviteStatus.class));
@@ -439,7 +445,7 @@ public class CompetitionSetupServiceImplTest {
         // Test that the competition is saved without the form validators, deleting them
         inOrder.verify(competitionRepository).save(createCompetitionExpectationsWithoutFormValidators(competition));
         inOrder.verify(milestoneRepository).deleteByCompetitionId(competition.getId());
-        inOrder.verify(assessmentParticipantRepository).deleteByCompetitionIdAndRole(competition.getId(), INNOVATION_LEAD);
+        inOrder.verify(innovationLeadRepository).deleteAllInnovationLeads(competition.getId());
         inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(),
                 competition.getId());
         inOrder.verify(competitionRepository).delete(competition);
@@ -471,7 +477,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.getFailure().is(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED));
 
         InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository,
-                assessmentParticipantRepository, setupStatusRepository, milestoneRepository);
+                innovationLeadRepository, setupStatusRepository, milestoneRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
                 EnumSet.allOf(InviteStatus.class));

@@ -17,6 +17,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
