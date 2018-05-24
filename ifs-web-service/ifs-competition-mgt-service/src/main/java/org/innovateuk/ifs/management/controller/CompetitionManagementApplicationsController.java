@@ -35,6 +35,8 @@ public class CompetitionManagementApplicationsController {
 
     private static final String DEFAULT_SORT_BY = "id";
 
+    private static final String UNSUCCESSFUL_APP_DEFAULT_FILTER = "ALL";
+
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
 
     @Autowired
@@ -128,10 +130,11 @@ public class CompetitionManagementApplicationsController {
                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
+                                           @RequestParam(value = "filter", defaultValue = UNSUCCESSFUL_APP_DEFAULT_FILTER) String filter,
                                            UserResource loggedInUser) {
 
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
-        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, loggedInUser, originQuery));
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, filter, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/previous-applications";
