@@ -55,6 +55,11 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum<Applicati
             WITHDRAWN
     );
 
+    public static final ImmutableSet<ApplicationState> ineligibleStates = Sets.immutableEnumSet(
+            INELIGIBLE,
+            INELIGIBLE_INFORMED
+    );
+
     ApplicationState(final long id, final State backingState) {
         this.id = id;
         this.backingState = backingState;
