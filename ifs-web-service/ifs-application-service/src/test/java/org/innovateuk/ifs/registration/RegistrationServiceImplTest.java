@@ -33,10 +33,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Mock
     private OrganisationService organisationService;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
     }
 
     @Override

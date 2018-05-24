@@ -1,16 +1,20 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.*;
@@ -36,6 +40,15 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
     long projectId = 123L;
 
     OrganisationResource leadOrganisation = newOrganisationResource().withId(1L).withName("Test Lead Organisation").build();
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private OtherDocumentsService otherDocumentsService;
+
+    @Mock
+    private ApplicationService applicationService;
 
     private void setupViewOtherDocumentsTestExpectations(ProjectResource project) {
 

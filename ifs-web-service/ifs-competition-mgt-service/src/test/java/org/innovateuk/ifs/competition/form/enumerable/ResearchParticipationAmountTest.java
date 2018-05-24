@@ -71,10 +71,10 @@ public class ResearchParticipationAmountTest {
 	}
 	
 	@Test
-	public void testFromAmountNoMatch() {
+	public void testFromAmountNoMatchSetsDefault() {
 		ResearchParticipationAmount result = ResearchParticipationAmount.fromAmount(95);
-		
-		assertNull(result);
+
+		assertEquals(ResearchParticipationAmount.THIRTY, result);
 	}
 	
 }

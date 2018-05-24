@@ -1,0 +1,20 @@
+<#ftl output_format="HTML" auto_esc=true>
+    <#import "layout/default.html" as layout>
+        <@layout.default>
+
+        <p>Dear ${name},</p>
+
+        <p>Thank you for accepting the invite to the interview panel for the '${competitionName}' competition.</p>
+
+        <p>You have now been assigned applications.</p>
+
+        <p>Please visit the online Innovation Funding Service before the panel to review the applications and associated feedback.</p>
+
+        <p style="margin: 0 0 1em 0;">
+            ${customTextHtml?no_esc}
+        </p>
+
+        <p>Yours sincerely,</p>
+
+        <@layout.senderHTML />
+    </@layout.default>

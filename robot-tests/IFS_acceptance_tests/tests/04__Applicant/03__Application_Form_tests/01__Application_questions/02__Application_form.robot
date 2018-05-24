@@ -193,7 +193,7 @@ Log in and create a new application for the Aerospace competition
 
     #The following two lines are failing if we don't have any other application for the same competition
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
-            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
             ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
 
     The user clicks the button/link    link=Begin application
