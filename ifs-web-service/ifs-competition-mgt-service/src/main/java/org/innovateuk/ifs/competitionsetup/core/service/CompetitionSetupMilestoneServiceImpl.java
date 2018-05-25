@@ -79,7 +79,8 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
                 errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
             }
 
-            if((day == null || month == null || year == null || !isMilestoneDateValid(day, month, year)) && errors.isEmpty()) {
+            boolean dateFieldsIncludeNull = (day == null || month == null || year == null);
+            if((dateFieldsIncludeNull || !isMilestoneDateValid(day, month, year)) && errors.isEmpty()) {
                 errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
             }
         });
