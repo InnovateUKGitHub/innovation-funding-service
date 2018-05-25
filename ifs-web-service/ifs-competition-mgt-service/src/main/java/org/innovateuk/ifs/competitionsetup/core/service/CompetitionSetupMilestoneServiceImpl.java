@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.core.service;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -27,6 +29,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
+    private static final Log LOG = LogFactory.getLog(CompetitionSetupMilestoneServiceImpl.class);
 
     @Autowired
     private MilestoneRestService milestoneRestService;
@@ -72,16 +75,13 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             Integer month = milestone.getMonth();
             Integer year = milestone.getYear();
 
-            if(!validTimeOfMiddayMilestone(milestone)) {
-                if(errors.isEmpty()) {
-                    errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
-                }
+            if(!validTimeOfMiddayMilestone(milestone) && errors.isEmpty()) {
+                errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
             }
 
-            if(day == null || month == null || year == null || !isMilestoneDateValid(day, month, year)) {
-                if(errors.isEmpty()) {
-                    errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
-                }
+            boolean dateFieldsIncludeNull = (day == null || month == null || year == null);
+            if((dateFieldsIncludeNull || !isMilestoneDateValid(day, month, year)) && errors.isEmpty()) {
+                errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
             }
         });
         return errors;
@@ -101,6 +101,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             return year <= 9999;
         }
         catch(DateTimeException dte){
+            LOG.trace("invalid milestone date", dte);
             return false;
         }
     }

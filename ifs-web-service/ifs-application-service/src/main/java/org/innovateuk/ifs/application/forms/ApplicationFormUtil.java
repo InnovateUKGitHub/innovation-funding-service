@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Util class for listing all constants in the applicationForm
  */
-public class ApplicationFormUtil {
+public final class ApplicationFormUtil {
     public static final String QUESTION_URL = "/question/";
     public static final String QUESTION_ID = "questionId";
     public static final String MODEL_ATTRIBUTE_MODEL = "model";
@@ -33,6 +33,7 @@ public class ApplicationFormUtil {
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
 
+    private ApplicationFormUtil() {}
 
     public static boolean isMarkQuestionRequest(@NotNull Map<String, String[]> params) {
         return params.containsKey(MARK_AS_COMPLETE) || params.containsKey(MARK_AS_INCOMPLETE);

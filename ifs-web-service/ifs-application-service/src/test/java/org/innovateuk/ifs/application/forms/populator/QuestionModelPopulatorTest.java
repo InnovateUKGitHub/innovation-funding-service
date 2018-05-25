@@ -68,7 +68,7 @@ public class QuestionModelPopulatorTest extends BaseUnitTest {
         when(questionService.getByQuestionIdAndApplicationIdAndOrganisationId(question.getQuestion().getId(), question.getApplication().getId(), question.getCurrentApplicant().getOrganisation().getId())).thenReturn(questionStatusResource);
         when(questionService.getNotificationsForUser(asList(questionStatusResource), question.getCurrentUser().getId())).thenReturn(notifications);
 
-        QuestionViewModel viewModel = populator.populateModel(question, model, form);
+        QuestionViewModel viewModel = populator.populateModel(question, form);
 
         assertThat(viewModel.isAllReadOnly(), equalTo(true));
         assertThat(viewModel.getCurrentApplicant(), equalTo(question.getCurrentApplicant()));

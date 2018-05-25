@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static junit.framework.TestCase.fail;
-import static org.innovateuk.ifs.sil.experian.controller.ExperianEndpointController.validationErrors;
-import static org.innovateuk.ifs.sil.experian.controller.ExperianEndpointController.verificationResults;
+import static org.innovateuk.ifs.sil.experian.controller.ExperianEndpointController.VALIDATION_ERRORS;
+import static org.innovateuk.ifs.sil.experian.controller.ExperianEndpointController.VERIFICATION_RESULTS;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,7 +22,7 @@ public class ExperianEndpointControllerMockMvcTest extends AbstractEndpointContr
 
     @Test
     public void testExperianValidate() throws Exception {
-        validationErrors.keySet().forEach(bankDetails -> {
+        VALIDATION_ERRORS.keySet().forEach(bankDetails -> {
             String requestBody = toJson(bankDetails);
             try {
                 MvcResult result = mockMvc.
@@ -35,14 +35,14 @@ public class ExperianEndpointControllerMockMvcTest extends AbstractEndpointContr
                         andExpect(status().isOk()).
                         andReturn();
             } catch (Exception e) {
-                fail("Error while validating a stub example " + e.getMessage() + " " + validationErrors.get(bankDetails));
+                fail("Error while validating a stub example " + e.getMessage() + " " + VALIDATION_ERRORS.get(bankDetails));
             }
         });
     }
 
     @Test
     public void testExperianVerify() throws Exception {
-        verificationResults.keySet().forEach(accountDetails -> {
+        VERIFICATION_RESULTS.keySet().forEach(accountDetails -> {
             String requestBody = toJson(accountDetails);
             try {
                 MvcResult result = mockMvc.perform(
@@ -52,7 +52,7 @@ public class ExperianEndpointControllerMockMvcTest extends AbstractEndpointContr
                                 content(requestBody)
                 ).andExpect(status().isOk()).andReturn();
             } catch (Exception e) {
-                fail("Error while verification of a stub example " + e.getMessage() + " " + verificationResults.get(accountDetails));
+                fail("Error while verification of a stub example " + e.getMessage() + " " + VERIFICATION_RESULTS.get(accountDetails));
             }
         });
     }

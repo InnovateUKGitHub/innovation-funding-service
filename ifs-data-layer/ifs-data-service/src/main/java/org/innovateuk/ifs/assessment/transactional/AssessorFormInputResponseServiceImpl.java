@@ -105,7 +105,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         for (AssessorFormInputResponse response : responses) {
             if (response.getFormInput().getType() == FormInputType.ASSESSOR_APPLICATION_IN_SCOPE) {
                 totalScope++;
-                if (response.getValue().equals("true")) {
+                if ("true".equals(response.getValue())) {
                     totalInScope++;
                 }
             }
