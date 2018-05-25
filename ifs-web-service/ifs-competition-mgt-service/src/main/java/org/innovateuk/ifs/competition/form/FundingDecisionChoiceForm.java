@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * Contains the Funding Decision choice value.
  */
 public class FundingDecisionChoiceForm {
-    @NotBlank
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String fundingDecision;
 
     public String getFundingDecision() {
