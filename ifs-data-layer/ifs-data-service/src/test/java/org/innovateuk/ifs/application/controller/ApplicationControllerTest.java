@@ -224,22 +224,22 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
     }
 
-
     @Test
     public void findUnsuccessfulApplications() throws Exception {
         final Long competitionId = 1L;
         int pageIndex = 0;
         int pageSize = 20;
         String sortField = "id";
+        String filter = "ALL";
 
         ApplicationPageResource applicationPage = new ApplicationPageResource();
 
-        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
+        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(applicationPage));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
+        mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(applicationPage)));
 
-        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
+        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter);
     }
 }
