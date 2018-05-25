@@ -35,14 +35,14 @@
 
 
     <!-- =========================== Your organisation =========================== -->
-    <th:block th:fragment="organisation_finances (model)">
+    <th:block th:fragment="organisation_finances (model, internalView)">
         <div class="question" th:with="formInputViewModel=${model.organisationSizeFormInputViewModel}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-            <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
+            <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
         </div>
 
         <th:block th:with="formInputViewModel=${model.financialEndYearFormInputViewModel}">
             <div class="question" th:if="${formInputViewModel != null}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
             </div>
         </th:block>
 
@@ -85,7 +85,7 @@
 
         <th:block th:each="formInputViewModel : ${model.standardInputViewModels}">
             <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})" />
             </div>
         </th:block>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
@@ -210,21 +210,21 @@
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
-    <th:block th:fragment="assessment_finances(model)">
-        <th:block th:insert="'finance/'+${detailedCostings.financeView} :: assessment_detailed_finance(${model})" />
+    <th:block th:fragment="assessment_finances(model, internalView)">
+        <th:block th:insert="'finance/'+${detailedCostings.financeView} :: assessment_detailed_finance(model=${model}, internalView=${internalView})" />
     </th:block>
 
-    <th:block th:fragment="funding_finances(model)">
+    <th:block th:fragment="funding_finances(model, internalView)">
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
             <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel})" />
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
             </div>
         </th:block>
         <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
-    <th:block th:fragment="overview_finances(model)">
+    <th:block th:fragment="overview_finances(model, internalView)">
         <h2 class="heading-medium">Funding rules for this competition</h2>
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}">
             <th:block th:if="${formInput.type.displayableFinancialSummaryType}"  th:with="model=${model.openSectionViewModel}" >
@@ -239,7 +239,7 @@
             </th:block>
             <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
                 <div class="wysiwyg-styles">
-                    <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
+                    <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})"></th:block>
                 </div>
             </th:block>
         </th:block>

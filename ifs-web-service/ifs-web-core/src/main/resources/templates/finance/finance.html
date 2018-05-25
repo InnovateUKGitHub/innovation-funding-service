@@ -2,44 +2,42 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
     <!-- ===========================Form: finance =========================== -->
-    <th:block th:fragment="finance">
-        <th:block th:fragment="finance(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-            <th:block th:unless="${model.readonly}">
-                <div th:class="form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-group-error'">
-                    <label class="form-label form-label-bold" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|">
-                        <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'"></div>
-                        <span class="form-hint" th:text="'The maximum funding level is ' + ${model.maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId})" />
-                    </label>
-                    <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                    <input type="number"
-                           min="0"
-                           required="required"
-                           class="form-control width-small"
-                           th:max="${model.maximumGrantClaimPercentage}"
-                           th:readonly="${model.readonly}"
-                           th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-control-error'"
-                           th:id="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
-                           th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
-                           th:value="${model.organisationGrantClaimPercentage}"
-                           placeholder="0"
-                           th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
-                                    data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
-                            />%
-                </div>
-            </th:block>
-            <th:block th:if="${model.readonly}">
-                <dl class="readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
-                    <dt th:text="${question.name}">Your Funding level</dt>
-                    <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
-                </dl>
-            </th:block>
+    <th:block th:fragment="finance(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
+        <th:block th:unless="${model.readonly}">
+            <div th:class="form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-group-error'">
+                <label class="form-label form-label-bold" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|">
+                    <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'"></div>
+                    <span class="form-hint" th:text="'The maximum funding level is ' + ${model.maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId})" />
+                </label>
+                <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+                <input type="number"
+                       min="0"
+                       required="required"
+                       class="form-control width-small"
+                       th:max="${model.maximumGrantClaimPercentage}"
+                       th:readonly="${model.readonly}"
+                       th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-control-error'"
+                       th:id="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
+                       th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
+                       th:value="${model.organisationGrantClaimPercentage}"
+                       placeholder="0"
+                       th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
+                                data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
+                        />%
+            </div>
+        </th:block>
+        <th:block th:if="${model.readonly}">
+            <dl class="readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
+                <dt th:text="${question.name}">Your Funding level</dt>
+                <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
+            </dl>
         </th:block>
     </th:block>
 
     <!-- ===========================Form: organisation_size =========================== -->
-    <th:block th:fragment="organisation_size(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <th:block th:fragment="organisation_size(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
             <h2 class="heading-small no-margin">Organisation size determines funding</h2>
             <p>The organisation size is used to calculate your funding level in the application.</p>
@@ -83,7 +81,7 @@
     </th:block>
 
     <!-- =========================== Form: Organisation Turnover =========================== -->
-    <th:block th:fragment="organisation_turnover(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <th:block th:fragment="organisation_turnover(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
@@ -112,7 +110,7 @@
     </th:block>
 
     <!-- =========================== Form: Staff Count =========================== -->
-    <th:block th:fragment="staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <th:block th:fragment="staff_count(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
@@ -142,7 +140,7 @@
     </th:block>
 
     <!-- =========================== Form: Financial Year End =========================== -->
-    <div th:fragment="financial_year_end(model)" th:with="formInput=${model.formInput}, question=${model.question}"
+    <div th:fragment="financial_year_end(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}"
          class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
         <fieldset th:with="value=(*{formInput[__${formInput.id}__]})">
             <legend th:id="|formInput[${formInput.id}]|">
@@ -195,7 +193,7 @@
     </div>
 
     <!-- =========================== Form: Financial Staff Count =========================== -->
-    <div th:fragment="financial_staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}"
+    <div th:fragment="financial_staff_count(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}"
          class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
         <th:block th:unless="${model.readonly}">
             <label class="form-label form-label-bold" th:for="|formInput[${formInput.id}]|" th:id="'form-label-'+${formInput.id}">
@@ -263,7 +261,7 @@
     </th:block>
 
     <!-- ===========================View: assessor_detailed_finance =========================== -->
-    <th:block th:fragment="assessment_detailed_finance(model)">
+    <th:block th:fragment="assessment_detailed_finance(model, internalView)">
         <h2 class="heading-medium">Detailed finances</h2>
 
         <section class="collapsible" th:each="projectCostSection : ${detailedCostings.defaultProjectCostSections}">
@@ -274,7 +272,7 @@
             <div class="collapsible-content">
                 <th:block th:each="costViewModel : ${projectCostSection.costViews}">
                     <th:block th:if="${costViewModel.formInput.type.displayableFinanceType}">
-                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
+                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (costViewModel=${costViewModel}, internalView=${internalView})" ></th:block>
                     </th:block>
                 </th:block>
             </div>
