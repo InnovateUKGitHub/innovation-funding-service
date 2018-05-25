@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -33,7 +31,6 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidati
 @Service
 public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
-    private static final Log LOG = LogFactory.getLog(ApplicationQuestionSaver.class);
     private static final String MARKED_AS_COMPLETE_INVALID_DATA_KEY = "mark.as.complete.invalid.data.exists";
 
     @Autowired

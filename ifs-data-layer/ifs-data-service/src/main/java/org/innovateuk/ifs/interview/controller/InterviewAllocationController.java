@@ -57,6 +57,11 @@ public class InterviewAllocationController {
         return interviewAllocationService.notifyAllocation(interviewNotifyAllocationResource).toPostResponse();
     }
 
+    @PostMapping("/allocated-applications/{assessorId}/unallocate/{applicationId}")
+    public RestResult<Void> unallocateApplication(@PathVariable long assessorId, @PathVariable long applicationId) {
+        return interviewAllocationService.unallocateApplication(assessorId, applicationId).toPostResponse();
+    }
+
     @GetMapping("/{competitionId}/unallocated-applications/{assessorId}")
     public RestResult<InterviewApplicationPageResource> getUnallocatedApplications(
             @PathVariable long competitionId,

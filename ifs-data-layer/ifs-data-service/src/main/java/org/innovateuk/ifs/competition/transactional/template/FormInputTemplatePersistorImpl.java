@@ -77,10 +77,8 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
     }
 
     private boolean isSectorCompetitionWithScopeQuestion(Competition competition, Question question, FormInput formInput) {
-        if (competition.getCompetitionType().isSector() && question.isScope()) {
-            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK)) {
-                return true;
-            }
+        if (competition.getCompetitionType().isSector() && question.isScope() && (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK))) {
+            return true;
         }
         return false;
     }

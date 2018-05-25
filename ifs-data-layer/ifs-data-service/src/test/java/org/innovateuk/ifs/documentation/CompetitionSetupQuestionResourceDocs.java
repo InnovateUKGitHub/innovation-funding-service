@@ -12,8 +12,6 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("questionId").description("Id of the question"),
             fieldWithPath("number").description("The question number"),
             fieldWithPath("shortTitle").description("Short title of the question"),
-            // @ZeroDowntime(reference = "IFS-2833", description = "Set a default value for questionSetupType. Remove in cleanup")
-            fieldWithPath("shortTitleEditable").description("Boolean to check if title is editable"),
             fieldWithPath("title").description("Title of the question"),
             fieldWithPath("subTitle").description("Sub title of the question"),
             fieldWithPath("guidanceTitle").description("The title of the guidance for the question"),
