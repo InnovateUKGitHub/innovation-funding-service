@@ -26,5 +26,6 @@ SET @new_form_input_type_id = LAST_INSERT_ID();
 INSERT INTO form_input (id, form_input_type_id, competition_id, included_in_application_summary, description, priority, question_id, scope, active)
     VALUES (NULL, @new_form_input_type_id, @programme_template_id, false, 'Application team', '0', @new_question_id, 'APPLICATION', true);
 
-
+-- Update all Application detail questions, so that they have type LEAD_ONLY as well
+UPDATE question SET question_type='LEAD_ONLY' WHERE question_setup_type='APPLICATION_DETAILS';
 

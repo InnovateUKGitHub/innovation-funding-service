@@ -162,6 +162,54 @@ public class ApplicationQuestionController {
         }
     }
 
+    @GetMapping(value = {QUESTION_URL + "application_details"})
+    public String showApplicationDetails(
+            @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @PathVariable(APPLICATION_ID) final Long applicationId,
+            @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
+            UserResource user,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+//        markAsComplete.ifPresent(markAsCompleteSet -> {
+//            if (markAsCompleteSet) {
+//                ValidationMessages errors = applicationSaver.saveApplicationForm(
+//                        applicationId,
+//                        form,
+//                        questionId,
+//                        user.getId(),
+//                        request,
+//                        response,
+//                        Optional.of(Boolean.TRUE)
+//                );
+//                validationHandler.addAnyErrors(errors);
+//            }
+//        });
+
+//        populateShowQuestion(user, applicationId, questionId, model, form);
+
+        return APPLICATION_FORM;
+    }
+
+    @GetMapping(value = {QUESTION_URL + "application_team"})
+    public String showApplicationTeam(
+            @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @PathVariable(APPLICATION_ID) final Long applicationId,
+            @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
+            UserResource user,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        return APPLICATION_FORM;
+    }
+
+
     private boolean hasErrors(HttpServletRequest request, ValidationMessages errors, BindingResult bindingResult) {
         return isUploadWithValidationErrors(request, errors)
                 || isMarkAsCompleteRequestWithValidationErrors(request.getParameterMap(), errors, bindingResult);
