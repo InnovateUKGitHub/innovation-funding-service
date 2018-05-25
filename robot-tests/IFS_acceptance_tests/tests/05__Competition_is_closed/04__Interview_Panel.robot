@@ -198,9 +198,9 @@ Applicant can remove the uploaded response
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
 
-CompAdmin check for interview panel key stats
+CompAdmin checks for interview panel key statistics
     [Documentation]  IFS-3524
-    Given the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}
+    When the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}
     Then the user checks for Manage interview panel key statistics
 
 CompAdmin can access the Allocate applications to assessors screen
