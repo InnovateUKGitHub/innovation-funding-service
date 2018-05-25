@@ -23,9 +23,9 @@ public abstract class AbstractPublicContentSectionViewModelPopulator<M extends A
         publicContentResource.getContentSections().stream()
                 .filter(section -> getType().equals(section.getType()))
                 .findAny()
-                .ifPresent(publicContentSectionResource -> {
-                    populateSection(model, publicContentResource, publicContentSectionResource, nonIFS);
-                });
+                .ifPresent(publicContentSectionResource ->
+                    populateSection(model, publicContentResource, publicContentSectionResource, nonIFS)
+                );
 
 
         return model;

@@ -32,8 +32,6 @@ public class CompetitionSetupQuestionResource {
     private String number;
     @NotBlank
     private String shortTitle;
-    // @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
-    private Boolean shortTitleEditable;
     @NotBlank
     private String title;
     private String subTitle;
@@ -178,16 +176,6 @@ public class CompetitionSetupQuestionResource {
 
     public void setNumber(String number) {
         this.number = number;
-    }
-
-    // @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
-    public Boolean getShortTitleEditable() {
-        return shortTitleEditable;
-    }
-
-    // @ZeroDowntime(reference = "IFS-2833", description = "Not needed anymore because of questionSetupType. Remove in cleanup")
-    public void setShortTitleEditable(Boolean shortTitleEditable) {
-        this.shortTitleEditable = shortTitleEditable;
     }
 
     public String getShortTitle() {

@@ -73,6 +73,6 @@ public class CompetitionManagementCompetitionController {
     }
 
     private boolean isCompetitionTypeEOI(Long competitionId) {
-            return competitionService.getById(competitionId).getCompetitionTypeName().equals("Expression of interest");
+            return "Expression of interest".equals(competitionService.getById(competitionId).getCompetitionTypeName());
     }
 }
