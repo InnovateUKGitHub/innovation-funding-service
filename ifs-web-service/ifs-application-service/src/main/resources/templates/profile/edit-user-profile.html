@@ -74,8 +74,7 @@
                        type="tel"
                        th:errorclass="form-control-error"
                        th:field="*{phoneNumber}"
-                       minlength="8"
-                       maxlength="20"
+                       pattern="^[\\)\\(\\+\s-]*(?:\d[\\)\\(\\+\s-]*){8,20}$"
                        required="required"
                        th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
                                 data-maxlength-errormessage=#{validation.standard.phonenumber.length.max(20)},
