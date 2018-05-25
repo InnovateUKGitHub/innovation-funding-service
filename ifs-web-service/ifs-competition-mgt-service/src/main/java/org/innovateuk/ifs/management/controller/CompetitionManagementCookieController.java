@@ -61,19 +61,30 @@ public abstract class CompetitionManagementCookieController<T> {
     }
 
     protected Optional<T> getSelectionFormFromCookie(HttpServletRequest request, long competitionId) {
-        String selectionCookieJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp_%s", getCookieName(), competitionId));
+        return getSelectionFormFromCookie(request, String.valueOf(competitionId));
+    }
+
+    protected Optional<T> getSelectionFormFromCookie(HttpServletRequest request, String identifier) {
+        String selectionCookieJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp_%s", getCookieName(), identifier));
         if (isNotBlank(selectionCookieJson)) {
             return Optional.ofNullable(getObjectFromJson(selectionCookieJson, getFormType()));
         } else {
             return Optional.empty();
         }
     }
-
     protected void saveFormToCookie(HttpServletResponse response, long competitionId, T selectionForm) {
-        cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", getCookieName(), competitionId), getSerializedObject(selectionForm));
+        saveFormToCookie(response, String.valueOf(competitionId), selectionForm);
+    }
+
+    protected void saveFormToCookie(HttpServletResponse response, String identifier, T selectionForm) {
+        cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", getCookieName(), identifier), getSerializedObject(selectionForm));
     }
 
     protected void removeCookie(HttpServletResponse response, long competitionId) {
-        cookieUtil.removeCookie(response, format("%s_comp_%s", getCookieName(), competitionId));
+        removeCookie(response, String.valueOf(competitionId));
+    }
+
+    protected void removeCookie(HttpServletResponse response, String identifier) {
+        cookieUtil.removeCookie(response, format("%s_comp_%s", getCookieName(), identifier));
     }
 }

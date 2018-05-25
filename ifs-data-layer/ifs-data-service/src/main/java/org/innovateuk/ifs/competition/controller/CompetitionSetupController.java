@@ -107,4 +107,9 @@ public class CompetitionSetupController {
     public RestResult<CompetitionResource> createNonIfs() {
         return competitionSetupService.createNonIfs().toPostCreateResponse();
     }
+
+    @DeleteMapping("{id}")
+    public RestResult<Void> delete(@PathVariable("id") long competitionId) {
+        return competitionSetupService.deleteCompetition(competitionId).toDeleteResponse();
+    }
 }

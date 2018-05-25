@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
+import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -28,6 +30,12 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
 
     @Mock
     private TermsAndConditionsRestService termsAndConditionsRestService;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private CookieUtil cookieUtil;
 
     @Override
     protected SiteTermsController supplyControllerUnderTest() {

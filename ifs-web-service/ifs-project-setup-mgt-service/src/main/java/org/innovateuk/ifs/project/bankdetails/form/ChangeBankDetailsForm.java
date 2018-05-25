@@ -21,6 +21,7 @@ public class ChangeBankDetailsForm {
     private String registrationNumber;
 
     @NotBlank(message = "{validation.standard.organisationname.required}")
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String organisationName;
 
     @Pattern(regexp = "\\d{6}", message = "{validation.standard.sortcode.format}")

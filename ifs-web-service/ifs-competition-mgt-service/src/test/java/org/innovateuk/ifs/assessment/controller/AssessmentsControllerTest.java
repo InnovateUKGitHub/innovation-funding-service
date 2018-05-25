@@ -27,7 +27,6 @@ public class AssessmentsControllerTest extends BaseControllerMockMVCTest<Assessm
 
     @Test
     public void manageAssessments() throws Exception {
-        final int expectedCompetitionId = 13;
         final String expectedCompetitionName = "Test Competition";
         final CompetitionStatus expectedCompetitionStatus = CompetitionStatus.IN_ASSESSMENT;
         final int expectedAssignmentCount = 2;
@@ -50,7 +49,7 @@ public class AssessmentsControllerTest extends BaseControllerMockMVCTest<Assessm
 
         ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource);
 
-        when(manageAssessmentsModelPopulatorMock.populateModel(expectedCompetitionId)).thenReturn(expectedModel);
+        when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId())).thenReturn(expectedModel);
 
         mockMvc.perform(get("/assessment/competition/{competitionId}", competitionResource.getId()))
                 .andExpect(status().isOk())

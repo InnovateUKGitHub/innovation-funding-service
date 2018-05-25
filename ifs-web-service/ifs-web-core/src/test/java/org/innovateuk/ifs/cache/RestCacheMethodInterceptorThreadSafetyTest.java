@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,9 +26,7 @@ import static org.innovateuk.ifs.async.AsyncExecutionTestHelper.BLOCKING_TIMEOUT
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isReadLocked;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isWriteLocked;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -40,7 +38,7 @@ import static org.mockito.Mockito.when;
  * single Controller call can safely share cache results and add cache results to the existing set of results
  * between the various Threads its Futures execute within.
  */
-public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMocksTest {
+public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTest {
 
     @InjectMocks
     private RestCacheMethodInterceptor interceptor;

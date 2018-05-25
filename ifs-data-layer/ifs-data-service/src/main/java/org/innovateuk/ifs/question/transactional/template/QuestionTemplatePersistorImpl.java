@@ -3,6 +3,7 @@ package org.innovateuk.ifs.question.transactional.template;
 import org.innovateuk.ifs.competition.transactional.template.BaseChainedTemplatePersistor;
 import org.innovateuk.ifs.competition.transactional.template.BaseTemplatePersistor;
 import org.innovateuk.ifs.competition.transactional.template.FormInputTemplatePersistorImpl;
+import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -74,8 +76,11 @@ public class QuestionTemplatePersistorImpl implements BaseChainedTemplatePersist
 
     private Function<Question, Question> createQuestionFunction() {
         return (Question question) -> {
+            ArrayList<FormInput> formInputsCopy = new ArrayList<>(question.getFormInputs());
+
             entityManager.detach(question);
             question.setId(null);
+            question.setFormInputs(formInputsCopy);
             questionRepository.save(question);
 
             question.setFormInputs(formInputTemplateService.persistByParentEntity(question));
