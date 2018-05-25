@@ -207,21 +207,22 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupPostWithRestResultVerifications(applicationRestURL + "/" + applicationId + "/withdraw", Void.class, null);
     }
 
-    //TODO - XXX - FIx this
-/*    @Test
+    @Test
     public void findUnsuccessfulApplications() {
         int pageNumber = 0;
         int pageSize = 20;
         String sortField = "id";
+        String filter = "ALL";
 
         ApplicationPageResource applicationPage = new ApplicationPageResource();
 
-        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
+        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
 
-        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccess();
+        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
         assertNotNull(result);
         Assert.assertEquals(applicationPage, result);
-    }*/
+        setupGetWithRestResultVerifications(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", null, ApplicationPageResource.class);
+    }
 
     @Test
     public void getLatestEmailFundingDate() {
