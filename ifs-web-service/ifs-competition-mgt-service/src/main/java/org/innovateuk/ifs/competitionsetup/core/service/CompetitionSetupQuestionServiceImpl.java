@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.core.service;
 
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
@@ -110,6 +111,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
         return questionResources.stream()
                 .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()) && !question.getName().equals("Application details"))
+                .filter(question -> question.getType() != QuestionType.LEAD_ONLY) // TODO: IFS-3088
                 .map(questionResource -> questionResource.getId())
                 .collect(Collectors.toList());
     }
