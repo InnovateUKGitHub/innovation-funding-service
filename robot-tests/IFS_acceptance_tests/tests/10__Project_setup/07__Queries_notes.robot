@@ -20,7 +20,7 @@ Documentation
 ...
 ...               IFS-2746 External queries redesign: query statuses and banner messages
 Suite Setup       Custom Suite Setup
-#Suite Teardown    Close browser and delete emails
+Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
@@ -38,9 +38,8 @@ ${opens_in_new_window}    (opens in a new window)
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
-    [Setup]  finance contacts are selected and bank details are approved
-    Given log in as a different user      &{internal_finance_credentials}
-    When the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
+    Given Logging in and Error Checking   &{internal_finance_credentials}
+    When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
     And the user clicks the button/link   jQuery=.button:contains("Queries")
     Then the user should see the element  jQuery=h2:contains("Queries")
     When the user clicks the button/link  jQuery=.button:contains("Post a new query")
@@ -49,7 +48,7 @@ Queries section is linked from eligibility and this selects eligibility on the q
 Queries section is linked from viability and this selects viability on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]
-    [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Given the user clicks the button/link    jQuery=table.table-progress th:contains("Lead") + td a
     When the user clicks the button/link     jQuery=.button:contains("Queries")
     And the user clicks the button/link      jQuery=.button:contains("Post a new query")
@@ -58,16 +57,16 @@ Queries section is linked from viability and this selects viability on the query
 Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
     [Tags]
-    [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     When the user clicks the button/link     css=table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the element     jQuery=h2:contains("Queries")
 
 Queries section contains finance contact name, email and telephone
     [Documentation]    INFUND-4840
     [Tags]
-    When the user should see the element    jQuery=#content p:nth-of-type(1):contains("Sarah Peacock")
-    And the user should see the element     jQuery=#content p:nth-of-type(1):contains("74373688727")
-    And the user should see the element     jQuery=#content p:nth-of-type(1):contains(${successful_applicant_credentials["email"]})
+    When the user should see the element    jQuery=#content p:nth-of-type(1):contains("Becky Mason")
+    And the user should see the element     jQuery=#content p:nth-of-type(1):contains("3578109078")
+    And the user should see the element     jQuery=#content p:nth-of-type(1):contains(${PublicSector_lead_applicant_credentials["email"]})
 
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840
@@ -85,7 +84,7 @@ Project finance user can upload a pdf file
 Project finance can remove the file
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query/new-query
+    Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query/new-query
     When the user clicks the button/link  name=removeAttachment
     Then the user should not see the text in the page    ${valid_pdf}
     And the user should not see an error in the page
@@ -131,7 +130,7 @@ New query can be cancelled
 Query can be re-entered (Eligibility)
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
-    When the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query
+    When the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query
     And the user clicks the button/link    jQuery=.button:contains("Post a new query")
     And the user enters text to a text field    id=queryTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some query text
@@ -159,9 +158,9 @@ Query Section dropdown filters the queries displayed
 Finance contact receives an email when new query is posted and can see a pending query
     [Documentation]  INFUND-4841 IFS-2746
     [Tags]  Email
-    [Setup]  log in as a different user     &{successful_applicant_credentials}
-    Given the user reads his email          ${successful_applicant_credentials["email"]}  ${PROJECT_SETUP_COMPETITION_NAME}: Query regarding your finances for project ${PROJECT_SETUP_APPLICATION_1}  We have raised a query around your project finances.
-    When the user navigates to the page     ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    [Setup]  log in as a different user     &{PublicSector_lead_applicant_credentials}
+    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  Query regarding your finances  We have raised a query around your project finances.
+    When the user navigates to the page     ${server}/project-setup/project/${Queries_Application_Project}
     Then the user should see the element    css=.status-warning  #Pending query
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=#title-query-1:contains("Pending query")
@@ -170,8 +169,8 @@ Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
     [Tags]
     [Setup]  log in as a different user       &{internal_finance_credentials}
-    Given the user navigates to the page      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user clicks the button/link      jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("View")
+    Given the user navigates to the page      ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
+    Then the user clicks the button/link      jQuery=th:contains("${Dreambit_Name}") ~ td:contains("View")
     When the user clicks the button/link      css=a[id="post-new-query"]
     And the user enters text to a text field  id=queryTitle  a viability query's title
     And the user selects the option from the drop-down menu  VIABILITY    id=section
@@ -186,21 +185,21 @@ Queries show in reverse chronological order
     When the user should see the element  jQuery=h2:nth-of-type(1):contains("a viability query's title")
     Then the user should see the element  jQuery=h2:nth-of-type(2):contains("an eligibility query's title")
     # Query responses tab
-    When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/queries
+    When the user navigates to the page    ${server}/project-setup-management/competition/${Queries_Application_Project}/status/queries
     Then the user should see the element   jQuery=p:contains("There are no outstanding queries.")
 
 Applicant - Finance contact can view query
     [Documentation]    INFUND-4843
     [Tags]
-    Given log in as a different user      &{successful_applicant_credentials}
-    When the user navigates to the page   ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/finance-checks
+    Given log in as a different user      &{PublicSector_lead_applicant_credentials}
+    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
     Then the user should see the element  jQuery=h2:contains("an eligibility query's title")
     And the user should see the element   jQuery=h2:contains("a viability query's title")
 
 Applicant - Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
     [Tags]
-    When the user downloads the file  ${successful_applicant_credentials["email"]}  ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/finance-checks/attachment/4  ${DOWNLOAD_FOLDER}/${valid_pdf}
+    When the user downloads the file  ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup/project/${Queries_Application_Project}/finance-checks/attachment/4  ${DOWNLOAD_FOLDER}/${valid_pdf}
     Then remove the file from the operating system  testing.pdf
 
 Applicant - Response to query server side validations
@@ -239,8 +238,8 @@ Applicant - Query response can be posted
     When the user clicks the button/link      jQuery=.button:contains("Post response")
     Then the user should not see the element  jQuery=.button:contains("Post response")
     And the user should see the element       jQuery=h2:contains("an eligibility") .section-awaiting
-    And the user should see the element       jQuery=.heading-small:contains("Sarah Peacock") small:contains("${today}")
-    And the user should see the element       jQuery=.heading-small:contains("Sarah Peacock") ~ .heading-small:contains("Supporting documentation")
+    And the user should see the element       jQuery=.heading-small:contains("Becky Mason") small:contains("${today}")
+    And the user should see the element       jQuery=.heading-small:contains("Becky Mason") ~ .heading-small:contains("Supporting documentation")
 
 Applicant - Respond to older query
     [Documentation]    INFUND-4843
@@ -248,7 +247,7 @@ Applicant - Respond to older query
     Given the user clicks the button/link      jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
     When the user enters text to a text field  css=.editor    one more response to the eligibility query
     Then the user clicks the button/link       jQuery=.button:contains("Post response")
-    And the user should see the element        jQuery=.panel + .panel:contains("Sarah ")  #is the 2nd response
+    And the user should see the element        jQuery=.panel + .panel:contains("Becky ")  #is the 2nd response
 
 Applicant - Repond to Viability query
     [Documentation]  IFS-2746
@@ -263,18 +262,18 @@ IFS Admin can see queries raised column updates to 'view'
     [Documentation]    INFUND-4843, IFS-603
     [Tags]  #Administrator
     Given log in as a different user       &{ifs_admin_user_credentials}
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    When the user navigates to the page    ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
 
 IFS Admin can see applicant's response flagged in Query responses tab and mark discussion as Resolved
     [Documentation]  IFS-1882 IFS-1987
     [Tags]  #Administrator
     # Query responses tab
-    Given the user navigates to the page  ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/queries
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${Queries_Competition_Id}/status/queries
     When the user clicks the button/link  link=Query responses (1)
-    Then the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + td:contains("${EMPIRE_LTD_NAME}")
-    When the user clicks the button/link  link=${EMPIRE_LTD_NAME}
-    Then the user should see the element  jQuery=h1:contains("${EMPIRE_LTD_NAME}")
+    Then the user should see the element  jQuery=td:contains("${Queries_Application_Title}") + td:contains("${Dreambit_Name}")
+    When the user clicks the button/link  link=${Dreambit_Name}
+    Then the user should see the element  jQuery=h1:contains("${Dreambit_Name}")
     And the user should see the element   link=Post a new query
     When the user expands the section     a viability query's title
     Then the query conversation can be resolved by  Arden Pimenta  viability
@@ -284,10 +283,10 @@ Project finance user can view the response and uploaded files
     [Documentation]    INFUND-4843
     [Tags]
     [Setup]  log in as a different user   &{internal_finance_credentials}
-    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     When the user clicks the button/link  css=table.table-progress tr:nth-child(1) td:nth-child(6)  # View
     And the user expands the section      an eligibility query's title
-    Then the user should see the element  jQuery=.heading-small:contains("Sarah") + p:contains("This is some response text")
+    Then the user should see the element  jQuery=.heading-small:contains("Becky") + p:contains("This is some response text")
     And the user should see the element   jQuery=.panel li:nth-of-type(1) a:contains("${valid_pdf}")
 
 Project finance user can continue the conversation
@@ -300,13 +299,13 @@ Project finance user can continue the conversation
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753
     [Tags]    Email
-    Then the user reads his email    ${successful_applicant_credentials["email"]}    ${PROJECT_SETUP_COMPETITION_NAME}: You have a reply to your query for project ${PROJECT_SETUP_APPLICATION_1}    We have replied to a query regarding your finances
+    Then the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}    You have a reply to your query    We have replied to a query regarding your finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752
     [Tags]
-    Given log in as a different user      &{successful_applicant_credentials}
-    When the user clicks the button/link  jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    Given log in as a different user      &{PublicSector_lead_applicant_credentials}
+    When the user clicks the button/link  jQuery=.projects-in-setup a:contains("${Queries_Application_Title}")
     And the user clicks the button/link   link=Finance checks
     Then the user should see the element  jQuery=.heading-small:contains("Finance team") + .wysiwyg-styles:contains("This is a response to a response")
 
@@ -314,7 +313,7 @@ Project Finance user is able to mark a query discussion as complete
     [Documentation]  IFS-1987
     [Tags]  HappyPath
     Given log in as a different user     &{internal_finance_credentials}
-    When the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query
+    When the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query
     And the user expands the section     an eligibility query's title
     Then the query conversation can be resolved by  Lee Bowman  eligibility
     And the user should not see the element         jQuery=h2:contains("an eligibility query's title") + [id^="finance-checks-internal-query"] a:contains("Respond")
@@ -323,8 +322,8 @@ Project Finance user is able to mark a query discussion as complete
 Applicant can see the the queries resolved
     [Documentation]  IFS-1987 IFS-2746
     [Tags]
-    Given log in as a different user      &{successful_applicant_credentials}
-    When the user navigates to the page   ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
+    Given log in as a different user      &{PublicSector_lead_applicant_credentials}
+    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
     Then the user should see the element  jQuery=h2:contains("an eligibility query's title") .section-complete
     And the user should see the element   jQuery=h2:contains("a viability query's title") .section-complete
     And the user should not be able to respond to resolved queries
@@ -333,7 +332,7 @@ Link to notes from viability section
     [Documentation]    INFUND-4845
     [Tags]
     Given log in as a different user      &{internal_finance_credentials}
-    When the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     And the user clicks the button/link   css=table.table-progress tr:nth-child(1) td:nth-child(2)
     And the user clicks the button/link   jQuery=.button:contains("Notes")
     Then the user should see the element  jQuery=h2:contains("Review notes")
@@ -342,14 +341,14 @@ Link to notes from viability section
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
+    Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
     And the user clicks the button/link   jQuery=.button:contains("Notes")
     Then the user should see the element  jQuery=.button:contains("Create a new note")
 
 Link to notes from main finance checks summary page
     [Documentation]    INFUND-4845
     [Tags]
-    When the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     And the user clicks the button/link   css=table.table-progress tr:nth-child(1) td:nth-child(7)  # View Notes of Empire Ltd
 
 Project finance can upload a pdf file to notes
@@ -537,7 +536,7 @@ Note comment can be posted
 Custom Suite Setup
     ${today} =  get today
     set suite variable  ${today}
-    Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    The guest user opens the browser
 
 The query conversation can be resolved by
     [Arguments]  ${user}  ${section}
