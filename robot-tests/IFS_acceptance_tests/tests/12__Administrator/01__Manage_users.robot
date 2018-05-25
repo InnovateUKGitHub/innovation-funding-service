@@ -106,7 +106,7 @@ Invited user can receive the invitation
     [Setup]  the guest user opens the browser
     The invitee reads his email and clicks the link  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
 
-Account creation validation checks
+Account creation validation checks - Blank
     [Documentation]  IFS-643
     [Tags]  HappyPath
     Given the user clicks the button/link   jQuery=.button:contains("Create account")
@@ -116,8 +116,16 @@ Account creation validation checks
     When the user enters text to a text field  css=#firstName  New
     And the user enters text to a text field   css=#lastName  Administrator
     And the user enters text to a text field   css=#password  ${correct_password}
-    Then the user cannot see a validation error in the page
-    And the user should see the element        jQuery=h3:contains("Email") + p:contains("ifs.innovationLead@innovateuk")
+    Then the user should see the element        jQuery=h3:contains("Email") + p:contains("ifs.innovationLead@innovateuk")
+    And the user cannot see a validation error in the page
+
+Account creation validation checks - Lowercase password
+    [Documentation]  IFS-3554
+    [Tags]
+    Given the user enters text to a text field  id=password  PASSWORD123
+    When The user clicks the button/link        jQuery=.button:contains("Create account")
+    Then The user should see a field and summary error  Password must contain at least one lower case letter.
+    [Teardown]  the user enters text to a text field   css=#password  ${correct_password}
 
 New user account is created and verified
     [Documentation]  IFS-643 IFS-983
