@@ -32,7 +32,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     @Autowired
     private QuestionService questionService;
 
-    public QuestionViewModel populateModel(ApplicantQuestionResource question, final Model model, final ApplicationForm form) {
+    public QuestionViewModel populateModel(ApplicantQuestionResource question, final ApplicationForm form) {
         List<AbstractFormInputViewModel> formInputViewModels = formInputViewModelGenerator.fromQuestion(question, form);
         NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question.getQuestion(), question.getApplication().getId());
         removeNotifications(question);

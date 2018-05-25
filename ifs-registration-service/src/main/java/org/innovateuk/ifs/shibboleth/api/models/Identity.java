@@ -118,7 +118,7 @@ public final class Identity {
                 '}';
     }
 
-    public static class Constants {
+    public static final class Constants {
 
         public static final String UUID = "uid";
         public static final String EMAIL = "mail";
@@ -131,6 +131,8 @@ public final class Identity {
         // e.g. their email has been validated
         static final String USER_STATUS_ACTIVE = "active";
         static final String USER_STATUS_INACTIVE = "inactive";
+
+        private Constants() {}
 
         public static final String[] ATTRIBUTES = {
             UUID,

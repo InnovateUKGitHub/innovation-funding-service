@@ -84,7 +84,7 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     }
 
     private ApplicantSectionResource findChildSectionByType(ApplicantSectionResource section, SectionType sectionType) {
-        return section.getApplicantChildrenSections().stream().filter(child -> child.getSection().getType().equals(sectionType)).findAny().orElse(null);
+        return section.getApplicantChildrenSections().stream().filter(child -> child.getSection().getType().equals(sectionType)).findAny().get();
     }
 
     @Override

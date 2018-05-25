@@ -44,22 +44,16 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
 
-		setFieldsDisallowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
 		setFieldsAllowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
 
 		try {
 			competitionSetupRestService.update(competition).getSuccess();
 		} catch (RuntimeException e) {
-			LOG.error("Competition object not available");
+			LOG.error("Competition object not available", e);
 			return serviceFailure(asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST)));
 		}
 
 		return serviceSuccess();
-	}
-
-
-	private void setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
-		//All fields set by saver are valid when live. Competition code cannot be set, but is not saved via this class.
 	}
 
 	private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
@@ -83,7 +77,7 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 															  String value,
 															  Optional<Long> questionId) {
 		if("removeFunder".equals(fieldName)) {
-			return removeFunder(competitionResource, fieldName, value);
+			return removeFunder(competitionResource, value);
 		} else if (fieldName.contains("funder")) {
 			return tryUpdateFunders(competitionResource, fieldName, value);
 		} else {
@@ -91,7 +85,7 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 		}
 	}
 
-	private ServiceResult<Void> removeFunder(CompetitionResource competitionResource, String fieldName, String value) {
+	private ServiceResult<Void> removeFunder(CompetitionResource competitionResource, String value) {
 		int index = Integer.valueOf(value);
 		//If the index is out of range then ignore it, The UI will add rows without them being persisted yet.
 		if (competitionResource.getFunders().size() <= index) {

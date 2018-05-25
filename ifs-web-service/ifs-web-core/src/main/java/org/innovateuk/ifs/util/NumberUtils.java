@@ -13,7 +13,9 @@ import java.util.Locale;
 /**
  * This class is a general util class containing method converting or handling some kind of {@link Number} object.
  */
-public class NumberUtils {
+public final class NumberUtils {
+
+    private NumberUtils() {}
 
     public static BigDecimal getBigDecimalValue(String value, Double defaultValue) {
         value = cleanNumberValue(value);

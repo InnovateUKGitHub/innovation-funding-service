@@ -32,12 +32,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * HttpServletRequest-handling Thread so that we can halt rendering of any templates from the Controllers until all
  * Futures have completed.
  */
-public class AsyncFuturesHolder {
+public final class AsyncFuturesHolder {
 
     private static final Log LOG = LogFactory.getLog(AsyncFuturesGenerator.class);
 
     private static final ThreadLocal<Queue<RegisteredAsyncFutureDetails<?>>> ASYNC_FUTURES = new ThreadLocal<>();
     private static final ThreadLocal<AsyncFutureDetails> CURRENTLY_EXECUTING_ASYNC_FUTURE = new ThreadLocal<>();
+
+    private AsyncFuturesHolder() {}
 
     /**
      * This method, given a future, will register this future as a future to be tracked by this Thread (and by the parent

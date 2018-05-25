@@ -20,12 +20,6 @@ import java.util.List;
 @RequestMapping("/competition/postSubmission")
 public class CompetitionPostSubmissionController {
 
-    private static final String DEFAULT_PAGE_NUMBER = "0";
-
-    private static final String DEFAULT_PAGE_SIZE = "20";
-
-    private static final String DEFAULT_SORT_BY = "id";
-
     @Autowired
     private CompetitionService competitionService;
 
