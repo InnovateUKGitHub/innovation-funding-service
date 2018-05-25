@@ -50,7 +50,7 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
 
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
 
         competition = CompetitionResourceBuilder.newCompetitionResource().build();
         parentSection = newSectionResource().withCompetition(competition.getId()).build();

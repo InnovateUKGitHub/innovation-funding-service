@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentMenuPopulator;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
@@ -43,6 +44,9 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
 
     @Mock
     private CompetitionSetupService competitionSetupService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected PublicContentMenuController supplyControllerUnderTest() {

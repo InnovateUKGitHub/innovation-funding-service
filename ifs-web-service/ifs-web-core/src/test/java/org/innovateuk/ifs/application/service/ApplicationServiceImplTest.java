@@ -48,10 +48,9 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     private CompetitionResource fundersPanelCompetition;
     private CompetitionResource closedCompetition;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
 
         userId = 1L;
 

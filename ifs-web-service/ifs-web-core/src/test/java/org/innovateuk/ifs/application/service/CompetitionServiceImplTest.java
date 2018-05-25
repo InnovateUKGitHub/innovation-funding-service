@@ -47,10 +47,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         return new CompetitionServiceImpl();
     }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
     }
 
     @Test

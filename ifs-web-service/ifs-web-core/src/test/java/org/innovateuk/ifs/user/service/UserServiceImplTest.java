@@ -41,10 +41,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Mock
     private UserRestService userRestService;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
 
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER))).thenReturn(restSuccess());
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError()));
