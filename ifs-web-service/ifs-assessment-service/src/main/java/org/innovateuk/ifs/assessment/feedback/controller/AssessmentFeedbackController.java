@@ -112,7 +112,7 @@ public class AssessmentFeedbackController {
                     .getSuccess();
             return createJsonObjectNode(true);
         } catch (Exception e) {
-            LOG.error("exception throwsn updating input form response", e);
+            LOG.error("exception thrown updating input form response", e);
             return createJsonObjectNode(false);
         }
     }
