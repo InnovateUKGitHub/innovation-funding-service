@@ -323,7 +323,7 @@ the compAdmin can cancel allocating applications to assessor
     the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
 
 the user checks for Manage interview panel key statistics
-    ${applicaitons_assigned}=  Get Text  css=ul li:nth-child(1) span
+    ${applications_assigned}=  Get Text  css=ul li:nth-child(1) span
     ${assessor_accepted}=      Get Text  css=ul li:nth-child(3) span
     ${feedback_responded}=     Get Text  css=ul li:nth-child(2) span
     the user should see the element      jQUery=div span:contains("${feedback_responded}") ~ small:contains("Applications responded to feedback")
