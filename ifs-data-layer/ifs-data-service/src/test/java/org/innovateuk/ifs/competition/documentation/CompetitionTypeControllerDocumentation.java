@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.controller.CompetitionTypeController;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
@@ -25,6 +26,7 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
         return new CompetitionTypeController();
     }
 
+    @ZeroDowntime(reference = "IFS-3288", description = "Remove stateAid field from the responseFields in the next release")
     @Test
     public void findAll() throws Exception {
         when(competitionSetupService.findAllTypes()).thenReturn(ServiceResult.serviceSuccess(asList(new CompetitionTypeResource())));
@@ -36,6 +38,7 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
                             fieldWithPath("[].id").description("id of the competition type"),
                             fieldWithPath("[].name").description("name of the competition type"),
                             fieldWithPath("[].competitions").description("competition ids that have this type"),
+                            fieldWithPath("[].stateAid").description("the competition id"),
                             fieldWithPath("[].active").description("indicates if the competition type is active")
                     )
                 ));
