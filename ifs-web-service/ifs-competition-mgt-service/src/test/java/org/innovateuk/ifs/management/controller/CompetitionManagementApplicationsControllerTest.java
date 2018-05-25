@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.*;
@@ -73,6 +74,9 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private CompetitionService competitionService;
 
     @InjectMocks
     @Spy
