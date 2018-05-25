@@ -34,7 +34,7 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
     }
 
     @Test

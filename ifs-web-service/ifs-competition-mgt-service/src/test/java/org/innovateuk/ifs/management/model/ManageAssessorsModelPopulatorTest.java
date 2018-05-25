@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.viewmodel.ManageAssessorsRowViewModel;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.management.viewmodel.ManageAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 
 import java.util.List;
@@ -29,6 +31,9 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
     @Spy
     @InjectMocks
     private ManageAssessorsModelPopulator manageAssessorsModelPopulator;
+
+    @Mock
+    private CategoryRestService categoryRestServiceMock;
 
     @Test
     public void populateModel() {

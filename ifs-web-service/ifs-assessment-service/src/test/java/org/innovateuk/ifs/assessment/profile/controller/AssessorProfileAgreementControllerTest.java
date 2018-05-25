@@ -2,19 +2,18 @@ package org.innovateuk.ifs.assessment.profile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileAgreementModelPopulator;
-import org.innovateuk.ifs.assessment.profile.controller.AssessorProfileAgreementController;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileAgreementViewModel;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -29,6 +28,9 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
     @Spy
     @InjectMocks
     private AssessorProfileAgreementModelPopulator assessorProfileAgreementModelPopulator;
+
+    @Mock
+    private ProfileRestService profileRestService;
 
     @Override
     protected AssessorProfileAgreementController supplyControllerUnderTest() {

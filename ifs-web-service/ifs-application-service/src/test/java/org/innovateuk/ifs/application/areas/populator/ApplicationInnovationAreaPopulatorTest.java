@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.application.areas.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.application.areas.populator.ApplicationInnovationAreaPopulator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -19,6 +21,11 @@ public class ApplicationInnovationAreaPopulatorTest extends BaseUnitTest {
     @InjectMocks
     private ApplicationInnovationAreaPopulator populator;
 
+    @Mock
+    private ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
+
+    @Mock
+    private ApplicationRestService applicationRestService;
 
     @Test
     public void populate() throws Exception {

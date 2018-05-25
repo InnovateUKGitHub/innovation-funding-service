@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
@@ -19,7 +22,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
+    @Mock
+    private ProjectService projectService;
 
+    @Mock
+    private MonitoringOfficerService monitoringOfficerService;
     @Test
     public void testViewMonitoringOfficer() throws Exception {
 
