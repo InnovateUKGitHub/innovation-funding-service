@@ -111,7 +111,8 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isAssessmentPanelEnabled() {
-        return assessmentPanelEnabled;
+        return assessmentPanelEnabled && competitionStatus != READY_TO_OPEN &&
+                competitionStatus != OPEN && competitionStatus != ASSESSOR_FEEDBACK;
     }
 
     public boolean isInterviewPanelEnabled() {
