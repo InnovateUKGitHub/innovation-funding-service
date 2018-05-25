@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -55,7 +56,7 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
     public ServiceResult<ApplicantInterviewInviteResource> getEmailTemplate() {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_applicants_to_interview_panel_text.txt",
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, PREVIEW_TEMPLATES_PATH + "invite_applicants_to_interview_panel_text.txt",
                 Collections.emptyMap()).andOnSuccessReturn(content -> new ApplicantInterviewInviteResource(content));
     }
 

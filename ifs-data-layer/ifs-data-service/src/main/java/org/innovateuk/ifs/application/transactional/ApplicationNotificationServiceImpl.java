@@ -30,7 +30,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 
@@ -84,7 +83,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
                     applicationRepository.save(application);
                     String bodyPlain = stripHtml(applicationIneligibleSendResource.getMessage());
-                    String bodyHtml = plainTextToHtml(bodyPlain);
 
                     NotificationTarget recipient = new UserNotificationTarget(
                                     application.getLeadApplicant().getName(),
@@ -96,7 +94,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                             Notifications.APPLICATION_INELIGIBLE,
                             asMap("subject", applicationIneligibleSendResource.getSubject(),
                                     "bodyPlain", bodyPlain,
-                                    "bodyHtml", bodyHtml)
+                                    "bodyHtml", applicationIneligibleSendResource.getMessage())
                     );
                     return notificationSender.sendNotification(notification);
                 }).andOnSuccessReturnVoid();

@@ -53,12 +53,18 @@
                     <span class="error-message" th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
                 </th:block>
             </label>
-            <textarea id="message"
-                      rows="16"
-                      class="form-control width-full"
-                      th:field="*{message}"
-                      required="required"
-                      th:attr="data-required-errormessage=#{validation.informleadapplicant.message.required}"></textarea>
+            <div class="textarea-wrapped">
+                <textarea id="message"
+                          rows="16"
+                          class="form-control width-full"
+                          data-editor="html"
+                          th:errorclass="form-control-error"
+                          maxlength="5000"
+                          ifs:utext="${form.message}"
+                          th:field="*{message}"
+                          required="required"
+                          th:attr="data-required-errormessage=#{validation.informleadapplicant.message.required}"></textarea>
+            </div>
         </div>
 
         <div class="extra-margin">
