@@ -50,7 +50,7 @@ public class AssessorSelectionForm extends BaseBindingResultTarget {
 
     public boolean anySelectionIsMade() {
         return this.allSelected != false ||
-                this.selectedAssessorIds.size() > 0;
+                !this.selectedAssessorIds.isEmpty();
     }
 
     @Override

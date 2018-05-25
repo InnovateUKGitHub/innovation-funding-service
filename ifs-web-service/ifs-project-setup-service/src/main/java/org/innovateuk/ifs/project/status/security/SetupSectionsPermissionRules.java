@@ -226,7 +226,7 @@ public class SetupSectionsPermissionRules {
 
             return sectionCheckFn.apply(sectionAccessor, organisation) == ACCESSIBLE;
         } catch (ForbiddenActionException e) {
-            LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
+            LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup", e);
             return false;
         }
     }

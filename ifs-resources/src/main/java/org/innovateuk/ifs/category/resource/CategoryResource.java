@@ -12,12 +12,6 @@ public abstract class CategoryResource {
     public CategoryResource() {
     }
 
-    protected CategoryResource(Long id, String name, String description, CategoryType type) {
-        this.id = id;
-        this.name= name;
-        this.description = description;
-    }
-
     public Long getId() {
         return id;
     }
