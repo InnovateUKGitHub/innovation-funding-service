@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -16,7 +14,6 @@ import javax.validation.constraints.NotNull;
  * or for sending it over.
  */
 public class MaterialsHandler extends FinanceRowHandler<Materials> {
-    private static final Log LOG = LogFactory.getLog(MaterialsHandler.class);
     public static final String COST_KEY = "materials";
 
     @Override

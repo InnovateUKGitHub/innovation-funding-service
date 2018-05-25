@@ -111,14 +111,14 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
         return find(competitionRepository.findById(competitionId),
                     notFoundError(Competition.class, competitionId))
-            .andOnSuccessReturnVoid(competition -> {
+            .andOnSuccessReturnVoid(competition ->
                 find(userRepository.findOne(innovationLeadUserId),
                      notFoundError(User.class, innovationLeadUserId))
                 .andOnSuccess(innovationLead -> {
                     innovationLeadRepository.save(new InnovationLead(competition, innovationLead));
                     return serviceSuccess();
-                });
-            });
+                })
+            );
     }
 
     @Override

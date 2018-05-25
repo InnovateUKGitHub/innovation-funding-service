@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
@@ -36,6 +38,8 @@ import static java.util.stream.Collectors.toList;
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingNotificationsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementFundingNotificationsController extends CompetitionManagementCookieController<FundingNotificationSelectionCookie> {
+
+    private static final Log LOG = LogFactory.getLog(CompetitionManagementFundingNotificationsController.class);
 
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
     private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
@@ -230,6 +234,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
 
             return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingNotificationSelectionForm().getIds().size(), selectionCookie.getFundingNotificationSelectionForm().isAllSelected(), limitIsExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown selecting application for email list", e);
             return createFailureResponse();
         }
     }
@@ -267,6 +272,8 @@ public class CompetitionManagementFundingNotificationsController extends Competi
             saveFormToCookie(response, competitionId, selectionCookie);
             return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingNotificationSelectionForm().getIds().size(), selectionCookie.getFundingNotificationSelectionForm().isAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown adding applications to email list", e);
+
             return createFailureResponse();
         }
     }

@@ -206,21 +206,9 @@ public class ApplicationModelPopulator {
     }
 
     public void addApplicationInputs(ApplicationResource application, Model model) {
-
         model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
-
         model.addAttribute("applicationTitle", application.getName());
         model.addAttribute("applicationDuration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() == null){
-            model.addAttribute("applicationStartdateDay", "");
-            model.addAttribute("applicationStartdateMonth", "");
-            model.addAttribute("applicationStartdateYear", "");
-        }
-        else{
-            model.addAttribute("applicationStartdateDay", String.valueOf(application.getStartDate().getDayOfMonth()));
-            model.addAttribute("applicationStartdateMonth", String.valueOf(application.getStartDate().getMonthValue()));
-            model.addAttribute("applicationStartdateYear", String.valueOf(application.getStartDate().getYear()));
-        }
     }
 
     public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,

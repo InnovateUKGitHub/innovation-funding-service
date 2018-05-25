@@ -134,14 +134,14 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
 
                 List<AssessorFormInputResponseResource> questionScore = assessorResponses
                         .stream()
-                        .filter(response -> formInputRestService.getById(response.getFormInput())
-                                .getSuccess().getDescription().equals("Question score"))
+                        .filter(response -> "Question score".equals(formInputRestService.getById(response.getFormInput())
+                                .getSuccess().getDescription()))
                         .collect(toList());
 
                 List<AssessorFormInputResponseResource> questionFeedback = assessorResponses
                         .stream()
-                        .filter(response -> formInputRestService.getById(response.getFormInput())
-                                .getSuccess().getDescription().equals("Feedback"))
+                        .filter(response -> "Feedback".equals(formInputRestService.getById(response.getFormInput())
+                                .getSuccess().getDescription()))
                         .collect(toList());
 
                 model.addAttribute("feedback", questionFeedback);

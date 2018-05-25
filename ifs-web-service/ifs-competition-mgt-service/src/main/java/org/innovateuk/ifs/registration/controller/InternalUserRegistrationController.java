@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.registration.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -34,7 +32,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InternalUserRegistrationController.class)
 @PreAuthorize("permitAll")
 public class InternalUserRegistrationController {
-    private static final Log LOG = LogFactory.getLog(InternalUserRegistrationController.class);
 
     private static final String FORM_ATTR_NAME = "form";
 

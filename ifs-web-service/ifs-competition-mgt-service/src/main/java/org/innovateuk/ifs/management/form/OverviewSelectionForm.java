@@ -68,7 +68,7 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
     }
 
     public boolean anySelectionIsMade() {
-        return this.allSelected || this.selectedInviteIds.size() > 0;
+        return this.allSelected || !this.selectedInviteIds.isEmpty();
     }
 
     @Override

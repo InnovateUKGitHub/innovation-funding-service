@@ -155,10 +155,10 @@ public class SetupSectionsPermissionRules {
         try {
             projectStatusResource = statusService.getProjectStatus(projectId);
         } catch (ForbiddenActionException e) {
-            LOG.error("Internal user is not allowed to access this project " + projectId);
+            LOG.error("Internal user is not allowed to access this project " + projectId, e);
             return false;
         } catch (ObjectNotFoundException e) {
-            LOG.error("Status for project " + projectId + " cannot be found.");
+            LOG.error("Status for project " + projectId + " cannot be found.", e);
             return false;
         }
 
