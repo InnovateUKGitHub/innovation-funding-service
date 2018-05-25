@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
@@ -56,6 +59,15 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
     @Mock
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+
+    @Mock
+    private AssessmentRestService assessmentRestService;
 
     @Override
     protected CompetitionManagementCompetitionController supplyControllerUnderTest() {

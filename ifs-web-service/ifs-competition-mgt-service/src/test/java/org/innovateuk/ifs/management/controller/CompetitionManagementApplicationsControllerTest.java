@@ -3,10 +3,13 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -61,6 +64,15 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
     @Mock
     private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
+
+    @Mock
+    private ApplicationSummaryRestService applicationSummaryRestService;
+
+    @Mock
+    private ApplicationFundingDecisionService applicationFundingDecisionService;
+
+    @Mock
+    private ProjectService projectService;
 
     @InjectMocks
     @Spy

@@ -5,16 +5,18 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.login.HomeController;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
 import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
-import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,6 +30,9 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     @InjectMocks
     private RoleSelectionModelPopulator roleSelectionModelPopulator;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
     @Override
     protected HomeController supplyControllerUnderTest() {
         return new HomeController();
@@ -36,6 +41,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     @Before
     public void setUp() {
         super.setUp();
+        setupCookieUtil(cookieUtil);
     }
 
     /**
