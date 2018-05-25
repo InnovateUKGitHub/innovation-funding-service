@@ -336,24 +336,17 @@ IFS.core.formValidation = (function () {
       }
     },
     checkRange: function (field) {
-      console.log('Check range')
       var rangeAttribute = 'range'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, rangeAttribute)
-      console.log(displayValidationMessages)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, rangeAttribute)
-      console.log(errorMessage)
       var min = parseInt(field.data('range-min'), 10)
       var max = parseInt(field.data('range-max'), 10)
-      console.log('Min = ' + min)
-      console.log('Max = ' + max)
       if (IFS.core.formValidation.checkNumber(field)) {
         var fieldVal = parseInt(field.val(), 10)
         if (fieldVal < min || fieldVal > max) {
-          console.log('Invalid')
           IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
           return false
         } else {
-          console.log('Valid')
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
         }
@@ -363,7 +356,8 @@ IFS.core.formValidation = (function () {
       var requiredAttribute = 'required'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, requiredAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)
-
+      console.log('Required')
+      console.log(errorMessage)
       if (field.val() !== null) {
         var value = field.val()
         if (field.is(':checkbox,:radio')) {
@@ -382,6 +376,41 @@ IFS.core.formValidation = (function () {
         } else if (field.is(s.number.fields) && s.html5validationMode && field[0].validity.badInput) {
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
+        } else if (field.is('select')) {
+          console.log('This one')
+          console.log(value)
+          // check if we are a group of select elements
+          var selectGroup = field.closest('.form-group').find('select')
+          var valid = true
+          console.log(selectGroup.length)
+          if (selectGroup.length > 1) {
+            // a group of select elements
+            // check if any of the select elements are invalid
+            selectGroup.each(function () {
+              if (jQuery(this).val().length === 0) {
+                valid = false
+                return false
+              }
+            })
+            console.log(valid)
+            if (!valid) {
+              selectGroup.each(function () { IFS.core.formValidation.setInvalid(jQuery(this), errorMessage, displayValidationMessages) })
+              return false
+            } else {
+              selectGroup.each(function () { IFS.core.formValidation.setValid(jQuery(this), errorMessage, displayValidationMessages) })
+              return true
+            }
+          } else {
+            // single select element
+            // check if the value has any characters OR if the value only contains spaces
+            if (value.length === 0) {
+              IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+              return false
+            } else {
+              IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+              return true
+            }
+          }
         } else {
           // check if the value has any characters OR if the value only contains spaces
           if (value.length === 0 || !value.trim()) {

@@ -333,6 +333,10 @@ tr {
       }
     }
   }
+  select {
+    @include box-shadow(none);
+    border: 4px solid $error-colour;
+  }
 }
 
 td {

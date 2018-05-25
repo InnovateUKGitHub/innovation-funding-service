@@ -96,7 +96,9 @@
                                     data-progressive-group-select="Innovation sector"
                                     data-progressive-group-select-instruction="Please select an innovation sector"
                                     data-progressive-group-select-id="selectedInnovationArea"
+                                    data-progressive-group-select-errormessage="#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
                                     required="required"
+                                    th:errorclass="form-control-error"
                                     th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
                                     aria-labelledby="innovation-area"
                                     id="grouped-innovation-area">
