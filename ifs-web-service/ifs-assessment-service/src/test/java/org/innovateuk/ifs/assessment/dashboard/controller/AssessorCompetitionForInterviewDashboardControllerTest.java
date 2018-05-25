@@ -56,7 +56,7 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
 
     @Test
     public void competitionForInterviewDashboard() throws Exception {
-        Long userId = 1L;
+        long userId = 1L;
 
         CompetitionResource competition = buildTestCompetition();
         List<ApplicationResource> applications = buildTestApplications();
@@ -118,7 +118,7 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
 
     @Test
     public void competitionDashboard_empty() throws Exception {
-        Long userId = 1L;
+        long userId = 1L;
 
         CompetitionResource competition = buildTestCompetition();
 

@@ -28,22 +28,26 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class AssessorCompetitionForInterviewDashboardModelPopulator {
 
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
     private InterviewAllocationRestService interviewAllocateRestService;
 
-    public AssessorCompetitionForInterviewDashboardViewModel populateModel(Long competitionId, Long userId) {
+    @Autowired
+    public AssessorCompetitionForInterviewDashboardModelPopulator(CompetitionService competitionService,
+                                                                  ApplicationService applicationService,
+                                                                  OrganisationRestService organisationRestService,
+                                                                  ProcessRoleService processRoleService,
+                                                                  InterviewAllocationRestService interviewAllocateRestService) {
+        this.competitionService = competitionService;
+        this.applicationService = applicationService;
+        this.organisationRestService = organisationRestService;
+        this.processRoleService = processRoleService;
+        this.interviewAllocateRestService = interviewAllocateRestService;
+    }
+
+    public AssessorCompetitionForInterviewDashboardViewModel populateModel(long competitionId, long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
         List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
