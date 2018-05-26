@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.interview.security;
+package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -14,31 +14,31 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 @PermissionRules
 @Component
-public class InterviewPermissionRules {
+public class AssessmentPermissionRules {
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @PermissionRule(value = "INTERVIEW", description = "Only project finance or competition admin can see interview panels" +
+    @PermissionRule(value = "ASSESSMENT", description = "Only project finance or competition admin can see assessment panels" +
             "if the competition is in the correct state.")
     public boolean interviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                competitionHasInterviewPanel(competition) &&
+                competitionHasAssessmentPanel(competition) &&
                 !competitionIsInInform(competition);
     }
 
-    @PermissionRule(value = "INTERVIEW_APPLICATIONS", description = "Only project finance or competition admin can " +
-            "see interview panel applications if the competition is in the correct state.")
+    @PermissionRule(value = "ASSESSMENT_APPLICATIONS", description = "Only project finance or competition admin can " +
+            "see assessment panel applications if the competition is in the correct state.")
     public boolean interviewPanelApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                competitionHasInterviewPanel(competition) &&
+                competitionHasAssessmentPanel(competition) &&
                 competitionIsInFundersPanel(competition);
     }
 
-    private boolean competitionHasInterviewPanel(CompetitionResource competition) {
-        return competition.isHasInterviewStage();
+    private boolean competitionHasAssessmentPanel(CompetitionResource competition) {
+        return competition.isHasAssessmentPanel();
     }
 
     private boolean competitionIsInFundersPanel(CompetitionResource competition) {

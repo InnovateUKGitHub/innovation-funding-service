@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}/application/{applicationId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentApplicationProgressController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class AssessmentApplicationProgressController {
 
     private static final String FORM_ATTR_NAME = "form";

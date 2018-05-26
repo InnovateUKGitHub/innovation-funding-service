@@ -107,7 +107,7 @@
                     </li>
                     <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
-                           th:unless="${model.assessmentPanelEnabled">
+                           th:unless="${model.assessmentPanelEnabled}">
                             Manage assessment panel
                         </a>
                         <a th:if="${model.assessmentPanelEnabled}" th:href="@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}">

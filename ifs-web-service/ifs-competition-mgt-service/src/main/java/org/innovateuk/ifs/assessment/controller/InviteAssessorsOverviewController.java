@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InviteAssessorsOverviewController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class InviteAssessorsOverviewController extends CompetitionManagementCookieController<OverviewSelectionForm> {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
