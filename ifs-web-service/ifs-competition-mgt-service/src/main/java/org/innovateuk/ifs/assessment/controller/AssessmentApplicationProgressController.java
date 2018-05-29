@@ -27,8 +27,6 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class AssessmentApplicationProgressController {
 
-    private static final String FORM_ATTR_NAME = "form";
-
     @Autowired
     private ApplicationAssessmentProgressModelPopulator applicationAssessmentProgressModelPopulator;
 

@@ -318,13 +318,13 @@ Eligibility: Mark as Done then Edit again
     And the user moves focus and waits for autosave
     And the user selects the radio button    resubmission    no
     When the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the text in the page    Yes
-    And the user should see the text in the page    Single
-    And the user should see the text in the page    Business
-    And the user should see the text in the page    50%
-    And the user should see the text in the page    Feasibility studies
-    And the user should see the text in the page    Industrial research
-    And the user should see the text in the page    Experimental development
+    Then the user should see the element    jQuery=dt:contains("Project type") ~ dd:contains("Single")
+    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Feasibility studies")
+    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Industrial research")
+    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Experimental development")
+    And the user should see the element     jQuery=dt:contains("Lead applicant") ~ dd:contains("Business")
+    And the user should see the element     jQuery=dt:contains("Research participation") ~ dd:contains("50%")
+    And the user should see the element     jQuery=dt:contains("Are resubmissions allowed") ~ dd:contains("No")
     And The user should not see the element    id=streamName
     When the user clicks the button/link    link=Competition setup
     When the user clicks the button/link    link=Eligibility

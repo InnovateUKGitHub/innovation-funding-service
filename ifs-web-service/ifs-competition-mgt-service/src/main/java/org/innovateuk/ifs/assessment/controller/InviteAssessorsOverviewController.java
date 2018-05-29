@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
@@ -39,6 +41,8 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InviteAssessorsOverviewController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class InviteAssessorsOverviewController extends CompetitionManagementCookieController<OverviewSelectionForm> {
+
+    private static final Log LOG = LogFactory.getLog(InviteAssessorsOverviewController.class);
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String SELECTION_FORM = "overviewSelectionForm";
@@ -179,6 +183,7 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown selecting assessor for resend list", e);
             return createFailureResponse();
         }
     }
@@ -208,6 +213,8 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown adding assessors to resend list", e);
+
             return createFailureResponse();
         }
     }

@@ -47,7 +47,7 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
                                                               String value,
                                                               Optional<Long> questionId) {
         if("removeGuidanceRow".equals(fieldName)) {
-            return removeGuidanceRow(questionId, fieldName, value);
+            return removeGuidanceRow(questionId, value);
         } else if (fieldName.contains("guidanceRow")) {
             return tryUpdateGuidanceRow(questionId, fieldName, value);
         } else if (fieldName.contains("allowedFileTypes")) {
@@ -68,7 +68,7 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
         });
     }
 
-    private ServiceResult<Void> removeGuidanceRow(Optional<Long> questionId, String fieldName, String value) {
+    private ServiceResult<Void> removeGuidanceRow(Optional<Long> questionId, String value) {
         return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
             int index = Integer.valueOf(value);
             //If the index is out of range then ignore it, The UI will add rows without them being persisted yet.

@@ -45,7 +45,7 @@ public class ApplicantResource {
 
     @JsonIgnore
     public boolean isLead() {
-        return getProcessRole().getRoleName().equals("leadapplicant");
+        return "leadapplicant".equals(getProcessRole().getRoleName());
     }
 
     @JsonIgnore

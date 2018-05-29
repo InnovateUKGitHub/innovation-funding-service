@@ -10,9 +10,11 @@ import java.io.IOException;
 /**
  * Useful utility class for actions around the upload of files
  */
-public class FileUploadControllerUtils {
+public final class FileUploadControllerUtils {
 
     private static final Log LOG = LogFactory.getLog(FileUploadControllerUtils.class);
+
+    private FileUploadControllerUtils() {}
 
     public static byte[] getMultipartFileBytes(MultipartFile file) {
         try {
