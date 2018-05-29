@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.interview.security;
+package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
@@ -15,28 +15,28 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class InterviewPermissionRulesTest extends BasePermissionRulesTest<InterviewPermissionRules> {
+public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<AssessmentPermissionRules> {
 
     @Mock
     private CompetitionRestService competitionRestService;
 
     @Override
-    protected InterviewPermissionRules supplyPermissionRulesUnderTest() {
-        return new InterviewPermissionRules();
+    protected AssessmentPermissionRules supplyPermissionRulesUnderTest() {
+        return new AssessmentPermissionRules();
     }
 
     @Test
-    public void interviewPanel() {
+    public void reviewPanel() {
         UserResource loggedInUser = compAdminUser();
 
         for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
             final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
-                    .withHasInterviewStage(true)
+                    .withHasAssessmentPanel(true)
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
             final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
-                    .withHasInterviewStage(false)
+                    .withHasAssessmentPanel(false)
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
@@ -46,29 +46,29 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
             switch (competitionStatus) {
                 case ASSESSOR_FEEDBACK: case PROJECT_SETUP:
                     assertFalse("With interview stage and status " + competitionStatus.toString(),
-                            rules.interviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+                            rules.reviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
                     break;
                 default:
                     assertTrue("With interview stage and status " + competitionStatus.toString(),
-                            rules.interviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+                            rules.reviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
             }
             assertFalse("Without interview stage and status " + competitionStatus.toString(),
-                    rules.interviewPanel(CompetitionCompositeId.id(competitionWithoutInterviewStage.getId()), loggedInUser));
+                    rules.reviewPanel(CompetitionCompositeId.id(competitionWithoutInterviewStage.getId()), loggedInUser));
         }
     }
 
     @Test
-    public void interviewPanelApplications() {
+    public void reviewPanelApplications() {
         UserResource loggedInUser = compAdminUser();
 
         for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
             final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
-                    .withHasInterviewStage(true)
+                    .withHasAssessmentPanel(true)
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
             final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
-                    .withHasInterviewStage(false)
+                    .withHasAssessmentPanel(false)
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
@@ -76,12 +76,12 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
             when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
 
             if (competitionStatus == CompetitionStatus.FUNDERS_PANEL) {
-                assertTrue(rules.interviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+                assertTrue(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
             }
             else {
-                assertFalse(rules.interviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+                assertFalse(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
             }
-            assertFalse(rules.interviewPanelApplications(CompetitionCompositeId.id(competitionWithoutInterviewStage.getId()), loggedInUser));
+            assertFalse(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithoutInterviewStage.getId()), loggedInUser));
         }
     }
 }

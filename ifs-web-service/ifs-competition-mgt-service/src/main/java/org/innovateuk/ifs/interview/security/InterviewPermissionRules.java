@@ -25,7 +25,7 @@ public class InterviewPermissionRules {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
                 competitionHasInterviewPanel(competition) &&
-                !competitionIsInInform(competition);
+                !competitionIsInInformOrLater(competition);
     }
 
     @PermissionRule(value = "INTERVIEW_APPLICATIONS", description = "Only project finance or competition admin can " +
@@ -45,7 +45,7 @@ public class InterviewPermissionRules {
         return competition.getCompetitionStatus().equals(CompetitionStatus.FUNDERS_PANEL);
     }
 
-    private boolean competitionIsInInform(CompetitionResource competition) {
-        return competition.getCompetitionStatus().equals(CompetitionStatus.ASSESSOR_FEEDBACK);
+    private boolean competitionIsInInformOrLater(CompetitionResource competition) {
+        return competition.getCompetitionStatus().isLaterThan(CompetitionStatus.FUNDERS_PANEL);
     }
 }
