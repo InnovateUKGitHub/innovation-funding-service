@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.organisation.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
@@ -18,6 +20,9 @@ import java.util.Optional;
  */
 @Service
 public class OrganisationPatternMatcher {
+
+    private static final Log LOG = LogFactory.getLog(OrganisationPatternMatcher.class);
+
     @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
     public boolean organisationAddressMatches(Organisation existingOrganisation, OrganisationResource submittedOrganisation, OrganisationAddressType addressType, boolean required) {
         Optional<OrganisationAddress> organisationOperatingAddress = getOrganisationAddressByType(existingOrganisation, addressType);
@@ -38,6 +43,7 @@ public class OrganisationPatternMatcher {
             return organisation.getOrganisationType().getId().equals(organisationResource.getOrganisationType());
         }
         catch(NullPointerException e) {
+            LOG.trace("NPE when checking organisation type match", e);
             return false;
         }
     }
@@ -48,6 +54,7 @@ public class OrganisationPatternMatcher {
             return OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
         }
         catch(NullPointerException e) {
+            LOG.trace("NPE when checking organisation type is research", e);
             return false;
         }
     }
@@ -69,11 +76,10 @@ public class OrganisationPatternMatcher {
             return true;
         }
 
-        try {
-            return string1.trim().equalsIgnoreCase(string2.trim());
-        } catch(NullPointerException e) {
+        if(string1 == null || string2 == null) {
             return false;
         }
+        return string1.trim().equalsIgnoreCase(string2.trim());
     }
 
     private Optional<OrganisationAddress> getOrganisationAddressByType(Organisation organisation, OrganisationAddressType addressType) {
@@ -82,6 +88,7 @@ public class OrganisationPatternMatcher {
                     .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))
                     .findAny();
         } catch(NullPointerException e) {
+            LOG.trace("NPE when getting organisation address by type", e);
             return Optional.empty();
         }
     }
@@ -92,6 +99,7 @@ public class OrganisationPatternMatcher {
                 .filter(findAddress -> findAddress.getAddressType().getId().equals(addressType.getOrdinal()))
                 .findAny();
         } catch(NullPointerException e) {
+            LOG.trace("NPE when getting organisation resource address by type", e);
             return Optional.empty();
         }
     }

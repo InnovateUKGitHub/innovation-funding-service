@@ -6,7 +6,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 /**
  * Util class to help build 'Back' button links.
  */
-public abstract class BackLinkUtil {
+public final class BackLinkUtil {
+
+    private BackLinkUtil() {}
 
     /**
      * Builds a URI query string that can be used to return a user to an original location

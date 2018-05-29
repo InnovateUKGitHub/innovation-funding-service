@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Optional.ofNullable;
 
@@ -43,5 +44,10 @@ public class NoteResource {
                 .append(title, that.title)
                 .append(createdOn, that.createdOn)
                 .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, contextClassPk, posts, title, createdOn);
     }
 }

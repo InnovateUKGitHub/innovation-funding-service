@@ -29,8 +29,6 @@ public class SpendProfileResource {
 
     private Calendar generatedDate;
 
-    private ApprovalType approval;
-
     public Long getId() {
         return id;
     }

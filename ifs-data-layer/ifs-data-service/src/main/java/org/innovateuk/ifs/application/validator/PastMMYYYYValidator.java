@@ -44,6 +44,7 @@ public class PastMMYYYYValidator extends BaseValidator {
                 }
             }
             catch (DateTimeException e) {
+                LOG.trace("invalid date time", e);
                 rejectValue(errors, "value", "validation.standard.mm.yyyy.format");
             }
         }

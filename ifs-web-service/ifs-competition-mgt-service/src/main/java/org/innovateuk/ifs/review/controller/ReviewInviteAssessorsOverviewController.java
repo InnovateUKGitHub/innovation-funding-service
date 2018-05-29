@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.review.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
@@ -30,6 +32,8 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
         " panels if they competition supports them", securedType = ReviewInviteAssessorsOverviewController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<ReviewOverviewSelectionForm> {
+
+    private static final Log LOG = LogFactory.getLog(ReviewInviteAssessorsController.class);
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
@@ -132,6 +136,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown getting pending and declined", e);
             return createFailureResponse();
         }
     }
@@ -157,6 +162,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown getting pending and declined", e);
             return createFailureResponse();
         }
     }
