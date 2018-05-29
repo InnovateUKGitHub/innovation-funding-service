@@ -22,7 +22,7 @@ Documentation
 ...
 ...               IFS-3559 Email subject for new finance queries to include competition name and application ID
 Suite Setup       Custom Suite Setup
-#Suite Teardown    Close browser and delete emails
+Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
