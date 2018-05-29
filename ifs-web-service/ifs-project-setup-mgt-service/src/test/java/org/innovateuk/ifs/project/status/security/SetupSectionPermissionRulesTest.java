@@ -1,13 +1,16 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
@@ -19,6 +22,13 @@ import static org.mockito.Mockito.when;
 
 
 public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<SetupSectionsPermissionRules> {
+
+    @Mock
+    private ProjectService projectServiceMock;
+
+    @Mock
+    private StatusService statusServiceMock;
+
     @Override
     protected SetupSectionsPermissionRules supplyPermissionRulesUnderTest() {
         return new SetupSectionsPermissionRules();

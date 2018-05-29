@@ -8,7 +8,9 @@ import static org.innovateuk.ifs.commons.error.Error.globalError;
 /**
  * A factory class that produces various ErrorConverter implementations
  */
-public class ErrorConverterFactory {
+public final class ErrorConverterFactory {
+
+    private ErrorConverterFactory() {}
 
     public static ErrorConverter toField(String field) {
         return e -> Optional.of(newFieldError(e, field, e.getFieldRejectedValue()));

@@ -13,11 +13,11 @@ var compass = require('compass-importer')
 var nodeModulesPath = __dirname + '/../../../../../node_modules/'
 var nodeModulesRelativePath = '../../../../../node_modules/'
 var gdsFrontendToolkitPath = nodeModulesPath + 'govuk_frontend_toolkit/'
-var gdsJinjaPath = nodeModulesPath + 'govuk_template_jinja/'
+var gdsTemplateJinjaPath = nodeModulesPath + 'govuk_template_jinja/'
 var gdsElementsPath = nodeModulesPath + 'govuk-elements-sass/'
 var vendorImages = [
-  gdsJinjaPath + 'assets/images/**/**',
-  gdsJinjaPath + 'assets/stylesheets/images/**/**',
+	gdsTemplateJinjaPath + 'assets/images/**/**',
+	gdsTemplateJinjaPath + 'assets/stylesheets/images/**/**',
   gdsFrontendToolkitPath + 'images/**/**'
 ]
 var sassFiles = [
@@ -30,16 +30,23 @@ var vendorJsFiles = [
   nodeModulesPath + 'jquery/dist/jquery.js',
   nodeModulesPath + 'simplestatemanager/src/ssm.js',
   'js/vendor/jquery-ui/jquery-ui.min.js',
-  'js/vendor/govuk/*.js',
-  '!js/vendor/govuk/ie.js',
+	gdsFrontendToolkitPath + 'javascripts/govuk/shim-links-with-button-role.js',
+	gdsFrontendToolkitPath + 'javascripts/vendor/polyfills/bind.js',
+	gdsFrontendToolkitPath + 'javascripts/govuk/details.polyfill.js',
+  'js/vendor/govuk/application.js',
+	gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
   'js/vendor/wysiwyg-editor/*.js',
   '!js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
 
-gulp.task('copy-govuk', ['copy-fonts-govuk', 'copy-images-govuk'])
+gulp.task('copy-govuk', ['copy-js-govuk', 'copy-fonts-govuk', 'copy-images-govuk'])
+// copy over the ie javascript file to the js/vendor/govuk folder
+gulp.task('copy-js-govuk', function () {
+	return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/javascripts/ie.js')).pipe(gulp.dest('js/vendor/govuk'))
+})
 // copy over the fonts from GDS node-modules to css/fonts folder
 gulp.task('copy-fonts-govuk', function () {
-  return gulp.src(filesExist(gdsJinjaPath + 'assets/stylesheets/fonts/*')).pipe(gulp.dest('css/fonts'))
+  return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/stylesheets/fonts/*')).pipe(gulp.dest('css/fonts'))
 })
 //  copy over the images from GDS node-modules to images folder
 gulp.task('copy-images-govuk', function () {
@@ -94,7 +101,7 @@ gulp.task('css', ['copy-govuk'], function () {
     .pipe(sass({includePaths: [
       gdsFrontendToolkitPath + 'stylesheets',
       gdsElementsPath + 'public/sass',
-      gdsJinjaPath + 'assets/stylesheets'
+      gdsTemplateJinjaPath + 'assets/stylesheets'
     ],
       importer: compass,
       outputStyle: 'compressed'

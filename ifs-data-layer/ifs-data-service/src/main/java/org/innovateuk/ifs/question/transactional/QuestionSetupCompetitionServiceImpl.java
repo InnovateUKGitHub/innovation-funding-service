@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.question.transactional;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -35,8 +33,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalService implements QuestionSetupCompetitionService {
-
-	private static final Log LOG = LogFactory.getLog(QuestionSetupCompetitionServiceImpl.class);
 
     @Autowired
     private QuestionRepository questionRepository;
