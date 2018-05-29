@@ -2,7 +2,10 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
+import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
+import org.innovateuk.ifs.management.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.model.InformIneligibleModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -10,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
@@ -38,6 +42,9 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
     @InjectMocks
     InformIneligibleModelPopulator informIneligibleModelPopulator;
 
+    @Mock
+    private ApplicationNotificationTemplateRestService applicationNotificationTemplateRestService;
+
     @Override
     protected CompetitionManagementSendIneligibleController supplyControllerUnderTest() {
         return new CompetitionManagementSendIneligibleController();
@@ -50,7 +57,6 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
         String competitionName = "competition";
         String applicationName = "application";
         String leadApplicant = "lead applicant";
-
 
         ApplicationResource applicationResource = newApplicationResource()
                 .withId(applicationId)
@@ -66,14 +72,19 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
 
         InformIneligibleViewModel expectedViewModel =
                 new InformIneligibleViewModel(competitionId, applicationId, competitionName, applicationName, leadApplicant);
+        InformIneligibleForm expectedForm = new InformIneligibleForm();
+        expectedForm.setMessage("MessageBody");
+
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(processRoles);
+        when(applicationNotificationTemplateRestService.getIneligibleNotificationTemplate(competitionId))
+                .thenReturn(restSuccess(new ApplicationNotificationTemplateResource("MessageBody")));
 
         mockMvc.perform(get("/competition/application/{applicationId}/ineligible", applicationId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel));
-
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("form", expectedForm));
         verify(applicationRestService, only()).getApplicationById(applicationId);
         verify(processRoleService, only()).findProcessRolesByApplicationId(applicationId);
     }

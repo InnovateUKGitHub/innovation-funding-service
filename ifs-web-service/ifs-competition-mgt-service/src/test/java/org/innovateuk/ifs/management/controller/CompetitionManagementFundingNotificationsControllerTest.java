@@ -12,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
+import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
@@ -266,7 +267,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         List<ApplicationSummaryResource> resourceList = singletonList(new ApplicationSummaryResource());
 
         SendNotificationsViewModel viewModel = new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName");
-        when(sendNotificationsModelPopulator.populate(COMPETITION_ID, applicationsIds)).thenReturn(viewModel);
+        when(sendNotificationsModelPopulator.populate(COMPETITION_ID, applicationsIds, new NotificationEmailsForm())).thenReturn(viewModel);
         mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-send-notifications"));
