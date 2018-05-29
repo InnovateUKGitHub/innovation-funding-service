@@ -582,6 +582,8 @@ Complete button disabled when sections are edited
 Moving competition to Ready to Open state
     [Documentation]
     [Tags]
+    #Remove this setup when IFS-3601 is done
+    [Setup]  Fill in assesor section
 #    The following steps will move the comp from "In preparation" to "Ready to Open" state
     When the user clicks the button/link  css=#compCTA
     Then the user clicks the button/link  jQuery=.button:contains("Done")
@@ -638,7 +640,9 @@ Assessor: Contain the correct options
     [Documentation]    INFUND-5641
     [Tags]    HappyPath
     [Setup]  the user clicks the button/link  link=${competitionTitle}
-    Given the user clicks the button/link    link=Assessors
+    Given The user clicks the button/link   link=View and update competition setup
+    And the user clicks the button/link    link=Assessors
+    And The user clicks the button/link    jQuery=.button:contains("Edit")
     And the user should see the text in the page    How many assessors are required for each application?
     Then the user should see the element    jQuery=label:contains(1)
     When the user should see the element    jQuery=label:contains(3)
@@ -675,8 +679,9 @@ Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link  link=${competitionTitle}
-    Given The user clicks the button/link     link=Stakeholders
-    And the user should see the element      jQuery=h1:contains("Manage innovation leads")
+    Given The user clicks the button/link     link=View and update competition setup
+    And The user clicks the button/link       link=Stakeholders
+    And the user should see the element       jQuery=h1:contains("Manage innovation leads")
     And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
     And the user should see the element       jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper") ~ dd:contains("John Doe")
     And the user should see the element       jQuery=li.selected a:contains("Find")
@@ -882,3 +887,11 @@ the user marks question as complete
     the user clicks the button/link      jQuery=a:contains("${question_link}")
     the user clicks the button/link      css=button[type="submit"]
     the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
+
+Fill in assesor section
+    the user clicks the button/link  link=Assessors
+    the user selects the radio button     hasInterviewStage  hasInterviewStage-1
+    the user selects the radio button     hasAssessmentPanel  0
+    the user clicks the button/link       jQuery=button:contains("Done")
+    the user clicks the button/link       link=Competition setup
+
