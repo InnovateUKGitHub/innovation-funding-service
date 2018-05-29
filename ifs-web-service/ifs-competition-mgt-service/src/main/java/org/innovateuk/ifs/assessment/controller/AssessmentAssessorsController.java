@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.form.AssessmentAssessorsFilterForm;
 import org.innovateuk.ifs.management.model.ManageAssessorsModelPopulator;
@@ -20,6 +21,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can manage assessments", securedType = AssessmentAssessorsController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class AssessmentAssessorsController extends BaseAssessmentController<AssessorCountSummaryPageResource> {
 
