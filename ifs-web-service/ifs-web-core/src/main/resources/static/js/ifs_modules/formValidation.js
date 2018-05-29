@@ -356,8 +356,6 @@ IFS.core.formValidation = (function () {
       var requiredAttribute = 'required'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, requiredAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)
-      console.log('Required')
-      console.log(errorMessage)
       if (field.val() !== null) {
         var value = field.val()
         if (field.is(':checkbox,:radio')) {
@@ -377,12 +375,9 @@ IFS.core.formValidation = (function () {
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
         } else if (field.is('select')) {
-          console.log('This one')
-          console.log(value)
           // check if we are a group of select elements
           var selectGroup = field.closest('.form-group').find('select')
           var valid = true
-          console.log(selectGroup.length)
           if (selectGroup.length > 1) {
             // a group of select elements
             // check if any of the select elements are invalid
@@ -392,7 +387,6 @@ IFS.core.formValidation = (function () {
                 return false
               }
             })
-            console.log(valid)
             if (!valid) {
               selectGroup.each(function () { IFS.core.formValidation.setInvalid(jQuery(this), errorMessage, displayValidationMessages) })
               return false
