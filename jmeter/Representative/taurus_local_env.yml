@@ -2,12 +2,6 @@ modules:
   jmeter:
     gui: false
     properties:
-      invite_users : 1
-      applicant_users : 10
-      registration_users : 1
-      front_door_users : 10
-      competition_management_users : 10
-      assessor_users : 50
       global_pause_deviation : 100
       micro_pause_deviation : 100
       short_pause_deviation : 500
