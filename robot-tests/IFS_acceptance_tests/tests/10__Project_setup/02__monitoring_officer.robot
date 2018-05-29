@@ -10,6 +10,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 ...
 ...               INFUND-6706 Mismatch in MO status between dashboard and consortium table
+...
+...               IFS-3553 Email subject for Monitoring Officer to include competition name and application ID
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -132,7 +134,7 @@ MO details can be added
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details(email step)
-    [Documentation]    INFUND-2630, INFUND-2632, INFUND-2633
+    [Documentation]    INFUND-2630, INFUND-2632, INFUND-2633, IFS-3553
     [Tags]    Email    HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
@@ -159,7 +161,7 @@ MO details can be edited and viewed in the Project setup status page
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details edit(email step)
-    [Documentation]    INFUND-2630, INFUND-2634
+    [Documentation]    INFUND-2630, INFUND-2634, IFS-3553
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email from the second mailbox    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you

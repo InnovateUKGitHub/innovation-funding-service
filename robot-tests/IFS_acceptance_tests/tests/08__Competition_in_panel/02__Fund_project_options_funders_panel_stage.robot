@@ -14,6 +14,8 @@ Documentation     INFUND-2601 As a competition administrator I want a view of al
 ...               IFS-1620 Internal Project Setup dashboard: project visibility needed after successful notification not feedback released
 ...
 ...               IFS-2903 Identify root cause of failure in changing the Funding decision
+...
+...               IFS-3560 Email subject for application funded and funding to include competition name and application ID
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  Applicant
@@ -50,7 +52,7 @@ Internal user puts the application on hold
     Given the internal user marks the application as  On hold  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
 
 Proj Finance user can send Fund Decision notification
-    [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813
+    [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813, IFS-3560
     [Tags]  HappyPath
     [Setup]  log in as a different user      &{internal_finance_credentials}
     Given the user navigates to the page     ${funders_panel_competition_url}

@@ -19,6 +19,8 @@ Documentation
 ...               IFS-1987 Queries: close a conversation. See also IFS-2638, IFS-2639
 ...
 ...               IFS-2746 External queries redesign: query statuses and banner messages
+...
+...               IFS-3559 Email subject for new finance queries to include competition name and application ID
 Suite Setup       Custom Suite Setup
 #Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -156,14 +158,13 @@ Query Section dropdown filters the queries displayed
     # Tried to catch with .query.eligibility-section[aria=hidden="true"], but without success
 
 Finance contact receives an email when new query is posted and can see a pending query
-    [Documentation]  INFUND-4841 IFS-2746
+    [Documentation]  INFUND-4841 IFS-2746 IFS-3559
     [Tags]  Email
     [Setup]  log in as a different user     &{PublicSector_lead_applicant_credentials}
-    #here  Rolling stock future developments: Query regarding your finances for project 116   ${PS_EF_Competition_Name}: Query regarding your finances ${PS_EF_APPLICATION_NUMBER}
     Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_EF_Competition_Name}: Query regarding your finances for project ${Queries_Application_No}  We have raised a query around your project finances.
     When the user navigates to the page     ${server}/project-setup/project/${Queries_Application_Project}
     Then the user should see the element    css=.status-warning  #Pending query
-    When the user clicks the button/link    link=Finance checks
+    And the user clicks the button/link     link=Finance checks
     Then the user should see the element    jQuery=#title-query-1:contains("Pending query")
 
 Project finance user can add another query while he is awaiting for response
@@ -298,9 +299,9 @@ Project finance user can continue the conversation
     And the user clicks the button/link       jQuery=.button:contains("Post response")
 
 Finance contact receives an email when a new response is posted
-    [Documentation]    INFUND-7753
+    [Documentation]    INFUND-7753 IFS-3559
     [Tags]    Email
-    Then the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${Queries_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your finances
+    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${Queries_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752
