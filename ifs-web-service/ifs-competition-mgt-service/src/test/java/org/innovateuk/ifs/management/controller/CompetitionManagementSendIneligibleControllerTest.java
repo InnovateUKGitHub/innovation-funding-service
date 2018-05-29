@@ -68,6 +68,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
         List<ProcessRoleResource> processRoles = newProcessRoleResource()
                 .withRoleName(COLLABORATOR.getRoleName(), LEAD_APPLICANT.getRoleName(), COLLABORATOR.getRoleName())
                 .withUserName("other", leadApplicant, "an other")
+                .withUserId(1L, 2L, 3L)
                 .build(3);
 
         InformIneligibleViewModel expectedViewModel =
@@ -78,7 +79,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(processRoles);
-        when(applicationNotificationTemplateRestService.getIneligibleNotificationTemplate(competitionId))
+        when(applicationNotificationTemplateRestService.getIneligibleNotificationTemplate(competitionId, 2L))
                 .thenReturn(restSuccess(new ApplicationNotificationTemplateResource("MessageBody")));
 
         mockMvc.perform(get("/competition/application/{applicationId}/ineligible", applicationId))

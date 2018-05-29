@@ -22,7 +22,7 @@ public class ApplicationNotificationTemplateServiceSecurityTest extends BaseServ
 
     @Test
     public void getIneligibleNotificationTemplate() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getIneligibleNotificationTemplate(1L),
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getIneligibleNotificationTemplate(1L, 2L),
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 

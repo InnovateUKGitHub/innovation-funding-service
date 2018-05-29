@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Populator for {@link InformIneligibleViewModel}
@@ -27,13 +28,12 @@ public class InformIneligibleModelPopulator {
     public InformIneligibleViewModel populateModel(ApplicationResource applicationResource, InformIneligibleForm form) {
 
         List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationResource.getId());
-        String leadApplilcant = processRoles.stream()
+        Optional<ProcessRoleResource> leadApplicant = processRoles.stream()
                 .filter(pr -> pr.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(ProcessRoleResource::getUserName)
-                .findFirst().orElse("");
+                .findFirst();
 
-        if (form.getMessage() == null) {
-            form.setMessage(templateRestService.getIneligibleNotificationTemplate(applicationResource.getCompetition()).getSuccess().getMessageBody());
+        if (form.getMessage() == null && leadApplicant.isPresent()) {
+            form.setMessage(templateRestService.getIneligibleNotificationTemplate(applicationResource.getCompetition(), leadApplicant.get().getUser()).getSuccess().getMessageBody());
         }
 
         return new InformIneligibleViewModel(
@@ -41,6 +41,6 @@ public class InformIneligibleModelPopulator {
                 applicationResource.getId(),
                 applicationResource.getCompetitionName(),
                 applicationResource.getName(),
-                leadApplilcant);
+                leadApplicant.map(ProcessRoleResource::getUserName).orElse(""));
     }
 }

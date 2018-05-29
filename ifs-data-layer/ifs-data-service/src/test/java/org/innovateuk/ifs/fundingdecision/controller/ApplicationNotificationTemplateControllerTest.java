@@ -50,11 +50,12 @@ public class ApplicationNotificationTemplateControllerTest extends BaseControlle
 
     @Test
     public void getIneligibleNotificationTemplate() throws Exception {
-        Long competitionId = 1L;
+        long competitionId = 1L;
+        long userId = 2L;
         ApplicationNotificationTemplateResource resource = new ApplicationNotificationTemplateResource();
-        when(applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId)).thenReturn(serviceSuccess(resource));
+        when(applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId, userId)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/application-notification-template/ineligible/1")
+        mockMvc.perform(get("/application-notification-template/ineligible/1/2")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(resource)));

@@ -23,7 +23,7 @@ public class ApplicationNotificationTemplateRestServiceImpl extends BaseRestServ
     }
 
     @Override
-    public RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId) {
-        return getWithRestResult(String.format("%s/%s/%s", baseUrl, "ineligible", competitionId), ApplicationNotificationTemplateResource.class);
+    public RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId, long userId) {
+        return getWithRestResult(String.format("%s/%s/%s/%s", baseUrl, "ineligible", competitionId, userId), ApplicationNotificationTemplateResource.class);
     }
 }

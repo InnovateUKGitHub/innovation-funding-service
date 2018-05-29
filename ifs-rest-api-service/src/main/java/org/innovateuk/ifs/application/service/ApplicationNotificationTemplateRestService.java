@@ -7,5 +7,5 @@ public interface ApplicationNotificationTemplateRestService {
 
     RestResult<ApplicationNotificationTemplateResource> getSuccessfulNotificationTemplate(long competitionId);
     RestResult<ApplicationNotificationTemplateResource> getUnsuccessfulNotificationTemplate(long competitionId);
-    RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId);
+    RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId, long userId);
 }
