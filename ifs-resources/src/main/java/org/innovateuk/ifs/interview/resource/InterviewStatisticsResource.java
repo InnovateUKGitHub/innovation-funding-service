@@ -7,11 +7,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * DTO for interview key statistics
  */
 public class InterviewStatisticsResource {
-    private int applicationsAssigned;
-    private int respondedToFeedback;
-    private int assessorsAccepted;
+    private final int applicationsAssigned;
+    private final int respondedToFeedback;
+    private final int assessorsAccepted;
 
     public InterviewStatisticsResource() {
+        applicationsAssigned = 0;
+        respondedToFeedback = 0;
+        assessorsAccepted = 0;
     }
 
     public InterviewStatisticsResource(int applicationsAssigned, int respondedToFeedback, int assessorsAccepted) {
@@ -24,24 +27,12 @@ public class InterviewStatisticsResource {
         return applicationsAssigned;
     }
 
-    public void setApplicationsAssigned(int applicationsAssigned) {
-        this.applicationsAssigned = applicationsAssigned;
-    }
-
     public int getRespondedToFeedback() {
         return respondedToFeedback;
     }
 
-    public void setRespondedToFeedback(int respondedToFeedback) {
-        this.respondedToFeedback = respondedToFeedback;
-    }
-
     public int getAssessorsAccepted() {
         return assessorsAccepted;
-    }
-
-    public void setAssessorsAccepted(int assessorsAccepted) {
-        this.assessorsAccepted = assessorsAccepted;
     }
 
     @Override

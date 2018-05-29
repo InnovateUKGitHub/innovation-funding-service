@@ -26,8 +26,8 @@ import static org.innovateuk.ifs.documentation.InterviewAssignmentKeyStatisticsR
 import static org.innovateuk.ifs.documentation.InterviewAssignmentKeyStatisticsResourceDocs.interviewAssignmentKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewInviteStatisticsResourceDocs.interviewInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewInviteStatisticsResourceDocs.interviewInviteStatisticsResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewStatisticsResourceDocs.interviewStatisticsResourceBuilder;
-import static org.innovateuk.ifs.documentation.InterviewStatisticsResourceDocs.interviewStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewStatisticsResourceDocs.INTERVIEW_STATISTICS_RESOURCE_BUILDER;
+import static org.innovateuk.ifs.documentation.InterviewStatisticsResourceDocs.INTERVIEW_STATISTICS_RESOURCE_FIELDS;
 import static org.innovateuk.ifs.documentation.ReviewInviteStatisticsResourceDocs.reviewInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.ReviewInviteStatisticsResourceDocs.reviewInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.ReviewKeyStatisticsResourceDocs.reviewKeyStatisticsResourceBuilder;
@@ -222,7 +222,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     @Test
     public void getInterviewStatistics() throws Exception {
         long competitionId = 1L;
-        when(interviewStatisticsServiceMock.getInterviewStatistics(competitionId)).thenReturn(serviceSuccess(interviewStatisticsResourceBuilder.build()));
+        when(interviewStatisticsServiceMock.getInterviewStatistics(competitionId)).thenReturn(serviceSuccess(INTERVIEW_STATISTICS_RESOURCE_BUILDER.build()));
 
         mockMvc.perform(get("/competition-statistics/{id}/interview", competitionId))
                 .andExpect(status().isOk())
@@ -230,7 +230,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition")
                         ),
-                        responseFields(interviewStatisticsResourceFields)
+                        responseFields(INTERVIEW_STATISTICS_RESOURCE_FIELDS)
                 ));
 
         verify(interviewStatisticsServiceMock, only()).getInterviewStatistics(competitionId);
