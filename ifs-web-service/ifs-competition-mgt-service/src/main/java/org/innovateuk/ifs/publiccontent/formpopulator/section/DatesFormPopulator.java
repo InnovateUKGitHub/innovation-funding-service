@@ -26,9 +26,9 @@ public class DatesFormPopulator extends AbstractPublicContentFormPopulator<Dates
     protected void populateSection(DatesForm form, PublicContentResource publicContentResource) {
         List<Date> dateList = new ArrayList<>();
 
-        publicContentResource.getContentEvents().forEach(event -> {
-            dateList.add(mapEventToDate(event));
-        });
+        publicContentResource.getContentEvents().forEach(event ->
+            dateList.add(mapEventToDate(event))
+        );
 
         form.setDates(dateList);
     }

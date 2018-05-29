@@ -125,7 +125,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
             }
             milestoneRestService.updateMilestone(milestone).getSuccess();
         } catch (Exception ex) {
-            LOG.error(ex.getMessage());
+            LOG.error(ex.getMessage(), ex);
             return makeErrorList();
         }
         return errors;

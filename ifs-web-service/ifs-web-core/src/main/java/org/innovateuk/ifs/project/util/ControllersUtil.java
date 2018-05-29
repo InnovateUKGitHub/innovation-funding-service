@@ -12,7 +12,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 /**
  * utility class for project controllers.
  */
-public class ControllersUtil {
+public final class ControllersUtil {
+
+    private ControllersUtil() {}
 
     public static boolean isLeadPartner(final PartnerOrganisationRestService partnerOrganisationService, final Long projectId, final Long organisationId) {
         RestResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getProjectPartnerOrganisations(projectId);

@@ -105,10 +105,10 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
                 if (user.hasRoles(ASSESSOR, APPLICANT)) {
                   String role = cookieUtil.getCookieValue(request, "role");
                   if (!role.isEmpty()) {
-                      if(role.equals("assessor")) {
+                      if("assessor".equals(role)) {
                         return ASSESSOR_PROFILE_URL;
                       }
-                      if(role.equals("applicant")) {
+                      if("applicant".equals(role)) {
                         return USER_PROFILE_URL;
                       }
                   }

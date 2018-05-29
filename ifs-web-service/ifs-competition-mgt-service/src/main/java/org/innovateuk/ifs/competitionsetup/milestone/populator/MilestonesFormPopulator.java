@@ -47,9 +47,9 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         }
 
         LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
-        milestonesByCompetition.stream().forEachOrdered(milestone -> {
-            milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone, competitionResource));
-        });
+        milestonesByCompetition.stream().forEachOrdered(milestone ->
+            milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone, competitionResource))
+        );
 
 
         competitionSetupForm.setMilestoneEntries(milestoneFormEntries);

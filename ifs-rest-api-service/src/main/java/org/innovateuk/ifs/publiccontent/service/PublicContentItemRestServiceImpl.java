@@ -31,7 +31,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
         try {
             searchStringEncoded = UriUtils.encode(searchString.orElse(null), "UTF8");
         } catch (UnsupportedEncodingException e) {
-            LOG.error("searchString can not be encoded");
+            LOG.error("searchString can not be encoded", e);
         }
 
         String url = PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter";
@@ -48,7 +48,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
             URI uri = builder.build();
             uriString = uri.toString();
         } catch (URISyntaxException e) {
-            LOG.error("URI cannot be built");
+            LOG.error("URI cannot be built", e);
         }
 
         return getWithRestResultAnonymous( uriString, PublicContentItemPageResource.class);

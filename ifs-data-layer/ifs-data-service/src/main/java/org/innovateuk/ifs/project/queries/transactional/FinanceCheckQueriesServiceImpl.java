@@ -84,11 +84,9 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
             Optional<ProjectUser> financeContact = getFinanceContact(projectFinance.getProject(), projectFinance.getOrganisation());
             if(financeContact.isPresent()) {
                 ServiceResult<Void> result = service.addPost(post, threadId);
-                if (result.isSuccess()) {
-                    if (post.author.hasRole(PROJECT_FINANCE)) {
-                        Project project = projectFinance.getProject();
-                        return sendResponseNotification(financeContact.get().getUser(), project);
-                    }
+                if (result.isSuccess() && post.author.hasRole(PROJECT_FINANCE)) {
+                    Project project = projectFinance.getProject();
+                    return sendResponseNotification(financeContact.get().getUser(), project);
                 }
                 return result;
             } else {
