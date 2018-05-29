@@ -3,8 +3,6 @@ package org.innovateuk.ifs.finance.resource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -14,8 +12,6 @@ import java.util.Map;
  * Application finance resource holds the organisation's finance resources for an target
  */
 public abstract class BaseFinanceResource {
-
-    private static final Log LOG = LogFactory.getLog(BaseFinanceResource.class);
 
     protected Long id;
     protected Long organisation;

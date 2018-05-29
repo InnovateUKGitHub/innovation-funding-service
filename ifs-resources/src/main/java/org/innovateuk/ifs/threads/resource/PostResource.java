@@ -8,6 +8,7 @@ import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class PostResource {
     public final Long id;
@@ -37,11 +38,15 @@ public class PostResource {
 
         return new EqualsBuilder()
                 .append(id, that.id)
-                .append(id, that.id)
                 .append(author, that.author)
                 .append(body, that.body)
                 .append(attachments, that.attachments)
                 .append(createdOn, that.createdOn)
                 .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, author, body, attachments, createdOn);
     }
 }

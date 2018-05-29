@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -43,6 +45,8 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
         " panels if they competition supports them", securedType = InterviewApplicationAssignmentController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW_APPLICATIONS')")
 public class InterviewApplicationAssignmentController extends CompetitionManagementCookieController<InterviewAssignmentSelectionForm> {
+
+    private static final Log LOG = LogFactory.getLog(InterviewApplicationAssignmentController.class);
 
     private static final String SELECTION_FORM = "interviewAssignmentApplicationSelectionForm";
 
@@ -149,6 +153,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown selecting application for invite list", e);
             return createFailureResponse();
         }
     }
@@ -175,6 +180,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown adding applications to invite list", e);
             return createFailureResponse();
         }
     }

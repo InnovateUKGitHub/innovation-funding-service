@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/cost")
 public class FinanceRowController {
-    private static final Log LOG = LogFactory.getLog(FinanceRowController.class);
 
     @Autowired
     private FinanceRowCostsService financeRowCostsService;

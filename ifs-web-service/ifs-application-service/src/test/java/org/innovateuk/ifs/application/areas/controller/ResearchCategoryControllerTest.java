@@ -5,6 +5,9 @@ import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategor
 import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
+import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -37,6 +40,15 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
     @Mock
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
+
+    @Mock
+    private ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
 
     @Test
     public void getInnovationAreas() throws Exception {
