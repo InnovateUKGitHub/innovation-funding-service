@@ -20,7 +20,7 @@ Documentation
 ...
 ...               IFS-2746 External queries redesign: query statuses and banner messages
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+#Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
@@ -159,7 +159,8 @@ Finance contact receives an email when new query is posted and can see a pending
     [Documentation]  INFUND-4841 IFS-2746
     [Tags]  Email
     [Setup]  log in as a different user     &{PublicSector_lead_applicant_credentials}
-    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  Query regarding your finances  We have raised a query around your project finances.
+    #here  Rolling stock future developments: Query regarding your finances for project 116   ${PS_EF_Competition_Name}: Query regarding your finances ${PS_EF_APPLICATION_NUMBER}
+    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_EF_Competition_Name}: Query regarding your finances for project ${Queries_Application_No}  We have raised a query around your project finances.
     When the user navigates to the page     ${server}/project-setup/project/${Queries_Application_Project}
     Then the user should see the element    css=.status-warning  #Pending query
     When the user clicks the button/link    link=Finance checks
@@ -299,7 +300,7 @@ Project finance user can continue the conversation
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753
     [Tags]    Email
-    Then the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}    You have a reply to your query    We have replied to a query regarding your finances
+    Then the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${Queries_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752
