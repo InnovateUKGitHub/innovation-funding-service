@@ -169,7 +169,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             );
             return inviteContactEmailSendResult;
         } catch (IllegalArgumentException e) {
-            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().getName()));
+            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().getName()), e);
             return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
         }
     }

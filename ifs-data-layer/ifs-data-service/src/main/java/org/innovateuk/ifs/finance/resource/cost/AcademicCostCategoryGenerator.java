@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
@@ -59,16 +60,20 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
     }
 
     public static BigDecimal findCost(CostCategory academicCostCategory, List<? extends FinanceRow> rows){
-        String financeRowName = from(academicCostCategory).getFinanceRowName();
+        Optional<AcademicCostCategoryGenerator> generator = from(academicCostCategory);
+        if (!generator.isPresent()) {
+           return BigDecimal.ZERO;
+        }
+        String financeRowName = generator.get().getFinanceRowName();
         return rows.stream().filter(row -> financeRowName.equals(row.getName())).findFirst().map(row -> row.getCost()).orElseGet(() -> BigDecimal.ZERO);
     }
 
-    private static AcademicCostCategoryGenerator from(CostCategory academicCostCategory){
+    private static Optional<AcademicCostCategoryGenerator> from(CostCategory academicCostCategory){
         for (AcademicCostCategoryGenerator value: AcademicCostCategoryGenerator.values()){
             if (value.getLabel().equals(academicCostCategory.getLabel()) && value.getName().equals(academicCostCategory.getName())){
-                return value;
+                return Optional.of(value);
             }
         }
-        return null;
+        return Optional.empty();
     }
 }

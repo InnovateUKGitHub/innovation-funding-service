@@ -3,9 +3,11 @@ package org.innovateuk.ifs.util;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-public class TimeZoneUtil {
+public final class TimeZoneUtil {
 
     public static final ZoneId UK_TIME_ZONE = ZoneId.of("Europe/London");
+
+    private TimeZoneUtil() {}
 
     public static ZonedDateTime toUkTimeZone(ZonedDateTime zonedDateTime) {
         if (zonedDateTime != null) {

@@ -10,7 +10,9 @@ import static java.math.RoundingMode.HALF_UP;
 /**
  * Math utils
  */
-public class MathFunctions {
+public final class MathFunctions {
+
+    private MathFunctions() {}
 
     /**
      * Consistent scale

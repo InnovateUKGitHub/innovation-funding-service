@@ -61,6 +61,6 @@ public class ApplicationOverviewSectionViewModel {
     }
 
     public Boolean hasSubSection(Long sectionId) {
-        return subSections.get(sectionId).size() != 0;
+        return !subSections.get(sectionId).isEmpty();
     }
 }

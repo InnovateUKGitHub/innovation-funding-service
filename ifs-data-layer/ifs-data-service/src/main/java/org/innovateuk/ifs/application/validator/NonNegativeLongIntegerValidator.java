@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
@@ -15,7 +13,6 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
  */
 @Component
 public class NonNegativeLongIntegerValidator extends IntegerValidator {
-    private static final Log LOG = LogFactory.getLog(NonNegativeLongIntegerValidator.class);
 
     @Override
     protected void validate(BigDecimal value, Errors errors) {
