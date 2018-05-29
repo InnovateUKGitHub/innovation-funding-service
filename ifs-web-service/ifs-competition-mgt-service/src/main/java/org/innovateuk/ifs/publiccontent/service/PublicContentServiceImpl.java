@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.publiccontent.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
@@ -27,6 +29,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
  */
 @Service
 public class PublicContentServiceImpl implements PublicContentService {
+
+    private static final Log LOG = LogFactory.getLog(PublicContentServiceImpl.class);
 
     @Autowired
     private PublicContentRestService publicContentRestService;
@@ -73,6 +77,7 @@ public class PublicContentServiceImpl implements PublicContentService {
             try {
                 return contentGroupRestService.uploadFile(groupToUpload, attachment.getContentType(), attachment.getSize(), attachment.getOriginalFilename(), attachment.getBytes()).toServiceResult();
             } catch (IOException e) {
+                LOG.error("unable to upload file", e);
                 return serviceFailure(FILES_UNABLE_TO_CREATE_FILE);
             }
         } else {

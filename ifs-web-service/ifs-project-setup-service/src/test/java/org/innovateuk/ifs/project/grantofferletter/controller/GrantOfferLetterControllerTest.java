@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterModelPopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -11,6 +13,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -50,6 +53,12 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @InjectMocks
     @SuppressWarnings("unused")
     private GrantOfferLetterModelPopulator grantOfferLetterViewModelPopulator;
+
+    @Mock
+    private GrantOfferLetterService grantOfferLetterService;
+
+    @Mock
+    private ProjectService projectService;
 
     @Test
     public void testViewGrantOfferLetterPageWithSignedOfferAsProjectManager() throws Exception {

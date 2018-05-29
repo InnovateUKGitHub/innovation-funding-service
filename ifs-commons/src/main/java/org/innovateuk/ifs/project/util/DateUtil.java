@@ -10,7 +10,9 @@ import java.util.Date;
  * Used currently for spend profile controller and tests to convert a LocalDate to java Date type.
  * Other methods may be used in future for date conversion.
  */
-public class DateUtil {
+public final class DateUtil {
+
+    private DateUtil() {}
 
     public static Date asDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());

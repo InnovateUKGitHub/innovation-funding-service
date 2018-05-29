@@ -51,11 +51,8 @@ public class FinanceOverviewPopulator {
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
 
             applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId(), Optional.of(applicantSection.getCurrentApplicant().getOrganisation().getId()));
-            if(!form.isAdminMode()){
-
-                if(applicantSection.getCompetition().isOpen()) {
-                    openSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
-                }
+            if(!form.isAdminMode() && applicantSection.getCompetition().isOpen()) {
+                openSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
             }
         }
     }

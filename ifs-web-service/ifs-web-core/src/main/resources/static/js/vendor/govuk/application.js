@@ -12,7 +12,7 @@ $(document).ready(function () {
   GOVUK.shimLinksWithButtonRole.init()
 
   // Details/summary polyfill
-  // See /javascripts/vendor/details.polyfill.js
+  GOVUK.details.addDetailsPolyfill()
 })
 
 $(window).load(function () {

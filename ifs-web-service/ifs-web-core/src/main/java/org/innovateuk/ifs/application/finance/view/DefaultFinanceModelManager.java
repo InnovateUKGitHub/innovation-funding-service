@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.finance.view;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
@@ -35,6 +37,8 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
  */
 @Component
 public class DefaultFinanceModelManager implements FinanceModelManager {
+
+    private static final Log LOG = LogFactory.getLog(DefaultFinanceModelManager.class);
 
     @Autowired
     private QuestionService questionService;
@@ -166,6 +170,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         	try {
         		return FinanceRowType.fromType(formInputType);
         	} catch(IllegalArgumentException e) {
+        	    LOG.trace("no finance row type for form input type", e);
         		continue;
         	}
     	}

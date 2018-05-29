@@ -43,7 +43,7 @@ public class GuidanceRowTemplatePersistorImpl implements BaseChainedTemplatePers
     @Transactional
     public void cleanForParentEntity(FormInput formInput) {
         List<GuidanceRow> scoreRows = formInput.getGuidanceRows();
-        if(scoreRows.size() > 0) {
+        if(!scoreRows.isEmpty()) {
             scoreRows.forEach(scoreRow -> entityManager.detach(scoreRow));
             guidanceRowRepository.delete(scoreRows);
         }

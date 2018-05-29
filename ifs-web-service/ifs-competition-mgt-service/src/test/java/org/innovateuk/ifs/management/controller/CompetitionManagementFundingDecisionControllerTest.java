@@ -6,6 +6,9 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionSelectionCookie;
@@ -13,6 +16,7 @@ import org.innovateuk.ifs.competition.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +25,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,12 +33,16 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
+import static org.innovateuk.ifs.CookieTestUtil.encryptor;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -62,6 +69,18 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Mock
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
 
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private ApplicationSummaryRestService applicationSummaryRestService;
+
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private ApplicationFundingDecisionService applicationFundingDecisionService;
+
     private MockMvc mockMvc;
 
     private final FundingDecisionSelectionCookie cookieWithFilterAndSelectionParameters = createCookieWithFilterAndSelectionParameters();
@@ -74,11 +93,6 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Before
     public void setupMockMvc() {
         super.setUp();
-
-        String password = "mysecretpassword";
-        String salt = "109240124012412412";
-        encryptor = Encryptors.text(password, salt);
-
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();

@@ -80,7 +80,7 @@ Create new application with the same user
 check if there is an existing application in progress for this competition
     wait until page contains element    css=body
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
-            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
             ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
 
 create new submit application

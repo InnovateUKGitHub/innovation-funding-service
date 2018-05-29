@@ -4,9 +4,12 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.viewmodel.ManageAssessmentsViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -20,6 +23,12 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
     @InjectMocks
     @Spy
     private ManageAssessmentsModelPopulator manageAssessmentsModelPopulator;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
 
     @Test
     public void populateModel() throws Exception {
