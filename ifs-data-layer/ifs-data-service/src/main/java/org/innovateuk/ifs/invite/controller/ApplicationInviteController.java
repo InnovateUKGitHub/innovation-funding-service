@@ -7,8 +7,6 @@ import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +22,6 @@ import static org.innovateuk.ifs.invite.resource.ApplicationInviteConstants.GET_
 @RestController
 @RequestMapping("/invite")
 public class ApplicationInviteController {
-    private static final Log LOG = LogFactory.getLog(ApplicationInviteController.class);
 
     @Autowired
     private ApplicationInviteService applicationInviteService;

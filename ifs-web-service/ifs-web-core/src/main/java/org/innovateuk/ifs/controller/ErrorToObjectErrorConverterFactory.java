@@ -10,7 +10,9 @@ import java.util.function.Function;
 /**
  * Factory class for creating specific useful implementations of ErrorToObjectErrorConverter
  */
-public class ErrorToObjectErrorConverterFactory {
+public final class ErrorToObjectErrorConverterFactory {
+
+    private ErrorToObjectErrorConverterFactory() {}
 
     public static ErrorToObjectErrorConverter toField(String field) {
         return e -> Optional.of(newFieldError(e, field, e.getFieldRejectedValue()));

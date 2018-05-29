@@ -53,7 +53,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
 
     @Override
     public void updateFinancePosition(Long userId, Long projectId, String fieldName, String value, Long competitionId) {
-
+        // do nothing.
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
 
                         List<FinanceFormField> fieldGroup = groupedEntry.getValue();
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
-                        if (costItem != null && fieldGroup.size() > 0) {
+                        if (costItem != null && !fieldGroup.isEmpty()) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
                             ValidationMessages addResult = projectFinanceRowRestService.add(projectFinanceId, questionId, costItem).getSuccess();
                             Either<FinanceRowItem, ValidationMessages> either;

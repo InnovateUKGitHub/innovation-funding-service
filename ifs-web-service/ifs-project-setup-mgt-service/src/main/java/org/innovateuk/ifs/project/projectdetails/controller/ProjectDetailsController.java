@@ -121,14 +121,14 @@ public class ProjectDetailsController {
 
         projectRestService.withdrawProject(projectId)
                 .andOnSuccess(
-                        () -> { projectRestService.getProjectById(projectId)
+                        () ->  projectRestService.getProjectById(projectId)
                                 .andOnSuccess(
                                         project -> applicationRestService.withdrawApplication(project.getApplication())
                                             .andOnFailure(
                                                     () -> LOG.error("Application withdrawal failed")
                                             )
-                                );
-                        });
+                                )
+                        );
 
         return redirectToCompetitionManagementService(request,
                 "competition/" + competitionId + "/applications/previous");

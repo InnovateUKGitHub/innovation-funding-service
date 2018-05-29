@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.application.sectionupdater;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -20,6 +22,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
  */
 public abstract class AbstractSectionUpdater implements CompetitionSetupUpdater {
 
+    private static final Log LOG = LogFactory.getLog(AbstractSectionUpdater.class);
+
     @Override
     public ServiceResult<Void> autoSaveSectionField(CompetitionResource competitionResource, CompetitionSetupForm form, String fieldName, String value, Optional<Long> questionId) {
         try {
@@ -28,6 +32,7 @@ public abstract class AbstractSectionUpdater implements CompetitionSetupUpdater 
             setNestedProperty(form, fieldName, convert(value, propertyType));
             return saveSection(competitionResource, form);
         } catch (Exception e) {
+            LOG.error("exception thrown auto saving section field", e);
             return handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
         }
     }

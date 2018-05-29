@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -44,6 +46,8 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewAssessorInviteController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewAssessorInviteController extends CompetitionManagementCookieController<InterviewSelectionForm> {
+
+    private static final Log LOG = LogFactory.getLog(InterviewAssessorInviteController.class);
 
     private static final String SELECTION_FORM = "interviewSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
@@ -159,6 +163,7 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown selecting assessor for invite list", e);
             return createFailureResponse();
         }
     }
@@ -184,6 +189,7 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown adding assessors to invite list", e);
             return createFailureResponse();
         }
     }

@@ -2,13 +2,18 @@ package org.innovateuk.ifs.project.financechecks;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksOverviewController;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -26,6 +31,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit tests for finance check overview page for external users
  */
 public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMockMVCTest<ProjectFinanceChecksOverviewController> {
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private PartnerOrganisationRestService partnerOrganisationRestService;
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    private ProjectFinanceService projectFinanceService;
 
     @Test
     public void testOverviewPageWorks() throws Exception {

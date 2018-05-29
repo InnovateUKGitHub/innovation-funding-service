@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistration
 import org.innovateuk.ifs.assessment.registration.service.AssessorService;
 import org.innovateuk.ifs.assessment.registration.registration.AssessorRegistrationBecomeAnAssessorViewModel;
 import org.innovateuk.ifs.assessment.registration.registration.AssessorRegistrationViewModel;
+import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
@@ -72,6 +73,9 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Mock
     private AddressRestService addressRestService;
+
+    @Mock
+    private CompetitionInviteRestService competitionInviteRestService;
 
     @Override
     @Before
