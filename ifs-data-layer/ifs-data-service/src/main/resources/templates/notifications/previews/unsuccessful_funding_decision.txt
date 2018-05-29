@@ -1,3 +1,0 @@
-Dear [recipient name]
-
-We are pleased to inform you that your application [application title] has been successful.  Innovate UK, as part of UK Research and Innovation, will be offering a grant for the above project as part of the '${competitionName}' competition.
