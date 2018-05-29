@@ -15,13 +15,13 @@ public class InterviewFeedbackViewModelTest {
         assertThat(leadWithResponse.getBannerText(), is(equalTo(InterviewFeedbackViewModel.LEAD_WITH_RESPONSE_BANNER)));
         assertThat(leadWithResponse.hasResponse(), is(true));
         assertThat(leadWithResponse.hasFeedback(), is(true));
-        assertThat(leadWithResponse.displayResponseSection(), is(true));
+        assertThat(leadWithResponse.isResponseSectionEnabled(), is(true));
 
         InterviewFeedbackViewModel leadWithoutResponse = new InterviewFeedbackViewModel(null, "feedback", true, true);
 
         assertThat(leadWithoutResponse.getBannerText(), is(equalTo(InterviewFeedbackViewModel.LEAD_WITHOUT_RESPONSE_BANNER)));
         assertThat(leadWithoutResponse.hasResponse(), is(false));
-        assertThat(leadWithoutResponse.displayResponseSection(), is(false));
+        assertThat(leadWithoutResponse.isResponseSectionEnabled(), is(false));
 
         InterviewFeedbackViewModel collabWithResponse = new InterviewFeedbackViewModel("response", "feedback", false, false);
 

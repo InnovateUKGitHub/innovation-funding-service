@@ -55,7 +55,7 @@
         <p th:text="${interviewFeedbackViewModel.bannerText}">Some info</p>
     </div>
 
-    <th:block th:if="${interviewFeedbackViewModel.displayResponseSection()}">
+    <th:block th:if="${interviewFeedbackViewModel.responseSectionEnabled}">
         <th:block th:if="${interviewFeedbackViewModel.leadApplicant}">
             <form th:action="@{/application/{applicationId}/summary(applicationId=${currentApplication.id})}"
                   method="post" enctype="multipart/form-data" th:object="${interviewResponseForm}" novalidate="novalidate">

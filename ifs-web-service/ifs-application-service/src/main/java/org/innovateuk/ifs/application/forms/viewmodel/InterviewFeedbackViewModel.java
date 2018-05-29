@@ -47,7 +47,7 @@ public class InterviewFeedbackViewModel {
         return feedbackFilename != null;
     }
 
-    public boolean displayResponseSection() {
+    public boolean isResponseSectionEnabled() {
         return !feedbackReleased || hasResponse();
     }
 

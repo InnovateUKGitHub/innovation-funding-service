@@ -46,6 +46,6 @@ public class InterviewFeedbackViewModelPopulatorTest {
         assertThat(viewModel.hasResponse(), is(true));
         assertThat(viewModel.hasFeedback(), is(true));
         assertThat(viewModel.isFeedbackReleased(), is(true));
+        assertThat(viewModel.isResponseSectionEnabled(), is(true));
     }
-
 }
