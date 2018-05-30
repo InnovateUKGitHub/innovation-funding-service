@@ -81,11 +81,17 @@ public class Section implements Comparable<Section> {
     }
 
     /**
-     * Get questions from this section and childSections.
+     * Get questions of type LEAD_ONLY
      */
-    @JsonIgnore
-    public List<Question> fetchLeadQuestions() {
+    public List<Question> getLeadQuestions() {
         return questions.stream().filter(question -> question.isType(QuestionType.LEAD_ONLY)).collect(Collectors.toList());
+    }
+
+    /**
+     * Get questions not of type GENERAL
+     */
+    public List<Question> getGeneralQuestions() {
+        return questions.stream().filter(question -> !question.isType(QuestionType.LEAD_ONLY)).collect(Collectors.toList());
     }
 
     public Long getId() {

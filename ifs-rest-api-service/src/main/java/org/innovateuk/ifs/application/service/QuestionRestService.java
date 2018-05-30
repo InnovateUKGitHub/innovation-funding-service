@@ -13,6 +13,8 @@ import java.util.List;
 public interface QuestionRestService {
     RestResult<List<QuestionResource>> findByCompetition(long competitionId);
 
+    //RestResult<List<QuestionResource>> findByCompetitionForCompAdmin(long competitionId);
+
     RestResult<QuestionResource> findById(long questionId);
 
     RestResult<QuestionResource> getNextQuestion(long questionId);
