@@ -227,15 +227,10 @@ CompAdmin allocate applications to assessor
 Assessor can view the list of allocated applications
     [Documentation]  IFS-3534
     [Tags]
-    Given the user navigates to the page     ${SERVER}/assessment/assessor/dashboard/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/interview
+    Given log in as a different user         ${assessor_joel_email}   ${short_password}
+    When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/interview
     Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION_NAME}")
-    And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div:contains("Neural industries")   #Organisation could be made a variable
-
-
-    #Given the user navigates to the page     ${SERVER}/assessment/assessor/dashboard/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/interview
-    #Then the user should see the element     jQuery=h1:contains("Machine learning for transport infrastructure")
-    #And the user should see the element      jQuery=a:contains("Neural networks to optimise freight train routing") ~ div:contains("Neural industries")
-
+    And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
 
 *** Keywords ***
 Custom Suite Setup
