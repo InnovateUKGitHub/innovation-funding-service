@@ -49,7 +49,7 @@ public class SpendProfileCostValidator implements Validator {
                 ValidationMessages.rejectValue(errors, bindFieldName, ex.getSpendProfileValidationError().getErrorKey());
 
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(ex.getMessage());
+                    LOG.debug(ex.getMessage(), ex);
                 }
             }
         }

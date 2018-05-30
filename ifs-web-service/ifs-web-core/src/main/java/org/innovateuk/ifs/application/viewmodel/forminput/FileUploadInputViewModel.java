@@ -43,6 +43,6 @@ public class FileUploadInputViewModel extends AbstractFormInputViewModel {
     }
 
     public boolean isMayRemove() {
-        return viewmode.equals("edit");
+        return "edit".equals(viewmode);
     }
 }

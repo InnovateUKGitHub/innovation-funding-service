@@ -135,7 +135,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
                         .filter(Objects::nonNull)
                         .filter(e -> hasText(e.getErrorKey()))
                         .forEach(e -> {
-                            if (validationMessage.getObjectName().equals("costItem")) {
+                            if ("costItem".equals(validationMessage.getObjectName())) {
                                 if (hasText(e.getErrorKey())) {
                                     toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e));
                                 } else {

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.finance.resource.category;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import java.util.List;
  * Default representation for costs and defaults to summing up the costs.
  */
 public class GrantClaimCategory implements FinanceRowCostCategory {
-    private static final Log LOG = LogFactory.getLog(GrantClaimCategory.class);
 
     private List<FinanceRowItem> costs = new ArrayList<>();
     private BigDecimal total = BigDecimal.ZERO;

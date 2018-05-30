@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.sil.experian.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.experian.resource.*;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,13 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 
 /**
  * A simple endpoint to allow stubbing of the SIL outbound email endpoint for non-integration test environments
@@ -24,26 +25,37 @@ import org.apache.commons.logging.LogFactory;
 public class ExperianEndpointController {
     private static final Log LOG = LogFactory.getLog(ExperianEndpointController.class);
 
-    public static HashMap<SILBankDetails, ValidationResultWrapper> validationErrors;
-    public static HashMap<SILBankDetails, SilExperianError> otherErrorsDuringValidation;
-    public static ValidationResultWrapper defaultValidationResult;
-    public static HashMap<AccountDetails, VerificationResultWrapper> verificationResults;
-    public static HashMap<AccountDetails, SilExperianError> otherErrorsDuringVerification;
-    public static VerificationResultWrapper defaultVerificationResult;
+    static final Map<SILBankDetails, ValidationResultWrapper> VALIDATION_ERRORS;
+    private static final Map<SILBankDetails, SilExperianError> OTHER_ERRORS_DURING_VALIDATION;
+    private static final ValidationResultWrapper DEFAULT_VALIDATION_RESULT;
+    static final Map<AccountDetails, VerificationResultWrapper> VERIFICATION_RESULTS;
+    private static final Map<AccountDetails, SilExperianError> OTHER_ERRORS_DURING_VERIFICATION;
+    private static final VerificationResultWrapper DEFAULT_VERIFICATION_RESULT;
 
     static {
-        buildValidationTestData();
-        buildVerificationTestData();
+        VALIDATION_ERRORS = buildValidationErrors();
+        DEFAULT_VALIDATION_RESULT =
+                fromJson("{\n" +
+                        "  \"ValidationResult\": {\n" +
+                        "    \"checkPassed\": true,\n" +
+                        "    \"iban\": \"GB53BRNU00000412345677\"\n" +
+                        "  }\n" +
+                        "}", ValidationResultWrapper.class);
+
+        OTHER_ERRORS_DURING_VALIDATION = new HashMap<>();
+        VERIFICATION_RESULTS = buildVerificationResults();
+        OTHER_ERRORS_DURING_VERIFICATION = buildOtherErrorsDuringVerification();
+        DEFAULT_VERIFICATION_RESULT = new VerificationResultWrapper(new VerificationResult("1", "7", "3", "No Match", singletonList(new Condition("warning", 2, "Modulus check algorithm is unavailable for these account details"))));
     }
 
     @PostMapping("/experianValidate")
     public RestResult<Object> experianValidate(@RequestBody SILBankDetails bankDetails) {
         LOG.info("Stubbing out SIL experian validation: " + bankDetails);
-        ValidationResultWrapper validationResultWrapper = validationErrors.get(bankDetails);
+        ValidationResultWrapper validationResultWrapper = VALIDATION_ERRORS.get(bankDetails);
         if (validationResultWrapper == null) {
-            SilExperianError silError = otherErrorsDuringValidation.get(bankDetails);
+            SilExperianError silError = OTHER_ERRORS_DURING_VALIDATION.get(bankDetails);
             if(silError == null) {
-                validationResultWrapper = defaultValidationResult;
+                validationResultWrapper = DEFAULT_VALIDATION_RESULT;
             } else {
                 return restSuccess(silError);
             }
@@ -53,11 +65,11 @@ public class ExperianEndpointController {
 
     @PostMapping("/experianVerify")
     public RestResult<Object> experianVerify(@RequestBody AccountDetails accountDetails) {
-        VerificationResultWrapper verificationResultWrapper = verificationResults.get(accountDetails);
+        VerificationResultWrapper verificationResultWrapper = VERIFICATION_RESULTS.get(accountDetails);
         if (verificationResultWrapper == null) {
-            SilExperianError silError = otherErrorsDuringVerification.get(accountDetails);
+            SilExperianError silError = OTHER_ERRORS_DURING_VERIFICATION.get(accountDetails);
             if(silError == null) {
-                verificationResultWrapper = defaultVerificationResult;
+                verificationResultWrapper = DEFAULT_VERIFICATION_RESULT;
             } else {
                 return restSuccess(silError);
             }
@@ -65,8 +77,8 @@ public class ExperianEndpointController {
         return restSuccess(verificationResultWrapper);
     }
 
-    private static void buildValidationTestData() {
-        validationErrors = new HashMap<>();
+    private static Map<SILBankDetails, ValidationResultWrapper> buildValidationErrors() {
+        Map<SILBankDetails, ValidationResultWrapper> validationErrors = new HashMap<>();
         validationErrors.put(
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
@@ -255,22 +267,11 @@ public class ExperianEndpointController {
                         "    }\n" +
                         "  }\n" +
                         "}", ValidationResultWrapper.class));
-
-
-        defaultValidationResult =
-                fromJson("{\n" +
-                        "  \"ValidationResult\": {\n" +
-                        "    \"checkPassed\": true,\n" +
-                        "    \"iban\": \"GB53BRNU00000412345677\"\n" +
-                        "  }\n" +
-                        "}", ValidationResultWrapper.class);
-
-        otherErrorsDuringValidation = new HashMap<>();
+        return validationErrors;
     }
 
-    private static void buildVerificationTestData() {
-        verificationResults = new HashMap<>();
-
+    private static Map<AccountDetails, VerificationResultWrapper> buildVerificationResults() {
+        Map<AccountDetails, VerificationResultWrapper> verificationResults = new HashMap<>();
         verificationResults.put(
                 fromJson("{\n" +
                         "  \"sortcode\":\"404745\",\n" +
@@ -489,8 +490,11 @@ public class ExperianEndpointController {
                         "  }\n" +
                         "}", VerificationResultWrapper.class)
         );
+        return verificationResults;
+    }
 
-        otherErrorsDuringVerification = new HashMap<>();
+    private static Map<AccountDetails, SilExperianError> buildOtherErrorsDuringVerification() {
+        Map otherErrorsDuringVerification = new HashMap<>();
         otherErrorsDuringVerification.put(
                 fromJson("{\n" +
                         "  \"sortcode\":\"404745\",\n" +
@@ -508,7 +512,7 @@ public class ExperianEndpointController {
                         "  \"description\": \"Invalid Parameter\"\n" +
                         "}", SilExperianError.class)
         );
-
-        defaultVerificationResult = new VerificationResultWrapper(new VerificationResult("1", "7", "3", "No Match", singletonList(new Condition("warning", 2, "Modulus check algorithm is unavailable for these account details"))));
+        return otherErrorsDuringVerification;
     }
+
 }

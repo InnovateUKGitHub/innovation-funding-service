@@ -6,7 +6,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompetitionCoFundersResourceFixture {
+public final class CompetitionCoFundersResourceFixture {
+
+    private CompetitionCoFundersResourceFixture() {}
 
     public static List<CompetitionFunderResource> getTestCoFundersResouces(int count, Long competitionId) {
         List<CompetitionFunderResource> returnList = new ArrayList<>();
