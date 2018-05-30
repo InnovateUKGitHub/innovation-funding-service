@@ -8,6 +8,8 @@ apply from: rootProject.file("gradle-support/openshift-build.gradle")
 
 def buildJreDockerEnabled = project.hasProperty('buildJreDocker') ? project.property('buildJreDocker').toBoolean() : false
 buildDocker.enabled = buildJreDockerEnabled
+tagDocker.enabled = buildJreDockerEnabled
+osStageRemote.enabled = buildJreDockerEnabled
 
 buildDocker {
     tag = "infrastructure/oracle-jre"
