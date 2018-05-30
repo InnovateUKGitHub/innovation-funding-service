@@ -126,7 +126,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
         InterviewAssignmentKeyStatisticsResource interviewAssignmentKeyStatisticsResource = newInterviewAssignmentKeyStatisticsResource().build();
-        when(competitionKeyStatisticsRestService.getInterviewKeyStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(interviewAssignmentKeyStatisticsResource));
+        when(competitionKeyStatisticsRestService.getInterviewAssignmentStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(interviewAssignmentKeyStatisticsResource));
     }
 
     @Test
@@ -157,7 +157,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
-        inOrder.verify(competitionKeyStatisticsRestService).getInterviewKeyStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewAssignmentStatisticsByCompetition(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -188,7 +188,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
-        inOrder.verify(competitionKeyStatisticsRestService).getInterviewKeyStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewAssignmentStatisticsByCompetition(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -228,7 +228,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
-        inOrder.verify(competitionKeyStatisticsRestService).getInterviewKeyStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewAssignmentStatisticsByCompetition(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -369,7 +369,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService, competitionKeyStatisticsRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getStagedApplications(competition.getId(), page);
-        inOrder.verify(competitionKeyStatisticsRestService).getInterviewKeyStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewAssignmentStatisticsByCompetition(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -439,7 +439,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService, competitionKeyStatisticsRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getAssignedApplications(competition.getId(), page);
-        inOrder.verify(competitionKeyStatisticsRestService).getInterviewKeyStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewAssignmentStatisticsByCompetition(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
