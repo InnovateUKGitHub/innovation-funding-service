@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Function;
 
@@ -41,6 +43,7 @@ import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageRe
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
+import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -50,6 +53,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -342,6 +346,34 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
         verify(interviewApplicationFeedbackServiceMock).uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class));
+    }
+
+    @Test
+    public void getSentInvite() throws Exception {
+        long applicationId = 1L;
+        InterviewApplicationSentInviteResource sentInvite = newInterviewApplicationSentInviteResource()
+                .withSubject("Subject")
+                .withContent("content")
+                .withAssigned(ZonedDateTime.now())
+                .build();
+
+        when(interviewApplicationInviteServiceMock.getSentInvite(applicationId)).thenReturn(serviceSuccess(sentInvite));
+
+        mockMvc.perform(get("/interview-panel/sent-invite/{applicationId}", applicationId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to get invite of")
+                        ),
+                        responseFields(
+                                fieldWithPath("subject").type("String").description("Subject of the invite"),
+                                fieldWithPath("content").type("String").description("Content of the message sent"),
+                                fieldWithPath("assigned").type("Date").description("The date the message was sent")
+                        )
+                ));
+
+        verify(interviewApplicationInviteServiceMock, only()).getSentInvite(applicationId);
     }
 
     private HttpHeaders createFileUploadHeader(String contentType, long contentLength) {

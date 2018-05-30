@@ -112,6 +112,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                 asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
+                        "applicationId", application.getId(),
                         "competitionName", application.getCompetition().getName(),
                         "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
