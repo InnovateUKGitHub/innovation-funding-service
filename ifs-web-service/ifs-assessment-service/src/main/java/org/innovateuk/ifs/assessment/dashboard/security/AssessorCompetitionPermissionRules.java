@@ -38,9 +38,7 @@ public class AssessorCompetitionPermissionRules {
             " if its in interview panel.")
     public boolean assessorInterviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isAssessor(loggedInUser) &&
-                competition.getCompetitionStatus().isLaterThan(CompetitionStatus.IN_ASSESSMENT) &&
-                assessorAssignedToInterview(competitionCompositeId, loggedInUser);
+        return isAssessor(loggedInUser) && assessorAssignedToInterview(competitionCompositeId, loggedInUser);
     }
 
     private boolean assessorAssignedToInterview(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
