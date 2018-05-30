@@ -101,9 +101,9 @@ public class GrantOfferLetterController {
             ValidationHandler validationHandler,
             Model model,
             UserResource loggedInUser) {
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
-            return grantOfferLetterService.removeSignedGrantOfferLetter(projectId);
-        });
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () ->
+            grantOfferLetterService.removeSignedGrantOfferLetter(projectId)
+        );
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")

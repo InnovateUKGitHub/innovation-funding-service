@@ -80,10 +80,10 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
             expressionResult =
                     FragmentExpression.resolveExecutedFragmentExpression(context, executedFragmentExpression, true);
 
-        } else {
-
+        } else if(expression != null) {
             expressionResult = expression.execute(context, StandardExpressionExecutionContext.RESTRICTED);
-
+        } else {
+            expressionResult = null;
         }
 
 

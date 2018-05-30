@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.interview.form.InterviewOverviewSelectionForm;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsOverviewModelPopulator;
@@ -29,6 +31,8 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewInviteAssessorsOverviewController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<InterviewOverviewSelectionForm> {
+
+    private static final Log LOG = LogFactory.getLog(InterviewInviteAssessorsOverviewController.class);
 
     private static final String SELECTION_FORM = "interviewOverviewSelectionForm";
 
@@ -131,6 +135,7 @@ public class InterviewInviteAssessorsOverviewController extends CompetitionManag
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown selecting assessors for resend list", e);
             return createFailureResponse();
         }
     }
@@ -156,6 +161,8 @@ public class InterviewInviteAssessorsOverviewController extends CompetitionManag
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown adding assessors to resend list", e);
+
             return createFailureResponse();
         }
     }

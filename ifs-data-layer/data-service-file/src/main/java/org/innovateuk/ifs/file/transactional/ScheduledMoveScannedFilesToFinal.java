@@ -36,7 +36,7 @@ public class ScheduledMoveScannedFilesToFinal {
         final ServiceResult<List<File>> listServiceResult = moveAllFiles(scannedFileStorageStrategy, finalFileStorageStrategy, true);
         if (listServiceResult.isFailure()) {
             LOG.error("Failed to move some files from scanned to final: " + listServiceResult.getFailure());
-        } else if (listServiceResult.getSuccess() != null && listServiceResult.getSuccess().size() > 0) {
+        } else if (listServiceResult.getSuccess() != null && !listServiceResult.getSuccess().isEmpty()) {
             LOG.debug("Copied files from scanned to final: " + listServiceResult.getSuccess());
         }
     }

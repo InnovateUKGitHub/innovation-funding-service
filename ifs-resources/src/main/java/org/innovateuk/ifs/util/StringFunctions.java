@@ -11,7 +11,9 @@ import static org.apache.commons.lang3.StringUtils.stripToNull;
 /**
  * Utility methods for String objects.
  */
-public class StringFunctions {
+public final class StringFunctions {
+
+    private StringFunctions() {}
 
     /**
      * Count the number of words in a given content {@link String}. If the content contains HTML markup then this will first be parsed into a HTML Document and the text content will be extracted.
