@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.form;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -11,7 +12,7 @@ import java.util.function.Predicate;
  */
 public class InterviewApplicationSendForm extends SendInviteForm {
 
-    private List<MultipartFile> feedback;
+    private List<MultipartFile> feedback = new ArrayList<>();
     private Long attachFeedbackApplicationId;
     private Long removeFeedbackApplicationId;
     private int page = 0;

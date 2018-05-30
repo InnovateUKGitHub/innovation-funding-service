@@ -8,7 +8,9 @@ import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
+import org.innovateuk.ifs.publiccontent.form.ContentGroupForm;
 import org.innovateuk.ifs.publiccontent.viewmodel.AbstractPublicContentViewModel;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 /**
  * Abstract controller for all sections of public content with a repeating content group.
@@ -82,9 +88,20 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         //Pass in the public content resource after saving for success view.
         Supplier<String> successView = () -> getPage(publicContentService.getCompetitionById(competitionId), model, Optional.empty(), false);
 
-        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> formSaver().save(form, publicContent).andOnSuccess(action));
+        ServiceResult<Void> result = formSaver().save(form, publicContent);
 
+        validationHandler.addAnyErrors(error(removeDuplicates(result.getErrors())));
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ServiceResult<Void> fileResult = action.get();
+            Optional<ContentGroupForm> groupWithAttachment = CollectionFunctions.simpleFindFirst(form.getContentGroups(),
+                    contentGroupForm -> contentGroupForm.getAttachment() != null && !contentGroupForm.getAttachment().isEmpty());
+            if (groupWithAttachment.isPresent()) {
+                int index = form.getContentGroups().indexOf(groupWithAttachment.get());
+                validationHandler.addAnyErrors(error(removeDuplicates(fileResult.getErrors())), fileUploadField(String.format("contentGroups[%s].attachment", index)), defaultConverters());
+            }
+            return validationHandler.failNowOrSucceedWith(failureView, successView);
+        });
     }
 
     protected abstract PublicContentSectionType getType();
