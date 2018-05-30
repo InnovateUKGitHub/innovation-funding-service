@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.util.NumberUtils;
 import org.thymeleaf.context.ITemplateContext;
@@ -28,6 +30,8 @@ import java.math.BigDecimal;
 public final class NonZeroValueProcessor
         extends AbstractStandardExpressionAttributeTagProcessor
         implements IAttributeDefinitionsAware {
+
+    private static final Log LOG = LogFactory.getLog(NonZeroValueProcessor.class);
 
     // This is 1010 in order to make sure it is executed after "name" and "type"
     public static final int PRECEDENCE = 1010;
@@ -92,10 +96,11 @@ public final class NonZeroValueProcessor
 
     private String emptyStringWhenZero(String newValue) {
         BigDecimal decimal = BigDecimal.ZERO;
-        try{
+        try {
             decimal = NumberUtils.getBigDecimalValue(newValue, new Double(0));
-        }catch (IntegerNumberFormatException e ){
+        } catch (IntegerNumberFormatException e) {
             // Ignore number format exceptions..
+            LOG.trace(e);
         }
 
         if (StringUtils.isEmpty(newValue) || decimal.equals(BigDecimal.ZERO)) {

@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.exception;
 
-import org.innovateuk.ifs.commons.error.exception.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
+import org.innovateuk.ifs.commons.error.exception.*;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.ModelAndView;
@@ -70,6 +71,27 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     public ModelAndView objectNotFoundHandler(HttpServletRequest req, ObjectNotFoundException e) {
         LOG.debug("ErrorController  objectNotFoundHandler", e);
         return createErrorModelAndViewWithStatusAndView(e, req, e.getArguments(), HttpStatus.NOT_FOUND, "404");
+    }
+
+    @ResponseStatus(value= HttpStatus.NOT_FOUND)  // 404
+    @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
+    public ModelAndView methodArgumentMismatchHandler(HttpServletRequest req, MethodArgumentTypeMismatchException e) {
+        LOG.debug("ErrorController  methodArgumentMismatchHandler", e);
+        return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.NOT_FOUND, "404");
+    }
+
+    @ResponseStatus(value= HttpStatus.NOT_FOUND)  // 404
+    @ExceptionHandler(value = IncorrectStateForPageException.class)
+    public ModelAndView incorrectStateForPageHandler(HttpServletRequest req, IncorrectStateForPageException e) {
+        LOG.debug("ErrorController  incorrectStateForPageHandler", e);
+        return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.NOT_FOUND, "404");
+    }
+
+    @ResponseStatus(value= HttpStatus.METHOD_NOT_ALLOWED)  // 405
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    public ModelAndView httpRequestMethodNotSupportedHandler(HttpServletRequest req, HttpRequestMethodNotSupportedException e) {
+        LOG.debug("ErrorController  httpRequestMethodNotSupportedHandler", e);
+        return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.NOT_FOUND, "404");
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)    // 409

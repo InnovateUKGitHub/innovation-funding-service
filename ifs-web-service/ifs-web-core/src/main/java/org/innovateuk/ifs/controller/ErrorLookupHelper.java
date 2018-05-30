@@ -14,7 +14,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Thymeleaf templates doing the lookups for us, like in Ajax calls whose responses do not return templates but instead
  * lists of errors
  */
-public class ErrorLookupHelper {
+public final class ErrorLookupHelper {
+
+    private ErrorLookupHelper() {}
 
     public static List<String> lookupErrorMessageResourceBundleEntries(MessageSource messageSource, ErrorHolder errorHolder) {
         return simpleMap(errorHolder.getErrors(), e -> lookupErrorMessageResourceBundleEntry(messageSource, e));

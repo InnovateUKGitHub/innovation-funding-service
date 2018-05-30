@@ -43,11 +43,11 @@
             <p>Once you complete, this competition will be ready to open.</p>
             <a data-js-modal="complete-modal"
                th:disabled="${!setupReady}"
-               class="button no-margin-right"  id="compCTA">Complete</a>
+               class="button no-margin-right" id="compCTA">Complete</a>
         </div>
         <div class="extra-margin"
              th:unless="${model.general.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
-            <a data-js-modal="delete-modal" href="#">Delete competition</a>
+            <a data-js-modal="delete-modal" class="buttonlink">Delete competition</a>
         </div>
     </th:block>
 </th:block>

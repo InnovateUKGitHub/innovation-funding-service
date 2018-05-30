@@ -217,13 +217,13 @@ public class ApplicationAjaxController {
             }
         } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
             errors = this.saveApplicationStartDate(application, fieldName, value);
-        } else if (fieldName.equals("application.resubmission")) {
+        } else if ("application.resubmission".equals(fieldName)) {
             application.setResubmission(Boolean.valueOf(value));
             applicationService.save(application);
-        } else if (fieldName.equals("application.previousApplicationNumber")) {
+        } else if ("application.previousApplicationNumber".equals(fieldName)) {
             application.setPreviousApplicationNumber(value);
             applicationService.save(application);
-        } else if (fieldName.equals("application.previousApplicationTitle")) {
+        } else if ("application.previousApplicationTitle".equals(fieldName)) {
             application.setPreviousApplicationTitle(value);
             applicationService.save(application);
         }

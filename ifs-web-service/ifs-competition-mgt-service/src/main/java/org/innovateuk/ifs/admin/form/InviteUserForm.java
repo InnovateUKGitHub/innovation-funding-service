@@ -39,8 +39,8 @@ public class InviteUserForm extends BaseBindingResultTarget {
 
     private Role role;
 
-    // for spring form binding
     public InviteUserForm() {
+        // for spring form binding
     }
 
     public String getFirstName() {
