@@ -131,7 +131,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testSendGrantOfferLetterEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev"
+                "dashboardUrl", "https://ifs-local-dev",
+                "applicationId", 1234L,
+                "competitionName", "Competition 1"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("grant_offer_letter_project_manager_subject.txt", templateArguments);

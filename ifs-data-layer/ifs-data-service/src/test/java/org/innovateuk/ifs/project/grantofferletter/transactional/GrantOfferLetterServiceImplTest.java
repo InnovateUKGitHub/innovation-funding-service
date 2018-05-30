@@ -728,7 +728,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
+                "dashboardUrl", "https://ifs-local-dev/dashboard",
+                "competitionName", project.getApplication().getCompetition().getName(),
+                "applicationId", project.getApplication().getId()
         );
 
         when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
@@ -760,7 +762,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
+                "dashboardUrl", "https://ifs-local-dev/dashboard",
+                "competitionName", project.getApplication().getCompetition().getName(),
+                "applicationId", project.getApplication().getId()
         );
 
         when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());

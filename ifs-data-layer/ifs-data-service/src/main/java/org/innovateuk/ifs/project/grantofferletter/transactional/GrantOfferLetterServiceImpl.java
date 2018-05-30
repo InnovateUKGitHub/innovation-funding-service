@@ -453,6 +453,8 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("dashboardUrl", webBaseUrl);
+            notificationArguments.put("applicationId", project.getApplication().getId());
+            notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
 
             ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER);
 
