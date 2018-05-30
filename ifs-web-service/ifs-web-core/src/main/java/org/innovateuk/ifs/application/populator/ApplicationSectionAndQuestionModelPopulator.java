@@ -98,9 +98,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
         });
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
-        markAsCompleteEnabled.ifPresent(markAsCompleteEnabledBoolean -> {
-            questions.forEach(questionResource -> questionResource.setMarkAsCompletedEnabled(markAsCompleteEnabledBoolean));
-        });
+        markAsCompleteEnabled.ifPresent(markAsCompleteEnabledBoolean ->
+            questions.forEach(questionResource -> questionResource.setMarkAsCompletedEnabled(markAsCompleteEnabledBoolean))
+        );
 
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccess();

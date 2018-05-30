@@ -88,13 +88,13 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     }
 
     private List<QuestionResource> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
-        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst();
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Application questions".equals(sectionResource.getName())).findFirst();
         return section.isPresent() ? questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList())
                 : new ArrayList<>();
     }
 
     private List<QuestionResource> getSortedProjectDetails(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
-        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Project details")).findFirst();
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Project details".equals(sectionResource.getName())).findFirst();
         return section.isPresent() ? questionResources.stream()
                 .filter(questionResource ->  section.get().getQuestions().contains(questionResource.getId()))
                 .filter(questionResource -> !questionResource.getQuestionSetupType().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS))

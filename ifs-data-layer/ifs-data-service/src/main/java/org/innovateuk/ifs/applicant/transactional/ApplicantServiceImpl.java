@@ -166,7 +166,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private ServiceResult<List<ApplicantFormInputResponseResource>> mapFormInputResponse(ServiceResults results, FormInputResource formInputResource, Long applicationId, List<ApplicantResource> applicants) {
         List<ApplicantFormInputResponseResource> responses = new ArrayList<>();
         results.trackResult(() -> formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputResource.getId(), applicationId),
-                formInputResponseResources -> {
+                formInputResponseResources ->
                     formInputResponseResources.forEach(formInputResponseResource -> {
                         ApplicantFormInputResponseResource applicantResponse = new ApplicantFormInputResponseResource();
                         applicantResponse.setResponse(formInputResponseResource);
@@ -174,8 +174,8 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
                                 .filter(applicant -> formInputResponseResource.getUpdatedBy().equals(applicant.getProcessRole().getId()))
                                 .findAny().orElse(null));
                         responses.add(applicantResponse);
-                    });
-                });
+                    })
+                );
         return serviceSuccess(responses);
     }
 

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -14,7 +12,6 @@ import org.innovateuk.ifs.finance.resource.cost.TravelCost;
  * or for sending it over.
  */
 public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
-    private static final Log LOG = LogFactory.getLog(TravelCostHandler.class);
 
     public static final String COST_KEY = "travel";
 

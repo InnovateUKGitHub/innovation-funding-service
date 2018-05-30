@@ -6,11 +6,14 @@ import org.innovateuk.ifs.assessment.invite.populator.ReviewInviteModelPopulator
 import org.innovateuk.ifs.assessment.invite.viewmodel.ReviewInviteViewModel;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
+import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
@@ -44,6 +47,12 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
     @Spy
     @InjectMocks
     private ReviewInviteModelPopulator reviewInviteModelPopulator;
+
+    @Mock
+    private RejectionReasonRestService rejectionReasonRestService;
+
+    @Mock
+    private ReviewInviteRestService reviewInviteRestService;
 
     private List<RejectionReasonResource> rejectionReasons = newRejectionReasonResource()
             .withReason("Reason 1", "Reason 2")

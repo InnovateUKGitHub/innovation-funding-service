@@ -4,10 +4,14 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesController;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddCommentForm;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
@@ -21,13 +25,11 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -41,13 +43,13 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -90,6 +92,21 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Captor
     ArgumentCaptor<PostResource> savePostArgumentCaptor;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private ProjectFinanceService projectFinanceService;
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
+
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
@@ -98,7 +115,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Before
     public void setup() {
         super.setUp();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
         when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
         when(organisationService.getOrganisationForUser(financeContactUser.getId())).thenReturn(leadOrganisationResource);
         when(projectService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(partnerOrg);

@@ -14,6 +14,8 @@ Documentation     INFUND-2601 As a competition administrator I want a view of al
 ...               IFS-1620 Internal Project Setup dashboard: project visibility needed after successful notification not feedback released
 ...
 ...               IFS-2903 Identify root cause of failure in changing the Funding decision
+...
+...               IFS-3560 Email subject for application funded and funding to include competition name and application ID
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  Applicant
@@ -23,7 +25,7 @@ Resource          ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
-${application1Subject}  Notification regarding your application ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
+${application1Subject}  ${FUNDERS_PANEL_COMPETITION_NAME}: Notification regarding your application ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
 ${application2Subject}  Notification regarding your application ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: ${FUNDERS_PANEL_APPLICATION_2_TITLE}
 ${onHoldMessage}  We have put your project on hold because our Assessment department is very busy at the moment.
 ${unsuccMessage}  We are sorry to annouce that your application has failed the assessment procedure.
@@ -50,7 +52,7 @@ Internal user puts the application on hold
     Given the internal user marks the application as  On hold  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
 
 Proj Finance user can send Fund Decision notification
-    [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813
+    [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813, IFS-3560
     [Tags]  HappyPath
     [Setup]  log in as a different user      &{internal_finance_credentials}
     Given the user navigates to the page     ${funders_panel_competition_url}
@@ -59,7 +61,7 @@ Proj Finance user can send Fund Decision notification
     And the user should see the element      jQuery=button[disabled]:contains("Write and send email")
     When the user selects the checkbox       app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     Then the user clicks the button/link     jQuery=button:contains("Write and send email")
-    And the user should see the element      css=#subject[value^="Notification regarding your application"]
+    And the user should see the element      css=#subject[value^="<competition name>: Notification regarding your application <application number>: <application title>"]
     When the user clicks the button/link     jQuery=summary:contains("Review list of recipients")[aria-expanded="false"]
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     And the user should not see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")

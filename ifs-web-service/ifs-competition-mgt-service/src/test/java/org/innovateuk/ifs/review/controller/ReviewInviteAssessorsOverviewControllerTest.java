@@ -5,17 +5,22 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewInviteAssessorsOverviewViewModel;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -26,6 +31,7 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -52,6 +58,18 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
     @InjectMocks
     private ReviewInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+
+    @Mock
+    private ReviewInviteRestService reviewInviteRestService;
+
     @Override
     protected ReviewInviteAssessorsOverviewController supplyControllerUnderTest() {
         return new ReviewInviteAssessorsOverviewController();
@@ -65,7 +83,7 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
     @Before
     public void setUp() {
         super.setUp();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)

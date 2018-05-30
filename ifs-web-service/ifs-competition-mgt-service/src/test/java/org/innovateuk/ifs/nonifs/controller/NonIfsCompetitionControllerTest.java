@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.nonifs.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
@@ -35,6 +36,8 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
     public NonIfsDetailsFormSaver nonIfsDetailsFormSaver;
     @Mock
     public CompetitionSetupRestService competitionSetupRestService;
+    @Mock
+    private CompetitionService competitionService;
 
     @Override
     protected NonIfsCompetitionController supplyControllerUnderTest() {

@@ -3,17 +3,21 @@ package org.innovateuk.ifs.project.status.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -23,10 +27,7 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -34,12 +35,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class TeamStatusControllerTest extends BaseControllerMockMVCTest<TeamStatusController> {
 
-    @Before
-    public void setUp() {
-        super.setUp();
-        setupInvites();
-        loginDefaultUser();
-    }
+//    @Before
+//    public void setUp() {
+//        super.setUp();
+//        setupInvites();
+//    }
+
+    @Mock
+    private StatusService statusService;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private CompetitionService competitionService;
 
     @Override
     protected TeamStatusController supplyControllerUnderTest() {

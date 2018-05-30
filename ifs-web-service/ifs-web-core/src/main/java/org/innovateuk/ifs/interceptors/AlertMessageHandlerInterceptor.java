@@ -2,6 +2,8 @@ package org.innovateuk.ifs.interceptors;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import static java.util.Collections.emptyList;
  * Look for alertmessages on every page that has a modelAndView
  */
 public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
+
+    private static final Log LOG = LogFactory.getLog(AlertMessageHandlerInterceptor.class);
 
     private static final String ALERT_MESSAGES = "alertMessages";
 
@@ -41,6 +45,7 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
         try {
             alerts = ALERT_CACHE.get(ALERT_MESSAGES, () -> alertRestService.findAllVisible().getSuccess());
         } catch (ExecutionException e) {
+            LOG.error("exception thrown adding alert messages", e);
             alerts = emptyList();
         }
 

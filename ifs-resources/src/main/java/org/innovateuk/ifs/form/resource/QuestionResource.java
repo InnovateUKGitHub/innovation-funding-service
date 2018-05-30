@@ -25,9 +25,7 @@ public class QuestionResource implements Comparable<QuestionResource> {
     private Long section;
     private String questionNumber;
     private QuestionType type;
-
-    // @ZeroDowntime(reference = "IFS-2833", description = "Set a default value for questionSetupType. Remove in cleanup")
-    private CompetitionSetupQuestionType questionSetupType = CompetitionSetupQuestionType.ASSESSED_QUESTION;
+    private CompetitionSetupQuestionType questionSetupType;
     private Integer assessorMaximumScore;
 
     public QuestionResource() {
@@ -199,6 +197,7 @@ public class QuestionResource implements Comparable<QuestionResource> {
                 .append(section, that.section)
                 .append(questionNumber, that.questionNumber)
                 .append(type, that.type)
+                .append(questionSetupType, that.questionSetupType)
                 .append(assessorMaximumScore, that.assessorMaximumScore)
                 .isEquals();
     }
@@ -219,6 +218,7 @@ public class QuestionResource implements Comparable<QuestionResource> {
                 .append(section)
                 .append(questionNumber)
                 .append(type)
+                .append(questionSetupType)
                 .append(assessorMaximumScore)
                 .toHashCode();
     }

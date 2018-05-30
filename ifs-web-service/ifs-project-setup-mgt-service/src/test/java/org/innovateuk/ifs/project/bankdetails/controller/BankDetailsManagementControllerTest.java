@@ -2,10 +2,13 @@ package org.innovateuk.ifs.project.bankdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.populator.BankDetailsReviewModelPopulator;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -52,8 +55,18 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     private List<ProjectUserResource> projectUsers;
     private BankDetailsReviewViewModel bankDetailsReviewViewModel;
     private ChangeBankDetailsViewModel notUpdatedChangeBankDetailsViewModel;
+
     @Mock
     private BankDetailsReviewModelPopulator bankDetailsReviewModelPopulator;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private BankDetailsRestService bankDetailsRestService;
+
+    @Mock
+    private ProjectService projectService;
 
     @Before
     public void setUp(){
