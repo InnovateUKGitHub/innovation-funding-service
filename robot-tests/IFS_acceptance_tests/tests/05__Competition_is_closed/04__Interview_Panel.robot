@@ -55,6 +55,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...
 ...               IFS-3452 Allocate applications to assessors - Allocated tab
 ...
+...               IFS-3535 Assign applications to interview panel - View of previously sent invite
+...
 ...               IFS-3534 Assessor dashboard - List of applications
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
@@ -126,6 +128,15 @@ Competition Admin can send or cancel sending the invitation to the applicants
     Then the user reads his email              ${aaron_robertson_email}   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
     When log in as a different user            ${aaron_robertson_email}   ${short_password}
     Then the user should see the element       jQuery=.progress-list div:contains("Neural networks to optimise freight train routing") ~ div span:contains("Invited to interview")
+
+CompAdmin view invite sent to the applicant
+    [Documentation]  IFS-3535
+    [Tags]
+    [Setup]  log in as a different user     &{Comp_admin1_credentials}
+    Given the user navigates to the page    ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
+    When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td a:contains("View invite")
+    Then the user should see the element    jQuery=h1:contains("Review invite email")
+    And the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -227,15 +238,10 @@ CompAdmin allocate applications to assessor
 Assessor can view the list of allocated applications
     [Documentation]  IFS-3534
     [Tags]
-    Given the user navigates to the page     ${SERVER}/assessment/assessor/dashboard/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/interview
+    Given log in as a different user         ${assessor_joel_email}   ${short_password}
+    When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/interview
     Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION_NAME}")
-    And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div:contains("Neural industries")   #Organisation could be made a variable
-
-
-    #Given the user navigates to the page     ${SERVER}/assessment/assessor/dashboard/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/interview
-    #Then the user should see the element     jQuery=h1:contains("Machine learning for transport infrastructure")
-    #And the user should see the element      jQuery=a:contains("Neural networks to optimise freight train routing") ~ div:contains("Neural industries")
-
+    And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
 
 *** Keywords ***
 Custom Suite Setup
