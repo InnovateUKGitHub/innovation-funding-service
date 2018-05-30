@@ -4,12 +4,10 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
