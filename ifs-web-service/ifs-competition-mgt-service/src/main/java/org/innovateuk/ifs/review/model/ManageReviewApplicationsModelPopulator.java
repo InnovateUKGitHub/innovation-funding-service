@@ -3,7 +3,7 @@ package org.innovateuk.ifs.review.model;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.review.viewmodel.ManagePanelApplicationsViewModel;
 import org.innovateuk.ifs.review.viewmodel.ManageReviewApplicationsRowViewModel;
 import org.springframework.stereotype.Component;

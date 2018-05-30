@@ -4,8 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
-import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

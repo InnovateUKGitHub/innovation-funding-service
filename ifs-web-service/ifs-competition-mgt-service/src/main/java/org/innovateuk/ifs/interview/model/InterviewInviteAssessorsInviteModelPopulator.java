@@ -6,8 +6,8 @@ import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewInviteAssessorsInviteViewModel;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
-import org.innovateuk.ifs.management.viewmodel.InvitedAssessorRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
+import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

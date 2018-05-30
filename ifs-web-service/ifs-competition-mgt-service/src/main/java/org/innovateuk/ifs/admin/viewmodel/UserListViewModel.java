@@ -3,7 +3,7 @@ package org.innovateuk.ifs.admin.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;

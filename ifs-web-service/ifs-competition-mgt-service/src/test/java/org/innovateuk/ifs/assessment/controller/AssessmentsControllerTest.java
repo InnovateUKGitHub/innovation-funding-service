@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.management.model.ManageAssessmentsModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.ManageAssessmentsViewModel;
+import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
+import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 

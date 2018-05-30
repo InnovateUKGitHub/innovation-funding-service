@@ -9,8 +9,8 @@ import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestServic
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
-import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;

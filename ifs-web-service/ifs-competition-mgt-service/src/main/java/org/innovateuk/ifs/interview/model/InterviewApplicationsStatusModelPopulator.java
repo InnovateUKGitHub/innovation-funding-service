@@ -2,15 +2,13 @@ package org.innovateuk.ifs.interview.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationStatusRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationStatusViewModel;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentApplicationResource;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

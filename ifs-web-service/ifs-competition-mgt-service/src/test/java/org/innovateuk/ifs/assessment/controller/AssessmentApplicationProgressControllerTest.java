@@ -10,8 +10,10 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.management.assessment.populator.ApplicationAssessmentProgressModelPopulator;
+import org.innovateuk.ifs.management.assessment.viewmodel.*;
+import org.innovateuk.ifs.management.assessor.viewmodel.ApplicationAvailableAssessorsRowViewModel;
+import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.*;
 

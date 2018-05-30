@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.review.model.ManageReviewApplicationsModelPopulator;
 import org.innovateuk.ifs.review.viewmodel.ManagePanelApplicationsViewModel;
 import org.junit.Test;

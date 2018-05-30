@@ -11,10 +11,10 @@ import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestServi
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressRemoveViewModel;
-import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressViewModel;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressViewModel;
+import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;

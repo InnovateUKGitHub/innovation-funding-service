@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.interview.form;
 
-import org.innovateuk.ifs.management.form.SendInviteForm;
+import org.innovateuk.ifs.management.notification.form.SendInviteForm;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

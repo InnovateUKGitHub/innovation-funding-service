@@ -17,7 +17,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
+import org.innovateuk.ifs.management.application.populator.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;

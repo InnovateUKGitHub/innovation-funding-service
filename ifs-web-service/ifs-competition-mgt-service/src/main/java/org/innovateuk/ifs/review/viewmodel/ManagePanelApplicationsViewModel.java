@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.review.viewmodel;
 
 
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 
 import java.util.List;
 
