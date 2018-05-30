@@ -47,14 +47,13 @@ public class ApplicationNotificationTemplateRestServiceImplTest extends BaseRest
     @Test
     public void getIneligibleNotificationTemplate() {
         long competitionId = 1L;
-        long userId = 2L;
-        String expectedUrl = baseUrl + "/ineligible/" + competitionId + "/" + userId;
+        String expectedUrl = baseUrl + "/ineligible/" + competitionId;
 
         ApplicationNotificationTemplateResource applicationNotificationTemplateResource = new ApplicationNotificationTemplateResource();
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationNotificationTemplateResource.class, applicationNotificationTemplateResource);
 
-        RestResult<ApplicationNotificationTemplateResource> result = service.getIneligibleNotificationTemplate(competitionId, userId);
+        RestResult<ApplicationNotificationTemplateResource> result = service.getIneligibleNotificationTemplate(competitionId);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(applicationNotificationTemplateResource, result.getSuccess());
     }

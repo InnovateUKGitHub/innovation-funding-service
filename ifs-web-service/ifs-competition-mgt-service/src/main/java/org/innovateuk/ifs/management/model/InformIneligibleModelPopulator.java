@@ -32,8 +32,12 @@ public class InformIneligibleModelPopulator {
                 .filter(pr -> pr.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .findFirst();
 
-        if (form.getMessage() == null && leadApplicant.isPresent()) {
-            form.setMessage(templateRestService.getIneligibleNotificationTemplate(applicationResource.getCompetition(), leadApplicant.get().getUser()).getSuccess().getMessageBody());
+        if (form.getMessage() == null) {
+            form.setMessage(templateRestService.getIneligibleNotificationTemplate(applicationResource.getCompetition()).getSuccess().getMessageBody());
+        }
+
+        if (form.getSubject() == null) {
+            form.setSubject(String.format("Notification regarding your application %s: %s", applicationResource.getId(), applicationResource.getName()));
         }
 
         return new InformIneligibleViewModel(

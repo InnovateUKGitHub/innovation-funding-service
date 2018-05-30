@@ -28,9 +28,8 @@ public class ApplicationNotificationTemplateController {
         return applicationNotificationTemplateService.getUnsuccessfulNotificationTemplate(competitionId).toGetResponse();
     }
 
-    @RequestMapping("/ineligible/{competitionId}/{userId}")
-    public RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(@PathVariable("competitionId") long competitionId,
-                                                                                                 @PathVariable("userId") long userId) {
-        return applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId, userId).toGetResponse();
+    @RequestMapping("/ineligible/{competitionId}")
+    public RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(@PathVariable("competitionId") long competitionId) {
+        return applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId).toGetResponse();
     }
 }

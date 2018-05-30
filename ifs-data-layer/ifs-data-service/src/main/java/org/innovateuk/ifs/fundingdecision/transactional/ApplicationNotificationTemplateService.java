@@ -21,5 +21,5 @@ public interface ApplicationNotificationTemplateService {
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	@SecuredBySpring(value = "GET_DEFAULT_INELIGIBLE_TEMPLATE", securedType = FundingDecision.class, description = "Comp Admins should be able to see default templates for application emails.")
-	ServiceResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId, long userId);
+	ServiceResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId);
 }

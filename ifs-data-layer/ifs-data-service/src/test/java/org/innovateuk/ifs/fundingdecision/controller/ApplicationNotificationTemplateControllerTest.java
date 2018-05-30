@@ -53,9 +53,9 @@ public class ApplicationNotificationTemplateControllerTest extends BaseControlle
         long competitionId = 1L;
         long userId = 2L;
         ApplicationNotificationTemplateResource resource = new ApplicationNotificationTemplateResource();
-        when(applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId, userId)).thenReturn(serviceSuccess(resource));
+        when(applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/application-notification-template/ineligible/1/2")
+        mockMvc.perform(get("/application-notification-template/ineligible/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(resource)));

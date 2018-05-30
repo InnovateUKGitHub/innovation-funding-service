@@ -71,14 +71,13 @@ public class ApplicationNotificationTemplateControllerDocumentation extends Base
         long userId = 2L;
         ApplicationNotificationTemplateResource resource = new ApplicationNotificationTemplateResource("Content");
 
-        when(applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId, userId)).thenReturn(serviceSuccess(resource));
+        when(applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/application-notification-template/ineligible/{competitionId}/{userId}", competitionId, userId)
+        mockMvc.perform(get("/application-notification-template/ineligible/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(document("application-notification-template/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("Competition ID to get the template of."),
-                                parameterWithName("userId").description("Recipient of the email.")
+                                parameterWithName("competitionId").description("Competition ID to get the template of.")
                         ),
                         responseFields(
                                 fieldWithPath("messageBody").description("The body of the template"))

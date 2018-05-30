@@ -7,8 +7,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -22,7 +20,6 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.DEFAULT_NOTIFICATION_TEMPLATES_PATH;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -43,9 +40,6 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
 
     @Mock
     private CompetitionRepository competitionRepository;
-
-    @Mock
-    private UserRepository userRepository;
 
     @Override
     protected ApplicationNotificationTemplateServiceImpl supplyServiceUnderTest() {
@@ -99,20 +93,16 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
     @Test
     public void getIneligibleNotificationTemplate() {
         long competitionId = 1L;
-        long userId = 2L;
         Competition competition = newCompetition().withName("Competition").build();
-        User user = newUser().withFirstName("a").withLastName("b").build();
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
-        arguments.put("recipient", user.getName());
 
         when(competitionRepository.findOne(competitionId)).thenReturn(competition);
-        when(userRepository.findOne(userId)).thenReturn(user);
         when(renderer.renderTemplate(eq(systemNotificationSource), any(),
                 eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "ineligible_application.html"), eq(arguments)))
                 .thenReturn(serviceSuccess("MessageBody"));
 
-        ServiceResult<ApplicationNotificationTemplateResource> result = service.getIneligibleNotificationTemplate(competitionId, userId);
+        ServiceResult<ApplicationNotificationTemplateResource> result = service.getIneligibleNotificationTemplate(competitionId);
 
         assertTrue(result.isSuccess());
         assertEquals("MessageBody", result.getSuccess().getMessageBody());

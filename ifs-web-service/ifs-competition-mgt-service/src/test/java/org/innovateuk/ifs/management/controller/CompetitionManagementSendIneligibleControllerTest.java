@@ -83,11 +83,11 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
                 new InformIneligibleViewModel(competitionId, applicationId, competitionName, applicationName, leadApplicant);
         InformIneligibleForm expectedForm = new InformIneligibleForm();
         expectedForm.setMessage("MessageBody");
-
+        expectedForm.setSubject(String.format("Notification regarding your application %s: %s", applicationResource.getId(), applicationResource.getName()));
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(processRoles);
-        when(applicationNotificationTemplateRestService.getIneligibleNotificationTemplate(competitionId, 2L))
+        when(applicationNotificationTemplateRestService.getIneligibleNotificationTemplate(competitionId))
                 .thenReturn(restSuccess(new ApplicationNotificationTemplateResource("MessageBody")));
 
         mockMvc.perform(get("/competition/application/{applicationId}/ineligible", applicationId))

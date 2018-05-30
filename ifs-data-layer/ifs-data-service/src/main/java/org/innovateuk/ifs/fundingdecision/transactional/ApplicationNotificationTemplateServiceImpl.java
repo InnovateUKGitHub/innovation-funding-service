@@ -8,8 +8,6 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,9 +31,6 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -63,12 +58,10 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
     }
 
     @Override
-    public ServiceResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId, long userId) {
+    public ServiceResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId) {
         return renderTemplate(competitionId, "ineligible_application.html", (competition) -> {
-            User user = userRepository.findOne(userId);
             Map<String, Object> arguments = new HashMap<>();
             arguments.put("competitionName", competition.getName());
-            arguments.put("recipient", user.getName());
             return arguments;
         });
     }
