@@ -23,7 +23,9 @@ public class ReviewPermissionRules {
             "if the competition is in the correct state.")
     public boolean reviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isInternalAdmin(loggedInUser) && competitionHasReviewPanel(competition);
+        return isInternalAdmin(loggedInUser) &&
+                competitionHasReviewPanel(competition) &&
+                !competitionIsInInformOrLater(competition);
     }
 
     @PermissionRule(value = "REVIEW_APPLICATIONS", description = "Only project finance or competition admin can " +
@@ -39,5 +41,9 @@ public class ReviewPermissionRules {
 
     private boolean competitionIsInFundersPanel(CompetitionResource competition) {
         return competition.getCompetitionStatus().equals(CompetitionStatus.FUNDERS_PANEL);
+    }
+
+    private boolean competitionIsInInformOrLater(CompetitionResource competition) {
+        return competition.getCompetitionStatus().isLaterThan(CompetitionStatus.FUNDERS_PANEL);
     }
 }

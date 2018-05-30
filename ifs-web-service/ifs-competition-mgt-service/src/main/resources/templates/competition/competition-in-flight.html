@@ -106,8 +106,7 @@
                         </a>
                     </li>
                     <li th:unless="${model.readOnly}">
-                        <a class="disabled" aria-disabled="true"
-                           th:unless="${model.assessmentPanelEnabled}">
+                        <a class="disabled" aria-disabled="true" th:unless="${model.assessmentPanelEnabled}">
                             Manage assessment panel
                         </a>
                         <a th:if="${model.assessmentPanelEnabled}" th:href="@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
@@ -115,8 +114,7 @@
                         </a>
                     </li>
                     <li th:unless="${model.readOnly}">
-                        <a class="disabled" aria-disabled="true"
-                           th:unless="${model.interviewPanelEnabled}">
+                        <a class="disabled" aria-disabled="true" th:unless="${model.interviewPanelEnabled}">
                             Manage interview panel
                         </a>
                         <a th:if="${model.interviewPanelEnabled}" th:href="@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}">
