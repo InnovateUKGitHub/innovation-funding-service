@@ -1,4 +1,5 @@
-
+import com.bmuschko.gradle.docker.tasks.image.DockerPullImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
@@ -20,4 +21,20 @@ tagDocker {
 
 osStageRemote {
     imageName = registryCredentials.url + "/infrastructure/oracle-jre"
+    tag = "latest"
+}
+
+
+task pullImage(type: DockerPullImage) {
+    repository = "${project.dockerRegistry}/infrastructure/oracle-jre"
+}
+
+task tagPulledImage(type: DockerTagImage) {
+    imageId =  "${project.dockerRegistry}/infrastructure/oracle-jre"
+    repository = "infrastructure/oracle-jre"
+    tag = "latest"
+}
+
+task pullAndTagImage(dependsOn:[pullImage, tagPulledImage]) {
+    tagPulledImage.mustRunAfter pullImage
 }
