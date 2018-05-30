@@ -239,7 +239,7 @@ Assessor can view the list of allocated applications
     [Documentation]  IFS-3534
     [Tags]
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
-    When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/interview
+    When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${CLOSED_COMPETITION}/interview
     Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
 

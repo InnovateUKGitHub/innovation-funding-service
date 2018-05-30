@@ -5,38 +5,30 @@ if (file(targetBuildFile).exists()) {
 
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
+apply from: rootProject.file("gradle-support/asciidoc.gradle")
+
 
 bootRepackage {
     enabled = false
 }
 
-configurations {
-    testArtifacts
-}
-task testJar (type: Jar) {
-    baseName = "${project.name}-test"
-    from sourceSets.test.output
-}
-artifacts {
-    testArtifacts testJar
-}
-
+test.finalizedBy asciidoctor
 
 dependencies {
     compile project(":ifs-commons")
-    compile project(":ifs-security")
+    compile project(":ifs-data-layer:data-service-commons")
+
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.apache.tika:tika-parsers:1.14"
     compile "org.apache.httpcomponents:httpasyncclient"
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
     testCompile "com.h2database:h2:1.4.196"
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "net.sf.opencsv:opencsv:2.3"
 
 }
-
