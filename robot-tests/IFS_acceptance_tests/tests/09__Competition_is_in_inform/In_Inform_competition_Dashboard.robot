@@ -33,7 +33,7 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...
 ...               IFS-2640 Innovation Leads can access ‘Previous’ tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
-Suite Teardown    the user closes the browser
+Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 
