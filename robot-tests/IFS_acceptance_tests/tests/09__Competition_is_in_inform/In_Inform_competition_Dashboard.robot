@@ -33,7 +33,7 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...
 ...               IFS-2640 Innovation Leads can access ‘Previous’ tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
-Suite Teardown    Close browser and delete emails
+Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 
@@ -93,7 +93,7 @@ Release feedback
     Then The user should not see the element             jQuery=h1:contains("Inform")
     When The user clicks the button/link                 jQuery=a:contains("Live")
     Then The user should not see the element             link=${INFORM_COMPETITION_NAME}
-    And the user reads his email                         ${test_mailbox_two}+releasefeedback@gmail.com    Feedback for your application    The feedback provided by the independent assessors has been reviewed by Innovate UK
+    And the user reads his email                         ${test_mailbox_two}+releasefeedback@gmail.com    ${INFORM_COMPETITION_NAME}: Feedback for application ${application_ids['High Performance Gasoline Stratified']} is now available.    The feedback provided by the independent assessors has been reviewed by Innovate UK
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861

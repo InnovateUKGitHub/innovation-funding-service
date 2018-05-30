@@ -120,7 +120,7 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page     Satellite applications
     And the user should see the text in the page     Space technology
     And the user should see the text in the page     Sector
-    And the user should see the text in the page     Yes
+    And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
     And the user should see the element              jQuery=.button:contains("Edit")
 
 Initial details - Innovation sector of Open should be visible
@@ -177,7 +177,7 @@ Initial details - Comp Type and Date should not be editable
     And the user should see the text in the page    Open
     And the user should see the text in the page    Biosciences
     And the user should see the text in the page    Creative industries
-    And the user should see the text in the page    Yes
+    And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
@@ -188,7 +188,7 @@ Initial details - should have a green check
 
 User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104  IFS-3086
-    Given The user should see the element    link=Terms and conditions
+    Given The user should see the element   link=Terms and conditions
     And The user should see the element     link=Funding information
     And The user should see the element     link=Eligibility
     And The user should see the element     link=Milestones
@@ -641,14 +641,14 @@ Assessor: Contain the correct options
     [Tags]    HappyPath
     [Setup]  the user clicks the button/link  link=${competitionTitle}
     Given The user clicks the button/link   link=View and update competition setup
-    And the user clicks the button/link    link=Assessors
-    And The user clicks the button/link    jQuery=.button:contains("Edit")
+    And the user clicks the button/link     link=Assessors
+    And The user clicks the button/link     jQuery=.button:contains("Edit")
     And the user should see the text in the page    How many assessors are required for each application?
     Then the user should see the element    jQuery=label:contains(1)
     When the user should see the element    jQuery=label:contains(3)
-    And the user should see the element    jQuery=label:contains(5)
+    And the user should see the element     jQuery=label:contains(5)
     And the user should see the text in the page    How much do assessors receive per application
-    And the user should see the element    id=assessorPay
+    And the user should see the element     id=assessorPay
 
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641 IFS-380
