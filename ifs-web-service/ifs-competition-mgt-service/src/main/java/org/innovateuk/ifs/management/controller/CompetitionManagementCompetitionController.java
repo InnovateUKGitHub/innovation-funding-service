@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
+import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -48,7 +49,7 @@ public class CompetitionManagementCompetitionController {
         } if (competition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP)) {
             throw new ObjectNotFoundException();
         } else {
-            throw new IllegalStateException("Unexpected competition state for competition: " + competitionId);
+            throw new IncorrectStateForPageException("Unexpected competition state for competition: " + competitionId);
         }
     }
 
