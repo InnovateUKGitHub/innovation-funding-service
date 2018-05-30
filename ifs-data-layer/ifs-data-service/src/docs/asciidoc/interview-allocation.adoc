@@ -26,7 +26,6 @@ include::{snippets}/interview-panel/get-allocated-applications/response-fields.a
 include::{snippets}/interview-panel/get-allocated-applications/curl-request.adoc[]
 
 
-
 === Get the allocated applications for an assessor by id
 ==== Request
 include::{snippets}/interview-panel/get-allocated-applications-by-assessor-id/http-request.adoc[]
