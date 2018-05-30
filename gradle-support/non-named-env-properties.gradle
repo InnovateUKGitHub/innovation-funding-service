@@ -48,11 +48,10 @@ ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.pro
 ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
-ext.FILE_UPLOAD_CLAIM="file-upload-claim"
-
 ext.PROTOTYPES_ADDRESS="prototypes-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
-//for db reset
+ext.FILE_UPLOAD_CLAIM="file-upload-claim"
+
 ext.DB_NAME="ifs"
 ext.DB_USER="root"
 ext.DB_PASS="password"
@@ -67,7 +66,6 @@ ext.LDAP_SCHEME="ldaps"
 ext.FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
 ext.SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 
-//for finance thingy
 ext.FINANCE_DB_NAME="ifs_finance"
 ext.FINANCE_DB_USER="root"
 ext.FINANCE_DB_PASS="password"
