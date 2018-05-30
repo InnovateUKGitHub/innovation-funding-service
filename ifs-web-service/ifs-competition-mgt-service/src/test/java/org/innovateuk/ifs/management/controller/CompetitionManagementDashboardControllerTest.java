@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.controller.dashboard.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
+import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,6 +59,9 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Mock
     private CompetitionSetupRestService competitionSetupRestService;
+
+    @Mock
+    private BankDetailsRestService bankDetailsRestService;
 
     private CompetitionCountResource counts;
 

@@ -77,10 +77,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     @Override
     public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
-        if (fieldName != null && value != null) {
-            if (fieldName.startsWith("cost-")) {
-                return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId);
-            }
+        if (fieldName != null && value != null && fieldName.startsWith("cost-")) {
+            return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId);
         }
         return null;
     }

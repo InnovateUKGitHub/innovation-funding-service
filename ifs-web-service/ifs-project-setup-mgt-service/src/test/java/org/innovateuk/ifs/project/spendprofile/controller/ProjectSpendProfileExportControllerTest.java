@@ -3,10 +3,13 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -28,6 +31,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectSpendProfileExportControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileExportController> {
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private SpendProfileService spendProfileService;
 
     @Override
     protected ProjectSpendProfileExportController supplyControllerUnderTest() {

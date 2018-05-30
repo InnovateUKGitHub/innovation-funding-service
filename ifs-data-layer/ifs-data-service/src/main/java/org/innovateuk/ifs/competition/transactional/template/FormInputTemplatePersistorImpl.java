@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
+import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,8 +44,8 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
     public void cleanForParentEntity(Question question) {
         List<FormInput> formInputs = question.getFormInputs();
 
-        formInputs.stream().forEach(formInput -> guidanceRowTemplateService.cleanForParentEntity(formInput));
-        formInputs.stream().forEach(formInput -> entityManager.detach(formInput));
+        formInputs.forEach(formInput -> guidanceRowTemplateService.cleanForParentEntity(formInput));
+        formInputs.forEach(formInput -> entityManager.detach(formInput));
         formInputRepository.delete(formInputs);
     }
 
@@ -51,25 +53,32 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
         return (FormInput formInput) -> {
             // Extract the validators into a new Set as the hibernate Set contains persistence information which alters
             // the original FormValidator
-            Set<FormValidator> copy = new HashSet<>(formInput.getFormValidators());
+            Set<FormValidator> formValidatorsCopy = new HashSet<>(formInput.getFormValidators());
+            List<GuidanceRow> guidanceRowsCopy = new ArrayList<>();
+            if (formInput.getGuidanceRows() != null) {
+                guidanceRowsCopy.addAll(formInput.getGuidanceRows());
+            }
 
             entityManager.detach(formInput);
             formInput.setCompetition(question.getCompetition());
             formInput.setQuestion(question);
             formInput.setId(null);
-            formInput.setFormValidators(copy);
-            formInput.setActive(isSectorCompetitionWithScopeQuestion(question.getCompetition(), question, formInput) ? false : formInput.getActive());
+            formInput.setFormValidators(formValidatorsCopy);
+            formInput.setGuidanceRows(new ArrayList<>());
+            formInput.setActive(!isSectorCompetitionWithScopeQuestion(question.getCompetition(), question, formInput)
+                    && formInput.getActive());
             formInputRepository.save(formInput);
-            formInput.setGuidanceRows(guidanceRowTemplateService.persistByParentEntity(formInput));
+
+            formInput.setGuidanceRows(guidanceRowsCopy);
+            guidanceRowTemplateService.persistByParentEntity(formInput);
+
             return formInput;
         };
     }
 
     private boolean isSectorCompetitionWithScopeQuestion(Competition competition, Question question, FormInput formInput) {
-        if (competition.getCompetitionType().isSector() && question.isScope()) {
-            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK)) {
-                return true;
-            }
+        if (competition.getCompetitionType().isSector() && question.isScope() && (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK))) {
+            return true;
         }
         return false;
     }

@@ -60,9 +60,9 @@ public class OrganisationPermissionRules {
         // TODO DW - INFUND-1556 - this code feels pretty heavy given that all we need to do is find a link between a User and an Organisation via an Application
         List<ProcessRole> processRoles = processRoleRepository.findByUserId(user.getId());
         List<Long> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplicationId);
-        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, applicationId -> {
-            return processRoleRepository.findByApplicationId(applicationId);
-        }));
+        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, applicationId ->
+            processRoleRepository.findByApplicationId(applicationId)
+        ));
 
         return simpleMap(processRolesForAllApplications, ProcessRole::getOrganisationId).contains(organisation.getId());
     }
