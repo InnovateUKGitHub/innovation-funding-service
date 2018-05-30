@@ -24,7 +24,7 @@ public class AssessmentPermissionRules {
     public boolean reviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                competitionHasAssessmentPanel(competition) &&
+                competitionHasReviewPanel(competition) &&
                 !competitionIsInInformOrLater(competition);
     }
 
@@ -33,11 +33,11 @@ public class AssessmentPermissionRules {
     public boolean reviewPanelApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                competitionHasAssessmentPanel(competition) &&
+                competitionHasReviewPanel(competition) &&
                 competitionIsInFundersPanel(competition);
     }
 
-    private boolean competitionHasAssessmentPanel(CompetitionResource competition) {
+    private boolean competitionHasReviewPanel(CompetitionResource competition) {
         return competition.isHasAssessmentPanel();
     }
 
