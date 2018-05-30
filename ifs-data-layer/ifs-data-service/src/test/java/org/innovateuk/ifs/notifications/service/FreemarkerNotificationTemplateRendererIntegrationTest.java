@@ -201,7 +201,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testSendSpendProfileAvailableEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/spend-profile"
+                "dashboardUrl", "https://ifs-local-dev/spend-profile",
+                "applicationId", 1234L,
+                "competitionName", "Competition 1"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_subject.txt", templateArguments);

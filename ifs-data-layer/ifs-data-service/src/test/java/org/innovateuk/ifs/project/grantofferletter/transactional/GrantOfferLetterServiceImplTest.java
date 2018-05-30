@@ -834,7 +834,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(golWorkflowHandlerMock).grantOfferLetterRejected(project, u);
         verify(golWorkflowHandlerMock, never()).grantOfferLetterApproved(project, u);
         verify(projectWorkflowHandlerMock, never()).grantOfferLetterApproved(any(), any());
-        verify(projectEmailService, never()).sendEmail(singletonList(to), emptyMap(), GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
+        verify(projectEmailService, never()).sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
         assertNull(project.getOfferSubmittedDate());
         assertEquals(project.getGrantOfferLetterRejectionReason(), rejectionReason);
 
