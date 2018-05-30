@@ -2,11 +2,9 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
-import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
+import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -15,6 +13,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.interviewApplicationsResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.interviewResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 /**
@@ -44,6 +43,13 @@ public class InterviewAllocationRestServiceImpl extends BaseRestService implemen
                 .queryParam("page", page);
 
         return getWithRestResult(builder.toUriString(), InterviewApplicationPageResource.class);
+    }
+
+    @Override
+    public RestResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(long competitionId, long assessorId) {
+        String baseUrl = format("%s/%s/%s/%s", INTERVIEW_PANEL_REST_URL, competitionId, "allocated-applications-assessorId", assessorId);
+
+        return getWithRestResult(baseUrl,  interviewResourceListType());
     }
 
     @Override
