@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 public abstract class AssessorProfileDeclarationBasePopulator {
 
     private final Predicate<List<AffiliationResource>> filterByExisting =
-            affiliationsByType -> affiliationsByType.size() >= 1 && affiliationsByType.get(0).getExists();
+            affiliationsByType -> !affiliationsByType.isEmpty() && affiliationsByType.get(0).getExists();
 
     protected Map<AffiliationType, List<AffiliationResource>> getAffiliationsMap(List<AffiliationResource> affiliations) {
         if (affiliations == null) {
@@ -107,7 +107,7 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     protected Boolean hasAffiliationsByType(AffiliationType affiliationType,
                                             Map<AffiliationType, List<AffiliationResource>> affiliations) {
         return ofNullable(affiliations.get(affiliationType))
-                .map(affiliationsByType -> affiliationsByType.size() >= 1 && affiliationsByType.get(0).getExists())
+                .map(affiliationsByType -> !affiliationsByType.isEmpty() && affiliationsByType.get(0).getExists())
                 .orElse(null);
     }
 }

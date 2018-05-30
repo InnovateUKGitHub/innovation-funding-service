@@ -34,8 +34,8 @@ public class EditUserForm extends BaseBindingResultTarget {
 
     private Role role;
 
-    // for spring form binding
     public EditUserForm() {
+        // for spring form binding
     }
 
     public String getFirstName() {

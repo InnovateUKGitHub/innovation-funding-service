@@ -160,6 +160,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
+                                "applicationId", applications.get(0).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
@@ -169,6 +170,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
+                                "applicationId", applications.get(1).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
@@ -178,6 +180,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
+                                "applicationId", applications.get(2).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
@@ -292,6 +295,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
+                                "applicationId", applications.get(0).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
@@ -301,6 +305,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
+                                "applicationId", applications.get(1).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
@@ -310,6 +315,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
+                                "applicationId", applications.get(2).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
@@ -426,6 +432,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
+                                "applicationId", applications.get(0).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
@@ -435,6 +442,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
+                                "applicationId", applications.get(1).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
@@ -444,6 +452,7 @@ public class ApplicationNotificationServiceImplTest {
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
+                                "applicationId", applications.get(2).getId(),
                                 "competitionName", competition.getName(),
                                 "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )

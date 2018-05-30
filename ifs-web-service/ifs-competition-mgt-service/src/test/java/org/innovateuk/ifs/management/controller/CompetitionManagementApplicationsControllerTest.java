@@ -5,7 +5,9 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.project.ProjectService;
@@ -30,6 +32,7 @@ import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -72,6 +75,9 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private CompetitionService competitionService;
+
     @InjectMocks
     @Spy
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
@@ -91,6 +97,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .withIneligibleApplications(5)
                 .withAssesorsInvited(30)
                 .build();
+
+        when(competitionService.getById(any())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
     }
 
     @Test

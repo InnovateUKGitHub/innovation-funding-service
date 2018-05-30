@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.interceptors;
 
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,11 +18,11 @@ public class GoogleAnalyticsHandlerInterceptor extends HandlerInterceptorAdapter
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (modelAndView != null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:"))) {
-            addGoogleAnalytics(request, modelAndView);
+            addGoogleAnalytics(modelAndView);
         }
     }
 
-    private void addGoogleAnalytics(HttpServletRequest request, ModelAndView modelAndView) {
+    private void addGoogleAnalytics(ModelAndView modelAndView) {
         if (StringUtils.hasText(googleAnalyticsKeys) && !googleAnalyticsKeys.equals(EMPTY_VALUE)) {
             modelAndView.getModel().put("GoogleAnalyticsTrackingID", googleAnalyticsKeys);
         }

@@ -184,6 +184,8 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("projectName", project.getName());
+        globalArguments.put("competitionName", project.getApplication().getCompetition().getName());
+        globalArguments.put("applicationId", project.getApplication().getId());
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
         globalArguments.put("leadOrganisation", leadOrganisation.getName());

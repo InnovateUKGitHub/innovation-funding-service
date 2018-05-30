@@ -85,7 +85,7 @@ public class InnovationAreaController {
     }
 
     private RestResult<ApplicationResource> saveInnovationAreaChoice(Long applicationId, InnovationAreaForm innovationAreaForm) {
-        if(innovationAreaForm.getInnovationAreaChoice().equals("NOT_APPLICABLE")) {
+        if("NOT_APPLICABLE".equals(innovationAreaForm.getInnovationAreaChoice())) {
             return applicationInnovationAreaRestService.setApplicationInnovationAreaToNotApplicable(applicationId);
         }
         else {

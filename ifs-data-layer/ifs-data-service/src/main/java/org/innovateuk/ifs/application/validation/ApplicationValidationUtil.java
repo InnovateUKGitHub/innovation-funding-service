@@ -155,6 +155,7 @@ public class ApplicationValidationUtil {
             validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
+            LOG.trace("input type not a cost type", e);
         }
     }
 
