@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping(value = "/assessor")
 @SecuredBySpring(value = "Controller", description = "Assessors can access the assessment interview dashboard", securedType = AssessorCompetitionForInterviewDashboardController.class)
-@PreAuthorize("hasAuthority('assessor')")
 public class AssessorCompetitionForInterviewDashboardController {
 
     @Autowired
     private AssessorCompetitionForInterviewDashboardModelPopulator assessorCompetitionForInterviewDashboardModelPopulator;
 
     @GetMapping("/dashboard/competition/{competitionId}/interview")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSOR_INTERVIEW')")
     public String viewApplications( Model model,
                                     @PathVariable("competitionId") long competitionId,
                                     UserResource loggedInUser
