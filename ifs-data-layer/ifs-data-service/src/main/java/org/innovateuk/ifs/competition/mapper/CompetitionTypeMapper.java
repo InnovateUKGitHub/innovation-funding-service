@@ -19,7 +19,7 @@ public abstract class CompetitionTypeMapper extends BaseMapper<CompetitionType, 
     @Mappings({
             @Mapping(target = "template", ignore = true)
     })
-    public abstract CompetitionType mapToDomain(CompetitionTypeResource domain);
+    public abstract CompetitionType mapToDomain(CompetitionTypeResource resource);
 
     public Long mapCompetitionTypeToId(CompetitionType object) {
         if (object == null) {

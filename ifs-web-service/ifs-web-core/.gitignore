@@ -1,6 +1,7 @@
 src/main/resources/static/css/*
 src/main/resources/static/js/dest/*
 src/main/resources/static/js/vendor/govuk/ie.js
+src/main/resources/static/js/vendor/govuk/govuk-template.js
 src/main/resources/static/images/*
 !src/main/resources/static/images/ifs-images
 !src/main/resources/static/images/ifs-images/*

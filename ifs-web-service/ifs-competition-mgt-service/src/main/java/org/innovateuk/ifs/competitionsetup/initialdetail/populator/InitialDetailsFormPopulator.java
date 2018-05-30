@@ -12,9 +12,9 @@ import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
@@ -56,6 +56,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 		}
 
 		competitionSetupForm.setTitle(competitionResource.getName());
+		competitionSetupForm.setStateAid(competitionResource.getStateAid());
 
 		return competitionSetupForm;
 	}
@@ -65,7 +66,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 	        return asList(CompetitionUtils.ALL_INNOVATION_AREAS);
         }
 
-        return innovationAreaCategoryIds.stream().collect(Collectors.toList());
+        return new ArrayList<>(innovationAreaCategoryIds);
     }
 
     private String getFormattedInnovationAreaNames(Set<Long> ids, List<InnovationAreaResource> allInnovationAreas) {

@@ -31,4 +31,12 @@ public class InterviewApplicationInviteServiceSecurityTest extends BaseServiceSe
                 COMP_ADMIN, PROJECT_FINANCE
         );
     }
+
+    @Test
+    public void getSentInvite() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.getSentInvite(1L),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
 }
