@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.registration;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.registration.controller.OrganisationCreationContributorTypeController;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class OrganisationCreationContributorTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationContributorTypeController> {
+public class OrganisationCreationContributorTypeControllerTest extends AbstractApplicationMockMVCTest<OrganisationCreationContributorTypeController> {
 
     @Mock
     private Validator validator;
@@ -37,6 +40,9 @@ public class OrganisationCreationContributorTypeControllerTest extends BaseContr
 
     @Mock
     private RegistrationCookieService registrationCookieService;
+
+    @Mock
+    private CookieUtil cookieUtil;
 
     @Override
     protected OrganisationCreationContributorTypeController supplyControllerUnderTest() {
@@ -49,11 +55,10 @@ public class OrganisationCreationContributorTypeControllerTest extends BaseContr
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
         this.setupOrganisationTypes();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
 
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
     }

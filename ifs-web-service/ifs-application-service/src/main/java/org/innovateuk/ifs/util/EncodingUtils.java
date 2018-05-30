@@ -6,15 +6,17 @@ import org.apache.commons.logging.LogFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class EncodingUtils {
+public final class EncodingUtils {
     private static final Log LOG = LogFactory.getLog(EncodingUtils.class);
+
+    private EncodingUtils() {}
 
     public static String urlEncode(final String string){
         String encodedSearchString = string;
         try {
             encodedSearchString = URLEncoder.encode(encodedSearchString, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            LOG.info("Unsupported Encoding.  Skipping encoding and using original search string.");
+            LOG.info("Unsupported Encoding.  Skipping encoding and using original search string.", e);
         }
         return encodedSearchString;
     }

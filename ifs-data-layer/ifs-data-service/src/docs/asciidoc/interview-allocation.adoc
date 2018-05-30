@@ -26,7 +26,6 @@ include::{snippets}/interview-panel/get-allocated-applications/response-fields.a
 include::{snippets}/interview-panel/get-allocated-applications/curl-request.adoc[]
 
 
-
 === Get the allocated applications for an assessor by id
 ==== Request
 include::{snippets}/interview-panel/get-allocated-applications-by-assessor-id/http-request.adoc[]
@@ -103,7 +102,9 @@ include::{snippets}/interview-panel/send-invite/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/send-invite/curl-request.adoc[]
-=== unallocate application from an assessor
+
+
+=== Unallocate application from an assessor
 ==== Request
 include::{snippets}/interview-panel/unallocate-application/http-request.adoc[]
 include::{snippets}/interview-panel/unallocate-application/path-parameters.adoc[]

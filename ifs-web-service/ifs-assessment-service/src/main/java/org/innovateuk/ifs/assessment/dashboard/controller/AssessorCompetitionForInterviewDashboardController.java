@@ -10,18 +10,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller to manage interviews of Applications
+ * This controller will handle all requests that are related to the assessor interview dashboard.
  */
 @Controller
 @RequestMapping(value = "/assessor")
-@SecuredBySpring(value = "Controller", description = "Assessors can access assessment interviews", securedType = AssessorCompetitionForInterviewDashboardController.class)
-@PreAuthorize("hasAuthority('assessor')")
+@SecuredBySpring(value = "Controller", description = "Assessors can access the assessment interview dashboard", securedType = AssessorCompetitionForInterviewDashboardController.class)
 public class AssessorCompetitionForInterviewDashboardController {
 
     @Autowired
     private AssessorCompetitionForInterviewDashboardModelPopulator assessorCompetitionForInterviewDashboardModelPopulator;
 
     @GetMapping("/dashboard/competition/{competitionId}/interview")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSOR_INTERVIEW')")
     public String viewApplications( Model model,
                                     @PathVariable("competitionId") long competitionId,
                                     UserResource loggedInUser

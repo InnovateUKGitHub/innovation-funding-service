@@ -124,12 +124,12 @@ public class FinanceChecksViabilityController {
     }
 
     private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
-        model.addAttribute("model", getViewModel(projectId, organisationId, model));
+        model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form);
         return "project/financecheck/viability";
     }
 
-    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId, Model model) {
+    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId) {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);

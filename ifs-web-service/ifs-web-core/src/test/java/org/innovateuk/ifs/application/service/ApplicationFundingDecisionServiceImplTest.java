@@ -27,10 +27,9 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 	@Mock
 	private ApplicationSummaryRestService applicationSummaryRestService;
 
-	@Override
 	@Before
 	public void setUp() {
-		super.setUp();
+		super.setup();
 	}
 
 	protected ApplicationFundingDecisionServiceImpl supplyServiceUnderTest() {

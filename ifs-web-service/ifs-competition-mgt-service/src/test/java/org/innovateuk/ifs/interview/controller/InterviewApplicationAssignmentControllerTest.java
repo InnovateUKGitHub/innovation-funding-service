@@ -6,23 +6,29 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
+import org.innovateuk.ifs.interview.model.InterviewApplicationSentInviteModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsFindModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsInviteModelPopulator;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsStatusModelPopulator;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.*;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -42,26 +48,24 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
-import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
-import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
-import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentInvitedResourceBuilder.newInterviewAssignmentApplicationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -86,6 +90,18 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
     @InjectMocks
     private InterviewApplicationsStatusModelPopulator interviewApplicationsStatusModelPopulator;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+
+    @Mock
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
     private CompetitionResource competition;
 
     @Override
@@ -97,7 +113,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
     @Before
     public void setUp() {
         super.setUp();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()
                 .withId(1L)

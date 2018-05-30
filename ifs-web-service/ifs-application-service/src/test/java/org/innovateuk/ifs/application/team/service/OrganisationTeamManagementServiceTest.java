@@ -10,8 +10,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
+import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,7 +39,16 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
 
 
     @Mock
-    ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
+    private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
+
+    @Mock
+    private ProcessRoleService processRoleServiceMock;
+
+    @Mock
+    private InviteOrganisationRestService inviteOrganisationRestServiceMock;
+
+    @Mock
+    private InviteRestService inviteRestServiceMock;
 
     protected OrganisationTeamManagementService supplyServiceUnderTest() {
         return new OrganisationTeamManagementService();
@@ -44,7 +56,7 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
 
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
         applicationId = 1L;
         organisationId = 2L;
     }

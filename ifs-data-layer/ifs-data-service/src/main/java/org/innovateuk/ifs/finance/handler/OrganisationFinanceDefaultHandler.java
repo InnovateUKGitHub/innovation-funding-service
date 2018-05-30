@@ -320,7 +320,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         FinanceRowType costType = OTHER_COSTS;
         if(availableRow != null) {
             List<FormInput> formInputs = availableRow.getQuestion().getFormInputs();
-            if (formInputs.size() > 0) {
+            if (!formInputs.isEmpty()) {
                 costType = FinanceRowType.fromType(formInputs.get(0).getType());
             }
         }

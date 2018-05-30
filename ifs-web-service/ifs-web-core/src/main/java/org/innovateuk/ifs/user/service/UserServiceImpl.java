@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
         }
         catch (ObjectNotFoundException e) {
             // Do nothing. We don't want to reveal that the address was not recognised
-            LOG.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when resending email verification notification.", email));
+            LOG.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when resending email verification notification.", email), e);
         }
     }
 

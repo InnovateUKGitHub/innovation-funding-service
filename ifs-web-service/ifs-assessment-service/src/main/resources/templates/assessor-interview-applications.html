@@ -38,7 +38,7 @@
                     th:text="${#lists.size(model.applications)}"/>)</h2>
 
                 <ul>
-                    <li th:each="app,iterStat : ${model.applications}">
+                    <li th:each="app : ${model.applications}">
 
                         <th:block>
                             <div class="task">

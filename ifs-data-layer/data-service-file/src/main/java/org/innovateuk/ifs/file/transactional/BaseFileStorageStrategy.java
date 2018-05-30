@@ -169,6 +169,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
             final Path targetFile = Files.move(tempFile.toPath(), fileToCreate.toPath());
             return serviceSuccess(targetFile.toFile());
         } catch (final FileAlreadyExistsException e) {
+            LOG.trace("file already exists", e);
             if (!tempFile.exists()) {
                 // Move might already have happened as we do not have file to copy and the target already exists
                 return serviceFailure(new Error(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT));
@@ -176,6 +177,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
             LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + " file already exists");
             return serviceFailure(new Error(FILES_DUPLICATE_FILE_MOVED));
         } catch (final NoSuchFileException e) {
+            LOG.trace("no such file", e);
             if (fileToCreate != null && fileToCreate.exists()) {
                 // Move might already have happened as we do not have file to copy and the target already exists
                 return serviceFailure(new Error(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT));

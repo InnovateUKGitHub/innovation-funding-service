@@ -10,7 +10,9 @@ import java.io.IOException;
 /**
  * Helper around handling JSON within tests
  */
-public class JsonMappingUtil {
+public final class JsonMappingUtil {
+
+    private JsonMappingUtil() {}
 
     public static <T> T fromJson(String json, Class<T> clazz) {
         try {
