@@ -26,11 +26,11 @@ osStageRemote {
 
 
 task pullImage(type: DockerPullImage) {
-    repository = "${project.dockerRegistry}/infrastructure/oracle-jre"
+    repository = project.dockerRegistry + "/infrastructure/oracle-jre"
 }
 
 task tagPulledImage(type: DockerTagImage) {
-    imageId =  "${project.dockerRegistry}/infrastructure/oracle-jre"
+    imageId = project.dockerRegistry + "/infrastructure/oracle-jre"
     repository = "infrastructure/oracle-jre"
     tag = "latest"
 }
