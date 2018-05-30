@@ -340,7 +340,7 @@ the user checks for Manage interview panel key statistics
     the user should see the element      jQUery=div span:contains("${feedback_responded}") ~ small:contains("Applications responded to feedback")
     the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/find
     ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span    #Assigned to interview panel
-    Should Be Equal As Integers   ${Assigned_applications}  ${applicaitons_assigned}
+    Should Be Equal As Integers   ${Assigned_applications}  ${applications_assigned}
     the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/find
     ${Accepted}=  Get Text  css=div:nth-child(2) > div > span
     Should Be Equal As Integers   ${Accepted}  ${assessor_accepted}
