@@ -90,15 +90,15 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                         return costSection;
                     }).collect(Collectors.toList()));
         } else if (viewModel instanceof JesYourProjectCostsSectionViewModel) {
-            section.allQuestions().forEach(applicantQuestion -> {
+            section.allQuestions().forEach(applicantQuestion ->
                 applicantQuestion.getApplicantFormInputs().forEach(applicantFormInput -> {
                     if (applicantFormInput.getFormInput().getType().equals(FormInputType.FINANCE_UPLOAD)) {
                         JesYourProjectCostsSectionViewModel jesModel = (JesYourProjectCostsSectionViewModel) viewModel;
                         jesModel.setFinanceUploadFormInput(applicantFormInput.getFormInput());
                         jesModel.setFinanceUploadQuestion(applicantQuestion.getQuestion());
                     }
-                });
-            });
+                })
+            );
         }
     }
 

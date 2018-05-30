@@ -9,7 +9,9 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
 
-public class SecurityRuleUtil {
+public final class SecurityRuleUtil {
+
+    private SecurityRuleUtil() {}
 
     public static boolean isProjectFinanceUser(User user) {
         return user.hasRole(PROJECT_FINANCE);

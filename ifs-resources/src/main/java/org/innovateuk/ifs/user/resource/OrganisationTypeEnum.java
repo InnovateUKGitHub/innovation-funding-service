@@ -35,6 +35,9 @@ public enum OrganisationTypeEnum {
     public static boolean isResearch(Long organisationTypeId){
         if(organisationTypeId != null) {
             OrganisationTypeEnum organisationType = getFromId(organisationTypeId);
+            if (organisationType == null) {
+                return false;
+            }
             return isResearch(organisationType);
         } else {
             return false;

@@ -8,9 +8,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.login.LoginController;
 import org.innovateuk.ifs.token.resource.TokenResource;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -33,6 +36,11 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         return new LoginController();
     }
 
+    @Mock
+    private UserRestService userRestServiceMock;
+
+    @Mock
+    private UserService userService;
 
     @Before
     public void setUp() {

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
@@ -125,5 +126,10 @@ public class InterviewAssignmentController {
     @GetMapping(value = "/feedback-details/{applicationId}", produces = "application/json")
     public RestResult<FileEntryResource> findFile(@PathVariable("applicationId") long applicationId) throws IOException {
         return interviewApplicationFeedbackService.findFeedback(applicationId).toGetResponse();
+    }
+
+    @GetMapping(value = "/sent-invite/{applicationId}", produces = "application/json")
+    public RestResult<InterviewApplicationSentInviteResource> getSentInvite(@PathVariable("applicationId") long applicationId) throws IOException {
+        return interviewApplicationInviteService.getSentInvite(applicationId).toGetResponse();
     }
 }

@@ -182,7 +182,7 @@ public class ApplicationDetailsSectionSaverTest {
 
         ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
 
-        assertThat(result.isSuccess());
+        assertThat(result.isSuccess()).isTrue();
 
         verify(competitionSetupRestServiceMock, times(1)).update(any());
     }

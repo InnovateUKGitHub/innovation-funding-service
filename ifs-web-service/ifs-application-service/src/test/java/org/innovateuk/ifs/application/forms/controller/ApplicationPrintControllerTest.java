@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationPrintControllerTest extends BaseControllerMockMVCTest<ApplicationPrintController> {
+public class ApplicationPrintControllerTest extends AbstractApplicationMockMVCTest<ApplicationPrintController> {
     @Mock
     private ApplicationPrintPopulator applicationPrintPopulator;
 
@@ -33,6 +34,9 @@ public class ApplicationPrintControllerTest extends BaseControllerMockMVCTest<Ap
         return new ApplicationPrintController();
     }
 
+    @Mock
+    private CategoryRestService categoryRestServiceMock;
+
     @Before
     public void setUp() {
         super.setUp();
@@ -40,7 +44,6 @@ public class ApplicationPrintControllerTest extends BaseControllerMockMVCTest<Ap
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestServiceImpl;
 import org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder;
 import org.innovateuk.ifs.invite.resource.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
+import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
@@ -207,5 +209,17 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "feedback", applicationId), ByteArrayResource.class, expected, OK);
         final ByteArrayResource response = service.downloadFeedback(applicationId).getSuccess();
         assertSame(expected, response);
+    }
+
+    @Test
+    public void getSentInvite() {
+        long applicationId = 1L;
+        InterviewApplicationSentInviteResource invite = newInterviewApplicationSentInviteResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "sent-invite", applicationId), InterviewApplicationSentInviteResource.class, invite);
+
+        RestResult<InterviewApplicationSentInviteResource> actual = service.getSentInvite(applicationId);
+
+        assertEquals(invite, actual.getSuccess());
     }
 }

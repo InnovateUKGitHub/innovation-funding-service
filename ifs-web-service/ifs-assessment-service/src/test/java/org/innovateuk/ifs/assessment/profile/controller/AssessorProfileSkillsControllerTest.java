@@ -8,6 +8,7 @@ import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileSkillsMode
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileEditSkillsViewModel;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -52,6 +54,9 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     @Spy
     @InjectMocks
     private AssessorProfileEditSkillsModelPopulator assessorProfileEditSkillsModelPopulator;
+
+    @Mock
+    private ProfileRestService profileRestService;
 
     @Override
     protected AssessorProfileSkillsController supplyControllerUnderTest() {
