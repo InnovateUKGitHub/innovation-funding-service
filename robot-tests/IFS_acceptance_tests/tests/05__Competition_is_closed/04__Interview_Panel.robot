@@ -48,6 +48,16 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3436 Allocate applications to assessors - Assessor profile view
 ...
 ...               IFS-3450 Allocate applications to assessors - Applications tab
+...
+...               IFS-3451 Allocate applications to assessors - Notify assessors
+...
+...               IFS-3485 Remove applications before allocating (notifying) to assessor
+...
+...               IFS-3452 Allocate applications to assessors - Allocated tab
+...
+...               IFS-3535 Assign applications to interview panel - View of previously sent invite
+...
+...               IFS-3524 Manage Interview panel - Key statistics
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -118,6 +128,15 @@ Competition Admin can send or cancel sending the invitation to the applicants
     Then the user reads his email              ${aaron_robertson_email}   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
     When log in as a different user            ${aaron_robertson_email}   ${short_password}
     Then the user should see the element       jQuery=.progress-list div:contains("Neural networks to optimise freight train routing") ~ div span:contains("Invited to interview")
+
+CompAdmin view invite sent to the applicant
+    [Documentation]  IFS-3535
+    [Tags]
+    [Setup]  log in as a different user     &{Comp_admin1_credentials}
+    Given the user navigates to the page    ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
+    When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td a:contains("View invite")
+    Then the user should see the element    jQuery=h1:contains("Review invite email")
+    And the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -190,10 +209,14 @@ Applicant can remove the uploaded response
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
 
+CompAdmin checks for interview panel key statistics
+    [Documentation]  IFS-3524
+    When the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}
+    Then the user checks for Manage interview panel key statistics
+
 CompAdmin can access the Allocate applications to assessors screen
     [Documentation]  IFS-3435  IFS-3436  IFS-3450
     [Tags]
-    Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery=a:contains("${assessor_joel}")
     And the user should see the element      jQuery=h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
@@ -202,6 +225,20 @@ CompAdmin can access the Allocate applications to assessors screen
     ${applications_Assiged}=  Get text       css=div:nth-child(6) div span:nth-child(1)
     And the user should see the element      link=Applications (${applications_Assiged})
     And the user should see the element      jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+
+CompAdmin allocate applications to assessor
+    [Documentation]  IFS-3451  IFS-3485  IFS-3451
+    [Tags]
+    Given the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
+    And the user clicks the button/link      jQuery=tr:contains("${computer_vision_application}") label
+    When the user clicks the button/link     css=.button[name="addSelected"]  #Allocate
+    Then the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Remove")
+    And the compAdmin can cancel allocating applications to assessor
+    And the compAdmin removes the application from notify list
+    When the user clicks the button/link     css=input[type="submit"]   #Notify
+    And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION}")
+    Then the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Neural Industries") ~ td:contains("Remove")
+    And the user reads his email             ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
 
 *** Keywords ***
 Custom Suite Setup
@@ -243,15 +280,15 @@ the Competition Admin should see the assigned applications in the View status ta
     the user should see the element       jQuery=td:contains("${computer_vision_application}")
 
 the user checks for Key Statistics for submitted application
-    ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span
+    ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span   #Total number of submitted applications
     the user should see the element    jQuery=div span:contains("${Application_in_comp}") ~ small:contains("Applications in competition")
     the user should see the element    jQuery=div span:contains("0") ~ small:contains("Assigned to interview panel")
     Get the total number of submitted applications
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${Application_in_comp}
 
 the user checks for Key Statistics for assigned to interview panel
-    ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span
-    ${Application_sent}=  Get Text  css=div:nth-child(7) > div>:nth-child(1)
+    ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span    #Assigned to interview panel
+    ${Application_sent}=  Get Text  css=div:nth-child(7) > div>:nth-child(1)  #Application assigned
     Should Be Equal As Integers    ${Assigned_applications}   ${Application_sent}
 
 the user checks for the key statistics for invite assessors
@@ -284,3 +321,26 @@ the applicant upload the response to the interview panel
 the compAdmin checks the status for response uploaded applicantion
     log in as a different user        &{Comp_admin1_credentials}
     the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
+
+the compAdmin removes the application from notify list
+    the user clicks the button/link   jQuery=td:contains("${computer_vision_application}") ~ td:contains("Remove")
+    the user clicks the button/link   link=Applications allocated for interview
+    the user should see the element   jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
+    the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
+
+the compAdmin can cancel allocating applications to assessor
+    the user clicks the button/link    link= Cancel
+    the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/unallocated-applications/${assessor_joel_id}
+    the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
+
+the user checks for Manage interview panel key statistics
+    ${applications_assigned}=  Get Text  css=ul li:nth-child(1) span
+    ${assessor_accepted}=      Get Text  css=ul li:nth-child(3) span
+    ${feedback_responded}=     Get Text  css=ul li:nth-child(2) span
+    the user should see the element      jQUery=div span:contains("${feedback_responded}") ~ small:contains("Applications responded to feedback")
+    the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/find
+    ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span    #Assigned to interview panel
+    Should Be Equal As Integers   ${Assigned_applications}  ${applications_assigned}
+    the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/find
+    ${Accepted}=  Get Text  css=div:nth-child(2) > div > span
+    Should Be Equal As Integers   ${Accepted}  ${assessor_accepted}

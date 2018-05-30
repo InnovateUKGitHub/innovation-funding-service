@@ -1,19 +1,22 @@
 package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamAddOrganisationModelPopulator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.team.controller.ApplicationTeamAddOrganisationController;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamAddOrganisationViewModel;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -45,6 +48,15 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
     @Spy
     @InjectMocks
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private InviteRestService inviteRestService;
+
+    @Mock
+    private UserService userService;
 
     @Override
     protected ApplicationTeamAddOrganisationController supplyControllerUnderTest() {

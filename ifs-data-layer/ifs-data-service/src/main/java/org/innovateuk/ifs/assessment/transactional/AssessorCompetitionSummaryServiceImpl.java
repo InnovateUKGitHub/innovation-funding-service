@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static java.util.Collections.unmodifiableSet;
 import static java.util.Comparator.comparingLong;
 import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
@@ -27,12 +28,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Service
 public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitionSummaryService {
 
-    public static final Set<AssessmentState> INVALID_ASSESSMENT_STATES = asLinkedSet(
+    public static final Set<AssessmentState> INVALID_ASSESSMENT_STATES = unmodifiableSet(asLinkedSet(
             AssessmentState.WITHDRAWN,
             AssessmentState.REJECTED
-    );
+    ));
 
-    public static final Set<AssessmentState> VALID_ASSESSMENT_STATES = asLinkedSet(
+    public static final Set<AssessmentState> VALID_ASSESSMENT_STATES = unmodifiableSet(asLinkedSet(
             AssessmentState.CREATED,
             AssessmentState.OPEN,
             AssessmentState.PENDING,
@@ -40,9 +41,9 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
             AssessmentState.DECIDE_IF_READY_TO_SUBMIT,
             AssessmentState.READY_TO_SUBMIT,
             AssessmentState.SUBMITTED
-    );
+    ));
 
-    public static final Set<AssessmentState> ALL_ASSESSMENT_STATES = Sets.union(VALID_ASSESSMENT_STATES, INVALID_ASSESSMENT_STATES);
+    public static final Set<AssessmentState> ALL_ASSESSMENT_STATES = unmodifiableSet(Sets.union(VALID_ASSESSMENT_STATES, INVALID_ASSESSMENT_STATES));
 
     @Autowired
     private AssessorService assessorService;

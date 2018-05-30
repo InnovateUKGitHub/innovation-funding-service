@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.analytics;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
@@ -17,20 +17,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.analytics.GoogleAnalyticsDataLayerInterceptor.ANALYTICS_DATA_LAYER_NAME;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE;
 
-public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTest {
+public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
     @Mock
     private GoogleAnalyticsDataLayerRestService googleAnalyticsDataLayerRestServiceMock;
@@ -48,10 +46,9 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
     private final String expectedCompName = "competition name";
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
         mav = new ModelAndView();
         setAnonymousAuthentication();
         when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(emptyMap());

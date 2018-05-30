@@ -2,13 +2,19 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationCompositeId;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.SectionAccess;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -48,6 +54,24 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Mock
     private SetupSectionAccessibilityHelper accessorMock;
+
+    @Mock
+    private ApplicationService applicationServiceMock;
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    @Mock
+    private ProjectService projectServiceMock;
+
+    @Mock
+    private OtherDocumentsService otherDocumentsServiceMock;
+
+    @Mock
+    private OrganisationService organisationServiceMock;
+
+    @Mock
+    private StatusService statusServiceMock;
 
     private UserResource user = newUserResource().build();
 

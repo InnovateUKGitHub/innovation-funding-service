@@ -2,7 +2,9 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
@@ -12,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -43,6 +46,12 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     @InjectMocks
     private AssessorProfileModelPopulator assessorProfileModelPopulator;
 
+    @Mock
+    private AssessorRestService assessorRestService;
+
+    @Mock
+    private CompetitionService competitionService;
+
     private CompetitionResource competition;
 
     @Override
@@ -61,6 +70,8 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .withInnovationSectorName("Infrastructure systems")
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
+
+        when(competitionService.getById(any())).thenReturn(competition);
     }
 
     @Test

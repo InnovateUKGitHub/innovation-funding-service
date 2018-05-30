@@ -5,7 +5,6 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
@@ -45,6 +44,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -156,7 +156,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(null);
         ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Competition.class, competitionId)));
+        assertTrue(result.getFailure().is(notFoundError(Competition.class, competitionId)));
     }
 
     @Test
@@ -188,7 +188,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .thenReturn(null);
         ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD)));
+        assertTrue(result.getFailure().is(notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD)));
     }
 
     @Test
@@ -810,7 +810,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competitionId, competition.getTermsAndConditions().getId());
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(GrantTermsAndConditions.class,
+        assertTrue(result.getFailure().is(notFoundError(GrantTermsAndConditions.class,
                 competition.getTermsAndConditions().getId())));
 
     }

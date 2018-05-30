@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singleton;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
@@ -36,7 +37,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -44,32 +44,32 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
-    public static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = asLinkedSet(
+    public static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = unmodifiableSet(asLinkedSet(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
-            ApplicationState.SUBMITTED);
+            ApplicationState.SUBMITTED));
 
-    public static final Set<ApplicationState> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES;
+    public static final Set<ApplicationState> SUBMITTED_STATES = unmodifiableSet(SUBMITTED_APPLICATION_STATES);
 
-    public static final Set<ApplicationState> NOT_SUBMITTED_STATES = asLinkedSet(
+    public static final Set<ApplicationState> NOT_SUBMITTED_STATES = unmodifiableSet(asLinkedSet(
             ApplicationState.CREATED,
-            ApplicationState.OPEN);
+            ApplicationState.OPEN));
 
-    public static final Set<ApplicationState> INELIGIBLE_STATES = asLinkedSet(
+    public static final Set<ApplicationState> INELIGIBLE_STATES = unmodifiableSet(asLinkedSet(
             ApplicationState.INELIGIBLE,
-            INELIGIBLE_INFORMED);
+            INELIGIBLE_INFORMED));
 
-    public static final Set<ApplicationState> CREATED_AND_OPEN_STATUSES = asLinkedSet(
+    public static final Set<ApplicationState> CREATED_AND_OPEN_STATUSES = unmodifiableSet(asLinkedSet(
             ApplicationState.CREATED,
-            ApplicationState.OPEN);
+            ApplicationState.OPEN));
 
-    public static final Set<ApplicationState> FUNDING_DECISIONS_MADE_STATUSES = asLinkedSet(
+    public static final Set<ApplicationState> FUNDING_DECISIONS_MADE_STATUSES = unmodifiableSet(asLinkedSet(
             ApplicationState.APPROVED,
-            ApplicationState.REJECTED);
+            ApplicationState.REJECTED));
 
-    public static final Set<ApplicationState> SUBMITTED_AND_INELIGIBLE_STATES = Stream.concat(
+    public static final Set<ApplicationState> SUBMITTED_AND_INELIGIBLE_STATES = unmodifiableSet(Stream.concat(
             SUBMITTED_STATES.stream(),
-            INELIGIBLE_STATES.stream()).collect(toSet());
+            INELIGIBLE_STATES.stream()).collect(toSet()));
 
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
         put("name", new Sort(ASC, new String[]{"name", "id"}));

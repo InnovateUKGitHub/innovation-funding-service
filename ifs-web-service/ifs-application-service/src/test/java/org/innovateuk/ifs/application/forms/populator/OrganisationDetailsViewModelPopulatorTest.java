@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.populator;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocksTest {
+public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private OrganisationDetailsViewModelPopulator populator;
@@ -60,7 +60,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
 
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
 
         applicationId = 23L;
         userApplicationRoles = newProcessRoleResource()

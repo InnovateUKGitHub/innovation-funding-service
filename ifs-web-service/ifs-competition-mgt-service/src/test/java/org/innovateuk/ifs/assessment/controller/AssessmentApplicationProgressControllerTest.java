@@ -4,16 +4,16 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Test;
-import org.mockito.InOrder;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.*;
 
 import java.util.List;
 
@@ -45,6 +45,15 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
     @Spy
     @InjectMocks
     private ApplicationAssessmentProgressModelPopulator applicationAssessmentProgressModelPopulator;
+
+    @Mock
+    private ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
+
+    @Mock
+    private CategoryRestService categoryRestServiceMock;
+
+    @Mock
+    private AssessmentRestService assessmentRestService;
 
     @Override
     protected AssessmentApplicationProgressController supplyControllerUnderTest() {

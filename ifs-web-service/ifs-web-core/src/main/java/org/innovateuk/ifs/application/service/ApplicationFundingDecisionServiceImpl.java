@@ -64,7 +64,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 			fundingDecision = Optional.of(FundingDecision.valueOf(val));
 		}
 		catch(IllegalArgumentException e) {
-			LOG.info("Funding decision string disallowed");
+			LOG.info("Funding decision string disallowed", e);
 		}
 
 		return fundingDecision;

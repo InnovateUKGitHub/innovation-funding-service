@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.otherdocuments.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
@@ -11,6 +13,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -45,7 +48,13 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
     @Spy
     @InjectMocks
-    OtherDocumentsViewModelPopulator populator;
+    private OtherDocumentsViewModelPopulator populator;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private OtherDocumentsService otherDocumentsService;
 
     @Test
     public void testViewOtherDocumentsPage() throws Exception {

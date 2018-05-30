@@ -17,12 +17,10 @@ public class ErrorHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
-            if(ex instanceof NestedServletException) {
-                if (((NestedServletException) ex).getRootCause() instanceof org.thymeleaf.exceptions.TemplateProcessingException) {
+            if(ex instanceof NestedServletException && ((NestedServletException) ex).getRootCause() instanceof org.thymeleaf.exceptions.TemplateProcessingException) {
                     request.setAttribute("message", "There was a problem processing this request.  Please contact site administrator");
                     RequestDispatcher rd = request.getRequestDispatcher("/rendering-error");
                     rd.forward(request, response);
-                }
             }
         }
     }

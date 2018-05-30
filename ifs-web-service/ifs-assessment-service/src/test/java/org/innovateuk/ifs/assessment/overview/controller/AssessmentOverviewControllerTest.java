@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.overview.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
@@ -15,6 +15,7 @@ import org.innovateuk.ifs.application.populator.section.YourProjectCostsSectionP
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultYourProjectCostsSectionViewModel;
@@ -28,6 +29,7 @@ import org.innovateuk.ifs.assessment.overview.viewmodel.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -91,7 +93,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<AssessmentOverviewController> {
+public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVCTest<AssessmentOverviewController> {
 
     private static final long APPLICATION_ID = 1L;
 
@@ -115,6 +117,12 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
+
+    @Mock
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Mock
+    private SectionRestService sectionRestService;
 
     @Spy
     @InjectMocks
@@ -736,7 +744,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         long applicationId = 2L;
         long formInputId = 3L;
 
-        loginDefaultUser();
         UserResource assessor = getLoggedInUser();
 
         ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();

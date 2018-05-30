@@ -310,10 +310,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             return REJECTED;
         }
 
-        if (project.getOfferSubmittedDate() != null) {
-            if (golWorkflowHandler.isApproved(project)) {
-                return COMPLETE;
-            }
+        if (project.getOfferSubmittedDate() != null && golWorkflowHandler.isApproved(project)) {
+            return COMPLETE;
         }
 
         if (project.getOfferSubmittedDate() != null) {

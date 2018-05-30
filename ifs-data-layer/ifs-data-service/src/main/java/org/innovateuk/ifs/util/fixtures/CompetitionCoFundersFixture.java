@@ -9,7 +9,10 @@ import java.util.List;
 /**
  * Created by worth on 15/11/2016.
  */
-public class CompetitionCoFundersFixture {
+public final class CompetitionCoFundersFixture {
+
+    private CompetitionCoFundersFixture() {}
+
     public static List<CompetitionFunder> getTestCoFunders(int count) {
         List<CompetitionFunder> returnList = new ArrayList<>();
 

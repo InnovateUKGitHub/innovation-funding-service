@@ -1,13 +1,17 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -59,6 +63,18 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Mock
     private CompetitionParticipantRestService competitionParticipantRestService;
+
+    @Mock
+    private ProfileRestService profileRestService;
+
+    @Mock
+    private ReviewInviteRestService reviewInviteRestService;
+
+    @Mock
+    private InterviewInviteRestService interviewInviteRestService;
+
+    @Mock
+    private CompetitionService competitionService;
 
     @Override
     protected AssessorDashboardController supplyControllerUnderTest() {

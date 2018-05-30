@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.registration.model;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.registration.viewmodel.InviteAndUserOrganisationDifferentViewModel;
@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class InviteAndUserOrganisationDifferentModelPopulatorTest extends BaseUnitTestMocksTest {
+public class InviteAndUserOrganisationDifferentModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private InviteAndUserOrganisationDifferentModelPopulator populator;
