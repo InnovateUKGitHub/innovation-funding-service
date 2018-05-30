@@ -2,10 +2,10 @@ package org.innovateuk.ifs.form.resource;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public class SectionResource {
     private Long id;
@@ -127,4 +127,5 @@ public class SectionResource {
     public void setType(SectionType type) {
 		this.type = type;
 	}
+
 }

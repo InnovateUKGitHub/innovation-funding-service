@@ -11,20 +11,6 @@ UPDATE question SET priority = priority + 1 WHERE competition_id=@programme_temp
 -- Add application team question with priority 1
 INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, competition_id, section_id, question_type, question_setup_type)
     VALUES (false, 'Description not used', true, false, 'Application team', 'Application team', '1', @programme_template_id, @project_details_section_id, 'LEAD_ONLY', 'APPLICATION_TEAM');
-SET @new_question_id = LAST_INSERT_ID();
-
--- The following form input stuff is hopefully temporary...
--- Ideally Questions of 'LEAD_ONLY' input type will not need form_inputs
--- and 'application details' question will also be changed to fit that model and its related form inputs removed
-
--- Add a new form input type for the application team page
-INSERT INTO form_input_type (name)
-    VALUES ('APPLICATION_TEAM');
-SET @new_form_input_type_id = LAST_INSERT_ID();
-
--- Add a new form input attached to the Application team question, with the new form input type
-INSERT INTO form_input (id, form_input_type_id, competition_id, included_in_application_summary, description, priority, question_id, scope, active)
-    VALUES (NULL, @new_form_input_type_id, @programme_template_id, false, 'Application team', '0', @new_question_id, 'APPLICATION', true);
 
 
 

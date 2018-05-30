@@ -3,12 +3,14 @@ package org.innovateuk.ifs.form.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -76,6 +78,13 @@ public class Section implements Comparable<Section> {
         return combineLists(questions, flattenLists(allChildQuestions));
     }
 
+    /**
+     * Get questions from this section and childSections.
+     */
+    @JsonIgnore
+    public List<Question> fetchLeadQuestions() {
+        return questions.stream().filter(question -> question.isType(QuestionType.LEAD_ONLY)).collect(Collectors.toList());
+    }
 
     public Long getId() {
         return id;

@@ -43,10 +43,7 @@ public enum FormInputType implements IdentifiableEnum<FormInputType> {
     STAFF_COUNT(25),
     FINANCIAL_YEAR_END(26),
     FINANCIAL_OVERVIEW_ROW(27),
-    FINANCIAL_STAFF_COUNT(28),
-    // TODO: adding a form input for the team page temporarily, but ideally the new structure will support
-    //       'LEAD_ONLY' type questions not having any form inputs underneath them and this can be removed
-    APPLICATION_TEAM(29);
+    FINANCIAL_STAFF_COUNT(28);
 
     private static List<FormInputType> COST_CATEGORIES =
             asList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING, TRAVEL, OTHER_COSTS);
