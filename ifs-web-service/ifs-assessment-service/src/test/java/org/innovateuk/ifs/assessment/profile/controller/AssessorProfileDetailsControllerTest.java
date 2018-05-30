@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.profile.form.AssessorProfileEditDetailsForm
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditDetailsModelPopulator;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +48,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
     @Mock
     private EthnicityRestService ethnicityRestService;
+
+    @Mock
+    private ProfileRestService profileRestService;
 
     @Mock
     private Validator validator;

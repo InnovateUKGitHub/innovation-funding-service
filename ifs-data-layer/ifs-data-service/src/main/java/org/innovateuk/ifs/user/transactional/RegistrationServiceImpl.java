@@ -133,7 +133,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 andOnSuccess(
                         () -> addUserToOrganisation(newUser, organisationId)).
                 andOnSuccess(
-                        user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, APPLICANT) : serviceSuccess(user)).
+                        user -> userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user)).
                 andOnSuccess(
                         userWithRole -> userWithRole.hasRole(Role.APPLICANT) ?
                                 agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole)).

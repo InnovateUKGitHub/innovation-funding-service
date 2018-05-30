@@ -130,7 +130,33 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
     }
 
     /**
-     * This test is for {@link AsyncFuturesGenerator#awaitAll(CompletableFuture, CompletableFuture, CompletableFuture, CompletableFuture[])}
+     * This test is for {@link AsyncFuturesGenerator#awaitAll(CompletableFuture, CompletableFuture, CompletableFuture, CompletableFuture)}
+     * to show that 4 futures can be awaited on and that their subsequent results will be provided as a tuple-4 to the
+     * new Future to perform some new work on the multiple results of the dependent Futures.
+     */
+    @Test
+    public void testTuple4AwaitAllFuture() throws ExecutionException, InterruptedException {
+
+        CompletableFuture<Integer> future1 = generator.async(() -> 3);
+        CompletableFuture<Integer> future2 = generator.async(() -> 4);
+        CompletableFuture<Integer> future3 = generator.async(() -> 5);
+        CompletableFuture<Integer> future4 = generator.async(() -> 6);
+        CompletableFuture<Integer> awaitingFuture = generator.awaitAll(future1, future2, future3, future4).thenApply((r1, r2, r3, r4) -> r1 + r2 + r3 + r4);
+
+        Integer finalResult = awaitingFuture.get();
+        assertEquals(Integer.valueOf(18), finalResult);
+
+        List<RegisteredAsyncFutureDetails<?>> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
+        assertEquals(5, registeredFutures.size());
+        assertEquals(future1, registeredFutures.get(0).getFuture());
+        assertEquals(future2, registeredFutures.get(1).getFuture());
+        assertEquals(future3, registeredFutures.get(2).getFuture());
+        assertEquals(future4, registeredFutures.get(3).getFuture());
+        assertEquals(awaitingFuture, registeredFutures.get(4).getFuture());
+    }
+
+    /**
+     * This test is for {@link AsyncFuturesGenerator#awaitAll(CompletableFuture, CompletableFuture, CompletableFuture, CompletableFuture, CompletableFuture[])}
      * to show that more than 3 futures can be awaited on.
      */
     @Test
@@ -283,5 +309,4 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         List<String> futureNames = simpleMap(registeredFutures, RegisteredAsyncFutureDetails::getFutureName);
         assertThat(futureNames, contains("future", "Waiting for future", "childFuture", "Waiting for childFuture"));
     }
-
 }

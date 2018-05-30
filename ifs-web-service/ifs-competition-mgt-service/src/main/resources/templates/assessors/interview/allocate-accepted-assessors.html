@@ -35,7 +35,7 @@
             <tr th:each="assessor : ${model.assessors}">
                 <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
                 <td th:text="${assessor.skillAreas}">skill areas</td>
-                <td class="numeric">0</td>
+                <td th:text="${assessor.numberOfAllocatedApplications}" class="numeric"></td>
                 <td class="alignright">
                     <a class="button-secondary no-margin"
                        th:href="@{/assessment/interview/competition/{cid}/assessors/unallocated-applications/{aid}(cid=${model.competitionId},aid=${assessor.id})}"

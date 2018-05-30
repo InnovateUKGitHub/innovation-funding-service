@@ -181,6 +181,12 @@
     color: $text-colour;
   }
 
+  .status-warning {
+    @extend %icon-incomplete;
+    background-size: 17px;
+    padding-left: 25px;
+    color: $text-colour;
+  }
 
   .positive {
     strong {

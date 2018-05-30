@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,6 +31,7 @@ public class SetupStatusController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_SETUP_STATUS')")
     @GetMapping("/{projectId}")
+    @AsyncMethod
     public String viewProjectSetupStatus(@PathVariable("projectId") final long projectId,
                                          Model model,
                                          UserResource loggedInUser,

@@ -9,14 +9,16 @@ public class InterviewAcceptedAssessorsResource {
     private long id;
     private String name;
     private String skillAreas;
+    private long numberOfAllocatedApplications;
 
     public InterviewAcceptedAssessorsResource() {
     }
 
-    public InterviewAcceptedAssessorsResource(long id, String name, String skillAreas) {
+    public InterviewAcceptedAssessorsResource(long id, String name, String skillAreas, long numberOfAllocatedApplications) {
         this.id = id;
         this.name = name;
         this.skillAreas = skillAreas;
+        this.numberOfAllocatedApplications = numberOfAllocatedApplications;
     }
 
     public long getId() {
@@ -41,6 +43,14 @@ public class InterviewAcceptedAssessorsResource {
 
     public void setSkillAreas(String skillAreas) {
         this.skillAreas = skillAreas;
+    }
+
+    public long getNumberOfAllocatedApplications() {
+        return numberOfAllocatedApplications;
+    }
+
+    public void setNumberOfAllocatedApplications(long numberOfAllocatedApplications) {
+        this.numberOfAllocatedApplications = numberOfAllocatedApplications;
     }
 
     @Override

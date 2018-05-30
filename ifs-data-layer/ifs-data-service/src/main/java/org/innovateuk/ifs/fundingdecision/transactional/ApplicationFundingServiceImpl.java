@@ -205,7 +205,8 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
                     Map<String, Object> perNotificationTargetArguments = new HashMap<>();
                     perNotificationTargetArguments.put("applicationName", application.getName());
-                    perNotificationTargetArguments.put("applicationNumber", applicationId);
+                    perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
+                    perNotificationTargetArguments.put("applicationId", applicationId);
                     return Pair.of(pair.getValue(), perNotificationTargetArguments);
                 });
 

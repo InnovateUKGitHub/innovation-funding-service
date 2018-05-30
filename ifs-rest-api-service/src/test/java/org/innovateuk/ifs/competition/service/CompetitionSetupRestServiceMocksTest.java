@@ -163,4 +163,16 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
         assertTrue(result.isSuccess());
         assertEquals(expectedResult, result.getSuccess());
     }
+
+    @Test
+    public void delete() {
+        long competitionId = 1L;
+
+        setupDeleteWithRestResultExpectations(String.format("%s/%s", competitionSetupRestURL, competitionId));
+
+        RestResult<Void> response = service.delete(competitionId);
+
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
 }

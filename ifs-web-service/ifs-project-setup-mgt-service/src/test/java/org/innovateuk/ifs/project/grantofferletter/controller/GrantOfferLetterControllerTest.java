@@ -3,11 +3,15 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
@@ -17,6 +21,7 @@ import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterMod
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -50,6 +55,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<GrantOfferLetterController> {
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private ApplicationSummaryRestService applicationSummaryRestService;
+
+    @Mock
+    private GrantOfferLetterService grantOfferLetterService;
 
     @Test
     public void testView() throws Exception {
