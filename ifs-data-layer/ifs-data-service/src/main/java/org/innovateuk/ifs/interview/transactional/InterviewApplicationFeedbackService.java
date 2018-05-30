@@ -29,7 +29,7 @@ public interface InterviewApplicationFeedbackService {
             description = "Competition Admins and Project Finance users can download feedback")
     ServiceResult<FileAndContents> downloadFeedback(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant', 'assessor')")
     @SecuredBySpring(value = "FIND_FEEDBACK",
             description = "Competition Admins and Project Finance users can find feedback")
     ServiceResult<FileEntryResource> findFeedback(long applicationId);

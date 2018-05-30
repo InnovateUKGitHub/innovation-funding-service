@@ -9,7 +9,10 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
+    <th:block th:unless="${interviewFeedbackViewModel.assessor}" th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
+    <th:block th:if="${interviewFeedbackViewModel.assessor}" th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Interviews you have agreed to attend',linkClass='link-back',linkUrl=@{~/assessment/assessor/dashboard/competition/{competitionId}/interview(competitionId=${currentCompetition.id})}"/>
     <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
     <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationName},size='heading-xlarge'" />
@@ -55,48 +58,72 @@
         <p th:text="${interviewFeedbackViewModel.bannerText}">Some info</p>
     </div>
 
-    <th:block th:if="${interviewFeedbackViewModel.leadApplicant}">
-        <form th:action="@{/application/{applicationId}/summary(applicationId=${currentApplication.id})}"
-              method="post" enctype="multipart/form-data" th:object="${interviewResponseForm}" novalidate="novalidate">
-            <h2 class="heading-medium">Your response</h2>
-            <div class="upload-section">
-                <details role="group">
-                    <summary role="button" aria-controls="details-content-0" aria-expanded="false">
-                        <span class="summary">What should I include in the response?</span>
-                    </summary>
-                    <div class="panel" id="details-content-0" aria-hidden="true">
-                        <p>You may submit a written response to this feedback. You can upload up to 3 A4 pages in a single PDF
-                            document, including charts and diagrams. The maximum file upload size is 2MB.</p>
-                    </div>
-                </details>
-                <div th:unless="${interviewFeedbackViewModel.hasResponse()}">
-                    <p class="uploaded-file">No file currently uploaded</p>
-                    <input type="file" id="feedback-response" name="response" class="inputfile">
-                    <label for="feedback-response" class="button-secondary extra-margin">+ Upload</label>
-                    <button name="uploadResponse" class="button-secondary" data-for-file-upload="feedback-response"></button>
-                </div>
-                <div th:if="${interviewFeedbackViewModel.hasResponse()}">
+    <th:block th:unless="${interviewFeedbackViewModel.assessor}">
+
+        <th:block th:if="${interviewFeedbackViewModel.leadApplicant}">
+                <form th:action="@{/application/{applicationId}/summary(applicationId=${currentApplication.id})}"
+                      method="post" enctype="multipart/form-data" th:object="${interviewResponseForm}" novalidate="novalidate">
+                    <h2 class="heading-medium">Your response</h2>
+                        <div class="upload-section">
+                            <details role="group">
+                                <summary role="button" aria-controls="details-content-0" aria-expanded="false">
+                                    <span class="summary">What should I include in the response?</span>
+                                </summary>
+                                <div class="panel" id="details-content-0" aria-hidden="true">
+                                    <p>You may submit a written response to this feedback. You can upload up to 3 A4 pages in a single PDF
+                                        document, including charts and diagrams. The maximum file upload size is 2MB.</p>
+                                </div>
+                            </details>
+                            <div th:unless="${interviewFeedbackViewModel.hasResponse()}">
+                                <p class="uploaded-file">No file currently uploaded</p>
+                                <input type="file" id="feedback-response" name="response" class="inputfile">
+                                <label for="feedback-response" class="button-secondary extra-margin">+ Upload</label>
+                                <button name="uploadResponse" class="button-secondary" data-for-file-upload="feedback-response"></button>
+                            </div>
+                            <div th:if="${interviewFeedbackViewModel.hasResponse()}">
+                                <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
+                                                            th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
+                                                            target="_blank">File</a></p>
+                                <button name="removeResponse" class="button-secondary">Remove</button>
+                            </div>
+                        </div>
+                </form>
+            </th:block>
+        <th:block th:unless="${interviewFeedbackViewModel.leadApplicant}">
+            <h2 class="heading-medium">Response from lead applicant</h2>
+            <th:block th:unless="${interviewFeedbackViewModel.hasResponse()}">
+                <p>The lead applicant has not yet uploaded a response.</p>
+            </th:block>
+            <th:block th:if="${interviewFeedbackViewModel.hasResponse()}">
+                <div class="form-group download">
+                    <h3 class="heading-small no-margin">Lead applicant response</h3>
                     <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
-                                                th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
-                                                target="_blank">File</a></p>
-                    <button name="removeResponse" class="button-secondary">Remove</button>
+                       th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
+                       target="_blank">File</a></p>
                 </div>
-            </div>
-        </form>
+            </th:block>
+        </th:block>
     </th:block>
-    <th:block th:unless="${interviewFeedbackViewModel.leadApplicant}">
-        <h2 class="heading-medium">Response from lead applicant</h2>
-        <th:block th:unless="${interviewFeedbackViewModel.hasResponse()}">
-            <p>The lead applicant has not yet uploaded a response.</p>
-        </th:block>
-        <th:block th:if="${interviewFeedbackViewModel.hasResponse()}">
-            <div class="form-group download">
-                <h3 class="heading-small no-margin">Lead applicant response</h3>
-                <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
-                   th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
-                   target="_blank">File</a></p>
-            </div>
-        </th:block>
+
+    <th:block th:if="${interviewFeedbackViewModel.assessor && interviewFeedbackViewModel.hasResponse()}">
+        <h2 class="heading-medium">Attachments</h2>
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">
+                Applicant feedback response
+            </h3>
+            <a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
+                                        th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
+                                        target="_blank">File</a>
+        </div>
+
+        <div class="form-group download" th:if="${interviewFeedbackViewModel.hasFeedback()}">
+            <h3 class="heading-small no-margin">
+                Panel assessment feedback
+            </h3>
+            <a th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${currentApplication.id})}"
+               th:text="${interviewFeedbackViewModel.feedbackFilename + ' (opens in a new window)'}"
+               target="_blank">File</a>
+        </div>
     </th:block>
 
     <h2 class="heading-medium no-margin-bottom">Assessor feedback</h2>

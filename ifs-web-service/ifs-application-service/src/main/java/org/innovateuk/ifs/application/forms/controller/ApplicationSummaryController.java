@@ -135,7 +135,7 @@ public class ApplicationSummaryController {
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
             addFeedbackAndScores(model, applicationId);
-            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole));
+            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, false));
             return "application-interview-feedback";
         }
         else {

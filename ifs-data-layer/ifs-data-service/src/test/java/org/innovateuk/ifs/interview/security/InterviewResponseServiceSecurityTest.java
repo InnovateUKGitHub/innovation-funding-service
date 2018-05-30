@@ -6,6 +6,7 @@ import org.innovateuk.ifs.interview.transactional.InterviewResponseServiceImpl;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 
 public class InterviewResponseServiceSecurityTest extends BaseServiceSecurityTest<InterviewResponseService> {
 
@@ -42,7 +43,7 @@ public class InterviewResponseServiceSecurityTest extends BaseServiceSecurityTes
     public void findResponse() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.findResponse(1L),
-                APPLICANT
+                APPLICANT, ASSESSOR
         );
     }
 

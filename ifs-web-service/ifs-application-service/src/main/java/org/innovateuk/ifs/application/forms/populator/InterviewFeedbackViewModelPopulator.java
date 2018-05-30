@@ -6,6 +6,7 @@ import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static java.util.Optional.ofNullable;
@@ -21,7 +22,7 @@ public class InterviewFeedbackViewModelPopulator {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
     }
 
-    public InterviewFeedbackViewModel populate(long applicationId, ProcessRoleResource userApplicationRole) {
+    public InterviewFeedbackViewModel populate(long applicationId, ProcessRoleResource userApplicationRole, boolean isAssessor) {
         String responseFilename = ofNullable(interviewResponseRestService.findResponse(applicationId).getSuccess())
                 .map(FileEntryResource::getName)
                 .orElse(null);
@@ -30,6 +31,10 @@ public class InterviewFeedbackViewModelPopulator {
                 .map(FileEntryResource::getName)
                 .orElse(null);
 
-        return new InterviewFeedbackViewModel(responseFilename, feedbackFilename, Role.getById(userApplicationRole.getRole()).isLeadApplicant());
+        return new InterviewFeedbackViewModel(responseFilename,
+                feedbackFilename,
+                Role.getById(userApplicationRole.getRole()).isLeadApplicant(),
+                isAssessor
+        );
     }
 }
