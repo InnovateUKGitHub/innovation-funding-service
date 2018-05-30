@@ -121,7 +121,9 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="row, iterStat : *{invites}">
+                                <tr th:each="row, iterStat : *{invites}"
+                                    class="form-group-row"
+                                    th:classappend="((${#fields.hasErrors('invites[__${iterStat.index}__].name')}) or (${#fields.hasErrors('invites[__${iterStat.index}__].email')})) ? 'form-group-error'">
                                     <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'form-group-error'">
                                         <label>
                                              <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">
