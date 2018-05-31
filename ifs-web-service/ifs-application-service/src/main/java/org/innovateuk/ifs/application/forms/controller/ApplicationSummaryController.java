@@ -97,7 +97,7 @@ public class ApplicationSummaryController {
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.interviewResponseRestService = interviewResponseRestService;
     }
-
+    
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/summary")
@@ -127,6 +127,7 @@ public class ApplicationSummaryController {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
         model.addAttribute("projectWithdrawn", projectWithdrawn);
+        model.addAttribute("projectId", new ProjectResource().getId());
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
