@@ -118,6 +118,8 @@ public class Competition implements ProcessActivity {
 
     private boolean locationPerPartner = true;
 
+    private Boolean stateAid;
+
     public Competition() {
         setupComplete = false;
     }
@@ -709,6 +711,14 @@ public class Competition implements ProcessActivity {
 
     public void setMinProjectDuration(Integer minProjectDuration) {
         this.minProjectDuration = minProjectDuration;
+    }
+
+    public Boolean getStateAid() {
+        return stateAid;
+    }
+
+    public void setStateAid(final Boolean stateAid) {
+        this.stateAid = stateAid;
     }
 }
 

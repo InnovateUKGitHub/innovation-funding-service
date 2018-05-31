@@ -5,10 +5,12 @@ import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<InterviewAssignmentMessageOutcome, InterviewAssignmentMessageOutcomeBuilder> {
 
@@ -35,7 +37,7 @@ public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<Interv
     }
 
     public InterviewAssignmentMessageOutcomeBuilder withSubject(String... subjects) {
-        return withArray((subject, assessmentInterviewPanelMessageOutcome) -> assessmentInterviewPanelMessageOutcome.setMessage(subject), subjects);
+        return withArray((subject, assessmentInterviewPanelMessageOutcome) -> assessmentInterviewPanelMessageOutcome.setSubject(subject), subjects);
     }
 
     public InterviewAssignmentMessageOutcomeBuilder withMessage(String... messages) {
@@ -46,4 +48,11 @@ public class InterviewAssignmentMessageOutcomeBuilder extends BaseBuilder<Interv
         return withArray((feedback, assessmentInterviewPanelMessageOutcome) -> assessmentInterviewPanelMessageOutcome.setFeedback(feedback), feedbacks);
     }
 
+    public InterviewAssignmentMessageOutcomeBuilder withCreatedOn(ZonedDateTime... createdOns) {
+        return withArraySetFieldByReflection("createdOn", createdOns);
+    }
+
+    public InterviewAssignmentMessageOutcomeBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+        return withArraySetFieldByReflection("modifiedOn", modifiedOns);
+    }
 }

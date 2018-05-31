@@ -25,4 +25,26 @@ public class InterviewStatisticsServiceSecurityTest extends BaseServiceSecurityT
                 PROJECT_FINANCE
         );
     }
+
+    @Test
+    public void getInterviewAssignmentPanelKeyStatistics() {
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.getInterviewAssignmentPanelKeyStatistics(competitionId),
+                COMP_ADMIN,
+                PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void getInterviewStatistics() {
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.getInterviewStatistics(competitionId),
+                COMP_ADMIN,
+                PROJECT_FINANCE
+        );
+    }
 }

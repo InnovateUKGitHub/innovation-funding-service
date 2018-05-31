@@ -1,1 +1,1 @@
-Notification regarding your application ${applicationNumber?c}: ${applicationName}
+${competitionName}: Notification regarding your application ${applicationId?c}: ${applicationName}

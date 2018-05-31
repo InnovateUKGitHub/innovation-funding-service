@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
@@ -20,6 +21,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatistic
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteStatisticsResourceBuilder.newInterviewInviteStatisticsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewStatisticsResourceBuilder.newInterviewStatisticsResource;
 import static org.innovateuk.ifs.review.builder.ReviewInviteStatisticsResourceBuilder.newReviewInviteStatisticsResource;
 import static org.innovateuk.ifs.review.builder.ReviewKeyStatisticsResourceBuilder.newReviewKeyStatisticsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -130,13 +132,13 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void getInterviewStatistics() throws Exception {
+    public void getInterviewAssignmentStatistics() throws Exception {
         final long competitionId = 1L;
 
         InterviewAssignmentKeyStatisticsResource interviewAssignmentKeyStatisticsResource = newInterviewAssignmentKeyStatisticsResource().build();
-        when(interviewStatisticsServiceMock.getInterviewPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(interviewAssignmentKeyStatisticsResource));
+        when(interviewStatisticsServiceMock.getInterviewAssignmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(interviewAssignmentKeyStatisticsResource));
 
-        mockMvc.perform(get("/competition-statistics/{id}/interview", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/interview-assignment", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(interviewAssignmentKeyStatisticsResource)));
     }
@@ -149,6 +151,18 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         when(interviewStatisticsServiceMock.getInterviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(interviewInviteStatisticsResource));
 
         mockMvc.perform(get("/competition-statistics/{id}/interview-invites", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(interviewInviteStatisticsResource)));
+    }
+
+    @Test
+    public void getInterviewStatistics() throws Exception {
+        final long competitionId = 1L;
+
+        InterviewStatisticsResource interviewInviteStatisticsResource = newInterviewStatisticsResource().build();
+        when(interviewStatisticsServiceMock.getInterviewStatistics(competitionId)).thenReturn(serviceSuccess(interviewInviteStatisticsResource));
+
+        mockMvc.perform(get("/competition-statistics/{id}/interview", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(interviewInviteStatisticsResource)));
     }

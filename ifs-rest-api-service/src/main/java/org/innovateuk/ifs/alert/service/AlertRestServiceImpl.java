@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.alertResourceListType;
-
 /**
  * AlertRestServiceImpl is a utility for CRUD operations on {@link org.innovateuk.ifs.alert.domain.Alert}.
  * This class connects to the {@link org.innovateuk.ifs.alert.controller.AlertController}
