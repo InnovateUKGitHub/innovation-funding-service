@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.util;
+package org.innovateuk.ifs.user.resource;
 
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.stereotype.Component;

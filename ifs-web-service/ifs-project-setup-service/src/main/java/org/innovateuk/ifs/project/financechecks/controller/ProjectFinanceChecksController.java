@@ -42,7 +42,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.status.StatusService;
-import org.innovateuk.ifs.project.util.FinanceUtil;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadState;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;

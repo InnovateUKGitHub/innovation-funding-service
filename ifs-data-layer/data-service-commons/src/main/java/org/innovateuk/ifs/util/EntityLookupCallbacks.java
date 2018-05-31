@@ -2,9 +2,9 @@ package org.innovateuk.ifs.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.commons.error.Error;
 
 import java.util.Collection;
 import java.util.Optional;

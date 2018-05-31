@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorConverter;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
@@ -136,7 +137,7 @@ public class ValidationMessages implements ErrorHolder, Serializable {
 
     private void addAnyErrors(List<Error> errors, ErrorConverter converter, ErrorConverter... otherConverters) {
         errors.forEach(e -> {
-            List<Optional<Error>> optionalConversionsForThisError = simpleMap(combineLists(converter, otherConverters), fn -> fn.apply(e));
+            List<Optional<Error>> optionalConversionsForThisError = simpleMap(CollectionFunctions.combineLists(converter, otherConverters), fn -> fn.apply(e));
             Optional<Optional<Error>> successfullyConvertedErrorList = simpleFindFirst(optionalConversionsForThisError, Optional::isPresent);
 
             successfullyConvertedErrorList.ifPresent(error -> this.errors.add(error.get()));

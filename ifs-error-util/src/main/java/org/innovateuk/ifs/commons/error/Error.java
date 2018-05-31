@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
@@ -54,7 +55,7 @@ public class Error implements Serializable {
 
     public Error(String messageKey, List<Object> arguments, HttpStatus statusCode) {
         this.errorKey = messageKey;
-        this.arguments = simpleMap(arguments, argument -> argument + "");
+        this.arguments = CollectionFunctions.simpleMap(arguments, argument -> argument + "");
         this.statusCode = statusCode;
     }
 

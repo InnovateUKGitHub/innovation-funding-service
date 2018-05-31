@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 
 import java.util.List;
 import java.util.Set;

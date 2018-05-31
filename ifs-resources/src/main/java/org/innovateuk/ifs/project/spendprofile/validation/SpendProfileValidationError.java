@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.commons.validation;
+package org.innovateuk.ifs.project.spendprofile.validation;
 
 /**
  * Enum for listing all Spend Profile related error keys

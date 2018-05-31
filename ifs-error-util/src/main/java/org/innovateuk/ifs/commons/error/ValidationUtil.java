@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.util;
+package org.innovateuk.ifs.commons.error;
 
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.validation.Errors;
 
 import javax.validation.ConstraintViolation;
@@ -15,7 +16,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 public final class ValidationUtil {
 
@@ -50,7 +50,7 @@ public final class ValidationUtil {
             Map<String, Object> attributes = v.getConstraintDescriptor().getAttributes();
             Map<String, Object> messageArguments =
                     attributes != null ?
-                            simpleFilter(attributes, (key, value) -> !asList("groups", "message", "payload", "inclusive").contains(key))
+                            CollectionFunctions.simpleFilter(attributes, (key, value) -> !asList("groups", "message", "payload", "inclusive").contains(key))
                             : emptyMap();
 
             List<Object> messageArgumentValues = new ArrayList<>(messageArguments.values());

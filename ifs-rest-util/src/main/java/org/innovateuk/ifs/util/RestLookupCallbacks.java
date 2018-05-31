@@ -33,13 +33,13 @@ public class RestLookupCallbacks {
             Error failureResponse) {
 
         if (result instanceof Collection && ((Collection) result).isEmpty()) {
-            return RestResult.restFailure(failureResponse);
+            return restFailure(failureResponse);
         }
         if (result instanceof Optional) {
-            return ((Optional<SuccessType>) result).map(RestResult::restSuccess).orElse(RestResult.restFailure(failureResponse));
+            return ((Optional<SuccessType>) result).map(RestResult::restSuccess).orElse(restFailure(failureResponse));
         }
 
-        return ofNullable(result).map(RestResult::restSuccess).orElse(RestResult.restFailure(failureResponse));
+        return ofNullable(result).map(RestResult::restSuccess).orElse(restFailure(failureResponse));
     }
 
     public static <T> RestResult<T> find(
@@ -47,9 +47,9 @@ public class RestLookupCallbacks {
             Error failureResponse) {
 
         if(result.isPresent()){
-            return RestResult.restSuccess(result.get());
+            return restSuccess(result.get());
         }else{
-            return RestResult.restFailure(failureResponse);
+            return restFailure(failureResponse);
         }
     }
 
@@ -155,15 +155,15 @@ public class RestLookupCallbacks {
 
     public static <T> RestResult<T> getOnlyElementOrFail(Collection<T> list) {
         if (list == null || list.size() != 1) {
-            return RestResult.restFailure(new Error(GENERAL_SINGLE_ENTRY_EXPECTED, list != null ? list.size() : null));
+            return restFailure(new Error(GENERAL_SINGLE_ENTRY_EXPECTED, list != null ? list.size() : null));
         }
-        return RestResult.restSuccess(list.iterator().next());
+        return restSuccess(list.iterator().next());
     }
     public static <T> RestResult<T> getOptionalElementOrFail(Optional<T> item) {
         if (!item.isPresent()) {
             return RestResult.restFailure(GENERAL_OPTIONAL_ENTRY_EXPECTED);
         }
-        return RestResult.restSuccess(item.get());
+        return restSuccess(item.get());
     }
 
     /**
@@ -186,7 +186,7 @@ public class RestLookupCallbacks {
         }
 
         public <T> RestResult<T> andOnSuccess(Supplier<T> supplier) {
-            return getterFn1.get().andOnSuccess(result1 -> RestResult.restSuccess(supplier.get()));
+            return getterFn1.get().andOnSuccess(result1 -> restSuccess(supplier.get()));
         }
 
         public <R> RestResult<R> andOnSuccessReturn(ExceptionThrowingFunction<T, R> successFn) {
@@ -217,7 +217,7 @@ public class RestLookupCallbacks {
         }
 
         public <T> RestResult<T> andOnSuccess(Supplier<T> supplier) {
-            return andOnSuccess((p1, p2) -> RestResult.restSuccess(supplier.get()));
+            return andOnSuccess((p1, p2) -> restSuccess(supplier.get()));
         }
     }
 
@@ -249,7 +249,7 @@ public class RestLookupCallbacks {
         }
 
         public <T> RestResult<T> andOnSuccess(Supplier<T> supplier) {
-            return andOnSuccess((p1, p2, p3) -> RestResult.restSuccess(supplier.get()));
+            return andOnSuccess((p1, p2, p3) -> restSuccess(supplier.get()));
         }
     }
 
@@ -284,7 +284,7 @@ public class RestLookupCallbacks {
         }
 
         public <T> RestResult<T> andOnSuccess(Supplier<T> supplier) {
-            return andOnSuccess((p1, p2, p3, p4) -> RestResult.restSuccess(supplier.get()));
+            return andOnSuccess((p1, p2, p3, p4) -> restSuccess(supplier.get()));
         }
 
     }
