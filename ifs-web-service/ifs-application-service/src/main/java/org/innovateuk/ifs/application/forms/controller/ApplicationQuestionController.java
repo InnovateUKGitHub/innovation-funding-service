@@ -129,24 +129,10 @@ public class ApplicationQuestionController {
         if (params.containsKey(EDIT_QUESTION)) {
             return handleEditQuestion(form, model, applicationId, questionId, user);
         } else {
-            if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-                questionService.assignQuestion(applicationId, user, request);
-                cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-            }
+            handleAssignedQuestions(applicationId, user, request, response);
 
             // First check if any errors already exist in bindingResult
-            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
-                /* Start save action */
-                errors = applicationSaver.saveApplicationForm(
-                        applicationId,
-                        form,
-                        questionId,
-                        user.getId(),
-                        request,
-                        response,
-                        Optional.empty()
-                );
-            }
+            checkErrorsInForm(form, applicationId, questionId, user.getId(), request, response);
 
             model.addAttribute("form", form);
 
@@ -162,45 +148,85 @@ public class ApplicationQuestionController {
         }
     }
 
-    @GetMapping(value = {QUESTION_URL + "application_details"})
+    @GetMapping(value = {QUESTION_URL + "application_details/" + "{" + QUESTION_ID + "}"})
     public String showApplicationDetails(
             @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
             @PathVariable(APPLICATION_ID) final Long applicationId,
+            @PathVariable(QUESTION_ID) final Long questionId,
             @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
             UserResource user,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-//        markAsComplete.ifPresent(markAsCompleteSet -> {
-//            if (markAsCompleteSet) {
-//                ValidationMessages errors = applicationSaver.saveApplicationForm(
-//                        applicationId,
-//                        form,
-//                        questionId,
-//                        user.getId(),
-//                        request,
-//                        response,
-//                        Optional.of(Boolean.TRUE)
-//                );
-//                validationHandler.addAnyErrors(errors);
-//            }
-//        });
+        markAsComplete.ifPresent(markAsCompleteSet -> {
+            if (markAsCompleteSet) {
+                ValidationMessages errors = applicationSaver.saveApplicationForm(
+                        applicationId,
+                        form,
+                        questionId,
+                        user.getId(),
+                        request,
+                        response,
+                        Optional.of(Boolean.TRUE)
+                );
+                validationHandler.addAnyErrors(errors);
+            }
+        });
 
-//        populateShowQuestion(user, applicationId, questionId, model, form);
+        populateShowQuestion(user, applicationId, questionId, model, form);
 
-        return APPLICATION_FORM;
+        return APPLICATION_DETAILS_FORM;
     }
 
-    @GetMapping(value = {QUESTION_URL + "application_team"})
+    @PostMapping(value = {QUESTION_URL + "application_details/" + "{" + QUESTION_ID + "}"})
+    public String applicationDetailFormSubmit(
+            @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
+            BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @PathVariable(APPLICATION_ID) final Long applicationId,
+            @PathVariable(QUESTION_ID) final Long questionId,
+            UserResource user,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        Map<String, String[]> params = request.getParameterMap();
+        ValidationMessages errors = new ValidationMessages();
+
+        // Check if the request is to just open edit view or to save
+        if (params.containsKey(EDIT_QUESTION)) {
+            return handleEditQuestion(form, model, applicationId, questionId, user);
+        } else {
+            handleAssignedQuestions(applicationId, user, request, response);
+
+            // First check if any errors already exist in bindingResult
+            checkErrorsInForm(form, applicationId, questionId, user.getId(), request, response);
+
+            model.addAttribute("form", form);
+
+            /* End save action */
+            if (hasErrors(request, errors, bindingResult)) {
+                // Add any validated fields back in invalid entries are displayed on re-render
+                validationHandler.addAnyErrors(errors);
+                populateShowQuestion(user, applicationId, questionId, model, form);
+                return APPLICATION_DETAILS_FORM;
+            } else {
+                return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
+            }
+        }
+    }
+
+    @GetMapping(value = {QUESTION_URL + "application_team/" + "{" + QUESTION_ID + "}"})
     public String showApplicationTeam(
             @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
             @PathVariable(APPLICATION_ID) final Long applicationId,
+            @PathVariable(QUESTION_ID) final Long questionId,
             @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
             UserResource user,
             HttpServletRequest request,
@@ -209,6 +235,42 @@ public class ApplicationQuestionController {
         return APPLICATION_FORM;
     }
 
+    private String handleFormSubmit() {
+        
+    }
+
+    private void handleAssignedQuestions(Long applicationId,
+                                         UserResource user,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
+            questionService.assignQuestion(applicationId, user, request);
+            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+        }
+    }
+
+    private ValidationMessages checkErrorsInForm(ApplicationForm form,
+                                                 Long applicationId,
+                                                 Long questionId,
+                                                 Long userId,
+                                                 HttpServletRequest request,
+                                                 HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+        if (isAllowedToUpdateQuestion(questionId, applicationId, userId) || isMarkQuestionRequest(params)) {
+                /* Start save action */
+            return applicationSaver.saveApplicationForm(
+                    applicationId,
+                    form,
+                    questionId,
+                    userId,
+                    request,
+                    response,
+                    Optional.empty()
+            );
+        }
+        return null;
+    }
 
     private boolean hasErrors(HttpServletRequest request, ValidationMessages errors, BindingResult bindingResult) {
         return isUploadWithValidationErrors(request, errors)

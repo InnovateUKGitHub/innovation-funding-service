@@ -14,7 +14,7 @@
             <div class="task">
                 <h3 class="heading-small">
                     <a th:if="${question.type == T(org.innovateuk.ifs.form.resource.QuestionType).LEAD_ONLY}"
-                       th:href="'/application/'+${currentApplication.id}+'/form/question/'+${#strings.toLowerCase(question.questionSetupType)}"
+                       th:href="'/application/'+${currentApplication.id}+'/form/question/'+${#strings.toLowerCase(question.questionSetupType)}+'/'+${question.id}"
                        th:text="${question.questionNumber != null ? question.questionNumber + '. ' : '' } + ${question.shortName}"/>
                     <a th:unless="${question.type == T(org.innovateuk.ifs.form.resource.QuestionType).LEAD_ONLY}"
                        th:href="'/application/'+${currentApplication.id}+'/form/question/'+${question.id}"
