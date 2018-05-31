@@ -54,7 +54,7 @@ public interface InterviewAssignmentService {
 
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     @SecuredBySpring(value = "IS_APPLICATION_ASSIGNED_TO_INTERVIEW",
-            description = "The applicants can see if their application is assigned to interview")
+            description = "The applicants and assessors can see if the application is assigned to interview")
     ServiceResult<Boolean> isApplicationAssigned(long applicationId);
 
 }

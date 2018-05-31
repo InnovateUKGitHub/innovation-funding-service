@@ -100,7 +100,7 @@ public class ApplicationController {
 
     private boolean userIsLeadApplicant(long userId, long applicationId) {
         return processRoleService.findProcessRole(userId, applicationId)
-                .getRole() == LEADAPPLICANT.getId();
+                .getRole() == LEADAPPLICANT;
     }
 
     @PostMapping(value = "/{applicationId}")

@@ -131,24 +131,16 @@ public class ApplicationSummaryController {
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
         if (competition.getCompetitionStatus().isFeedbackReleased()) {
-            addFeedbackAndScores(model, applicationId);
+            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
-            addFeedbackAndScores(model, applicationId);
+            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
             model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, false));
             return "application-interview-feedback";
         }
         else {
             return "application-summary";
         }
-    }
-
-    private void addFeedbackAndScores(Model model, long applicationId) {
-        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
-        model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
-                .getSuccess()
-                .getFeedback()
-        );
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")

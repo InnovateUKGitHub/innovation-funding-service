@@ -33,7 +33,7 @@ public class InterviewFeedbackViewModelPopulator {
 
         return new InterviewFeedbackViewModel(responseFilename,
                 feedbackFilename,
-                Role.getById(userApplicationRole.getRole()).isLeadApplicant(),
+                userApplicationRole.getRole().isLeadApplicant(),
                 isAssessor
         );
     }

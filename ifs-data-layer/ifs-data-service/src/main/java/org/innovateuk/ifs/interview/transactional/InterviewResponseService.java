@@ -31,7 +31,7 @@ public interface InterviewResponseService {
 
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     @SecuredBySpring(value = "FIND_RESPONSE",
-            description = "Applicant users can find a response")
+            description = "Applicant users and assessors can find a response")
     ServiceResult<FileEntryResource> findResponse(long applicationId);
 
 }
