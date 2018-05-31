@@ -2,7 +2,10 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
@@ -61,10 +64,14 @@ public class CompetitionManagementApplicationsController {
     @Autowired
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
 
+    @Autowired
+    private CompetitionService competitionService;
+
     @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and Innovation Leads can view the applications menu")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
+        checkCompetitionIsOpen(competitionId);
         model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId, user));
         return "competition/applications-menu";
     }
@@ -79,6 +86,7 @@ public class CompetitionManagementApplicationsController {
                                   @RequestParam(value = "sort", defaultValue = "") String sort,
                                   @RequestParam(value = "filterSearch") Optional<String> filter,
                                   UserResource user) {
+        checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.ALL_APPLICATIONS, queryParams);
         model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter, user));
         model.addAttribute("originQuery", originQuery);
@@ -95,6 +103,7 @@ public class CompetitionManagementApplicationsController {
                                         @RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "sort", defaultValue = "") String sort,
                                         @RequestParam(value = "filterSearch") Optional<String> filter) {
+        checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.SUBMITTED_APPLICATIONS, queryParams);
         model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filter));
         model.addAttribute("originQuery", originQuery);
@@ -112,6 +121,7 @@ public class CompetitionManagementApplicationsController {
                                          @RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "sort", defaultValue = "") String sort,
                                          UserResource user) {
+        checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INELIGIBLE_APPLICATIONS, queryParams);
         model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filterForm, user));
         model.addAttribute("originQuery", originQuery);
@@ -129,7 +139,7 @@ public class CompetitionManagementApplicationsController {
                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
                                            UserResource loggedInUser) {
-
+        checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
         model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
@@ -143,10 +153,16 @@ public class CompetitionManagementApplicationsController {
     public String markApplicationAsSuccessful(
                                               @PathVariable("competitionId") long competitionId,
                                               @PathVariable("applicationId") long applicationId)  {
-
+        checkCompetitionIsOpen(competitionId);
         applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
         projectService.createProjectFromApplicationId(applicationId).getSuccess();
 
         return "redirect:/competition/{competitionId}/applications/previous";
+    }
+
+    private void checkCompetitionIsOpen(long competitionId) {
+        if (!competitionService.getById(competitionId).getCompetitionStatus().isLaterThan(CompetitionStatus.READY_TO_OPEN)) {
+            throw new IncorrectStateForPageException("Competition is not yet open.");
+        }
     }
 }

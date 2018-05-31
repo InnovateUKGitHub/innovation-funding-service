@@ -192,6 +192,7 @@ public class CompetitionSetupController {
                     Optional.ofNullable(objectId));
             return createJsonObjectNode(true);
         } catch (Exception e) {
+            LOG.error("exception thrown saving form element", e);
             return createJsonObjectNode(false);
         }
     }
@@ -217,6 +218,7 @@ public class CompetitionSetupController {
                     Optional.ofNullable(objectId));
             return createJsonObjectNode(true);
         } catch (Exception e) {
+            LOG.error("exception thrown saving form element", e);
             return createJsonObjectNode(false);
         }
     }

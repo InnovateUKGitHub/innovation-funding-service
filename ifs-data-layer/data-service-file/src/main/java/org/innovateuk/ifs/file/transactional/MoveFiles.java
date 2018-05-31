@@ -22,6 +22,8 @@ public final class MoveFiles {
 
     private static final Log LOG = LogFactory.getLog(MoveFiles.class);
 
+    private MoveFiles() {}
+
     public static ServiceResult<List<File>> moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to, final boolean ignoreAlreadyMovedErrors) {
         if (ignoreAlreadyMovedErrors) {
             return aggregate(filterErrors(moveAllFiles(from, to), f -> !f.is(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT)));
@@ -37,9 +39,9 @@ public final class MoveFiles {
                     final Pair<List<String>, String> path = idAndPathOfFileToMove.getValue();
                     final File fileToMove = new File(pathElementsToFile(path.getKey()), path.getValue());
                     ServiceResult<File> moveResult= to.moveFile(id, fileToMove);
-                    moveResult.ifSuccessful(movedFile -> {
-                        LOG.info("[FileLogging] Moved file " + fileToMove.getAbsolutePath() + " to " + movedFile.getAbsolutePath() );
-                    });
+                    moveResult.ifSuccessful(movedFile ->
+                        LOG.info("[FileLogging] Moved file " + fileToMove.getAbsolutePath() + " to " + movedFile.getAbsolutePath())
+                    );
                     return moveResult;
                 }).
                 collect(toList());

@@ -82,17 +82,17 @@ include::{snippets}/competition-statistics/get-review-invite-statistics/response
 ==== Curl Example
 include::{snippets}/competition-statistics/get-review-invite-statistics/curl-request.adoc[]
 
-=== Get interview statistics
+=== Get interview assignment statistics
 ==== Request
-include::{snippets}/competition-statistics/get-interview-statistics/http-request.adoc[]
-include::{snippets}/competition-statistics/get-interview-statistics/path-parameters.adoc[]
+include::{snippets}/competition-statistics/get-interview-assignment-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-interview-assignment-statistics/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competition-statistics/get-interview-statistics/http-response.adoc[]
-include::{snippets}/competition-statistics/get-interview-statistics/response-fields.adoc[]
+include::{snippets}/competition-statistics/get-interview-assignment-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-interview-assignment-statistics/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/competition-statistics/get-interview-statistics/curl-request.adoc[]
+include::{snippets}/competition-statistics/get-interview-assignment-statistics/curl-request.adoc[]
 
 === Get interview invite statistics
 ==== Request
@@ -105,3 +105,15 @@ include::{snippets}/competition-statistics/get-interview-invite-statistics/respo
 
 ==== Curl Example
 include::{snippets}/competition-statistics/get-interview-invite-statistics/curl-request.adoc[]
+
+=== Get interview statistics
+==== Request
+include::{snippets}/competition-statistics/get-interview-statistics/http-request.adoc[]
+include::{snippets}/competition-statistics/get-interview-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-statistics/get-interview-statistics/http-response.adoc[]
+include::{snippets}/competition-statistics/get-interview-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-statistics/get-interview-statistics/curl-request.adoc[]

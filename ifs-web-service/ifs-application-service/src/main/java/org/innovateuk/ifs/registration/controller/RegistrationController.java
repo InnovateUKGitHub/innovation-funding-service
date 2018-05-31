@@ -127,6 +127,7 @@ public class RegistrationController {
         try {
             addRegistrationFormToModel(registrationForm, model, request, response);
         } catch (InviteAlreadyAcceptedException e) {
+            LOG.info("invite already accepted", e);
             cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
             return "redirect:/login";
         }
@@ -198,6 +199,7 @@ public class RegistrationController {
                 validator.validate(registrationForm, bindingResult);
             }
         } catch (InviteAlreadyAcceptedException e) {
+            LOG.info("invite already accepted", e);
             cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
 
             return "redirect:/login";

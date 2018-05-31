@@ -36,7 +36,7 @@ public class ReviewSelectionForm extends BaseBindingResultTarget {
     }
 
     public boolean anySelectionIsMade() {
-        return this.selectedAssessorIds.size() > 0;
+        return !this.selectedAssessorIds.isEmpty();
     }
 
     @Override

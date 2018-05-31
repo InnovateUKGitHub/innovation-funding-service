@@ -2,7 +2,6 @@ package org.innovateuk.ifs.interview.model;
 
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +15,6 @@ abstract class InterviewApplicationsModelPopulator {
     private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
 
     protected InterviewAssignmentKeyStatisticsResource getKeyStatistics(long competitionId) {
-        return competitionKeyStatisticsRestService.getInterviewKeyStatisticsByCompetition(competitionId).getSuccess();
+        return competitionKeyStatisticsRestService.getInterviewAssignmentStatisticsByCompetition(competitionId).getSuccess();
     }
 }

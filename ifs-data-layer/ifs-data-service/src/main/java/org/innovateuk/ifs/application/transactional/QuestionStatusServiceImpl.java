@@ -112,11 +112,11 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
             Set<Long> markedAsCompleteQuestions = questions
                     .stream()
                     .filter(Question::isMarkAsCompletedEnabled)
-                    .filter(q -> simpleAnyMatch(questionStatuses, qs -> {
-                        return qs.getQuestion().getId().equals(q.getId()) &&
+                    .filter(q -> simpleAnyMatch(questionStatuses, qs ->
+                            qs.getQuestion().getId().equals(q.getId()) &&
                                 ((q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(false)) ||
-                                        (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(false)));
-                    })).map(Question::getId).collect(Collectors.toSet());
+                                        (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(false)))
+                    )).map(Question::getId).collect(Collectors.toSet());
             return serviceSuccess(markedAsCompleteQuestions);
         });
     }

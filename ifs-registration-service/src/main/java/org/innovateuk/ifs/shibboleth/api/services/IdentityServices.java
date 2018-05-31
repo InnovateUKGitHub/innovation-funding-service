@@ -227,9 +227,9 @@ public class IdentityServices implements CreateIdentityService, FindIdentityServ
                     }
                     return lockDuration == 0 || lockDate.getTime() + (lockDuration * 1000) > System.currentTimeMillis();
                 } catch (ParseException e) {
-                    LOG.error("Unable to parse " + lockedUntilAttrib + " attrib value " + lockValue);
+                    LOG.error("Unable to parse " + lockedUntilAttrib + " attrib value " + lockValue, e);
                 } catch (NamingException e) {
-                    LOG.error("Unable to read " + lockedUntilAttrib + " attrib value");
+                    LOG.error("Unable to read " + lockedUntilAttrib + " attrib value", e);
                 }
             }
         }
