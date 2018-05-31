@@ -3,10 +3,12 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalProjectSpendProfileTableViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalSpendProfileViewModel;
@@ -38,6 +40,10 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
     public SpendProfileCostValidator spendProfileCostValidator;
     @Spy
     public SpendProfileTableCalculator spendProfileTableCalculator;
+    @Mock
+    private ProjectService projectService;
+    @Mock
+    private SpendProfileService spendProfileService;
 
     @Override
     protected TotalProjectSpendProfileController supplyControllerUnderTest() {

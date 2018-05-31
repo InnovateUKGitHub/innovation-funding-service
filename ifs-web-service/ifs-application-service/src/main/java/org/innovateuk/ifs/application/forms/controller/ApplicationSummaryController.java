@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -63,6 +64,7 @@ public class ApplicationSummaryController {
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
     private InterviewResponseRestService interviewResponseRestService;
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     public ApplicationSummaryController() {
     }
@@ -81,7 +83,8 @@ public class ApplicationSummaryController {
                                         ProjectService projectService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
-                                        InterviewResponseRestService interviewResponseRestService) {
+                                        InterviewResponseRestService interviewResponseRestService,
+                                        ApplicationTeamModelPopulator applicationTeamModelPopulator) {
         this.processRoleService = processRoleService;
         this.sectionService = sectionService;
         this.applicationService = applicationService;
@@ -96,6 +99,7 @@ public class ApplicationSummaryController {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.interviewResponseRestService = interviewResponseRestService;
+        this.applicationTeamModelPopulator = applicationTeamModelPopulator;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
@@ -127,6 +131,7 @@ public class ApplicationSummaryController {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
         model.addAttribute("projectWithdrawn", projectWithdrawn);
+        model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateModel(applicationId, user.getId()));
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 

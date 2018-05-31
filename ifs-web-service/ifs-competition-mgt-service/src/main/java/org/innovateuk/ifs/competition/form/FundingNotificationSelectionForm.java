@@ -31,6 +31,6 @@ public class FundingNotificationSelectionForm {
 
     public boolean anySelectionIsMade() {
         return this.allSelected != false ||
-                this.ids.size() > 0;
+                !this.ids.isEmpty();
     }
 }

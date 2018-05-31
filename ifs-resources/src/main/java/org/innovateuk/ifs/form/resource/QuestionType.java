@@ -6,7 +6,7 @@ package org.innovateuk.ifs.form.resource;
 public enum QuestionType {
 	COST,
 	GENERAL,
-	// TODO: name might change. 
+	// TODO: name might change.
 	// This is the new type for application team and research category questions
 	// on the application menu, which behave differently to normal questions.
 	// Hopefully the Application details question will become part of this category too, because it is also

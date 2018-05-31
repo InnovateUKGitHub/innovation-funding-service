@@ -80,9 +80,9 @@ public class InterviewResponseServiceImpl implements InterviewResponseService {
     @Override
     @Transactional
     public ServiceResult<Void> deleteResponse(long applicationId) {
-        return findAssignmentByApplicationId(applicationId).andOnSuccessReturnVoid(interviewAssignment -> {
-            interviewAssignmentWorkflowHandler.withdrawResponse(interviewAssignment);
-        });
+        return findAssignmentByApplicationId(applicationId).andOnSuccessReturnVoid(interviewAssignment ->
+            interviewAssignmentWorkflowHandler.withdrawResponse(interviewAssignment)
+        );
     }
 
     @Override

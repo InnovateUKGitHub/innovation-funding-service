@@ -285,7 +285,7 @@ public class ApplicationQuestionController {
             ApplicationForm form
     ) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
+        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());

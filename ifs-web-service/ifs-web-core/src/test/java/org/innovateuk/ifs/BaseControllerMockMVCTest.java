@@ -2,7 +2,6 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.controller.CustomFormBindingControllerAdvice;
@@ -12,6 +11,7 @@ import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.formatter.RejectionReasonFormatter;
 import org.innovateuk.ifs.user.formatter.EthnicityFormatter;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.mockito.InjectMocks;
@@ -30,12 +30,15 @@ import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 /**
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
@@ -52,7 +55,41 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     protected abstract ControllerType supplyControllerUnderTest();
 
     @Mock
-    private AsyncFuturesGenerator futuresGeneratorMock;
+    protected Environment env;
+
+    @Mock
+    protected MessageSource messageSource;
+
+    protected UserResource applicant = newUserResource().withId(1L)
+            .withFirstName("James")
+            .withLastName("Watts")
+            .withEmail("james.watts@email.co.uk")
+            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withUID("2aerg234-aegaeb-23aer").build();
+
+
+    protected UserResource assessor = newUserResource().withId(3L)
+            .withFirstName("Clark")
+            .withLastName("Baker")
+            .withEmail("clark.baker@email.co.uk")
+            .withRolesGlobal(singletonList(Role.ASSESSOR))
+            .withUID("2522-34y34ah-hrt4420").build();
+
+    protected UserResource assessorAndApplicant = newUserResource().withId(4L)
+            .withFirstName("Fred")
+            .withLastName("Smith")
+            .withEmail("fred.smith@email.co.uk")
+            .withRolesGlobal(asList(Role.APPLICANT, Role.ASSESSOR))
+            .withUID("1234-abcdefgh-abc1234").build();
+
+    protected UserResource collaborator = newUserResource().withId(2L)
+            .withFirstName("John")
+            .withLastName("Patricks")
+            .withEmail("john.patricks@email.co.uk")
+            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withUID("6573ag-aeg32aeb-23aerr").build();
+
+    protected UserResource loggedInUser = applicant;
 
     @Before
     public void setUp() {
@@ -62,8 +99,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         mockMvc = setupMockMvc(controller, () -> getLoggedInUser(), env, messageSource);
 
         setLoggedInUser(loggedInUser);
-
-        setupAsyncExpectations(futuresGeneratorMock);
     }
 
     public static <ControllerType> MockMvc setupMockMvc(ControllerType controller, Supplier<UserResource> loggedInUserSupplier, Environment environment, MessageSource messageSource) {
@@ -94,6 +129,13 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 .build();
 
         return mockMvc;
+    }
+
+    private static InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/resources");
+        viewResolver.setSuffix(".html");
+        return viewResolver;
     }
 
     private static LoggedInUserMethodArgumentResolver getLoggedInUserMethodArgumentResolver(Supplier<UserResource> loggedInUserSupplier) {
@@ -161,5 +203,4 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     protected void logoutCurrentUser() {
         setLoggedInUser(null);
     }
-
 }

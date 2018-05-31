@@ -2,8 +2,10 @@ package org.innovateuk.ifs.alert;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -21,6 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AlertControllerTest extends BaseControllerMockMVCTest<AlertController> {
+
+    @Mock
+    private AlertRestService alertRestService;
 
     @Override
     protected AlertController supplyControllerUnderTest() {

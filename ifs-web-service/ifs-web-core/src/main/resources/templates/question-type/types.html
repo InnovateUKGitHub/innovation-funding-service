@@ -165,7 +165,44 @@
         <span>%</span>
     </div>
 
-                    <!-- ===========================Form: empty / no question =========================== -->
+    <!-- ===========================Form: application_team =========================== -->
+
+    <th:block th:fragment="application_team(model)">
+
+        <th:block th:each="organisation : ${model.organisations}">
+
+            <br/>
+            <label class="form-label form-label-bold" th:for="organisation-name">
+                <th:block th:text="${organisation.name}">Organisation name</th:block>
+                <th:block th:if="${organisation.lead}"> (Lead)</th:block>
+                <th:block th:unless="${organisation.lead}"> (Collaborator)</th:block>
+            </label>
+            <br/>
+
+            <label class="form-label form-label-bold" th:for="organisation-type">
+                Organisation type
+            </label>
+            <p th:text="${organisation.type}" id="organisation-type">Research and technology organisations (RTOs)</p>
+            <table class="table-overflow">
+                <thead>
+                <tr>
+                    <th class="width-30-percent" scope="col">Applicant</th>
+                    <th class="width-50-percent" scope="col">Email</th>
+                    <th scope="col"><span class="visually-hidden">Additional details</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="applicant : ${organisation.applicants}">
+                    <td th:text="${applicant.name}">Steve Smith</td>
+                    <td th:text="${applicant.email}">steve.smith@empire.com</td>
+                    <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
+    </th:block>
+
+    <!-- ===========================Form: empty / no question =========================== -->
     <th:block th:fragment="empty(model)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block ifs:utext="${question.description}" />
         <th:block th:unless="${model.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />

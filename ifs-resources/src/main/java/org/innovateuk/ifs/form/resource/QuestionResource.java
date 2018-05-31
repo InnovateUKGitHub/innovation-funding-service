@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Question defines database relations and a model to use client side and server side.
  */
-public class QuestionResource {
+public class QuestionResource implements Comparable<QuestionResource> {
     private Long id;
     private String name;
     private String shortName;
@@ -25,9 +25,7 @@ public class QuestionResource {
     private Long section;
     private String questionNumber;
     private QuestionType type;
-
-    // @ZeroDowntime(reference = "IFS-2833", description = "Set a default value for questionSetupType. Remove in cleanup")
-    private CompetitionSetupQuestionType questionSetupType = CompetitionSetupQuestionType.ASSESSED_QUESTION;
+    private CompetitionSetupQuestionType questionSetupType;
     private Integer assessorMaximumScore;
 
     public QuestionResource() {
@@ -173,6 +171,11 @@ public class QuestionResource {
     }
 
     @Override
+    public int compareTo(QuestionResource o) {
+        return Integer.compare(this.priority, o.priority);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -194,6 +197,7 @@ public class QuestionResource {
                 .append(section, that.section)
                 .append(questionNumber, that.questionNumber)
                 .append(type, that.type)
+                .append(questionSetupType, that.questionSetupType)
                 .append(assessorMaximumScore, that.assessorMaximumScore)
                 .isEquals();
     }
@@ -214,6 +218,7 @@ public class QuestionResource {
                 .append(section)
                 .append(questionNumber)
                 .append(type)
+                .append(questionSetupType)
                 .append(assessorMaximumScore)
                 .toHashCode();
     }

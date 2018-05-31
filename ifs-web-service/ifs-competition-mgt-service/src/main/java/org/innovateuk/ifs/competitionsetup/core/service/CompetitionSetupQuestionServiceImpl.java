@@ -105,12 +105,12 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 .collect(Collectors.toSet());
 
         Set<Long> projectDetailsAndApplicationSections = parentSections.stream()
-                .filter(sectionResource -> sectionResource.getName().equals("Project details") || sectionResource.getName().equals("Application questions"))
+                .filter(sectionResource -> "Project details".equals(sectionResource.getName()) || "Application questions".equals(sectionResource.getName()))
                 .map(SectionResource::getId)
                 .collect(Collectors.toSet());
 
         return questionResources.stream()
-                .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()) && !question.getName().equals("Application details"))
+                .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()) && !"Application details".equals(question.getName()))
                 .filter(question -> question.getType() != QuestionType.LEAD_ONLY) // TODO: IFS-3088
                 .map(questionResource -> questionResource.getId())
                 .collect(Collectors.toList());

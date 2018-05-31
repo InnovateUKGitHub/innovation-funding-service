@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.form.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.Question;
@@ -29,7 +27,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class SectionServiceImpl extends BaseTransactionalService implements SectionService {
-    private static final Log LOG = LogFactory.getLog(SectionServiceImpl.class);
 
     @Autowired
     private SectionRepository sectionRepository;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.application.viewmodel;
 
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupSubsectionViewModel;
 
-public class FinanceViewModel extends CompetitionSetupSubsectionViewModel {
+public class FinanceViewModel implements CompetitionSetupSubsectionViewModel {
     private boolean sectorCompetition;
     private boolean noneFinanceCompetition;
 
