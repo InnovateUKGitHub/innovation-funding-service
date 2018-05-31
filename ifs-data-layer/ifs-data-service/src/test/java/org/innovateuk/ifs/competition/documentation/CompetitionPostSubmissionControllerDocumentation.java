@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
-import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionController;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
@@ -34,31 +33,11 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
     private CompetitionService competitionService;
 
     @Mock
-    private AssessorService assessorServiceMock;
-
-    @Mock
     private ApplicationNotificationService applicationNotificationServiceMock;
 
     @Override
     protected CompetitionPostSubmissionController supplyControllerUnderTest() {
         return new CompetitionPostSubmissionController();
-    }
-
-    @Test
-    public void notifyAssessors() throws Exception {
-        final Long competitionId = 1L;
-
-        when(competitionService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
-        when(assessorServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/competition/postSubmission/{id}/notify-assessors", competitionId))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition for the notifications")
-                        ))
-                );
     }
 
     @Test

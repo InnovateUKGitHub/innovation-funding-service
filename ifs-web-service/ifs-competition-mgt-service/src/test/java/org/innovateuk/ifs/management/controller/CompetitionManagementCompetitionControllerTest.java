@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
@@ -68,6 +69,9 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
     @Mock
     private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private AssessorRestService assessorRestService;
 
     @Override
     protected CompetitionManagementCompetitionController supplyControllerUnderTest() {
@@ -205,13 +209,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void notifyAssessors() throws Exception {
         long competitionId = 1L;
 
-        when(competitionPostSubmissionRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
+        when(assessorRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
-        verify(competitionPostSubmissionRestService).notifyAssessors(competitionId);
+        verify(assessorRestService).notifyAssessors(competitionId);
         verifyNoMoreInteractions(competitionService);
     }
 

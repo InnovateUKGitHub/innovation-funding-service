@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.competition.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -102,7 +102,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
-    private CompetitionInviteMapper competitionInviteMapper;
+    private AssessmentInviteMapper assessmentInviteMapper;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
@@ -221,14 +221,14 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
                 .andOnSuccessReturn(this::openInvite)
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
@@ -381,7 +381,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                                         )
                                 )
                         )
-                        .andOnSuccessReturn(competitionInviteMapper::mapToResource),
+                        .andOnSuccessReturn(assessmentInviteMapper::mapToResource),
                 success -> serviceFailure(Error.globalError(
                         "validation.competitionAssessmentInvite.create.email.exists",
                         singletonList(stagedInvite.getEmail())
@@ -429,7 +429,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource stagedInvite) {
         return getUser(stagedInvite.getUserId())
                 .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()))
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
