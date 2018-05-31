@@ -81,7 +81,6 @@
                                                 target="_blank">File</a></p>
                     <button name="removeResponse" class="button-secondary">Remove</button>
                 </div>
-
             </div>
         </form>
     </th:block>
@@ -94,8 +93,8 @@
             <div class="form-group download">
                 <h3 class="heading-small no-margin">Lead applicant response</h3>
                 <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
-                                            th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
-                                            target="_blank">File</a></p>
+                   th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
+                   target="_blank">File</a></p>
             </div>
         </th:block>
     </th:block>
