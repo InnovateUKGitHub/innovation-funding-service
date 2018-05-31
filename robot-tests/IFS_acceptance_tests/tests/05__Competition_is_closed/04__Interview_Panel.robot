@@ -250,6 +250,27 @@ Assessor can view the list of allocated applications
     Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
 
+Applicant can still see their feedback once the comp feedback has been released
+    [Documentation]  IFS-3534
+    [Tags] #Add keywords, Variables and use direct links!!
+    Given log in as a different user          &{Comp_admin1_credentials}
+    When the user navigates to the page       ${SERVER}/management/competition/18/funding
+    And the user selects the checkbox         select-all-1  #Selects all on the
+    Then the user clicks the button/link      jQuery=button:contains(Successful)
+    And the user clicks the button/link       jQuery=.link-back:contains("Competition")
+    Then the user clicks the button/link      jQuery=.button:contains("Manage funding notifications")
+    And the user selects the checkbox         select-all-1  #Selects all on the Manage funding notifications screen
+    Then the user clicks the button/link      jQuery=button:contains("Write and send email")         #Keyword
+    And the user enters text to a text field  css=[class="textarea-wrapped"]  Funding decision Notification
+    Then the user clicks the button/link      jQuery=button:contains("Send email to all applicants") #Keyword - Duplicate?
+    Then the user clicks the button/link      jQuery=button:contains("Send email to all applicants") #Keyword - Duplicate?
+    #send-to-all-applicants-modal
+    And the user clicks the button/link       jQuery=.link-back:contains("Competition")
+    And the user clicks the button/link       jQuery=button:contains("Release feedback")
+    Given log in as a different user          ${aaron_robertson_email}   ${short_password}
+    And the user clicks the button/link       jQuery=section:contains(Previous) h3:contains(Neural network)
+    And The user should not see the element   jQuery=div:contains(message alert)  #css=[class="message-alert"]
+
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}

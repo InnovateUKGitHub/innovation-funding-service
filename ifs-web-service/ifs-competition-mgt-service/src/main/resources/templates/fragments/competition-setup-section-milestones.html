@@ -69,12 +69,16 @@
                       </td>
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
-                          <input type="number"
+                          <input type="text"
                                  placeholder="DD"
                                  min="1"
                                  max="31"
                                  data-maxlength-errormessage=""
                                  required="required"
+                                 pattern="^[0-9]{1,2}$"
+                                 data-prevent-input-regex="[^0-9]"
+                                 maxlength="2"
+                                 minlength="1"
                                  class="form-control width-small"
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
@@ -83,11 +87,15 @@
                                  th:readonly="${milestoneEntry.value.readonly}" />
                       </td>
                       <td class="month">
-                          <input type="number"
+                          <input type="text"
                                 placeholder="MM"
                                 min="1"
                                 max="12"
                                 required="required"
+                                pattern="^[0-9]{1,2}$"
+                                data-prevent-input-regex="[^0-9]"
+                                maxlength="2"
+                                minlength="1"
                                 class="form-control width-small"
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
@@ -95,8 +103,12 @@
                                 th:readonly="${milestoneEntry.value.readonly}"/>
                       </td>
                       <td class="year" >
-                          <input type="number"
+                          <input type="test"
                                  placeholder="YYYY"
+                                 pattern="[0-9]{4,}"
+                                 data-prevent-input-regex="[^0-9]"
+                                 maxlength="4"
+                                 minlength="4"
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
                                  data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year},
                                  min=${#dates.format(#dates.createNow(), 'yyyy')}"

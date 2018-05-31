@@ -582,8 +582,6 @@ Complete button disabled when sections are edited
 Moving competition to Ready to Open state
     [Documentation]
     [Tags]
-    #Remove this setup when IFS-3601 is done
-    [Setup]  Fill in assesor section
 #    The following steps will move the comp from "In preparation" to "Ready to Open" state
     When the user clicks the button/link  css=#compCTA
     Then the user clicks the button/link  jQuery=.button:contains("Done")
@@ -642,7 +640,6 @@ Assessor: Contain the correct options
     [Setup]  the user clicks the button/link  link=${competitionTitle}
     Given The user clicks the button/link   link=View and update competition setup
     And the user clicks the button/link     link=Assessors
-    And The user clicks the button/link     jQuery=.button:contains("Edit")
     And the user should see the text in the page    How many assessors are required for each application?
     Then the user should see the element    jQuery=label:contains(1)
     When the user should see the element    jQuery=label:contains(3)
@@ -653,7 +650,9 @@ Assessor: Contain the correct options
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641 IFS-380
      [Tags]    HappyPath
-    When the user selects the radio button     assessorCount   5
+    Given the user selects the radio button    assessorCount   5
+    And the user selects the radio button      hasInterviewStage  hasInterviewStage-1
+    And the user selects the radio button      hasAssessmentPanel  0
     Then the user enters text to a text field  id=assessorPay  100
     When the user clicks the button/link       jQuery=button:contains("Done")
     Then the user should see the element       jQuery=dt:contains("How many assessors") + dd:contains("5")
@@ -887,11 +886,4 @@ the user marks question as complete
     the user clicks the button/link      jQuery=a:contains("${question_link}")
     the user clicks the button/link      css=button[type="submit"]
     the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
-
-Fill in assesor section
-    the user clicks the button/link  link=Assessors
-    the user selects the radio button     hasInterviewStage  hasInterviewStage-1
-    the user selects the radio button     hasAssessmentPanel  0
-    the user clicks the button/link       jQuery=button:contains("Done")
-    the user clicks the button/link       link=Competition setup
 
