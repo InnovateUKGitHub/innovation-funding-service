@@ -127,7 +127,7 @@ public class ApplicationSummaryController {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
         model.addAttribute("projectWithdrawn", projectWithdrawn);
-        model.addAttribute("projectId", new ProjectResource().getId());
+        model.addAttribute("projectId", project.getId());
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
