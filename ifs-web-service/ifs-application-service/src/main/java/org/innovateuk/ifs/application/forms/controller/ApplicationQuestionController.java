@@ -235,10 +235,6 @@ public class ApplicationQuestionController {
         return APPLICATION_FORM;
     }
 
-    private String handleFormSubmit() {
-        
-    }
-
     private void handleAssignedQuestions(Long applicationId,
                                          UserResource user,
                                          HttpServletRequest request,
