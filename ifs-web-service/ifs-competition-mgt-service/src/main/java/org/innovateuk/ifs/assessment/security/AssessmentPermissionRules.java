@@ -21,7 +21,7 @@ public class AssessmentPermissionRules {
 
     @PermissionRule(value = "ASSESSMENT", description = "Only project finance or competition admin can see assessments " +
             "if the competition is in the correct state.")
-    public boolean reviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+    public boolean assessment(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
                 !competitionIsInInformOrLater(competition);
@@ -29,14 +29,10 @@ public class AssessmentPermissionRules {
 
     @PermissionRule(value = "ASSESSMENT_APPLICATIONS", description = "Only project finance or competition admin can " +
             "see assessments if the competition is in the correct state.")
-    public boolean reviewPanelApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+    public boolean assessmentApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                competitionIsInFundersPanel(competition);
-    }
-
-    private boolean competitionIsInFundersPanel(CompetitionResource competition) {
-        return competition.getCompetitionStatus().equals(CompetitionStatus.FUNDERS_PANEL);
+                !competitionIsInInformOrLater(competition);
     }
 
     private boolean competitionIsInInformOrLater(CompetitionResource competition) {

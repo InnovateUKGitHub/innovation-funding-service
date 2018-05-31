@@ -30,58 +30,45 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         UserResource loggedInUser = compAdminUser();
 
         for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
-            final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
-                    .withHasAssessmentPanel(true)
+            final CompetitionResource competition = newCompetitionResource()
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
-            final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
-                    .withHasAssessmentPanel(false)
-                    .withCompetitionStatus(competitionStatus)
-                    .build();
-
-            when(competitionRestService.getCompetitionById(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionWithInterviewStage));
-            when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
+            when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
             switch (competitionStatus) {
                 case ASSESSOR_FEEDBACK: case PROJECT_SETUP:
-                    assertFalse("With interview stage and status " + competitionStatus.toString(),
-                            rules.reviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+                    assertFalse("With status " + competitionStatus.toString(),
+                            rules.assessment(CompetitionCompositeId.id(competition.getId()), loggedInUser));
                     break;
                 default:
-                    assertTrue("With interview stage and status " + competitionStatus.toString(),
-                            rules.reviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+                    assertTrue("With status " + competitionStatus.toString(),
+                            rules.assessment(CompetitionCompositeId.id(competition.getId()), loggedInUser));
             }
-            assertFalse("Without interview stage and status " + competitionStatus.toString(),
-                    rules.reviewPanel(CompetitionCompositeId.id(competitionWithoutInterviewStage.getId()), loggedInUser));
         }
     }
 
     @Test
-    public void reviewPanelApplications() {
+    public void assessmentApplications() {
         UserResource loggedInUser = compAdminUser();
 
         for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
-            final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
+            final CompetitionResource competition = newCompetitionResource()
                     .withHasAssessmentPanel(true)
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
-            final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
-                    .withHasAssessmentPanel(false)
-                    .withCompetitionStatus(competitionStatus)
-                    .build();
+            when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
-            when(competitionRestService.getCompetitionById(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionWithInterviewStage));
-            when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
-
-            if (competitionStatus == CompetitionStatus.FUNDERS_PANEL) {
-                assertTrue(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+            switch (competitionStatus) {
+                case ASSESSOR_FEEDBACK: case PROJECT_SETUP:
+                    assertFalse("With status " + competitionStatus.toString(),
+                            rules.assessmentApplications(CompetitionCompositeId.id(competition.getId()), loggedInUser));
+                    break;
+                default:
+                    assertTrue("With status " + competitionStatus.toString(),
+                            rules.assessmentApplications(CompetitionCompositeId.id(competition.getId()), loggedInUser));
             }
-            else {
-                assertFalse(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
-            }
-            assertFalse(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithoutInterviewStage.getId()), loggedInUser));
         }
     }
 }
