@@ -2,6 +2,7 @@ package org.innovateuk.ifs.commons.service;
 
 
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class ServiceResultTest {
     public void testAggregateFailureAndSuccess() {
         final List<ServiceResult<String>> fails = asList("1", "2", "3").stream().map(i -> ServiceResult.<String>serviceFailure(new Error(i, INTERNAL_SERVER_ERROR))).collect(toList());
         final List<ServiceResult<String>> success = asList("1", "2", "3").stream().map(ServiceResult::serviceSuccess).collect(toList());
-        final List<ServiceResult<String>> successAndFails = combineLists(success, fails);
+        final List<ServiceResult<String>> successAndFails = CollectionFunctions.combineLists(success, fails);
         final ServiceResult<List<String>> serviceResult = aggregate(successAndFails); // Method under test
         // A fail should result in a fail being returned.
         assertTrue(serviceResult.isFailure());

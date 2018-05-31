@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.util;
+package org.innovateuk.ifs.project.spendprofile.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
