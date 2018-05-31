@@ -1,5 +1,6 @@
 #!/bin/bash
 
-bzt taurus.yml
+cd jmeter/Representative
+bzt ../../taurus.yml
 
 

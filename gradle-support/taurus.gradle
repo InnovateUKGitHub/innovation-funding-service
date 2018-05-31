@@ -4,16 +4,16 @@ if (!isNamedEnv()) {
     ext.server_url = "ifs.local-dev"
     ext.authorisation_url = "auth.local-dev:9443"
 } else {
-    ext.server_url = "perf.apps.prod.ifs-test-clusters.com"
-    ext.authorisation_url = "auth-perf.apps.prod.ifs-test-clusters.com"
+    ext.server_url = project.serverUrl
+    ext.authorisation_url = project.authorisationUrl
 }
 
-task prepareDeployment(type: Copy) {
+task prepareTaurusDeployment(type: Copy) {
 
     destinationDir = file('./')
 
     from('jmeter/Representative/') {
-        include '**/*.yml'
+        include '**/taurus.yml'
     }
     filesMatching("**/**.*") {
         expand project.properties
@@ -21,7 +21,7 @@ task prepareDeployment(type: Copy) {
 }
 
 task osRunTaurus(type: Exec) {
-    dependsOn prepareDeployment
-    executable = 'setup-files/scripts/openshift/taurus.sh'
+    dependsOn prepareTaurusDeployment
+    executable = 'setup-files/scripts/openshift/os-taurus.sh'
     args = []
 }
