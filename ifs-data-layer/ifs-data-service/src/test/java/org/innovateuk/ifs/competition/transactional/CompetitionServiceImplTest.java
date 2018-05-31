@@ -228,13 +228,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         CompetitionType eoicompetitionType = newCompetitionType().withName("Expression of interest").build();
         Competition comp1 = newCompetition().withName("Comp1").withId(competitionId).withCompetitionType(progcompetitionType).build();
         Competition comp2 = newCompetition().withName("Comp2").withId(competitionId).withCompetitionType(progcompetitionType).build();
-        Competition comp3 = newCompetition().withName("Comp3").withId(competitionId).withCompetitionType(eoicompetitionType).build();
 
         List<Competition> expectedCompetitions = Lists.newArrayList(comp1, comp2);
-        List<Competition> allCompetitions = Lists.newArrayList(comp1, comp2, comp3);
 
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
-        when(competitionRepositoryMock.findProjectSetup()).thenReturn(allCompetitions);
+        when(competitionRepositoryMock.findProjectSetup()).thenReturn(expectedCompetitions);
 
         List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccess();
 
