@@ -1272,10 +1272,20 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
             PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
             PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
 
+            Competition competition = newCompetition()
+                    .withName("Competition 1")
+                    .build();
+
+            Application application = newApplication()
+                    .withName("Application 1")
+                    .withCompetition(competition)
+                    .build();
+
             project = newProject().
                     withId(projectId).
                     withDuration(3L).
                     withPartnerOrganisations(asList(partnerOrganisation1, partnerOrganisation2)).
+                    withApplication(application).
                     build();
 
             // First cost category type and everything that goes with it.
