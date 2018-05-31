@@ -64,7 +64,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         when(competitionKeyApplicationStatisticsServiceMock.getOpenKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/open", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/open", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -84,7 +84,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         when(competitionKeyApplicationStatisticsServiceMock.getClosedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/closed", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/closed", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -105,7 +105,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/funded", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/funded", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -125,7 +125,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         when(reviewStatisticsServiceMock.getReviewPanelKeyStatistics(competitionId))
                 .thenReturn(serviceSuccess(reviewKeyStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/review", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/review", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -144,7 +144,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         when(reviewStatisticsServiceMock.getReviewInviteStatistics(competitionId))
                 .thenReturn(serviceSuccess(reviewInviteStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/review-invites", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/review-invites", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -162,7 +162,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
         when(interviewStatisticsServiceMock.getInterviewAssignmentPanelKeyStatistics(competitionId))
                 .thenReturn(serviceSuccess(interviewAssignmentKeyStatisticsResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition-statistics/{id}/interview-assignment", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/interview-assignment", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -180,7 +180,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
         when(interviewStatisticsServiceMock.getInterviewInviteStatistics(competitionId))
                 .thenReturn(serviceSuccess(interviewInviteStatisticsResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition-statistics/{id}/interview-invites", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/interview-invites", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -197,7 +197,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
         long competitionId = 1L;
         when(interviewStatisticsServiceMock.getInterviewStatistics(competitionId)).thenReturn(serviceSuccess(INTERVIEW_STATISTICS_RESOURCE_BUILDER.build()));
 
-        mockMvc.perform(get("/competition-statistics/{id}/interview", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/interview", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(

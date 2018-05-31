@@ -15,8 +15,10 @@ import static org.innovateuk.ifs.documentation.CompetitionClosedKeyAssessmentSta
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyAssessmentStatisticsResourceDocs.competitionClosedKeyAssessmentStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyAssessmentStatisticsResourceDocs.competitionInAssessmentKeyAssessmentStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyAssessmentStatisticsResourceDocs.competitionInAssessmentKeyAssessmentStatisticsResourceFields;
-import static org.innovateuk.ifs.documentation.CompetitionOpenKeyApplicationStatisticsResourceDocs.competitionOpenKeyApplicationStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionOpenKeyAssessmentStatisticsResourceDocs.competitionOpenKeyAssessmentStatisticsResourceBuilder;
+
+import static org.innovateuk.ifs.documentation.CompetitionOpenKeyAssessmentStatisticsResourceDocs
+        .competitionOpenKeyAssessmentStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyAssessmentStatisticsResourceDocs.competitionReadyToOpenKeyAssessmentStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyAssessmentStatisticsResourceDocs.competitionReadyToOpenKeyAssessmentStatisticsResourceFields;
 import static org.mockito.Mockito.*;
@@ -47,7 +49,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
         when(competitionKeyAssessmentStatisticsService.getReadyToOpenKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competition-statistics/{id}/ready-to-open", competitionId))
+        mockMvc.perform(get("/competition-assessment-statistics/{id}/ready-to-open", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -69,13 +71,13 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
 
         when(competitionKeyAssessmentStatisticsService.getOpenKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/open", competitionId))
+        mockMvc.perform(get("/competition-assessment-statistics/{id}/open", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
-                        responseFields(competitionOpenKeyApplicationStatisticsResourceFields)
+                        responseFields(competitionOpenKeyAssessmentStatisticsResourceFields)
                 ));
 
         verify(competitionKeyAssessmentStatisticsService, only()).getOpenKeyStatisticsByCompetition(competitionId);
@@ -89,7 +91,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
 
         when(competitionKeyAssessmentStatisticsService.getClosedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/closed", competitionId))
+        mockMvc.perform(get("/competition-assessment-statistics/{id}/closed", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
@@ -109,7 +111,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
 
         when(competitionKeyAssessmentStatisticsService.getInAssessmentKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competition-statistics/{id}/in-assessment", competitionId))
+        mockMvc.perform(get("/competition-assessment-statistics/{id}/in-assessment", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competition-statistics/{method-name}",
                         pathParameters(

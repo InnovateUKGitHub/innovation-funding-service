@@ -61,7 +61,7 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
                         .build();
 
         Competition competition = newCompetition()
-                .withAssessorCount(4)
+                .withAssessorCount(2)
                 .build();
 
         BigDecimal limit = new BigDecimal(50L);

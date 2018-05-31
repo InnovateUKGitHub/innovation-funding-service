@@ -84,7 +84,7 @@ public class CompetitionKeyApplicationStatisticsControllerTest extends
         when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competition-statistics/{id}/funded", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/funded", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }
