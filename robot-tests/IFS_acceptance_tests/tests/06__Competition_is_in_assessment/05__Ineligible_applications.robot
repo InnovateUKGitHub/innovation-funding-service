@@ -127,7 +127,7 @@ Applicant is informed that his application is not eligible
     [Documentation]  INFUND-7374
     [Tags]  HappyPath  Applicant
     When the applicant can see his application in the right section  Previous applications
-    Then the user reads his email  ${Ineligible_user["email"]}  This is ineligible  Thank you for your application but this is ineligible
+    Then the user reads his email  ${Ineligible_user["email"]}  Notification regarding your application  ${ineligibleMessage}
 
 Innovation Lead is not able to reinstate an application
     [Documentation]  INFUND-8941 IFS-986
