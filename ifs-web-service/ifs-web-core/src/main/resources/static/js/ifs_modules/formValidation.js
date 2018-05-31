@@ -744,7 +744,7 @@ IFS.core.formValidation = (function () {
 
       var formGroup = field.closest('.form-group')
       var formGroupRow = field.closest('.form-group-row')
-      var dateGroup = field.closest('.form-group-row.date-group')
+      var formGroupRowValidated = field.closest('.form-group-row-validated')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
 
@@ -760,18 +760,18 @@ IFS.core.formValidation = (function () {
         }
       }
 
-      if (formGroupRow) {
-        if (visuallyhidden === false) { formGroupRow.addClass('form-group-error') }
+      if (formGroupRowValidated) {
+        if (visuallyhidden === false) { formGroupRowValidated.addClass('form-group-error') }
       }
 
-      if (dateGroup.length) {
+      if (formGroupRow.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
-        if (visuallyhidden === false) { dateGroup.addClass('form-group-error') }
+        if (visuallyhidden === false) { formGroupRow.addClass('form-group-error') }
 
-        var linkedErrorEl = dateGroup.find('[data-errorfield="' + name + '"]:contains("' + message + '")')
+        var linkedErrorEl = formGroupRow.find('[data-errorfield="' + name + '"]:contains("' + message + '")')
         if (linkedErrorEl.length === 0) {
           if (visuallyhidden === false) { field.addClass('form-control-error') }
-          dateGroup.find('legend,label,[scope="row"]').first().append('<span data-errorfield="' + name + '" class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+          formGroupRow.find('legend,label,[scope="row"]').first().append('<span data-errorfield="' + name + '" class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
         }
       }
 
@@ -796,7 +796,7 @@ IFS.core.formValidation = (function () {
       }
       var formGroup = field.closest('.form-group')
       var formGroupRow = field.closest('.form-group-row')
-      var dateGroup = field.closest('.date-group')
+      var formGroupRowValidated = field.closest('.form-group-row-validated')
       var errorSummary = jQuery('.error-summary-list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
@@ -822,8 +822,8 @@ IFS.core.formValidation = (function () {
           }
         }
       }
-      if (formGroupRow.length && formGroupRow.find('.form-control-error').length === 0) {
-        formGroupRow.removeClass('form-group-error')
+      if (formGroupRowValidated.length && formGroupRowValidated.find('.form-control-error').length === 0) {
+        formGroupRowValidated.removeClass('form-group-error')
       }
 
       // if it is a .form-group-multiple there can be multiple fields within the group, all having there own validation but reporting to one label
@@ -837,17 +837,17 @@ IFS.core.formValidation = (function () {
       //    </th>
       //     <td><input aria-labelledby="rowlabel" type="text" name="field1" class="form-control form-control-error" required /></td>
       //     <td><input aria-labelledby="rowlabel" type="text" name="field2" class="form-control form-control-error" required /></td>
-      // <tr>
-      if (dateGroup.length) {
-        dateGroup.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
-        if (dateGroup.find('[data-errorfield="' + name + '"]').length === 0) {
+      // </tr>
+      if (formGroupRow.length) {
+        formGroupRow.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
+        if (formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) {
           field.removeClass('form-control-error')
         }
-        if ((dateGroup.find('[data-errorfield="' + name + '"]').length === 0) && (s.html5validationMode)) {
+        if ((formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) && (s.html5validationMode)) {
           jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })
         }
-        if (dateGroup.find('[data-errorfield]').length === 0) {
-          dateGroup.removeClass('form-group-error')
+        if (formGroupRow.find('[data-errorfield]').length === 0) {
+          formGroupRow.removeClass('form-group-error')
         }
       }
 

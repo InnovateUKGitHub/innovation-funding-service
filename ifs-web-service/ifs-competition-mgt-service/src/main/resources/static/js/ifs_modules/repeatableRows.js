@@ -21,7 +21,7 @@ IFS.competitionManagement.repeatableRows = (function () {
     addRow: function (el) {
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
-      var newRow = jQuery('<tr class="form-group-row">' +
+      var newRow = jQuery('<tr class="form-group-row-validated">' +
         '<td class="width-40-percent form-group">' +
         '<label></label>' +
         '<input aria-labelledby="invite-label-assessor-name" class="form-control width-full" type="text" ' +

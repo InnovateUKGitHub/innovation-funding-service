@@ -122,7 +122,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="row, iterStat : *{invites}"
-                                    class="form-group-row"
+                                    class="form-group-row-validated"
                                     th:classappend="((${#fields.hasErrors('invites[__${iterStat.index}__].name')}) or (${#fields.hasErrors('invites[__${iterStat.index}__].email')})) ? 'form-group-error'">
                                     <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'form-group-error'">
                                         <label>
