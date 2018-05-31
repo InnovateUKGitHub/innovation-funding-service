@@ -82,21 +82,21 @@
                     <button name="removeResponse" class="button-secondary">Remove</button>
                 </div>
 
-                </div>
-                </form>
-            </th:block>
-            <th:block th:unless="${interviewFeedbackViewModel.leadApplicant}">
-                <h2 class="heading-medium">Response from lead applicant</h2>
-                <th:block th:unless="${interviewFeedbackViewModel.hasResponse()}">
-                    <p>The lead applicant has not yet uploaded a response.</p>
-                </th:block>
-                <th:block th:if="${interviewFeedbackViewModel.hasResponse()}">
-                    <div class="form-group download">
-                        <h3 class="heading-small no-margin">Lead applicant response</h3>
-                        <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
-                                                    th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
-                                                    target="_blank">File</a></p>
-                    </div>
+            </div>
+        </form>
+    </th:block>
+    <th:block th:unless="${interviewFeedbackViewModel.leadApplicant}">
+        <h2 class="heading-medium">Response from lead applicant</h2>
+        <th:block th:unless="${interviewFeedbackViewModel.hasResponse()}">
+            <p>The lead applicant has not yet uploaded a response.</p>
+        </th:block>
+        <th:block th:if="${interviewFeedbackViewModel.hasResponse()}">
+            <div class="form-group download">
+                <h3 class="heading-small no-margin">Lead applicant response</h3>
+                <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
+                                            th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
+                                            target="_blank">File</a></p>
+            </div>
         </th:block>
     </th:block>
 
