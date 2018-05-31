@@ -28,6 +28,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 ${ineligibleApplication}  Living with Virtual Reality
 ${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${application_ids["${ineligibleApplication}"]}
 ${ineligibleApplications}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
+${ineligibleMessage}  On checking your application we found that it did not meet these requirements.
 # ${IN_ASSESSMENT_COMPETITION} is the Sustainable living models for the future
 
 *** Test Cases ***
@@ -118,9 +119,7 @@ Inform a user their application is ineligible
     And the user clicks the button/link       jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
     And the user clicks the button/link       jQuery=a:contains("Cancel")
     When the user clicks the button/link      jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
-    And the user is required to enter a subject/message    Please enter the email subject.  subject  This is ineligible
-    And the user clicks the button/link       jQuery=button:contains("Send")
-    And the user is required to enter a subject/message    Please enter the email message.  message  Thank you for your application but this is ineligible
+    And the user should see the element       jQuery=p:contains("${ineligibleMessage}")
     And the user clicks the button/link       jQuery=button:contains("Send")
     Then the user should see the element      jQuery=td:contains("${ineligibleApplication}") ~ td span:contains("Informed")
 
