@@ -1,0 +1,52 @@
+modules:
+  jmeter:
+    gui: false
+    properties:
+      global_pause_deviation : 100
+      micro_pause_deviation : 100
+      short_pause_deviation : 500
+      normal_pause_deviation : 5000
+      long_pause_deviation : 10000
+      longer_pause_deviation : 15000
+      server_url : "${server_url}"
+      authorisation_url : "${authorisation_url}"
+      users_csv : user_data.csv
+      competitions_csv : competition_data.csv
+      invites_csv : invite_data.csv
+      assessor_csv : assessor_data.csv
+      front_door_competitions_csv : front-door-competitions.csv
+      summariser.name : summary
+      summariser.interval : 5
+      summariser.log : true
+      summariser.out : true
+
+execution:
+- iterations: 1
+  concurrency: 10
+  scenario:
+    script: invite.jmx
+- iterations: 1
+  concurrency: 10
+  scenario:
+    script: applicant.jmx
+- iterations: 1
+  concurrency: 10
+  scenario:
+    script: registration.jmx
+- iterations: 1
+  concurrency: 10
+  scenario:
+    script: front_door.jmx
+- iterations: 1
+  concurrency: 10
+  scenario:
+    script: competition_management.jmx
+- iterations: 1
+  concurrency: 50
+  scenario:
+    script: assessor.jmx
+
+reporting:
+- module: passfail
+  criteria:
+  - "fail>50% for 10s, stop as failed"
