@@ -224,14 +224,18 @@
                             <li th:each="interviewPanelAccept : ${model.interviewPanelAccepted}">
                                 <div class="task">
                                     <h3 class="heading-small">
-                                        <a class="disabled"
+                                        <a class="heading-small"
+                                           th:href="@{/assessor/dashboard/competition/{competitionId}/interview(competitionId=${interviewPanelAccept.competitionId})}"
                                            th:text="${interviewPanelAccept.competitionName}"/>
                                     </h3>
 
                                     <p th:if="${interviewPanelAccept.awaitingApplications == 0}">Applications awaiting review will be added here.</p>
 
                                     <div th:if="${interviewPanelAccept.awaitingApplications > 0}" class="action-required">
-                                        <p th:text="${interviewPanelAccept.awaitingApplications}" class="accepted-applications">COUNT</p> applications awaiting review
+                                        <strong>
+                                            <span th:text="${interviewPanelAccept.awaitingApplications}" class="accepted-applications">COUNT
+                                            </span> applications awaiting review
+                                        </strong>
                                     </div>
                                 </div>
                             </li>

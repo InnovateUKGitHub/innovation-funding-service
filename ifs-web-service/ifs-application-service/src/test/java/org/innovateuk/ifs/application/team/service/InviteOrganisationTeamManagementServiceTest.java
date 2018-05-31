@@ -10,6 +10,8 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
+import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,12 +33,18 @@ public class InviteOrganisationTeamManagementServiceTest extends BaseServiceUnit
     @Mock
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
 
+    @Mock
+    private InviteRestService inviteRestServiceMock;
+
+    @Mock
+    private InviteOrganisationRestService inviteOrganisationRestServiceMock;
+
     private long applicationId;
     private long inviteOrganisationId;
 
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
         applicationId = 1L;
         inviteOrganisationId = 2L;
     }

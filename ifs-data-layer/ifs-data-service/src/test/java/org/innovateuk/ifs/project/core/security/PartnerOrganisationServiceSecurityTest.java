@@ -2,9 +2,9 @@ package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationServiceImpl;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -66,18 +66,21 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void testGetPartnerOrganisationIsNotOpenToAll() {
+
         when(classUnderTestMock.getPartnerOrganisation(123L, 234L))
                 .thenReturn(serviceSuccess(partnerOrganisations.get(0)));
 
         assertAccessDenied(() -> classUnderTest.getPartnerOrganisation(123L, 234L),
                 () -> {
-                    verify(partnerOrganisationPermissionRules)
-                            .internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA
-                                    (UserResource.class));
-                    verify(partnerOrganisationPermissionRules).partnersCanViewTheirOwnPartnerOrganisation(
-                            isA(PartnerOrganisationResource.class), isA(UserResource.class));
-                    verifyNoMoreInteractions(partnerOrganisationPermissionRules);
-                });
+
+            verify(partnerOrganisationPermissionRules).internalUsersCanViewPartnerOrganisations(
+                    isA(PartnerOrganisationResource.class), isA(UserResource.class));
+
+            verify(partnerOrganisationPermissionRules).partnersCanViewTheirOwnPartnerOrganisation(
+                    isA(PartnerOrganisationResource.class), isA(UserResource.class));
+
+            verifyNoMoreInteractions(partnerOrganisationPermissionRules);
+        });
     }
 
     @Test
@@ -90,16 +93,49 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
         when(partnerOrganisationPermissionRules.internalUsersCanViewPartnerOrganisations(partnerOrganisations.get(0),
                 internalUser))
                 .thenReturn(true);
-
         ServiceResult<PartnerOrganisationResource> result = classUnderTest.getPartnerOrganisation(123L, 234L);
 
-        verify(partnerOrganisationPermissionRules)
+        verify(partnerOrganisationPermissionRules, times(1))
                 .internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource
                         .class));
+
+        verify(partnerOrganisationPermissionRules, atMost(1))
+                .partnersCanViewTheirOwnPartnerOrganisation(isA(PartnerOrganisationResource.class), isA(UserResource
+                        .class));
+
         verifyNoMoreInteractions(partnerOrganisationPermissionRules);
 
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    public void testPartnerCanSeeOwnPartnerOrganisation() {
+
+        UserResource partnerUser = newUserResource().build();
+        setLoggedInUser(partnerUser);
+
+        when(classUnderTestMock.getPartnerOrganisation(123L, 234L))
+                .thenReturn(serviceSuccess(partnerOrganisations.get(0)));
+
+        when(partnerOrganisationPermissionRules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrganisations.get(0),
+                partnerUser))
+                .thenReturn(true);
+
+        ServiceResult<PartnerOrganisationResource> result = classUnderTest.getPartnerOrganisation(123L, 234L);
+
+        verify(partnerOrganisationPermissionRules, atMost(1))
+                .internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource
+                        .class));
+
+        verify(partnerOrganisationPermissionRules, times(1))
+                .partnersCanViewTheirOwnPartnerOrganisation(isA(PartnerOrganisationResource.class), isA(UserResource
+                        .class));
+
+        verifyNoMoreInteractions(partnerOrganisationPermissionRules);
+
+        assertTrue(result.isSuccess());
+    }
+
 
     @Override
     protected Class<? extends PartnerOrganisationService> getClassUnderTest() {

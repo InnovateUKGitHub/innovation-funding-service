@@ -26,7 +26,7 @@ public class PartnerOrganisation implements ProcessActivity {
 
     private boolean leadOrganisation;
 
-    private String postCode;
+    private String postcode;
 
     public PartnerOrganisation() {
         // for ORM use
@@ -54,11 +54,11 @@ public class PartnerOrganisation implements ProcessActivity {
         return leadOrganisation;
     }
 
-    public String getPostCode() {
-        return postCode;
+    public String getPostcode() {
+        return postcode;
     }
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
     }
 }

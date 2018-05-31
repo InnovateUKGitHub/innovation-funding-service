@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.application.validation;
 
-import com.google.common.collect.ImmutableMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.application.validator.*;
-import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
+import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -23,7 +22,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
@@ -45,16 +47,6 @@ public class ApplicationValidationUtil {
     @Autowired
     private AcademicJesValidator academicJesValidator;
 
-    @ZeroDowntime(reference = "IFS-3366", description = "Remove old package names and add flyway script to correct them in database.")
-    private static final Map<String, Class<?>> oldPackageClassMap = ImmutableMap.<String, Class<?>> builder()
-            .put("org.innovateuk.ifs.validation.validator.EmailValidator", EmailValidator.class)
-            .put("org.innovateuk.ifs.validation.validator.NotEmptyValidator", NotEmptyValidator.class)
-            .put("org.innovateuk.ifs.validation.validator.WordCountValidator", WordCountValidator.class)
-            .put("org.innovateuk.ifs.validation.validator.NonNegativeLongIntegerValidator", NonNegativeLongIntegerValidator.class)
-            .put("org.innovateuk.ifs.validation.validator.SignedLongIntegerValidator", SignedLongIntegerValidator.class)
-            .put("org.innovateuk.ifs.validation.validator.PastMMYYYYValidator", PastMMYYYYValidator.class)
-            .build();
-
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
         if (response == null) {
@@ -70,14 +62,9 @@ public class ApplicationValidationUtil {
                     try {
                         // Sometimes we want to allow the user to enter a empty response. Then we can ignore the NotEmptyValidator .
                         if (!(ignoreEmpty &&
-                                (v.getClazzName().equals(NotEmptyValidator.class.getName())
-                                        || v.getClazzName().equals(NotEmptyValidator.OLD_PACKAGE_NAME)))) {
+                                (v.getClazzName().equals(NotEmptyValidator.class.getName())))) {
 
-                            try {
-                                validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
-                            } catch (ClassNotFoundException e) {
-                                validator = (Validator) context.getBean(oldPackageClassMap.get(v.getClazzName()));
-                            }
+                            validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
 
                             binder.addValidators(validator);
                         }
@@ -168,6 +155,7 @@ public class ApplicationValidationUtil {
             validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
+            LOG.trace("input type not a cost type", e);
         }
     }
 

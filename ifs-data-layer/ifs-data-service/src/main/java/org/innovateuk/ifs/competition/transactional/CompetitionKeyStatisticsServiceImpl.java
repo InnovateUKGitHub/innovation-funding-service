@@ -32,16 +32,16 @@ import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.A
 public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalService implements CompetitionKeyStatisticsService {
 
     @Autowired
-    AssessmentInviteRepository assessmentInviteRepository;
+    private AssessmentInviteRepository assessmentInviteRepository;
 
     @Autowired
-    ApplicationStatisticsRepository applicationStatisticsRepository;
+    private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Autowired
-    AssessmentRepository assessmentRepository;
+    private AssessmentRepository assessmentRepository;
 
     @Autowired
-    AssessmentParticipantRepository assessmentParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Override
     public ServiceResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatisticsByCompetition(long competitionId) {

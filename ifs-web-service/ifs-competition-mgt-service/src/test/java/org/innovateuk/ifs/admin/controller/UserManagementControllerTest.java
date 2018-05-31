@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.admin.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
 import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
@@ -9,10 +9,12 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
+import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * A mock MVC test for user management controller
  */
-public class UserManagementControllerTest extends BaseControllerMockMVCTest<UserManagementController>{
+public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<UserManagementController> {
 
     private UserPageResource userPageResource;
 
@@ -44,6 +46,12 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
     @Mock
     private InternalUserService internalUserServiceMock;
+
+    @Mock
+    private UserRestService userRestServiceMock;
+
+    @Mock
+    private InviteUserRestService inviteUserRestServiceMock;
 
     @Before
     public void setUp(){

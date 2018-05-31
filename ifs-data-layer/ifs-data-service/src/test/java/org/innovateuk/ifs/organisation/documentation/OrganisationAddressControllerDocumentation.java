@@ -9,7 +9,9 @@ import org.innovateuk.ifs.documentation.OrganisationAddressDocs;
 import org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder;
 import org.innovateuk.ifs.organisation.controller.OrganisationAddressController;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -24,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class OrganisationAddressControllerDocumentation extends BaseControllerMockMVCTest<OrganisationAddressController> {
+
+    @Mock
+    private OrganisationAddressService organisationAddressServiceMock;
 
     @Override
     protected OrganisationAddressController supplyControllerUnderTest() {

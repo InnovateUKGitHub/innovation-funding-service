@@ -2,6 +2,11 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -14,9 +19,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.fundingdecision.validator.ApplicationFundingDecisionValidator;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
@@ -57,11 +65,35 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     private static final String webBaseUrl = "http://ifs-local-dev";
 
     @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
     private FundingDecisionMapper fundingDecisionMapper;
 
     @Mock
     private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
-    
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private NotificationService notificationServiceMock;
+
+    @Mock
+    private ApplicationService applicationServiceMock;
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    @Mock
+    private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
+
     private Competition competition;
     
     @Override
@@ -121,9 +153,20 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Map<String, Object> expectedGlobalNotificationArguments = asMap("message", fundingNotificationResource.getMessageBody());
 
         Map<NotificationTarget, Map<String, Object>> expectedTargetSpecificNotificationArguments = asMap(
-                application1LeadApplicantTarget, asMap("applicationName", application1.getName(), "applicationNumber", application1.getId()),
-                application2LeadApplicantTarget, asMap("applicationName", application2.getName(), "applicationNumber", application2.getId()),
-                application3LeadApplicantTarget, asMap("applicationName", application3.getName(), "applicationNumber", application3.getId()));
+                application1LeadApplicantTarget, asMap(
+                        "applicationName", application1.getName(),
+                        "competitionName", application1.getCompetition().getName(),
+                        "applicationId", application1.getId()),
+
+                application2LeadApplicantTarget, asMap(
+                        "applicationName", application2.getName(),
+                        "competitionName", application2.getCompetition().getName(),
+                        "applicationId", application2.getId()),
+
+                application3LeadApplicantTarget, asMap(
+                        "applicationName", application3.getName(),
+                        "competitionName", application3.getCompetition().getName(),
+                        "applicationId", application3.getId()));
 
         Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments, expectedTargetSpecificNotificationArguments);
 

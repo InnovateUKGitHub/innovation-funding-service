@@ -45,6 +45,7 @@ Initial details: server-side validations
     And the user should see an error    Please enter a valid date.
     And the user should see an error    Please select an Innovation Lead.
     And the user should see an error    Please select a Portfolio Manager.
+    And the user should see an error    Please select a state aid option.
 
 Initial details: client-side validations
     [Documentation]  INFUND-2982  INFUND-3888
@@ -63,6 +64,8 @@ Initial details: client-side validations
     #Then the user should not see the error any more    Please enter an opening month.
     When the user enters text to a text field    id=openingDateYear  ${nextYear}
     #Then the user should not see the error any more    Please enter an opening year.
+    When the user clicks the button twice              css=label[for="stateAid2"]
+    Then the user should not see the error any more    Please select a state aid option.
     When the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     Then the user should not see the error any more    Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id=executiveUserId
@@ -246,16 +249,6 @@ Custom suite setup
 the user moves focus and waits for autosave
     focus    link=Sign out
     Wait For Autosave
-
-the user leaves all the question field empty
-    Clear Element Text    css=.editor
-    Press Key    css=.editor    \\8
-    focus    jQuery=.button[value="Save and close"]
-    wait for autosave
-    The user enters text to a text field    id=question.title    ${EMPTY}
-    The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
-    The user enters text to a text field    id=question.maxWords    ${EMPTY}
-    the user moves focus and waits for autosave
 
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}

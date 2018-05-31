@@ -159,7 +159,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
 
-        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostCode()))? PENDING : COMPLETE;
+        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostcode()))? PENDING : COMPLETE;
 
     }
 
@@ -310,10 +310,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             return REJECTED;
         }
 
-        if (project.getOfferSubmittedDate() != null) {
-            if (golWorkflowHandler.isApproved(project)) {
-                return COMPLETE;
-            }
+        if (project.getOfferSubmittedDate() != null && golWorkflowHandler.isApproved(project)) {
+            return COMPLETE;
         }
 
         if (project.getOfferSubmittedDate() != null) {

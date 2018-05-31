@@ -25,6 +25,16 @@ ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}     ${test_mailbox_one}+marian@gmail
 ${PS_GOL_APPLICATION_PARTNER_EMAIL}             ${test_mailbox_one}+karen@gmail.com
 ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.com
 
+
+${Dreambit_Name}    Dreambit
+${Dreambit_Id}      ${organisation_ids["${Dreambit_Name}"]}
+${Queries_Competition_Name}    Rolling stock future developments
+${Queries_Competition_Id}      ${competition_ids["${Queries_Competition_Name}"]}
+${Queries_Application_Title}   High-speed rail and its effects on soil compaction
+${Queries_Application_No}      ${application_ids["${Queries_Application_Title}"]}
+${Queries_Application_Project}  ${project_ids["${Queries_Application_Title}"]}
+
+
 #Project: High-speed rail and its effects on air quality
 # MD = Mandatory Documents
 ${Ooba_Name}        Ooba
@@ -266,7 +276,7 @@ navigate to external finance contact page, choose finance contact and save
 Select project location
     [Arguments]  ${org_id}  ${projectId}
     the user navigates to the page        ${server}/project-setup/project/${projectId}/organisation/${org_id}/partner-project-location
-    the user enters text to a text field  css=#postCode  ${postcode}
+    the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
 

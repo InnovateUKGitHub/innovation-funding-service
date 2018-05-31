@@ -2,9 +2,12 @@ package org.innovateuk.ifs.address.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.address.mapper.AddressMapper;
+import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -13,6 +16,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class AddressServiceImplTest extends BaseServiceUnitTest<AddressServiceImpl> {
+
+    @Mock
+    private AddressRepository addressRepositoryMock;
+
+    @Mock
+    private AddressMapper addressMapperMock;
 
     @Override
     protected AddressServiceImpl supplyServiceUnderTest() {

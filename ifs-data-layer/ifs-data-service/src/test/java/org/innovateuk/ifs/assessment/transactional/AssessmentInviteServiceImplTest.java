@@ -1,16 +1,22 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
@@ -19,13 +25,20 @@ import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -103,6 +116,49 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     @Mock
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
 
+    @Mock
+    private UserMapper userMapperMock;
+
+    @Mock
+    private AssessmentInviteRepository assessmentInviteRepositoryMock;
+
+    @Mock
+    private AssessmentInviteMapper assessmentInviteMapperMock;
+
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+
+    @Mock
+    private RejectionReasonRepository rejectionReasonRepositoryMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
+
+    @Mock
+    private ProfileRepository profileRepositoryMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private NotificationTemplateRenderer notificationTemplateRendererMock;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+
+    @Mock
+    private NotificationSender notificationSenderMock;
+
+    @Mock
+    private InnovationAreaRepository innovationAreaRepositoryMock;
+
+    @Mock
+    private InnovationAreaMapper innovationAreaMapperMock;
+
+
     private AssessmentParticipant competitionParticipant;
 
     private UserResource userResource;
@@ -152,7 +208,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByHash(INVITE_HASH)).thenReturn(assessmentInvite);
 
         when(assessmentInviteRepositoryMock.save(same(assessmentInvite))).thenReturn(assessmentInvite);
-        when(competitionInviteMapperMock.mapToResource(same(assessmentInvite))).thenReturn(expected);
+        when(assessmentInviteMapperMock.mapToResource(same(assessmentInvite))).thenReturn(expected);
 
         when(assessmentParticipantRepositoryMock.getByInviteHash(INVITE_HASH)).thenReturn(competitionParticipant);
 
@@ -388,9 +444,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         CompetitionInviteResource competitionInviteResource = inviteServiceResult.getSuccess();
         assertEquals("my competition", competitionInviteResource.getCompetitionName());
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, competitionInviteMapperMock);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentInviteMapperMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByHash(INVITE_HASH);
-        inOrder.verify(competitionInviteMapperMock).mapToResource(isA(AssessmentInvite.class));
+        inOrder.verify(assessmentInviteMapperMock).mapToResource(isA(AssessmentInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -403,7 +459,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertTrue(inviteServiceResult.isFailure());
         assertTrue(inviteServiceResult.getFailure().is(notFoundError(AssessmentInvite.class, "inviteHashNotExists")));
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, competitionInviteMapperMock);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentInviteMapperMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByHash("inviteHashNotExists");
         inOrder.verifyNoMoreInteractions();
     }
@@ -455,10 +511,10 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         CompetitionInviteResource competitionInviteResource = inviteServiceResult.getSuccess();
         assertEquals("my competition", competitionInviteResource.getCompetitionName());
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, competitionInviteMapperMock);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentInviteMapperMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByHash(INVITE_HASH);
         inOrder.verify(assessmentInviteRepositoryMock).save(isA(AssessmentInvite.class));
-        inOrder.verify(competitionInviteMapperMock).mapToResource(isA(AssessmentInvite.class));
+        inOrder.verify(assessmentInviteMapperMock).mapToResource(isA(AssessmentInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -471,7 +527,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertTrue(inviteServiceResult.isFailure());
         assertTrue(inviteServiceResult.getFailure().is(notFoundError(AssessmentInvite.class, "inviteHashNotExists")));
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, competitionInviteMapperMock);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentInviteMapperMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByHash("inviteHashNotExists");
         inOrder.verifyNoMoreInteractions();
     }
@@ -490,7 +546,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertTrue(inviteServiceResult.isFailure());
         assertTrue(inviteServiceResult.getFailure().is(new Error(COMPETITION_INVITE_EXPIRED, "my competition")));
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, competitionInviteMapperMock);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentInviteMapperMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByHash("inviteHashExpired");
         inOrder.verifyNoMoreInteractions();
     }
@@ -1502,18 +1558,18 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         AssessmentInvite inviteExpectation = createInviteExpectations(newUser.getName(), newUser.getEmail(), CREATED, competition, null);
 
         when(assessmentInviteRepositoryMock.save(inviteExpectation)).thenReturn(assessmentInvite);
-        when(competitionInviteMapperMock.mapToResource(assessmentInvite)).thenReturn(expectedInviteResource);
+        when(assessmentInviteMapperMock.mapToResource(assessmentInvite)).thenReturn(expectedInviteResource);
 
         CompetitionInviteResource invite = service.inviteUser(existingAssessor).getSuccess();
 
         assertEquals(expectedInviteResource, invite);
 
         InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, competitionInviteMapperMock);
+                                  assessmentInviteRepositoryMock, assessmentInviteMapperMock);
         inOrder.verify(userRepositoryMock).findOne(newUser.getId());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).save(createInviteExpectations(newUser.getName(), newUser.getEmail(), CREATED, competition, null));
-        inOrder.verify(competitionInviteMapperMock).mapToResource(assessmentInvite);
+        inOrder.verify(assessmentInviteMapperMock).mapToResource(assessmentInvite);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1586,7 +1642,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         AssessmentInvite inviteExpectation = createInviteExpectations(newAssessorName, newAssessorEmail, CREATED, competition, innovationArea);
         when(assessmentInviteRepositoryMock.save(inviteExpectation)).thenReturn(assessmentInvite);
-        when(competitionInviteMapperMock.mapToResource(assessmentInvite)).thenReturn(expectedInviteResource);
+        when(assessmentInviteMapperMock.mapToResource(assessmentInvite)).thenReturn(expectedInviteResource);
 
         ServiceResult<CompetitionInviteResource> serviceResult = service.inviteUser(newAssessor);
         assertTrue(serviceResult.isSuccess());
@@ -1595,12 +1651,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertEquals(expectedInviteResource, invite);
 
         InOrder inOrder = inOrder(innovationAreaRepositoryMock, competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, competitionInviteMapperMock, userRepositoryMock);
+                                  assessmentInviteRepositoryMock, assessmentInviteMapperMock, userRepositoryMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(newAssessorEmail, competition.getId());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(innovationAreaRepositoryMock).findOne(innovationArea.getId());
         inOrder.verify(assessmentInviteRepositoryMock).save(createInviteExpectations(newAssessorName, newAssessorEmail, CREATED, competition, innovationArea));
-        inOrder.verify(competitionInviteMapperMock).mapToResource(assessmentInvite);
+        inOrder.verify(assessmentInviteMapperMock).mapToResource(assessmentInvite);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1628,7 +1684,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertFalse(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(innovationAreaRepositoryMock, competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, competitionInviteMapperMock, userRepositoryMock);
+                                  assessmentInviteRepositoryMock, assessmentInviteMapperMock, userRepositoryMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(newAssessorEmail, competition.getId());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(innovationAreaRepositoryMock).findOne(innovationArea);
@@ -1660,7 +1716,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertFalse(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, competitionInviteMapperMock, userRepositoryMock);
+                                  assessmentInviteRepositoryMock, assessmentInviteMapperMock, userRepositoryMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(newAssessorEmail, competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
@@ -1691,7 +1747,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertFalse(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, competitionInviteMapperMock, userRepositoryMock);
+                                  assessmentInviteRepositoryMock, assessmentInviteMapperMock, userRepositoryMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(newAssessorEmail, competitionId);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
         inOrder.verifyNoMoreInteractions();

@@ -176,7 +176,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                     List<List<FinanceFormField>> fieldsSeparated = unsavedFieldsManager.separateFields(fields);
                     for(List<FinanceFormField> fieldGroup: fieldsSeparated) {
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
-                        if (costItem != null && fieldGroup.size() > 0) {
+                        if (costItem != null && !fieldGroup.isEmpty()) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
                             ValidationMessages addResult = financeRowRestService.add(applicationFinanceId, questionId, costItem).getSuccess();
                             Either<FinanceRowItem, ValidationMessages> either;

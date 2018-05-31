@@ -49,10 +49,8 @@ public class FlatFolderFileStorageStrategy extends BaseFileStorageStrategy {
 
     @Override
     public ServiceResult<Long> fileEntryIdFromPath(Pair<List<String>, String> path) {
-        if (getAbsolutePathToFileUploadFolder().equals(path.getLeft())) {
-            if (isLong(path.getRight())) {
-                return serviceSuccess(parseLong(path.getRight()));
-            }
+        if (getAbsolutePathToFileUploadFolder().equals(path.getLeft()) && isLong(path.getRight())) {
+            return serviceSuccess(parseLong(path.getRight()));
         }
         return serviceFailure(new Error(FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE));
     }

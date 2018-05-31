@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='View internal user\'s details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='View internal user details'" />
 </head>
 <body class="competition-management">
 
@@ -12,7 +12,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/admin/users/active}"  />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View internal user\'s details',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View internal user details',size='heading-xlarge'" />
 
     <dl>
         <dt>Full name</dt>

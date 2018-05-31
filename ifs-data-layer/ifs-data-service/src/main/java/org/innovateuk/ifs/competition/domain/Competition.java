@@ -30,13 +30,13 @@ public class Competition implements ProcessActivity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CompetitionFunder> funders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("priority ASC")
     private List<Section> sections = new ArrayList<>();
 
@@ -117,6 +117,8 @@ public class Competition implements ProcessActivity {
     private GrantTermsAndConditions termsAndConditions;
 
     private boolean locationPerPartner = true;
+
+    private Boolean stateAid;
 
     public Competition() {
         setupComplete = false;
@@ -709,6 +711,14 @@ public class Competition implements ProcessActivity {
 
     public void setMinProjectDuration(Integer minProjectDuration) {
         this.minProjectDuration = minProjectDuration;
+    }
+
+    public Boolean getStateAid() {
+        return stateAid;
+    }
+
+    public void setStateAid(final Boolean stateAid) {
+        this.stateAid = stateAid;
     }
 }
 

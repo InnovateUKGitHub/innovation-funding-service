@@ -5,8 +5,11 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.Collections;
@@ -20,11 +23,19 @@ import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSet
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<CompetitionSetupController> {
+
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    @Mock
+    private CompetitionSetupService competitionSetupServiceMock;
 
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {
@@ -147,5 +158,17 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().is2xxSuccessful());
 
         verify(competitionSetupServiceMock, only()).getSubsectionStatuses(competitionId);
+    }
+
+
+    @Test
+    public void testDelete() throws Exception {
+        final long competitionId = 1L;
+
+        when(competitionSetupServiceMock.deleteCompetition(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/competition/setup/{id}", competitionId)).andExpect(status().isNoContent());
+
+        verify(competitionSetupServiceMock, only()).deleteCompetition(competitionId);
     }
 }

@@ -112,13 +112,13 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
 
         financeService.financeDetails(applicationId)
                 .getOptionalSuccessObject()
-                .ifPresent(applicationFinanceResources -> {
+                .ifPresent(applicationFinanceResources ->
                     applicationFinanceResources.forEach(applicationFinance -> {
                         if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
                             applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
                             financeRowCostsService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
                         }
-                    });
-                });
+                    })
+                );
     }
 }

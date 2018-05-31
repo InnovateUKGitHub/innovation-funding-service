@@ -336,24 +336,17 @@ IFS.core.formValidation = (function () {
       }
     },
     checkRange: function (field) {
-      console.log('Check range')
       var rangeAttribute = 'range'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, rangeAttribute)
-      console.log(displayValidationMessages)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, rangeAttribute)
-      console.log(errorMessage)
       var min = parseInt(field.data('range-min'), 10)
       var max = parseInt(field.data('range-max'), 10)
-      console.log('Min = ' + min)
-      console.log('Max = ' + max)
       if (IFS.core.formValidation.checkNumber(field)) {
         var fieldVal = parseInt(field.val(), 10)
         if (fieldVal < min || fieldVal > max) {
-          console.log('Invalid')
           IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
           return false
         } else {
-          console.log('Valid')
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
         }

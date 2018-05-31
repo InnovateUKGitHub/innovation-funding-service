@@ -1,18 +1,22 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationFormPopulator;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -31,6 +35,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
@@ -53,6 +58,12 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
     @Spy
     @InjectMocks
     private AssessorProfileDeclarationFormPopulator assessorProfileDeclarationFormPopulator;
+
+    @Mock
+    private AffiliationRestService affiliationRestService;
+
+    @Mock
+    private UserService userService;
 
     @Override
     @Before
@@ -126,7 +137,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         );
 
         when(affiliationRestService.getUserAffiliations(user.getId()))
-                .thenReturn(restSuccess(combineLists(
+                .thenReturn(restSuccess(new AffiliationListResource(combineLists(
                 combineLists(
                         expectedAppointments,
                         expectedFamilyAffiliations
@@ -136,7 +147,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 financialInterests,
                 familyFinancialInterests
                 )
-                ));
+                )));
 
         mockMvc.perform(get("/profile/declaration"))
                 .andExpect(status().isOk())
@@ -162,7 +173,11 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 null
         );
 
-        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(emptyList()));
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(emptyList())
+                .build();
+
+        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(affiliationListResource));
 
         mockMvc.perform(get("/profile/declaration"))
                 .andExpect(status().isOk())
@@ -236,7 +251,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .build();
 
         when(affiliationRestService.getUserAffiliations(user.getId()))
-                .thenReturn(restSuccess(combineLists(
+                .thenReturn(restSuccess(new AffiliationListResource(combineLists(
                 combineLists(
                         appointments,
                         familyAffiliations
@@ -246,7 +261,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 financialInterests,
                 familyFinancialInterests
                 )
-        ));
+        )));
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setPrincipalEmployer(expectedPrincipalEmployer);
@@ -278,7 +293,11 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         // The form should have no fields populated
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
 
-        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(emptyList()));
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(emptyList())
+                .build();
+
+        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(affiliationListResource));
 
         mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
@@ -295,7 +314,11 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build(1);
 
-        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(appointments));
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(appointments)
+                .build();
+
+        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(affiliationListResource));
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasAppointments(FALSE);
@@ -315,7 +338,11 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build(1);
 
-        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(financialInterests));
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(financialInterests)
+                .build();
+
+        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(affiliationListResource));
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFinancialInterests(FALSE);
@@ -335,7 +362,11 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build(1);
 
-        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(appointments));
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(appointments)
+                .build();
+
+        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(affiliationListResource));
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFamilyAffiliations(FALSE);
@@ -355,7 +386,11 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build(1);
 
-        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(familyFinancialInterests));
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(familyFinancialInterests)
+                .build();
+
+        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(affiliationListResource));
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFamilyFinancialInterests(FALSE);
@@ -429,14 +464,14 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withDescription(familyFinancialInterests)
                 .build();
 
-        when(affiliationRestService.updateUserAffiliations(user.getId(), combineLists(
+        when(affiliationRestService.updateUserAffiliations(user.getId(), new AffiliationListResource(combineLists(
                 combineLists(expectedAppointments,
                         expectedFamilyAffiliations
                 ),
                 expectedPrincipalEmployer,
                 expectedProfessionalAffiliations,
                 expectedFinancialInterests,
-                expectedFamilyFinancialInterests))).thenReturn(restSuccess());
+                expectedFamilyFinancialInterests)))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -515,13 +550,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build();
 
-        when(affiliationRestService.updateUserAffiliations(user.getId(), combineLists(
+        when(affiliationRestService.updateUserAffiliations(user.getId(), new AffiliationListResource(combineLists(
                 expectedAppointments,
                 expectedFamilyAffiliations,
                 expectedPrincipalEmployer,
                 expectedProfessionalAffiliations,
                 expectedFinancialInterests,
-                expectedFamilyFinancialInterests))).thenReturn(restSuccess());
+                expectedFamilyFinancialInterests)))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -701,13 +736,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build();
 
-        when(affiliationRestService.updateUserAffiliations(user.getId(), combineLists(
+        when(affiliationRestService.updateUserAffiliations(user.getId(), new AffiliationListResource(combineLists(
                 expectedAppointments,
                 expectedFamilyAffiliations,
                 expectedPrincipalEmployer,
                 expectedProfessionalAffiliations,
                 expectedFinancialInterests,
-                expectedFamilyFinancialInterests))).thenReturn(restSuccess());
+                expectedFamilyFinancialInterests)))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -953,13 +988,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build();
 
-        when(affiliationRestService.updateUserAffiliations(user.getId(), combineLists(
+        when(affiliationRestService.updateUserAffiliations(user.getId(), new AffiliationListResource(combineLists(
                 expectedAppointments,
                 expectedFamilyAffiliations,
                 expectedPrincipalEmployer,
                 expectedProfessionalAffiliations,
                 expectedFinancialInterests,
-                expectedFamilyFinancialInterests))).thenReturn(restSuccess());
+                expectedFamilyFinancialInterests)))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)

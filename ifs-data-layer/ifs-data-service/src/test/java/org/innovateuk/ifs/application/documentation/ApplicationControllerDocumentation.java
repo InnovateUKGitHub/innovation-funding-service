@@ -9,11 +9,15 @@ import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
+import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
@@ -38,6 +42,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationControllerDocumentation extends BaseControllerMockMVCTest<ApplicationController> {
+
+    @Mock
+    private ApplicationService applicationServiceMock;
+
+    @Mock
+    private ApplicationNotificationService applicationNotificationServiceMock;
+
+    @Mock
+    private ApplicationProgressService applicationProgressServiceMock;
+
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -265,6 +279,22 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("applicationId").description("Id of the application to inform of being ineligible")
                         ),
                         requestFields(applicationIneligibleSendResourceFields)
+                ));
+    }
+
+    @Test
+    public void withdraw() throws Exception {
+        long applicationId = 1L;
+
+        when(applicationServiceMock.withdrawApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/{applicationId}/withdraw", applicationId)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("application/{method-name}",
+                                pathParameters(
+                                        parameterWithName("applicationId").description("Id of the application to withdraw")
+                                )
                 ));
     }
 

@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.review.model.ReviewModelPopulator;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
+import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -29,12 +33,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewController> {
 
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+
+    @Mock
+    private ReviewRestService reviewRestService;
+
     @Spy
     @InjectMocks
     private ReviewModelPopulator reviewModelPopulator;
 
-    @Mock
     private ReviewKeyStatisticsResource reviewKeyStatisticsResource;
+    private CompetitionResource competitionResource;
 
     @Override
     protected ReviewController supplyControllerUnderTest() {

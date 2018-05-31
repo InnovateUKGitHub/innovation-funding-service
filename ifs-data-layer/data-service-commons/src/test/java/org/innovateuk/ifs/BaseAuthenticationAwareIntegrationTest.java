@@ -48,6 +48,10 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
         return getByEmail("felix.wilson@gmail.com");
     }
 
+    protected UserResource getIfsAdmin() {
+        return getByEmail("ifsadmin@innovateuk.test");
+    }
+
     protected UserResource getAnonUser() {
         return SecurityRuleUtil.getAnonymous();
     }
@@ -68,6 +72,10 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
 
     protected void loginCompAdmin() {
         setLoggedInUser(getCompAdmin());
+    }
+
+    protected void loginIfsAdmin() {
+        setLoggedInUser(getIfsAdmin());
     }
 
     protected void loginSystemRegistrationUser() {

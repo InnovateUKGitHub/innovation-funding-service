@@ -20,7 +20,6 @@ import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -28,6 +27,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
@@ -36,13 +36,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
 public class PublicContentItemControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentItemController> {
+
     private static final Long COMPETITION_ID = 1L;
     private static final String PRIVATE_OR_PUBLIC_COMP_NAME = "Private Competition";
     private static final ZonedDateTime YESTERDAY = ZonedDateTime.now().minusDays(1);
     private static final ZonedDateTime TOMORROW = ZonedDateTime.now().plusDays(1);
-
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -68,18 +67,15 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         this.controller = controller;
     }
 
-
     @Before
-    public void setLoggedInUserOnThread() {
+    public void setUp() throws Exception {
         loginSystemRegistrationUser();
 
         setupCompetitionWithKeywords();
         createPrivateCompetition();
     }
 
-
     @Test
-    @Rollback
     public void findFilteredItems_findByKeywords() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
         long innovationId = 5L;
@@ -131,7 +127,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_findAllPublicContent() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
         flushAndClearSession();
@@ -150,7 +145,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_findByInnovationAreaId() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
         long innovationId = 5L;
@@ -169,7 +163,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_findByKeywordsAndInnovationAreaId() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
         long innovationId = 5L;
@@ -187,7 +180,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_openCompetitionsAreFilteredFromResultListAndTotalFound() throws Exception {
         addOpenDateToCompetition(competitionRepository.findById(COMPETITION_ID), YESTERDAY);
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
@@ -199,7 +191,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void testByCompetitionId() throws Exception {
         RestResult<PublicContentItemResource> result = controller.byCompetitionId(COMPETITION_ID);
 
@@ -210,7 +201,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_privateCompetitionsWontBeFoundByKeyword() throws Exception {
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("keywordoninviteonly"), Optional.of(0), 20);
 
@@ -221,7 +211,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_publicCompetitionsWillBeFoundByKeyword() throws Exception {
         setPrivateCompetitionToPublic();
 
@@ -235,7 +224,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_noPrivateCompetitionsWillBeFound() throws Exception {
         setPublicCompetitionToPrivate();
 
@@ -248,7 +236,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_allPublicCompetitionsWillBeFound() throws Exception {
         setPrivateCompetitionToPublic();
 
@@ -262,7 +249,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_noPrivateCompetitionsWillBeFoundByInnovationArea() throws Exception {
         setPublicCompetitionToPrivate();
 
@@ -275,7 +261,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_allPublicCompetitionsWillBeFoundByInnovationArea() throws Exception {
         setPrivateCompetitionToPublic();
 
@@ -289,7 +274,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_noPrivateCompetitionsWillBeFoundByInnovationAreaAndKeyword() throws Exception {
         setPublicCompetitionToPrivate();
 
@@ -302,7 +286,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void findFilteredItems_allPublicCompetitionsWillBeFoundByInnovationAreaAndKeyword() throws Exception {
         setPrivateCompetitionToPublic();
 
@@ -316,7 +299,11 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     private void setupCompetitionWithKeywords() {
+        Optional.ofNullable(publicContentRepository.findByCompetitionId
+                (COMPETITION_ID)).ifPresent(publicContent -> publicContentRepository.delete(publicContent));
+
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
+                .with(id(null))
                 .withCompetitionId(1L)
                 .withPublishDate(ZonedDateTime.now().minusDays(1))
                 .withInviteOnly(false)
@@ -339,12 +326,16 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     private void createPrivateCompetition() {
         InnovationArea innovationArea = innovationAreaRepository.findOne(6L);
 
-        Competition privateCompetition = competitionRepository.save(newCompetition().withName(PRIVATE_OR_PUBLIC_COMP_NAME).build());
+        Competition privateCompetition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName(PRIVATE_OR_PUBLIC_COMP_NAME)
+                .build());
         privateCompetition.setInnovationSector(innovationArea.getSector());
 
         addOpenDateToCompetition(privateCompetition, YESTERDAY);
 
         Milestone closedMilestone = newMilestone()
+                .with(id(null))
                 .withCompetition(privateCompetition)
                 .withType(MilestoneType.SUBMISSION_DATE)
                 .withDate(TOMORROW).build();
@@ -352,6 +343,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
 
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
+                .with(id(null))
                 .withCompetitionId(privateCompetition.getId())
                 .withPublishDate(YESTERDAY)
                 .withInviteOnly(true)
@@ -381,11 +373,16 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     private void addOpenDateToCompetition(Competition competition, ZonedDateTime openDate) {
-        Milestone openDateMilestone = newMilestone()
+        milestoneRepository.findByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId()).ifPresent
+                (milestone -> milestoneRepository.delete(milestone));
+
+        flushAndClearSession();
+
+        milestoneRepository.save(newMilestone()
+                .with(id(null))
                 .withCompetition(competition)
                 .withType(MilestoneType.OPEN_DATE)
-                .withDate(openDate).build();
-        milestoneRepository.save(openDateMilestone);
+                .withDate(openDate).build());
     }
 
     private static Predicate<PublicContentItemPageResource> privateOrgPublicCompetitionIsInPage() {

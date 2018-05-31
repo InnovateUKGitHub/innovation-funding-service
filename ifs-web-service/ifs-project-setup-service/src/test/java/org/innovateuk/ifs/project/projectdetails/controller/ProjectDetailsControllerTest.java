@@ -5,12 +5,18 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
@@ -18,13 +24,16 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -80,14 +89,44 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private static final String RESEND_PM_INVITE = "resend-pm-invite";
 
     @Mock
-    SetupStatusViewModelPopulator setupStatusViewModelPopulatorMock;
+    private SetupStatusViewModelPopulator setupStatusViewModelPopulatorMock;
 
-	@Before
-	public void setUp() {
-		super.setUp();
-		setupInvites();
-		loginDefaultUser();
-	}
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private PartnerOrganisationRestService partnerOrganisationRestService;
+
+    @Mock
+    private StatusService statusService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
+
+    @Mock
+    private ProjectDetailsService projectDetailsService;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private OrganisationAddressRestService organisationAddressRestService;
+
+//	@Before
+//	public void setUp() {
+//		super.setUp();
+//		setupInvites();
+//		loginDefaultUser();
+//	}
 	
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
@@ -471,7 +510,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .build();
 
         PartnerOrganisationResource partnerOrganisation = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource()
-                .withPostCode("TW14 9QG")
+                .withPostcode("TW14 9QG")
                 .build();
         when(partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
@@ -488,7 +527,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(organisationId, model.getOrganisationId());
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
-        assertEquals("TW14 9QG", form.getPostCode());
+        assertEquals("TW14 9QG", form.getPostcode());
 
     }
 
@@ -497,27 +536,27 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "UB7 8QF";
+        String postcode = "UB7 8QF";
 
         ProjectResource projectResource = newProjectResource()
                 .withId(projectId)
                 .withName("Project 1")
                 .build();
 
-        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postCode))
+        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcode))
                 .thenReturn(serviceFailure(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
         when(projectService.getById(projectId)).thenReturn(projectResource);
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("postCode", postCode)).
+                param("postcode", postcode)).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/partner-project-location")).
                 andReturn();
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
-        assertEquals(new PartnerProjectLocationForm(postCode), form);
+        assertEquals(new PartnerProjectLocationForm(postcode), form);
     }
 
     @Test
@@ -525,20 +564,20 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "UB7 8QF";
+        String postcode = "UB7 8QF";
 
-        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postCode))
+        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcode))
                 .thenReturn(serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("postCode", postCode)).
+                param("postcode", postcode)).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId  + "/details")).
                 andReturn();
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
-        assertEquals(new PartnerProjectLocationForm(postCode), form);
+        assertEquals(new PartnerProjectLocationForm(postcode), form);
 
         verify(projectService, never()).userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId());
         verify(projectService, never()).getById(projectId);

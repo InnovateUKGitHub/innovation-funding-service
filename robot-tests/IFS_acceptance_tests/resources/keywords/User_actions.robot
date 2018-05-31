@@ -138,25 +138,16 @@ the user should see that the element is disabled
 
 The user fills the empty question fields
     The user enters text to a text field    id=question.title    Test title
-    the user moves focus and waits for autosave
     The user enters text to a text field    id=question.subTitle    Subtitle test
-    the user moves focus and waits for autosave
     The user enters text to a text field    id=question.guidanceTitle    Test guidance title
-    the user moves focus and waits for autosave
     The user enters text to a text field    css=.editor    Guidance text test
-    the user moves focus and waits for autosave
     The user enters text to a text field    id=question.maxWords    150
-    the user moves focus and waits for autosave
 
 The user fills the empty assessment fields
     The user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
-    the user moves focus and waits for autosave
     The user enters text to a text field    id=guidanceRows[0].scoreFrom    30
-    the user moves focus and waits for autosave
     The user enters text to a text field    id=guidanceRows[0].scoreTo    35
-    the user moves focus and waits for autosave
     The user enters text to a text field    id=guidanceRows[0].justification    This is a justification
-    the user moves focus and waits for autosave
 
 The user checks the question fields
     The user should see the text in the page    Test title

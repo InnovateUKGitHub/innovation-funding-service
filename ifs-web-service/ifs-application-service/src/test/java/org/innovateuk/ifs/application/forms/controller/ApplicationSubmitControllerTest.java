@@ -1,19 +1,18 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPopulator;
-import org.innovateuk.ifs.application.forms.populator.FeedbackNavigationPopulator;
-import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -25,6 +24,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,8 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
@@ -55,7 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<ApplicationSubmitController> {
+public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCTest<ApplicationSubmitController> {
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
@@ -67,11 +68,18 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
+
+    @Mock
+    private CategoryRestService categoryRestServiceMock;
 
     @Override
     protected ApplicationSubmitController supplyControllerUnderTest() {
@@ -85,7 +93,6 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
 
@@ -156,7 +163,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        mockMvc.perform(get("/application/1/confirm-submit"))
+        mockMvc.perform(get("/application/" + app.getId() + "/confirm-submit"))
                 .andExpect(view().name("application-confirm-submit"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
@@ -166,7 +173,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
-        when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
+        when(userService.isLeadApplicant(applicant.getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -174,7 +181,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-        mockMvc.perform(post("/application/1/submit")
+        mockMvc.perform(post("/application/" + app.getId() + "/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app));
@@ -185,14 +192,14 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void testApplicationSubmitAppisNotSubmittable() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
-        when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
+        when(userService.isLeadApplicant(applicant.getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-        mockMvc.perform(post("/application/1/submit")
+        mockMvc.perform(post("/application/" + app.getId() + "/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 
@@ -203,13 +210,27 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void testApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.SUBMITTED);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(competitionService.getById(anyLong())).thenReturn(competitionResource);
 
-        mockMvc.perform(get("/application/1/track"))
+        mockMvc.perform(get("/application/" + app.getId() + "/track"))
                 .andExpect(view().name("application-track"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", competitionResource));
 
+    }
+
+    @Test
+    public void testNotSubmittedApplicationTrack() throws Exception {
+        ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.OPEN);
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(competitionService.getById(app.getCompetition())).thenReturn(competitionResource);
+
+        mockMvc.perform(get("/application/" + app.getId() + "/track"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + app.getId()));
     }
 }
