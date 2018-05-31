@@ -7,10 +7,37 @@ apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-bootRepackage {
-    enabled = false
+project.version = alertServiceVersion
+tagDocker.tag = alertServiceVersion
+osStageRemote.tag = alertServiceVersion
+tagDockerLocal.tag = alertServiceVersion
+osStageLocal.tag = alertServiceVersion
+
+ext.dockerDir = "$project.parent.projectDir/docker/"
+
+buildDocker.dependsOn prepareDockerInput
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
+
+def enabled = project.hasProperty('ifs.alert-service.enabled') ? project.property('ifs.alert-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
 }
+deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
+deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
+
+//TODO
+//createContainer.portBindings = ['8086:8080','9006:8000']
+
+
+createContainer.networkAliases=["ifs-alert-service"]
+
 
 test.finalizedBy asciidoctor
 
@@ -21,6 +48,8 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.httpcomponents:httpasyncclient"
+    compile "mysql:mysql-connector-java"
+
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
