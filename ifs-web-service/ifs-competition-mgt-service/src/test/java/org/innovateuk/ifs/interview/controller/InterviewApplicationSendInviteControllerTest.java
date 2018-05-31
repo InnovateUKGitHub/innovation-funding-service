@@ -242,7 +242,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(interviewAssignmentRestService.getStagedApplications(competitionId, 0)).thenReturn(restSuccess(invites));
         when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Some content")));
-        when(competitionKeyStatisticsRestService.getInterviewKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
+        when(competitionKeyStatisticsRestService.getInterviewAssignmentStatisticsByCompetition(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
         return invites;
     }
 

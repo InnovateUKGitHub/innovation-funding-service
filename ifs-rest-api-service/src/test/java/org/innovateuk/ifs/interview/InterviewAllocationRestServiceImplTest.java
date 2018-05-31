@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
+import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestServiceImpl;
 import org.junit.Test;
 
@@ -14,9 +15,11 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.interviewApplicationsResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.interviewResourceListType;
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResourceBuilder.newInterviewApplicationPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewResourceBuilder.newInterviewResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -61,6 +64,23 @@ public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitT
         setupGetWithRestResultExpectations(expectedUrl, InterviewApplicationPageResource.class, expected);
 
         InterviewApplicationPageResource actual = service.getAllocatedApplications(competitionId, userId, page)
+                .getSuccess();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAllocatedApplicationsByAssessorId() {
+        long competitionId = 1L;
+        long userId = 1L;
+
+        List<InterviewResource> expected = newInterviewResource().build(1);
+
+        String expectedUrl = format("%s/%s/%s/%s", restUrl, competitionId, "allocated-applications-assessorId", userId);
+
+        setupGetWithRestResultExpectations(expectedUrl, interviewResourceListType(), expected);
+
+        List<InterviewResource> actual = service.getAllocatedApplicationsByAssessorId(competitionId, userId)
                 .getSuccess();
 
         assertEquals(expected, actual);
