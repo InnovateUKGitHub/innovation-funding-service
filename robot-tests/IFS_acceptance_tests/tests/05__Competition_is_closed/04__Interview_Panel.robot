@@ -60,6 +60,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3534 Assessor dashboard - List of applications
 ...
 ...               IFS-3524 Manage Interview panel - Key statistics
+...
+...               IFS-3542 Interview panels - View of application and feedback when competition feedback released
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -251,7 +253,7 @@ Assessor can view the list of allocated applications
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
 
 Applicant can still see their feedback once the comp feedback has been released
-    [Documentation]  IFS-3534
+    [Documentation]  IFS-3542
     [Tags] #Add keywords, Variables and use direct links!!
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/18/funding
