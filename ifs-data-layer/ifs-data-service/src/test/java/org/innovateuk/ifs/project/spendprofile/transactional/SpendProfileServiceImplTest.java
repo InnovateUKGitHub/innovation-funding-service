@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
@@ -57,9 +59,11 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
@@ -188,11 +192,12 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
+                "dashboardUrl", "https://ifs-local-dev/dashboard",
+                "applicationId", project.getApplication().getId(),
+                "competitionName", "Competition 1"
         );
 
         NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
-
         NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
 
         when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
@@ -294,7 +299,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     public void testGenerateSpendProfileWhenAllViabilityApprovedButAcademicViabilityNotApplicable() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
-
         Project project = generateSpendProfileData.getProject();
         Organisation organisation1 = generateSpendProfileData.getOrganisation1();
         Organisation organisation2 = generateSpendProfileData.getOrganisation2();
@@ -324,11 +328,12 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
+                "dashboardUrl", "https://ifs-local-dev/dashboard",
+                "competitionName", "Competition 1",
+                "applicationId", project.getApplication().getId()
         );
 
         NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
-
         NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
 
         when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
@@ -434,11 +439,22 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Test
     public void testGenerateSpendProfileForPartnerOrganisation() {
 
-        Project project = newProject().
-                withId(projectId).
-                withDuration(3L).
-                withPartnerOrganisations(newPartnerOrganisation().build(2)).
-                build();
+        Competition competition = newCompetition()
+                .withName("Competition 1")
+                .build();
+
+        Application application = newApplication()
+                .withName("Application 1")
+                .withCompetition(competition)
+                .build();
+
+        Project project = newProject()
+                .withId(projectId)
+                .withDuration(3L)
+                .withPartnerOrganisations(newPartnerOrganisation()
+                .build(2))
+                .withApplication(application)
+                .build();
 
         Organisation organisation1 = newOrganisation().build();
 
@@ -497,7 +513,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard",
-                "applicationId", projectId,
+                "applicationId", project.getApplication().getId(),
                 "competitionName", "Competition 1"
         );
 

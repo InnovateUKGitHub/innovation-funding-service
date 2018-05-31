@@ -976,7 +976,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "competitionName", "Competition 1",
-                "applicationId", projectId
+                "applicationId", project.getApplication().getId()
         );
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -1050,7 +1050,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "competitionName", "Competition 1",
-                "applicationId", projectId
+                "applicationId", project.getApplication().getId()
         );
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
