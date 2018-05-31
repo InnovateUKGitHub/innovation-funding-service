@@ -36,6 +36,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
     the user selects the option from the drop-down menu  Ian Cooper  id=innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
+    the user clicks the button twice                     css=label[for="stateAid2"]
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete

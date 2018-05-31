@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyApplicationStatisticsService;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyApplica
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyApplicationStatisticsResourceBuilder.newCompetitionOpenKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteStatisticsResourceBuilder.newInterviewInviteStatisticsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewStatisticsResourceBuilder.newInterviewStatisticsResource;
 import static org.innovateuk.ifs.review.builder.ReviewInviteStatisticsResourceBuilder.newReviewInviteStatisticsResource;
 import static org.innovateuk.ifs.review.builder.ReviewKeyStatisticsResourceBuilder.newReviewKeyStatisticsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -26,7 +28,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 public class CompetitionKeyApplicationStatisticsControllerTest extends
         BaseControllerMockMVCTest<CompetitionKeyApplicationStatisticsController> {
@@ -83,7 +84,7 @@ public class CompetitionKeyApplicationStatisticsControllerTest extends
         when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competition-application-statistics/{id}/funded", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/funded", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }
@@ -115,15 +116,15 @@ public class CompetitionKeyApplicationStatisticsControllerTest extends
     }
 
     @Test
-    public void getInterviewStatistics() throws Exception {
+    public void getInterviewAssignmentStatistics() throws Exception {
         final long competitionId = 1L;
 
         InterviewAssignmentKeyStatisticsResource interviewAssignmentKeyStatisticsResource =
                 newInterviewAssignmentKeyStatisticsResource().build();
-        when(interviewStatisticsServiceMock.getInterviewPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess
-                (interviewAssignmentKeyStatisticsResource));
+        when(interviewStatisticsServiceMock.getInterviewAssignmentPanelKeyStatistics(competitionId)).thenReturn(
+                serviceSuccess(interviewAssignmentKeyStatisticsResource));
 
-        mockMvc.perform(get("/competition-application-statistics/{id}/interview", competitionId))
+        mockMvc.perform(get("/competition-application-statistics/{id}/interview-assignment", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(interviewAssignmentKeyStatisticsResource)));
     }
@@ -138,6 +139,18 @@ public class CompetitionKeyApplicationStatisticsControllerTest extends
                 (interviewInviteStatisticsResource));
 
         mockMvc.perform(get("/competition-application-statistics/{id}/interview-invites", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(interviewInviteStatisticsResource)));
+    }
+
+    @Test
+    public void getInterviewStatistics() throws Exception {
+        final long competitionId = 1L;
+
+        InterviewStatisticsResource interviewInviteStatisticsResource = newInterviewStatisticsResource().build();
+        when(interviewStatisticsServiceMock.getInterviewStatistics(competitionId)).thenReturn(serviceSuccess(interviewInviteStatisticsResource));
+
+        mockMvc.perform(get("/competition-application-statistics/{id}/interview", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(interviewInviteStatisticsResource)));
     }

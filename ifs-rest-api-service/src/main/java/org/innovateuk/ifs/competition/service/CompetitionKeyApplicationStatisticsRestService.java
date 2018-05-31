@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationSt
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 
@@ -24,8 +25,10 @@ public interface CompetitionKeyApplicationStatisticsRestService {
 
     RestResult<ReviewInviteStatisticsResource> getReviewInviteStatisticsByCompetition(long competitionId);
 
-    RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewKeyStatisticsByCompetition(long competitionId);
+    RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewAssignmentStatisticsByCompetition(long competitionId);
 
     RestResult<InterviewInviteStatisticsResource> getInterviewInviteStatisticsByCompetition(long competitionId);
+
+    RestResult<InterviewStatisticsResource> getInterviewStatisticsByCompetition(long competitionId);
 
 }

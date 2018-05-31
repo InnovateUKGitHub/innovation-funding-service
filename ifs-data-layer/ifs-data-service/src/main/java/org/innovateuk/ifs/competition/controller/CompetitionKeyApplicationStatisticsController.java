@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyApplicationStatisticsService;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
@@ -64,13 +65,19 @@ public class CompetitionKeyApplicationStatisticsController {
         return reviewStatisticsService.getReviewInviteStatistics(id).toGetResponse();
     }
 
-    @GetMapping("/interview")
-    public RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewStatistics(@PathVariable("id") long id) {
-        return interviewStatisticsService.getInterviewPanelKeyStatistics(id).toGetResponse();
+    @GetMapping("/interview-assignment")
+    public RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewAssignmentStatistics(@PathVariable("id") long id) {
+        return interviewStatisticsService.getInterviewAssignmentPanelKeyStatistics(id).toGetResponse();
     }
 
     @GetMapping("/interview-invites")
     public RestResult<InterviewInviteStatisticsResource> getInterviewInviteStatistics(@PathVariable("id") long id) {
         return interviewStatisticsService.getInterviewInviteStatistics(id).toGetResponse();
     }
+
+    @GetMapping("/interview")
+    public RestResult<InterviewStatisticsResource> getInterviewStatistics(@PathVariable("id") long id) {
+        return interviewStatisticsService.getInterviewStatistics(id).toGetResponse();
+    }
+
 }

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.interview.mapper.InterviewMapper;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.*;
@@ -22,6 +23,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
@@ -42,9 +44,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewBuilder.newInterview;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.newInterviewParticipant;
+import static org.innovateuk.ifs.interview.builder.InterviewResourceBuilder.newInterviewResource;
 import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -75,6 +80,8 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     private ApplicationRepository applicationRepositoryMock;
     @Mock
     private InterviewWorkflowHandler interviewWorkflowHandlerMock;
+    @Mock
+    private InterviewMapper interviewMapper;
 
     @Override
     protected InterviewAllocationServiceImpl supplyServiceUnderTest() {
@@ -172,6 +179,70 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         assertEquals(pageResource.getContent(), expectedParticipants);
         assertEquals(pageResource.getUnallocatedApplications(), unallocatedApplications);
         assertEquals(pageResource.getAllocatedApplications(), allocatedApplications);
+    }
+
+    @Test
+    public void getAllocatedApplicationsByAssessorId() {
+        long competitionId = 1L;
+
+        User user = newUser()
+                .withId(1L)
+                .build();
+
+        Application application1 = newApplication()
+                .withId(1L)
+                .withName("Application 1")
+                .build();
+
+        Application application2 = newApplication()
+                .withId(1L)
+                .withName("Application 1")
+                .build();
+
+        ProcessRole processRole1 = newProcessRole()
+                .withApplication(application1)
+                .withUser(user)
+                .build();
+
+        ProcessRole processRole2 = newProcessRole()
+                .withApplication(application2)
+                .withUser(user)
+                .build();
+
+        List<Interview> expectedInterviews = newInterview()
+                .withTarget(application1, application2)
+                .withParticipant(processRole1, processRole2)
+                .build(2);
+
+        List<InterviewResource> expectedInterviewResources = newInterviewResource()
+                .withApplication(application1.getId(), application2.getId())
+                .withProcessRole(processRole1.getId(), processRole2.getId())
+                .build(2);
+
+        when(interviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
+                competitionId,
+                user.getId()
+        )).thenReturn(expectedInterviews);
+
+        when(interviewMapper.mapToResource(expectedInterviews.get(0))).thenReturn(expectedInterviewResources.get(0));
+        when(interviewMapper.mapToResource(expectedInterviews.get(1))).thenReturn(expectedInterviewResources.get(1));
+
+        ServiceResult<List<InterviewResource>> result =
+                service.getAllocatedApplicationsByAssessorId(competitionId, user.getId());
+
+        verify(interviewRepositoryMock)
+                .findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(competitionId, user.getId());
+
+        assertTrue(result.isSuccess());
+
+        List<InterviewResource> interviewResources = result.getSuccess();
+
+        assertEquals(interviewResources.get(0).getApplication(), expectedInterviews.get(0).getTarget().getId());
+        assertEquals(processRole1, expectedInterviews.get(0).getParticipant());
+
+        assertEquals(interviewResources.get(1).getApplication(), expectedInterviews.get(1).getTarget().getId());
+        assertEquals(processRole2, expectedInterviews.get(1).getParticipant());
+        assertEquals(interviewResources.size(), expectedInterviews.size());
     }
 
     @Test

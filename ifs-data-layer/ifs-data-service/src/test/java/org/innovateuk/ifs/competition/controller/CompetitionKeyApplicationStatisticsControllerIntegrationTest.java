@@ -121,8 +121,8 @@ public class CompetitionKeyApplicationStatisticsControllerIntegrationTest extend
 
         interviewAssignmentRepository.save(interviewAssignment);
 
-        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = controller.getInterviewStatistics
-                (competition.getId()).getSuccess();
+        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = controller.getInterviewAssignmentStatistics(
+                competition.getId()).getSuccess();
 
         assertEquals(2, keyStatisticsResource.getApplicationsInCompetition());
         assertEquals(1, keyStatisticsResource.getApplicationsAssigned());

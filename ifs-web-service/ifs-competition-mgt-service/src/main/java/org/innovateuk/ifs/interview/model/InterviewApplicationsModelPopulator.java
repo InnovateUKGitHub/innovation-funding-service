@@ -15,6 +15,6 @@ abstract class InterviewApplicationsModelPopulator {
     private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     protected InterviewAssignmentKeyStatisticsResource getKeyStatistics(long competitionId) {
-        return competitionKeyApplicationStatisticsRestService.getInterviewKeyStatisticsByCompetition(competitionId).getSuccess();
+        return competitionKeyApplicationStatisticsRestService.getInterviewAssignmentStatisticsByCompetition(competitionId).getSuccess();
     }
 }

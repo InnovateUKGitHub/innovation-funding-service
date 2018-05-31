@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
@@ -22,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -71,6 +75,18 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
             }
         }
         return result;
+    }
+
+    @Override
+    public ServiceResult<InterviewApplicationSentInviteResource> getSentInvite(long applicationId) {
+        InterviewAssignment assignment = interviewAssignmentRepository.findOneByTargetId(applicationId);
+        return ofNullable(assignment.getMessage())
+                .map(message ->
+                        serviceSuccess(
+                                new InterviewApplicationSentInviteResource(message.getSubject(), message.getMessage(), message.getCreatedOn())
+                        )
+                )
+                .orElse(serviceFailure(GENERAL_NOT_FOUND));
     }
 
     private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment) {
