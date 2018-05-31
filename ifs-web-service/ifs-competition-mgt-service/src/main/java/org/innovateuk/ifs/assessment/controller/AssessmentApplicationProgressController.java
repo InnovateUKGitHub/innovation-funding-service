@@ -4,7 +4,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
-import org.innovateuk.ifs.interview.controller.InterviewAllocationController;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
@@ -24,8 +23,8 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}/application/{applicationId}/assessors")
-@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can manage assessment applications", securedType = AssessmentApplicationProgressController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT_APPLICATIONS')")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentApplicationProgressController.class)
+@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class AssessmentApplicationProgressController {
 
     @Autowired
