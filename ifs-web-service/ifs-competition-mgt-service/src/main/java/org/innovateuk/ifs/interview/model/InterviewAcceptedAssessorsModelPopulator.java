@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.assessor.populator;
+package org.innovateuk.ifs.interview.model;
 
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;

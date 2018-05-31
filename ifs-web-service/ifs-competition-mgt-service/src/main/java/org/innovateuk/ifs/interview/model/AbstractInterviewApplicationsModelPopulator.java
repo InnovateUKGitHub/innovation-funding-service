@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.application.populator;
+package org.innovateuk.ifs.interview.model;
 
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
@@ -9,7 +9,6 @@ import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
-import org.innovateuk.ifs.management.application.viewmodel.InterviewAllocatedApplicationRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAssessorApplicationsViewModel;
 import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;

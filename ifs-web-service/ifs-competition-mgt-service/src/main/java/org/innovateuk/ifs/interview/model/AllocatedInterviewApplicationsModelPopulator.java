@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.application.populator;
+package org.innovateuk.ifs.interview.model;
 
 import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
 import org.springframework.stereotype.Component;

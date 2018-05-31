@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.application.viewmodel;
+package org.innovateuk.ifs.interview.model;
 
 public class InterviewAllocatedApplicationRowViewModel {
 
