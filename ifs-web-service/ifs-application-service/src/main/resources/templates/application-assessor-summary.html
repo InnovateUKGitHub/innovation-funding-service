@@ -51,9 +51,9 @@
         <p th:text="${interviewFeedbackViewModel.bannerText}">Some info</p>
     </div>
 
-    <th:block th:if="${interviewFeedbackViewModel.hasResponse()}">
+    <th:block th:if="${interviewFeedbackViewModel.hasResponse() || interviewFeedbackViewModel.hasFeedback()}">
         <h2 class="heading-medium">Attachments</h2>
-        <div class="form-group download">
+        <div class="form-group download" th:if="${interviewFeedbackViewModel.hasResponse()}>
             <h3 class="heading-small no-margin">
                 Applicant feedback response
             </h3>
@@ -120,16 +120,6 @@
             </div>
         </th:block>
     </section>
-
-    <th:block th:if="${interviewFeedbackViewModel.hasFeedback()}">
-        <h2 class="heading-medium">Additional feedback</h2>
-        <div class="form-group download">
-            <h3 class="heading-small no-margin">Panel assessment feedback</h3>
-            <a target="_blank" href=""
-               th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${currentApplication.id})}"
-               th:text="${interviewFeedbackViewModel.feedbackFilename + ' (opens in a new window)'}">panel-assessment-feedback.pdf, 6 KB (opens in a new window)</a>
-        </div>
-    </th:block>
 
     <section th:if="${hasFinanceSection}">
         <h2 class="heading-medium">Finance</h2>
