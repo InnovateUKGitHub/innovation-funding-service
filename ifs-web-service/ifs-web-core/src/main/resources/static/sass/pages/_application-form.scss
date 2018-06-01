@@ -41,10 +41,36 @@
             }
           }
         }
+
+        &.form-group-row-validated {
+          &.form-group-error {
+            td {
+              &:first-child {
+                border-left: 10px solid $error-colour;
+              }
+            }
+          }
+        }
       }
 
       .control {
         padding: 0;
+      }
+    }
+
+    #material-costs-table,
+    #travel-costs-table,
+    #other-costs-table {
+      tr {
+        &.form-group-row-validated {
+          &.form-group-error {
+            td {
+              &:first-child {
+                border-left: 10px solid $error-colour;
+              }
+            }
+          }
+        }
       }
     }
 
