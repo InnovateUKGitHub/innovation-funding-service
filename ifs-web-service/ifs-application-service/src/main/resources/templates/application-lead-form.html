@@ -57,10 +57,12 @@
         <!--/* Application Form for a Question. */-->
         <th:block th:if="${model.isQuestion()}">
             <div class="question" th:with="question=${model.applicantResource.question}">
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}"
-                          th:insert="fragments/application-details :: application_details(${model.formInputViewModels})"/>
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}"
-                          th:insert="fragments/application-team :: application_team(${applicationTeamModel})"/>
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
+                    <th:block th:insert="fragments/application-details :: application_details(${model.formInputViewModels[0]})" />
+                </th:block>
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
+                    <th:block th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
+                </th:block>
             </div>
             <th:block th:if="${model.allReadOnly}">
                 <a th:href="${backURL}" class="button-secondary"

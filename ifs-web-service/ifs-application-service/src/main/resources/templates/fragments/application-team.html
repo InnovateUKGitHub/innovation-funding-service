@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="application_team(model)">
+<th:block th:fragment="application_team(model, question)">
 
     <th:block th:each="organisation : ${model.organisations}">
 
@@ -33,6 +33,12 @@
             </tr>
             </tbody>
         </table>
+
+        <!-- TODO IFS-3612 What should appIsClosed be? -->
+        <th:block
+            th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question},appIsClosed=${false})"/>
+        <th:block th:if="${model.summary}"
+                  th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question},appIsClosed=${false})"/>
     </th:block>
 </th:block>
 
