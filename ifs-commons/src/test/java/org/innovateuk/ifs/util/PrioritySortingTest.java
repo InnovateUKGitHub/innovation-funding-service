@@ -51,7 +51,7 @@ public class PrioritySortingTest {
                 .map(n -> new TestResource(n))
                 .collect(Collectors.toList());
     }
-    private TestResource createResource(String name) {  
+    private TestResource createResource(String name) {
         return createResources(name).get(0);
     }
 

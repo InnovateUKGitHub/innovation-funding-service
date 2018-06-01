@@ -3,8 +3,6 @@ package org.innovateuk.ifs.util;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -24,9 +22,6 @@ import static java.util.Optional.ofNullable;
  * some failure message if that entity cannot be found.
  */
 public class RestLookupCallbacks {
-
-    @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(RestLookupCallbacks.class);
 
     public static <SuccessType> RestResult<SuccessType> find(
             SuccessType result,
@@ -287,17 +282,5 @@ public class RestLookupCallbacks {
             return andOnSuccess((p1, p2, p3, p4) -> restSuccess(supplier.get()));
         }
 
-    }
-
-    @FunctionalInterface
-    public interface TriFunction<R, S, T, A> {
-
-        A apply(R r, S s, T t);
-    }
-
-    @FunctionalInterface
-    public interface QuadFunction<R, S, T, U, A> {
-
-        A apply(R r, S s, T t, U u);
     }
 }
