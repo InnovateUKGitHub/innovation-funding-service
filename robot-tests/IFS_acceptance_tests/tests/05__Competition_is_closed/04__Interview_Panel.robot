@@ -254,7 +254,7 @@ Assessor can view the list of allocated applications
 
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
-    [Tags]
+    [Tags]  pending
     Given log in as a different user          &{Comp_admin1_credentials}
     Then the user navigates to the page       ${SERVER}/management/competition/18/funding
     And the user selects and marks applications as successful
@@ -264,7 +264,6 @@ Applicant can still see their feedback once the comp feedback has been released
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     And the user clicks the button/link       jQuery=section:contains(Previous) h3:contains(Neural network)
     And The user should not see the element   jQuery=div:contains(message alert)
-#Add keywords, Variables and use direct links!!
 
 *** Keywords ***
 Custom Suite Setup
@@ -372,14 +371,14 @@ the user checks for Manage interview panel key statistics
     Should Be Equal As Integers   ${Accepted}  ${assessor_accepted}
 
 the user selects and marks applications as successful
-    the user selects the checkbox         select-all-1  #Selects all on the
+    the user selects the checkbox         select-all-1
     the user clicks the button/link       jQuery=button:contains(Successful)
     the user clicks the button/link       jQuery=.link-back:contains("Competition")
 
 the user sends emails about funding decision
     the user selects the checkbox         select-all-1  #Selects all on the Manage funding notifications screen
-    the user clicks the button/link       jQuery=button:contains("Write and send email")         #Keyword
+    the user clicks the button/link       jQuery=button:contains("Write and send email")
     the user enters text to a text field  css=.editor  Funding decision Notification email text
-    the user clicks the button/link       jQuery=ul:contains("") ~ button:contains("Send email to all applicants")  #Keyword - Duplicate?
+    the user clicks the button/link       jQuery=ul:contains("") ~ button:contains("Send email to all applicants")
     the user clicks the button/link       jQuery=.send-to-all-applicants-modal .button:contains("Send email to all applicants")
     the user clicks the button/link       jQuery=.link-back:contains("Competition")
