@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.review.model.ReviewModelPopulator;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
@@ -37,7 +37,7 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
     private CompetitionService competitionService;
 
     @Mock
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     @Mock
     private ReviewRestService reviewRestService;
@@ -78,7 +78,7 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
 
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
-        when(competitionKeyStatisticsRestService.getReviewKeyStatisticsByCompetition(competitionId))
+        when(competitionKeyApplicationStatisticsRestService.getReviewKeyStatisticsByCompetition(competitionId))
                 .thenReturn(toGetResponse(reviewKeyStatisticsResource));
         when(reviewRestService.isPendingReviewNotifications(competitionId))
                 .thenReturn(toGetResponse(reviewsPending));
