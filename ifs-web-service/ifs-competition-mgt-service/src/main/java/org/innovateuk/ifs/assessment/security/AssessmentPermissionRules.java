@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.review.security;
+package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -14,35 +14,25 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 @PermissionRules
 @Component
-public class ReviewPermissionRules {
+public class AssessmentPermissionRules {
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @PermissionRule(value = "REVIEW", description = "Only project finance or competition admin can see review panels" +
+    @PermissionRule(value = "ASSESSMENT", description = "Only project finance or competition admin can see assessments " +
             "if the competition is in the correct state.")
-    public boolean reviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+    public boolean assessment(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                competitionHasReviewPanel(competition) &&
                 !competitionIsInInformOrLater(competition);
     }
 
-    @PermissionRule(value = "REVIEW_APPLICATIONS", description = "Only project finance or competition admin can " +
-            "see review panel applications if the competition is in the correct state.")
-    public boolean reviewPanelApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+    @PermissionRule(value = "ASSESSMENT_APPLICATIONS", description = "Only project finance or competition admin can " +
+            "see assessments if the competition is in the correct state.")
+    public boolean assessmentApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                competitionHasReviewPanel(competition) &&
-                competitionIsInFundersPanel(competition);
-    }
-
-    private boolean competitionHasReviewPanel(CompetitionResource competition) {
-        return competition.isHasAssessmentPanel();
-    }
-
-    private boolean competitionIsInFundersPanel(CompetitionResource competition) {
-        return competition.getCompetitionStatus().equals(CompetitionStatus.FUNDERS_PANEL);
+                !competitionIsInInformOrLater(competition);
     }
 
     private boolean competitionIsInInformOrLater(CompetitionResource competition) {
