@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
 import java.util.Set;

@@ -7,7 +7,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;

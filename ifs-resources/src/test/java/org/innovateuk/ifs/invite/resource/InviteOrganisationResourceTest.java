@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.resource;
 
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

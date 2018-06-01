@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;

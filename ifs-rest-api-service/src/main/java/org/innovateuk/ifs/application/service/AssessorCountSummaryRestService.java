@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.Optional;
 

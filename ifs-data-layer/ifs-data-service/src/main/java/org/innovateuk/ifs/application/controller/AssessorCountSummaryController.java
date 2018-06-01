@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.transactional.AssessorCountSummaryService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

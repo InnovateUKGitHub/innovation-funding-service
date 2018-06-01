@@ -2,7 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;

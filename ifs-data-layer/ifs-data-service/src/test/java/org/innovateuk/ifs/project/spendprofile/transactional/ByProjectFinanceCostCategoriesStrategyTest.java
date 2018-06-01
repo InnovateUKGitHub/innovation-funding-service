@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -38,8 +38,8 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBu
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.spendprofile.transactional.ByProjectFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
-import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.allOf;

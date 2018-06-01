@@ -23,7 +23,7 @@ import org.innovateuk.ifs.management.model.UnallocatedInterviewApplicationsModel
 import org.innovateuk.ifs.management.viewmodel.InterviewAcceptedAssessorsRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewAcceptedAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewAssessorApplicationsViewModel;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CookieUtil;

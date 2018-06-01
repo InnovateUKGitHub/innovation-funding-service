@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,8 +11,8 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
-import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.organisation.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.junit.Assert.assertEquals;
 
 public class AvailableAssessorResourceBuilderTest {

@@ -46,8 +46,8 @@ import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newPr
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
-import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.organisation.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;

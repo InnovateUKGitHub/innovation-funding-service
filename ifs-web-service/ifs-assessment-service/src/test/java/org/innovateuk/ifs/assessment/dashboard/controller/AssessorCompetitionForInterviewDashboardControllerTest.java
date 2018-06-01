@@ -10,7 +10,7 @@ import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForI
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;

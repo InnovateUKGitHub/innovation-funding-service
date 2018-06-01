@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
 

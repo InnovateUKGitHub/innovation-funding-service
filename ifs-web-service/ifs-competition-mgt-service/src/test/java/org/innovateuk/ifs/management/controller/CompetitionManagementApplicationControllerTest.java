@@ -29,7 +29,7 @@ import org.innovateuk.ifs.management.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.viewmodel.ReinstateIneligibleApplicationViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;

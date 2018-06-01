@@ -17,7 +17,7 @@ import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewM
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;

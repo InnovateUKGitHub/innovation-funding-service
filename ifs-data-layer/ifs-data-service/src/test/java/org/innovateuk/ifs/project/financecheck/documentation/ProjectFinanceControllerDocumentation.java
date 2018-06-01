@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceControl
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.payload.PayloadDocumentation;

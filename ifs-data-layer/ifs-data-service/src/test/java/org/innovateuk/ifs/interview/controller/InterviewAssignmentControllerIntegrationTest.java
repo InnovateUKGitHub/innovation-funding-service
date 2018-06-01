@@ -46,7 +46,7 @@ import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.junit.Assert.*;
 
 public class InterviewAssignmentControllerIntegrationTest extends BaseControllerIntegrationTest<InterviewAssignmentController> {

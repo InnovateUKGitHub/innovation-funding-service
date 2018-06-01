@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
-import static org.innovateuk.ifs.organisation.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.organisation.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.junit.Assert.assertEquals;
 
 public class ProfileSkillsEditResourceBuilderTest {

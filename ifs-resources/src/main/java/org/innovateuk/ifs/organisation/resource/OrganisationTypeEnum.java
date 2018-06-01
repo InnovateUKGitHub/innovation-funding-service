@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.resource;
+package org.innovateuk.ifs.organisation.resource;
 
 import java.util.EnumSet;
 

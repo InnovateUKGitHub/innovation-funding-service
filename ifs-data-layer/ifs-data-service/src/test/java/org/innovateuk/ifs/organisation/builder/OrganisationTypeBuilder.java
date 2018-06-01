@@ -2,7 +2,7 @@ package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import java.util.List;
 import java.util.function.BiConsumer;

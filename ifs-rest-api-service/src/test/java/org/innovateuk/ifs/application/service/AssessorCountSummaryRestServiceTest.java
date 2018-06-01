@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.builder.AssessorCountSummaryPageResourceBuilder;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
-import org.innovateuk.ifs.organisation.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
 import java.util.Optional;
