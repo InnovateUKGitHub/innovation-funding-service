@@ -254,24 +254,24 @@ Assessor can view the list of allocated applications
 
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
-    [Tags] #Add keywords, Variables and use direct links!!
+    [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
-    When the user navigates to the page       ${SERVER}/management/competition/18/funding
+    Then the user navigates to the page       ${SERVER}/management/competition/18/funding
     And the user selects the checkbox         select-all-1  #Selects all on the
     Then the user clicks the button/link      jQuery=button:contains(Successful)
     And the user clicks the button/link       jQuery=.link-back:contains("Competition")
     Then the user clicks the button/link      jQuery=.button:contains("Manage funding notifications")
     And the user selects the checkbox         select-all-1  #Selects all on the Manage funding notifications screen
     Then the user clicks the button/link      jQuery=button:contains("Write and send email")         #Keyword
-    And the user enters text to a text field  css=[class="textarea-wrapped"]  Funding decision Notification
-    Then the user clicks the button/link      jQuery=button:contains("Send email to all applicants") #Keyword - Duplicate?
-    Then the user clicks the button/link      jQuery=button:contains("Send email to all applicants") #Keyword - Duplicate?
-    #send-to-all-applicants-modal
+    And the user enters text to a text field   css=.editor  Funding decision Notification email text
+    Then the user clicks the button/link      jQuery=ul:contains("") ~ button:contains("Send email to all applicants")  #Keyword - Duplicate?
+    And the user clicks the button/link       jQuery=.send-to-all-applicants-modal .button:contains("Send email to all applicants")
     And the user clicks the button/link       jQuery=.link-back:contains("Competition")
     And the user clicks the button/link       jQuery=button:contains("Release feedback")
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     And the user clicks the button/link       jQuery=section:contains(Previous) h3:contains(Neural network)
-    And The user should not see the element   jQuery=div:contains(message alert)  #css=[class="message-alert"]
+    And The user should not see the element       jQuery=div:contains(message alert)
+#Add keywords, Variables and use direct links!!
 
 *** Keywords ***
 Custom Suite Setup
