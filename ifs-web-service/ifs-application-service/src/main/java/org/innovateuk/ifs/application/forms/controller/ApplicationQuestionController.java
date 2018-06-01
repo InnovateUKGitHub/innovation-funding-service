@@ -178,45 +178,7 @@ public class ApplicationQuestionController {
 
         populateShowQuestion(user, applicationId, questionId, model, form);
 
-        return APPLICATION_DETAILS_FORM;
-    }
-
-    @PostMapping(value = {QUESTION_URL + "application_details/" + "{" + QUESTION_ID + "}"})
-    public String applicationDetailFormSubmit(
-            @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-            BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            Model model,
-            @PathVariable(APPLICATION_ID) final Long applicationId,
-            @PathVariable(QUESTION_ID) final Long questionId,
-            UserResource user,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        Map<String, String[]> params = request.getParameterMap();
-        ValidationMessages errors = new ValidationMessages();
-
-        // Check if the request is to just open edit view or to save
-        if (params.containsKey(EDIT_QUESTION)) {
-            return handleEditQuestion(form, model, applicationId, questionId, user);
-        } else {
-            handleAssignedQuestions(applicationId, user, request, response);
-
-            // First check if any errors already exist in bindingResult
-            checkErrorsInForm(form, applicationId, questionId, user.getId(), request, response);
-
-            model.addAttribute("form", form);
-
-            /* End save action */
-            if (hasErrors(request, errors, bindingResult)) {
-                // Add any validated fields back in invalid entries are displayed on re-render
-                validationHandler.addAnyErrors(errors);
-                populateShowQuestion(user, applicationId, questionId, model, form);
-                return APPLICATION_DETAILS_FORM;
-            } else {
-                return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
-            }
-        }
+        return APPLICATION_FORM;
     }
 
     @GetMapping(value = {QUESTION_URL + "application_team/" + "{" + QUESTION_ID + "}"})
@@ -232,6 +194,24 @@ public class ApplicationQuestionController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
+
+        markAsComplete.ifPresent(markAsCompleteSet -> {
+            if (markAsCompleteSet) {
+                ValidationMessages errors = applicationSaver.saveApplicationForm(
+                        applicationId,
+                        form,
+                        questionId,
+                        user.getId(),
+                        request,
+                        response,
+                        Optional.of(Boolean.TRUE)
+                );
+                validationHandler.addAnyErrors(errors);
+            }
+        });
+
+        populateShowQuestion(user, applicationId, questionId, model, form);
+
         return APPLICATION_FORM;
     }
 
