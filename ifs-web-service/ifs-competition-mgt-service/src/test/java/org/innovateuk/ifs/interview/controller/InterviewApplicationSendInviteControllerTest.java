@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.interview.model.InterviewApplicationSentInviteModelPopulator;
@@ -38,18 +38,18 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
-import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.assertEquals;
@@ -95,7 +95,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     @Override
     @Before
@@ -242,7 +242,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(interviewAssignmentRestService.getStagedApplications(competitionId, 0)).thenReturn(restSuccess(invites));
         when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Some content")));
-        when(competitionKeyStatisticsRestService.getInterviewKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
+        when(competitionKeyApplicationStatisticsRestService.getInterviewAssignmentStatisticsByCompetition(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
         return invites;
     }
 

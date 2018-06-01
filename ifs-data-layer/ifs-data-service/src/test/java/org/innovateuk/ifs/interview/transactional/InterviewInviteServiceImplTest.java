@@ -77,6 +77,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -506,7 +507,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_interview_panel_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_interview_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(interviewInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
@@ -561,7 +562,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_interview_panel_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_interview_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(interviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);

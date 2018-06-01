@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.competition.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -67,6 +67,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -101,7 +102,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
-    private CompetitionInviteMapper competitionInviteMapper;
+    private AssessmentInviteMapper assessmentInviteMapper;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
@@ -220,14 +221,14 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
                 .andOnSuccessReturn(this::openInvite)
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
@@ -380,7 +381,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                                         )
                                 )
                         )
-                        .andOnSuccessReturn(competitionInviteMapper::mapToResource),
+                        .andOnSuccessReturn(assessmentInviteMapper::mapToResource),
                 success -> serviceFailure(Error.globalError(
                         "validation.competitionAssessmentInvite.create.email.exists",
                         singletonList(stagedInvite.getEmail())
@@ -428,7 +429,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource stagedInvite) {
         return getUser(stagedInvite.getUserId())
                 .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()))
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
@@ -578,12 +579,12 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_editable_text.txt",
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, PREVIEW_TEMPLATES_PATH + "invite_assessor_editable_text.txt",
                 arguments).getSuccess();
     }
 
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_preview_text.txt",
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, PREVIEW_TEMPLATES_PATH + "invite_assessor_preview_text.txt",
                 arguments).getSuccess();
     }
 

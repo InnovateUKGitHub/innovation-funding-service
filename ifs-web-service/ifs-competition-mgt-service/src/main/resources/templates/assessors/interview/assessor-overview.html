@@ -81,6 +81,7 @@
                   th:action="@{/assessment/interview/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
                   th:object="${interviewOverviewSelectionForm}"
                   data-multipage-select=""
+                  autocomplete="off"
                   th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
                 <div class="grid-row sorting">

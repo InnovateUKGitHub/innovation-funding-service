@@ -98,6 +98,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setInnovationLeadUserId(leadTechnologistId);
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
+        competitionSetupForm.setStateAid(Boolean.TRUE);
 
         InnovationAreaResource innovationArea = newInnovationAreaResource().withId(innovationAreaId).build();
         competitionSetupForm.setInnovationAreaCategoryIds(asList(innovationAreaId));
@@ -137,6 +138,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(openingDate, competition.getStartDate());
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
+        assertEquals(Boolean.TRUE, competition.getStateAid());
 
         verify(competitionSetupRestService).updateCompetitionInitialDetails(competition);
         verify(competitionSetupRestService).initApplicationForm(competition.getId(), competitionSetupForm.getCompetitionTypeId());
