@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -65,6 +66,9 @@ public class ApplicationQuestionController {
 
     @Autowired
     private ApplicantRestService applicantRestService;
+
+    @Autowired
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
@@ -212,6 +216,7 @@ public class ApplicationQuestionController {
         });
 
         populateShowQuestion(user, applicationId, questionId, model, form);
+        model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateModel(applicationId, user.getId()));
 
         return APPLICATION_FORM_LEAD;
     }

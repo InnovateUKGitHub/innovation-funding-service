@@ -3,7 +3,7 @@
 
 <th:block th:fragment="application_team(model)">
 
-    <th:block th:with="organisation=${model.applicantResource.currentApplicant.organisation}">
+    <th:block th:each="organisation : ${model.organisations}">
 
         <br/>
         <label class="form-label form-label-bold" th:for="organisation-name">
