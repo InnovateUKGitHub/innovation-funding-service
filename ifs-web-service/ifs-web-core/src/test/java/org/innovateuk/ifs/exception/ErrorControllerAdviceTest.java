@@ -2,7 +2,7 @@ package org.innovateuk.ifs.exception;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.commons.error.exception.IFSRuntimeException;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

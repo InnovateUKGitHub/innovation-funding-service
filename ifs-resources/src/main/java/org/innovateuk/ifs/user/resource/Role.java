@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.user.resource;
 
-import org.innovateuk.ifs.util.enums.Identifiable;
+import org.innovateuk.ifs.identity.Identifiable;
 
 import java.util.Arrays;
 import java.util.HashSet;

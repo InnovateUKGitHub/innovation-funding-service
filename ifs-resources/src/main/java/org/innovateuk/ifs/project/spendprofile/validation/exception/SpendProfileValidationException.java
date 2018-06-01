@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.validation.exception;
 
-import org.innovateuk.ifs.commons.error.exception.IFSRuntimeException;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileValidationError;
 
 import java.util.Collections;

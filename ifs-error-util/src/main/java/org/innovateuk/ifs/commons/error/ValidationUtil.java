@@ -13,8 +13,8 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 public final class ValidationUtil {

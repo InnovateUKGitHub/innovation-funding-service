@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.validator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.resource.cost.Materials;

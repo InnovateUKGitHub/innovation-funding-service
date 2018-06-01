@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.validation;
 
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.project.spendprofile.validation.exception.SpendProfileValidationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
