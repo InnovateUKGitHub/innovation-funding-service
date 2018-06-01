@@ -25,7 +25,6 @@ public class OrganisationCreationForm implements Serializable {
     @NotNull(message = "{validation.standard.organisationtype.required}")
     private Long organisationTypeId;
 
-    @NotEmpty(message = "{validation.standard.organisationsearchname.required}")
     // on empty value don't check pattern since then there already is a validation message.
     private String organisationSearchName;
     private String searchOrganisationId;
