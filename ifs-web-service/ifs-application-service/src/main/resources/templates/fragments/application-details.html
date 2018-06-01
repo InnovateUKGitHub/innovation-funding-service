@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
-    <th:block th:fragment="application_details(model)" th:with="formInput=${model.formInput}, question=${model.question}, competition=${model.competition}">
+<th:block th:fragment="application_details(model[0])" th:with="formInput=${model.formInput}, question=${model.question}, competition=${model.competition}">
     <th:block th:unless="${model.readonly}">
         <!--/* start of edit template */-->
         <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'form-group-error'">

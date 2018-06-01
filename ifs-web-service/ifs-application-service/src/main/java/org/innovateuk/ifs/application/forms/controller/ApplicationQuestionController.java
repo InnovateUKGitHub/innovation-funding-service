@@ -141,6 +141,7 @@ public class ApplicationQuestionController {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
                 populateShowQuestion(user, applicationId, questionId, model, form);
+                // TODO 3088: return APPLICATION_FORM or APPLICATION_FORM_LEAD based on questionIype
                 return APPLICATION_FORM;
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
@@ -178,7 +179,7 @@ public class ApplicationQuestionController {
 
         populateShowQuestion(user, applicationId, questionId, model, form);
 
-        return APPLICATION_FORM;
+        return APPLICATION_FORM_LEAD;
     }
 
     @GetMapping(value = {QUESTION_URL + "application_team/" + "{" + QUESTION_ID + "}"})
@@ -212,7 +213,7 @@ public class ApplicationQuestionController {
 
         populateShowQuestion(user, applicationId, questionId, model, form);
 
-        return APPLICATION_FORM;
+        return APPLICATION_FORM_LEAD;
     }
 
     private void handleAssignedQuestions(Long applicationId,
