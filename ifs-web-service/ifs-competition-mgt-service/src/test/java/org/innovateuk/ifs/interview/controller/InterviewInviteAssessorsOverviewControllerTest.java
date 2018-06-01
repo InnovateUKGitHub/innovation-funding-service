@@ -5,7 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
@@ -64,7 +64,7 @@ public class InterviewInviteAssessorsOverviewControllerTest extends BaseControll
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     @Mock
     private InterviewInviteRestService interviewInviteRestService;
@@ -90,7 +90,7 @@ public class InterviewInviteAssessorsOverviewControllerTest extends BaseControll
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionKeyStatisticsRestService.getInterviewInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(newInterviewInviteStatisticsResource().build()));
+        when(competitionKeyApplicationStatisticsRestService.getInterviewInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(newInterviewInviteStatisticsResource().build()));
     }
 
     @Test
@@ -118,10 +118,11 @@ public class InterviewInviteAssessorsOverviewControllerTest extends BaseControll
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService, competitionKeyStatisticsRestService);
+        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService,
+                competitionKeyApplicationStatisticsRestService);
         inOrder.verify(interviewInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(competitionKeyStatisticsRestService).getInterviewInviteStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyApplicationStatisticsRestService).getInterviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(interviewInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
         inOrder.verifyNoMoreInteractions();
     }
