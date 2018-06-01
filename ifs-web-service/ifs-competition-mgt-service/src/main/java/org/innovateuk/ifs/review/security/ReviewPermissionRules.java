@@ -19,18 +19,22 @@ public class ReviewPermissionRules {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @PermissionRule(value = "REVIEW", description = "Only project finance or competition admin can see interview panels" +
+    @PermissionRule(value = "REVIEW", description = "Only project finance or competition admin can see review panels" +
             "if the competition is in the correct state.")
     public boolean reviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isInternalAdmin(loggedInUser) && competitionHasReviewPanel(competition);
+        return isInternalAdmin(loggedInUser) &&
+                competitionHasReviewPanel(competition) &&
+                !competitionIsInInformOrLater(competition);
     }
 
     @PermissionRule(value = "REVIEW_APPLICATIONS", description = "Only project finance or competition admin can " +
-            "see interview panel applications if the competition is in the correct state.")
+            "see review panel applications if the competition is in the correct state.")
     public boolean reviewPanelApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isInternalAdmin(loggedInUser) && competitionHasReviewPanel(competition) && competitionIsInFundersPanel(competition);
+        return isInternalAdmin(loggedInUser) &&
+                competitionHasReviewPanel(competition) &&
+                competitionIsInFundersPanel(competition);
     }
 
     private boolean competitionHasReviewPanel(CompetitionResource competition) {
@@ -39,5 +43,9 @@ public class ReviewPermissionRules {
 
     private boolean competitionIsInFundersPanel(CompetitionResource competition) {
         return competition.getCompetitionStatus().equals(CompetitionStatus.FUNDERS_PANEL);
+    }
+
+    private boolean competitionIsInInformOrLater(CompetitionResource competition) {
+        return competition.getCompetitionStatus().isLaterThan(CompetitionStatus.FUNDERS_PANEL);
     }
 }
