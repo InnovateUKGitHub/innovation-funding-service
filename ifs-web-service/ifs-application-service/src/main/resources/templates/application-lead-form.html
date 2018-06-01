@@ -60,7 +60,7 @@
                 <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}"
                           th:insert="fragments/application-details :: application_details(${model.formInputViewModels})"/>
                 <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}"
-                          th:insert="fragments/application-team :: application_team(${model})"/>
+                          th:insert="fragments/application-team :: application_team(${applicationTeamModel})"/>
             </div>
             <th:block th:if="${model.allReadOnly}">
                 <a th:href="${backURL}" class="button-secondary"

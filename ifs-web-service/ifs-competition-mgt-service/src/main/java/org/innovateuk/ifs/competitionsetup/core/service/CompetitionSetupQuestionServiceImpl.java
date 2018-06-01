@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.core.service;
 
-import org.innovateuk.ifs.application.service.QuestionSetupRestService;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
+import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -14,6 +10,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -110,8 +110,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 .collect(Collectors.toSet());
 
         return questionResources.stream()
-                .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()) && !"Application details".equals(question.getName()))
-                .filter(question -> question.getType() != QuestionType.LEAD_ONLY) // TODO: IFS-3088
+                .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()))
+                .filter(question -> question.getType() != QuestionType.LEAD_ONLY)
                 .map(questionResource -> questionResource.getId())
                 .collect(Collectors.toList());
     }
