@@ -252,18 +252,22 @@ Assessor can view the list of allocated applications
     Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
 
-Applicant can still see their feedback once the comp feedback has been released
+Assessor marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
-    Then the user navigates to the page       ${SERVER}/management/competition/18/funding
-    And the user selects and marks applications as successful
-    Then the user clicks the button/link      css=a.button.button-large   #Manage funding notifications
-    And the user sends emails about funding decision
+    When the user navigates to the page       ${SERVER}/management/competition/18/funding
+    Then the user selects and marks applications as successful
+    And the user clicks the button/link       css=a.button.button-large   #Manage funding notifications
+    Then the user sends emails about funding decision
     And the user clicks the button/link       css=button.button.button-large  #Release feedback
+
+Applicant can still see their feedback once the comp feedback has been released
+    [Documentation]  IFS-3542
+    [Tags]
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
-    And the user clicks the button/link       jQuery=section:contains(Previous) h3:contains(Neural network)
-    And The user should not see the element   jQuery=div:contains(message alert)
+    When the user clicks the button/link      jQuery=section:contains("Previous") h3:contains("Neural network")
+    Then the user should not see the element  jQuery=div:contains("message alert")
 
 *** Keywords ***
 Custom Suite Setup
@@ -372,11 +376,12 @@ the user checks for Manage interview panel key statistics
 
 the user selects and marks applications as successful
     the user selects the checkbox         select-all-1
-    the user clicks the button/link       jQuery=button:contains(Successful)
+    the user clicks the button/link       jQuery=button:contains("Successful")
     the user clicks the button/link       css=a.link-back
 
 the user sends emails about funding decision
-    the user clicks the button/link       css=button.button.button-notification.extra-margin-top
+    the user selects the checkbox         select-all-1
+    the user clicks the button/link       css=button.button.button-notification.extra-margin-top   #Assessor clicks 'Write and send emails'
     the user enters text to a text field  css=.editor  Funding decision Notification email text
     the user clicks the button/link       jQuery=ul:contains("") ~ button:contains("Send email to all applicants")
     the user clicks the button/link       jQuery=.send-to-all-applicants-modal .button:contains("Send email to all applicants")
