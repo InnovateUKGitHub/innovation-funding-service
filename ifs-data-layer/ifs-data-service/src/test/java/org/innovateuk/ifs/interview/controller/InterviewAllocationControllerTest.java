@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationPageResource;
-import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
-import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
+import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.junit.Test;
@@ -24,6 +21,7 @@ import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsRes
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResourceBuilder.newInterviewApplicationPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationResourceBuilder.newInterviewApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewNotifyAllocationResourceBuilder.newInterviewNotifyAllocationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewResourceBuilder.newInterviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -95,6 +93,24 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .andExpect(content().json(toJson(expectedPageResource)));
 
         verify(interviewAllocationServiceMock, only()).getAllocatedApplications(competitionId, userId, pageable);
+    }
+
+    @Test
+    public void getAllocatedApplicationsByAssessorId() throws Exception {
+        long competitionId = 1L;
+        long userId = 2L;
+
+        List<InterviewResource> expectedInterviewResources = newInterviewResource()
+                .build(2);
+
+        when(interviewAllocationServiceMock.getAllocatedApplicationsByAssessorId(competitionId, userId))
+                .thenReturn(serviceSuccess(expectedInterviewResources));
+
+        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications-assessorId/{userId}", competitionId, userId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedInterviewResources)));
+
+        verify(interviewAllocationServiceMock, only()).getAllocatedApplicationsByAssessorId(competitionId, userId);
     }
 
     @Test
