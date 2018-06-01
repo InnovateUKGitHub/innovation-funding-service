@@ -46,6 +46,7 @@ import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxy;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -316,8 +317,4 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         return (DefaultRestTemplateAdaptor) unwrapProxy(applicationContext.getBean(DefaultRestTemplateAdaptor.class));
     }
 
-
-    private static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {
-        return new ParameterizedTypeReference<List<ProcessRoleResource>>() {};
-    }
 }

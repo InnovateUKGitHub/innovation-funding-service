@@ -2,7 +2,6 @@ package org.innovateuk.ifs.commons.rest;
 
 
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -40,7 +39,7 @@ public class RestResultTest {
     public void testAggregateFailureAndSuccess() {
         final List<RestResult<String>> fails = asList("1", "2", "3").stream().map(i -> RestResult.<String>restFailure(new Error(i, HttpStatus.INTERNAL_SERVER_ERROR))).collect(toList());
         final List<RestResult<String>> success = asList("1", "2", "3").stream().map(RestResult::restSuccess).collect(toList());
-        final List<RestResult<String>> successAndFails = CollectionFunctions.combineLists(success, fails);
+        final List<RestResult<String>> successAndFails = combineLists(success, fails);
         final RestResult<List<String>> RestResult = aggregate(successAndFails); // Method under test
         // A fail should result in a fail being returned.
         assertTrue(RestResult.isFailure());

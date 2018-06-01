@@ -6,7 +6,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile 'org.jsoup:jsoup:1.10.2'
     compile 'net.bytebuddy:byte-buddy:1.7.11'
-    compile project(":ifs-resources") //TODO still needed?
+    compile project(":ifs-resources")
     compile project(":ifs-rest-util")
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')

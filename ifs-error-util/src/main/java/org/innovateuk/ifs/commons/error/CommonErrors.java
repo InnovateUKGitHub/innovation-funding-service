@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.commons.error;
 
 import org.apache.commons.io.FileUtils;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
@@ -44,11 +43,11 @@ public final class CommonErrors {
     }
 
     public static Error unsupportedMediaTypeByNameError(List<String> validMediaTypes) {
-        return new Error(UNSUPPORTED_MEDIA_TYPE, singletonList(CollectionFunctions.simpleJoiner(validMediaTypes, ", ")), UNSUPPORTED_MEDIA_TYPE);
+        return new Error(UNSUPPORTED_MEDIA_TYPE, singletonList(simpleJoiner(validMediaTypes, ", ")), UNSUPPORTED_MEDIA_TYPE);
     }
 
     public static Error unsupportedMediaTypeError(List<MediaType> validMediaTypes) {
-        return unsupportedMediaTypeByNameError(CollectionFunctions.simpleMap(validMediaTypes, Object::toString));
+        return unsupportedMediaTypeByNameError(simpleMap(validMediaTypes, Object::toString));
     }
 
     public static Error badRequestError(String errorKey) {
