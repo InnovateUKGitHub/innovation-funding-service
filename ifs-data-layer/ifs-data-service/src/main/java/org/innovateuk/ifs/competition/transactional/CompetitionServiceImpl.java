@@ -39,6 +39,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.repository.CompetitionRepository.EOI_COMPETITION_TYPE;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -83,12 +84,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private PublicContentService publicContentService;
 
     @Autowired
-    private CompetitionKeyStatisticsService competitionKeyStatisticsService;
+    private CompetitionKeyApplicationStatisticsService competitionKeyApplicationStatisticsService;
 
     @Autowired
     private MilestoneService milestoneService;
-
-    private static final String EOI = "Expression of interest";
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -158,7 +157,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             }
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
-                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
+                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI_COMPETITION_TYPE))
                             .collect(Collectors.toList())),
                     this::searchResultFromCompetition));
         });
@@ -286,8 +285,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> releaseFeedback(long competitionId) {
-        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
-                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+        CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
@@ -301,8 +300,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> manageInformState(long competitionId) {
-        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
-                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+        CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);

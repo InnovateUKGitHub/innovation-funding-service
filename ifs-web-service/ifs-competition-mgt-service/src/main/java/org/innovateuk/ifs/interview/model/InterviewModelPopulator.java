@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.interview.model;
 
-
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.interview.viewmodel.InterviewViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +18,12 @@ public class InterviewModelPopulator {
     private CompetitionService competitionService;
 
     @Autowired
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     public InterviewViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        InterviewStatisticsResource interviewStatisticsResource = competitionKeyStatisticsRestService.getInterviewStatisticsByCompetition(competitionId).getSuccess();
+        InterviewStatisticsResource interviewStatisticsResource = competitionKeyApplicationStatisticsRestService
+                .getInterviewStatisticsByCompetition(competitionId).getSuccess();
         return new InterviewViewModel(
                 competition.getId(),
                 competition.getName(),

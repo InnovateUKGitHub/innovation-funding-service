@@ -16,9 +16,9 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
-import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
@@ -61,7 +61,7 @@ import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyApplicationStatisticsResourceBuilder.newCompetitionFundedKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -107,7 +107,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     private ApplicationFundingDecisionService applicationFundingDecisionService;
 
     @Mock
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     @Mock
     private AssessmentRestService assessmentRestService;
@@ -116,7 +116,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     public static final Long APPLICATION_ID_ONE = 1L;
     public static final Long APPLICATION_ID_TWO = 2L;
 
-    CompetitionResource competitionResource;
+    private CompetitionResource competitionResource;
 
     @Override
     @Before
@@ -146,8 +146,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
         when(applicationSummaryRestService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, of(filter), sendFilter, fundingFilter)).thenReturn(restSuccess(applicationSummaryPageResource));
 
-        CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
-        when(competitionKeyStatisticsRestService.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
+        CompetitionFundedKeyApplicationStatisticsResource keyStatistics = newCompetitionFundedKeyApplicationStatisticsResource().build();
+        when(competitionKeyApplicationStatisticsRestService.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
         when(assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, COMPETITION_ID)).thenReturn(restSuccess(changesSinceLastNotify));
 
         // Expected values to match against
