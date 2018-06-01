@@ -62,8 +62,6 @@ public abstract class RootUnitTestMocksTest extends BaseTest {
     @Mock
     protected FinanceUtil financeUtilMock;
 
-    @Mock
-    protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock
     protected LoggedInUserSupplier loggedInUserSupplierMock;
