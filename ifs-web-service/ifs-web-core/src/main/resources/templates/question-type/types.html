@@ -32,18 +32,19 @@
     <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? form-group-error">
 
         <th:block th:if="${!model.assignButtonsViewModel.currentUserIsLead}">
-            <th:block th:unless="${model.complete or model.closed}">
+            <th:block th:unless="${model.complete or model.closed or model.summary}">
                 <div class="assign-container" th:classappend="${model.assignButtonsViewModel.assignedToCurrentUser} ? 'assign-alert' : 'assigned-alert'">
                     <th:block th:insert="question-type/form-elements :: current-assignee (${model.assignButtonsViewModel})"/>
                 </div>
             </th:block>
         </th:block>
 
-        <th:block th:if="${!model.closed and !model.assignButtonsViewModel.hideAssignButtons and model.assignButtonsViewModel.currentUserIsLead}">
+        <th:block
+            th:if="${!model.closed and !model.summary and !model.assignButtonsViewModel.hideAssignButtons and model.assignButtonsViewModel.currentUserIsLead}">
             <th:block th:insert="question-type/form-elements :: assign-buttons-dialog (${model.assignButtonsViewModel})" th:with="fullButtonText=${TRUE}"/>
         </th:block>
 
-        <div th:unless="${model.closed}" class="textarea-header">
+        <div th:unless="${model.closed or model.summary}" class="textarea-header">
 
             <th:block th:if="${model.complete}">
                 <div class="success-alert assignee extra-margin-bottom">
@@ -56,18 +57,18 @@
         <label class="form-label form-label-bold"
                th:for="formInput[__${formInput.id}__]"
                th:id="'form-label-'+${formInput.id}">
-            <th:block th:if="${model.closed}">
+            <th:block th:if="${model.closed or model.summary}">
                 <span class="heading-small" th:if="${question.name} and ${question.name != 'Project summary'} and ${question.name != 'Public description'}"
                       th:text="${question.name}" />
             </th:block>
-            <th:block th:unless="${model.closed}">
+            <th:block th:unless="${model.closed or model.summary}">
               <span class="heading-small" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
               <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
             </th:block>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
 
-        <th:block th:unless="${model.closed}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:unless="${model.closed or model.summary}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:unless="${hideDetails}" th:insert="question-type/form-elements :: form-textarea-wrapped(${model})" />
         <th:block th:if="${hideDetails}" th:insert="question-type/form-elements :: form-text-only(${model})" />
     </div>
@@ -167,7 +168,7 @@
 
     <!-- ===========================Form: application_team =========================== -->
 
-    <th:block th:fragment="application_team(model)">
+    <th:block th:fragment="application_team (model, question)">
 
         <th:block th:each="organisation : ${model.organisations}">
 
@@ -199,6 +200,11 @@
                 </tr>
                 </tbody>
             </table>
+            <!-- TODO IFS-3612 What should appIsClosed be? -->
+            <th:block
+                th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question},appIsClosed=${false})"/>
+            <th:block th:if="${model.summary}"
+                      th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question},appIsClosed=${false})"/>
         </th:block>
     </th:block>
 

@@ -199,9 +199,9 @@
             </div>
         </div>
     </th:block>
-    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})"/>
+    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model},${model.question})"/>
     <th:block th:if="${model.summary and model.readonly and model.assignButtonsViewModel.currentUserIsLead}"
-              th:insert="question-type/form-elements :: form-edit-question-button (${model})"/>
+              th:insert="question-type/form-elements :: form-edit-question-button (${model},${model.question})"/>
 </th:block>
 
 </html>

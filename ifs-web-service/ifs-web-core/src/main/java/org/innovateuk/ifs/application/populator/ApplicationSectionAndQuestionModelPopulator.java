@@ -139,7 +139,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
         model.addAttribute("formInputViewModels", formInputViewModels);
         formInputViewModels.values().forEach(viewModel -> {
-            viewModel.setClosed(true);
+            viewModel.setClosed(!(competition.isOpen() && application.isOpen()));
             viewModel.setReadonly(true);
             viewModel.setSummary(true);
         });
