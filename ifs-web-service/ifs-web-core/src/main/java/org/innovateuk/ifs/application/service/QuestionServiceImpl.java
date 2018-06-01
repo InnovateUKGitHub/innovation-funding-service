@@ -61,6 +61,11 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRestService.findByCompetition(competitionId).getSuccess();
     }
 
+//    @Override
+//    public List<QuestionResource> findByCompetitionForCompAdmin(Long competitionId) {
+//        return questionRestService.findByCompetitionForCompAdmin(competitionId).getSuccess();
+//    }
+
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
         return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccess());

@@ -232,11 +232,13 @@
 
                     <th:block th:if="${model.assignButtonsViewModel.currentUserIsLead}">
                         <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-                        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})" />
+                        <th:block
+                            th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model},${model.question})" />
                     </th:block>
 
                     <!--/* if  readonly we show the edit form button */-->
-                    <th:block th:if="${readonly} and ${model.assignButtonsViewModel.assignedToCurrentUser}" th:insert="question-type/form-elements :: form-edit-question-button (${model})" />
+                    <th:block th:if="${readonly} and ${model.assignButtonsViewModel.assignedToCurrentUser}"
+                              th:insert="question-type/form-elements :: form-edit-question-button (${model},${model.question})" />
 
                 </th:block>
             </div>
@@ -435,20 +437,20 @@
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<th:block th:fragment="form-mark-as-complete-buttons (model)" th:with="formInput=${model.formInput}, question=${model.question}, compIsClosed=${model.assignButtonsViewModel.currentCompetitionIsClosed}">
-    <th:block th:unless="${appIsClosed or compIsClosed}">
+<th:block th:fragment="form-mark-as-complete-buttons (model, question)">
+    <th:block th:unless="${model.closed}">
         <button th:if="${model.complete and !model.summary}"
                 type="submit"
                 name="mark_as_incomplete"
-                th:value="${question.getId()}"
+                th:value="${question.id}"
                 class="buttonlink">Edit
         </button>
-        <button th:if="${!model.complete and model.assignButtonsViewModel.assignedToCurrentUser}"
+        <button th:if="${!model.complete and model.canMarkAsComplete}"
             id="application-question-complete"
             type="submit"
             name="mark_as_complete"
             class="buttonlink"
-            th:value="${question.getId()}">Mark as complete
+            th:value="${question.id}">Mark as complete
         </button>
     </th:block>
 </th:block>
@@ -458,7 +460,7 @@
 <th:block th:fragment="form-mark-all-as-complete-buttons">
     <th:block th:unless="${appIsClosed}">
         <button th:unless="${readonly}"
-                th:if="${!completedSections?.contains(currentSection.getId())}"
+                th:if="${!completedSections?.contains(currentSection.id)}"
                 type="submit"
                 name="mark_section_as_complete"
                 th:value="${currentSection.getId()}"
@@ -466,7 +468,7 @@
                 th:class="button">Mark all as complete
         </button>
         <button th:unless="${readonly}"
-                th:if="${completedSections?.contains(currentSection.getId())}"
+                th:if="${completedSections?.contains(currentSection.id)}"
                 type="submit"
                 name="mark_section_as_incomplete"
                 th:value="${currentSection.getId()}"
@@ -478,13 +480,13 @@
 
 <!-- ========================= edit link =========================== -->
 
-<th:block th:fragment="form-edit-question-button (model)" th:with="formInput=${model.formInput}, question=${model.question}, compIsClosed=${model.assignButtonsViewModel.currentCompetitionIsClosed}">
+<th:block th:fragment="form-edit-question-button (model, question)">
     <button class="buttonlink"
             type="submit"
             name="edit_question"
-            th:unless="${appIsClosed or compIsClosed}"
+            th:unless="${model.closed}"
             th:value="${question.id}"
-            th:attrappend="formaction='/application/'+${model.application.id}+'/form/question/edit/'+${question.id}"
+            th:attrappend="formaction='/application/'+${model.applicationId}+'/form/question/edit/'+${question.id}"
             th:text="${model.summary ? 'Return and edit' : 'Edit'}" />
 </th:block>
 

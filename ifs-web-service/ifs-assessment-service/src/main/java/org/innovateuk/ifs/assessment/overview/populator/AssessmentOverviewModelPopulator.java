@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
 import org.apache.commons.io.FileUtils;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionRestService;
@@ -15,9 +14,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +65,14 @@ public class AssessmentOverviewModelPopulator {
     public AssessmentOverviewViewModel populateModel(long assessmentId) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionService.getById(assessment.getCompetition());
-        List<QuestionResource> questions = questionService.findByCompetition(assessment.getCompetition());
 
+        // TODO: IFS-3088 - rather than filtering here, consider pushing logic down to a data layer call that only fetches assessor-allowed questions
+        List<QuestionResource> questions = questionService.findByCompetition(assessment.getCompetition());
+        List<QuestionResource> assessorViewQuestions = questions
+                .stream()
+                // TODO: Do we need an 'is assessed' flag on questions? or is using this 'lead applicant only' type sufficient?
+                .filter(question -> question.getType() != QuestionType.LEAD_ONLY)
+                .collect(toList());
 
         return new AssessmentOverviewViewModel(assessmentId,
                 assessment.getApplication(),
@@ -77,8 +80,8 @@ public class AssessmentOverviewModelPopulator {
                 assessment.getCompetition(),
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
-                getSections(assessment, questions),
-                getAppendices(assessment.getApplication(), questions)
+                getSections(assessment, assessorViewQuestions),
+                getAppendices(assessment.getApplication(), assessorViewQuestions)
         );
     }
 
@@ -91,7 +94,8 @@ public class AssessmentOverviewModelPopulator {
 
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
         return simpleMap(sections, sectionResource -> {
-            List<QuestionResource> sectionQuestions = sectionResource.getQuestions().stream()
+            List<QuestionResource> sectionQuestions = sectionResource.getGeneralQuestions()
+                    .stream()
                     .map(questionsMap::get)
                     .collect(toList());
 

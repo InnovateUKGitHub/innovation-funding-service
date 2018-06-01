@@ -2,10 +2,10 @@ package org.innovateuk.ifs.form.resource;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public class SectionResource {
     private Long id;
@@ -16,6 +16,8 @@ public class SectionResource {
     private Boolean questionGroup;
     private Long competition;
     private List<Long> questions = new ArrayList<>();
+    private List<Long> leadQuestions = new ArrayList<>();
+    private List<Long> generalQuestions = new ArrayList<>();
     private Long parentSection;
     private List<Long> childSections;
     private Boolean displayInAssessmentApplicationSummary = false;
@@ -127,4 +129,19 @@ public class SectionResource {
     public void setType(SectionType type) {
 		this.type = type;
 	}
+
+    public List<Long> getLeadQuestions() {
+        return leadQuestions;
+    }
+    public void setLeadQuestions(List<Long> questions) {
+        this.leadQuestions = questions;
+    }
+
+    public List<Long> getGeneralQuestions() {
+        return generalQuestions;
+    }
+    public void setGeneralQuestions(List<Long> questions) {
+        this.generalQuestions = questions;
+    }
+
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.form.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -78,6 +80,19 @@ public class Section implements Comparable<Section> {
         return combineLists(questions, flattenLists(allChildQuestions));
     }
 
+    /**
+     * Get questions of type LEAD_ONLY
+     */
+    public List<Question> getLeadQuestions() {
+        return questions.stream().filter(question -> question.isType(QuestionType.LEAD_ONLY)).collect(Collectors.toList());
+    }
+
+    /**
+     * Get questions not of type GENERAL
+     */
+    public List<Question> getGeneralQuestions() {
+        return questions.stream().filter(question -> !question.isType(QuestionType.LEAD_ONLY)).collect(Collectors.toList());
+    }
 
     public Long getId() {
         return id;
@@ -192,10 +207,10 @@ public class Section implements Comparable<Section> {
     }
     
     public void setType(SectionType type) {
-		this.type = type;
-	}
+        this.type = type;
+    }
     
     public SectionType getType() {
-		return type;
-	}
+        return type;
+    }
 }

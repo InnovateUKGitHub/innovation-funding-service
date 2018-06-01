@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -65,6 +66,9 @@ public class ApplicationQuestionController {
 
     @Autowired
     private ApplicantRestService applicantRestService;
+
+    @Autowired
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
@@ -129,24 +133,10 @@ public class ApplicationQuestionController {
         if (params.containsKey(EDIT_QUESTION)) {
             return handleEditQuestion(form, model, applicationId, questionId, user);
         } else {
-            if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-                questionService.assignQuestion(applicationId, user, request);
-                cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-            }
+            handleAssignedQuestions(applicationId, user, request, response);
 
             // First check if any errors already exist in bindingResult
-            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
-                /* Start save action */
-                errors = applicationSaver.saveApplicationForm(
-                        applicationId,
-                        form,
-                        questionId,
-                        user.getId(),
-                        request,
-                        response,
-                        Optional.empty()
-                );
-            }
+            checkErrorsInForm(form, applicationId, questionId, user.getId(), request, response);
 
             model.addAttribute("form", form);
 
@@ -155,11 +145,113 @@ public class ApplicationQuestionController {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
                 populateShowQuestion(user, applicationId, questionId, model, form);
+                // TODO 3088: return APPLICATION_FORM or APPLICATION_FORM_LEAD based on questionIype
                 return APPLICATION_FORM;
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
         }
+    }
+
+    @GetMapping(value = {QUESTION_URL + "application_details/" + "{" + QUESTION_ID + "}"})
+    public String showApplicationDetails(
+            @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @PathVariable(APPLICATION_ID) final Long applicationId,
+            @PathVariable(QUESTION_ID) final Long questionId,
+            @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
+            UserResource user,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        markAsComplete.ifPresent(markAsCompleteSet -> {
+            if (markAsCompleteSet) {
+                ValidationMessages errors = applicationSaver.saveApplicationForm(
+                        applicationId,
+                        form,
+                        questionId,
+                        user.getId(),
+                        request,
+                        response,
+                        Optional.of(Boolean.TRUE)
+                );
+                validationHandler.addAnyErrors(errors);
+            }
+        });
+
+        populateShowQuestion(user, applicationId, questionId, model, form);
+
+        return APPLICATION_FORM_LEAD;
+    }
+
+    @GetMapping(value = {QUESTION_URL + "application_team/" + "{" + QUESTION_ID + "}"})
+    public String showApplicationTeam(
+            @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @PathVariable(APPLICATION_ID) final Long applicationId,
+            @PathVariable(QUESTION_ID) final Long questionId,
+            @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
+            UserResource user,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+
+        markAsComplete.ifPresent(markAsCompleteSet -> {
+            if (markAsCompleteSet) {
+                ValidationMessages errors = applicationSaver.saveApplicationForm(
+                        applicationId,
+                        form,
+                        questionId,
+                        user.getId(),
+                        request,
+                        response,
+                        Optional.of(Boolean.TRUE)
+                );
+                validationHandler.addAnyErrors(errors);
+            }
+        });
+
+        populateShowQuestion(user, applicationId, questionId, model, form);
+        model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateModel(applicationId, user.getId()));
+
+        return APPLICATION_FORM_LEAD;
+    }
+
+    private void handleAssignedQuestions(Long applicationId,
+                                         UserResource user,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
+            questionService.assignQuestion(applicationId, user, request);
+            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+        }
+    }
+
+    private ValidationMessages checkErrorsInForm(ApplicationForm form,
+                                                 Long applicationId,
+                                                 Long questionId,
+                                                 Long userId,
+                                                 HttpServletRequest request,
+                                                 HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+        if (isAllowedToUpdateQuestion(questionId, applicationId, userId) || isMarkQuestionRequest(params)) {
+                /* Start save action */
+            return applicationSaver.saveApplicationForm(
+                    applicationId,
+                    form,
+                    questionId,
+                    userId,
+                    request,
+                    response,
+                    Optional.empty()
+            );
+        }
+        return null;
     }
 
     private boolean hasErrors(HttpServletRequest request, ValidationMessages errors, BindingResult bindingResult) {

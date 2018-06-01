@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -48,9 +49,19 @@ public class ApplicationTeamModelPopulator {
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
+        boolean closed = !isCompetitionOpen(applicationResource);
+        // TODO IFS-3612
+        boolean complete = false;
+        boolean canMarkAsComplete = userIsLeadApplicant;
         return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
-                userIsLeadApplicant, applicationCanBegin);
+                userIsLeadApplicant, applicationCanBegin, closed, complete, canMarkAsComplete);
+    }
+
+    public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId) {
+        ApplicationTeamViewModel model = populateModel(applicationId, loggedInUserId);
+        model.setSummary(true);
+        return model;
     }
 
     private boolean isApplicationStateCreated(ApplicationResource applicationResource) {
@@ -129,6 +140,10 @@ public class ApplicationTeamModelPopulator {
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         return userService.findById(leadApplicantProcessRole.getUser());
+    }
+
+    private boolean isCompetitionOpen(ApplicationResource applicationResource) {
+        return CompetitionStatus.OPEN == applicationResource.getCompetitionStatus();
     }
 
     private OrganisationResource getLeadOrganisation(long applicationId) {

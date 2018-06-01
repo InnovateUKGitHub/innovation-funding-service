@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="application_details(model)" th:with="formInput=${model.formInput}, question=${model.question}, competition=${model.competition}">
+    <th:block th:unless="${model.readonly}">
+        <!--/* start of edit template */-->
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'form-group-error'">
+            <label for="application.name">
+                <span class="form-label form-label-bold">Application title</span>
+                <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
+                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
+            </label>
+            <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+            <input class="form-control width-full"
+                   type="text"
+                   id="application.name"
+                   th:field="*{__application.name__}"
+                   th:attr="data-required-errormessage=#{validation.project.name.must.not.be.empty}"
+                   required="required"
+                   th:errorclass="field-error" />
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'form-group-error'">
+            <fieldset>
+                <legend id="application.startDate">
+                    <span class="heading-medium">Estimated timescales</span>
+                    <span class="form-hint">When do you wish to start your project?</span>
+                    <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
+                </legend>
+                <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
+            </fieldset>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'form-group-error'">
+            <label for="application.durationInMonths" class="form-label">
+                <span>Duration in months</span>
+                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
+            </label>
+            <input class="form-control width-extra-small"
+                   id="application.durationInMonths"
+                   th:field="*{__application.durationInMonths__}"
+                   th:errorclass="form-control-error"
+                   type="number"
+                   required="required"
+                   th:attr="data-range-min=${competition.minProjectDuration},
+                                data-range-max=${competition.maxProjectDuration},
+                                data-range-errormessage=#{validation.project.duration.input.invalid(${competition.minProjectDuration}, ${competition.maxProjectDuration})}" />
+        </div>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'form-group-error'">
+            <label for="application.researchCategory">
+                <span class="heading-medium">Research category</span>
+                <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
+                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
+            </label>
+            <div th:if="${model.researchCategoryHasBeenSelected}">
+                Chosen research category: <th:block th:text="${model.selectedResearchCategoryName}"/>
+
+                <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
+                <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>
+            </div>
+            <button id="application.researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
+                <span th:text="${model.researchCategoryText}">Choose your research category</span>
+            </button>
+        </div>
+
+        <div class="form-group"
+             th:if="${model.canSelectInnovationArea}"
+             th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'form-group-error'">
+
+            <label for="researchArea">
+                <span class="heading-medium">Innovation area</span>
+                <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
+                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.innovationArea')" />
+            </label>
+            <div th:if="${model.innovationAreaHasBeenSelected}">
+                Chosen innovation area:
+                <th:block th:unless="${model.noInnovationAreaApplicable}" th:text="${model.selectedInnovationAreaName}"/>
+                <th:block th:if="${model.noInnovationAreaApplicable}" th:text="#{ifs.application.no_innovation_area}"/>
+            </div>
+            <button id="researchArea" class="buttonlink" name="submit-section-redirect"
+                    th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit"
+                    th:text="${model.innovationAreaText}">
+                Choose your innovation area
+            </button>
+        </div>
+        <!--/* Input is used here to easily check if a Innovation Area has been selected for mark as complete validation */-->
+        <input type="hidden" th:if="${model.innovationAreaHasBeenSelected}" th:field="*{__application.innovationArea.name__}" value="Innovation area name has been selected"/>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'form-group-error'">
+            <fieldset>
+                <legend id="application.resubmission">
+                    <span class="form-label form-label-bold">Is this application a resubmission?</span>
+                    <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
+                </legend>
+                <div class="multiple-choice" data-target="resubmission-details">
+                    <input type="radio"
+                           id="application.resubmission-yes"
+                           th:field="*{__application.resubmission__}"
+                           value="true"
+                           required="required"
+                           th:checked="${model.application.resubmission != null and model.application.resubmission}"
+                           th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                    <label for="application.resubmission-yes">
+                        Yes
+                    </label>
+                </div>
+                <div class="multiple-choice">
+                    <input type="radio"
+                           id="application.resubmission-no"
+                           th:field="*{__application.resubmission__}"
+                           value="false"
+                           required="required"
+                           th:checked="${model.application.resubmission != null and !model.application.resubmission}"
+                           th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                    <label for="application.resubmission-no">
+                        No
+                    </label>
+                </div>
+            </fieldset>
+        </div>
+        <div id="resubmission-details">
+            <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
+                <h2 class="heading-medium no-margin-top">Please provide the details of this previous application</h2>
+                <label for="application.previousApplicationNumber">
+                    <span class="form-label form-label-bold">Previous application number</span>
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />
+                </label>
+                <input class="form-control width-full"
+                       type="text"
+                       id="application.previousApplicationNumber"
+                       th:field="*{__application.previousApplicationNumber__}"
+                       required="required"
+                       th:errorclass="form-control-error"
+                       th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'form-group-error'">
+                <label for="application.previousApplicationTitle">
+                    <span class="form-label form-label-bold">Previous application title</span>
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
+                </label>
+                <input class="form-control width-full"
+                       type="text"
+                       id="application.previousApplicationTitle"
+                       th:field="*{__application.previousApplicationTitle__}"
+                       required="required"
+                       th:errorclass="form-control-error"
+                       th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
+            </div>
+        </div>
+    </th:block>
+    <!--/* end of edit template */-->
+    <th:block th:if="${model.readonly}">
+        <th:block th:if="${model.complete}">
+            <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
+        </th:block>
+
+        <div class="grid-row">
+            <div class="column-half">
+                <dl class="font-xsmall">
+                    <dt>Competition name</dt>
+                    <dd th:text="${competition.name}"></dd>
+                    <dt>When do you wish to start your project?</dt>
+                    <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
+                    <dd th:unless="${model.application.startDate}"><span class="invisible">Not specified</span></dd>
+                    <dt>Duration in months</dt>
+                    <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
+                    <dt>Research category</dt>
+                    <dd th:text="${model.application.researchCategory.name}"></dd>
+                    <dd th:unless="${model.application.researchCategory.name}"><span class="invisible">Not specified</span></dd>
+                    <dt>Innovation area</dt>
+                    <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
+                    <th:block th:unless="${model.application.resubmission == null}">
+                        <dt>Is this application a resubmission?</dt>
+                        <dd th:text="${model.application.resubmission ? 'Yes' : 'No'}"></dd>
+                        <th:block th:if="${model.application.resubmission == true}">
+                            <dt>Previous application number</dt>
+                            <dd th:text="${model.application.previousApplicationNumber}"></dd>
+                            <dt>Previous application title</dt>
+                            <dd th:text="${model.application.previousApplicationTitle}"></dd>
+                        </th:block>
+                    </th:block>
+                </dl>
+            </div>
+            <div class="column-half">
+                <th:block th:if="${showApplicationTeamLink}">
+                    <ul class="list list-bullet">
+                        <li>
+                            <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}">
+                                view contributors and collaborators
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}">
+                                view the grant terms and conditions
+                            </a>
+                        </li>
+                    </ul>
+                </th:block>
+            </div>
+        </div>
+    </th:block>
+    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model},${model.question})"/>
+    <th:block th:if="${model.summary and model.readonly and model.assignButtonsViewModel.currentUserIsLead}"
+              th:insert="question-type/form-elements :: form-edit-question-button (${model},${model.question})"/>
+</th:block>
+
+</html>

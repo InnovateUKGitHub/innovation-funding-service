@@ -6,8 +6,10 @@
       <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and !(currentApplication.isOpen() and isApplicant)}"/>
 
       <th:block th:each="question : ${sectionQuestions.get(section.id)}">
-          <div class="collapsible" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
-                                                    and !(currentApplication.isOpen() and isApplicant)}">
+          <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
+                                                    and !(currentApplication.isOpen() and isApplicant))
+                                             or (question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM
+                                                    and !isApplicant)}">
             <h3>
                 <th:block th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
                 <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
@@ -20,13 +22,28 @@
                     </div>
                 </th:block>
             </h3>
+
+            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
+                <div th:replace="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
+            </th:block>
+
             <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
-                 th:with="formInputIndex=(${status.index}), hideDetails=${hideDetails}, summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
+                 th:with="formInputIndex=(${status.index}), hideDetails=${hideDetails}, summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)},
+                            response=(${responses.get(formInput.getId())}),
+                            questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
                  th:id="'form-input-'+${formInput.getId()}">
 
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                    <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
-
+                    <th:block
+                        th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                        <div
+                            th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
+                    </th:block>
+                    <th:block
+                        th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                        <div
+                            th:replace="fragments/application-details :: application_details(${formInputViewModels.get(formInput.id)})" />
+                    </th:block>
                     <th:block th:if="${question.questionNumber!=null && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FILEUPLOAD}">
                         <th:block th:if="!${#lists.isEmpty(feedback)}">
                             <th:block th:each="item : ${feedback}">

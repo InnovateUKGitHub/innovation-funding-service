@@ -139,7 +139,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
         model.addAttribute("formInputViewModels", formInputViewModels);
         formInputViewModels.values().forEach(viewModel -> {
-            viewModel.setClosed(true);
+            viewModel.setClosed(!(competition.isOpen() && application.isOpen()));
             viewModel.setReadonly(true);
             viewModel.setSummary(true);
         });
@@ -247,7 +247,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
+        List<QuestionResource> questionResources = simpleFilter(questions, q -> questionIds.contains(q.getId()));
+        Collections.sort(questionResources);
+        return questionResources;
     }
 
     private Optional<SectionResource> getSection(List<SectionResource> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
