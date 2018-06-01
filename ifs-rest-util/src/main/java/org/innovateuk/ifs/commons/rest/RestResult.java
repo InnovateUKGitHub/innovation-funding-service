@@ -5,7 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
-import org.innovateuk.ifs.commons.error.exception.*;
+import org.innovateuk.ifs.commons.exception.*;
 import org.innovateuk.ifs.commons.exception.*;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
