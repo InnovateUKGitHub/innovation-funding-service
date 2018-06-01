@@ -46,26 +46,21 @@ task prepareDeployment(type: Copy) {
     }
 }
 
-
 task setDatabaseDefaults {
-    mustRunAfter prepareDeployment
-
     if (!project.hasProperty('DB_PORT')) {
         project.ext.DB_PORT = 3306
     }
 }
+prepareDeployment.mustRunAfter setDatabaseDefaults
 
 task setFinanceDataServiceSyncDefaults {
-    mustRunAfter prepareDeployment
-
     if (!project.hasProperty('DATA_SERVICE_PORT')) {
         project.ext.DATA_SERVICE_PORT = 8080
     }
 }
+prepareDeployment.mustRunAfter setFinanceDataServiceSyncDefaults
 
 task setDbResetDefaults {
-    mustRunAfter prepareDeployment
-
     if (!project.hasProperty('LDAP_PORT')) {
         project.ext.LDAP_PORT = 389
     }
@@ -74,6 +69,7 @@ task setDbResetDefaults {
         project.ext.ONLY_SYNC_LDAP = false
     }
 }
+prepareDeployment.mustRunAfter setDbResetDefaults
 
 
 task osDeployProduction(type: Exec, dependsOn: prepareDeployment) {
