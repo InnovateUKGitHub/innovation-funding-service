@@ -69,6 +69,7 @@ public class ApplicationAssessorSummaryController {
         this.applicationSummaryRestService = applicationSummaryRestService;
     }
 
+    @SecuredBySpring(value = "READ", description = "Assessors have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('assessor')")
     @GetMapping("/{applicationId}/assessor-summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,

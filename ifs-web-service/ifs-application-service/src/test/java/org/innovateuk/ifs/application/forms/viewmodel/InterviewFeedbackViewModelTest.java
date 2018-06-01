@@ -28,5 +28,9 @@ public class InterviewFeedbackViewModelTest {
         InterviewFeedbackViewModel collabWithoutResponse = new InterviewFeedbackViewModel(null, "feedback", false, false);
 
         assertThat(collabWithoutResponse.getBannerText(), is(equalTo(InterviewFeedbackViewModel.COLLAB_WITHOUT_RESPONSE_BANNER)));
+
+        InterviewFeedbackViewModel assessorWithResponse = new InterviewFeedbackViewModel("response", "feedback", false, true);
+
+        assertThat(assessorWithResponse.getBannerText(), is(equalTo(InterviewFeedbackViewModel.ASSESSOR_WITH_RESPONSE_BANNER)));
     }
 }
