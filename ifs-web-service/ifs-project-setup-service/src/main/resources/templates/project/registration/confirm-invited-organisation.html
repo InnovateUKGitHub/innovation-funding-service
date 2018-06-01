@@ -11,8 +11,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='heading-large'" />
 
-    <h2 class="heading-medium">Business organisation</h2>
-
+    <h2 class="heading-medium no-margin-bottom">Business organisation</h2>
     <fieldset>
         <legend class="visuallyhidden">Business organisation</legend>
         <div class="form-block">
@@ -20,17 +19,13 @@
             <p th:text="${organisation.name}">Nomensa</p>
             <h3 class="heading-small">Registration number</h3>
             <p th:text="${organisation.companyHouseNumber}">0123456789</p>
-
-
-            <div>
-                <h3 class="heading-small">Address</h3>
-                <div th:text="${organisationAddress?.addressLine1}"></div>
-                <div th:text="${organisationAddress?.addressLine2}"></div>
-                <div th:text="${organisationAddress?.addressLine3}"></div>
-                <div th:text="${organisationAddress?.town}"></div>
-                <div th:text="${organisationAddress?.county}"></div>
-                <div th:text="${organisationAddress?.postcode}"></div>
-            </div>
+            <h3 class="heading-small">Address</h3>
+            <div th:text="${organisationAddress?.addressLine1}"></div>
+            <div th:text="${organisationAddress?.addressLine2}"></div>
+            <div th:text="${organisationAddress?.addressLine3}"></div>
+            <div th:text="${organisationAddress?.town}"></div>
+            <div th:text="${organisationAddress?.county}"></div>
+            <div th:text="${organisationAddress?.postcode}"></div>
         </div>
     </fieldset>
 
