@@ -51,7 +51,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InviteAssessorsController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class InviteAssessorsController extends CompetitionManagementCookieController<AssessorSelectionForm> {
 
     private static final Log LOG = LogFactory.getLog(InviteAssessorsController.class);

@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.management.competition.viewmodel;
 
+import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.competition.resource.*;
 
 /**
@@ -18,10 +22,10 @@ public class CompetitionInFlightStatsViewModel {
     private boolean canReleaseFeedback = true;
 
     public CompetitionInFlightStatsViewModel() {
-
     }
 
-    public CompetitionInFlightStatsViewModel(CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource, CompetitionStatus competitionStatus) {
+    public CompetitionInFlightStatsViewModel(CompetitionReadyToOpenKeyAssessmentStatisticsResource
+                                                     keyStatisticsResource, CompetitionStatus competitionStatus) {
         this.statOne = keyStatisticsResource.getAssessorsInvited();
         this.statTwo = keyStatisticsResource.getAssessorsAccepted();
         this.canManageFundingNotifications = false;
@@ -29,31 +33,41 @@ public class CompetitionInFlightStatsViewModel {
         this.canReleaseFeedback = false;
     }
 
-    public CompetitionInFlightStatsViewModel(CompetitionOpenKeyStatisticsResource keyStatisticsResource, CompetitionStatus competitionStatus) {
-        this.statOne = keyStatisticsResource.getAssessorsInvited();
-        this.statTwo = keyStatisticsResource.getAssessorsAccepted();
-        this.statThree = keyStatisticsResource.getApplicationsPerAssessor();
-        this.statFour = keyStatisticsResource.getApplicationsStarted();
-        this.statFive = keyStatisticsResource.getApplicationsPastHalf();
-        this.statSix = keyStatisticsResource.getApplicationsSubmitted();
+    public CompetitionInFlightStatsViewModel(CompetitionOpenKeyApplicationStatisticsResource
+                                                     competitionOpenKeyApplicationStatisticsResource,
+                                             CompetitionOpenKeyAssessmentStatisticsResource
+                                                     competitionOpenKeyAssessmentStatisticsResource,
+                                             CompetitionStatus competitionStatus) {
+        this.statOne = competitionOpenKeyAssessmentStatisticsResource.getAssessorsInvited();
+        this.statTwo = competitionOpenKeyAssessmentStatisticsResource.getAssessorsAccepted();
+        this.statThree = competitionOpenKeyApplicationStatisticsResource.getApplicationsPerAssessor();
+        this.statFour = competitionOpenKeyApplicationStatisticsResource.getApplicationsStarted();
+        this.statFive = competitionOpenKeyApplicationStatisticsResource.getApplicationsPastHalf();
+        this.statSix = competitionOpenKeyApplicationStatisticsResource.getApplicationsSubmitted();
         this.canManageFundingNotifications = false;
         this.status = competitionStatus;
         this.canReleaseFeedback = false;
     }
 
-    public CompetitionInFlightStatsViewModel(CompetitionClosedKeyStatisticsResource keyStatisticsResource, CompetitionStatus competitionStatus) {
-        this.statOne = keyStatisticsResource.getApplicationsRequiringAssessors();
-        this.statTwo = keyStatisticsResource.getAssignmentCount();
-        this.statThree = keyStatisticsResource.getAssessorsWithoutApplications();
-        this.statFour = keyStatisticsResource.getAssessorsInvited();
-        this.statFive = keyStatisticsResource.getAssessorsAccepted();
-        this.statSix = keyStatisticsResource.getApplicationsPerAssessor();
+    public CompetitionInFlightStatsViewModel(CompetitionClosedKeyApplicationStatisticsResource
+                                                     competitionClosedKeyApplicationStatisticsResource,
+                                             CompetitionClosedKeyAssessmentStatisticsResource
+                                                     competitionClosedKeyAssessmentStatisticsResource,
+                                             CompetitionStatus competitionStatus) {
+        this.statOne = competitionClosedKeyApplicationStatisticsResource.getApplicationsRequiringAssessors();
+        this.statTwo = competitionClosedKeyApplicationStatisticsResource.getAssignmentCount();
+        this.statThree = competitionClosedKeyAssessmentStatisticsResource.getAssessorsWithoutApplications();
+        this.statFour = competitionClosedKeyAssessmentStatisticsResource.getAssessorsInvited();
+        this.statFive = competitionClosedKeyAssessmentStatisticsResource.getAssessorsAccepted();
+        this.statSix = competitionClosedKeyApplicationStatisticsResource.getApplicationsPerAssessor();
         this.canManageFundingNotifications = false;
         this.status = competitionStatus;
         this.canReleaseFeedback = false;
     }
 
-    public CompetitionInFlightStatsViewModel(CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource, CompetitionStatus competitionStatus) {
+    public CompetitionInFlightStatsViewModel(CompetitionInAssessmentKeyAssessmentStatisticsResource
+                                                     keyStatisticsResource,
+                                             CompetitionStatus competitionStatus) {
         this.statOne = keyStatisticsResource.getAssignmentCount();
         this.statTwo = keyStatisticsResource.getAssignmentsWaiting();
         this.statThree = keyStatisticsResource.getAssignmentsAccepted();
@@ -64,7 +78,8 @@ public class CompetitionInFlightStatsViewModel {
         this.canReleaseFeedback = false;
     }
 
-    public CompetitionInFlightStatsViewModel(CompetitionFundedKeyStatisticsResource keyStatisticsResource, CompetitionStatus competitionStatus) {
+    public CompetitionInFlightStatsViewModel(CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource,
+                                             CompetitionStatus competitionStatus) {
         this.statOne = keyStatisticsResource.getApplicationsSubmitted();
         this.statTwo = keyStatisticsResource.getApplicationsFunded();
         this.statThree = keyStatisticsResource.getApplicationsNotFunded();

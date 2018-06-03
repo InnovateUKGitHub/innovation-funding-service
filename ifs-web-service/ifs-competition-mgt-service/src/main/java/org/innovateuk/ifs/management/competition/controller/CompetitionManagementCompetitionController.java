@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.competition.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -31,6 +32,9 @@ public class CompetitionManagementCompetitionController {
     private CompetitionService competitionService;
 
     @Autowired
+    private AssessorRestService assessorRestService;
+
+    @Autowired
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Autowired
@@ -57,7 +61,7 @@ public class CompetitionManagementCompetitionController {
 
     @PostMapping("/{competitionId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
-        competitionPostSubmissionRestService.notifyAssessors(competitionId).getSuccess();
+        assessorRestService.notifyAssessors(competitionId).getSuccess();
         return "redirect:/competition/" + competitionId;
     }
 

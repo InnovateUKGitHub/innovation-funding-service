@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.assessment.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +18,13 @@ public class ManageAssessmentsModelPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyAssessmentStatisticsRestService competitionKeyAssessmentStatisticsRestService;
 
     public ManageAssessmentsViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        CompetitionInAssessmentKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccess();
+        CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatistics =
+                competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition
+                        (competitionId).getSuccess();
 
         return new ManageAssessmentsViewModel(competition, keyStatistics);
     }

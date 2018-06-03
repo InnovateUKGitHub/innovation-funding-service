@@ -9,6 +9,10 @@ import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import java.math.BigInteger;
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
+
 /**
  * Holder of model attributes for the Competition Management 'in flight' Dashboard
  */
@@ -49,8 +53,8 @@ public class CompetitionInFlightViewModel {
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
         this.readOnly = readOnly;
-        this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel();
-        this.interviewPanelEnabled = competitionResource.isHasInterviewStage();
+        this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel() != null ? competitionResource.isHasAssessmentPanel() : false;
+        this.interviewPanelEnabled = competitionResource.isHasInterviewStage() != null ? competitionResource.isHasInterviewStage() : false;
         this.assessorFinanceView = competitionResource.getAssessorFinanceView();
     }
 
@@ -107,11 +111,13 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isAssessmentPanelEnabled() {
-        return assessmentPanelEnabled;
+        return assessmentPanelEnabled && competitionStatus != READY_TO_OPEN &&
+                competitionStatus != OPEN && competitionStatus != ASSESSOR_FEEDBACK;
     }
 
     public boolean isInterviewPanelEnabled() {
-        return interviewPanelEnabled;
+        return interviewPanelEnabled && competitionStatus != READY_TO_OPEN &&
+                competitionStatus != OPEN && competitionStatus != ASSESSOR_FEEDBACK;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {

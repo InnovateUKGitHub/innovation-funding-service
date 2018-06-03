@@ -545,15 +545,23 @@ public class ApplicationNotificationServiceImplTest {
                 .withRole(Role.LEADAPPLICANT, Role.COLLABORATOR)
                 .buildArray(2, ProcessRole.class);
 
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .build();
+
         Application application = newApplication()
                 .withId(applicationId)
+                .withCompetition(competition)
                 .withProcessRoles(processRoles)
                 .build();
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "subject", subject,
                 "bodyPlain", message,
-                "bodyHtml", message
+                "bodyHtml", message,
+                "competitionName", competition.getName(),
+                "applicationId", application.getId(),
+                "applicationName", application.getName()
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;

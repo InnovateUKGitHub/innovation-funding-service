@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
@@ -71,7 +72,7 @@ public class SendNotificationsModelPopulatorTest {
         List<ApplicationSummaryResource> expectedApplications = Arrays.asList(application1, application3);
         Map<Long, FundingDecision> expectedDecisions = asMap(application1.getId(), ON_HOLD, application3.getId(), UNFUNDED);
 
-        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds);
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds, new NotificationEmailsForm());
 
         assertThat(viewModel.getCompetitionId(), is(equalTo(COMPETITION_ID)));
         assertThat(viewModel.getCompetitionName(), is(equalTo(COMPETITION_NAME)));

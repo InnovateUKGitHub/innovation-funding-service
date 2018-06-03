@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
+import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -29,7 +29,7 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyAssessmentStatisticsRestService competitionKeyAssessmentStatisticsRestService;
 
     @Test
     public void populateModel() throws Exception {
@@ -47,7 +47,7 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
                 .withName(expectedCompetitionName)
                 .withCompetitionStatus(expectedCompetitionStatus)
                 .build();
-        CompetitionInAssessmentKeyStatisticsResource statisticsResource = newCompetitionInAssessmentKeyStatisticsResource()
+        CompetitionInAssessmentKeyAssessmentStatisticsResource statisticsResource = newCompetitionInAssessmentKeyAssessmentStatisticsResource()
                 .withAssignmentCount(expectedAssignmentCount)
                 .withAssignmentsWaiting(expectedAssignmentsWaiting)
                 .withAssignmentsAccepted(expectedAssignmentsAccepted)
@@ -56,7 +56,7 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
                 .build();
 
         when(competitionRestService.getCompetitionById(expectedCompetitionId)).thenReturn(restSuccess(competitionResource));
-        when(competitionKeyStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(expectedCompetitionId)).thenReturn(restSuccess(statisticsResource));
+        when(competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(expectedCompetitionId)).thenReturn(restSuccess(statisticsResource));
 
         ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource);
 

@@ -47,7 +47,7 @@ public class CompetitionManagementSendIneligibleController {
         if (applicationResource.getApplicationState() != INELIGIBLE) {
             return getRedirect(applicationResource);
         }
-        model.addAttribute("model", informIneligibleModelPopulator.populateModel(applicationResource));
+        model.addAttribute("model", informIneligibleModelPopulator.populateModel(applicationResource, form));
         return "competition/inform-ineligible";
     }
 

@@ -2,10 +2,12 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.application.populator.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -18,6 +20,8 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can manage assessment applications", securedType = AssessmentApplicationsController.class)
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT_APPLICATIONS')")
 public class AssessmentApplicationsController extends BaseAssessmentController<ApplicationCountSummaryPageResource> {
 
     @Autowired
