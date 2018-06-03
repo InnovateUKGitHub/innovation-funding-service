@@ -97,6 +97,8 @@
                        th:id="|formInput[${formInput.id}]|"
                        th:name="'formInput['+${formInput.id}+']'"
                        th:value="*{formInput[__${formInput.id}__]}"
+                       pattern="[0-9]"
+                       data-prevent-input-regex="[^0-9]"
                        required="required"
                        min="0"
                        type="number" />
