@@ -100,7 +100,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     }
 
     private String getFundingDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
-        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(competitionId, applicationIds);
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(competitionId, applicationIds, form);
         if (viewModel.getApplications().isEmpty()) {
             return "redirect:" + getManageFundingApplicationsPage(competitionId);
         }
