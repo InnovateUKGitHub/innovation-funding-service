@@ -42,12 +42,12 @@
             </tr>
             </tbody>
         </table>
-
-        <th:block
-            th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})"/>
-        <th:block th:if="${model.summary}"
-            th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
     </th:block>
+
+    <th:block
+        th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})"/>
+    <th:block th:if="${model.summary}"
+              th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
 </th:block>
 
 </html>

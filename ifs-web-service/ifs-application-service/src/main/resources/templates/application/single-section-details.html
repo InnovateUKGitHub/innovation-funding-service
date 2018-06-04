@@ -22,17 +22,22 @@
                 </h3>
             </div>
             <th:block th:unless="${model.completed.completedOrMarkedAsComplete(question, section)}">
-                <!--/* lead */-->
-                <th:block th:if="${userIsLeadApplicant}">
-                    <th:block
-                        th:insert="question-type/form-elements :: assign-buttons (${model.section.assignButtonViewModels.get(question.id)})"
-                        th:with="hideAssignedTo=${true}"/>
+
+                <!-- /* 'Assigned to' info */-->
+                <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
+                    <!--/* lead */-->
+                    <th:block th:if="${userIsLeadApplicant}">
+                        <th:block
+                            th:insert="question-type/form-elements :: assign-buttons (${model.section.assignButtonViewModels.get(question.id)})"
+                            th:with="hideAssignedTo=${true}"/>
+                    </th:block>
+                    <!--/* collabr */-->
+                    <th:block th:unless="${userIsLeadApplicant}">
+                        <th:block
+                            th:insert="question-type/form-elements :: assigned-to (${model.section.assignButtonViewModels.get(question.id)})"/>
+                    </th:block>
                 </th:block>
-                <!--/* collabr */-->
-                <th:block th:unless="${userIsLeadApplicant}">
-                    <th:block
-                        th:insert="question-type/form-elements :: assigned-to (${model.section.assignButtonViewModels.get(question.id)})"/>
-                </th:block>
+
                 <div class="task-status-incomplete">
                     <span>Incomplete</span>
                 </div>
