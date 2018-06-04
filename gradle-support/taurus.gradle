@@ -23,5 +23,4 @@ task prepareTaurusDeployment(type: Copy) {
 task osRunTaurus(type: Exec) {
     dependsOn prepareTaurusDeployment
     executable = 'setup-files/scripts/openshift/os-taurus.sh'
-    args = []
 }
