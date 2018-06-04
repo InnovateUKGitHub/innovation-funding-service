@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.form.resource;
 
-import org.innovateuk.ifs.util.enums.IdentifiableEnum;
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 
 import java.util.List;
 

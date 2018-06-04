@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;

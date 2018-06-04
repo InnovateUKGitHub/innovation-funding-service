@@ -9,7 +9,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -25,7 +25,7 @@ import java.util.Objects;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.util.StringUtils.hasText;
 

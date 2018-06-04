@@ -7,7 +7,7 @@ import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinanc
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
