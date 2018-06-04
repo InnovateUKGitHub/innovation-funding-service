@@ -13,11 +13,13 @@ public class InterviewFeedbackViewModel {
     private final String responseFilename;
     private final String feedbackFilename;
     private final boolean leadApplicant;
+    private final boolean feedbackReleased;
 
-    public InterviewFeedbackViewModel(String responseFilename, String feedbackFilename, boolean leadApplicant) {
+    public InterviewFeedbackViewModel(String responseFilename, String feedbackFilename, boolean leadApplicant, boolean feedbackReleased) {
         this.feedbackFilename = feedbackFilename;
         this.responseFilename = responseFilename;
         this.leadApplicant = leadApplicant;
+        this.feedbackReleased = feedbackReleased;
     }
 
     public String getResponseFilename() {
@@ -32,6 +34,10 @@ public class InterviewFeedbackViewModel {
         return leadApplicant;
     }
 
+    public boolean isFeedbackReleased() {
+        return feedbackReleased;
+    }
+
     /* View logic methods. */
     public boolean hasResponse() {
         return responseFilename != null;
@@ -39,6 +45,10 @@ public class InterviewFeedbackViewModel {
 
     public boolean hasFeedback() {
         return feedbackFilename != null;
+    }
+
+    public boolean isResponseSectionEnabled() {
+        return !feedbackReleased || hasResponse();
     }
 
     public String getBannerText() {

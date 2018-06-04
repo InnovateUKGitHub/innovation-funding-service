@@ -60,6 +60,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3534 Assessor dashboard - List of applications
 ...
 ...               IFS-3524 Manage Interview panel - Key statistics
+...
+...               IFS-3542 Interview panels - View of application and feedback when competition feedback released
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -250,6 +252,21 @@ Assessor can view the list of allocated applications
     Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
 
+Assessor marks appplications as successful and releases competition feedback
+    [Documentation]  IFS-3542
+    [Tags]
+    Given log in as a different user          &{Comp_admin1_credentials}
+    When the user navigates to the page       ${SERVER}/management/competition/18/funding
+    Then the user marks applications as successful and send funding decision email
+    And the user clicks the button/link       css=button.button.button-large  #Release feedback
+
+Applicant can still see their feedback once the comp feedback has been released
+    [Documentation]  IFS-3542
+    [Tags]
+    Given log in as a different user          ${aaron_robertson_email}   ${short_password}
+    When the user clicks the button/link      jQuery=section:contains("Previous") h3:contains("Neural network")
+    Then the user should see the element      link=testing.pdf (opens in a new window)
+
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
@@ -347,10 +364,21 @@ the user checks for Manage interview panel key statistics
     ${applications_assigned}=  Get Text  css=ul li:nth-child(1) span
     ${assessor_accepted}=      Get Text  css=ul li:nth-child(3) span
     ${feedback_responded}=     Get Text  css=ul li:nth-child(2) span
-    the user should see the element      jQUery=div span:contains("${feedback_responded}") ~ small:contains("Applicants responded to feedback")
+    the user should see the element      jQuery=div span:contains("${feedback_responded}") ~ small:contains("Applicants responded to feedback")
     the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/find
     ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span    #Assigned to interview panel
     Should Be Equal As Integers   ${Assigned_applications}  ${applications_assigned}
     the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/find
     ${Accepted}=  Get Text  css=div:nth-child(2) > div > span
     Should Be Equal As Integers   ${Accepted}  ${assessor_accepted}
+
+the user marks applications as successful and send funding decision email
+    the user selects the checkbox         select-all-1
+    the user clicks the button/link       jQuery=button:contains("Successful")
+    the user clicks the button/link       link=Competition
+    the user clicks the button/link       link=Manage funding notifications
+    the user selects the checkbox         select-all-1
+    the user clicks the button/link       css=button.button.button-notification.extra-margin-top   #Assessor clicks 'Write and send emails'
+    the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css=button[name="send-emails"]
+    the user clicks the button/link       link=Competition
