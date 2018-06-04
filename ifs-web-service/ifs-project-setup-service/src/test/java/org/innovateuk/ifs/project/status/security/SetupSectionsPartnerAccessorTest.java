@@ -294,7 +294,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
@@ -302,7 +301,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isProjectDetailsSubmitted(),
                 mock -> mock.isFinanceContactSubmitted(organisation)
         );
     }
@@ -313,7 +311,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
@@ -321,7 +318,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isProjectDetailsSubmitted(),
                 mock -> mock.isFinanceContactSubmitted(organisation)
         );
     }
