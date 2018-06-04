@@ -154,6 +154,21 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
         whenSpendProfileGeneratedAndAccessible((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
     }
 
+    @Test
+    public void testCanAccessFinanceChecksSectionWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    }
+
+    @Test
+    public void testCanAccessFinanceChecksSectionWhenFinanceContactNotYetSubmitted() {
+        whenFinanceContactNotSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    }
+
+    @Test
+    public void testCanAccessFinanceChecksSectionWhenFinanceContactSubmitted() {
+        whenFinanceContactSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    }
+
     private void whenCompaniesHouseDetailsNotComplete(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
@@ -255,6 +270,28 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenFinanceContactNotSubmitted(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenFinanceContactSubmitted(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.ACCESSIBLE == access);
 
     }
 

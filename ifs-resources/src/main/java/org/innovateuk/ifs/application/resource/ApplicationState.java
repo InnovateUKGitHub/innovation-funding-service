@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import org.innovateuk.ifs.util.enums.IdentifiableEnum;
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.service.DefaultRestTemplateAdaptor;
@@ -315,4 +315,5 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
     private DefaultRestTemplateAdaptor getRestTemplateAdaptorFromApplicationContext() {
         return (DefaultRestTemplateAdaptor) unwrapProxy(applicationContext.getBean(DefaultRestTemplateAdaptor.class));
     }
+
 }

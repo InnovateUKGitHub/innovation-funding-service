@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
-import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
+import org.innovateuk.ifs.project.spendprofile.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalProjectSpendProfileTableViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalSpendProfileViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;

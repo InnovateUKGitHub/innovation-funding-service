@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.totals.service.AsyncRestCostTotalEndpoint;
 import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
 import org.junit.Before;
 import org.junit.Test;

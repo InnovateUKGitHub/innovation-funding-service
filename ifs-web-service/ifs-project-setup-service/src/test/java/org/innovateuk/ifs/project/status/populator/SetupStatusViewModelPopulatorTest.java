@@ -134,10 +134,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .build(1))
                 .build();
 
@@ -145,7 +147,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertStatuses(viewModel);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertFalse(viewModel.isProjectComplete());
 
@@ -1282,10 +1285,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .build(1))
                 .build();
 
@@ -1294,7 +1299,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertStatuses(viewModel);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertEquals(false, viewModel.isCollaborationAgreementRequired());
 

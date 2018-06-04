@@ -74,6 +74,7 @@
           th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}/addSelected(competitionId=${model.competitionId}, userId=${model.user.id})}"
           th:object="${interviewAllocationSelectionForm}"
           data-multipage-select=""
+          autocomplete="off"
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
         <div class="grid-row sorting">
