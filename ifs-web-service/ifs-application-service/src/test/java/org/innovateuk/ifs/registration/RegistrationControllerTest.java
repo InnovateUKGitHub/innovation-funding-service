@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.exception.RegistrationTokenExpiredException;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
@@ -42,7 +43,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VER
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.mockito.Matchers.anyLong;

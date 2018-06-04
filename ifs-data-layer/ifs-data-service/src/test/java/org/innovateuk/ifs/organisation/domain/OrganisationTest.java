@@ -1,13 +1,14 @@
-package org.innovateuk.ifs.user.domain;
+package org.innovateuk.ifs.organisation.domain;
 
 import org.innovateuk.ifs.user.builder.UserBuilder;
+import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.junit.Assert.*;
 
 public class OrganisationTest {

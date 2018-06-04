@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.domain;
+package org.innovateuk.ifs.organisation.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

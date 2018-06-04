@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.user.resource;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-
 public class ProcessRoleResource {
     private Long id;
     private Long user;
@@ -15,14 +13,14 @@ public class ProcessRoleResource {
     	// no-arg constructor
     }
 
-    public ProcessRoleResource(Long id, UserResource user, ApplicationResource application, Role role, OrganisationResource organisation) {
+    public ProcessRoleResource(Long id, UserResource user, Long applicationId, Role role, String roleName, Long organisationId) {
         this.id = id;
         this.user = user.getId();
         this.userName = user.getName();
-        this.applicationId = application.getId();
+        this.applicationId = applicationId;
         this.role = role;
-        this.roleName = role.getName();
-        this.organisationId = organisation.getId();
+        this.roleName = roleName;
+        this.organisationId = organisationId;
     }
 
     public Long getId(){return id;}

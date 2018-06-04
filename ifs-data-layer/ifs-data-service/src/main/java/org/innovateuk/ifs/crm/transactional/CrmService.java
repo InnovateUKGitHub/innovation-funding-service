@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.transactional;
+package org.innovateuk.ifs.crm.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;

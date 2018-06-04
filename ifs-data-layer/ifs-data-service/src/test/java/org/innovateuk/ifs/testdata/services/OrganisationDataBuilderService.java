@@ -3,7 +3,7 @@ package org.innovateuk.ifs.testdata.services;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
