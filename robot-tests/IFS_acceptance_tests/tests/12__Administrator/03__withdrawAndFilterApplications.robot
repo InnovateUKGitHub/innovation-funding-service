@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation   IFS-2945 Withdraw a project from Project Setup
+...
+...             IFS-3473 Previous Applications Filter
 Force Tags      Administrator
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
@@ -18,21 +20,14 @@ The IFS Admin withdraws a project from Project Setup
     When the user cancels then withdraws the project
     Then the user can see the previous application         ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
 
-The IFS Admin filters by withdrawn applications
+The IFS Admin filters the applications
     [Documentation]  IFS-3473
     [Tags]  HappyPath
     [Setup]
-    Given the user selects the option from the drop-down menu    Withdrawn  id=filter
-    When the user clicks the button/link                         css=button[class="button"]  #Filter
-    Then the user can see the previous application               ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
-
-The IFS Admin filters by unsuccessful applications
-    [Documentation]  IFS-3473
-    [Tags]  HappyPath
-    [Setup]
-    Given the user selects the option from the drop-down menu    Unsuccessful  id=filter
-    When the user clicks the button/link                         css=button[class="button"]  #Filter
-    Then the user can see the previous application               ${proj_electric_drive}  Unsuccessful
+    Given the user selects a filter for the applications    Withdrawn  filter
+    Then the user can see the previous application          ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
+    When the user selects a filter for the applications     Unsuccessful  filter
+    Then the user can see the previous application          ${proj_electric_drive}  Unsuccessful
 
 The IFS Admin clears any filters applied
     [Documentation]  IFS-3473
@@ -50,5 +45,11 @@ The user cancels then withdraws the project
     the user clicks the button/link            css=button[type="submit"]  #Withdraw the project on the modal
 
 The user can see the previous application
-    [Arguments]  ${filteredApplication}  ${applicationStatus}
-    the user should see the element            jQuery=td:contains("${filteredApplication}") ~ td:contains("${applicationStatus}")
+    [Arguments]  ${filteredApplication}  ${applicationStatusInTable}
+    the user should see the element            jQuery=td:contains("${filteredApplication}") ~ td:contains("${applicationStatusInTable}")
+
+The user selects a filter for the applications
+    [Arguments]  ${applicationStatusInDropDown}  ${filterID}
+    Given the user selects the option from the drop-down menu    ${applicationStatusInDropDown}  id=${filterID}
+    When the user clicks the button/link                         css=button[class="button"]  #Filter
+
