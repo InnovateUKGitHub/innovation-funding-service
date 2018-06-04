@@ -1,15 +1,20 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
+import org.innovateuk.ifs.interview.model.InterviewApplicationSentInviteModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteSendRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
+import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSentInviteViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
@@ -26,21 +31,29 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
-import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -56,9 +69,20 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     @InjectMocks
     private InterviewApplicationsSendModelPopulator interviewApplicationsSendModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private InterviewApplicationSentInviteModelPopulator interviewApplicationSentInviteModelPopulator;
+
+    @Mock
+    private ApplicationService applicationService;
+
     @Override
     protected InterviewApplicationSendInviteController supplyControllerUnderTest() {
-        return new InterviewApplicationSendInviteController();
+        return new InterviewApplicationSendInviteController(
+                interviewApplicationsSendModelPopulator,
+                interviewApplicationSentInviteModelPopulator,
+                interviewAssignmentRestService
+        );
     }
 
     @Mock
@@ -71,7 +95,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     @Override
     @Before
@@ -169,6 +193,46 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         verify(interviewAssignmentRestService).deleteFeedback(applicationId);
     }
 
+    @Test
+    public void viewInvite() throws Exception {
+        String subject = "subject";
+        String content = "Content";
+        ZonedDateTime assigned = ZonedDateTime.now();
+        long applicationId = 1L;
+
+        ApplicationResource applicationResource = newApplicationResource().withName("Application").build();
+
+        InterviewApplicationSentInviteResource sentInvite = newInterviewApplicationSentInviteResource()
+                .withSubject(subject)
+                .withContent(content)
+                .withAssigned(assigned)
+                .build();
+
+        when(interviewAssignmentRestService.getSentInvite(applicationId)).thenReturn(restSuccess(sentInvite));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(applicationService.getLeadOrganisation(applicationId)).thenReturn(newOrganisationResource().withName("Organisation").build());
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+        when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Template")));
+        when(interviewAssignmentRestService.findFeedback(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("Filename").build()));
+
+
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view", competition.getId(), applicationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/interview/application-view-invite"))
+                .andReturn();
+
+        InterviewAssignmentApplicationsSentInviteViewModel model = (InterviewAssignmentApplicationsSentInviteViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(content, model.getAdditionalText());
+        assertEquals(subject, model.getSubject());
+        assertEquals("Template", model.getContent());
+        assertEquals("Organisation", model.getLeadOrganisation());
+        assertEquals(assigned, model.getDateAssigned());
+        assertEquals("Filename", model.getFeedbackFilename());
+        assertTrue(model.hasAttachment());
+    }
+
     private InterviewAssignmentStagedApplicationPageResource setupMocksForGet(long competitionId) {
         List<InterviewAssignmentStagedApplicationResource> interviewAssignmentStagedApplicationResources = setUpApplicationCreatedInviteResources();
         InterviewAssignmentStagedApplicationPageResource invites = newInterviewAssignmentStagedApplicationPageResource()
@@ -178,7 +242,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(interviewAssignmentRestService.getStagedApplications(competitionId, 0)).thenReturn(restSuccess(invites));
         when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Some content")));
-        when(competitionKeyStatisticsRestService.getInterviewKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
+        when(competitionKeyApplicationStatisticsRestService.getInterviewAssignmentStatisticsByCompetition(competitionId)).thenReturn(restSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
         return invites;
     }
 

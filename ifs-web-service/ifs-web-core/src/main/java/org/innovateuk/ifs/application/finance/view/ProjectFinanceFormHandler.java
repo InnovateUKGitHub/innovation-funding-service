@@ -4,7 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.domain;
 import org.hibernate.annotations.Immutable;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 
 import javax.persistence.*;
 

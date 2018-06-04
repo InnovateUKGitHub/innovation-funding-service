@@ -16,16 +16,17 @@
     <p>Please review the organisation details below and confirm that they are correct.</p>
 
     <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
-    <div class="form-block">
-        <h3 class="heading-small">Organisation type</h3>
-        <p th:text="${model.organisationType}"></p>
-        <h3 class="heading-small">Registered name</h3>
-        <p th:text="${model.registrationName}"></p>
-        <th:block th:if="${model.registrationNumberNotEmptyAndNotResearch}">
-            <h3 class="heading-small">Registration number</h3>
-            <p th:text="${model.registrationNumber}"></p>
-        </th:block>
-        <div>
+    <fieldset>
+        <legend class="visuallyhidden">Confirm your organisation details are correct</legend>
+        <div class="form-block">
+            <h3 class="heading-small">Organisation type</h3>
+            <p th:text="${model.organisationType}"></p>
+            <h3 class="heading-small">Registered name</h3>
+            <p th:text="${model.registrationName}"></p>
+            <th:block th:if="${model.registrationNumberNotEmptyAndNotResearch}">
+                <h3 class="heading-small">Registration number</h3>
+                <p th:text="${model.registrationNumber}"></p>
+            </th:block>
             <h3 class="heading-small">Registered Address</h3>
             <div th:text="${model.organisationAddress?.addressLine1}"></div>
             <div th:text="${model.organisationAddress?.addressLine2}"></div>
@@ -34,7 +35,7 @@
             <div th:text="${model.organisationAddress?.county}"></div>
             <div th:text="${model.organisationAddress?.postcode}"></div>
         </div>
-    </div>
+    </fieldset>
 
     <p>If this is not the correct organisation, please <a th:href="${'mailto:'+ model.emailLeadApplicant}">email the lead applicant</a>.</p>
     <p><strong>Please note</strong>, if you are representing a different organisation then you will need to make a new account.</p>

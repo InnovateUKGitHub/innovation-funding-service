@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.*;
 
@@ -177,10 +177,6 @@ public class SetupSectionAccessibilityHelper {
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
             return NOT_ACCESSIBLE;
-        }
-
-        if (!setupProgressChecker.isProjectDetailsSubmitted()) {
-            return fail("Unable to access Finance Checks section until the Project Details section is complete");
         }
 
         if (!setupProgressChecker.isFinanceContactSubmitted(organisation)) {

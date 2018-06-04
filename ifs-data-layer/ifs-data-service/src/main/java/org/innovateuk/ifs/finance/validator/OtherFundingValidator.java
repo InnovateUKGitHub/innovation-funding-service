@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 

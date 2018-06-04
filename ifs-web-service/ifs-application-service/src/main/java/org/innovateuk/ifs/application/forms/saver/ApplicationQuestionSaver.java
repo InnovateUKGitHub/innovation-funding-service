@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -23,7 +23,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
 
 /**
  * This Saver will handle save all questions that are related to the application.

@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -19,7 +19,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -224,7 +224,8 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         INTERVIEW_PANEL_STATUS("/assessment/interview/competition/{competitionId}/applications/view-status"),
         INTERVIEW_PANEL_ALLOCATE("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{assessorId}"),
         INTERVIEW_APPLICATION_ALLOCATION("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{assessorId}"),
-        INTERVIEW_PANEL_ALLOCATED("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{assessorId}");
+        INTERVIEW_PANEL_ALLOCATED("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{assessorId}"),
+        INTERVIEW_PANEL_VIEW_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view");
 
         private String baseOriginUrl;
 

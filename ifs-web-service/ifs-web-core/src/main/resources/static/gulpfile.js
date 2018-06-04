@@ -40,9 +40,9 @@ var vendorJsFiles = [
 ]
 
 gulp.task('copy-govuk', ['copy-js-govuk', 'copy-fonts-govuk', 'copy-images-govuk'])
-// copy over the ie javascript file to the js/vendor/govuk folder
+// copy over the vendor javascript files to the js/vendor/govuk folder
 gulp.task('copy-js-govuk', function () {
-	return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/javascripts/ie.js')).pipe(gulp.dest('js/vendor/govuk'))
+	return gulp.src(filesExist([gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js', gdsTemplateJinjaPath + 'assets/javascripts/ie.js'])).pipe(gulp.dest('js/vendor/govuk'))
 })
 // copy over the fonts from GDS node-modules to css/fonts folder
 gulp.task('copy-fonts-govuk', function () {

@@ -15,7 +15,6 @@ public class CompetitionType {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private Boolean stateAid;
     private Boolean active;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -49,14 +48,6 @@ public class CompetitionType {
         this.competitions = competitions;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
-    }
-
-    public void setStateAid(Boolean stateAid) {
-        this.stateAid = stateAid;
-    }
-
     public Boolean getActive() {
         return active;
     }
@@ -84,7 +75,6 @@ public class CompetitionType {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(name, that.name)
-                .append(stateAid, that.stateAid)
                 .append(active, that.active)
                 .append(template, that.template)
                 .append(competitions, that.competitions)
@@ -96,7 +86,6 @@ public class CompetitionType {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(name)
-                .append(stateAid)
                 .append(active)
                 .append(template)
                 .append(competitions)

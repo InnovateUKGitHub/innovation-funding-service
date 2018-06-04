@@ -13,4 +13,6 @@ public interface AssessorRestService {
     RestResult<Void> createAssessorByInviteHash(String hash, UserRegistrationResource userRegistrationResource);
 
     RestResult<AssessorProfileResource> getAssessorProfile(Long assessorId);
+
+    RestResult<Void> notifyAssessors(long competitionId);
 }

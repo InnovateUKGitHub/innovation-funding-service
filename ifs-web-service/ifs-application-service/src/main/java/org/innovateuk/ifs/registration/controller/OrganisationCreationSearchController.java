@@ -8,7 +8,7 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;

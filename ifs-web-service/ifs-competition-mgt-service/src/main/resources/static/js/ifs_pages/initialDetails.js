@@ -2,9 +2,6 @@ IFS.competitionManagement.initialDetails = (function () {
   'use strict'
   return {
     init: function () {
-      jQuery('body.competition-management.competition-setup').on('change', '#competitionTypeId', function () {
-        IFS.competitionManagement.initialDetails.handleStateAid()
-      })
       IFS.competitionManagement.initialDetails.handleInnovationSector(true)
       jQuery('body.competition-management.competition-setup').on('change', '[name="innovationSectorCategoryId"]', function () {
         IFS.competitionManagement.initialDetails.handleInnovationSector(false)
@@ -107,15 +104,6 @@ IFS.competitionManagement.initialDetails = (function () {
       currentAreas = currentAreas.join(',')
       var innovationAreas = jQuery('[name*="innovationAreaCategoryId"] option')
       innovationAreas.not(currentAreas).remove()
-    },
-    handleStateAid: function () {
-      var stateAid = jQuery('#competitionTypeId').find('[value="' + jQuery('#competitionTypeId').val() + '"]').attr('data-stateaid')
-      if (stateAid === 'true') {
-        stateAid = 'yes'
-      } else {
-        stateAid = 'no'
-      }
-      jQuery('#stateAid').attr('aria-hidden', 'false').find('p').html('<span class="' + stateAid + '">' + stateAid + '</span>')
     }
   }
 })()

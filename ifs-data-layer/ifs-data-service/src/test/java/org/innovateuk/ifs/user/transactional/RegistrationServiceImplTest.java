@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import org.hibernate.validator.constraints.ModCheck;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
+import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
@@ -27,11 +27,11 @@ import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Ethnicity;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
@@ -71,7 +71,7 @@ import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationRe
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Disability.NO;

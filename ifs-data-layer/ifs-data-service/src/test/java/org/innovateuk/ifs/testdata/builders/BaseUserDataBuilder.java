@@ -3,7 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;

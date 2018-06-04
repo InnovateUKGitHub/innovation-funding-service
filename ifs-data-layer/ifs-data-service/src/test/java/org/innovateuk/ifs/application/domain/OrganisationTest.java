@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.junit.Assert;
 import org.junit.Before;

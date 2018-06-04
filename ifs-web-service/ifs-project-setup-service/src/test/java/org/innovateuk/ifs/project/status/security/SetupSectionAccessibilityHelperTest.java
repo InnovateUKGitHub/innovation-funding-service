@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.project.sections.SectionAccess;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -11,7 +11,7 @@ import org.mockito.Mock;
 
 import java.util.function.BiFunction;
 
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Mockito.when;
 
 public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
@@ -154,6 +154,21 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
         whenSpendProfileGeneratedAndAccessible((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
     }
 
+    @Test
+    public void testCanAccessFinanceChecksSectionWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    }
+
+    @Test
+    public void testCanAccessFinanceChecksSectionWhenFinanceContactNotYetSubmitted() {
+        whenFinanceContactNotSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    }
+
+    @Test
+    public void testCanAccessFinanceChecksSectionWhenFinanceContactSubmitted() {
+        whenFinanceContactSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    }
+
     private void whenCompaniesHouseDetailsNotComplete(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
@@ -255,6 +270,28 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenFinanceContactNotSubmitted(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenFinanceContactSubmitted(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.ACCESSIBLE == access);
 
     }
 
