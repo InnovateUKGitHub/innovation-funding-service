@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.overheads;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.junit.Before;
 import org.junit.Test;

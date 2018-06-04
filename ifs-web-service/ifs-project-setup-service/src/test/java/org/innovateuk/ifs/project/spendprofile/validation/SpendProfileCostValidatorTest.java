@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.validation;
 
-import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.commons.validation.ValidatorTestUtil;
-import org.innovateuk.ifs.commons.validation.SpendProfileValidationError;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.junit.Assert;
 import org.junit.Before;

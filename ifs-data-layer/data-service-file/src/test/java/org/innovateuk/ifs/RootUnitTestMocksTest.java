@@ -6,8 +6,8 @@ import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.project.util.FinanceUtil;
-import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
+import org.innovateuk.ifs.project.spendprofile.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
@@ -62,8 +62,6 @@ public abstract class RootUnitTestMocksTest extends BaseTest {
     @Mock
     protected FinanceUtil financeUtilMock;
 
-    @Mock
-    protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock
     protected LoggedInUserSupplier loggedInUserSupplierMock;
