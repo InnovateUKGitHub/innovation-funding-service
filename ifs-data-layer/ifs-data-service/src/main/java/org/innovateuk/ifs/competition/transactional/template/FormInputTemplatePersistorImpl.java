@@ -59,7 +59,13 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
                 guidanceRowsCopy.addAll(formInput.getGuidanceRows());
             }
 
-            Set<FileTypeCategory> allowedFileTypesCopy = new HashSet<>(formInput.getAllowedFileTypes());
+            final Set<FileTypeCategory> allowedFileTypesCopy;
+            if (formInput.getAllowedFileTypes() != null) {
+                allowedFileTypesCopy = new HashSet<>(formInput.getAllowedFileTypes());
+            }
+            else {
+                allowedFileTypesCopy = null;
+            }
 
             entityManager.detach(formInput);
             formInput.setAllowedFileTypes(allowedFileTypesCopy);
