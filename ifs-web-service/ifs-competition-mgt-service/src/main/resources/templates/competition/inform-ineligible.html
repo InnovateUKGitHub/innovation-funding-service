@@ -46,19 +46,35 @@
                    th:attr="data-required-errormessage=#{validation.informleadapplicant.subject.required}"   />
         </div>
 
+        <div class="form-group">
+            <span class="form-label-bold">Message</span>
+            <p class="form-hint">
+                Dear [recipient name] <br/>
+                Innovate UK <br/>
+                [competition name] <br/>
+                [application title]
+            </p>
+        </div>
+
         <div class="form-group" th:classappend="${#fields.hasErrors('*{message}')} ? 'form-group-error'">
             <label class="form-label" th:for="${#ids.next('message')}">
-                <span>Message</span>
+                <span>Body text</span>
                 <th:block th:if="${#fields.hasErrors('message')}">
                     <span class="error-message" th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
                 </th:block>
             </label>
-            <textarea id="message"
-                      rows="16"
-                      class="form-control width-full"
-                      th:field="*{message}"
-                      required="required"
-                      th:attr="data-required-errormessage=#{validation.informleadapplicant.message.required}"></textarea>
+            <div class="textarea-wrapped">
+                <textarea id="message"
+                          rows="16"
+                          class="form-control width-full"
+                          data-editor="html"
+                          th:errorclass="form-control-error"
+                          maxlength="5000"
+                          ifs:utext="${form.message}"
+                          th:field="*{message}"
+                          required="required"
+                          th:attr="data-required-errormessage=#{validation.informleadapplicant.message.required}"></textarea>
+            </div>
         </div>
 
         <div class="extra-margin">

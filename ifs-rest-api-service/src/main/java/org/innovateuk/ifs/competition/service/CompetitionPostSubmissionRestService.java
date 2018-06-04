@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
@@ -12,8 +11,6 @@ import java.util.List;
  * Rest service for handling Feedback and assessing actions on Competitions
  */
 public interface CompetitionPostSubmissionRestService {
-
-    RestResult<Void> notifyAssessors(long competitionId);
 
     RestResult<Void> releaseFeedback(long competitionId);
 

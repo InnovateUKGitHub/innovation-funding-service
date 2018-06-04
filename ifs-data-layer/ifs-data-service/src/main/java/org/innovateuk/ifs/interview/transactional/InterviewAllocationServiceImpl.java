@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.interview.mapper.InterviewMapper;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.*;
@@ -30,11 +31,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
@@ -65,6 +68,8 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     private ApplicationRepository applicationRepository;
     @Autowired
     private NotificationSender notificationSender;
+    @Autowired
+    private InterviewMapper interviewMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -127,6 +132,19 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
                 unallocatedApplications,
                 allocatedApplications
         ));
+    }
+
+    @Override
+    public ServiceResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(long competitionId, long assessorUserId) {
+        List<Interview> interviews = interviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
+                assessorUserId,
+                competitionId);
+
+        List<InterviewResource> interviewResources = interviews.stream()
+                .map(interview -> interviewMapper.mapToResource(interview))
+                .collect(Collectors.toList());
+
+        return serviceSuccess(interviewResources);
     }
 
     @Override
@@ -209,7 +227,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
         return renderer.renderTemplate(
                 systemNotificationSource,
                 notificationTarget,
-                "allocate_interview_applications_to_assessor_text.txt",
+                PREVIEW_TEMPLATES_PATH + "allocate_interview_applications_to_assessor_text.txt",
                 arguments
         ).getSuccess();
     }

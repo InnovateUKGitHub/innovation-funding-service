@@ -67,6 +67,7 @@
           th:action="@{/assessment/interview/competition/{competitionId}/applications/find/addSelected(competitionId=${model.competitionId})}"
           th:object="${interviewAssignmentApplicationSelectionForm}"
           data-multipage-select=""
+          autocomplete="off"
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
         <div class="grid-row sorting">
