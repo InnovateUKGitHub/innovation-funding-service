@@ -3,7 +3,16 @@
 
 <th:block th:fragment="application_team(model, question)">
 
-    <th:block th:each="organisation : ${model.organisations}">
+    <!-- Normal page-->
+    <th:block
+        th:unless="${model.summary}"
+        th:insert="application-team/team :: page-body"
+    />
+
+    <!--  Summary view-->
+    <th:block
+        th:if="${model.summary}"
+        th:each="organisation : ${model.organisations}">
 
         <br/>
         <label class="form-label form-label-bold" th:for="organisation-name">
@@ -37,7 +46,7 @@
         <th:block
             th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})"/>
         <th:block th:if="${model.summary}"
-                  th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
+            th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
     </th:block>
 </th:block>
 
