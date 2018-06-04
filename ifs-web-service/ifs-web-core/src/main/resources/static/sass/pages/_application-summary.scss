@@ -18,6 +18,14 @@
     overflow: hidden;
     margin: 20px 0;
   }
+
+  .collapsible {
+    table {
+      th, td {
+        font-size: 16px;
+      }
+    }
+  }
 }
 
 .no-js {
