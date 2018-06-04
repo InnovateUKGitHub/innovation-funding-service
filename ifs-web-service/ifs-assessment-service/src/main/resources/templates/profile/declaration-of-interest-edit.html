@@ -267,7 +267,9 @@
                         <th:block th:if="${#fields.hasErrors('familyAffiliations')}">
                             <span class="error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}"></span>
                         </th:block>
-                        <table id="family-table">
+                        <div class="flex-table">
+                            <div class="flex-table-wrap">
+                                <table id="family-table">
                             <thead>
                             <tr>
                                 <th scope="col" id="aria-family-rel">Relation</th>
@@ -333,6 +335,8 @@
                             </tr>
                             </tbody>
                         </table>
+                            </div>
+                        </div>
 
                         <p class="alignright extra-margin"><button class="buttonlink" data-repeatable-rowcontainer="#family-table tbody" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></p>
                     </div>

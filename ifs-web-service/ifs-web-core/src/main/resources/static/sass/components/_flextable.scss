@@ -55,11 +55,6 @@
     border-right: 1px solid $border-colour;
   }
 
-  .flex-table-wrap {
-    overflow:auto;
-    max-width:100%;
-  }
-
   .form-group-row {
     &.form-group-error {
       .fix-right {
@@ -110,6 +105,14 @@
         }
       }
     }
+  }
+}
+
+.flex-table,
+.spend-profile-table{
+  .flex-table-wrap {
+    overflow:auto;
+    max-width:100%;
   }
 }
 
@@ -166,7 +169,8 @@
   }
 
   @supports (display:flex){
-    .spend-profile-table {
+    .spend-profile-table,
+    .flex-table {
       display:flex;
 
       th {
