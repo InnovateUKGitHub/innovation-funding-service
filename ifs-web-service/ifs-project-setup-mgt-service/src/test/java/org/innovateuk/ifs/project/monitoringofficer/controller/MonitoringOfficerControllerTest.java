@@ -388,17 +388,17 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertEquals(8, bindingResult.getFieldErrorCount());
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
-        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
 
         assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
-        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
 
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
 
         List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
         phoneNumberErrors.sort((o1, o2) -> o1.getCode().compareTo(o2.getCode()));
 
-        assertEquals("NotEmpty", phoneNumberErrors.get(0).getCode());
+        assertEquals("NotBlank", phoneNumberErrors.get(0).getCode());
         assertEquals("Pattern", phoneNumberErrors.get(1).getCode());
         assertEquals("Size", phoneNumberErrors.get(2).getCode());
 
@@ -568,10 +568,10 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertEquals(7, bindingResult.getFieldErrorCount());
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
-        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
 
         assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
-        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
         
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
 
