@@ -3,7 +3,6 @@ package org.innovateuk.ifs.exception;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.exception.*;
-import org.innovateuk.ifs.commons.exception.*;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;

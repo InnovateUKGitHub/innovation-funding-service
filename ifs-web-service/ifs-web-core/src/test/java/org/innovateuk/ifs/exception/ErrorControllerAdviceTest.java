@@ -54,7 +54,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
         httpServletRequest.setRequestURI("/test.html");
 
         when(messageSource.getMessage("error.title.status.500", null, Locale.ENGLISH)).thenReturn("sample title");
-        when(messageSource.getMessage("org.innovateuk.ifs.commons.error.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
+        when(messageSource.getMessage("org.innovateuk.ifs.commons.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
         when(env.acceptsProfiles("debug")).thenReturn(true);
 
         ModelAndView mav = errorControllerAdvice.createErrorModelAndViewWithStatus(exception, httpServletRequest, arguments, INTERNAL_SERVER_ERROR);
@@ -80,7 +80,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
         httpServletRequest.setRequestURI("/test.html");
 
         when(messageSource.getMessage("error.title.status.500", null, Locale.ENGLISH)).thenReturn("sample title");
-        when(messageSource.getMessage("org.innovateuk.ifs.commons.error.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
+        when(messageSource.getMessage("org.innovateuk.ifs.commons.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
         when(env.acceptsProfiles("debug")).thenReturn(true);
 
         ModelAndView mav = errorControllerAdvice.createErrorModelAndViewWithStatusAndView(exception, httpServletRequest, arguments, INTERNAL_SERVER_ERROR, "other-error-view");
@@ -132,7 +132,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
 
         when(messageSource.getMessage("sample.title.key", null, Locale.ENGLISH)).thenReturn("sample title");
         when(messageSource.getMessage("sample.message.key", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample user message");
-        when(messageSource.getMessage("org.innovateuk.ifs.commons.error.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
+        when(messageSource.getMessage("org.innovateuk.ifs.commons.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
         when(env.acceptsProfiles("debug")).thenReturn(true);
 
         ModelAndView mav = errorControllerAdvice.createErrorModelAndViewWithTitleAndMessage(exception, httpServletRequest, arguments, INTERNAL_SERVER_ERROR, "sample.title.key", "sample.message.key");
@@ -159,7 +159,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
 
         when(messageSource.getMessage("sample.title.key", null, Locale.ENGLISH)).thenReturn("sample title");
         when(messageSource.getMessage("sample.message.key", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample user message");
-        when(messageSource.getMessage("org.innovateuk.ifs.commons.error.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
+        when(messageSource.getMessage("org.innovateuk.ifs.commons.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
         when(env.acceptsProfiles("debug")).thenReturn(true);
 
         ModelAndView mav = errorControllerAdvice.createErrorModelAndViewWithUrlTitleAndMessage(exception, httpServletRequest, arguments, INTERNAL_SERVER_ERROR, "sample.title.key", "sample.message.key");
@@ -186,7 +186,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
 
         when(messageSource.getMessage("sample.title.key", null, Locale.ENGLISH)).thenReturn("sample title");
         when(messageSource.getMessage("sample.message.key", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample user message");
-        when(messageSource.getMessage("org.innovateuk.ifs.commons.error.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
+        when(messageSource.getMessage("org.innovateuk.ifs.commons.exception.IFSRuntimeException", arguments.toArray(), Locale.ENGLISH)).thenReturn("sample error message");
         when(env.acceptsProfiles("debug")).thenReturn(true);
 
         ModelAndView mav = errorControllerAdvice.createErrorModelAndViewWithUrlTitleMessageAndView(exception, httpServletRequest, arguments, INTERNAL_SERVER_ERROR, "sample.title.key", "sample.message.key", "other-error-view");
