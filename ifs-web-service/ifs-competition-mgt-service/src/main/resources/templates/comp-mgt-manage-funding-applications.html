@@ -70,7 +70,7 @@
     </div>
     <div data-selection-limit-exceeded-block=""></div>
 
-    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"  data-multipage-select="" th:attr="data-total-checkboxes=${model.keyStatistics.statThree}"><!--/* todo: total checkboxes attribute ? */-->
+    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"  data-multipage-select="" th:attr="data-total-checkboxes=${model.keyStatistics.statThree}" autocomplete="off"><!--/* todo: total checkboxes attribute ? */-->
         <div class="grid-row sorting">
             <div class="column-half">
                 <div class="select-all">

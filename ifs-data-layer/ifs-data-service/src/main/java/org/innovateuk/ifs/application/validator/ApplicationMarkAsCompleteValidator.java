@@ -10,7 +10,7 @@ import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 
 /**
  * Validates the inputs in the application details, if valid on the markAsComplete action

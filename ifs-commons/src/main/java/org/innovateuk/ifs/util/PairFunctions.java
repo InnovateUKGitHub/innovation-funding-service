@@ -14,9 +14,6 @@ import java.util.function.Predicate;
 public final class PairFunctions {
 
 	private PairFunctions() {}
-	
-    @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(PairFunctions.class);
 
     public static <R, T> Predicate<Pair<R, Optional<T>>> rightPairIsPresent() {
         return pair -> pair.getRight().isPresent();

@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
 
 
 /**
