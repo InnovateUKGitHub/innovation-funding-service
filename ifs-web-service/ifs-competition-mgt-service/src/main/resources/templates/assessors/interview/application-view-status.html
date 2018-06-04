@@ -82,7 +82,10 @@
 
                     <td th:if="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}"><span class="yes"></span>Responded to feedback</td>
                     <td th:unless="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}">Awaiting response</td>
-                    <td><a class="button button-secondary disabled">View invite</a></td>
+                    <td>
+                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
+                           class="button button-secondary">View invite</a>
+                    </td>
 
                 </tr>
                 <tr th:if="${#lists.isEmpty(model.applications)}">

@@ -30,15 +30,6 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
     }
 
     @Test
-    public void notifyAssessors() {
-        long competitionId = 1L;
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/notify-assessors", HttpStatus.OK);
-
-        RestResult<Void> result = service.notifyAssessors(competitionId);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
     public void releaseFeedback() {
         long competitionId = 1L;
         setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/release-feedback", HttpStatus.OK);

@@ -18,6 +18,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-1459 View unsuccessful applications after Inform state: list
 ...
 ...               IFS-1491 Inform Applicant - Ineligible page - couple of issues
+...
+...               IFS-3132 Email content templates for notifications
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -28,6 +30,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 ${ineligibleApplication}  Living with Virtual Reality
 ${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${application_ids["${ineligibleApplication}"]}
 ${ineligibleApplications}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
+${ineligibleMessage}  On checking your application we found that it did not meet these requirements.
 # ${IN_ASSESSMENT_COMPETITION} is the Sustainable living models for the future
 
 *** Test Cases ***
@@ -111,24 +114,22 @@ The Administrator should see the ineligible applications in unsuccessful list bu
     And the user should not see the element  jQuery=td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
 
 Inform a user their application is ineligible
-    [Documentation]  INFUND-7374  IFS-1491
+    [Documentation]  INFUND-7374  IFS-1491  IFS-3132
     [Tags]  HappyPath  Applicant
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the user navigates to the page      ${ineligibleApplications}
     And the user clicks the button/link       jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
     And the user clicks the button/link       jQuery=a:contains("Cancel")
     When the user clicks the button/link      jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
-    And the user is required to enter a subject/message    Please enter the email subject.  subject  This is ineligible
-    And the user clicks the button/link       jQuery=button:contains("Send")
-    And the user is required to enter a subject/message    Please enter the email message.  message  Thank you for your application but this is ineligible
+    And the user should see the element       jQuery=p:contains("${ineligibleMessage}")
     And the user clicks the button/link       jQuery=button:contains("Send")
     Then the user should see the element      jQuery=td:contains("${ineligibleApplication}") ~ td span:contains("Informed")
 
 Applicant is informed that his application is not eligible
-    [Documentation]  INFUND-7374
+    [Documentation]  INFUND-7374  IFS-3132
     [Tags]  HappyPath  Applicant
     When the applicant can see his application in the right section  Previous applications
-    Then the user reads his email  ${Ineligible_user["email"]}  This is ineligible  Thank you for your application but this is ineligible
+    Then the user reads his email  ${Ineligible_user["email"]}  Notification regarding your application  ${ineligibleMessage}
 
 Innovation Lead is not able to reinstate an application
     [Documentation]  INFUND-8941 IFS-986
