@@ -257,9 +257,7 @@ Assessor marks appplications as successful and releases competition feedback
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/18/funding
-    Then the user selects and marks applications as successful
-    And the user clicks the button/link       css=a.button.button-large   #Manage funding notifications
-    Then the user sends emails about funding decision
+    Then the user marks applications as successful and send funding decision email
     And the user clicks the button/link       css=button.button.button-large  #Release feedback
 
 Applicant can still see their feedback once the comp feedback has been released
@@ -267,7 +265,7 @@ Applicant can still see their feedback once the comp feedback has been released
     [Tags]
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     When the user clicks the button/link      jQuery=section:contains("Previous") h3:contains("Neural network")
-    Then the user should not see the element  jQuery=div:contains("message alert")
+    Then the user should see the element      link=testing.pdf (opens in a new window)
 
 *** Keywords ***
 Custom Suite Setup
@@ -374,15 +372,13 @@ the user checks for Manage interview panel key statistics
     ${Accepted}=  Get Text  css=div:nth-child(2) > div > span
     Should Be Equal As Integers   ${Accepted}  ${assessor_accepted}
 
-the user selects and marks applications as successful
+the user marks applications as successful and send funding decision email
     the user selects the checkbox         select-all-1
     the user clicks the button/link       jQuery=button:contains("Successful")
-    the user clicks the button/link       css=a.link-back
-
-the user sends emails about funding decision
+    the user clicks the button/link       link=Competition
+    the user clicks the button/link       link=Manage funding notifications
     the user selects the checkbox         select-all-1
     the user clicks the button/link       css=button.button.button-notification.extra-margin-top   #Assessor clicks 'Write and send emails'
-    the user enters text to a text field  css=.editor  Funding decision Notification email text
-    the user clicks the button/link       jQuery=ul:contains("") ~ button:contains("Send email to all applicants")
-    the user clicks the button/link       jQuery=.send-to-all-applicants-modal .button:contains("Send email to all applicants")
-    the user clicks the button/link       css=a.link-back
+    the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css=button[name="send-emails"]
+    the user clicks the button/link       link=Competition
