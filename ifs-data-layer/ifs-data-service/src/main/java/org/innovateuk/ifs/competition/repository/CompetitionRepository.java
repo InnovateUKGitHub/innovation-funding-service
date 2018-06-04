@@ -18,6 +18,8 @@ import java.util.List;
  */
 public interface CompetitionRepository extends PagingAndSortingRepository<Competition, Long> {
 
+    String EOI_COMPETITION_TYPE = "'Expression of interest'";
+
     /* Filters competitions to those in live state */
     String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
@@ -28,7 +30,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
        Filters competitions to those in project setup state */
     String PROJECT_SETUP_WHERE_CLAUSE = "WHERE ( " +
             "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
-            ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+            ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE " +
+            "AND ct.name != " + EOI_COMPETITION_TYPE;
 
     /* Filters competitions to those in upcoming state */
     String UPCOMING_CRITERIA = "FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
@@ -83,9 +86,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String INNOVATION_LEAD_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM AssessmentParticipant ap " + INNOVATION_LEAD_LIVE_WHERE_CLAUSE;
 
-    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
+    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c LEFT JOIN c.competitionType ct " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
+    String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c LEFT JOIN c.competitionType ct " + PROJECT_SETUP_WHERE_CLAUSE;
 
     String INNOVATION_LEAD_PROJECT_SETUP_QUERY = "SELECT ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
 
