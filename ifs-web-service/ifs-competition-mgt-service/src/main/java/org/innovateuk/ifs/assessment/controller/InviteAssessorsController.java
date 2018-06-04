@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -50,8 +52,10 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InviteAssessorsController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class InviteAssessorsController extends CompetitionManagementCookieController<AssessorSelectionForm> {
+
+    private static final Log LOG = LogFactory.getLog(InviteAssessorsController.class);
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String FORM_ATTR_NAME = "form";
@@ -174,6 +178,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown selecting assessor for invite list", e);
             return createFailureResponse();
         }
     }
@@ -201,6 +206,8 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown adding assessors to invite list", e);
+
             return createFailureResponse();
         }
     }

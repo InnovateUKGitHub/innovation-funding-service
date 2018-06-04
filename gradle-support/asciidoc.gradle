@@ -1,0 +1,28 @@
+apply plugin: 'org.asciidoctor.convert'
+
+
+asciidoctor {
+
+    dependsOn test
+    attributes 'snippets': file('build/generated-snippets')
+    backends 'html5'
+    inputs.dir "$project.buildDir/generated-snippets"
+    outputs.dir file("$project.buildDir/static/docs")
+
+    doLast {
+        copy {
+            from "$project.buildDir/asciidoc/html5"
+            into "$project.buildDir/static/docs"
+        }
+    }
+}
+
+task asciidoctorOnly(type: Test) {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
+    useJUnit {
+        includeCategories 'org.innovateuk.ifs.ControllerTest'
+    }
+    finalizedBy asciidoctor
+}

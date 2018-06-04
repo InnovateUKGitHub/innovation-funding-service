@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.util;
 
 
-public class ExceptionFunctions {
+public final class ExceptionFunctions {
+
+    private ExceptionFunctions() {}
 
     public static <T> T getOrRethrow(ExceptionThrowingSupplier<T> supplier) {
         try {

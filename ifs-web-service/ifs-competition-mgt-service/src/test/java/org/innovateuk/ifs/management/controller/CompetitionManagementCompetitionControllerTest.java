@@ -1,10 +1,15 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
+import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
+import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
@@ -28,7 +33,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
+import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
@@ -56,6 +61,18 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
     @Mock
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private CompetitionKeyAssessmentStatisticsRestService competitionKeyAssessmentStatisticsRestService;
+
+    @Mock
+    private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private AssessorRestService assessorRestService;
 
     @Override
     protected CompetitionManagementCompetitionController supplyControllerUnderTest() {
@@ -90,7 +107,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
         when(milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(milestones));
 
-        CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = newCompetitionInAssessmentKeyStatisticsResource()
+        CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatisticsResource = newCompetitionInAssessmentKeyAssessmentStatisticsResource()
                 .withAssignmentCount(1)
                 .withAssignmentsWaiting(2)
                 .withAssignmentsAccepted(3)
@@ -98,7 +115,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withAssessmentsSubmitted(5)
                 .build();
 
-        when(competitionKeyStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(competitionResource.getId())).thenReturn(restSuccess(keyStatisticsResource));
+        when(competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(competitionResource.getId())).thenReturn(restSuccess(keyStatisticsResource));
         when(assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, competitionResource.getId())).thenReturn(restSuccess(2L));
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
@@ -106,10 +123,10 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .andExpect(MockMvcResultMatchers.view().name("competition/competition-in-flight"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, milestoneRestService, competitionKeyStatisticsRestService, assessmentRestService);
+        InOrder inOrder = inOrder(competitionService, milestoneRestService, competitionKeyAssessmentStatisticsRestService, assessmentRestService);
         inOrder.verify(competitionService).getById(competitionId);
         inOrder.verify(milestoneRestService).getAllMilestonesByCompetitionId(competitionResource.getId());
-        inOrder.verify(competitionKeyStatisticsRestService).getInAssessmentKeyStatisticsByCompetition(competitionResource.getId());
+        inOrder.verify(competitionKeyAssessmentStatisticsRestService).getInAssessmentKeyStatisticsByCompetition(competitionResource.getId());
         inOrder.verify(assessmentRestService).countByStateAndCompetition(AssessmentState.CREATED, competitionResource.getId());
         inOrder.verifyNoMoreInteractions();
 
@@ -163,10 +180,11 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
-                .andExpect(MockMvcResultMatchers.status().is5xxServerError())
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(model().attribute("exception", new InstanceOf(IncorrectStateForPageException.class)))
                 .andReturn();
 
-        IllegalStateException exception = (IllegalStateException) result.getModelAndView().getModel().get("exception");
+        IncorrectStateForPageException exception = (IncorrectStateForPageException) result.getModelAndView().getModel().get("exception");
         assertEquals(format("Unexpected competition state for competition: %s", competitionId), exception.getMessage());
 
         InOrder inOrder = inOrder(competitionService);
@@ -192,13 +210,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void notifyAssessors() throws Exception {
         long competitionId = 1L;
 
-        when(competitionPostSubmissionRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
+        when(assessorRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
-        verify(competitionPostSubmissionRestService).notifyAssessors(competitionId);
+        verify(assessorRestService).notifyAssessors(competitionId);
         verifyNoMoreInteractions(competitionService);
     }
 

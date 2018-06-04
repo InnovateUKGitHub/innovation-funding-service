@@ -40,8 +40,8 @@ import static java.util.Arrays.asList;
 public class ApplicationDownloadController {
     private static final Log LOG = LogFactory.getLog(ApplicationDownloadController.class);
     private static final String APPLICATION_SUMMARY_QUESTION_NAME = "Project summary";
-    public static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
-    public static final String FONT_NAME = "Arial";
+    private static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
+    private static final String FONT_NAME = "Arial";
     @Autowired
     private ApplicationService applicationService;
     @Autowired
@@ -54,7 +54,7 @@ public class ApplicationDownloadController {
     private Integer rowCount = 0;
     private Integer headerCount = 0;
 
-    public static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
+    private static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
@@ -73,26 +73,25 @@ public class ApplicationDownloadController {
         
         LOG.info(String.format("Generate download for %s applications with status ", applications.size()));
 
-        POIXMLDocument wb;
-        try {
-        	wb = getExcelWorkbook(applications);
+        try(XSSFWorkbook wb = new XSSFWorkbook()) {
+        	populateExcelWorkbook(wb, applications);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            wb.write(baos);
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            // Prevent caching
+            httpHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
+            httpHeaders.add("Pragma", "no-cache");
+            httpHeaders.add("Expires", "0");
+            return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
         } catch (SummaryDataUnavailableException e) {
-        	LOG.error("unable to retrieve data required for the excel workbook");
+        	LOG.error("unable to retrieve data required for the excel workbook", e);
         	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        wb.write(baos);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        // Prevent caching
-        httpHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        httpHeaders.add("Pragma", "no-cache");
-        httpHeaders.add("Expires", "0");
-        return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
     }
 
-    private XSSFWorkbook getExcelWorkbook(List<Application> applications) {
-        XSSFWorkbook wb = new XSSFWorkbook();
+    private void populateExcelWorkbook(XSSFWorkbook wb, List<Application> applications) {
         XSSFSheet sheet = wb.createSheet("Submitted Applications");
 
         XSSFFont font = wb.createFont();
@@ -174,7 +173,6 @@ public class ApplicationDownloadController {
         }
         // This column contains the project summary, so might be very long because of autoSize..
         sheet.setColumnWidth(8, PROJECT_SUMMARY_COLUMN_WITH * 256);
-        return wb;
     }
 
     private XSSFRow createHeaderCellWithValue(XSSFRow row, String value){

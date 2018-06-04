@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.initialdetail.sectionupdater;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -52,9 +51,6 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
 
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
 	private static Log LOG = LogFactory.getLog(InitialDetailsSectionUpdater.class);
-
-	@Autowired
-	private CompetitionService competitionService;
 
 	@Autowired
     private CompetitionSetupService competitionSetupService;
@@ -115,6 +111,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setName(initialDetailsForm.getTitle());
         competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
         competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
+        competition.setStateAid(initialDetailsForm.getStateAid());
 
         errors.addAll(attemptOpeningMilestoneSave(initialDetailsForm, competition));
         errors.addAll(attemptAddingInnovationAreasToCompetition(initialDetailsForm, competition));
@@ -281,10 +278,10 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                     return competitionSetupRestService.update(competitionResource).toServiceResult();
                 }
             } catch (Exception e) {
-                LOG.error(e.getMessage());
+                LOG.error(e.getMessage(), e);
                 return serviceFailure(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
             }
-        } else if(fieldName.equals("autosaveInnovationAreaIds")) {
+        } else if("autosaveInnovationAreaIds".equals(fieldName)) {
             processInnovationAreas(value, competitionResource);
             return competitionSetupRestService.update(competitionResource).toServiceResult();
         }

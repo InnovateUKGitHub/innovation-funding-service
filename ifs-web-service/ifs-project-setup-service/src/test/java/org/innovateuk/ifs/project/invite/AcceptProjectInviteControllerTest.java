@@ -8,6 +8,8 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel
 import org.innovateuk.ifs.registration.service.AcceptProjectInviteController;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +17,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.Cookie;
 
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
+import static org.innovateuk.ifs.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.CookieTestUtil.getDecryptedCookieValue;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
@@ -42,11 +50,27 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     @Mock
     private ProjectInviteRestService projectInviteRestServiceMock;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private Environment env;
+
+    @Mock
+    private MessageSource messageSource;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
+
+    private MockMvc mockMvc;
+
+    private UserResource loggedInUser;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = setupMockMvc(acceptProjectInviteController, () -> loggedInUser, env, messageSource);
-        setupCookieUtil();
+        setupCookieUtil(cookieUtil);
     }
 
     @Test

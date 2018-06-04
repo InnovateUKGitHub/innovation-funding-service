@@ -75,7 +75,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private void generateProcessRolesForApplication(User user, Role role, Application application) {
         List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
         List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-        Long userOrganisationId = usersProcessRoles.size() != 0
+        Long userOrganisationId = !usersProcessRoles.isEmpty()
                 ? usersProcessRoles.get(0).getOrganisationId()
                 : usersOrganisations.get(0).getId();
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisationId);

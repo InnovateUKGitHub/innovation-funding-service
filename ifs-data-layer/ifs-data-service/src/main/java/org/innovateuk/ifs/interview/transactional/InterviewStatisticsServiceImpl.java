@@ -9,6 +9,7 @@ import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,12 @@ import org.springframework.stereotype.Service;
 import java.util.EnumSet;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 /**
  * Service to get statistics related to Interview Panels.
@@ -52,7 +51,7 @@ public class InterviewStatisticsServiceImpl implements InterviewStatisticsServic
     }
 
     @Override
-    public ServiceResult<InterviewAssignmentKeyStatisticsResource> getInterviewPanelKeyStatistics(long competitionId) {
+    public ServiceResult<InterviewAssignmentKeyStatisticsResource> getInterviewAssignmentPanelKeyStatistics(long competitionId) {
         int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED);
         int applicationsAssigned = interviewAssignmentRepository.
                 countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
@@ -73,6 +72,25 @@ public class InterviewStatisticsServiceImpl implements InterviewStatisticsServic
                         totalAssessorsInvited,
                         assessorsAccepted,
                         assessorsDeclined
+                )
+        );
+    }
+
+    @Override
+    public ServiceResult<InterviewStatisticsResource> getInterviewStatistics(long competitionId) {
+        List<Long> interviewPanelInviteIds = simpleMap(interviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
+
+        int applicationsAssigned = interviewAssignmentRepository.
+                countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
+        int interviewResponses = interviewAssignmentRepository.
+                countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE));
+        int assessorsAccepted = getInterviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, interviewPanelInviteIds);
+
+        return serviceSuccess(
+                new InterviewStatisticsResource(
+                        applicationsAssigned,
+                        interviewResponses,
+                        assessorsAccepted
                 )
         );
     }

@@ -1,18 +1,22 @@
 package org.innovateuk.ifs.alert;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.alert.AlertController;
+import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.alert.service.AlertRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,6 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AlertControllerTest extends BaseControllerMockMVCTest<AlertController> {
+
+    @Mock
+    private AlertRestService alertRestService;
 
     @Override
     protected AlertController supplyControllerUnderTest() {
@@ -31,7 +38,7 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
     public void findAllVisibleByType() throws Exception {
         when(alertRestService.findAllVisibleByType(AlertType.MAINTENANCE))
                 .thenReturn(
-                        restSuccess(asList(newAlertResource()
+                        RestResult.restSuccess(Arrays.asList(AlertResourceBuilder.newAlertResource()
                                 .withId(1L)
                                 .withMessage("Test Maintenance")
                                 .withType(AlertType.MAINTENANCE)

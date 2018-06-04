@@ -62,6 +62,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withPafCode("paf")
 				.withName("name")
 				.withBudgetCode("budgetcode")
+                .withStateAid(Boolean.TRUE)
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = new ArrayList<>();
@@ -82,6 +83,7 @@ public class InitialDetailsFormPopulatorTest {
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
 		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());
 		assertEquals("name", form.getTitle());
+		assertEquals(Boolean.TRUE, form.getStateAid());
 	}
 
 	@Test
@@ -96,6 +98,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withPafCode("paf")
 				.withName("name")
 				.withBudgetCode("budgetcode")
+                .withStateAid(Boolean.TRUE)
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = newInnovationAreaResource().withId(6L, 7L).build(2);

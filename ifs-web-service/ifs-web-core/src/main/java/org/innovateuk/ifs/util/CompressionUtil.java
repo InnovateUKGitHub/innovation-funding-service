@@ -15,9 +15,11 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64String;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 
-public class CompressionUtil {
+public final class CompressionUtil {
 
     private static final Log LOG = LogFactory.getLog(CompressionUtil.class);
+
+    private CompressionUtil() {}
 
     public static String getCompressedString(String rawString) {
         String compressedString = "";

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -20,12 +20,6 @@ import java.util.List;
 @RequestMapping("/competition/postSubmission")
 public class CompetitionPostSubmissionController {
 
-    private static final String DEFAULT_PAGE_NUMBER = "0";
-
-    private static final String DEFAULT_PAGE_SIZE = "20";
-
-    private static final String DEFAULT_SORT_BY = "id";
-
     @Autowired
     private CompetitionService competitionService;
 
@@ -33,11 +27,10 @@ public class CompetitionPostSubmissionController {
     private AssessorService assessorService;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private ApplicationNotificationService applicationNotificationService;
 
+    @ZeroDowntime(reference = "IFS-3561", description = "To support the older REST client before this was moved to " +
+            "AssessorController. Remove in cleanup before the next release.")
     @PutMapping("/{id}/notify-assessors")
     public RestResult<Void> notifyAssessors(@PathVariable("id") final long competitionId) {
         return competitionService.notifyAssessors(competitionId)

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.competition.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
@@ -19,7 +18,7 @@ import org.mapstruct.Mappings;
     uses = {
         CompetitionMapper.class,
         UserMapper.class,
-        CompetitionInviteMapper.class,
+        AssessmentInviteMapper.class,
         RejectionReasonMapper.class,
         CompetitionParticipantRoleMapper.class,
         ParticipantStatusMapper.class,
