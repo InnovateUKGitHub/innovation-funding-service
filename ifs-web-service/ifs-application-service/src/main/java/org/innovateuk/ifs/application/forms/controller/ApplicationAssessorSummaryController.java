@@ -11,7 +11,6 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -42,7 +41,6 @@ public class ApplicationAssessorSummaryController {
     private ApplicationService applicationService;
     private CompetitionService competitionService;
     private ApplicationModelPopulator applicationModelPopulator;
-    private FormInputResponseRestService formInputResponseRestService;
     private UserRestService userRestService;
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -55,7 +53,6 @@ public class ApplicationAssessorSummaryController {
                                                 ApplicationService applicationService,
                                                 CompetitionService competitionService,
                                                 ApplicationModelPopulator applicationModelPopulator,
-                                                FormInputResponseRestService formInputResponseRestService,
                                                 UserRestService userRestService,
                                                 InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
                                                 ApplicationSummaryRestService applicationSummaryRestService) {
@@ -63,7 +60,6 @@ public class ApplicationAssessorSummaryController {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.applicationModelPopulator = applicationModelPopulator;
-        this.formInputResponseRestService = formInputResponseRestService;
         this.userRestService = userRestService;
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.applicationSummaryRestService = applicationSummaryRestService;

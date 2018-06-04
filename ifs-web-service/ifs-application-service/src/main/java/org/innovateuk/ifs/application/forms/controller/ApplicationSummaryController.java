@@ -7,8 +7,6 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -57,8 +55,6 @@ public class ApplicationSummaryController {
     private FormInputResponseService formInputResponseService;
     private FormInputResponseRestService formInputResponseRestService;
     private UserRestService userRestService;
-    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-    private AssessmentRestService assessmentRestService;
     private ProjectService projectService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
@@ -76,8 +72,6 @@ public class ApplicationSummaryController {
                                         FormInputResponseService formInputResponseService,
                                         FormInputResponseRestService formInputResponseRestService,
                                         UserRestService userRestService,
-                                        AssessorFormInputResponseRestService assessorFormInputResponseRestService,
-                                        AssessmentRestService assessmentRestService,
                                         ProjectService projectService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
@@ -90,8 +84,6 @@ public class ApplicationSummaryController {
         this.formInputResponseService = formInputResponseService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.userRestService = userRestService;
-        this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
-        this.assessmentRestService = assessmentRestService;
         this.projectService = projectService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
