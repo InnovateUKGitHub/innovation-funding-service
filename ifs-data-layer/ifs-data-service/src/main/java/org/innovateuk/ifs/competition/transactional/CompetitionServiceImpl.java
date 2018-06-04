@@ -13,12 +13,12 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private PublicContentService publicContentService;
 
     @Autowired
-    private CompetitionKeyStatisticsService competitionKeyStatisticsService;
+    private CompetitionKeyApplicationStatisticsService competitionKeyApplicationStatisticsService;
 
     @Autowired
     private MilestoneService milestoneService;
@@ -285,8 +285,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> releaseFeedback(long competitionId) {
-        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
-                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+        CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
@@ -300,8 +300,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> manageInformState(long competitionId) {
-        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
-                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+        CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);

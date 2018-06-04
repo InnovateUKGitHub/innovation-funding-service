@@ -17,12 +17,12 @@ import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
@@ -53,8 +53,8 @@ import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newIn
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
@@ -85,7 +85,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     private CompetitionMapper competitionMapperMock;
 
     @Mock
-    private CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
+    private CompetitionKeyApplicationStatisticsService competitionKeyApplicationStatisticsServiceMock;
 
     @Mock
     private UserMapper userMapperMock;
@@ -104,7 +104,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Mock
     private ProjectRepository projectRepositoryMock;
-
 
     private Long competitionId = 1L;
 
@@ -550,13 +549,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withMilestones(milestones)
                 .build();
 
-        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        CompetitionFundedKeyApplicationStatisticsResource keyStatistics = new CompetitionFundedKeyApplicationStatisticsResource();
         keyStatistics.setApplicationsAwaitingDecision(0);
         keyStatistics.setApplicationsSubmitted(5);
         keyStatistics.setApplicationsNotifiedOfDecision(5);
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+        when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
+                .thenReturn(serviceSuccess(keyStatistics));
 
         ServiceResult<Void> response = service.releaseFeedback(competitionId);
 
@@ -587,13 +587,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withMilestones(milestones)
                 .build();
 
-        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        CompetitionFundedKeyApplicationStatisticsResource keyStatistics = new CompetitionFundedKeyApplicationStatisticsResource();
         keyStatistics.setApplicationsAwaitingDecision(0);
         keyStatistics.setApplicationsSubmitted(5);
         keyStatistics.setApplicationsNotifiedOfDecision(4);
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+        when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
+                .thenReturn(serviceSuccess(keyStatistics));
 
         ServiceResult<Void> response = service.releaseFeedback(competitionId);
 
@@ -626,13 +627,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
 
-        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        CompetitionFundedKeyApplicationStatisticsResource keyStatistics = new CompetitionFundedKeyApplicationStatisticsResource();
         keyStatistics.setApplicationsAwaitingDecision(0);
         keyStatistics.setApplicationsSubmitted(5);
         keyStatistics.setApplicationsNotifiedOfDecision(5);
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+        when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
+                .thenReturn(serviceSuccess(keyStatistics));
 
         ServiceResult<Void> response = service.manageInformState(competitionId);
 
@@ -664,13 +666,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
 
-        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        CompetitionFundedKeyApplicationStatisticsResource keyStatistics = new CompetitionFundedKeyApplicationStatisticsResource();
         keyStatistics.setApplicationsAwaitingDecision(0);
         keyStatistics.setApplicationsSubmitted(5);
         keyStatistics.setApplicationsNotifiedOfDecision(4);
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+        when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
+                .thenReturn(serviceSuccess(keyStatistics));
 
         ServiceResult<Void> response = service.manageInformState(competitionId);
 
@@ -804,6 +807,5 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(GrantTermsAndConditions.class,
                 competition.getTermsAndConditions().getId())));
-
     }
 }

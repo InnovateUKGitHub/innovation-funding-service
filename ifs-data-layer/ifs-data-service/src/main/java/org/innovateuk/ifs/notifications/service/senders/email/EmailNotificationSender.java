@@ -13,15 +13,18 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.EMAIL_NOTIFICATION_TEMPLATES_PATH;
 import static org.innovateuk.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationSource;
 import static org.innovateuk.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationTarget;
-import static java.io.File.separator;
-import static java.util.Collections.singletonList;
 
 /**
  * A Notification Sender that can, given a Notification, construct an email from it and use the Email Service to send
@@ -29,8 +32,6 @@ import static java.util.Collections.singletonList;
  */
 @Component
 public class EmailNotificationSender implements NotificationSender {
-
-    public static final String EMAIL_NOTIFICATION_TEMPLATES_PATH = "notifications" + separator + "email" + separator;
 
     @Autowired
     private EmailService emailService;

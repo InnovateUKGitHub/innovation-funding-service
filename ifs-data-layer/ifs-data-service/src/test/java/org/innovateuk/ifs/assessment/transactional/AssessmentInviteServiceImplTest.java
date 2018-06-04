@@ -90,6 +90,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -254,7 +255,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessor_preview_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessor_preview_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
@@ -313,7 +314,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessor_preview_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessor_preview_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(assessmentInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
@@ -364,7 +365,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessor_editable_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessor_editable_text.txt";
 
         when(assessmentInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
@@ -412,7 +413,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessor_editable_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessor_editable_text.txt";
 
         when(assessmentInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,

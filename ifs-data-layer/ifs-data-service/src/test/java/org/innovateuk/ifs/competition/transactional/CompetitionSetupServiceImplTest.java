@@ -65,8 +65,6 @@ public class CompetitionSetupServiceImplTest {
     @Mock
     private CompetitionRepository competitionRepository;
     @Mock
-    private AssessmentInviteRepository assessmentInviteRepository;
-    @Mock
     private FormInputRepository formInputRepository;
     @Mock
     private PublicContentRepository publicContentRepository;
@@ -428,18 +426,14 @@ public class CompetitionSetupServiceImplTest {
         PublicContent publicContent = newPublicContent().build();
 
         when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
-        when(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), EnumSet.allOf
-                (InviteStatus.class))).thenReturn(0);
         when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository,
-                innovationLeadRepository, setupStatusRepository, milestoneRepository);
+        InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository,
+                setupStatusRepository, milestoneRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
-        inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
-                EnumSet.allOf(InviteStatus.class));
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
         // Test that the competition is saved without the form validators, deleting them
@@ -461,27 +455,6 @@ public class CompetitionSetupServiceImplTest {
                                 assertTrue(formInput.getFormValidators().isEmpty()));
                     }));
         });
-    }
-
-    @Test
-    public void deleteCompetition_assessmentInvitesExist() throws Exception {
-        Competition competition = newCompetition().build();
-
-        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
-        when(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), EnumSet.allOf
-                (InviteStatus.class))).thenReturn(1);
-
-        ServiceResult<Void> result = service.deleteCompetition(competition.getId());
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED));
-
-        InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository,
-                innovationLeadRepository, setupStatusRepository, milestoneRepository);
-        inOrder.verify(competitionRepository).findOne(competition.getId());
-        inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
-                EnumSet.allOf(InviteStatus.class));
-        inOrder.verifyNoMoreInteractions();
     }
 
     @Test

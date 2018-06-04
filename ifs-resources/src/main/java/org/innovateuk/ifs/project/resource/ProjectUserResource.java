@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
