@@ -37,7 +37,8 @@
                 </td>
                 <td th:text="${row.name}">Automated Project Title generator</td>
                 <td th:text="${row.leadOrganisationName}">B.Systems</td>
-                <td th:text="${#messages.msg('ifs.application.unsuccessful.' + row.applicationState.getStateName())}">Not funded</td>
+                <td th:text="${#messages.msg('ifs.application.unsuccessful.' + row.applicationState.getStateName())}"
+                    th:colspan="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED') ? '1' : '2'}">Not funded</td>
                 <th:block th:if="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED')}">
                     <td class="alignright cta">
                         <a

@@ -179,10 +179,6 @@ public class SetupSectionAccessibilityHelper {
             return NOT_ACCESSIBLE;
         }
 
-        if (!setupProgressChecker.isProjectDetailsSubmitted()) {
-            return fail("Unable to access Finance Checks section until the Project Details section is complete");
-        }
-
         if (!setupProgressChecker.isFinanceContactSubmitted(organisation)) {
 
             return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +
