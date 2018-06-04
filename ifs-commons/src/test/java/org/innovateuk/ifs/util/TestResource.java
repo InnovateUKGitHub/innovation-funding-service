@@ -3,8 +3,6 @@ package org.innovateuk.ifs.util;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestResource {
 
@@ -21,7 +19,6 @@ public class TestResource {
     public void setName(String name) {
         this.name = name;
     }
-
 
     @Override
     public boolean equals(Object o) {

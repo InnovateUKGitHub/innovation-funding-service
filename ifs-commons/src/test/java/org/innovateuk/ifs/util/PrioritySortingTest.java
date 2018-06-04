@@ -1,17 +1,18 @@
 package org.innovateuk.ifs.util;
 
-//import static org.innovateuk.ifs.user.builder.TestResourceBuilder.*;
-//import org.innovateuk.ifs.user.resource.TestResource;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import static java.util.Arrays.stream;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
 
 public class PrioritySortingTest {
 
@@ -23,9 +24,9 @@ public class PrioritySortingTest {
 
     @Test
     public void sortingListWorksAsExpectedWithIdentity() {
-        List<String> list = new PrioritySorting<>(Arrays.asList("C", "A", "exceptionElement"), "exceptionElement", Function.identity()).unwrap();
+        List<String> list = new PrioritySorting<>(asList("C", "A", "exceptionElement"), "exceptionElement", Function.identity()).unwrap();
         assertTrue(list.size() == 3);
-        assertEquals(list, Arrays.asList("exceptionElement", "A", "C"));
+        assertEquals(list, asList("exceptionElement", "A", "C"));
     }
 
     @Test
@@ -47,13 +48,12 @@ public class PrioritySortingTest {
     }
     
     private List<TestResource> createResources(String ... names) {
-        return Arrays.stream(names)
+        return stream(names)
                 .map(n -> new TestResource(n))
                 .collect(Collectors.toList());
     }
     private TestResource createResource(String name) {
         return createResources(name).get(0);
     }
-
 
 }
