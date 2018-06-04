@@ -4,7 +4,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.*;
 
 import java.util.ArrayList;
