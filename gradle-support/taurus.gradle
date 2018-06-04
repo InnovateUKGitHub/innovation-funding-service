@@ -1,7 +1,7 @@
 ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 
-ext.server_url = project.properties['server_url'] ?: "ifs.local-dev"
-ext.authorisation_url = project.properties['authorisation_url'] ?: "auth.local-dev:9443"
+ext.server_url = project.properties['serverUrl'] ?: "ifs.local-dev"
+ext.authorisation_url = project.properties['authorisationUrl'] ?: "auth.local-dev:9443"
 
 task prepareTaurusDeployment(type: Copy) {
 
