@@ -59,7 +59,6 @@ ext.DB_HOST="ifs-database"
 ext.DB_PORT=3306
 
 ext.LDAP_HOST="ldap"
-ext.LDAP_PASS="default"
 ext.LDAP_DOMAIN="dc=nodomain"
 ext.LDAP_SCHEME="ldaps"
 
