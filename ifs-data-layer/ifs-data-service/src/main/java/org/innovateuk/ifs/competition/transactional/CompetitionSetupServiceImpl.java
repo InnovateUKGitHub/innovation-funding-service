@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -16,7 +15,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
@@ -36,8 +34,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -72,8 +68,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private GrantTermsAndConditionsMapper termsAndConditionsMapper;
     @Autowired
     private PublicContentRepository publicContentRepository;
-    @Autowired
-    private AssessmentInviteRepository assessmentInviteRepository;
     @Autowired
     private MilestoneRepository milestoneRepository;
 
@@ -310,8 +304,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> deleteCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition ->
-                assessorInvitesExist(competition) ? serviceFailure(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED)
-                        : deletePublicContentForCompetition(competition).andOnSuccess(() -> {
+                deletePublicContentForCompetition(competition).andOnSuccess(() -> {
                     deleteFormValidatorsForCompetitionQuestions(competition);
                     deleteMilestonesForCompetition(competition);
                     deleteInnovationLead(competition);
@@ -319,11 +312,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                     competitionRepository.delete(competition);
                     return serviceSuccess();
                 }));
-    }
-
-    private boolean assessorInvitesExist(Competition competition) {
-        return assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(),
-                EnumSet.allOf(InviteStatus.class)) > 0;
     }
 
     private void deleteSetupStatus(Competition competition) {

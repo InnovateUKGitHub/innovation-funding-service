@@ -407,7 +407,9 @@
 
     <th:block th:fragment="labour_row">
         <th:block  th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
+                class="form-group-row-validated"
+                th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossEmployeeCost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-role]|">
                         <span class="visuallyhidden">Role within project</span>
@@ -829,7 +831,9 @@
 
     <th:block th:fragment="materials_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
+                class="form-group-row-validated"
+                th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-item]|">
                         <span class="visuallyhidden">Item</span>
@@ -891,8 +895,7 @@
                            th:id="${'cost-materials-'+costIdentifier+'-materialTotal'}"
                            data-calculation-operations="*"
                            readonly="readonly"
-                           th:value="'£'+${#numbers.formatInteger(cost.total, 0,'DEFAULT')}"
-                    />
+                           th:value="'£'+${#numbers.formatInteger(cost.total, 0,'DEFAULT')}" />
                 </td>
                 <td class="alignright buttoncolumn remove">
                     <button th:unless="${cost.id == null}"
@@ -1346,7 +1349,9 @@
 
     <th:block th:fragment="travel_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
+                class="form-group-row-validated"
+                th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-item]|">
                         <span class="visuallyhidden">Purpose of journey or description of subsistence cost</span>
@@ -1499,7 +1504,9 @@
     </th:block>
 
     <th:block th:fragment="other_costs_row" th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
+            class="form-group-row-validated"
+            th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')})) ? 'form-group-error'">
             <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'form-group-error'">
                 <label th:for="|formInput[cost-${costIdentifier}-description]|">
                     <span class="visuallyhidden">Description and justification of the cost</span>
