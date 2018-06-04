@@ -284,7 +284,7 @@ public class RegistrationController {
         }
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, long organisationId, long competitionId) {
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
         return userService.createLeadApplicantForOrganisationWithCompetitionId(
                 registrationForm.getFirstName(),
                 registrationForm.getLastName(),
