@@ -7,7 +7,6 @@ import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -372,7 +371,7 @@ public class CompetitionSetupController {
                          ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult);
 
-        RestResult<Void> deleteResult = competitionSetupRestService.delete(competitionId);
+        ServiceResult<Void> deleteResult = competitionSetupService.deleteCompetition(competitionId);
 
         return validationHandler.addAnyErrors(deleteResult, asGlobalErrors())
                 .failNowOrSucceedWith(failureView, () -> "redirect:/dashboard");
