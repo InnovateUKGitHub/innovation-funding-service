@@ -11,6 +11,7 @@ ${Kazio_Name}     Kazio
 ${Kazio_Id}       ${organisation_ids["${Kazio_Name}"]}
 ${Cogilith_Name}  Cogilith
 ${Cogilith_Id}    ${organisation_ids["${Cogilith_Name}"]}
+${PS_GOL_COMPETITION_NAME}       Rolling stock future developments
 ${PS_GOL_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_GOL_APPLICATION_TITLE}      London underground - enhancements to existing stock and logistics
 ${PS_GOL_APPLICATION_NO}         ${application_ids["${PS_GOL_APPLICATION_TITLE}"]}
