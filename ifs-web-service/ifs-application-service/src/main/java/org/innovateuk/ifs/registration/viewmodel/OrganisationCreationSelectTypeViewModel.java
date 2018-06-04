@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.util.List;
 

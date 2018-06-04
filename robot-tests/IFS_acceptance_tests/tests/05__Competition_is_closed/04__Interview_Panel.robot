@@ -364,6 +364,7 @@ the user checks for Manage interview panel key statistics
     ${applications_assigned}=  Get Text  css=ul li:nth-child(1) span
     ${assessor_accepted}=      Get Text  css=ul li:nth-child(3) span
     ${feedback_responded}=     Get Text  css=ul li:nth-child(2) span
+    the user should see the element      jQUery=div span:contains("${feedback_responded}") ~ small:contains("Applicants responded to feedback")
     the user should see the element      jQuery=div span:contains("${feedback_responded}") ~ small:contains("Applications responded to feedback")
     the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/find
     ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span    #Assigned to interview panel

@@ -1,0 +1,47 @@
+=== Competition ready to open key statistics
+==== Request
+include::{snippets}/competition-assessment-statistics/get-ready-to-open-key-statistics/http-request.adoc[]
+include::{snippets}/competition-assessment-statistics/get-ready-to-open-key-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-assessment-statistics/get-ready-to-open-key-statistics/http-response.adoc[]
+include::{snippets}/competition-assessment-statistics/get-ready-to-open-key-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-assessment-statistics/get-ready-to-open-key-statistics/curl-request.adoc[]
+
+=== Competition open key statistics
+==== Request
+include::{snippets}/competition-assessment-statistics/get-open-key-statistics/http-request.adoc[]
+include::{snippets}/competition-assessment-statistics/get-open-key-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-assessment-statistics/get-open-key-statistics/http-response.adoc[]
+include::{snippets}/competition-assessment-statistics/get-open-key-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-assessment-statistics/get-open-key-statistics/curl-request.adoc[]
+
+=== Competition closed key statistics
+==== Request
+include::{snippets}/competition-assessment-statistics/get-closed-key-statistics/http-request.adoc[]
+include::{snippets}/competition-assessment-statistics/get-closed-key-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-assessment-statistics/get-closed-key-statistics/http-response.adoc[]
+include::{snippets}/competition-assessment-statistics/get-closed-key-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-assessment-statistics/get-closed-key-statistics/curl-request.adoc[]
+
+=== Competition in assessment key statistics
+==== Request
+include::{snippets}/competition-assessment-statistics/get-in-assessment-key-statistics/http-request.adoc[]
+include::{snippets}/competition-assessment-statistics/get-in-assessment-key-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-assessment-statistics/get-in-assessment-key-statistics/http-response.adoc[]
+include::{snippets}/competition-assessment-statistics/get-in-assessment-key-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-assessment-statistics/get-in-assessment-key-statistics/curl-request.adoc[]

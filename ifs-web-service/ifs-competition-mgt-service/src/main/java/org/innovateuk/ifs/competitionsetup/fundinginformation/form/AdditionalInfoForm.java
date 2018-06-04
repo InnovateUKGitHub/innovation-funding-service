@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.fundinginformation.form;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.form.FunderRowForm;
@@ -19,7 +20,7 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
 
     private String pafNumber;
 
-    @NotEmpty(message = "{validation.additionalinfoform.competitioncode.required}")
+    @NotBlank(message = "{validation.additionalinfoform.competitioncode.required}")
     private String competitionCode;
 
     private String budgetCode;

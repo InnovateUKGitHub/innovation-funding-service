@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 
 import javax.validation.constraints.Pattern;
@@ -17,12 +17,12 @@ public class InviteNewAssessorsRowForm {
             @Size(min=2, message="{validation.standard.name.length.min}"),
             @Size(max=70, message="{validation.standard.name.length.max}"),
     })
-    @NotEmpty(message = "{validation.standard.name.required}")
+    @NotBlank(message = "{validation.standard.name.required}")
     private String name;
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @Size(max = 254, message = "{validation.standard.email.length.max}")
-    @NotEmpty(message = "{validation.inviteNewAssessorsForm.invites.email.required}")
+    @NotBlank(message = "{validation.inviteNewAssessorsForm.invites.email.required}")
     private String email;
 
     public String getName() {

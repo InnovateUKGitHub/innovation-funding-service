@@ -16,7 +16,7 @@ import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourc
 import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;

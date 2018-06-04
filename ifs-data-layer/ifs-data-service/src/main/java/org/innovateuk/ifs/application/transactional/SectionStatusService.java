@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.Section;
 import org.springframework.security.access.method.P;
