@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.profile.builder;
 
 import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.competition.domain.SiteTermsAndConditions;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -11,7 +10,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
-import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsBuilder.newSiteTermsAndConditions;
 import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;

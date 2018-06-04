@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.user.repository;
+package org.innovateuk.ifs.organisation.repository;
 
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.springframework.data.repository.CrudRepository;
 
 public interface OrganisationTypeRepository extends CrudRepository<OrganisationType, Long> {

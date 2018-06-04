@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.user.domain;
+package org.innovateuk.ifs.organisation.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.user.mapper;
+package org.innovateuk.ifs.organisation.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
-import org.innovateuk.ifs.user.domain.OrganisationType;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.mapstruct.Mapper;
 
 @Mapper(
