@@ -37,6 +37,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
@@ -226,7 +227,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
         return renderer.renderTemplate(
                 systemNotificationSource,
                 notificationTarget,
-                "allocate_interview_applications_to_assessor_text.txt",
+                PREVIEW_TEMPLATES_PATH + "allocate_interview_applications_to_assessor_text.txt",
                 arguments
         ).getSuccess();
     }
