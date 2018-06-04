@@ -41,7 +41,9 @@
         </div>
         <div class="column-half">
             <ul class="list list-bullet">
-                <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view and manage contributors and collaborators</a></li>
+                <th:block th:unless="${model.currentCompetition.useNewApplicantMenu}">
+                    <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view and manage contributors and collaborators</a></li>
+                </th:block>
                 <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">view the grant terms and conditions</a></li>
             </ul>
         </div>

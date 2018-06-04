@@ -103,6 +103,9 @@ public class CompetitionResource {
     // This should be removed in the next release.")
     private Boolean stateAid = Boolean.TRUE;
 
+    // IFS-3088: This is temporary until all competitions with the old menu view are complete
+    private boolean useNewApplicantMenu;
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -630,6 +633,14 @@ public class CompetitionResource {
 
     public void setStateAid(final Boolean stateAid) {
         this.stateAid = stateAid;
+    }
+
+    public boolean getUseNewApplicantMenu() {
+        return useNewApplicantMenu;
+    }
+
+    public void setUseNewApplicantMenu(boolean useNewApplicantMenu) {
+        this.useNewApplicantMenu = useNewApplicantMenu;
     }
 
     @Override
