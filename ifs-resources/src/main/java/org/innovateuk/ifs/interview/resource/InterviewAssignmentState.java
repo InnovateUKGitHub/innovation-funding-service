@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.interview.resource;
 
-import org.innovateuk.ifs.util.enums.IdentifiableEnum;
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
