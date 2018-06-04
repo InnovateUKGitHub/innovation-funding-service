@@ -1,18 +1,13 @@
 ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 
-if (!isNamedEnv()) {
-    ext.server_url = "ifs.local-dev"
-    ext.authorisation_url = "auth.local-dev:9443"
-} else {
-    ext.server_url = project.serverUrl
-    ext.authorisation_url = project.authorisationUrl
-}
+ext.server_url = "ifs.local-dev"
+ext.authorisation_url = "auth.local-dev:9443"
 
 task prepareTaurusDeployment(type: Copy) {
 
     destinationDir = file('./')
 
-    from('jmeter/Representative/') {
+    from('taurus') {
         include '**/taurus.yml'
     }
     filesMatching("**/**.*") {
