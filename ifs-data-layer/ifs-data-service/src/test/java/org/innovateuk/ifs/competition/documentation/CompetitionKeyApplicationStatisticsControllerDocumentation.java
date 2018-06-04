@@ -66,7 +66,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/open", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-application-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -86,7 +86,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/closed", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-application-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -107,7 +107,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/funded", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-application-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -127,7 +127,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(reviewKeyStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/review", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-application-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -146,7 +146,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(reviewInviteStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/review-invites", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-application-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -164,7 +164,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         mockMvc.perform(get("/competition-application-statistics/{id}/interview-assignment", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-application-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition")
                         ),
@@ -182,7 +182,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         mockMvc.perform(get("/competition-application-statistics/{id}/interview-invites", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-application-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition")
                         ),
@@ -199,7 +199,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         mockMvc.perform(get("/competition-application-statistics/{id}/interview", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-application-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition")
                         ),
