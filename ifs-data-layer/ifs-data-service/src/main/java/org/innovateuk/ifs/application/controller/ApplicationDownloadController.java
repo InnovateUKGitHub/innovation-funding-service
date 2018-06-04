@@ -2,14 +2,13 @@ package org.innovateuk.ifs.application.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.POIXMLDocument;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
-import org.innovateuk.ifs.commons.error.exception.SummaryDataUnavailableException;
+import org.innovateuk.ifs.commons.exception.SummaryDataUnavailableException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;

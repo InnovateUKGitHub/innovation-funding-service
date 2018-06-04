@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.stereotype.Service;
 

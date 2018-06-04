@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.exception;
 
-import org.innovateuk.ifs.commons.error.exception.IFSRuntimeException;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 
 import java.util.List;
 
