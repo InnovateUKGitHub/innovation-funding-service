@@ -47,7 +47,6 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -1189,19 +1188,19 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void deleteCompetition() throws Exception {
-        when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(restSuccess());
+        when(competitionSetupService.deleteCompetition(COMPETITION_ID)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
 
-        verify(competitionSetupRestService, only()).delete(COMPETITION_ID);
+        verify(competitionSetupService, only()).deleteCompetition(COMPETITION_ID);
     }
 
     @Test
     public void deleteCompetition_failure() throws Exception {
-        when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(
-                restFailure(new Error(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED, HttpStatus.BAD_REQUEST)));
+        when(competitionSetupService.deleteCompetition(COMPETITION_ID)).thenReturn(
+                serviceFailure(new Error(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED, HttpStatus.BAD_REQUEST)));
 
         // For re-display of Competition Setup following the failure
         CompetitionResource competitionResource = newCompetitionResource()
@@ -1216,8 +1215,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(model().errorCount(1))
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
-
-        verify(competitionSetupRestService, only()).delete(COMPETITION_ID);
 
         CompetitionSetupSummaryForm form = (CompetitionSetupSummaryForm) result.getModelAndView().getModel()
                 .get(COMPETITION_SETUP_FORM_KEY);

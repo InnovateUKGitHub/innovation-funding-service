@@ -1,0 +1,95 @@
+=== Competition open key statistics
+==== Request
+include::{snippets}/competition-application-statistics/get-open-key-statistics/http-request.adoc[]
+include::{snippets}/competition-application-statistics/get-open-key-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-application-statistics/get-open-key-statistics/http-response.adoc[]
+include::{snippets}/competition-application-statistics/get-open-key-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-application-statistics/get-open-key-statistics/curl-request.adoc[]
+
+=== Competition closed key statistics
+==== Request
+include::{snippets}/competition-application-statistics/get-closed-key-statistics/http-request.adoc[]
+include::{snippets}/competition-application-statistics/get-closed-key-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-application-statistics/get-closed-key-statistics/http-response.adoc[]
+include::{snippets}/competition-application-statistics/get-closed-key-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-application-statistics/get-closed-key-statistics/curl-request.adoc[]
+
+=== Competition funded key statistics
+==== Request
+include::{snippets}/competition-application-statistics/get-funded-key-statistics/http-request.adoc[]
+include::{snippets}/competition-application-statistics/get-funded-key-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-application-statistics/get-funded-key-statistics/http-response.adoc[]
+include::{snippets}/competition-application-statistics/get-funded-key-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-application-statistics/get-funded-key-statistics/curl-request.adoc[]
+
+=== Get review statistics
+==== Request
+include::{snippets}/competition-application-statistics/get-review-statistics/http-request.adoc[]
+include::{snippets}/competition-application-statistics/get-review-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-application-statistics/get-review-statistics/http-response.adoc[]
+include::{snippets}/competition-application-statistics/get-review-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-application-statistics/get-review-statistics/curl-request.adoc[]
+
+=== Get review invite statistics
+==== Request
+include::{snippets}/competition-application-statistics/get-review-invite-statistics/http-request.adoc[]
+include::{snippets}/competition-application-statistics/get-review-invite-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-application-statistics/get-review-invite-statistics/http-response.adoc[]
+include::{snippets}/competition-application-statistics/get-review-invite-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-application-statistics/get-review-invite-statistics/curl-request.adoc[]
+
+=== Get interview assignment statistics
+==== Request
+include::{snippets}/competition-application-statistics/get-interview-assignment-statistics/http-request.adoc[]
+include::{snippets}/competition-application-statistics/get-interview-assignment-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-application-statistics/get-interview-assignment-statistics/http-response.adoc[]
+include::{snippets}/competition-application-statistics/get-interview-assignment-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-application-statistics/get-interview-assignment-statistics/curl-request.adoc[]
+
+=== Get interview invite statistics
+==== Request
+include::{snippets}/competition-application-statistics/get-interview-invite-statistics/http-request.adoc[]
+include::{snippets}/competition-application-statistics/get-interview-invite-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-application-statistics/get-interview-invite-statistics/http-response.adoc[]
+include::{snippets}/competition-application-statistics/get-interview-invite-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-application-statistics/get-interview-invite-statistics/curl-request.adoc[]
+
+=== Get interview statistics
+==== Request
+include::{snippets}/competition-application-statistics/get-interview-statistics/http-request.adoc[]
+include::{snippets}/competition-application-statistics/get-interview-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-application-statistics/get-interview-statistics/http-response.adoc[]
+include::{snippets}/competition-application-statistics/get-interview-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-application-statistics/get-interview-statistics/curl-request.adoc[]

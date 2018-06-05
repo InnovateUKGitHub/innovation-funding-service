@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.publiccontent.form.section;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
 
 /**
@@ -8,15 +8,15 @@ import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
  */
 public class SearchInformationForm extends AbstractPublicContentForm {
 
-    @NotEmpty (message="{validation.publiccontent.searchinformationform.shortDescription.required}")
+    @NotBlank(message="{validation.publiccontent.searchinformationform.shortDescription.required}")
     private String shortDescription;
-    @NotEmpty (message="{validation.publiccontent.searchinformationform.projectFundingRange.required}")
+    @NotBlank (message="{validation.publiccontent.searchinformationform.projectFundingRange.required}")
     private String projectFundingRange;
-    @NotEmpty (message="{validation.publiccontent.searchinformationform.eligibilitySummary.required}")
+    @NotBlank (message="{validation.publiccontent.searchinformationform.eligibilitySummary.required}")
     private String eligibilitySummary;
-    @NotEmpty (message="{validation.publiccontent.searchinformationform.keywords.required}")
+    @NotBlank (message="{validation.publiccontent.searchinformationform.keywords.required}")
     private String keywords;
-    @NotEmpty (message="{validation.publiccontent.searchinformationform.publishsetting.required}")
+    @NotBlank (message="{validation.publiccontent.searchinformationform.publishsetting.required}")
     private String publishSetting;
 
     public String getShortDescription() {
