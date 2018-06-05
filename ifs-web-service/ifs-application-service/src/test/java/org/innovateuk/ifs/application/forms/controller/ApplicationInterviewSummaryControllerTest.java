@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.summary.controller.ApplicationInterviewSummaryController;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -52,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationAssessorSummaryControllerTest extends AbstractApplicationMockMVCTest<ApplicationAssessorSummaryController> {
+public class ApplicationInterviewSummaryControllerTest extends AbstractApplicationMockMVCTest<ApplicationInterviewSummaryController> {
 
     @Spy
     @InjectMocks
@@ -101,8 +102,8 @@ public class ApplicationAssessorSummaryControllerTest extends AbstractApplicatio
     private ApplicantRestService applicantRestService;
 
     @Override
-    protected ApplicationAssessorSummaryController supplyControllerUnderTest() {
-        return new ApplicationAssessorSummaryController();
+    protected ApplicationInterviewSummaryController supplyControllerUnderTest() {
+        return new ApplicationInterviewSummaryController();
     }
 
     @Before
