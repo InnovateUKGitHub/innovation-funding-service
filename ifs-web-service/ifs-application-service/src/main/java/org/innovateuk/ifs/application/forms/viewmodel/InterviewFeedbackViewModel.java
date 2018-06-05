@@ -11,6 +11,7 @@ public class InterviewFeedbackViewModel {
             " This response will be noted by the interview panel.";
     final static String ASSESSOR_WITH_RESPONSE_BANNER =  "The lead applicant has responded to feedback." +
             " Download and review all attachments before the interview panel.";
+    final static String ASSESSOR_WITHOUT_RESPONSE_BANNER =  "The lead applicant can respond to feedback.";
 
     private final String responseFilename;
     private final String feedbackFilename;
@@ -71,7 +72,7 @@ public class InterviewFeedbackViewModel {
         if (hasResponse()) {
             return ASSESSOR_WITH_RESPONSE_BANNER;
         } else {
-            return COLLAB_WITHOUT_RESPONSE_BANNER;
+            return ASSESSOR_WITHOUT_RESPONSE_BANNER;
         }
     }
 

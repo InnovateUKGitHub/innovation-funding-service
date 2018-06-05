@@ -58,8 +58,8 @@
                 Applicant feedback response
             </h3>
             <a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${currentApplication.id})}"
-               th:text="${interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
-               target="_blank">File</a>
+               th:text="${interviewFeedbackViewModel.responseFilename}"
+               target="_blank">File</a> (opens in a new window)
         </div>
 
         <div class="form-group download" th:if="${interviewFeedbackViewModel.hasFeedback()}">
@@ -67,8 +67,8 @@
                 Panel assessment feedback
             </h3>
             <a th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${currentApplication.id})}"
-               th:text="${interviewFeedbackViewModel.feedbackFilename + ' (opens in a new window)'}"
-               target="_blank">File</a>
+               th:text="${interviewFeedbackViewModel.feedbackFilename}"
+               target="_blank">File</a> (opens in a new window)
         </div>
     </th:block>
 

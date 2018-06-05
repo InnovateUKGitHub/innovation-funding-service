@@ -35,11 +35,9 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
  * Application overview is the page that contains the most basic information about the current application and
  * the basic information about the competition the application is related to.
  */
-
 @Controller
 @RequestMapping("/application")
 @SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationController.class)
-@PreAuthorize("hasAuthority('applicant')")
 public class ApplicationController {
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
@@ -63,6 +61,7 @@ public class ApplicationController {
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @GetMapping("/{applicationId}")
+    @PreAuthorize("hasAuthority('applicant')")
     public String applicationDetails(ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
@@ -104,6 +103,7 @@ public class ApplicationController {
     }
 
     @PostMapping(value = "/{applicationId}")
+    @PreAuthorize("hasAuthority('applicant')")
     public String applicationDetails(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      HttpServletRequest request) {
@@ -115,6 +115,7 @@ public class ApplicationController {
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
