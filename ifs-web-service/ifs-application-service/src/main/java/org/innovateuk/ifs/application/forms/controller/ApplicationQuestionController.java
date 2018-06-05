@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -37,6 +38,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -109,12 +112,24 @@ public class ApplicationQuestionController {
             }
         });
 
-        populateShowQuestion(user, applicationId, questionId, model, form);
+        model = populateShowQuestion(user, applicationId, questionId, model, form);
+
+        if (isQuestionType(model, APPLICATION_TEAM)) {
+            model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateModel(applicationId, user.getId()));
+            return APPLICATION_FORM_LEAD;
+        }
+
+        if (isQuestionType(model, APPLICATION_DETAILS)) {
+            return APPLICATION_FORM_LEAD;
+        }
 
         return APPLICATION_FORM;
     }
 
-    @PostMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
+    @PostMapping(value = {
+            QUESTION_URL + "{" + QUESTION_ID + "}",
+            QUESTION_URL + "edit/{" + QUESTION_ID + "}"
+    })
     public String questionFormSubmit(
             @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
             BindingResult bindingResult,
@@ -151,74 +166,6 @@ public class ApplicationQuestionController {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
         }
-    }
-
-    @GetMapping(value = {QUESTION_URL + "application_details/" + "{" + QUESTION_ID + "}"})
-    public String showApplicationDetails(
-            @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
-            @SuppressWarnings("unused") BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            Model model,
-            @PathVariable(APPLICATION_ID) final Long applicationId,
-            @PathVariable(QUESTION_ID) final Long questionId,
-            @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
-            UserResource user,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        markAsComplete.ifPresent(markAsCompleteSet -> {
-            if (markAsCompleteSet) {
-                ValidationMessages errors = applicationSaver.saveApplicationForm(
-                        applicationId,
-                        form,
-                        questionId,
-                        user.getId(),
-                        request,
-                        response,
-                        Optional.of(Boolean.TRUE)
-                );
-                validationHandler.addAnyErrors(errors);
-            }
-        });
-
-        populateShowQuestion(user, applicationId, questionId, model, form);
-
-        return APPLICATION_FORM_LEAD;
-    }
-
-    @GetMapping(value = {QUESTION_URL + "application_team/" + "{" + QUESTION_ID + "}"})
-    public String showApplicationTeam(
-            @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
-            @SuppressWarnings("unused") BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            Model model,
-            @PathVariable(APPLICATION_ID) final Long applicationId,
-            @PathVariable(QUESTION_ID) final Long questionId,
-            @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
-            UserResource user,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-
-        markAsComplete.ifPresent(markAsCompleteSet -> {
-            if (markAsCompleteSet) {
-                ValidationMessages errors = applicationSaver.saveApplicationForm(
-                        applicationId,
-                        form,
-                        questionId,
-                        user.getId(),
-                        request,
-                        response,
-                        Optional.of(Boolean.TRUE)
-                );
-                validationHandler.addAnyErrors(errors);
-            }
-        });
-
-        populateShowQuestion(user, applicationId, questionId, model, form);
-        model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateModel(applicationId, user.getId()));
-
-        return APPLICATION_FORM_LEAD;
     }
 
     private void handleAssignedQuestions(Long applicationId,
@@ -259,7 +206,7 @@ public class ApplicationQuestionController {
                 || isMarkAsCompleteRequestWithValidationErrors(request.getParameterMap(), errors, bindingResult);
     }
 
-    private void populateShowQuestion(
+    private Model populateShowQuestion(
             UserResource user,
             Long applicationId,
             Long questionId,
@@ -271,6 +218,7 @@ public class ApplicationQuestionController {
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        return model;
     }
 
     private String handleEditQuestion(
@@ -312,5 +260,10 @@ public class ApplicationQuestionController {
                         && (questionStatusResource.getMarkedAsComplete() == null
                                 || !questionStatusResource.getMarkedAsComplete())
                 );
+    }
+
+    private boolean isQuestionType(Model model, CompetitionSetupQuestionType questionType) {
+        QuestionViewModel questionViewModel = (QuestionViewModel) model.asMap().get(MODEL_ATTRIBUTE_MODEL);
+        return questionType == questionViewModel.getApplicantResource().getQuestion().getQuestionSetupType();
     }
 }

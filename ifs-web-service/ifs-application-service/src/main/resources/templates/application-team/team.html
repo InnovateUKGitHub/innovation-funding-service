@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team'"/>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body>
-        <th:block th:insert="fragments/layout :: body-start"/>
-        <th:block th:insert="fragments/layout :: global-header"/>
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: header-sub"
-                      th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
+                      th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}" />
 
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">There is a problem on this page.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
 
             <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
               <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application team',subTitle=${applicationName},size='heading-xlarge'" />
             </th:block>
 
-            <th:block th:insert="this :: page-body"/>
+            <th:block th:insert="this :: page-body" />
 
             <p class="extra-margin">
                 <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">
@@ -30,7 +34,7 @@
                 </a>
             </p>
 
-            <th:block th:insert="fragments/layout :: main-content-end"/>
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
         <th:block th:insert="fragments/layout :: footer" />
@@ -57,7 +61,9 @@
         </div>
 
         <!-- Middle -->
-        <th:block th:each="organisation : ${model.organisations}">
+        <div class="form-group"
+             th:each="organisation : ${model.organisations}">
+             <!--th:classappend="${#fields.hasErrors('organisation')} ? 'form-group-error'">-->
             <h2 class="heading-medium">
                 <th:block th:text="${organisation.name}">Organisation name</th:block>
                 <th:block th:if="${organisation.lead}"> (Lead)</th:block>
@@ -66,6 +72,10 @@
 
             <h3 class="heading-small">Organisation type</h3>
             <p th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
+
+            <!--<th:block th:if="${#fields.hasErrors('organisation')}">-->
+                <!--<span class="error-message" th:each="err : ${#fields.errors('organisation')}" th:text="${err}"></span>-->
+            <!--</th:block>-->
 
             <table class="table-overflow">
                 <thead>
@@ -91,7 +101,7 @@
                 <a th:if="${organisation.organisationExists}" th:href="@{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId},organisationId=${organisation.organisationId})}"
                    th:text="|Update and add contributors from ${organisation.name}|">Update and add contributors from Empire Ltd</a>
             </p>
-        </th:block>
+        </div>
 
         <!-- End -->
         <th:block th:if="${model.userLeadApplicant}">

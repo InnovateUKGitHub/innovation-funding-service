@@ -13,12 +13,8 @@
             th:id="'form-input-'+${question.id}">
             <div class="task">
                 <h3 class="heading-small">
-                    <a th:if="${question.type == T(org.innovateuk.ifs.form.resource.QuestionType).LEAD_ONLY}"
-                       th:href="'/application/'+${currentApplication.id}+'/form/question/'+${#strings.toLowerCase(question.questionSetupType)}+'/'+${question.id}"
-                       th:text="${question.questionNumber != null ? question.questionNumber + '. ' : '' } + ${question.shortName}"/>
-                    <a th:unless="${question.type == T(org.innovateuk.ifs.form.resource.QuestionType).LEAD_ONLY}"
-                       th:href="'/application/'+${currentApplication.id}+'/form/question/'+${question.id}"
-                       th:text="${question.questionNumber != null ? question.questionNumber + '. ' : '' } + ${question.shortName}"/>
+                    <a th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${currentApplication.id},questionId=${question.id})}"
+                       th:text="|${questionNumber}${question.shortName}|" th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''" />
                 </h3>
             </div>
             <th:block th:unless="${model.completed.completedOrMarkedAsComplete(question, section)}">
