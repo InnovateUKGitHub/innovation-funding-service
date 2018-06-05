@@ -40,6 +40,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
@@ -315,7 +316,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
                 (applicationResource.getId(), usersMap.get("jessica.doe@ludlow.com").getId());
 
-        assertTrue(applicationTeamViewModel.isApplicationCanBegin());
+        assertFalse(applicationTeamViewModel.isApplicationCanBegin());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
