@@ -28,7 +28,7 @@ public abstract class BaseRestService {
     @Autowired
     private RootAnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor;
 
-    private String dataRestServiceURL;
+    protected String dataRestServiceURL;
 
     protected String getDataRestServiceURL() {
         return dataRestServiceURL;

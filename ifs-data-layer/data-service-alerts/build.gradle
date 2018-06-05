@@ -36,7 +36,7 @@ deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
 //createContainer.portBindings = ['8086:8080','9006:8000']
 
 
-createContainer.networkAliases=["ifs-alert-service"]
+createContainer.networkAliases=["data-service-alerts"]
 
 
 test.finalizedBy asciidoctor
@@ -44,7 +44,6 @@ test.finalizedBy asciidoctor
 dependencies {
     compile project(":ifs-commons")
     compile project(":ifs-data-layer:data-service-commons")
-
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.httpcomponents:httpasyncclient"
