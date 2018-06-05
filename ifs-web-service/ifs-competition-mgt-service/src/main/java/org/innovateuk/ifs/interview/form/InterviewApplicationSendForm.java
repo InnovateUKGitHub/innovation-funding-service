@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -50,7 +51,7 @@ public class InterviewApplicationSendForm extends SendInviteForm {
     }
 
     public MultipartFile getNotEmptyFile() {
-        return feedback.stream().filter(((Predicate<MultipartFile>) MultipartFile::isEmpty).negate())
+        return feedback.stream().filter(Objects::nonNull).filter(((Predicate<MultipartFile>) MultipartFile::isEmpty).negate())
                 .findAny().get();
     }
 }
