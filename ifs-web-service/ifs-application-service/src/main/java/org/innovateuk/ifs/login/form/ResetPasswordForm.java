@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.login.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
 public class ResetPasswordForm {
-    @NotEmpty(message = "{validation.standard.password.required}")
+    @NotBlank(message = "{validation.standard.password.required}")
     @Size(min = 8, message = "{validation.standard.password.length.min}")
     private String password;
 

@@ -38,13 +38,14 @@ public class InterviewFeedbackViewModelPopulatorTest {
         when(interviewResponseRestService.findResponse(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("response").build()));
         when((interviewAssignmentRestService.findFeedback(applicationId))).thenReturn(restSuccess(newFileEntryResource().withName("feedback").build()));
 
-        InterviewFeedbackViewModel viewModel = viewModelPopulator.populate(applicationId, role, false);
+        InterviewFeedbackViewModel viewModel = viewModelPopulator.populate(applicationId, role, true, false);
 
         assertThat(viewModel.getResponseFilename(), is(equalTo("response")));
         assertThat(viewModel.getFeedbackFilename(), is(equalTo("feedback")));
         assertThat(viewModel.isLeadApplicant(), is(true));
         assertThat(viewModel.hasResponse(), is(true));
         assertThat(viewModel.hasFeedback(), is(true));
+        assertThat(viewModel.isFeedbackReleased(), is(true));
+        assertThat(viewModel.isResponseSectionEnabled(), is(true));
     }
-
 }

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.core.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 
 import javax.validation.constraints.Min;
@@ -12,7 +12,7 @@ import java.math.BigInteger;
  */
 public class FunderRowForm {
 
-    @NotEmpty(message = "{validation.additionalinfoform.fundername.required}")
+    @NotBlank(message = "{validation.additionalinfoform.fundername.required}")
     private String funder;
 
     @Min(value=0, message = "{validation.additionalinfoform.funderbudget.min}")

@@ -97,6 +97,8 @@
                        th:id="|formInput[${formInput.id}]|"
                        th:name="'formInput['+${formInput.id}+']'"
                        th:value="*{formInput[__${formInput.id}__]}"
+                       pattern="[0-9]"
+                       data-prevent-input-regex="[^0-9]"
                        required="required"
                        min="0"
                        type="number" />
@@ -126,6 +128,8 @@
                        type="number"
                        th:id="|formInput[${formInput.id}]|"
                        th:name="'formInput['+${formInput.id}+']'"
+                       pattern="[0-9]"
+                       data-prevent-input-regex="[^0-9]"
                        min="0"
                        max="2147483647"
                        th:value="*{formInput[__${formInput.id}__]}"
