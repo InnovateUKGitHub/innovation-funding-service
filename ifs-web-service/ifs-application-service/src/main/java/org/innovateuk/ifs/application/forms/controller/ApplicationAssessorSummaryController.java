@@ -84,7 +84,7 @@ public class ApplicationAssessorSummaryController {
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, leadApplicantUser, model, form, leadOrganisation.getId());
         applicationModelPopulator.addFeedbackAndScores(model, applicationId);
 
-        model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, leadUserApplicationRole, true));
+        model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, leadUserApplicationRole, competition.getCompetitionStatus().isFeedbackReleased(), true));
         return "application-assessor-summary";
     }
 
