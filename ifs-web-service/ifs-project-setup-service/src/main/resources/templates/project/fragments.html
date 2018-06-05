@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<div th:fragment="consortium-partner-status-row(partner, isLead)">
+<th:block th:fragment="consortium-partner-status-row(partner, isLead)">
     <th scope="row">
         <th:block th:text="${partner.name}"/>
         <th:block th:if="${isLead}"> (Lead)</th:block>
@@ -14,9 +14,9 @@
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.otherDocumentsStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
-</div>
+</th:block>
 
-<div th:fragment="consortium-partner-status-indicator(status)">
+<th:block th:fragment="consortium-partner-status-indicator(status)">
     <th:block th:switch="${status.name()}">
         <td th:case="'COMPLETE'" class="status ok">complete</td>
         <td th:case="'ACTION_REQUIRED'" class="status action">incomplete</td>
@@ -25,7 +25,7 @@
         <td th:case="'PENDING'" class="status waiting">pending</td>
         <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
-</div>
+</th:block>
 
 <th:block th:fragment="project-setup-status-indicator(status)">
     <div class="status">

@@ -15,7 +15,7 @@ import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileAppr
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;

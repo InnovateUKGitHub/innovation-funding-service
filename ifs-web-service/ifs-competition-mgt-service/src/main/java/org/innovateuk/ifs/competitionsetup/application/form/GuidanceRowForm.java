@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.application.form;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -17,7 +17,7 @@ public class GuidanceRowForm {
     public interface GuidanceRowViewGroup {
     }
 
-    @NotEmpty(message = "{validation.field.must.not.be.blank}", groups=GuidanceRowViewGroup.class)
+    @NotBlank(message = "{validation.field.must.not.be.blank}", groups=GuidanceRowViewGroup.class)
     @Size(max=5000, message = "{validation.applicationquestionform.justification.max}", groups=GuidanceRowViewGroup.class)
     private String justification;
 

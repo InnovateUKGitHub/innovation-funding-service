@@ -143,12 +143,9 @@ Organisation server side validation when no
     Given the user navigates to Your-finances page  ${applicationWithoutGrowth}
     Then the user clicks the button/link            link=Your organisation
     When the user clicks the button/link            jQuery=button:contains("Mark as complete")
-    Then the user should see the element            jQuery=.error-summary-list:contains("Enter your organisation size.")
-    When the user enters text to a text field       jQuery=label:contains("Turnover") + input    -42
-    And the user enters text to a text field        jQuery=label:contains("employees") + input    15.2
-    And the user clicks the button/link             jQuery=button:contains("Mark as complete")
-    Then the user should see the element            jQuery=.error-summary li:contains("This field should be 0 or higher.")
-    And the user should see the element             jQuery=.error-summary li:contains("This field can only accept whole numbers.")
+    Then the user should see a field and summary error    Enter your organisation size.
+    And the user should see a field and summary error    This field cannot be left blank.
+    And the user should see a field and summary error    This field cannot be left blank.
     And the user should not see the element         jQuery=h1:contains("Your finances")
     # Checking that by marking as complete, the user doesn't get redirected to the main finances page
 
@@ -156,9 +153,9 @@ Organisation client side validation when no
     [Documentation]    INFUND-6393
     [Tags]
     Given the user selects medium organisation size
-    When the user enters text to a text field           jQuery=label:contains("Turnover") + input  -33
+    When the user enters text to a text field           jQuery=label:contains("Turnover") + input  ${empty}
     And the user moves focus to the element             jQuery=label:contains("Full time employees") + input
-    Then the user should see a field and summary error  This field should be 0 or higher.
+    Then the user should see a field and summary error  This field cannot be left blank.
     And the user enters text to a text field            jQuery=label:contains("Full time employees") + input  ${empty}
     When the user moves focus to the element            jQuery=button:contains("Mark as complete")
     Then the user should see a field and summary error  This field cannot be left blank.

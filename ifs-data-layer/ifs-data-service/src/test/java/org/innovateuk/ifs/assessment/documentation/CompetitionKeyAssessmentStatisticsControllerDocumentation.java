@@ -51,7 +51,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
 
         mockMvc.perform(get("/competition-assessment-statistics/{id}/ready-to-open", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-assessment-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -73,7 +73,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-assessment-statistics/{id}/open", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-assessment-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -93,7 +93,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-assessment-statistics/{id}/closed", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-assessment-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -113,7 +113,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-assessment-statistics/{id}/in-assessment", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition-statistics/{method-name}",
+                .andDo(document("competition-assessment-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),

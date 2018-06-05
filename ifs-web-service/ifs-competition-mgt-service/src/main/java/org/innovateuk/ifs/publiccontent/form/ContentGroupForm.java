@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.publiccontent.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -10,10 +10,10 @@ public class ContentGroupForm {
 
     private Long id;
 
-    @NotEmpty(message = "{validation.publiccontent.contentgroup.heading.required}")
+    @NotBlank(message = "{validation.publiccontent.contentgroup.heading.required}")
     private String heading;
 
-    @NotEmpty(message = "{validation.publiccontent.contentgroup.content.required}")
+    @NotBlank(message = "{validation.publiccontent.contentgroup.content.required}")
     private String content;
 
     private MultipartFile attachment;

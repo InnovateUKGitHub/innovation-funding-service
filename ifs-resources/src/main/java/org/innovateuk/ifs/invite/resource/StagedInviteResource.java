@@ -3,11 +3,11 @@ package org.innovateuk.ifs.invite.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 public abstract class StagedInviteResource {
 
-    @NotEmpty(message = "{validation.standard.email.required}")
+    @NotBlank(message = "{validation.standard.email.required}")
     @Email(message = "{validation.standard.email.format}")
     private String email;
     private long competitionId;

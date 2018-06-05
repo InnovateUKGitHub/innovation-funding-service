@@ -97,7 +97,9 @@
                                     data-progressive-group-select-instruction="Please select an innovation sector"
                                     data-progressive-group-select-id="selectedInnovationArea"
                                     required="required"
-                                    th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
+                                    th:errorclass="form-control-error"
+                                    th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required},
+                                             data-progressive-group-select-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
                                     aria-labelledby="innovation-area"
                                     id="grouped-innovation-area">
                                 <option th:selected="*{selectedInnovationArea} == null" value="">Please select an innovation area</option>
@@ -119,7 +121,9 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="row, iterStat : *{invites}">
+                                <tr th:each="row, iterStat : *{invites}"
+                                    class="form-group-row-validated"
+                                    th:classappend="((${#fields.hasErrors('invites[__${iterStat.index}__].name')}) or (${#fields.hasErrors('invites[__${iterStat.index}__].email')})) ? 'form-group-error'">
                                     <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'form-group-error'">
                                         <label>
                                              <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">

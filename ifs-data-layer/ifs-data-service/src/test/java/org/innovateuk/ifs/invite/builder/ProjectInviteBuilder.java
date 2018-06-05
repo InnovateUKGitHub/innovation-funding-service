@@ -3,7 +3,7 @@ package org.innovateuk.ifs.invite.builder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import java.util.List;
 import java.util.function.BiConsumer;

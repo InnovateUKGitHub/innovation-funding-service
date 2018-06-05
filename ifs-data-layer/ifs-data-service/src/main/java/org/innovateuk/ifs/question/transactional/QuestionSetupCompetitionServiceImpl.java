@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
-import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
@@ -19,7 +18,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +26,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -82,9 +78,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
-                setupResource.setAllowedFileTypes(
-                        simpleToLinkedHashSet(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes()),
-                                FileTypeCategory::fromDisplayName));
+                setupResource.setAllowedFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
             case TEXTAREA:
@@ -182,10 +176,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     }
 
     private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        appendixFormInput.setAllowedFileTypes(
-                StringUtils.collectionToDelimitedString(
-                        simpleMap(competitionSetupQuestionResource.getAllowedFileTypes(), FileTypeCategory::getDisplayName),
-                        ","));
+        appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedFileTypes());
         if(competitionSetupQuestionResource.getAppendixGuidance() != null) {
             appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
         }
