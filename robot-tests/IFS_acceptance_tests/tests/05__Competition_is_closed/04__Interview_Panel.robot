@@ -255,7 +255,7 @@ Assessor can view the list of allocated applications
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
     When the user clicks the button/link     link=${CLOSED_COMPETITION_APPLICATION_TITLE}
     Then the user should see the element     jQuery=h1:contains("Feedback overview")
-    And the user should see the element      jQuery=div p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
+    And the user should see the element      jQuery=.message-alert p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
 
 Assessor marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
