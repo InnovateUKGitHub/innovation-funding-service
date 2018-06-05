@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.user.resource.Role.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
@@ -117,16 +122,25 @@ public class ApplicationController {
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
-                                                      @PathVariable("questionId") long questionId) {
+                                                      @PathVariable("questionId") long questionId,
+                                                      UserResource user) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
+
+        List<ProcessRoleResource> processRoleResources = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<Role> userRoles = processRoleResources.stream()
+                .filter(pr -> pr.getUser().equals(user.getId()))
+                .map(pr -> pr.getRole())
+                .collect(Collectors.toList());
+
+        boolean isInterviewAssessor = userRoles.contains(INTERVIEW_ASSESSOR);
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
         if (!applicationResource.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             return "redirect:/application/" + applicationId + "/summary";
         }
-        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId));
+        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, isInterviewAssessor));
         return "application-assessor-feedback";
 
     }
