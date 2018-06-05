@@ -10,6 +10,8 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -36,10 +38,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -107,6 +109,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     @Mock
     private InterviewResponseRestService interviewResponseRestService;
 
+    @Mock
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+
     @Override
     protected ApplicationSummaryController supplyControllerUnderTest() {
         return new ApplicationSummaryController();
@@ -123,7 +128,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         this.setupInvites();
 
         questionResources.forEach((id, questionResource) -> when(applicantRestService.getQuestion(any(), any(), eq(questionResource.getId()))).thenReturn(newApplicantQuestionResource().build()));
-        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
+        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(emptyList());
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }
@@ -175,6 +180,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
         when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
+        ApplicationTeamViewModel applicationTeamViewModel = setupApplicationTeamViewModel();
+        when(applicationTeamModelPopulator.populateSummaryModel(app.getId(), loggedInUser.getId())).thenReturn
+                (applicationTeamViewModel);
 
         mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
@@ -187,7 +195,8 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
+                .andExpect(model().attribute("applicationTeamModel", applicationTeamViewModel));
 
     }
 
@@ -341,5 +350,18 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
         when(interviewResponseRestService.findResponse(app.getId())).thenReturn(restSuccess(newFileEntryResource().withName("Name").build()));
         when(interviewAssignmentRestService.findFeedback(app.getId())).thenReturn(restSuccess(newFileEntryResource().withName("Name").build()));
+    }
+
+    private ApplicationTeamViewModel setupApplicationTeamViewModel() {
+        ApplicationTeamViewModel applicationTeamViewModel = new ApplicationTeamViewModel(1L,
+                "Application name",
+                emptyList(),
+                false,
+                false,
+                false,
+                false,
+                false);
+        applicationTeamViewModel.setSummary(true);
+        return applicationTeamViewModel;
     }
 }
