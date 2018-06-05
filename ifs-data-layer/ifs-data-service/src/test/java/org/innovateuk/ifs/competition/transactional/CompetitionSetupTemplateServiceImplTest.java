@@ -1,34 +1,28 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.TermsAndConditions;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
-import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
-import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
+import org.innovateuk.ifs.form.domain.Section;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
 
@@ -39,6 +33,12 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private CompetitionTypeRepository competitionTypeRepositoryMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private AssessorCountOptionRepository assessorCountOptionRepositoryMock;
 
     @Mock
     private CompetitionTemplatePersistorImpl competitionTemplatePersistorMock;
@@ -151,7 +151,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
 
-        TermsAndConditions templateTermsAndConditions = new TermsAndConditions();
+        GrantTermsAndConditions templateTermsAndConditions = new GrantTermsAndConditions();
 
         Competition competitionTemplate = newCompetition()
                 .withId(2L)

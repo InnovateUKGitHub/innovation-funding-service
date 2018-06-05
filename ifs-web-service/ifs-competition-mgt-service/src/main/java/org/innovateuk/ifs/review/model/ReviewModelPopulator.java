@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.review.model;
 
-
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewViewModel;
@@ -20,14 +19,14 @@ public class ReviewModelPopulator {
     private CompetitionService competitionService;
 
     @Autowired
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
+    private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
     @Autowired
     private ReviewRestService reviewRestService;
 
     public ReviewViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        ReviewKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService
+        ReviewKeyStatisticsResource keyStatistics = competitionKeyApplicationStatisticsRestService
                 .getReviewKeyStatisticsByCompetition(competitionId)
                 .getSuccess();
 

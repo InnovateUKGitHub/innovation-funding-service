@@ -8,10 +8,7 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.finance.transactional.OverheadFileService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -26,7 +23,6 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -35,11 +31,13 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({FileControllerUtils.class})
 public class OverheadFileControllerDocumentation extends BaseControllerMockMVCTest<OverheadFileController> {
+
     @Mock
     private OverheadFileService overheadFileServiceMock;
+
+    @Mock
+    private FileControllerUtils fileControllerUtils;
 
     @Override
     protected OverheadFileController supplyControllerUnderTest() {
@@ -73,8 +71,7 @@ public class OverheadFileControllerDocumentation extends BaseControllerMockMVCTe
         FileAndContents successResult = new BasicFileAndContents(fileEntryResource, () -> mock(InputStream.class));
         ResponseEntity<Object> objectResponseEntity = new ResponseEntity(successResult, HttpStatus.OK);
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
+        when(fileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
 
         when(overheadFileServiceMock.getProjectFileEntryContents(overHeadIdSuccess)).thenReturn(serviceSuccess(successResult));
 

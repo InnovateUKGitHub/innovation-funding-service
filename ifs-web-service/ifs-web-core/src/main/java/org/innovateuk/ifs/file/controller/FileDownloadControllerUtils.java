@@ -11,7 +11,9 @@ import org.springframework.util.StringUtils;
 /**
  * Utility class for helping Controllers with file downloads
  */
-public class FileDownloadControllerUtils {
+public final class FileDownloadControllerUtils {
+
+    private FileDownloadControllerUtils() {}
 
     public static ResponseEntity<ByteArrayResource> getFileResponseEntity(ByteArrayResource resource, FileEntryResource fileEntry) {
         HttpHeaders httpHeaders = new HttpHeaders();

@@ -11,7 +11,7 @@ import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflow
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -26,15 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
@@ -75,7 +72,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private void generateProcessRolesForApplication(User user, Role role, Application application) {
         List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
         List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-        Long userOrganisationId = usersProcessRoles.size() != 0
+        Long userOrganisationId = !usersProcessRoles.isEmpty()
                 ? usersProcessRoles.get(0).getOrganisationId()
                 : usersOrganisations.get(0).getId();
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisationId);
@@ -185,13 +182,21 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> markAsIneligible(long applicationId,
                                                 IneligibleOutcome reason) {
-        return find(application(applicationId)).andOnSuccess((application) -> {
-            if (!applicationWorkflowHandler.markIneligible(application, reason)) {
-                return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
-            }
-            applicationRepository.save(application);
-            return serviceSuccess();
-        });
+        return find(application(applicationId)).andOnSuccess(application ->
+                applicationWorkflowHandler.markIneligible(application, reason) ?
+                        serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_SUBMITTED)
+        );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> withdrawApplication(long applicationId) {
+        return find(application(applicationId))
+                .andOnSuccess(application -> getCurrentlyLoggedInUser()
+                        .andOnSuccess(user -> applicationWorkflowHandler.withdraw(application, user) ?
+                                serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_APPROVED)
+                        )
+                );
     }
 
     @Override
@@ -284,16 +289,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                                                int pageIndex,
                                                                                int pageSize,
                                                                                String sortField) {
-
-        Set<ApplicationState> unsuccessfulStates = asLinkedSet(
-                INELIGIBLE,
-                INELIGIBLE_INFORMED,
-                REJECTED);
-
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, unsuccessfulStates, pageable);
+        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, ApplicationState.unsuccessfulStates, pageable);
         List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));

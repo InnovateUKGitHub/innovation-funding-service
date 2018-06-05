@@ -356,13 +356,19 @@
                                         view contributors and collaborators
                                     </a>
                                 </li>
+                                <li>
+                                    <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}">
+                                        view the grant terms and conditions
+                                    </a>
+                                </li>
                             </ul>
                         </th:block>
                     </div>
                 </div>
             </th:block>
         <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})"/>
-        <th:block th:if="${model.summary and model.readonly}" th:insert="question-type/form-elements :: form-edit-question-button (${model})"/>
+        <th:block th:if="${model.summary and model.readonly and model.assignButtonsViewModel.currentUserIsLead}"
+                  th:insert="question-type/form-elements :: form-edit-question-button (${model})"/>
     </th:block>
 
                     <!-- ===========================Form: empty / no question =========================== -->

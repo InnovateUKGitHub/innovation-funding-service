@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.forms.saver;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -187,7 +187,7 @@ public class ApplicationQuestionFileSaverTest {
         assertTrue(result.hasFieldErrors("formInput[1000]"));
 
         Error fieldError = result.getFieldErrors("formInput[1000]").get(0);
-        Error expectedError = fieldError("formInput[1000]", "application/json", expectedErrorKey);
+        Error expectedError = fieldError("formInput[1000]", "application/json", expectedErrorKey, simpleJoiner(validMediaTypesFromDataLayer, ", "));
         assertEquals(expectedError, fieldError);
     }
 }

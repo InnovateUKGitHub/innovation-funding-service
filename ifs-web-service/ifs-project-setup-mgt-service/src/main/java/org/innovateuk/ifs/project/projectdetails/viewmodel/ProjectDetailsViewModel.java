@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.List;
 import java.util.Map;
@@ -84,11 +84,11 @@ public class ProjectDetailsViewModel {
         return locationPerPartnerRequired;
     }
 
-    public String getPostCodeForPartnerOrganisation(Long organisationId) {
+    public String getPostcodeForPartnerOrganisation(Long organisationId) {
         return partnerOrganisations.stream()
                 .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
                 .findFirst()
-                .map(PartnerOrganisationResource::getPostCode)
+                .map(PartnerOrganisationResource::getPostcode)
                 .orElse(null);
     }
 

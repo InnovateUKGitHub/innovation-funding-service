@@ -4,6 +4,7 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.workflow.actions.FeedbackResponseInterviewAssignmentAction;
 import org.innovateuk.ifs.interview.workflow.actions.NotifyInterviewAssignmentAction;
+import org.innovateuk.ifs.interview.workflow.actions.WithdrawResponseInterviewAssignmentAction;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import java.util.LinkedHashSet;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent.NOTIFY;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent.RESPOND;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent.WITHDRAW_RESPONSE;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.*;
 
 /**
@@ -32,6 +34,9 @@ public class InterviewAssignmentWorkflow extends StateMachineConfigurerAdapter<I
 
     @Autowired
     private FeedbackResponseInterviewAssignmentAction feedbackResponseInterviewAssignmentAction;
+
+    @Autowired
+    private WithdrawResponseInterviewAssignmentAction withdrawResponseInterviewAssignmentAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<InterviewAssignmentState, InterviewAssignmentEvent> config) throws Exception {
@@ -60,6 +65,11 @@ public class InterviewAssignmentWorkflow extends StateMachineConfigurerAdapter<I
                 .withExternal()
                 .source(AWAITING_FEEDBACK_RESPONSE).target(SUBMITTED_FEEDBACK_RESPONSE)
                 .event(RESPOND)
-                .action(feedbackResponseInterviewAssignmentAction);
+                .action(feedbackResponseInterviewAssignmentAction)
+                .and()
+                .withExternal()
+                .source(SUBMITTED_FEEDBACK_RESPONSE).target(AWAITING_FEEDBACK_RESPONSE)
+                .event(WITHDRAW_RESPONSE)
+                .action(withdrawResponseInterviewAssignmentAction);
     }
 }

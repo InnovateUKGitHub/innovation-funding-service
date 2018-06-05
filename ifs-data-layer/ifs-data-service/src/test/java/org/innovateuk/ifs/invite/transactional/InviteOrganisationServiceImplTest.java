@@ -3,9 +3,12 @@ package org.innovateuk.ifs.invite.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -19,6 +22,12 @@ public class InviteOrganisationServiceImplTest extends BaseServiceUnitTest<Invit
     protected InviteOrganisationServiceImpl supplyServiceUnderTest() {
         return new InviteOrganisationServiceImpl();
     }
+
+    @Mock
+    private InviteOrganisationRepository inviteOrganisationRepositoryMock;
+
+    @Mock
+    private InviteOrganisationMapper inviteOrganisationMapperMock;
 
     @Test
     public void getById() throws Exception {

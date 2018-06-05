@@ -6,25 +6,29 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
+import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,6 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(Parameterized.class)
 public class BankDetailsControllerAddressValidationTest extends BaseControllerMockMVCTest<BankDetailsController> {
+    @Mock
+    private BankDetailsRestService bankDetailsRestService;
+
+    @Mock
+    private ProjectService projectService;
 
     private BankDetailsForm form;
 
@@ -45,17 +54,32 @@ public class BankDetailsControllerAddressValidationTest extends BaseControllerMo
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
 
-        AddressResource addressResourceWithNullAddressLine1 = AddressResourceBuilder.newAddressResource().build();
+        AddressResourceBuilder blankAddressBuilder = newAddressResource().
+                withAddressLine1().
+                withAddressLine2().
+                withAddressLine3().
+                withTown().
+                withCounty().
+                withPostcode();
+
+        AddressResource addressResourceWithNullAddressLine1 = blankAddressBuilder.
+                build();
+
         BankDetailsForm formWithSelectedPostcodeWithNullAddressLine1 = new BankDetailsForm();
         formWithSelectedPostcodeWithNullAddressLine1.getAddressForm().setSelectedPostcode(addressResourceWithNullAddressLine1);
 
-        AddressResource addressResourceWithNullTown = AddressResourceBuilder.newAddressResource().
-                withAddressLine1("add Line1").build();
+        AddressResource addressResourceWithNullTown = blankAddressBuilder.
+                withAddressLine1("add Line1").
+                build();
+
         BankDetailsForm formWithSelectedPostcodeWithNullTown = new BankDetailsForm();
         formWithSelectedPostcodeWithNullTown.getAddressForm().setSelectedPostcode(addressResourceWithNullTown);
 
-        AddressResource addressResourceWithNullPostcode = AddressResourceBuilder.newAddressResource().
-                withAddressLine1("add Line1").withTown("Town1").build();
+        AddressResource addressResourceWithNullPostcode = blankAddressBuilder.
+                withAddressLine1("add Line1").
+                withTown("Town1").
+                build();
+
         BankDetailsForm formWithSelectedPostcodeWithNullPostcode = new BankDetailsForm();
         formWithSelectedPostcodeWithNullPostcode.getAddressForm().setSelectedPostcode(addressResourceWithNullPostcode);
 

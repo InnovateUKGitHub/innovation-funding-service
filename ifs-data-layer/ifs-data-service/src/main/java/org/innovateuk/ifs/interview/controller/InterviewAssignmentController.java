@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
@@ -18,8 +20,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
-
 /**
  * Controller for managing application assignments to Interview Panels.
  */
@@ -34,6 +34,8 @@ public class InterviewAssignmentController {
     private InterviewApplicationFeedbackService interviewApplicationFeedbackService;
 
     private InterviewApplicationInviteService interviewApplicationInviteService;
+
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @Autowired
     public InterviewAssignmentController(InterviewAssignmentService interviewAssignmentService,
@@ -118,11 +120,16 @@ public class InterviewAssignmentController {
     @GetMapping(value = "/feedback/{applicationId}", produces = "application/json")
     public @ResponseBody
     ResponseEntity<Object> downloadFile(@PathVariable("applicationId") long applicationId) throws IOException {
-        return handleFileDownload(() -> interviewApplicationFeedbackService.downloadFeedback(applicationId));
+        return fileControllerUtils.handleFileDownload(() -> interviewApplicationFeedbackService.downloadFeedback(applicationId));
     }
 
     @GetMapping(value = "/feedback-details/{applicationId}", produces = "application/json")
     public RestResult<FileEntryResource> findFile(@PathVariable("applicationId") long applicationId) throws IOException {
         return interviewApplicationFeedbackService.findFeedback(applicationId).toGetResponse();
+    }
+
+    @GetMapping(value = "/sent-invite/{applicationId}", produces = "application/json")
+    public RestResult<InterviewApplicationSentInviteResource> getSentInvite(@PathVariable("applicationId") long applicationId) throws IOException {
+        return interviewApplicationInviteService.getSentInvite(applicationId).toGetResponse();
     }
 }

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.question.transactional;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -14,7 +12,6 @@ import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -30,6 +27,7 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -40,8 +38,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalService implements QuestionSetupCompetitionService {
 
-	private static final Log LOG = LogFactory.getLog(QuestionSetupCompetitionServiceImpl.class);
-
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -50,9 +46,6 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     @Autowired
     private GuidanceRowMapper guidanceRowMapper;
-
-    @Autowired
-    private GuidanceRowRepository guidanceRowRepository;
 
     @Autowired
     private QuestionSetupTemplateService questionSetupTemplateService;
@@ -80,8 +73,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
         setupResource.setQuestionId(question.getId());
-        setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
-        setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
+        setupResource.setType(question.getQuestionSetupType());
 
         return serviceSuccess(setupResource);
     }
@@ -152,10 +144,9 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);
 
-        if (isShortNameEditable(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()))) {
+        if (question.getQuestionSetupType() != CompetitionSetupQuestionType.APPLICATION_DETAILS) {
             question.setShortName(competitionSetupQuestionResource.getShortTitle());
         }
-
         question.setName(competitionSetupQuestionResource.getTitle());
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
         question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
@@ -246,17 +237,13 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
             // Ensure form input and priority set against newly added rows
-            newRows.forEach(row -> {
+            forEachWithIndex(newRows, (index, row) -> {
                 row.setFormInput(writtenFeedbackFormInput);
-                row.setPriority(newRows.indexOf(row));
+                row.setPriority(index);
             });
-            guidanceRowRepository.delete(writtenFeedbackFormInput.getGuidanceRows());
-            guidanceRowRepository.save(newRows);
-            writtenFeedbackFormInput.setGuidanceRows(newRows);
+            writtenFeedbackFormInput.getGuidanceRows().clear();
+            writtenFeedbackFormInput.getGuidanceRows().addAll(newRows);
+            formInputRepository.save(writtenFeedbackFormInput);
         }
-    }
-
-    private boolean isShortNameEditable(CompetitionSetupQuestionType type) {
-        return CompetitionSetupQuestionType.ASSESSED_QUESTION.equals(type);
     }
 }

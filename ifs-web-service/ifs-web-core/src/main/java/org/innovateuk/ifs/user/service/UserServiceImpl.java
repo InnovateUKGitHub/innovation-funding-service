@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
         }
         catch (ObjectNotFoundException e) {
             // Do nothing. We don't want to reveal that the address was not recognised
-            LOG.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when resending email verification notification.", email));
+            LOG.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when resending email verification notification.", email), e);
         }
     }
 
@@ -176,5 +176,10 @@ public class UserServiceImpl implements UserService {
         UserResource execUser = result.getSuccess();
 
         return execUser != null && execUser.hasRole(role);
+    }
+
+    @Override
+    public ServiceResult<Void> agreeNewTermsAndConditions(long userId) {
+        return userRestService.agreeNewSiteTermsAndConditions(userId).toServiceResult();
     }
 }

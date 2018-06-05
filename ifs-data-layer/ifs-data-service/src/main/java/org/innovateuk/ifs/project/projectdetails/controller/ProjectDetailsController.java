@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -69,12 +68,12 @@ public class ProjectDetailsController {
         return projectDetailsService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
     }
 
-    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
+    @PostMapping(value = "/{projectId}/organisation/{organisationId}/partner-project-location", params = "postcode")
     public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
                                                          @PathVariable("organisationId") final long organisationId,
-                                                         @RequestParam("postCode") String postCode) {
+                                                         @RequestParam("postcode") String postcode) {
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectDetailsService.updatePartnerProjectLocation(composite, postCode).toPostResponse();
+        return projectDetailsService.updatePartnerProjectLocation(composite, postcode).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-finance-contact")

@@ -4,10 +4,13 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -24,6 +27,9 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
     @InjectMocks
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
 
+    @Mock
+    private QuestionService questionService;
+
     @Test
     public void questionAndApplicationHaveAllowedState_shouldReturnTrueWhenApplicationIsOpenAndDetailsNotMarkedAsComplete() throws Exception {
         Long questionId = 1L;
@@ -31,7 +37,10 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPEN).build();
 
-        QuestionResource questionResource = newQuestionResource().withShortName(APPLICATION_DETAILS.getShortName()).build();
+        QuestionResource questionResource = newQuestionResource()
+                .withShortName(APPLICATION_DETAILS.getShortName())
+                .withQuestionSetupType(CompetitionSetupQuestionType.APPLICATION_DETAILS)
+                .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
         when(questionService.getById(questionId)).thenReturn(questionResource);
@@ -49,7 +58,10 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.SUBMITTED).build();
 
-        QuestionResource questionResource = newQuestionResource().withShortName(APPLICATION_DETAILS.getShortName()).build();
+        QuestionResource questionResource = newQuestionResource()
+                .withShortName(APPLICATION_DETAILS.getShortName())
+                .withQuestionSetupType(CompetitionSetupQuestionType.APPLICATION_DETAILS)
+                .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
         when(questionService.getById(questionId)).thenReturn(questionResource);
@@ -67,7 +79,10 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPEN).build();
 
-        QuestionResource questionResource = newQuestionResource().withShortName(APPLICATION_DETAILS.getShortName()).build();
+        QuestionResource questionResource = newQuestionResource()
+                .withShortName(APPLICATION_DETAILS.getShortName())
+                .withQuestionSetupType(CompetitionSetupQuestionType.APPLICATION_DETAILS)
+                .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(true).build(2);
 
         when(questionService.getById(questionId)).thenReturn(questionResource);
@@ -85,7 +100,10 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.SUBMITTED).build();
 
-        QuestionResource questionResource = newQuestionResource().withShortName("non-application details").build();
+        QuestionResource questionResource = newQuestionResource()
+                .withShortName("non-application details")
+                .withQuestionSetupType(CompetitionSetupQuestionType.PROJECT_SUMMARY)
+                .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(true).build(2);
 
         when(questionService.getById(questionId)).thenReturn(questionResource);
@@ -103,7 +121,10 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPEN).build();
 
-        QuestionResource questionResource = newQuestionResource().withShortName("non-application details").build();
+        QuestionResource questionResource = newQuestionResource()
+                .withShortName("non-application details")
+                .withQuestionSetupType(CompetitionSetupQuestionType.PROJECT_SUMMARY)
+                .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
         when(questionService.getById(questionId)).thenReturn(questionResource);

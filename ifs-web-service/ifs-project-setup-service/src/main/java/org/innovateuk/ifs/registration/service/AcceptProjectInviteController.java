@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
@@ -25,10 +25,12 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
 
 /**
- * This class is use as an entry point to accept a invite to a project, to a application.
+ * This class is used as an entry point to accept an invite to a project.
  */
 @Controller
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AcceptProjectInviteController.class)
+@SecuredBySpring(value = "Controller",
+        description = "All users with a valid invite hash are able to view and accept the corresponding project invite",
+        securedType = AcceptProjectInviteController.class)
 @PreAuthorize("permitAll")
 public class AcceptProjectInviteController {
 

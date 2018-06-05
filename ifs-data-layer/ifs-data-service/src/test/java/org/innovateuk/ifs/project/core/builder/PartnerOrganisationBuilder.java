@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.core.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -44,8 +44,8 @@ public class PartnerOrganisationBuilder extends BaseBuilder<PartnerOrganisation,
         return withArray((org, partnerOrg) -> setField("organisation", org, partnerOrg), organisation);
     }
 
-    public PartnerOrganisationBuilder withPostCode(String... postCodes) {
-        return withArray((postCode, partnerOrg) -> setField("postCode", postCode, partnerOrg), postCodes);
+    public PartnerOrganisationBuilder withPostcode(String... postcodes) {
+        return withArray((postcode, partnerOrg) -> setField("postcode", postcode, partnerOrg), postcodes);
     }
 
     public PartnerOrganisationBuilder withLeadOrganisation(Boolean... lead) {

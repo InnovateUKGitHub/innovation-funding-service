@@ -2,20 +2,19 @@ package org.innovateuk.ifs.application.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.POIXMLDocument;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
-import org.innovateuk.ifs.commons.error.exception.SummaryDataUnavailableException;
+import org.innovateuk.ifs.commons.exception.SummaryDataUnavailableException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -40,8 +39,8 @@ import static java.util.Arrays.asList;
 public class ApplicationDownloadController {
     private static final Log LOG = LogFactory.getLog(ApplicationDownloadController.class);
     private static final String APPLICATION_SUMMARY_QUESTION_NAME = "Project summary";
-    public static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
-    public static final String FONT_NAME = "Arial";
+    private static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
+    private static final String FONT_NAME = "Arial";
     @Autowired
     private ApplicationService applicationService;
     @Autowired
@@ -54,7 +53,7 @@ public class ApplicationDownloadController {
     private Integer rowCount = 0;
     private Integer headerCount = 0;
 
-    public static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
+    private static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
@@ -73,26 +72,25 @@ public class ApplicationDownloadController {
         
         LOG.info(String.format("Generate download for %s applications with status ", applications.size()));
 
-        POIXMLDocument wb;
-        try {
-        	wb = getExcelWorkbook(applications);
+        try(XSSFWorkbook wb = new XSSFWorkbook()) {
+        	populateExcelWorkbook(wb, applications);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            wb.write(baos);
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            // Prevent caching
+            httpHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
+            httpHeaders.add("Pragma", "no-cache");
+            httpHeaders.add("Expires", "0");
+            return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
         } catch (SummaryDataUnavailableException e) {
-        	LOG.error("unable to retrieve data required for the excel workbook");
+        	LOG.error("unable to retrieve data required for the excel workbook", e);
         	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        wb.write(baos);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        // Prevent caching
-        httpHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        httpHeaders.add("Pragma", "no-cache");
-        httpHeaders.add("Expires", "0");
-        return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
     }
 
-    private XSSFWorkbook getExcelWorkbook(List<Application> applications) {
-        XSSFWorkbook wb = new XSSFWorkbook();
+    private void populateExcelWorkbook(XSSFWorkbook wb, List<Application> applications) {
         XSSFSheet sheet = wb.createSheet("Submitted Applications");
 
         XSSFFont font = wb.createFont();
@@ -174,7 +172,6 @@ public class ApplicationDownloadController {
         }
         // This column contains the project summary, so might be very long because of autoSize..
         sheet.setColumnWidth(8, PROJECT_SUMMARY_COLUMN_WITH * 256);
-        return wb;
     }
 
     private XSSFRow createHeaderCellWithValue(XSSFRow row, String value){

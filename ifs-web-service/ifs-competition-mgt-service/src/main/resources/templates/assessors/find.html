@@ -70,28 +70,32 @@
 
     <form method="GET" th:object="${filterForm}">
         <div class="search-filters extra-margin">
-            <div class="grid-row">
-                <div class="column-two-thirds">
-                    <label class="form-label" for="filterInnovationArea">Innovation area</label>
-                    <select name="innovationArea"
-                            id="filterInnovationArea" class="form-control extra-margin-bottom"
-                            th:field="*{innovationArea}">
-                        <option value="">Any</option>
-                        <optgroup th:each="innovationSector : ${model.innovationSectorOptions}"
-                                  th:label="${innovationSector.name}">
-                            <option th:each="innovationArea : ${innovationSector.children}"
-                                    th:value="${innovationArea.id}"
-                                    th:text="${innovationArea.name}">
-                            </option>
-                        </optgroup>
-                    </select>
-                    <input type="hidden" name="filterChanged" value="1"/>
-
-                    <a href="?filterChanged=1">Clear all filters</a>
+            <fieldset>
+                <legend class="heading-medium no-margin-top">Filter assessors</legend>
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <label class="form-label" for="filterInnovationArea">Innovation area</label>
+                        <select name="innovationArea"
+                                id="filterInnovationArea" class="form-control"
+                                th:field="*{innovationArea}">
+                            <option value="">Any</option>
+                            <optgroup th:each="innovationSector : ${model.innovationSectorOptions}"
+                                      th:label="${innovationSector.name}">
+                                <option th:each="innovationArea : ${innovationSector.children}"
+                                        th:value="${innovationArea.id}"
+                                        th:text="${innovationArea.name}">
+                                </option>
+                            </optgroup>
+                        </select>
+                        <input type="hidden" name="filterChanged" value="1"/>
+                    </div>
+                    <div class="column-third">
+                        <button class="button">Filter</button>
+                    </div>
                 </div>
-                <div class="column-third">
-                    <button class="button">Filter</button>
-                </div>
+            </fieldset>
+            <div class="extra-margin">
+                <a href="?filterChanged=1">Clear all filters</a>
             </div>
         </div>
     </form>
@@ -114,6 +118,7 @@
           th:object="${assessorSelectionForm}"
           data-multipage-select=""
           novalidate="novalidate"
+          autocomplete="off"
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
         <div class="grid-row sorting">

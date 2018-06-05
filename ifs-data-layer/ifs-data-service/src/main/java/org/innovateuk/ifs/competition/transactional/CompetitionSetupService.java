@@ -26,7 +26,7 @@ public interface CompetitionSetupService {
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId);
+    ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingInnovationLeadId);
 
     @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can create competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
@@ -75,4 +75,9 @@ public interface CompetitionSetupService {
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to competition setup")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(Long competitionId);
+
+    @SecuredBySpring(value="DELETE", description = "Only those with either comp admin or project finance roles, " +
+            "or the IFS Admin are able to delete competitions in preparation prior to them being in the Open state")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'DELETE')")
+    ServiceResult<Void> deleteCompetition(long competitionId);
 }

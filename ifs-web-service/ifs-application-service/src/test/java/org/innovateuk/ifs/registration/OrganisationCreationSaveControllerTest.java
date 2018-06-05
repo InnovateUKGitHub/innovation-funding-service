@@ -1,13 +1,17 @@
 package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.controller.OrganisationCreationSaveController;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
+import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,7 +24,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
@@ -49,16 +53,26 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     @Mock
     private Validator validator;
 
+    @Mock
+    private InviteOrganisationRestService inviteOrganisationRestService;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private OrganisationTypeRestService organisationTypeRestService;
+
     private OrganisationTypeForm organisationTypeForm;
     private OrganisationCreationForm organisationForm;
 
     @Before
     public void setup(){
-        super.setup();
+        super.setUp();
 
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
 
         when(organisationSearchRestService.getOrganisation(anyLong(), anyString())).thenReturn(restSuccess(organisationSearchResult));
+        when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource()));
 
         AddressForm addressForm = new AddressForm();
         addressForm.setPostcodeInput("ABC 12345");

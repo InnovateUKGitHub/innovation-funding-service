@@ -4,7 +4,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
 
-public class SecurityRuleUtil {
+public final class SecurityRuleUtil {
+
+    private SecurityRuleUtil() {}
+
     public static boolean isCompAdmin(UserResource user) {
         return user.hasRole(COMP_ADMIN);
     }

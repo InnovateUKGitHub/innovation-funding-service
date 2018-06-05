@@ -11,7 +11,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
-import org.innovateuk.ifs.user.transactional.CrmService;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,6 +199,11 @@ public class UserController {
                     return created;
                 }
         ).toPostCreateResponse();
+    }
+
+    @PostMapping("/id/{userId}/agreeNewSiteTermsAndConditions")
+    public RestResult<Void> agreeNewSiteTermsAndConditions(@PathVariable("userId") final long userId) {
+        return userService.agreeNewTermsAndConditions(userId).toPostResponse();
     }
 
     @PostMapping("/updateDetails")

@@ -1,17 +1,21 @@
 package org.innovateuk.ifs.registration;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractInviteMockMVCTest;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import org.innovateuk.ifs.commons.error.exception.InvalidURLException;
-import org.innovateuk.ifs.commons.error.exception.RegistrationTokenExpiredException;
+import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.exception.InvalidURLException;
+import org.innovateuk.ifs.commons.exception.RegistrationTokenExpiredException;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,12 +36,14 @@ import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.mockito.Matchers.anyLong;
@@ -54,7 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class RegistrationControllerTest extends BaseControllerMockMVCTest<RegistrationController> {
+public class RegistrationControllerTest extends AbstractInviteMockMVCTest<RegistrationController> {
 
     @InjectMocks
     private RegistrationController registrationController;
@@ -71,6 +77,15 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Mock
     private Validator validator;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private OrganisationService organisationService;
+
     private Cookie inviteHashCookie;
     private Cookie usedInviteHashCookie;
     private Cookie organisationCookie;
@@ -85,10 +100,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         super.setUp();
 
         MockitoAnnotations.initMocks(this);
-
-        setupUserRoles();
         setupInvites();
-        setupCookieUtil();
+        setupCookieUtil(cookieUtil);
 
         registrationController.setValidator(new LocalValidatorFactoryBean());
 

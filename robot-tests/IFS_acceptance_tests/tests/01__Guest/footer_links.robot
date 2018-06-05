@@ -13,24 +13,22 @@ Resource          ../../resources/defaultResources.robot
 Guest user can click on the footer links
     [Documentation]    IFS-362
     [Tags]
-    [Setup]    the user navigates to the page      ${frontDoor}
     Given the user tries the footer links          ${frontDoor}
-    Then the user navigates to the page            ${LOGIN_URL}
-    Then the user tries the footer links           ${DASHBOARD_URL}
+    And the user tries the footer links            ${LOGIN_URL}
     And the user navigates to the page             ${LOGIN_URL}
     When Logging in and Error Checking             &{lead_applicant_credentials}
-    Then the user should see the text in the page  Sign out
-    And the user tries the footer links            ${LOGIN_URL}
+    Then the user tries the footer links           ${DASHBOARD_URL}
 
 *** Keywords ***
 the user tries the footer links
     [Arguments]    ${page}
-    Given the user tries the external link  ${page}    Innovate UK    Innovate UK - GOV.UK
-    And the user tries the external link    ${page}    Innovation funding advice    Business innovation: what funding you can apply for - GOV.UK
-    And the user tries the external link    ${page}    Events    Events - innovateuk
-    And the user tries the external link    ${page}    Connect to innovation experts    Innovation: connect to experts, specialist support and facilities - GOV.UK
-    And the user tries the external link    ${page}    Innovate UK blog    Innovate UK
-    And the user tries the external link    ${page}    GOV.UK accessibility    Accessibility - GOV.UK
+    Given the user navigates to the page   ${page}
+    And the user should see the element   link=Innovate UK
+    And the user should see the element   link=Innovation funding advice
+    And the user should see the element   link=Events
+    And the user should see the element   link=Connect to innovation experts
+    And the user should see the element   link=Innovate UK blog
+    And the user should see the element   link=GOV.UK accessibility
     And the user tries the link             ${page}    Terms and conditions    Terms and conditions
     And the user tries the link             ${page}    Contact us    Contact us
     And the user tries the link             ${page}    Latest funding opportunities    Innovation competitions
@@ -41,8 +39,3 @@ the user tries the link
     Given the user navigates to the page  ${page}
     When the user clicks the button/link  link=${link}
     Then the user should see the element  jQuery=h1:contains(${header_one})
-
-the user tries the external link
-    [Arguments]    ${page}    ${link}    ${title}
-    Given the user navigates to the page   ${page}
-    Then the user should see the element   link=${link}

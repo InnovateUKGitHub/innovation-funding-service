@@ -76,7 +76,8 @@
 
             <div class="grid-row sorting">
                 <div class="column-half">
-                    <span class="heading-large" th:text="${model.pagination.totalCount}">20</span> assessors
+                    <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+                    <span class="heading-small">assessors</span>
                 </div>
             </div>
 
@@ -84,6 +85,7 @@
                   th:action="@{/panel/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
                   th:object="${assessorPanelOverviewSelectionForm}"
                   data-multipage-select=""
+                  autocomplete="off"
                   th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
                 <div class="grid-row sorting">

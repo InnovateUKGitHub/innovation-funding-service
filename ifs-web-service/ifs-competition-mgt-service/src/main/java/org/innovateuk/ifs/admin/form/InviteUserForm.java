@@ -3,7 +3,7 @@ package org.innovateuk.ifs.admin.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Role;
@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
  */
 public class InviteUserForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "{validation.standard.firstname.required}")
+    @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.firstname.length.min}"),
@@ -24,7 +24,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
     })
     private String firstName;
 
-    @NotEmpty(message = "{validation.standard.lastname.required}")
+    @NotBlank(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.lastname.length.min}"),
@@ -32,15 +32,15 @@ public class InviteUserForm extends BaseBindingResultTarget {
     })
     private String lastName;
 
-    @NotEmpty(message = "{validation.invite.email.required}")
+    @NotBlank(message = "{validation.invite.email.required}")
     @Size(max = 254, message = "{validation.standard.email.length.max}")
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     private String emailAddress;
 
     private Role role;
 
-    // for spring form binding
     public InviteUserForm() {
+        // for spring form binding
     }
 
     public String getFirstName() {

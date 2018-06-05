@@ -199,7 +199,7 @@ IFS.competitionManagement.repeater = (function () {
                     '<div class="column-half">' +
                       '<div class="form-group">' +
                         '<input type="number" min="0" class="form-control width-x-large" id="' + idCount + '-funderBudget" name="funders[' + count + '].funderBudget" value=""><input required="required" type="hidden" id="' + idCount + '-coFunder" name="funders[' + count + '].coFunder" value="true">' +
-                        '<button class="buttonlink" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +
+                        '<button class="button button-clear" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +
                       '</div>' +
                     '</div>' +
                   '</div>'
@@ -216,7 +216,7 @@ IFS.competitionManagement.repeater = (function () {
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('tr[id^=guidance-]').last().attr('id').split('guidance-')[1], 10) + 1
       }
-      var html = '<tr id="guidance-' + idCount + '">'
+      var html = '<tr id="guidance-' + idCount + '" class="form-group-row-validated">'
       if (isAssessed) {
         html += '<td class="form-group">' +
                 '<label class="form-label" for="guidanceRows[' + idCount + '].scoreFrom"><span class="visuallyhidden">Score from</span></label>' +

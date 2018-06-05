@@ -5,7 +5,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -30,13 +30,13 @@ public class Competition implements ProcessActivity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CompetitionFunder> funders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("priority ASC")
     private List<Section> sections = new ArrayList<>();
 
@@ -114,15 +114,24 @@ public class Competition implements ProcessActivity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
-    private TermsAndConditions termsAndConditions;
+    private GrantTermsAndConditions termsAndConditions;
 
     private boolean locationPerPartner = true;
+
+    private Boolean stateAid;
 
     public Competition() {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate, TermsAndConditions termsAndConditions) {
+    public Competition(Long id,
+                       List<Question> questions,
+                       List<Section> sections,
+                       String name,
+                       ZonedDateTime startDate,
+                       ZonedDateTime endDate,
+                       ZonedDateTime registrationDate,
+                       GrantTermsAndConditions termsAndConditions) {
         this.id = id;
         this.questions = questions;
         this.sections = sections;
@@ -672,11 +681,11 @@ public class Competition implements ProcessActivity {
         this.assessorFinanceView = assessorFinanceView;
     }
 
-    public TermsAndConditions getTermsAndConditions() {
+    public GrantTermsAndConditions getTermsAndConditions() {
         return termsAndConditions;
     }
 
-    public void setTermsAndConditions(TermsAndConditions termsAndConditions) {
+    public void setTermsAndConditions(GrantTermsAndConditions termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
     }
 
@@ -702,6 +711,14 @@ public class Competition implements ProcessActivity {
 
     public void setMinProjectDuration(Integer minProjectDuration) {
         this.minProjectDuration = minProjectDuration;
+    }
+
+    public Boolean getStateAid() {
+        return stateAid;
+    }
+
+    public void setStateAid(final Boolean stateAid) {
+        this.stateAid = stateAid;
     }
 }
 

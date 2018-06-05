@@ -11,6 +11,7 @@
 <body class="competition-management competition-setup" th:with="currentSectionIsHome=${model.general.currentSectionIsHome()}">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/competition-setup :: comp-setup-complete-modal" th:if="${currentSectionIsHome}"/>
+<th:block th:insert="fragments/competition-setup :: comp-setup-delete-modal" th:if="${currentSectionIsHome}"/>
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -21,7 +22,7 @@
 
     <th:block th:if="${currentSectionIsHome}">
         <div class="error-summary" th:if="${#fields.hasErrors('${competitionSetupForm}')}">
-            <h2 class="heading-medium error-summary-heading">We cannot complete setup.</h2>
+            <h2 class="heading-medium error-summary-heading">There is an error on this page.</h2>
             <ul class="error-summary-list">
                 <li th:each="err : ${#fields.errors('${competitionSetupForm}')}" th:text="${err}"></li>
             </ul>

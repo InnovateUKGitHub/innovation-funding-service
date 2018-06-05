@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration.form;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 
 import javax.validation.constraints.Size;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
  */
 public class ResendEmailVerificationForm {
 
-    @NotEmpty(message = "{validation.standard.email.required}")
+    @NotBlank(message = "{validation.standard.email.required}")
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String email;

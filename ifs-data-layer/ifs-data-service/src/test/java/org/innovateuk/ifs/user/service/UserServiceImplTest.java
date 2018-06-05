@@ -1,22 +1,34 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.token.domain.Token;
+import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
-import org.innovateuk.ifs.user.builder.OrganisationBuilder;
+import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
+import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +36,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,8 +46,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder
+        .newSiteTermsAndConditionsResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -43,6 +60,7 @@ import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilde
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
 
 /**
  * Tests of the UserService class
@@ -52,10 +70,47 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     private static final String WEB_BASE_URL = "baseUrl";
 
     @Captor
-    ArgumentCaptor<Notification> notificationArgumentCaptor;
+    private ArgumentCaptor<Notification> notificationArgumentCaptor;
 
     @Mock
-    UserOrganisationMapper userOrganisationMapperMock;
+    private UserOrganisationMapper userOrganisationMapperMock;
+
+    @Mock
+    private TermsAndConditionsService termsAndConditionsServiceMock;
+
+    @Mock
+    private TokenService tokenServiceMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private UserMapper userMapperMock;
+
+    @Mock
+    private PasswordPolicyValidator passwordPolicyValidatorMock;
+
+    @Mock
+    private IdentityProviderService idpServiceMock;
+
+    @Mock
+    private TokenRepository tokenRepositoryMock;
+
+    @Mock
+    private NotificationService notificationServiceMock;
+
+    @Mock
+    private RegistrationService registrationServiceMock;
+
+    @Mock
+    private UserOrganisationRepository userOrganisationRepositoryMock;
+
+    @Override
+    protected UserService supplyServiceUnderTest() {
+        UserServiceImpl spendProfileService = new UserServiceImpl();
+        ReflectionTestUtils.setField(spendProfileService, "webBaseUrl", WEB_BASE_URL);
+        return spendProfileService;
+    }
 
     @Test
     public void testChangePassword() {
@@ -64,11 +119,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         UserResource userResource = newUserResource().withUID("myuid").build();
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
-        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
-        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceSuccess());
-        when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(ServiceResult.serviceSuccess("mypassword"));
+        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(serviceSuccess());
+        when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(serviceSuccess("mypassword"));
 
         service.changePassword("myhash", "mypassword").getSuccess();
 
@@ -82,7 +137,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         UserResource userResource = newUserResource().withUID("myuid").build();
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
-        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
@@ -100,11 +155,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final String password = "mypassword";
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
-        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
 
-        when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(ServiceResult.serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(serviceSuccess());
         when(idpServiceMock.updateUserPassword(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
         ServiceResult<Void> result = service.changePassword("myhash", password);
@@ -141,7 +196,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
                 .withLastName("Bee")
                 .build();
 
-        when(notificationServiceMock.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+        when(notificationServiceMock.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
         service.sendPasswordResetNotification(user).getSuccess();
 
@@ -185,7 +240,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
                 .build();
 
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.of(new Token()));
-        when(registrationServiceMock.resendUserVerificationEmail(user)).thenReturn(ServiceResult.serviceSuccess());
+        when(registrationServiceMock.resendUserVerificationEmail(user)).thenReturn(serviceSuccess());
 
         service.sendPasswordResetNotification(user).getSuccess();
 
@@ -566,10 +621,45 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         verify(userOrganisationRepositoryMock).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
     }
 
-    @Override
-    protected UserService supplyServiceUnderTest() {
-        UserServiceImpl spendProfileService = new UserServiceImpl();
-        ReflectionTestUtils.setField(spendProfileService, "webBaseUrl", WEB_BASE_URL);
-        return spendProfileService;
+    @Test
+    public void agreeNewTermsAndConditions() {
+        List<SiteTermsAndConditionsResource> siteTermsAndConditions = newSiteTermsAndConditionsResource().build(3);
+
+        User existingUser = newUser()
+                .withTermsAndConditionsIds(new LinkedHashSet<>(asList(
+                        siteTermsAndConditions.get(0).getId(),
+                        siteTermsAndConditions.get(1).getId())))
+                .build();
+
+        Set<Long> expectedTermsAndConditionsIds = new LinkedHashSet<>(asList(
+                siteTermsAndConditions.get(0).getId(),
+                siteTermsAndConditions.get(1).getId(),
+                siteTermsAndConditions.get(2).getId()
+        ));
+
+        when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(
+                serviceSuccess(siteTermsAndConditions.get(2)));
+        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+
+        User userToSave = createUserExpectations(existingUser.getId(), expectedTermsAndConditionsIds);
+
+        when(userRepositoryMock.save(userToSave)).thenReturn(userToSave);
+
+        assertTrue(service.agreeNewTermsAndConditions(existingUser.getId()).isSuccess());
+
+        InOrder inOrder = inOrder(termsAndConditionsServiceMock, userRepositoryMock);
+        inOrder.verify(termsAndConditionsServiceMock).getLatestSiteTermsAndConditions();
+        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).save(createUserExpectations(existingUser.getId(),
+                expectedTermsAndConditionsIds));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    private User createUserExpectations(Long userId, Set<Long> termsAndConditionsIds) {
+        return createLambdaMatcher(user -> {
+            assertEquals(userId, user.getId());
+            assertEquals(termsAndConditionsIds, user.getTermsAndConditionsIds());
+            return true;
+        });
     }
 }

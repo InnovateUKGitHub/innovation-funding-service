@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
+import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -30,6 +32,9 @@ public class CompetitionManagementCompetitionController {
     private CompetitionService competitionService;
 
     @Autowired
+    private AssessorRestService assessorRestService;
+
+    @Autowired
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Autowired
@@ -44,7 +49,7 @@ public class CompetitionManagementCompetitionController {
         } if (competition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP)) {
             throw new ObjectNotFoundException();
         } else {
-            throw new IllegalStateException("Unexpected competition state for competition: " + competitionId);
+            throw new IncorrectStateForPageException("Unexpected competition state for competition: " + competitionId);
         }
     }
 
@@ -56,7 +61,7 @@ public class CompetitionManagementCompetitionController {
 
     @PostMapping("/{competitionId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
-        competitionPostSubmissionRestService.notifyAssessors(competitionId).getSuccess();
+        assessorRestService.notifyAssessors(competitionId).getSuccess();
         return "redirect:/competition/" + competitionId;
     }
 
@@ -72,6 +77,6 @@ public class CompetitionManagementCompetitionController {
     }
 
     private boolean isCompetitionTypeEOI(Long competitionId) {
-            return competitionService.getById(competitionId).getCompetitionTypeName().equals("Expression of interest");
+            return "Expression of interest".equals(competitionService.getById(competitionId).getCompetitionTypeName());
     }
 }

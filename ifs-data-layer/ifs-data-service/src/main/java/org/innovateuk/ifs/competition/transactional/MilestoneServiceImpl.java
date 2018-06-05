@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -187,11 +187,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             MilestoneResource previous = presetMilestones.get(i - 1);
             MilestoneResource current = presetMilestones.get(i);
 
-            if (current.getDate() != null && previous.getDate() != null) {
-                if (previous.getDate().isAfter(current.getDate())) {
-                    Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
-                    vm.addError(error);
-                }
+            if (current.getDate() != null && previous.getDate() != null && previous.getDate().isAfter(current.getDate())) {
+                Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
+                vm.addError(error);
             }
         }
 

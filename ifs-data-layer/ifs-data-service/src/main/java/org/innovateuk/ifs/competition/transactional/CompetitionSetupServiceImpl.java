@@ -3,24 +3,21 @@ package org.innovateuk.ifs.competition.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.TermsAndConditions;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
-import org.innovateuk.ifs.competition.mapper.TermsAndConditionsMapper;
+import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -33,13 +30,12 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -55,7 +51,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
-    private AssessmentParticipantRepository assessmentParticipantRepository;
+    private InnovationLeadRepository innovationLeadRepository;
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
@@ -65,9 +61,15 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private SetupStatusService setupStatusService;
     @Autowired
-    private TermsAndConditionsRepository termsAndConditionsRepository;
+    private SetupStatusRepository setupStatusRepository;
     @Autowired
-    private TermsAndConditionsMapper termsAndConditionsMapper;
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+    @Autowired
+    private GrantTermsAndConditionsMapper termsAndConditionsMapper;
+    @Autowired
+    private PublicContentRepository publicContentRepository;
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -85,7 +87,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         } else if (openingSameMonth.isEmpty()) {
             unusedCode = datePart + "-1";
         } else {
-            List<String> codes = openingSameMonth.stream().map(c -> c.getCode()).sorted().peek(c -> LOG.info("Codes : " + c)).collect(Collectors.toList());
+            List<String> codes = openingSameMonth.stream().map(Competition::getCode).sorted().peek(c -> LOG.info("Codes : " + c)).collect(Collectors.toList());
             for (int i = 1; i < 10000; i++) {
                 unusedCode = datePart + "-" + i;
                 if (!codes.contains(unusedCode)) {
@@ -115,12 +117,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
+    public ServiceResult<Void> updateCompetitionInitialDetails(final Long competitionId, final CompetitionResource
+            competitionResource, final Long existingInnovationLeadId) {
 
-        return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
+        return deleteExistingInnovationLead(competitionId, existingInnovationLeadId)
                 .andOnSuccess(() -> attachCorrectTermsAndConditions(competitionResource))
                 .andOnSuccess(() -> save(competitionId, competitionResource))
-                .andOnSuccess(this::saveLeadTechnologist);
+                .andOnSuccess(this::saveInnovationLead);
     }
 
     private ServiceResult<Void> attachCorrectTermsAndConditions(CompetitionResource competitionResource) {
@@ -131,57 +134,38 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         // here
         if (competitionTypeId != null) {
             CompetitionType competitionTypeSelected = competitionTypeRepository.findOne(competitionTypeId);
-            TermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
+            GrantTermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
             competitionResource.setTermsAndConditions(termsAndConditionsMapper.mapToResource(termsAndConditions));
         }
 
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> deleteExistingLeadTechnologist(Long competitionId, Long existingLeadTechnologistId) {
+    private ServiceResult<Void> deleteExistingInnovationLead(Long competitionId, Long existingInnovationLeadId) {
 
-        if (existingLeadTechnologistId != null) {
-
-            AssessmentParticipant competitionParticipant =
-                    assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
-                            existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
-
-            if (competitionParticipant != null) {
-                assessmentParticipantRepository.delete(competitionParticipant);
-            }
+        if (existingInnovationLeadId != null) {
+            innovationLeadRepository.deleteInnovationLead(competitionId, existingInnovationLeadId);
         }
 
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> saveLeadTechnologist(CompetitionResource competitionResource) {
+    private ServiceResult<Void> saveInnovationLead(CompetitionResource competitionResource) {
 
         if (competitionResource.getLeadTechnologist() != null) {
             Competition competition = competitionMapper.mapToDomain(competitionResource);
 
-            if (!doesLeadTechnologistAlreadyExist(competition)) {
-                User leadTechnologist = competition.getLeadTechnologist();
-
-                AssessmentParticipant competitionParticipant = new AssessmentParticipant();
-                competitionParticipant.setProcess(competition);
-                competitionParticipant.setUser(leadTechnologist);
-                competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
-                competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
-
-                assessmentParticipantRepository.save(competitionParticipant);
+            if (!doesInnovationLeadAlreadyExist(competition)) {
+                User innovationLead = competition.getLeadTechnologist();
+                innovationLeadRepository.save(new InnovationLead(competition, innovationLead));
             }
         }
 
         return serviceSuccess();
     }
 
-    private boolean doesLeadTechnologistAlreadyExist(Competition competition) {
-
-        CompetitionParticipant existingCompetitionParticipant =
-                assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competition.getId(),
-                        competition.getLeadTechnologist().getId(), CompetitionParticipantRole.INNOVATION_LEAD);
-
-        return existingCompetitionParticipant != null;
+    private boolean doesInnovationLeadAlreadyExist(Competition competition) {
+        return innovationLeadRepository.existsInnovationLead(competition.getId(), competition.getLeadTechnologist().getId());
     }
 
     @Override
@@ -223,7 +207,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 .filter(setupStatusResource ->
                         setupStatusResource.getClassName().equals(className) &&
                         setupStatusResource.getClassPk().equals(classPk))
-                .map(setupStatusResource -> setupStatusResource.getCompleted())
+                .map(SetupStatusResource::getCompleted)
                 .findAny();
     }
 
@@ -316,10 +300,52 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 .andOnSuccess(() -> serviceSuccess());
     }
 
-    private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteCompetition(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(competition ->
+                deletePublicContentForCompetition(competition).andOnSuccess(() -> {
+                    deleteFormValidatorsForCompetitionQuestions(competition);
+                    deleteMilestonesForCompetition(competition);
+                    deleteInnovationLead(competition);
+                    deleteSetupStatus(competition);
+                    competitionRepository.delete(competition);
+                    return serviceSuccess();
+                }));
+    }
 
-        TermsAndConditions defaultTermsAndConditions =
-                termsAndConditionsRepository.findOneByTemplate(TermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
+    private void deleteSetupStatus(Competition competition) {
+        setupStatusRepository.deleteByTargetClassNameAndTargetId(Competition.class.getName(), competition.getId());
+    }
+
+    private void deleteMilestonesForCompetition(Competition competition) {
+        competition.getMilestones().clear();
+        milestoneRepository.deleteByCompetitionId(competition.getId());
+    }
+
+    private void deleteInnovationLead(Competition competition) {
+        innovationLeadRepository.deleteAllInnovationLeads(competition.getId());
+    }
+
+    private ServiceResult<Void> deletePublicContentForCompetition(Competition competition) {
+        return find(publicContentRepository.findByCompetitionId(competition.getId()), notFoundError(Competition.class,
+                competition.getId())).andOnSuccess(publicContent -> {
+            publicContentRepository.delete(publicContent);
+            return serviceSuccess();
+        });
+    }
+
+    private void deleteFormValidatorsForCompetitionQuestions(Competition competition) {
+        competition.getSections().forEach(section ->
+                section.getQuestions().forEach(question ->
+                        question.getFormInputs().forEach(formInput ->
+                                formInput.getFormValidators().clear())));
+        competitionRepository.save(competition);
+    }
+
+    private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {
+        GrantTermsAndConditions defaultTermsAndConditions = grantTermsAndConditionsRepository.findOneByTemplate
+                (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
 

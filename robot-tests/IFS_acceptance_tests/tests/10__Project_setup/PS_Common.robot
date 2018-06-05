@@ -25,6 +25,16 @@ ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}     ${test_mailbox_one}+marian@gmail
 ${PS_GOL_APPLICATION_PARTNER_EMAIL}             ${test_mailbox_one}+karen@gmail.com
 ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.com
 
+
+${Dreambit_Name}    Dreambit
+${Dreambit_Id}      ${organisation_ids["${Dreambit_Name}"]}
+${Queries_Competition_Name}    Rolling stock future developments
+${Queries_Competition_Id}      ${competition_ids["${Queries_Competition_Name}"]}
+${Queries_Application_Title}   High-speed rail and its effects on soil compaction
+${Queries_Application_No}      ${application_ids["${Queries_Application_Title}"]}
+${Queries_Application_Project}  ${project_ids["${Queries_Application_Title}"]}
+
+
 #Project: High-speed rail and its effects on air quality
 # MD = Mandatory Documents
 ${Ooba_Name}        Ooba
@@ -266,7 +276,7 @@ navigate to external finance contact page, choose finance contact and save
 Select project location
     [Arguments]  ${org_id}  ${projectId}
     the user navigates to the page        ${server}/project-setup/project/${projectId}/organisation/${org_id}/partner-project-location
-    the user enters text to a text field  css=#postCode  ${postcode}
+    the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
 
@@ -362,19 +372,19 @@ Login and submit partners spend profile
     [Arguments]  ${email}  ${org_id}  ${project}
     log in as a different user       ${email}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
-    the user clicks the button/link  jQuery=a:contains("Submit to lead partner")
-    the user clicks the button/link  jQuery=.button:contains("Submit")
+    the user clicks the button/link  link=Submit to lead partner
+    the user clicks the button/link  jQuery=button.button:contains("Submit")
 
 Login and submit leads spend profile
     [Arguments]  ${email}  ${org_id}  ${org_name}  ${project}
     log in as a different user       ${email}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  link=${org_name}
-    the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link  css=[name="mark-as-complete"]
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
     the user clicks the button/link  jQuery=.button:contains("Review and send total project spend profile")
-    the user clicks the button/link  jQuery=.button:contains("Send project spend profile")
-    the user clicks the button/link  css=.modal-confirm-spend-profile-totals .button[value="Send"]
+    the user clicks the button/link  link=Send project spend profile
+    the user clicks the button/link  id=submit-send-all-spend-profiles
 
 project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     log in as a different user                          &{internal_finance_credentials}

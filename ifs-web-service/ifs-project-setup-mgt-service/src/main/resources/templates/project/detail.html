@@ -83,9 +83,9 @@
                     </th:block>
                 </td>
                 <td>
-                    <th:block th:unless="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}"
-                              th:text="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id)}" />
-                    <th:block th:if="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}">
+                    <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}"
+                              th:text="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id)}" />
+                    <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}">
                         Not yet completed
                     </th:block>
                 </td>

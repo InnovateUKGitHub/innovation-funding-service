@@ -12,7 +12,6 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +46,14 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);
     private static final int PAGE_SIZE = 20;
 
-    private ApplicationSummarySortFieldService applicationSummarySortFieldService;
     private ApplicationSummaryRestService applicationSummaryRestService;
     private ApplicationFundingDecisionService applicationFundingDecisionService;
     private CompetitionService competitionService;
 
     @Autowired
-    public CompetitionManagementFundingDecisionController(ApplicationSummarySortFieldService applicationSummarySortFieldService,
-                                                          ApplicationSummaryRestService applicationSummaryRestService,
+    public CompetitionManagementFundingDecisionController(ApplicationSummaryRestService applicationSummaryRestService,
                                                           ApplicationFundingDecisionService applicationFundingDecisionService,
                                                           CompetitionService competitionService) {
-        this.applicationSummarySortFieldService = applicationSummarySortFieldService;
         this.applicationSummaryRestService = applicationSummaryRestService;
         this.applicationFundingDecisionService = applicationFundingDecisionService;
         this.competitionService = competitionService;

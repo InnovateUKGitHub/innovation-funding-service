@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -16,10 +19,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
-import org.innovateuk.ifs.util.RedirectUtils;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,7 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.RedirectUtils.redirectToCompetitionManagementService;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -69,6 +72,11 @@ public class ProjectDetailsController {
 
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationService;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
@@ -107,10 +115,22 @@ public class ProjectDetailsController {
     @SecuredBySpring(value = "WITHDRAW_PROJECT", description = "Only the IFS administrator users are able to withdraw projects")
     @PostMapping("/{projectId}/withdraw")
     public String withdrawProject(@PathVariable("competitionId") final long competitionId,
-                                  @PathVariable("projectId") final long projectId, HttpServletRequest request) {
-         projectRestService.withdrawProject(projectId).getSuccess();
+                                  @PathVariable("projectId") final long projectId,
+                                  HttpServletRequest request) {
 
-        return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/unsuccessful");
+        projectRestService.withdrawProject(projectId)
+                .andOnSuccess(
+                        () ->  projectRestService.getProjectById(projectId)
+                                .andOnSuccess(
+                                        project -> applicationRestService.withdrawApplication(project.getApplication())
+                                            .andOnFailure(
+                                                    () -> LOG.error("Application withdrawal failed")
+                                            )
+                                )
+                        );
+
+        return redirectToCompetitionManagementService(request,
+                "competition/" + competitionId + "/applications/previous");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {

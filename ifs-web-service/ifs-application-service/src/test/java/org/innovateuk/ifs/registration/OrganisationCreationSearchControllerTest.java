@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.registration;
 
-import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.controller.OrganisationCreationSearchController;
@@ -11,8 +13,10 @@ import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
+import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,24 +36,23 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
-    @InjectMocks
-    private OrganisationCreationSearchController organisationCreationController;
+public class OrganisationCreationSearchControllerTest extends BaseControllerMockMVCTest<OrganisationCreationSearchController> {
     private ApplicationResource applicationResource;
 
     @Mock
@@ -60,6 +63,15 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
 
     @Mock
     private RegistrationCookieService registrationCookieService;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private OrganisationTypeRestService organisationTypeRestService;
 
     @Spy
     @InjectMocks
@@ -76,18 +88,18 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
     private OrganisationTypeForm organisationTypeForm;
     private OrganisationCreationForm organisationFormUseSearchResult;
 
+    OrganisationTypeResource businessOrganisationTypeResource = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
+
+    @Override
+    protected OrganisationCreationSearchController supplyControllerUnderTest() {
+        return new OrganisationCreationSearchController();
+    }
+
+    @Override
     @Before
     public void setUp() {
+        super.setUp();
 
-        // Process mock annotations
-        initMocks(this);
-
-        mockMvc = setupMockMvc(organisationCreationController, () -> loggedInUser, env, messageSource);
-
-        super.setup();
-
-        this.setupInvites();
-        this.setupCookieUtil();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
@@ -97,6 +109,8 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(restSuccess(true));
+        when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource()));
+
 
         AddressForm addressForm = new AddressForm();
         addressForm.setPostcodeInput("");
@@ -128,7 +142,7 @@ public class OrganisationCreationSearchControllerTest extends BaseUnitTest {
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
-        ReflectionTestUtils.setField(organisationCreationController, "validator", validator);
+        ReflectionTestUtils.setField(controller, "validator", validator);
     }
 
     @Test

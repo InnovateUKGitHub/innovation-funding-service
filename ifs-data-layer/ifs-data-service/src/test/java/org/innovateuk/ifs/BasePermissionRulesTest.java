@@ -1,32 +1,31 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.commons.security.evaluator.DefaultPermissionMethodHandler;
-import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.mockito.InjectMocks;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.mockito.Mock;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -35,60 +34,24 @@ import static org.mockito.Mockito.when;
 /**
  * A base class for testing @PermissionRules-annotated classes
  */
-public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
+public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest<T> {
 
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();
 
-    protected List<Role> allRoles;
+    @Mock
+    protected ProjectUserRepository projectUserRepositoryMock;
 
-    protected List<UserResource> allGlobalRoleUsers;
+    @Mock
+    protected ProjectRepository projectRepositoryMock;
 
-    protected List<UserResource> allInternalUsers;
+    @Mock
+    protected ProcessRoleRepository processRoleRepositoryMock;
 
-    protected UserResource compAdminUser() {
-        return getUserWithRole(COMP_ADMIN);
-    }
+    @Mock
+    protected OrganisationRepository organisationRepositoryMock;
 
-    protected UserResource projectFinanceUser() {
-        return getUserWithRole(PROJECT_FINANCE);
-    }
 
-    protected UserResource supportUser() {
-        return getUserWithRole(SUPPORT);
-    }
-
-    protected UserResource innovationLeadUser() {
-        return getUserWithRole(INNOVATION_LEAD);
-    }
-
-    protected UserResource assessorUser() {
-        return getUserWithRole(ASSESSOR);
-    }
-
-    protected UserResource systemRegistrationUser() {
-        return getUserWithRole(SYSTEM_REGISTRATION_USER);
-    }
-
-    protected UserResource anonymousUser() {
-        return (UserResource) ReflectionTestUtils.getField(new DefaultPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
-    }
-
-    protected UserResource ifsAdminUser(){
-        return getUserWithRole(IFS_ADMINISTRATOR);
-    }
-
-    @Before
-    public void setupSetsOfData() {
-        allRoles = asList(Role.values());
-        allGlobalRoleUsers = simpleMap(allRoles, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
-        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser());
-
-    }
-
-    protected UserResource getUserWithRole(Role type) {
-        return simpleFilter(allGlobalRoleUsers, user -> user.hasRole(type)).get(0);
-    }
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 

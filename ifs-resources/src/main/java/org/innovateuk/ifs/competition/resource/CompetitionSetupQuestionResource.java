@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "assessmentGuidance", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
@@ -31,7 +32,6 @@ public class CompetitionSetupQuestionResource {
     private String number;
     @NotBlank
     private String shortTitle;
-    private Boolean shortTitleEditable;
     @NotBlank
     private String title;
     private String subTitle;
@@ -57,6 +57,7 @@ public class CompetitionSetupQuestionResource {
 
     private Boolean scored;
     private Integer scoreTotal;
+
     private Boolean writtenFeedback;
 
     @Valid
@@ -177,14 +178,6 @@ public class CompetitionSetupQuestionResource {
         this.number = number;
     }
 
-    public Boolean getShortTitleEditable() {
-        return shortTitleEditable;
-    }
-
-    public void setShortTitleEditable(Boolean shortTitleEditable) {
-        this.shortTitleEditable = shortTitleEditable;
-    }
-
     public String getShortTitle() {
         return shortTitle;
     }
@@ -258,7 +251,6 @@ public class CompetitionSetupQuestionResource {
                 .append(type, that.type)
                 .append(number, that.number)
                 .append(shortTitle, that.shortTitle)
-                .append(shortTitleEditable, that.shortTitleEditable)
                 .append(title, that.title)
                 .append(subTitle, that.subTitle)
                 .append(guidanceTitle, that.guidanceTitle)
@@ -284,7 +276,6 @@ public class CompetitionSetupQuestionResource {
                 .append(type)
                 .append(number)
                 .append(shortTitle)
-                .append(shortTitleEditable)
                 .append(title)
                 .append(subTitle)
                 .append(guidanceTitle)

@@ -1,27 +1,25 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
-apply plugin: 'org.asciidoctor.convert'
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
-configurations {
-    providedRuntime
-}
 
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
 
 dependencies {
     compile project(":ifs-commons")
+    compile project(":ifs-sil-resources")
+    compile project(":ifs-security")
+
     compile "org.springframework.boot:spring-boot-starter-web"
     compile 'javax.mail:mail:1.4.7'
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
+
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
 }
 
 test {
-    outputs.dir snippetsDir
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
@@ -34,26 +32,14 @@ test {
 
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-sil-resources/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-security/build/classes")
+
     dependsOn ":ifs-commons:build"
+    dependsOn ":ifs-sil-resources:build"
+    dependsOn ":ifs-security:build"
+
 }
-
-
-asciidoctor {
-    dependsOn test
-    attributes 'snippets': snippetsDir
-    backends 'html5'
-    inputs.dir snippetsDir
-    outputs.dir file("static/docs")
-
-    doLast {
-        copy {
-            from "build/asciidoc/html5"
-            into 'static/docs'
-        }
-    }
-}
-
-
 
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerBaseInput

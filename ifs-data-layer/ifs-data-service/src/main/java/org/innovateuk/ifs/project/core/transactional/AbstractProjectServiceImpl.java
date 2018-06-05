@@ -29,7 +29,7 @@ import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfi
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -120,7 +120,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         boolean locationPresent = project.getPartnerOrganisations().stream()
                 .filter(partnerOrganisation -> partnerOrganisation.getOrganisation().getId().equals(organisation.getId()))
                 .findFirst()
-                .map(partnerOrganisation -> StringUtils.isNotBlank(partnerOrganisation.getPostCode()))
+                .map(partnerOrganisation -> StringUtils.isNotBlank(partnerOrganisation.getPostcode()))
                 .orElse(false);
 
         return locationPresent ? COMPLETE : ACTION_REQUIRED;

@@ -223,8 +223,12 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
     }
 
-    public CompetitionResourceBuilder withTermsAndConditions(TermsAndConditionsResource... value) {
+    public CompetitionResourceBuilder withTermsAndConditions(GrantTermsAndConditionsResource... value) {
         return withArray((template, competition) -> competition.setTermsAndConditions(template), value);
+    }
+
+    public CompetitionResourceBuilder withStateAid(Boolean... stateAid) {
+        return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
     @Override

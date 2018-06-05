@@ -3,10 +3,14 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -62,6 +66,18 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     @Mock
     private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
 
+    @Mock
+    private ApplicationSummaryRestService applicationSummaryRestService;
+
+    @Mock
+    private ApplicationFundingDecisionService applicationFundingDecisionService;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private CompetitionService competitionService;
+
     @InjectMocks
     @Spy
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
@@ -81,6 +97,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .withIneligibleApplications(5)
                 .withAssesorsInvited(30)
                 .build();
+
+        when(competitionService.getById(any())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
     }
 
     @Test
@@ -546,10 +564,10 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), any(UserResource.class), any()))
                 .thenReturn(viewModel);
 
-        mockMvc.perform(get("/competition/{competitionId}/applications/unsuccessful?page={pageIndex}&size={pageSize}&sort={sortField}",
+        mockMvc.perform(get("/competition/{competitionId}/applications/previous?page={pageIndex}&size={pageSize}&sort={sortField}",
                 competitionId, pageIndex, pageSize, sortField))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/unsuccessful-applications"))
+                .andExpect(view().name("competition/previous-applications"))
                 .andExpect(model().attribute("model", viewModel))
                 .andReturn();
     }
@@ -574,7 +592,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         mockMvc.perform(post("/competition/1/applications/mark-successful/application/2"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/{competitionId}/applications/unsuccessful"))
+                .andExpect(view().name("redirect:/competition/{competitionId}/applications/previous"))
                 .andReturn();
 
         verify(unsuccessfulApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), any(UserResource.class), any());
@@ -694,23 +712,5 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("Applications", model.getBackTitle());
         assertEquals("/competition/1/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
-    }
-
-    @Test
-    public void navigationOptions() throws Exception {
-        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withName(COMPETITION_NAME).build();
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
-
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/manage", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/navigate-applications"))
-                .andReturn();
-
-        NavigateApplicationsViewModel model = (NavigateApplicationsViewModel) result.getModelAndView().getModel().get("model");
-
-        verify(competitionService, only()).getById(COMPETITION_ID);
-
-        assertEquals(COMPETITION_ID, model.getCompetitionId().longValue());
-        assertEquals(COMPETITION_NAME, model.getCompetitionName());
     }
 }

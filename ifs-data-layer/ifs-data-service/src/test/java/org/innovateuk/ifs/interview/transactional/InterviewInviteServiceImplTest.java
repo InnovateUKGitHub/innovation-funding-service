@@ -2,6 +2,8 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
@@ -13,15 +15,25 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
+import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -65,6 +77,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -91,6 +104,31 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
     private AvailableAssessorMapper availableAssessorMapper;
     @Mock
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
+    @Mock
+    private InterviewInviteRepository interviewInviteRepositoryMock;
+    @Mock
+    private UserMapper userMapperMock;
+    @Mock
+    private InterviewInviteMapper interviewInviteMapperMock;
+    @Mock
+    private InterviewParticipantRepository interviewParticipantRepositoryMock;
+    @Mock
+    private RejectionReasonRepository rejectionReasonRepositoryMock;
+    @Mock
+    private UserRepository userRepositoryMock;
+    @Mock
+    private ProfileRepository profileRepositoryMock;
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+    @Mock
+    private NotificationTemplateRenderer notificationTemplateRendererMock;
+
 
     @Override
     protected InterviewInviteServiceImpl supplyServiceUnderTest() {
@@ -469,7 +507,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_interview_panel_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_interview_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(interviewInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
@@ -524,7 +562,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_interview_panel_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_interview_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(interviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);

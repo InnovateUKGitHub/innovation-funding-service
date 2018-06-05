@@ -4,9 +4,11 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -22,6 +24,9 @@ import static org.mockito.Mockito.when;
 public class UserSurveyServiceImplTest extends BaseServiceUnitTest<UserSurveyService> {
 
     private static final String diversitySurveyUrl = "https://www.surveymonkey.co.uk/r/ifsaccount";
+
+    @Mock
+    private NotificationService notificationServiceMock;
 
     @Override
     protected UserSurveyService supplyServiceUnderTest() {

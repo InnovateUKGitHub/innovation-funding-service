@@ -2,7 +2,7 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
@@ -65,7 +65,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition"),
             fieldWithPath("locationPerPartner").description("Indicates if the project location per partner is required during project setup for this competition"),
             fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last"),
-            fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last")
+            fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last"),
+            fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -101,5 +102,6 @@ public class CompetitionResourceDocs {
             .withHasAssessmentPanel(false)
             .withHasInterviewStage(false)
             .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
-            .withTermsAndConditions(new TermsAndConditionsResource("T&C", "terms-and-conditions-template", "1"));
+            .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
+            .withStateAid(true);
 }

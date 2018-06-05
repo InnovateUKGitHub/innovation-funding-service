@@ -2,15 +2,13 @@ package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.Optional;
-
-import static org.innovateuk.ifs.project.sections.SectionStatus.TICK;
 
 /**
  * A view model that backs the Project Status page
@@ -28,37 +26,25 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private boolean projectComplete;
     private String monitoringOfficerName;
     private Long organisationId;
-    private SectionAccess companiesHouseSection;
-    private SectionAccess projectDetailsSection;
-    private SectionAccess monitoringOfficerSection;
-    private SectionAccess bankDetailsSection;
-    private SectionAccess financeChecksSection;
-    private SectionAccess spendProfileSection;
-    private SectionAccess otherDocumentsSection;
-    private SectionAccess grantOfferLetterSection;
-    private SectionStatus projectDetailsStatus;
-    private SectionStatus monitoringOfficerStatus;
-    private SectionStatus bankDetailsStatus;
-    private SectionStatus financeChecksStatus;
-    private SectionStatus spendProfileStatus;
-    private SectionStatus otherDocumentsStatus;
-    private SectionStatus grantOfferLetterStatus;
+    private SectionAccessList sectionAccesses;
+    private SectionStatusList sectionStatuses;
     private boolean collaborationAgreementRequired;
     private boolean projectManager;
+    private boolean pendingQuery;
 
     public SetupStatusViewModel() {}
 
-    public SetupStatusViewModel(ProjectResource project, CompetitionResource competition,
-                                Optional<MonitoringOfficerResource> monitoringOfficerResource, OrganisationResource organisation, boolean leadPartner,
-                                SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
-                                SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
-                                SectionAccess financeChecksSection, SectionAccess spendProfileSection,
-                                SectionAccess otherDocumentsSection, SectionAccess grantOfferLetterSection,
-                                SectionStatus projectDetailsStatus, SectionStatus monitoringOfficerStatus,
-                                SectionStatus bankDetailsStatus, SectionStatus financeChecksStatus,
-                                SectionStatus spendProfileStatus, SectionStatus otherDocumentsStatus,
-                                SectionStatus grantOfferLetterStatus, boolean collaborationAgreementRequired,
-                                boolean projectManager) {
+    public SetupStatusViewModel(ProjectResource project,
+                                CompetitionResource competition,
+                                Optional<MonitoringOfficerResource> monitoringOfficerResource,
+                                OrganisationResource organisation,
+                                boolean leadPartner,
+                                SectionAccessList sectionAccesses,
+                                SectionStatusList sectionStatuses,
+                                boolean collaborationAgreementRequired,
+                                boolean projectManager,
+                                boolean pendingQuery) {
+
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
@@ -69,28 +55,12 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.organisationId = organisation.getId();
-        this.companiesHouseSection = companiesHouseSection;
-        this.projectDetailsSection = projectDetailsSection;
-        this.monitoringOfficerSection = monitoringOfficerSection;
-        this.bankDetailsSection = bankDetailsSection;
-        this.financeChecksSection = financeChecksSection;
-        this.spendProfileSection = spendProfileSection;
-        this.otherDocumentsSection = otherDocumentsSection;
-        this.grantOfferLetterSection = grantOfferLetterSection;
-        this.projectDetailsStatus = projectDetailsStatus;
-        this.monitoringOfficerStatus = monitoringOfficerStatus;
-        this.bankDetailsStatus = bankDetailsStatus;
-        this.financeChecksStatus = financeChecksStatus;
-        this.spendProfileStatus = spendProfileStatus;
-        this.otherDocumentsStatus = otherDocumentsStatus;
-        this.grantOfferLetterStatus = grantOfferLetterStatus;
-        this.projectComplete = projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus());
+        this.sectionAccesses = sectionAccesses;
+        this.sectionStatuses = sectionStatuses;
+        this.projectComplete = sectionStatuses.isProjectComplete();
         this.collaborationAgreementRequired = collaborationAgreementRequired;
         this.projectManager = projectManager;
+        this.pendingQuery = pendingQuery;
     }
 
     public Long getProjectId() {
@@ -130,61 +100,61 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     }
 
     public SectionAccess getCompaniesHouseSection() {
-        return companiesHouseSection;
+        return sectionAccesses.getCompaniesHouseSection();
     }
 
     public SectionAccess getProjectDetailsSection() {
-        return projectDetailsSection;
+        return sectionAccesses.getProjectDetailsSection();
     }
 
     public SectionAccess getMonitoringOfficerSection() {
-        return monitoringOfficerSection;
+        return sectionAccesses.getMonitoringOfficerSection();
     }
 
     public SectionAccess getBankDetailsSection() {
-        return bankDetailsSection;
+        return sectionAccesses.getBankDetailsSection();
     }
 
     public SectionAccess getFinanceChecksSection() {
-        return financeChecksSection;
+        return sectionAccesses.getFinanceChecksSection();
     }
 
     public SectionAccess getSpendProfileSection() {
-        return spendProfileSection;
+        return sectionAccesses.getSpendProfileSection();
     }
 
     public SectionAccess getOtherDocumentsSection() {
-        return otherDocumentsSection;
+        return sectionAccesses.getOtherDocumentsSection();
     }
 
     public SectionAccess getGrantOfferLetterSection() {
-        return grantOfferLetterSection;
+        return sectionAccesses.getGrantOfferLetterSection();
     }
 
-    public SectionStatus getProjectDetailsStatus() { return projectDetailsStatus; }
+    public SectionStatus getProjectDetailsStatus() { return sectionStatuses.getProjectDetailsStatus(); }
 
     public SectionStatus getMonitoringOfficerStatus() {
-        return monitoringOfficerStatus;
+        return sectionStatuses.getMonitoringOfficerStatus();
     }
 
     public SectionStatus getBankDetailsStatus() {
-        return bankDetailsStatus;
+        return sectionStatuses.getBankDetailsStatus();
     }
 
     public SectionStatus getFinanceChecksStatus() {
-        return financeChecksStatus;
+        return sectionStatuses.getFinanceChecksStatus();
     }
 
     public SectionStatus getSpendProfileStatus() {
-        return spendProfileStatus;
+        return sectionStatuses.getSpendProfileStatus();
     }
 
     public SectionStatus getOtherDocumentsStatus() {
-        return otherDocumentsStatus;
+        return sectionStatuses.getOtherDocumentsStatus();
     }
 
     public SectionStatus getGrantOfferLetterStatus() {
-        return grantOfferLetterStatus;
+        return sectionStatuses.getGrantOfferLetterStatus();
     }
 
     public Long getCompetitionId() {
@@ -202,4 +172,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     public boolean isCollaborationAgreementRequired() { return collaborationAgreementRequired; }
 
     public boolean isProjectManager() { return projectManager; }
+
+    public boolean isShowFinanceChecksPendingQueryWarning() {
+        return pendingQuery;
+    }
 }

@@ -8,9 +8,11 @@ ${assessor_madeleine}        Madeleine Martin
 ${assessor_riley}            Riley Butler
 ${assessor_ben_email}        benjamin.nixon@gmail.com
 ${assessor_joel_email}       joel.george@gmail.com
+${assessor_joel_id}          ${user_ids['${assessor_joel_email}']}
 ${assessor_madeleine_email}  madeleine.martin@gmail.com
 ${assessor_riley_email}      riley.butler@gmail.com
 ${aaron_robertson_email}     aaron.robertson@load.example.com
+${peter_styles_email}        peter.styles@load.example.com
 ${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${computer_vision_application_name}  Computer vision and machine learning for transport networks
 ${computer_vision_application}     ${application_ids["${computer_vision_application_name}"]}
