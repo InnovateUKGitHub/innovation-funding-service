@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.calls;
@@ -35,13 +36,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationAjaxControllerTest extends BaseControllerMockMVCTest<ApplicationAjaxController> {
+public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTest<ApplicationAjaxController> {
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
+
+    @Mock
+    private FinanceRowRestService financeRowRestService;
 
     private ApplicationResource application;
     private Long questionId;
@@ -373,7 +377,6 @@ public class ApplicationAjaxControllerTest extends BaseControllerMockMVCTest<App
         ).andExpect(status().isOk()).andReturn();
 
         String content = result.getResponse().getContentAsString();
-        log.info("Response : " + content);
 
         String jsonExpectedContent = "{\"success\":\"false\"}";
         assertEquals(jsonExpectedContent, content);

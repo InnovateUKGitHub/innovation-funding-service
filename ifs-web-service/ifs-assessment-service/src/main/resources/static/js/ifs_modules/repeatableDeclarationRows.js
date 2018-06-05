@@ -32,7 +32,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
       if (jQuery(el).attr('name') === 'hasAppointments' || jQuery(el).attr('name') === 'addAppointment') {
-        newRow = jQuery('<tr>' +
+        newRow = jQuery('<tr class="form-group-row-validated">' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text" ' +
@@ -52,7 +52,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<tr>' +
+        newRow = jQuery('<tr class="form-group-row-validated">' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field" type="text" ' +

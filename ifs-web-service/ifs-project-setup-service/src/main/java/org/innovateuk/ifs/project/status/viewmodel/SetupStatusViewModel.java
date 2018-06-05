@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsVi
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.Optional;
 

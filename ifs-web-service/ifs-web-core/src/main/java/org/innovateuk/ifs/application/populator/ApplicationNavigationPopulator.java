@@ -139,7 +139,7 @@ public class ApplicationNavigationPopulator {
             ApplicationResource application = applicationService.getById(applicationId);
             String backURL = "/application/" + applicationId;
 
-            if (applicantOrganisationId.isPresent()) {
+            if (applicantOrganisationId.isPresent() && section != null) {
                 model.addAttribute("backTitle", "Application overview");
                 backURL = ("/management/competition/" + section.getCompetition() + backURL);
             } else {

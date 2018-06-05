@@ -287,7 +287,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         newMetaValue.setFinanceRowId(savedCost.getId());
 
         getMetaValueByFieldForFinanceRow(newMetaValue, savedCost)
-                .andOnSuccessReturnVoid(currentMetaValue ->  {    updateCostValue(currentMetaValue, newMetaValue);})
+                .andOnSuccessReturnVoid(currentMetaValue -> updateCostValue(currentMetaValue, newMetaValue))
                 .andOnFailure(() -> {   createCostValue(newMetaValue, savedCost);
                                         return serviceSuccess(); });
 

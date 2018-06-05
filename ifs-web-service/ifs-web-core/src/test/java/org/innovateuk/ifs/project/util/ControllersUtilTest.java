@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.util;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 /**
  * unit test for {@link ControllersUtil}
  */
-public class ControllersUtilTest extends BaseUnitTestMocksTest{
+public class ControllersUtilTest extends BaseUnitTest {
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;

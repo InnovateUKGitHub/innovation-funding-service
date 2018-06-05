@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.form.service;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.junit.Assert.assertEquals;
 
-public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
+public class FormInputResponseServiceImplTest extends BaseUnitTest {
 
     @InjectMocks
     private FormInputResponseService service = new FormInputResponseServiceImpl();

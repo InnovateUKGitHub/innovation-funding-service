@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
@@ -24,6 +25,7 @@ import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
@@ -263,6 +265,20 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
                 .andExpect(content().json(toJson(fileEntryResource)));
 
         verify(interviewApplicationFeedbackServiceMock).findFeedback(applicationId);
+    }
+
+    @Test
+    public void getSentInvite() throws Exception {
+        long applicationId = 1L;
+        InterviewApplicationSentInviteResource invite = newInterviewApplicationSentInviteResource().build();
+        when(interviewApplicationInviteServiceMock.getSentInvite(applicationId)).thenReturn(serviceSuccess(invite));
+
+        mockMvc.perform(get("/interview-panel/sent-invite/{applicationId}", applicationId)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(invite)));
+
+        verify(interviewApplicationInviteServiceMock, only()).getSentInvite(applicationId);
     }
 
     protected HttpHeaders createFileUploadHeader(String contentType, long contentLength) {

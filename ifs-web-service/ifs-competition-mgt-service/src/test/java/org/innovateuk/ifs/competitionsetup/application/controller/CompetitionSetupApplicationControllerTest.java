@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -78,6 +79,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Mock
     private QuestionSetupRestService questionSetupRestService;
+
+    @Mock
+    private CompetitionService competitionService;
 
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }
@@ -472,7 +476,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.scoreTotal").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.assessmentGuidanceTitle").getCode());
-        assertEquals("NotEmpty", bindingResult.getFieldError("guidanceRows[0].justification").getCode());
+        assertEquals("NotBlank", bindingResult.getFieldError("guidanceRows[0].justification").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("guidanceRows[0].scoreTo").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("guidanceRows[0].scoreFrom").getCode());
     }
@@ -549,8 +553,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.scoreTotal").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.assessmentGuidanceTitle").getCode());
-        assertEquals("NotEmpty", bindingResult.getFieldError("question.guidanceRows[0].justification").getCode());
-        assertEquals("NotEmpty", bindingResult.getFieldError("question.guidanceRows[0].subject").getCode());
+        assertEquals("NotBlank", bindingResult.getFieldError("question.guidanceRows[0].justification").getCode());
+        assertEquals("NotBlank", bindingResult.getFieldError("question.guidanceRows[0].subject").getCode());
     }
 
     @Test

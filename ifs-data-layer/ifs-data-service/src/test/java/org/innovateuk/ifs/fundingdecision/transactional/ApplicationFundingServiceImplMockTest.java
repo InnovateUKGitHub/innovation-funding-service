@@ -153,9 +153,20 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Map<String, Object> expectedGlobalNotificationArguments = asMap("message", fundingNotificationResource.getMessageBody());
 
         Map<NotificationTarget, Map<String, Object>> expectedTargetSpecificNotificationArguments = asMap(
-                application1LeadApplicantTarget, asMap("applicationName", application1.getName(), "applicationNumber", application1.getId()),
-                application2LeadApplicantTarget, asMap("applicationName", application2.getName(), "applicationNumber", application2.getId()),
-                application3LeadApplicantTarget, asMap("applicationName", application3.getName(), "applicationNumber", application3.getId()));
+                application1LeadApplicantTarget, asMap(
+                        "applicationName", application1.getName(),
+                        "competitionName", application1.getCompetition().getName(),
+                        "applicationId", application1.getId()),
+
+                application2LeadApplicantTarget, asMap(
+                        "applicationName", application2.getName(),
+                        "competitionName", application2.getCompetition().getName(),
+                        "applicationId", application2.getId()),
+
+                application3LeadApplicantTarget, asMap(
+                        "applicationName", application3.getName(),
+                        "competitionName", application3.getCompetition().getName(),
+                        "applicationId", application3.getId()));
 
         Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments, expectedTargetSpecificNotificationArguments);
 

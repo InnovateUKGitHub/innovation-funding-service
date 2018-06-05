@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditable
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -85,7 +85,7 @@ public class InnovationAreaController {
     }
 
     private RestResult<ApplicationResource> saveInnovationAreaChoice(Long applicationId, InnovationAreaForm innovationAreaForm) {
-        if(innovationAreaForm.getInnovationAreaChoice().equals("NOT_APPLICABLE")) {
+        if("NOT_APPLICABLE".equals(innovationAreaForm.getInnovationAreaChoice())) {
             return applicationInnovationAreaRestService.setApplicationInnovationAreaToNotApplicable(applicationId);
         }
         else {

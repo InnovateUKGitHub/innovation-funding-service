@@ -19,7 +19,7 @@ public class OverheadsHandler extends FinanceRowHandler {
     @Override
     public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
         Optional<FinanceFormField> rateTypeField = financeFormFields.stream().filter(
-                financeFormField -> financeFormField.getCostName().equals("type")).
+                financeFormField -> "type".equals(financeFormField.getCostName())).
                 findFirst();
         Optional<FinanceFormField> rateValueField = determineRateValueField(rateTypeField, financeFormFields);
 

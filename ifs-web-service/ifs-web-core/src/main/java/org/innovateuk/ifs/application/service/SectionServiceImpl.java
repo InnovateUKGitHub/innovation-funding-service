@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -93,12 +93,16 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<SectionResource> filterParentSections(List<SectionResource> sections) {
         List<SectionResource> childSections = getChildSections(sections, new ArrayList<>());
-        sections = sections.stream()
+
+        if(sections == null) {
+            return new ArrayList<>();
+        }
+
+        return sections.stream()
                 .filter(s -> !childSections.stream()
                         .anyMatch(c -> c.getId().equals(s.getId())))
                 .sorted(Comparator.comparing(SectionResource::getPriority))
                 .collect(toList());
-        return sections;
     }
 
     @Override
@@ -107,7 +111,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     private List<SectionResource> getChildSections(List<SectionResource> sections, List<SectionResource>children) {
-        if(sections!= null && sections.size()>0) {
+        if(sections!= null && !sections.isEmpty()) {
             List<SectionResource> allSections = this.getAllByCompetitionId(sections.get(0).getCompetition());
             getChildSectionsFromList(sections, children, allSections);
         }

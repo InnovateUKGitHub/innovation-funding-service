@@ -41,7 +41,7 @@ public abstract class BaseMapper<D, R, I extends Serializable> {
             return constructor.newInstance();
 
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            throw new IllegalStateException("Attempt to invoke non-existent default constructor on " + clazz.getName());
+            throw new IllegalStateException("Attempt to invoke non-existent default constructor on " + clazz.getName(), e);
         }
     }
 }

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competition.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompetitionSetupFinanceRestServiceImpl extends BaseRestService implements CompetitionSetupFinanceRestService {
 
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupFinanceRestServiceImpl.class);
     private String competitionsSetupFinanceRestURL = "/competition-setup-finance";
 
 

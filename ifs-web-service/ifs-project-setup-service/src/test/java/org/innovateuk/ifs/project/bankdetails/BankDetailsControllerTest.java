@@ -9,12 +9,16 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
+import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -35,7 +39,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourc
 import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -46,6 +50,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDetailsController> {
 
     private final static String SEARCH_ADDRESS = "search-address";
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private BankDetailsRestService bankDetailsRestService;
+
+    @Mock
+    private OrganisationAddressRestService organisationAddressRestService;
 
     @Override
     protected BankDetailsController supplyControllerUnderTest() {

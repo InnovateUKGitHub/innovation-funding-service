@@ -36,7 +36,7 @@ public class InterviewAllocationSelectionForm extends BaseBindingResultTarget {
     }
 
     public boolean anySelectionIsMade() {
-        return this.selectedIds.size() > 0;
+        return !this.selectedIds.isEmpty();
     }
 
     @Override

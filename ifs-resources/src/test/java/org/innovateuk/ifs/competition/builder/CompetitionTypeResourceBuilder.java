@@ -38,10 +38,6 @@ public class CompetitionTypeResourceBuilder extends BaseBuilder<CompetitionTypeR
         return withArray((name, object) -> setField("name", name, object), names);
     }
 
-    public CompetitionTypeResourceBuilder withStateAid(Boolean... stateAid) {
-        return withArray((aid, object) -> setField("stateAid", aid, object), stateAid);
-    }
-
     public CompetitionTypeResourceBuilder withCompetitions(List<Long> competitions) {
         return with(object -> object.setCompetitions(competitions));
     }

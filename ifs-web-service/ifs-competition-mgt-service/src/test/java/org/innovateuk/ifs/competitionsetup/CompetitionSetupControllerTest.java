@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInf
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +47,6 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -89,6 +90,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Mock
     private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private CompetitionService competitionService;
+
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {
         return new CompetitionSetupController();
@@ -129,8 +136,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         List<CompetitionTypeResource> competitionTypeResources = newCompetitionTypeResource()
                 .withId(1L)
-                .withName("Comptype with stateAid")
-                .withStateAid(true)
+                .withName("Programme")
                 .withCompetitions(singletonList(COMPETITION_ID))
                 .build(1);
         when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypeResources);
@@ -339,7 +345,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "openingDate",
                         "innovationSectorCategoryId",
                         "innovationAreaCategoryIds",
-                        "competitionTypeId"))
+                        "competitionTypeId",
+                        "stateAid"))
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
 
@@ -350,7 +357,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(8, bindingResult.getFieldErrorCount());
+        assertEquals(9, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
         assertEquals(
                 "Please select a Portfolio Manager.",
@@ -384,6 +391,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 "Please select a competition type.",
                 bindingResult.getFieldError("competitionTypeId").getDefaultMessage()
         );
+        assertTrue(bindingResult.hasFieldErrors("stateAid"));
+        assertEquals(
+                "Please select a state aid option.",
+                bindingResult.getFieldError("stateAid").getDefaultMessage()
+        );
 
         verify(competitionSetupRestService, never()).update(competition);
     }
@@ -404,7 +416,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "innovationLeadUserId",
                         "openingDate",
                         "innovationSectorCategoryId",
-                        "innovationAreaCategoryIds"
+                        "innovationAreaCategoryIds",
+                        "stateAid"
                 ))
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
@@ -416,7 +429,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(6, bindingResult.getFieldErrorCount());
+        assertEquals(7, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
         assertEquals(
                 "Please select a Portfolio Manager.",
@@ -447,6 +460,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 "Please select an innovation area.",
                 bindingResult.getFieldError("innovationAreaCategoryIds").getDefaultMessage()
         );
+        assertTrue(bindingResult.hasFieldErrors("stateAid"));
+        assertEquals(
+                "Please select a state aid option.",
+                bindingResult.getFieldError("stateAid").getDefaultMessage()
+        );
 
         verify(competitionSetupRestService, never()).update(competition);
     }
@@ -471,7 +489,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("competitionTypeId", "1")
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
-                .param("unrestricted", "1"))
+                .param("unrestricted", "1")
+                .param("stateAid", "true"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
@@ -515,7 +534,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("competitionTypeId", "1")
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
-                .param("unrestricted", "1"))
+                .param("unrestricted", "1")
+                .param("stateAid", "true"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY, "openingDate"))
@@ -626,7 +646,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
                 .param("innovationLeadUserId", "1")
-                .param("title", "My competition"))
+                .param("title", "My competition")
+                .param("stateAid", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
 
@@ -1167,19 +1188,19 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void deleteCompetition() throws Exception {
-        when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(restSuccess());
+        when(competitionSetupService.deleteCompetition(COMPETITION_ID)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
 
-        verify(competitionSetupRestService, only()).delete(COMPETITION_ID);
+        verify(competitionSetupService, only()).deleteCompetition(COMPETITION_ID);
     }
 
     @Test
     public void deleteCompetition_failure() throws Exception {
-        when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(
-                restFailure(new Error(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED, HttpStatus.BAD_REQUEST)));
+        when(competitionSetupService.deleteCompetition(COMPETITION_ID)).thenReturn(
+                serviceFailure(new Error(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED, HttpStatus.BAD_REQUEST)));
 
         // For re-display of Competition Setup following the failure
         CompetitionResource competitionResource = newCompetitionResource()
@@ -1194,8 +1215,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(model().errorCount(1))
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
-
-        verify(competitionSetupRestService, only()).delete(COMPETITION_ID);
 
         CompetitionSetupSummaryForm form = (CompetitionSetupSummaryForm) result.getModelAndView().getModel()
                 .get(COMPETITION_SETUP_FORM_KEY);

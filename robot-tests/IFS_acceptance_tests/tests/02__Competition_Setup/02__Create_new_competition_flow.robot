@@ -101,22 +101,16 @@ User can create a new competition
     And The user should not see the element    link=Stakeholders
     And The user should see the element        jQuery=p:contains("Once you complete, this competition will be ready to open.")
 
-New competition shows in Preparation section
-    [Documentation]    INFUND-2980
-    Given The user clicks the button/link    link=All competitions
-    And the user navigates to the page    ${CA_UpcomingComp}
-    Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
-
 Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link                       link=Initial details
     And the user should see the option in the drop-down menu    Generic  id=competitionTypeId
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user clicks the button/link                         jQuery=button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
     And the user moves focus and waits for autosave
+    And the user clicks the button twice             css=label[for="stateAid2"]
     When the user clicks the button/link             jQuery=button:contains("Done")
     Then the user should see the text in the page    John Doe
     And the user should see the text in the page     10/1/${nextyear}
@@ -126,7 +120,7 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page     Satellite applications
     And the user should see the text in the page     Space technology
     And the user should see the text in the page     Sector
-    And the user should see the text in the page     Yes
+    And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
     And the user should see the element              jQuery=.button:contains("Edit")
 
 Initial details - Innovation sector of Open should be visible
@@ -183,7 +177,7 @@ Initial details - Comp Type and Date should not be editable
     And the user should see the text in the page    Open
     And the user should see the text in the page    Biosciences
     And the user should see the text in the page    Creative industries
-    And the user should see the text in the page    Yes
+    And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
@@ -194,8 +188,7 @@ Initial details - should have a green check
 
 User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104  IFS-3086
-    Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Then The user should see the element    link=Terms and conditions
+    Given The user should see the element   link=Terms and conditions
     And The user should see the element     link=Funding information
     And The user should see the element     link=Eligibility
     And The user should see the element     link=Milestones
@@ -231,15 +224,13 @@ Internal user can navigate to Public Content without having any issues
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
-    Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    And The user clicks the button/link   link=All competitions
-    And the user navigates to the page    ${CA_UpcomingComp}
+    Given the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element  jQuery=section:contains("In preparation") li:contains("${competitionTitle}")
 
 Funding information: calculations
     [Documentation]  INFUND-2985 INFUND-4894
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    [Setup]    the user clicks the button/link  link=${competitionTitle}
     Given the user clicks the button/link    link=Funding information
     And the user clicks the button/link    jQuery=.button:contains("Generate code")
     And the user enters text to a text field    id=funders[0].funder    FunderName
@@ -289,7 +280,6 @@ Funding information: should have a green check
 Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
     And the user should see the text in the page    Please choose the project type.
     Then the user should see the element    jQuery=label:contains("Single or Collaborative")
@@ -318,13 +308,13 @@ Eligibility: Mark as Done then Edit again
     And the user moves focus and waits for autosave
     And the user selects the radio button    resubmission    no
     When the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the text in the page    Yes
-    And the user should see the text in the page    Single
-    And the user should see the text in the page    Business
-    And the user should see the text in the page    50%
-    And the user should see the text in the page    Feasibility studies
-    And the user should see the text in the page    Industrial research
-    And the user should see the text in the page    Experimental development
+    Then the user should see the element    jQuery=dt:contains("Project type") ~ dd:contains("Single")
+    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Feasibility studies")
+    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Industrial research")
+    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Experimental development")
+    And the user should see the element     jQuery=dt:contains("Lead applicant") ~ dd:contains("Business")
+    And the user should see the element     jQuery=dt:contains("Research participation") ~ dd:contains("50%")
+    And the user should see the element     jQuery=dt:contains("Are resubmissions allowed") ~ dd:contains("No")
     And The user should not see the element    id=streamName
     When the user clicks the button/link    link=Competition setup
     When the user clicks the button/link    link=Eligibility
@@ -341,7 +331,6 @@ Eligibility: Should have a Green Check
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     When the user clicks the button/link    link=Milestones
     Then the user should see the text in the page  Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
     When The user should see the text in the page   1. Open date
@@ -376,7 +365,6 @@ Milestones: Green check should show
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]    HappyPath
-    [Setup]  The user navigates to the page  ${COMP_MANAGEMENT_COMP_SETUP}
     #Writing the following selectors using jQuery in order to avoidhardcoded numbers.
     When The user clicks the button/link  link=Application
     Then the user should see the element  jQuery= h2:contains("Sector competition questions")
@@ -573,7 +561,6 @@ Application: Done enabled when all questions are marked as complete
 Public content is required for a Competition to be setup
     [Documentation]
     [Tags]  HappyPath
-    [Setup]  the user navigates to the page  ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link  link=Public content
     When the user fills in the Public content and publishes  GrowthTable
     And the user clicks the button/link    link=Return to setup overview
@@ -650,19 +637,22 @@ User should be able to Save the Competition as Open
 Assessor: Contain the correct options
     [Documentation]    INFUND-5641
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user clicks the button/link    link=Assessors
+    [Setup]  the user clicks the button/link  link=${competitionTitle}
+    Given The user clicks the button/link   link=View and update competition setup
+    And the user clicks the button/link     link=Assessors
     And the user should see the text in the page    How many assessors are required for each application?
     Then the user should see the element    jQuery=label:contains(1)
     When the user should see the element    jQuery=label:contains(3)
-    And the user should see the element    jQuery=label:contains(5)
+    And the user should see the element     jQuery=label:contains(5)
     And the user should see the text in the page    How much do assessors receive per application
-    And the user should see the element    id=assessorPay
+    And the user should see the element     id=assessorPay
 
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641 IFS-380
      [Tags]    HappyPath
-    When the user selects the radio button     assessorCount   5
+    Given the user selects the radio button    assessorCount   5
+    And the user selects the radio button      hasInterviewStage  hasInterviewStage-1
+    And the user selects the radio button      hasAssessmentPanel  0
     Then the user enters text to a text field  id=assessorPay  100
     When the user clicks the button/link       jQuery=button:contains("Done")
     Then the user should see the element       jQuery=dt:contains("How many assessors") + dd:contains("5")
@@ -687,8 +677,10 @@ Assessor: Should have a Green Check
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
     [Tags]  HappyPath
-    When the user navigates to the page       ${COMP_MANAGEMENT_COMP_SETUP}/manage-innovation-leads/find
-    Then the user should see the element      jQuery=h1:contains("Manage innovation leads")
+    [Setup]  the user clicks the button/link  link=${competitionTitle}
+    Given The user clicks the button/link     link=View and update competition setup
+    And The user clicks the button/link       link=Stakeholders
+    And the user should see the element       jQuery=h1:contains("Manage innovation leads")
     And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
     And the user should see the element       jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper") ~ dd:contains("John Doe")
     And the user should see the element       jQuery=li.selected a:contains("Find")
@@ -894,3 +886,4 @@ the user marks question as complete
     the user clicks the button/link      jQuery=a:contains("${question_link}")
     the user clicks the button/link      css=button[type="submit"]
     the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
+

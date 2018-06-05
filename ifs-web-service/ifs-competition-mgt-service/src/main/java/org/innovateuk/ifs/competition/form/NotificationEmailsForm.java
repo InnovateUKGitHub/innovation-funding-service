@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.form;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 
 public class NotificationEmailsForm {
 
-    @NotEmpty(message="{validation.manage.funding.notifications.message.required}")
+    @NotBlank(message="{validation.manage.funding.notifications.message.required}")
     private String message;
 
     @NotEmpty(message="{validation.manage.funding.applications.no.application.selected}")

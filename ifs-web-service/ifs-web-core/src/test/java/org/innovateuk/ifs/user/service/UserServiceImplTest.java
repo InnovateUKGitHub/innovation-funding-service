@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -41,10 +41,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Mock
     private UserRestService userRestService;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
+        super.setup();
 
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER))).thenReturn(restSuccess());
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError()));

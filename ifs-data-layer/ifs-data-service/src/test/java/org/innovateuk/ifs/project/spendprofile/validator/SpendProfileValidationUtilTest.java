@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.validator;
 
-import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
+import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;

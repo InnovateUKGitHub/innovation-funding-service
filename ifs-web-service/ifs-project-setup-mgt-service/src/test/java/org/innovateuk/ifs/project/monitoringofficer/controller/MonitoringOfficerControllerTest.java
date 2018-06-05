@@ -4,20 +4,27 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -46,7 +53,7 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.*;
@@ -96,6 +103,24 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
             withApplication(applicationId).
             withAddress(projectAddress).
             withTargetStartDate(LocalDate.of(2017, 01, 05));
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private StatusService statusService;
+
+    @Mock
+    private MonitoringOfficerService monitoringOfficerService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Override
     @Before
@@ -363,17 +388,17 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertEquals(8, bindingResult.getFieldErrorCount());
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
-        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
 
         assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
-        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
 
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
 
         List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
         phoneNumberErrors.sort((o1, o2) -> o1.getCode().compareTo(o2.getCode()));
 
-        assertEquals("NotEmpty", phoneNumberErrors.get(0).getCode());
+        assertEquals("NotBlank", phoneNumberErrors.get(0).getCode());
         assertEquals("Pattern", phoneNumberErrors.get(1).getCode());
         assertEquals("Size", phoneNumberErrors.get(2).getCode());
 
@@ -543,10 +568,10 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertEquals(7, bindingResult.getFieldErrorCount());
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
-        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
 
         assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
-        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
         
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
 

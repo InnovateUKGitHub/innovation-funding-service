@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.validation;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.commons.security.NotSecured;

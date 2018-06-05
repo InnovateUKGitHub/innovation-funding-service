@@ -11,7 +11,7 @@ import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflow
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -26,14 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
@@ -74,7 +72,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private void generateProcessRolesForApplication(User user, Role role, Application application) {
         List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
         List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-        Long userOrganisationId = usersProcessRoles.size() != 0
+        Long userOrganisationId = !usersProcessRoles.isEmpty()
                 ? usersProcessRoles.get(0).getOrganisationId()
                 : usersOrganisations.get(0).getId();
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisationId);

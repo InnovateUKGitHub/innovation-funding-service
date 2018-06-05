@@ -24,10 +24,10 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -310,10 +310,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             return REJECTED;
         }
 
-        if (project.getOfferSubmittedDate() != null) {
-            if (golWorkflowHandler.isApproved(project)) {
-                return COMPLETE;
-            }
+        if (project.getOfferSubmittedDate() != null && golWorkflowHandler.isApproved(project)) {
+            return COMPLETE;
         }
 
         if (project.getOfferSubmittedDate() != null) {

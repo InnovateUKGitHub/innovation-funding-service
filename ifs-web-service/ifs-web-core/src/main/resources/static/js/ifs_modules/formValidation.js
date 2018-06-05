@@ -336,24 +336,17 @@ IFS.core.formValidation = (function () {
       }
     },
     checkRange: function (field) {
-      console.log('Check range')
       var rangeAttribute = 'range'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, rangeAttribute)
-      console.log(displayValidationMessages)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, rangeAttribute)
-      console.log(errorMessage)
       var min = parseInt(field.data('range-min'), 10)
       var max = parseInt(field.data('range-max'), 10)
-      console.log('Min = ' + min)
-      console.log('Max = ' + max)
       if (IFS.core.formValidation.checkNumber(field)) {
         var fieldVal = parseInt(field.val(), 10)
         if (fieldVal < min || fieldVal > max) {
-          console.log('Invalid')
           IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
           return false
         } else {
-          console.log('Valid')
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
         }
@@ -363,7 +356,6 @@ IFS.core.formValidation = (function () {
       var requiredAttribute = 'required'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, requiredAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)
-
       if (field.val() !== null) {
         var value = field.val()
         if (field.is(':checkbox,:radio')) {
@@ -382,6 +374,37 @@ IFS.core.formValidation = (function () {
         } else if (field.is(s.number.fields) && s.html5validationMode && field[0].validity.badInput) {
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
+        } else if (field.is('select')) {
+          // check if we are a group of select elements
+          var selectGroup = field.closest('.form-group').find('select')
+          var valid = true
+          if (selectGroup.length > 1) {
+            // a group of select elements
+            // check if any of the select elements are invalid
+            selectGroup.each(function () {
+              if (jQuery(this).val().length === 0) {
+                valid = false
+                return false
+              }
+            })
+            if (!valid) {
+              selectGroup.each(function () { IFS.core.formValidation.setInvalid(jQuery(this), errorMessage, displayValidationMessages) })
+              return false
+            } else {
+              selectGroup.each(function () { IFS.core.formValidation.setValid(jQuery(this), errorMessage, displayValidationMessages) })
+              return true
+            }
+          } else {
+            // single select element
+            // check if the value has any characters OR if the value only contains spaces
+            if (value.length === 0) {
+              IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+              return false
+            } else {
+              IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+              return true
+            }
+          }
         } else {
           // check if the value has any characters OR if the value only contains spaces
           if (value.length === 0 || !value.trim()) {
@@ -721,6 +744,7 @@ IFS.core.formValidation = (function () {
 
       var formGroup = field.closest('.form-group')
       var formGroupRow = field.closest('.form-group-row')
+      var formGroupRowValidated = field.closest('.form-group-row-validated')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
 
@@ -734,6 +758,10 @@ IFS.core.formValidation = (function () {
           if (visuallyhidden === false) { field.addClass('form-control-error') }
           formGroup.find('legend,label').first().append('<span class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
         }
+      }
+
+      if (formGroupRowValidated) {
+        if (visuallyhidden === false) { formGroupRowValidated.addClass('form-group-error') }
       }
 
       if (formGroupRow.length) {
@@ -768,6 +796,7 @@ IFS.core.formValidation = (function () {
       }
       var formGroup = field.closest('.form-group')
       var formGroupRow = field.closest('.form-group-row')
+      var formGroupRowValidated = field.closest('.form-group-row-validated')
       var errorSummary = jQuery('.error-summary-list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
@@ -793,6 +822,10 @@ IFS.core.formValidation = (function () {
           }
         }
       }
+      if (formGroupRowValidated.length && formGroupRowValidated.find('.form-control-error').length === 0) {
+        formGroupRowValidated.removeClass('form-group-error')
+      }
+
       // if it is a .form-group-multiple there can be multiple fields within the group, all having there own validation but reporting to one label
       // the template has to output server side error messages linked to the field
       // i.e. a table
@@ -804,7 +837,7 @@ IFS.core.formValidation = (function () {
       //    </th>
       //     <td><input aria-labelledby="rowlabel" type="text" name="field1" class="form-control form-control-error" required /></td>
       //     <td><input aria-labelledby="rowlabel" type="text" name="field2" class="form-control form-control-error" required /></td>
-      // <tr>
+      // </tr>
       if (formGroupRow.length) {
         formGroupRow.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
         if (formGroupRow.find('[data-errorfield="' + name + '"]').length === 0) {

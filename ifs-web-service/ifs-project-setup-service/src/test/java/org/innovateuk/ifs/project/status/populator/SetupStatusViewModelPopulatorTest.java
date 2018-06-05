@@ -3,20 +3,27 @@ package org.innovateuk.ifs.project.status.populator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
+import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +34,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -41,8 +49,11 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -51,6 +62,24 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private SetupStatusViewModelPopulator populator;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private CompetitionService competitionService;
+
+    @Mock
+    private MonitoringOfficerService monitoringOfficerService;
+
+    @Mock
+    private BankDetailsRestService bankDetailsRestService;
+
+    @Mock
+    private StatusService statusService;
 
     @Mock
     private AsyncFuturesGenerator futuresGeneratorMock;
@@ -75,6 +104,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     private Map<String, SectionStatus> partnerStatusFlagChecks = new HashMap<>();
 
+    private UserResource loggedInUser = newUserResource().withId(1L)
+            .withFirstName("James")
+            .withLastName("Watts")
+            .withEmail("james.watts@email.co.uk")
+            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withUID("2aerg234-aegaeb-23aer").build();
 
     @Before
     public void setUpDefaults() {
@@ -99,10 +134,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .build(1))
                 .build();
 
@@ -110,7 +147,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertStatuses(viewModel);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertFalse(viewModel.isProjectComplete());
 
@@ -1247,10 +1285,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .build(1))
                 .build();
 
@@ -1259,7 +1299,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertStatuses(viewModel);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertEquals(false, viewModel.isCollaborationAgreementRequired());
 

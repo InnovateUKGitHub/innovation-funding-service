@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessorController;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -29,6 +31,9 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
 
     @Mock
     private AssessorService assessorServiceMock;
+
+    @Mock
+    private CompetitionService competitionServiceMock;
 
     @Override
     protected AssessorController supplyControllerUnderTest() {
@@ -73,5 +78,22 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
                         ),
                         responseFields(assessorProfileResourceFields)
                 ));
+    }
+
+    @Test
+    public void notifyAssessors() throws Exception {
+        final Long competitionId = 1L;
+
+        when(competitionServiceMock.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
+        when(assessorServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessor/notify-assessors/competition/{id}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "assessor/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition for the notifications")
+                        ))
+                );
     }
 }

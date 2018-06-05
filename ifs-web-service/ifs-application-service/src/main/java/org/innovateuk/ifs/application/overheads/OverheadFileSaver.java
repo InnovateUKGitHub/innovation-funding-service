@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class OverheadFileSaver {
 
             handleRestResultUpload(fileEntryResult, messages);
         } catch(NumberFormatException | IOException e) {
-            LOG.error("Overheadfile cannot be saved :"  + e.getMessage());
+            LOG.error("Overheadfile cannot be saved :"  + e.getMessage(), e);
         }
 
         return messages;
@@ -53,7 +53,7 @@ public class OverheadFileSaver {
 
     private void handleRestResultUpload(RestResult<FileEntryResource> fileEntryResult, ValidationMessages messages) {
         if(fileEntryResult.isFailure()) {
-            if(fileEntryResult.getErrors().stream().anyMatch(error -> error.getErrorKey().equals("UNSUPPORTED_MEDIA_TYPE"))) {
+            if(fileEntryResult.getErrors().stream().anyMatch(error -> "UNSUPPORTED_MEDIA_TYPE".equals(error.getErrorKey()))) {
                 Error error = new Error("validation.finance.overhead.file.type",UNSUPPORTED_MEDIA_TYPE);
                 messages.addError(error);
             }
