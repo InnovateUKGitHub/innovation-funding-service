@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -14,30 +14,36 @@
 <main id="content">
 
 
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-3598-comp-overview'})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-3598-org-details'} + ${user == 'existing' ? '/?user=existing' : ''})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
     <h1 class="heading-xlarge">
-        Please sign in or create an account
+        <span class="heading-secondary">Start new application</span>
+        Confirm organisation details
     </h1>
 
-    <div class="grid-row">
-
-        <section class="column-half">
-            <h2 class="heading-large no-margin">Used this service before?</h2>
-            <p>Please sign into your Innovation Funding Service account.</p>
-
-            <a href="/prototypes/IFS-3598-signin-new-acc" class="button" value="create-account" type="submit">Sign in</a>
-        </section>
-
-        <section class="column-half">
-            <h2 class="heading-large no-margin">New to this service?</h2>
-            <p>If you haven't used the new Innovation Funding Service before you will need to create an account.</p>
-
-            <a href="/prototypes/IFS-3598-choose-org" class="button" value="create-account" type="submit">Create account</a>
-        </section>
+    <div class="message-alert">
+        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
+
+    <p class="extra-margin">This organisation will lead the application.</p>
+
+    <h3 class="heading-small">Organisation type</h3>
+    <p>Business</p>
+
+    <h3 class="heading-small">Registered name</h3>
+    <p>CERCIS LIMITED</p>
+
+    <h3 class="heading-small">Registration number</h3>
+    <p>05750811</p>
+
+    <h3 class="heading-small">Registered Address</h3>
+    <p>16 Queen Square<br />
+    Bristol<br />
+    BS1 4NT</p>
+
+    <a class="button" th:href="${'/prototypes/'} + ${user == 'existing' ? 'IFS-3598-application-team' : 'IFS-3598-your-details'}">Save and continue</a>
 
 	<!-- END OF HARDCODED PROTOTYPE HTML -->
 

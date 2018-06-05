@@ -13,33 +13,17 @@
 
 <main id="content">
 
-
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-3598-comp-overview'})" />
-
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-    <h1 class="heading-xlarge">
-        Please sign in or create an account
-    </h1>
+    <main id="content">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your account has been created',size='heading-large'" />
+        <p>Before you can access the system you will need to sign into your account.</p>
+        <a href="/prototypes/IFS-3598-signin-dashboard" class="button">Sign into your account</a>
 
-    <div class="grid-row">
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
 
-        <section class="column-half">
-            <h2 class="heading-large no-margin">Used this service before?</h2>
-            <p>Please sign into your Innovation Funding Service account.</p>
-
-            <a href="/prototypes/IFS-3598-signin-new-acc" class="button" value="create-account" type="submit">Sign in</a>
-        </section>
-
-        <section class="column-half">
-            <h2 class="heading-large no-margin">New to this service?</h2>
-            <p>If you haven't used the new Innovation Funding Service before you will need to create an account.</p>
-
-            <a href="/prototypes/IFS-3598-choose-org" class="button" value="create-account" type="submit">Create account</a>
-        </section>
-    </div>
-
-	<!-- END OF HARDCODED PROTOTYPE HTML -->
+    <!-- END OF HARDCODED PROTOTYPE HTML -->
 
 	<th:block th:insert="fragments/layout :: main-content-end" />
 </main>

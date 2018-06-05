@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -13,8 +13,7 @@
 
 <main id="content">
 
-
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-3598-choose-org'})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-3598-choose-org'} + ${user == 'existing' ? '/?user=existing' : ''})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -32,7 +31,7 @@
 
 
 
-    <form action="/organisation/create/find-organisation" method="POST"><input type="hidden" name="_csrf" value="bf3eeee5911011ca0665b19a96010e9e8cc50df9f63431bfc8533dbac5a10e7c56194216ef592632eb371669dc4c99a413fe220e5f312fb9f7c476057981d2496bf6e538cc7ee198c3e88543acaa00bb985bfbee3c5d8c85ec6a982b57e3ce48">
+    <form action="/prototypes/IFS-3598-org-selected" method="POST"><input type="hidden" name="_csrf" value="bf3eeee5911011ca0665b19a96010e9e8cc50df9f63431bfc8533dbac5a10e7c56194216ef592632eb371669dc4c99a413fe220e5f312fb9f7c476057981d2496bf6e538cc7ee198c3e88543acaa00bb985bfbee3c5d8c85ec6a982b57e3ce48">
 
         <div class="form-group">
             <label class="form-label">
@@ -49,28 +48,29 @@
         <ul id="org-results" class="results-list panel" style="display: block">
             <li class="type-company">
                 <h3>
-                    <a href="/prototypes/642-org-selected-from-companies-house" title="View company"> NOMENSA LTD
-                    </a>
+                    <a th:href="${'/prototypes/IFS-3598-org-selected'} + ${user == 'existing' ? '?user=existing' : ''}" title="View organisation">CERCIS LIMITED</a>
                 </h3>
-                <p class="meta crumbtrail"> <strong>04214477</strong> - Incorporated on 10 May 2001 </p>
-                <p>King William House, 13 Queen Square, Bristol, BS1 4NT</p>
+                <p class="meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
+                <p>Queen Square, Bristol, BS1 4NT</p>
+
             </li>
             <li class="type-company">
                 <h3>
-                    <a href="#" title="View company"> <strong>NOMEN</strong> UK LTD.
-                    </a>
+                    <a href="#" title="View organisation">CERCIS SERVICES LTD</a>
                 </h3>
-                <p class="meta crumbtrail"> <strong>03130339</strong> - Dissolved on  1 April 2014 </p>
-                <p>23, Star Hill, Rochester, Kent, ME1 1XF</p>
+                <p class="meta crumbtrail">10626442 - Incorporated on 17 February 2017</p>
+                <p>Stamford Square, London, SW15 2BF</p>
+
             </li>
             <li class="type-company">
                 <h3>
-                    <a href="#"> <strong>NOMEN</strong> ENTERPRISES LIMITED
-                    </a>
+                    <a href="#" title="View organisation">CERCIS TRAINING AND CONSULTANCY LTD</a>
                 </h3>
-                <p class="meta crumbtrail"> <strong>06285018</strong> - Dissolved on 13 October 2009 </p>
-                <p>1 Colman Way, Redhill, RH1 2BB</p>
+                <p class="meta crumbtrail">10105978 - Incorporated on  6 April 2016</p>
+                <p>Westergate Close, Worthing, BN12 5DD</p>
+
             </li>
+
         </ul>
 
 
@@ -116,7 +116,7 @@
                 <button type="submit" name="save-organisation-details" class="button extra-margin">Continue</button>
             </div>
         </details>
-        
+
     </form>
 
 	<!-- END OF HARDCODED PROTOTYPE HTML -->

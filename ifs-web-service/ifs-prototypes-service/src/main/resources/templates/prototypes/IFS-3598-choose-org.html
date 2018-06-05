@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -84,6 +84,11 @@
         <p>
             If your organisation type is not listed contact the <a href="/info/contact">customer support service</a>.
         </p>
+
+        <th:block th:if="${user == 'existing'}">
+            <input type="hidden" name="user" th:value="${user}" />
+        </th:block>
+
         <button id="lead-organisation-type-cta" class="button button-large extra-margin" name="select-company-type" type="submit">Save and continue</button>
     </form>
 
