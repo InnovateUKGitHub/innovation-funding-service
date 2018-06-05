@@ -79,7 +79,7 @@ IFS.core.formValidation = (function () {
       },
       tel: {
         fields: '[type="tel"]:not([readonly])',
-        messageInvalid: 'Please enter a valid phone number.'
+        messageInvalid: 'Please enter a valid telephone number between 8 and 20 digits.'
       },
       lowerthan: {
         fields: '[data-lowerthan]',
@@ -456,7 +456,8 @@ IFS.core.formValidation = (function () {
       var telAttribute = 'tel'
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, telAttribute)
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, telAttribute)
-      var re = /^(?=.*[0-9])[- +()0-9]+$/
+      var re = /^[\\)\\(\\+\s-]*(?:\d[\\)\\(\\+\s-]*){8,20}$/
+
       var tel = field.val()
       var validPhone = re.test(tel)
 

@@ -74,10 +74,8 @@
                        type="tel"
                        th:errorclass="form-control-error"
                        th:field="*{phoneNumber}"
-                       pattern="^[\\)\\(\\+\s-]*(?:\d[\\)\\(\\+\s-]*){8,20}$"
                        required="required"
-                       th:attr="data-required-errormessage=#{validation.standard.phonenumber.required},
-                                data-pattern-errormessage=#{validation.standard.phonenumber.length.minmax(null,null,8)}" />
+                       th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
             </div>
             <div class="form-group">
                 <div class="heading-small">Email</div>
