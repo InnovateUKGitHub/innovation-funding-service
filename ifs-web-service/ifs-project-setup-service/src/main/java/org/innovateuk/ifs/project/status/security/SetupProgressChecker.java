@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static java.util.Arrays.asList;

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.service.AbstractTeamManagementService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;

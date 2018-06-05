@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.workflow.domain;
 
-import org.innovateuk.ifs.util.enums.Identifiable;
+import org.innovateuk.ifs.identity.Identifiable;
 import org.innovateuk.ifs.workflow.resource.State;
 
 public enum ApplicationActivityState implements Identifiable, ActivityStateEnum {

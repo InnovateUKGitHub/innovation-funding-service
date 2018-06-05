@@ -2,7 +2,7 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-FROM infrastructure/oracle-jre
+FROM innovateuk/oracle-jre
 
 
 RUN mkdir -p /opt/app
