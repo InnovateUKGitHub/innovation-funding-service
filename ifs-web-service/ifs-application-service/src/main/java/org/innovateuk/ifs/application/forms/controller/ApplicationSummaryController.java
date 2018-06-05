@@ -127,12 +127,14 @@ public class ApplicationSummaryController {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
         model.addAttribute("projectWithdrawn", projectWithdrawn);
-        model.addAttribute("projectId", project.getId());
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
         if (competition.getCompetitionStatus().isFeedbackReleased()) {
             addFeedbackAndScores(model, applicationId);
+            if(project != null){
+                model.addAttribute("projectId", project.getId());
+            }
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
             addFeedbackAndScores(model, applicationId);
