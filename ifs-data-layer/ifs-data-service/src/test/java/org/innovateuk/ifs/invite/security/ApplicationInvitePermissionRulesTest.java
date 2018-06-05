@@ -8,9 +8,10 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.user.builder.OrganisationBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -45,6 +46,9 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
 
     @Mock
     private ApplicationRepository applicationRepository;
+
+    @Mock
+    private InviteOrganisationRepository inviteOrganisationRepositoryMock;
 
     @Override
     protected ApplicationInvitePermissionRules supplyPermissionRulesUnderTest() {

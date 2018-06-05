@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.interview.repository;
 
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -17,17 +17,17 @@ import java.util.Set;
  */
 public interface InterviewAssignmentRepository extends ProcessRepository<InterviewAssignment>, PagingAndSortingRepository<InterviewAssignment, Long> {
 
-    void deleteByTargetIdAndActivityStateState(long applicationId, State backingState);
+    void deleteByTargetIdAndActivityState(long applicationId, InterviewAssignmentState state);
 
-    void deleteByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
+    void deleteByTargetCompetitionIdAndActivityState(long competitionId, InterviewAssignmentState state);
 
-    Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState, Pageable pagable);
+    Page<InterviewAssignment> findByTargetCompetitionIdAndActivityState(long competitionId, InterviewAssignmentState state, Pageable pagable);
 
-    List<InterviewAssignment> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
+    List<InterviewAssignment> findByTargetCompetitionIdAndActivityState(long competitionId, InterviewAssignmentState state);
 
-    Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateStateNot(long competitionId, State backingState, Pageable pagable);
+    Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateNot(long competitionId, InterviewAssignmentState state, Pageable pagable);
 
-    boolean existsByTargetIdAndActivityStateState(long applicationId, State backingState);
+    boolean existsByTargetIdAndActivityStateIn(long applicationId, List<InterviewAssignmentState> states);
 
-    int countByTargetCompetitionIdAndActivityStateStateIn(long competitionId, Set<State> backingStates);
+    int countByTargetCompetitionIdAndActivityStateIn(long competitionId, Set<InterviewAssignmentState> states);
 }

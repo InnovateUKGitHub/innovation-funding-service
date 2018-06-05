@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
@@ -12,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
 
 /**
  * Controller for all content group actions.
@@ -35,6 +33,8 @@ public class ContentGroupController {
     @Autowired
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+
     @PostMapping(value = "upload-file", produces = "application/json")
     public RestResult<Void> uploadFile(@RequestHeader(value = "Content-Type", required = false) String contentType,
                                                  @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -42,7 +42,7 @@ public class ContentGroupController {
                                                  @RequestParam(value = "filename", required = false) String originalFilename,
                                                  HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForPublicContentAttachment, maxFilesizeBytesForPublicContentAttachment, request, (fileAttributes, inputStreamSupplier) ->
+        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForPublicContentAttachment, maxFilesizeBytesForPublicContentAttachment, request, (fileAttributes, inputStreamSupplier) ->
                 contentGroupService.uploadFile(contentGroupId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
@@ -56,7 +56,7 @@ public class ContentGroupController {
     @GetMapping("/get-file-contents/{contentGroupId}")
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @PathVariable("contentGroupId") long contentGroupId) throws IOException {
-        return handleFileDownload(() -> contentGroupService.getFileContents(contentGroupId));
+        return fileControllerUtils.handleFileDownload(() -> contentGroupService.getFileContents(contentGroupId));
     }
 
     @GetMapping(value = "/get-file-details/{contentGroupId}", produces = "application/json")

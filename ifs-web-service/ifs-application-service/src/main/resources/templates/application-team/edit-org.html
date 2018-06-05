@@ -49,7 +49,8 @@
                             <td th:unless="${applicant.lead}" th:text="${applicant.pending} ? |Invite pending for ${applicant.daysPending} days| : ''">
                             </td>
                             <td class="alignright">
-                                <button th:if="${applicant.removable and applicantStat.size > 1}"
+                                <button th:id="|remove-contributor-${applicantStat.index}|"
+                                        th:if="${applicant.removable and applicantStat.size > 1}"
                                         th:value="${applicant.applicationInviteId}"
                                         class="buttonlink"
                                         name="removeInvite"
@@ -59,7 +60,9 @@
                             </td>
                         </tr>
 
-                        <tr th:if="*{stagedInvite}" class="repeatable-row">
+                        <tr th:if="*{stagedInvite}"
+                            class="repeatable-row form-group-row-validated"
+                            th:classappend="((${#fields.hasErrors('stagedInvite.name')}) or (${#fields.hasErrors('stagedInvite.email')})) ? 'form-group-error'">
                             <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'form-group-error'">
                                 <label for="stagedInvite.name">
                                     <span class="visually-hidden">Applicant name</span>
@@ -95,7 +98,7 @@
                                                 data-email-duplication-errormessage=#{email.already.in.invite}" />
                             </td>
                             <td>
-                               <button class="button" name="executeStagedInvite" value="true" type="submit">Invite</button>
+                               <button class="button no-margin" name="executeStagedInvite" value="true" type="submit">Invite</button>
                             </td>
                             <td class="alignright">
                                 <button class="remove-another-row buttonlink"
@@ -110,13 +113,12 @@
                 </table>
 
                 <div th:unless="*{stagedInvite}">
-                    <button
-                          class="buttonlink"
-                           data-repeatable-rowcontainer="#applicant-table tbody"
-                           data-applicant-table="update-org"
-                           type="submit"
+                    <button class="buttonlink"
+                            data-repeatable-rowcontainer="#applicant-table tbody"
+                            data-applicant-table="update-org"
+                            type="submit"
                             value="true"
-                           name="addStagedInvite">
+                            name="addStagedInvite">
                         Add another contributor
                     </button>
                 </div>

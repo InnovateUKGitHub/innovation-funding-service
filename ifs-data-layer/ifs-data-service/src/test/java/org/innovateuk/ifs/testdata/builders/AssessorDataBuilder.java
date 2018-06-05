@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
@@ -193,7 +194,9 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     AffiliationResourceBuilder.createFamilyFinancialInterests(!familyFinancialInterests.isEmpty(), familyFinancialInterests)
             );
 
-            doAs(data.getUser(), () -> affiliationService.updateUserAffiliations(data.getUser().getId(), allAffiliations));
+            AffiliationListResource allAffiliationsList = new AffiliationListResource(allAffiliations);
+
+            doAs(data.getUser(), () -> affiliationService.updateUserAffiliations(data.getUser().getId(), allAffiliationsList));
         });
     }
 

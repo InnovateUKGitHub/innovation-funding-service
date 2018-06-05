@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 
@@ -25,7 +25,6 @@ public class ProjectPartnerStatusResource {
 
     private ProjectActivityStates financeContactStatus = COMPLETE;
     private ProjectActivityStates partnerProjectLocationStatus;
-    // TODO DW - INFUND-4915 - blocked until Companies House Project Setup work tackled
     private ProjectActivityStates companiesHouseStatus = COMPLETE;
 
     /* Following properties are only applicable to lead partner */

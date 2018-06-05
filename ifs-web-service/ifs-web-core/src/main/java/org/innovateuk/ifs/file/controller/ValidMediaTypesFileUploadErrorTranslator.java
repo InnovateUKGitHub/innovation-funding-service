@@ -12,6 +12,8 @@ import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
@@ -26,11 +28,11 @@ public class ValidMediaTypesFileUploadErrorTranslator implements FileUploadError
     public static final String UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY";
     public static final String UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_AND_SPREADSHEET_ONLY";
 
-    private static final EnumSet<FileTypeCategory> PDF_ONLY_VALID_MEDIA_TYPES = EnumSet.of(FileTypeCategory.PDF);
-    private static final EnumSet<FileTypeCategory> SPREADSHEET_ONLY_VALID_MEDIA_TYPES = EnumSet.of(FileTypeCategory.SPREADSHEET);
+    private static final EnumSet<FileTypeCategory> PDF_ONLY_VALID_MEDIA_TYPES = EnumSet.of(PDF);
+    private static final EnumSet<FileTypeCategory> SPREADSHEET_ONLY_VALID_MEDIA_TYPES = EnumSet.of(SPREADSHEET);
     private static final EnumSet<FileTypeCategory> PDF_AND_SPREADSHEET_ONLY_VALID_MEDIA_TYPES = EnumSet.of(
-            FileTypeCategory.PDF,
-            FileTypeCategory.SPREADSHEET
+            PDF,
+            SPREADSHEET
     );
 
     private static final List<EnumSet<FileTypeCategory>> VALID_MEDIA_TYPE_SETS = asList(
@@ -69,9 +71,9 @@ public class ValidMediaTypesFileUploadErrorTranslator implements FileUploadError
             String errorMessage = mediaTypeSetSupportingErrorConditions.map(VALID_MEDIA_TYPES_TO_ERROR_MESSAGE::get)
                     .orElse(error.getErrorKey());
 
-            return fieldError(fieldId, fieldRejectedValue, errorMessage);
+            return fieldError(fieldId, fieldRejectedValue, errorMessage, arguments);
         } else {
-            return fieldError(fieldId, fieldRejectedValue, error.getErrorKey());
+            return fieldError(fieldId, fieldRejectedValue, error.getErrorKey(), arguments);
         }
     }
 }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.finance.resource;
 
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -11,17 +12,17 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Eligibility process.
  */
-public enum EligibilityState implements ProcessState {
+public enum EligibilityState implements ProcessState, IdentifiableEnum {
 
-    REVIEW(State.NOT_VERIFIED),
-    NOT_APPLICABLE(State.NOT_APPLICABLE),
-    APPROVED(State.ACCEPTED);
+    REVIEW(24, State.NOT_VERIFIED),
+    NOT_APPLICABLE(25, State.NOT_APPLICABLE),
+    APPROVED(26, State.ACCEPTED);
 
-    //the status string value
-    private State backingState;
+    private final long id;
+    private final State backingState;
 
-    // creates the enum with the chosen type.
-    EligibilityState(State backingState) {
+    EligibilityState(long id, State backingState) {
+        this.id = id;
         this.backingState = backingState;
     }
 
@@ -41,5 +42,10 @@ public enum EligibilityState implements ProcessState {
 
     public static EligibilityState fromState(State state) {
         return ProcessState.fromState(EligibilityState.values(), state);
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 }

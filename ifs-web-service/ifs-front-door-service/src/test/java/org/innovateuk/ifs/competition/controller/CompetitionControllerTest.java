@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,6 +26,9 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Mock
     private CompetitionOverviewPopulator overviewPopulator;
+
+    @Mock
+    private CompetitionService competitionService;
 
     @Test
     public void competitionOverview() throws Exception {
@@ -62,7 +66,8 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     @Test
     public void termsAndConditions() throws Exception {
 
-        TermsAndConditionsResource termsAndConditions = new TermsAndConditionsResource("T&C", "special-terms-and-conditions", "3");
+        GrantTermsAndConditionsResource termsAndConditions = new GrantTermsAndConditionsResource("T&C",
+                "special-terms-and-conditions", 3);
 
         final CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionTypeName("Competition name")

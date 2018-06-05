@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -18,17 +19,15 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputScope;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,15 +55,15 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuil
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -79,7 +78,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<ApplicationSectionController> {
+public class ApplicationSectionControllerTest extends AbstractApplicationMockMVCTest<ApplicationSectionController> {
 
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
@@ -109,6 +108,15 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private ApplicationSectionSaver applicationSaver;
 
+    @Mock
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
+
+    @Mock
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
+
+    @Mock
+    private UserRestService userRestServiceMock;
+
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -128,8 +136,6 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
-        this.setupUserRoles();
         this.setupFinances();
         this.setupInvites();
         this.setupQuestionStatus(applications.get(0));
@@ -268,6 +274,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
                         .param(TERMS_AGREED_KEY, "1")
+                        .param("-otherPublicFunding", String.valueOf(true))
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
@@ -284,10 +291,30 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param("-otherPublicFunding", String.valueOf(true))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", TERMS_AGREED_KEY));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+    }
+
+    @Test
+    public void testApplicationFinanceMarkAsCompleteFailWithoutOtherPublicFunding() throws Exception {
+        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.FUNDING_FINANCES).build()).build());
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.YOUR_FINANCE).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(TERMS_AGREED_KEY, "1")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attributeErrorCount("form", 1))
+                .andExpect(model().attributeHasFieldErrors("form", "formInput[cost-otherPublicFunding]"));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
     }
 

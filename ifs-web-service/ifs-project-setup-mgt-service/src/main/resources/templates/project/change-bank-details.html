@@ -59,7 +59,9 @@
                     required="required"
                     name="company-name"
                     class="form-control"
-                    th:field="*{organisationName}"/>
+                    maxlength="255"
+                    th:field="*{organisationName}"
+                    th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'form-group-error'">
             <label class="form-label" for="registrationNumber">
@@ -68,7 +70,7 @@
                   <span class="error-message" th:each="err : ${#fields.errors('registrationNumber')}" th:text="${err}"></span>
                 </th:block>
             </label>
-            <p class="form-hint">For example: 1548965</p>
+            <p class="form-hint">For example: 15489657</p>
             <input type="text"
                    th:attr="data-required-errormessage=#{validation.standard.registrationnumber.required},
                             data-minlength-errormessage=#{validation.standard.registrationnumber.format}"
@@ -78,7 +80,8 @@
                    minlength="8"
                    name="companies-house-number"
                    class="form-control"
-                   th:field="*{registrationNumber}" />
+                   th:field="*{registrationNumber}"
+                   data-switches-button-status="#modal-change-bank-details"/>
         </div>
 
         <h2 class="heading-medium no-margin-bottom">Account details</h2>
@@ -90,16 +93,19 @@
                   <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
               </th:block>
             </label>
-            <p class="form-hint">For example: 1548965</p>
+            <p class="form-hint">For example: 15489657</p>
             <input type="text"
                    th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},
                             data-minlength-errormessage=#{validation.standard.accountnumber.format}"
                    th:errorclass="form-control-error"
                    required="required"
+                   pattern="[0-9]{8,}"
+                   data-prevent-input-regex="[^0-9]"
                    maxlength="8"
                    minlength="8"
                    class="form-control"
-                   th:field="*{accountNumber}"/>
+                   th:field="*{accountNumber}"
+                   data-switches-button-status="#modal-change-bank-details"/>
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'form-group-error'">
             <label class="form-label" for="sortCode">
@@ -114,10 +120,13 @@
                             data-minlength-errormessage=#{validation.standard.sortcode.format}"
                    th:errorclass="form-control-error"
                    required="required"
+                   pattern="[0-9]{6,}"
+                   data-prevent-input-regex="[^0-9]"
                    maxlength="6"
                    minlength="6"
                    class="form-control width-medium"
-                   th:field="*{sortCode}" />
+                   th:field="*{sortCode}"
+                   data-switches-button-status="#modal-change-bank-details"/>
         </div>
         <h2 class="heading-medium no-margin-bottom">Billing address</h2>
         <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
@@ -132,7 +141,12 @@
                       <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine1')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <input class="form-control" type="text" th:errorclass="form-control-error" required="required" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" th:field="*{addressForm.selectedPostcode.addressLine1}" />
+                <input class="form-control"
+                       type="text"
+                       th:errorclass="form-control-error"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.standard.addressline1.required}"
+                       th:field="*{addressForm.selectedPostcode.addressLine1}" />
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine2')} ? 'form-group-error'">
                 <label class="form-label visuallyhidden" for="addressForm.selectedPostcode.addressLine2">
@@ -177,7 +191,10 @@
                       <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.postcode')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <input class="form-control postcode" type="text" th:errorclass="form-control-error" required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}" th:field="*{addressForm.selectedPostcode.postcode}"/>
+                <input class="form-control postcode"
+                       type="text" th:errorclass="form-control-error"
+                       required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}"
+                       th:field="*{addressForm.selectedPostcode.postcode}"/>
             </div>
         </fieldset>
 
@@ -187,7 +204,7 @@
             </div>
             <th:block th:insert="fragments/modals :: modal-partner-change-bank-details" />
             <div class="column-half alignright">
-                <button class="no-margin-right button" data-js-modal="modal-partner-change-bank-details">Update bank account details</button>
+                <button class="no-margin-right button" id="modal-change-bank-details" data-js-modal="modal-partner-change-bank-details">Update bank account details</button>
             </div>
         </div>
     </form>

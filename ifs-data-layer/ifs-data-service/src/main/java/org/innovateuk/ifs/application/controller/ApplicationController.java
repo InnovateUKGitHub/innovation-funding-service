@@ -127,6 +127,11 @@ public class ApplicationController {
         return applicationNotificationService.informIneligible(applicationId, applicationIneligibleSendResource).toPostResponse();
     }
 
+    @PostMapping("/{applicationId}/withdraw")
+    public RestResult<Void> withdrawApplication(@PathVariable("applicationId") final long applicationId) {
+        return applicationService.withdrawApplication(applicationId).toPostResponse();
+    }
+
     // IFS-43 added to ease future expansion as application team members are expected to have access to the application team page, but the location of links to that page (enabled by tis method) is as yet unknown
     @GetMapping("/showApplicationTeam/{applicationId}/{userId}")
     public RestResult<Boolean> showApplicationTeam(@PathVariable("applicationId") final Long applicationId,
@@ -139,7 +144,6 @@ public class ApplicationController {
                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                                                             @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
-
         return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
     }
 

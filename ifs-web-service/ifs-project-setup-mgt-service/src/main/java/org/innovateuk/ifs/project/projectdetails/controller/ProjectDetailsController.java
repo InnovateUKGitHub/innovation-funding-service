@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.application.service.CompetitionService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -9,7 +11,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
@@ -17,27 +18,22 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewMod
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
+import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -48,6 +44,7 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.RedirectUtils.redirectToCompetitionManagementService;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -59,10 +56,10 @@ public class ProjectDetailsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private CompetitionService competitionService;
+    private ProjectService projectService;
 
     @Autowired
-    private ProjectService projectService;
+    private CompetitionService competitionService;
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
@@ -71,7 +68,15 @@ public class ProjectDetailsController {
     private OrganisationService organisationService;
 
     @Autowired
+    private ProjectRestService projectRestService;
+
+    @Autowired
     private PartnerOrganisationRestService partnerOrganisationService;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
@@ -87,11 +92,14 @@ public class ProjectDetailsController {
         List<OrganisationResource> organisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+
         boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
+        boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
+                isIfsAdministrator,
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),
@@ -101,6 +109,28 @@ public class ProjectDetailsController {
                         : Collections.emptyList()));
 
         return "project/detail";
+    }
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "WITHDRAW_PROJECT", description = "Only the IFS administrator users are able to withdraw projects")
+    @PostMapping("/{projectId}/withdraw")
+    public String withdrawProject(@PathVariable("competitionId") final long competitionId,
+                                  @PathVariable("projectId") final long projectId,
+                                  HttpServletRequest request) {
+
+        projectRestService.withdrawProject(projectId)
+                .andOnSuccess(
+                        () ->  projectRestService.getProjectById(projectId)
+                                .andOnSuccess(
+                                        project -> applicationRestService.withdrawApplication(project.getApplication())
+                                            .andOnFailure(
+                                                    () -> LOG.error("Application withdrawal failed")
+                                            )
+                                )
+                        );
+
+        return redirectToCompetitionManagementService(request,
+                "competition/" + competitionId + "/applications/previous");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
@@ -153,6 +183,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(project,
                 competitionId,
                 competition.getName(),
+                false,
                 null,
                 null,
                 null,

@@ -7,7 +7,7 @@ import java.time.LocalDate;
  */
 public class EligibilityResource {
 
-    private Eligibility eligibility;
+    private EligibilityState eligibility;
     private EligibilityRagStatus eligibilityRagStatus;
 
     private String eligibilityApprovalUserFirstName;
@@ -18,16 +18,16 @@ public class EligibilityResource {
     EligibilityResource() {
     }
 
-    public EligibilityResource(Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    public EligibilityResource(EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
         this.eligibility = eligibility;
         this.eligibilityRagStatus = eligibilityRagStatus;
     }
 
-    public Eligibility getEligibility() {
+    public EligibilityState getEligibility() {
         return eligibility;
     }
 
-    public void setEligibility(Eligibility eligibility) {
+    public void setEligibility(EligibilityState eligibility) {
         this.eligibility = eligibility;
     }
 

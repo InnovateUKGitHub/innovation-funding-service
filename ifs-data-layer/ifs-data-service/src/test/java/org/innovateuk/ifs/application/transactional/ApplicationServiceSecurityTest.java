@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.competition.security.CompetitionPermissionRules;
+import org.innovateuk.ifs.project.security.ProjectApplicationPermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -36,6 +36,7 @@ import static org.mockito.Mockito.*;
 public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationService> {
     private ApplicationPermissionRules applicationRules;
     private CompetitionPermissionRules competitionRules;
+    private ProjectApplicationPermissionRules projectApplicationPermissionRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
     private CompetitionLookupStrategy competitionLookupStrategy;
 
@@ -43,6 +44,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     public void lookupPermissionRules() {
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         competitionRules = getMockPermissionRulesBean(CompetitionPermissionRules.class);
+        projectApplicationPermissionRules = getMockPermissionRulesBean(ProjectApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         competitionLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy.class);
     }
@@ -56,6 +58,8 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                 () -> classUnderTest.getApplicationById(applicationId),
                 () -> {
                     verify(applicationRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class),
+                            isA(UserResource.class));
+                    verify(projectApplicationPermissionRules).projectPartnerCanViewApplicationsLinkedToTheirProjects(isA(ApplicationResource.class),
                             isA(UserResource.class));
                     verify(applicationRules).internalUsersCanViewApplications(isA(ApplicationResource.class), isA
                             (UserResource.class));
@@ -164,13 +168,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             verify(competitionRules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(competitionRules);
         });
-    }
-
-    @Test
-    public void getApplicationsByState() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
-                classUnderTest.getApplicationsByState(EnumSet.of(ApplicationState.SUBMITTED, ApplicationState
-                        .REJECTED)), SYSTEM_MAINTAINER);
     }
 
     @Override

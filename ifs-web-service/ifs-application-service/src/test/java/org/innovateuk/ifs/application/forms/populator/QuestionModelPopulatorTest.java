@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newA
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -40,6 +41,8 @@ public class QuestionModelPopulatorTest extends BaseUnitTest {
     private ApplicationNavigationPopulator applicationNavigationPopulator;
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
+    @Mock
+    private QuestionService questionService;
 
     @Test
     public void testPopulate() {
@@ -65,7 +68,7 @@ public class QuestionModelPopulatorTest extends BaseUnitTest {
         when(questionService.getByQuestionIdAndApplicationIdAndOrganisationId(question.getQuestion().getId(), question.getApplication().getId(), question.getCurrentApplicant().getOrganisation().getId())).thenReturn(questionStatusResource);
         when(questionService.getNotificationsForUser(asList(questionStatusResource), question.getCurrentUser().getId())).thenReturn(notifications);
 
-        QuestionViewModel viewModel = populator.populateModel(question, model, form);
+        QuestionViewModel viewModel = populator.populateModel(question, form);
 
         assertThat(viewModel.isAllReadOnly(), equalTo(true));
         assertThat(viewModel.getCurrentApplicant(), equalTo(question.getCurrentApplicant()));

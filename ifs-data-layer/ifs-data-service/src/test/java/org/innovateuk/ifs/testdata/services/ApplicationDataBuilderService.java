@@ -16,8 +16,8 @@ import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -79,6 +79,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         QuestionResponseDataBuilder baseBuilder =
                 questionResponseDataBuilder.withApplication(applicationData.getApplication());
+
+        if (!applicationLine.createApplicationResponses) {
+            return emptyList();
+        }
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r ->
@@ -144,6 +148,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             ApplicationData applicationData,
             ApplicationLine applicationLine,
             List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines) {
+
+        if (!applicationLine.createFinanceResponses) {
+            return emptyList();
+        }
 
         List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 

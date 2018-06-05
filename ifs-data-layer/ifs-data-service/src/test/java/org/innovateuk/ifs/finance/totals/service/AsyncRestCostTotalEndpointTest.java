@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.totals.service.AsyncRestCostTotalEndpoint;
 import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class AsyncRestCostTotalEndpointTest {
         when(restTemplateAdaptorMock.restPostWithEntityAsync(url, costTotalResources, authHeader, Void.class))
                 .thenReturn(new CompletableFuture<>());
 
-        costTotalEndpoint.sendCostTotals(costTotalResources);
+        costTotalEndpoint.sendCostTotals(1L, costTotalResources);
 
         verify(restTemplateAdaptorMock).restPostWithEntityAsync(url, costTotalResources, authHeader, Void.class);
     }

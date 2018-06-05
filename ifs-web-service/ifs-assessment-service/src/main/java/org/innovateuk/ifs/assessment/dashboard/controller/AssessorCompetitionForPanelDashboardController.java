@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(value = "/assessor")
 @SecuredBySpring(value = "Controller", description = "Assessors can access the assessment panel dashboard", securedType = AssessorCompetitionForPanelDashboardController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSOR_COMPETITION')")
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessorCompetitionForPanelDashboardController {
 
     private static final String FORM_ATTR_NAME = "form";

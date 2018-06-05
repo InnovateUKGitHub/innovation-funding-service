@@ -6,7 +6,10 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
@@ -20,15 +23,18 @@ import org.innovateuk.ifs.review.model.ReviewInviteAssessorsAcceptedModelPopulat
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewAvailableAssessorRowViewModel;
 import org.innovateuk.ifs.review.viewmodel.ReviewInviteAssessorsFindViewModel;
 import org.innovateuk.ifs.review.viewmodel.ReviewInviteAssessorsInviteViewModel;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -52,6 +58,7 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -98,6 +105,21 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
     @InjectMocks
     private ReviewInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
+
+    @Mock
+    private ReviewInviteRestService reviewInviteRestService;
+
+    @Mock
+    private CategoryRestService categoryRestServiceMock;
+
     private CompetitionResource competition;
 
     private ReviewInviteStatisticsResource inviteStatistics;
@@ -111,7 +133,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
     @Before
     public void setUp() {
         super.setUp();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)
@@ -127,7 +149,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
+        when(competitionKeyApplicationStatisticsRestService.getReviewInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
     }
 
     @Test
@@ -148,6 +170,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
 
         when(reviewInviteRestService.getAvailableAssessors(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
         when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(emptyList()));
+//        when(competitionKeyApplicationStatisticsRestService.getInterviewInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(newInterviewInviteStatisticsResource().build()));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId())
                 .param("page", "2"))
@@ -162,10 +185,10 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyApplicationStatisticsRestService);
         inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyApplicationStatisticsRestService).getReviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
@@ -193,10 +216,10 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyApplicationStatisticsRestService);
         inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyApplicationStatisticsRestService).getReviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
@@ -234,10 +257,10 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyApplicationStatisticsRestService);
         inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyApplicationStatisticsRestService).getReviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
@@ -377,7 +400,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertInvitedAssessors(assessorCreatedInviteResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, categoryRestServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(reviewInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
@@ -534,7 +557,6 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
-        assertEquals(inviteStatistics.getPending(), model.getAssessorsStaged());
     }
 
     private void assertAvailableAssessors(List<AvailableAssessorResource> expectedAvailableAssessors, MvcResult result) {

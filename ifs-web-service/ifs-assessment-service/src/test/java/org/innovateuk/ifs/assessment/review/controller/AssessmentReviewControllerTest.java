@@ -3,14 +3,19 @@ package org.innovateuk.ifs.assessment.review.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewModelPopulator;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.review.service.ReviewRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.http.MediaType;
 
@@ -21,16 +26,14 @@ import java.util.TreeSet;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparingLong;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -52,6 +55,18 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
 
     private OrganisationResource collaboratorOrganisation1;
     private OrganisationResource collaboratorOrganisation2;
+
+    @Mock
+    private FormInputResponseRestService formInputResponseRestService;
+
+    @Mock
+    private ProcessRoleService processRoleService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
+
+    @Mock
+    private ReviewRestService reviewRestService;
 
     @Spy
     @InjectMocks

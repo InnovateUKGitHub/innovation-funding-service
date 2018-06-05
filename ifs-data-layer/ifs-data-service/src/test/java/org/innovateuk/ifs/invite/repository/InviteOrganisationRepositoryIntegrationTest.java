@@ -5,12 +5,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +19,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 
 public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<InviteOrganisationRepository> {
 
@@ -32,9 +28,6 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
 
     @Autowired
     private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     private Organisation organisation1;
     private Organisation organisation2;
@@ -74,11 +67,8 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
         inviteOrgApplication1Org2 = inviteOrganisations.get(1);
         inviteOrgApplication2Org1 = inviteOrganisations.get(2);
 
-        ActivityState createdActivityState =
-                activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED);
-
-        application1 = applicationRepository.save(new Application("", createdActivityState));
-        application2 = applicationRepository.save(new Application("", createdActivityState));
+        application1 = applicationRepository.save(new Application(""));
+        application2 = applicationRepository.save(new Application(""));
 
         createNewApplicationInvite(application1, inviteOrgApplication1Org1, "app1.user1@org1.com");
         createNewApplicationInvite(application1, inviteOrgApplication1Org1, "app1.user2@org1.com");

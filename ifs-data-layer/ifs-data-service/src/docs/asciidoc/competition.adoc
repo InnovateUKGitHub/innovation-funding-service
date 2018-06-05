@@ -21,17 +21,6 @@ include::{snippets}/competition/find-all/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/competition/find-all/curl-request.adoc[]
 
-=== Retrieve all competitions for the userId
-==== Request
-include::{snippets}/competition/get-competitions-by-user-id/http-request.adoc[]
-
-==== Response
-include::{snippets}/competition/get-competitions-by-user-id/http-response.adoc[]
-include::{snippets}/competition/get-competitions-by-user-id/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/competition/get-competitions-by-user-id/curl-request.adoc[]
-
 === Mark Competition Setup Section as Complete
 ==== Request
 include::{snippets}/competition/mark-as-complete/http-request.adoc[]
@@ -89,19 +78,8 @@ include::{snippets}/competition/bank-details/export-bank-details/response-header
 ==== Curl Example
 include::{snippets}/competition/bank-details/export-bank-details/curl-request.adoc[]
 
-=== Notify assessors of assessment period
+=== Close assessment on a Competition
 ==== Request
-include::{snippets}/competition/notify-assessors/http-request.adoc[]
-include::{snippets}/competition/notify-assessors/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/competition/notify-assessors/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/competition/notify-assessors/curl-request.adoc[]
-
-== Close assessment on a Competition
-=== Request
 include::{snippets}/competition/close-assessment/http-request.adoc[]
 include::{snippets}/competition/close-assessment/path-parameters.adoc[]
 
@@ -245,4 +223,24 @@ include::{snippets}/competitions/count-pending-bank-details-approvals/http-respo
 ==== Curl Example
 include::{snippets}/competitions/count-pending-bank-details-approvals/curl-request.adoc[]
 
+=== Update terms and conditions for competition
+==== Request
+include::{snippets}/competition/update-terms-and-conditions/http-request.adoc[]
+include::{snippets}/competition/update-terms-and-conditions/path-parameters.adoc[]
 
+==== Response
+include::{snippets}/competition/update-terms-and-conditions/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/update-terms-and-conditions/curl-request.adoc[]
+
+=== Delete competition by id
+==== Request
+include::{snippets}/competition/delete-competition/http-request.adoc[]
+include::{snippets}/competition/delete-competition/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/delete-competition/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/delete-competition/curl-request.adoc[]

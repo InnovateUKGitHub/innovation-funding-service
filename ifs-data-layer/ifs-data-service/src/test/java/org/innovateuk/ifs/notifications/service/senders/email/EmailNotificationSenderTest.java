@@ -7,9 +7,12 @@ import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.email.service.EmailService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
@@ -17,7 +20,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender.EMAIL_NOTIFICATION_TEMPLATES_PATH;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.EMAIL_NOTIFICATION_TEMPLATES_PATH;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -30,7 +33,13 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private EmailNotificationSender notificationSender = new EmailNotificationSender();
-    
+
+    @Mock
+    private NotificationTemplateRenderer notificationTemplateRendererMock;
+
+    @Mock
+    private EmailService emailServiceMock;
+
     @Test
     public void testGetNotificationMedium() {
         assertEquals(EMAIL, notificationSender.getNotificationMedium());
@@ -60,7 +69,7 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testSendNotification() {
-        
+
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getGlobalArguments())).thenReturn(serviceSuccess("My subject"));
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getGlobalArguments())).thenReturn(serviceSuccess("Plain text body"));
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getGlobalArguments())).thenReturn(serviceSuccess("HTML body"));

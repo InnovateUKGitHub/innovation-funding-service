@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -19,6 +21,9 @@ public class CompetitionTemplatePersistorImplTest extends BaseServiceUnitTest<Co
 
     @Mock
     private SectionTemplatePersistorImpl sectionTemplateService;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
 
     @Mock
     private EntityManager entityManagerMock;

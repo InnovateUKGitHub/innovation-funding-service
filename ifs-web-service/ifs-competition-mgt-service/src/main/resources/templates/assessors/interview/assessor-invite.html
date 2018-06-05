@@ -17,26 +17,20 @@
             <div class="grid-row">
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="0">60</span><br/>
+                        <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
                         <small>Invited</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="0">23</span><br/>
+                        <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
                         <small>Accepted</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="0">3</span><br/>
+                        <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
                         <small>Declined</small>
-                    </div>
-                </div>
-                <div class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="0">6</span><br/>
-                        <small>Assessors on invite list</small>
                     </div>
                 </div>
             </div>
@@ -74,7 +68,8 @@
 
                 <div class="grid-row sorting">
                     <div class="column-half">
-                        <h2 class="heading-small">Invite list</h2>
+                        <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+                        <span class="heading-small">assessors</span>
                     </div>
 
                     <div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">

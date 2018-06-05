@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
-import org.innovateuk.ifs.competition.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
@@ -64,8 +64,10 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -100,7 +102,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
-    private CompetitionInviteMapper competitionInviteMapper;
+    private AssessmentInviteMapper assessmentInviteMapper;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
@@ -219,14 +221,14 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
                 .andOnSuccessReturn(this::openInvite)
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
@@ -379,7 +381,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                                         )
                                 )
                         )
-                        .andOnSuccessReturn(competitionInviteMapper::mapToResource),
+                        .andOnSuccessReturn(assessmentInviteMapper::mapToResource),
                 success -> serviceFailure(Error.globalError(
                         "validation.competitionAssessmentInvite.create.email.exists",
                         singletonList(stagedInvite.getEmail())
@@ -427,7 +429,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource stagedInvite) {
         return getUser(stagedInvite.getUserId())
                 .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()))
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
     }
 
     @Override
@@ -498,14 +500,18 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
                 assessmentInviteRepository.getByIdIn(inviteIds),
-                invite -> sendInviteNotification(
-                        assessorInviteSendResource.getSubject(),
-                        inviteFormatter,
-                        customTextPlain,
-                        customTextHtml,
-                        invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()),
-                        Notifications.INVITE_ASSESSOR_GROUP
-                )
+                invite -> {
+                    updateParticipantStatus(invite);
+
+                    return sendInviteNotification(
+                            assessorInviteSendResource.getSubject(),
+                            inviteFormatter,
+                            customTextPlain,
+                            customTextHtml,
+                            invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()),
+                            Notifications.INVITE_ASSESSOR_GROUP
+                    );
+                }
         ));
     }
 
@@ -573,12 +579,12 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_editable_text.txt",
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, PREVIEW_TEMPLATES_PATH + "invite_assessor_editable_text.txt",
                 arguments).getSuccess();
     }
 
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_preview_text.txt",
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, PREVIEW_TEMPLATES_PATH + "invite_assessor_preview_text.txt",
                 arguments).getSuccess();
     }
 
@@ -597,8 +603,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 .collect(Collectors.toList());
 
         List<String> userIsAlreadyInvitedList = existingEmails.stream()
-                    .filter(e -> e.equals(email))
-                    .collect(Collectors.toList());
+                .filter(e -> e.equals(email))
+                .collect(Collectors.toList());
 
         Optional<User> userExists = userRepository.findByEmail(email);
 
@@ -609,7 +615,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         } else {
             return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
         }
-}
+    }
 
     private ServiceResult<Void> deleteInvite(AssessmentInvite invite) {
         if (invite.getStatus() != CREATED) {
@@ -714,5 +720,13 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 pagedResult.getNumber(),
                 pagedResult.getSize()
         ));
+    }
+
+    private void updateParticipantStatus(AssessmentInvite invite){
+        AssessmentParticipant assessmentParticipant = assessmentParticipantRepository.getByInviteHash(invite.getHash());
+        if(assessmentParticipant.getStatus() != PENDING){
+            assessmentParticipant.setStatus(PENDING);
+            assessmentParticipantRepository.save(assessmentParticipant);
+        }
     }
 }

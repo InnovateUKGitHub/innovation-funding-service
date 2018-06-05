@@ -1,25 +1,29 @@
 package org.innovateuk.ifs.application.creation.controller;
 
+import org.innovateuk.ifs.application.creation.form.ApplicationCreationAuthenticatedForm;
 import org.innovateuk.ifs.application.creation.viewmodel.AuthenticatedNotEligibleViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
@@ -29,13 +33,11 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/application/create-authenticated")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationCreationAuthenticatedController {
     public static final String COMPETITION_ID = "competitionId";
-    public static final String RADIO_TRUE = "true";
-    public static final String RADIO_FALSE = "false";
-    public static final String FORM_RADIO_NAME = "create-application";
+    public static final String FORM_NAME = "form";
 
     @Autowired
     protected ApplicationService applicationService;
@@ -53,13 +55,15 @@ public class ApplicationCreationAuthenticatedController {
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        UserResource user) {
-        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
+
+        if (!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
 
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
+            model.addAttribute(FORM_NAME, new ApplicationCreationAuthenticatedForm());
             return "create-application/confirm-new-application";
         } else {
             return createApplicationAndShowInvitees(user, competitionId);
@@ -67,29 +71,31 @@ public class ApplicationCreationAuthenticatedController {
     }
 
     private String redirectToNotEligible(Long competitionId) {
-       return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
+        return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
     }
 
     @PostMapping("/{competitionId}")
-    public String post(Model model,
-                       @PathVariable(COMPETITION_ID) Long competitionId,
-                       @RequestParam(value = FORM_RADIO_NAME, required = false) Optional<String> createNewApplication,
+    public String post(@PathVariable(COMPETITION_ID) Long competitionId,
+                       @Valid @ModelAttribute(FORM_NAME) ApplicationCreationAuthenticatedForm form,
+                       BindingResult bindingResult,
+                       ValidationHandler validationHandler,
+                       Model model,
                        UserResource user) {
-        if(!isAllowedToLeadApplication(user.getId(), competitionId)) {
+
+        if (!isAllowedToLeadApplication(user.getId(), competitionId)) {
             return redirectToNotEligible(competitionId);
         }
 
-        if(createNewApplication.isPresent()) {
-            if (RADIO_TRUE.equals(createNewApplication.get())) {
+        Supplier<String> failureView = () -> "create-application/confirm-new-application";
+        Supplier<String> successView = () -> {
+            if (form.getCreateNewApplication()) {
                 return createApplicationAndShowInvitees(user, competitionId);
-            } else if (RADIO_FALSE.equals(createNewApplication.get())) {
-                // redirect to dashboard
-                return "redirect:/";
             }
-        }
+            // redirect to dashboard
+            return "redirect:/";
+        };
 
-        // user did not check one of the radio elements, show page again.
-        return "redirect:/application/create-authenticated/" + competitionId;
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
     @GetMapping("/{competitionId}/not-eligible")

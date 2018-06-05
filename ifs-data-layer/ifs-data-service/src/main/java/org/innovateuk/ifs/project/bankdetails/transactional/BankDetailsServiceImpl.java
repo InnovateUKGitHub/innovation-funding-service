@@ -21,17 +21,17 @@ import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.repository.ProjectRepository;
-import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.Address;
 import org.innovateuk.ifs.sil.experian.resource.Condition;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,7 +70,6 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Autowired
     private OrganisationAddressMapper organisationAddressMapper;
-
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
@@ -120,7 +119,13 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Transactional
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
         Address address = toExperianAddressFormat(bankDetailsResource.getOrganisationAddress().getAddress());
-        AccountDetails accountDetails = new AccountDetails(bankDetailsResource.getSortCode(), bankDetailsResource.getAccountNumber(), bankDetailsResource.getCompanyName(), bankDetailsResource.getRegistrationNumber(), address);
+        AccountDetails accountDetails = new AccountDetails(
+                bankDetailsResource.getSortCode(),
+                bankDetailsResource.getAccountNumber(),
+                bankDetailsResource.getCompanyName(),
+                bankDetailsResource.getRegistrationNumber(),
+                address
+        );
         return updateExistingBankDetails(accountDetails, bankDetailsResource).andOnSuccessReturnVoid();
     }
 
@@ -200,7 +205,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
             List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
 
             OrganisationAddress newOrganisationAddress;
-            if (bankOrganisationAddresses != null && bankOrganisationAddresses.size() > 0) {
+            if (bankOrganisationAddresses != null && !bankOrganisationAddresses.isEmpty()) {
                 newOrganisationAddress = bankOrganisationAddresses.get(0);
                 newOrganisationAddress.getAddress().updateFrom(addressResource);
             } else {
@@ -255,7 +260,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
                     List<Condition> conditions = verificationResult.getConditions();
 
-                    if (conditions != null && conditions.size() > 0) {
+                    if (conditions != null && !conditions.isEmpty()) {
                         bankDetails.setVerificationConditions(conditions.stream().map(silCondition -> {
                             VerificationCondition verificationCondition = new VerificationCondition();
                             verificationCondition.setCode(silCondition.getCode());

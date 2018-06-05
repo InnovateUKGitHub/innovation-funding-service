@@ -22,9 +22,10 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       var newRow
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children('.repeatable-row').length || 0
+      var rowId = jQuery(target).children('tr').length || 0
 
       if (jQuery(el).data('applicant-table') === 'update-org') {
-        newRow = jQuery('<tr class="repeatable-row">' +
+        newRow = jQuery('<tr class="repeatable-row form-group-row-validated">' +
           '<td class="form-group">' +
           '<label for="stagedInvite.name"><span class="visually-hidden">Applicant name</span></label>' +
           '<input class="form-control width-full" type="text" ' +
@@ -39,13 +40,13 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           'name="stagedInvite.email" value="" ' +
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
-          '<td><button class="button" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
+          '<td><button id="invite-collaborator-' + rowId + '" class="button no-margin" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
           '<td class="alignright">' +
-          '<button class="remove-another-row buttonlink" name="removeInvite" type="button" value="0">Remove</button>' +
+          '<button id="remove-collaborator-' + rowId + '" class="remove-another-row buttonlink" name="removeInvite" type="button" value="0">Remove</button>' +
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<tr class="repeatable-row">' +
+        newRow = jQuery('<tr class="repeatable-row form-group-row-validated">' +
           '<td class="form-group">' +
           '<label for="applicants[' + uniqueRowId + '].name"><span class="visually-hidden">Applicant name</span></label>' +
           '<input class="form-control width-full" type="text" ' +

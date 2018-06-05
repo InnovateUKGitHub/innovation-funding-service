@@ -3,26 +3,36 @@ package org.innovateuk.ifs.user.transactional;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
+import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationSource;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
+import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Ethnicity;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.EthnicityMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,12 +44,10 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
@@ -54,6 +62,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder
+        .newSiteTermsAndConditionsResource;
 import static org.innovateuk.ifs.invite.builder.RoleInviteBuilder.newRoleInvite;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -61,7 +71,7 @@ import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationRe
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Disability.NO;
@@ -92,7 +102,49 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private User updatedUserInDB;
 
     @Mock
+    private TermsAndConditionsService termsAndConditionsServiceMock;
+
+    @Mock
     private StandardPasswordEncoder standardPasswordEncoder;
+
+    @Mock
+    private ProfileRepository profileRepositoryMock;
+
+    @Mock
+    private PasswordPolicyValidator passwordPolicyValidatorMock;
+
+    @Mock
+    private UserMapper userMapperMock;
+
+    @Mock
+    private IdentityProviderService idpServiceMock;
+
+    @Mock
+    private AddressMapper addressMapperMock;
+
+    @Mock
+    private EthnicityMapper ethnicityMapperMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private TokenRepository tokenRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private NotificationService notificationServiceMock;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+
+    @Mock
+    private BaseUserService baseUserServiceMock;
+
+    @Mock
+    private RoleInviteRepository roleInviteRepositoryMock;
 
     @Override
     protected RegistrationServiceImpl supplyServiceUnderTest() {
@@ -209,9 +261,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEthnicity(2L).
                 build();
 
+        SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
         Organisation selectedOrganisation = newOrganisation().withId(123L).build();
         Role applicantRole = Role.APPLICANT;
 
+
+        when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
@@ -240,6 +295,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
             assertEquals(expectedProfile.getId(), user.getProfileId());
+            assertEquals(new LinkedHashSet<>(asList(siteTermsAndConditions.getId())), user.getTermsAndConditionsIds());
 
             return true;
         });
@@ -277,6 +333,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withTitle(Mr).
                 build();
 
+        SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
+
+        when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
         when(organisationRepositoryMock.findOne(123L)).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
@@ -298,8 +357,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withTitle(Mr).
                 build();
 
+        SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
         Organisation selectedOrganisation = newOrganisation().build();
 
+        when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);

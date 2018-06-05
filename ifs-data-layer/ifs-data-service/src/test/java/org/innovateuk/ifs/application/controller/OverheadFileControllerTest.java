@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
@@ -12,10 +12,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.transactional.OverheadFileService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -36,15 +33,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({FileControllerUtils.class})
 public class OverheadFileControllerTest extends BaseControllerMockMVCTest<OverheadFileController> {
 
     public static final String OVERHEAD_BASE_URL = "/overheadcalculation";
@@ -57,6 +51,9 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
 
     @Mock
     private OverheadFileService overheadFileService;
+
+    @Mock
+    private FileControllerUtils fileControllerUtils;
 
     @Override
     protected OverheadFileController supplyControllerUnderTest() {
@@ -113,8 +110,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
         FileAndContents successResult = new BasicFileAndContents(fileEntryResource, () -> mock(InputStream.class));
         ResponseEntity<Object> objectResponseEntity = new ResponseEntity(successResult, HttpStatus.OK);
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
+        when(fileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
 
         when(overheadFileService.getFileEntryContents(overHeadIdSuccess)).thenReturn(serviceSuccess(successResult));
 
@@ -127,8 +123,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
         validationMessages.addError(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST));
         objectResponseEntity = new ResponseEntity(new RestErrorResponse(new Error(FILES_EXCEPTION_WHILE_RETRIEVING_FILE)), INTERNAL_SERVER_ERROR);
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
+        when(fileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
 
         when(overheadFileService.getFileEntryContents(overHeadIdFailure)).thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
 
@@ -146,8 +141,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
         FileAndContents successResult = new BasicFileAndContents(fileEntryResource, () -> mock(InputStream.class));
         ResponseEntity<Object> objectResponseEntity = new ResponseEntity(successResult, HttpStatus.OK);
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
+        when(fileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
 
         when(overheadFileService.getProjectFileEntryContents(overHeadIdSuccess)).thenReturn(serviceSuccess(successResult));
 
@@ -160,8 +154,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
         validationMessages.addError(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST));
         objectResponseEntity = new ResponseEntity(new RestErrorResponse(new Error(FILES_EXCEPTION_WHILE_RETRIEVING_FILE)), INTERNAL_SERVER_ERROR);
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
+        when(fileControllerUtils.handleFileDownload(any(Supplier.class))).thenReturn(objectResponseEntity);
 
         when(overheadFileService.getProjectFileEntryContents(overHeadIdFailure)).thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
 
@@ -177,8 +170,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
 
         FileEntryResource fileEntryResource = newFileEntryResource().withId(overHeadIdSuccess).build();
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileUpload(anyString(), anyString(), anyString(), any(FilesizeAndTypeFileValidator.class), any(List.class), any(Long.class), any(HttpServletRequest.class), any(BiFunction.class)))
+        when(fileControllerUtils.handleFileUpload(anyString(), anyString(), anyString(), any(FilesizeAndTypeFileValidator.class), any(List.class), any(Long.class), any(HttpServletRequest.class), any(BiFunction.class)))
                 .thenReturn(RestResult.restSuccess(fileEntryResource, HttpStatus.OK));
         when(overheadFileService.createFileEntry(anyLong(), any(FileEntryResource.class), any(Supplier.class))).thenReturn(serviceSuccess(fileEntryResource));
 
@@ -190,8 +182,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
 
         fileEntryResource = newFileEntryResource().withId(overHeadIdFailure).build();
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileUpload(anyString(), anyString(), anyString(), any(FilesizeAndTypeFileValidator.class), any(List.class), any(Long.class), any(HttpServletRequest.class), any(BiFunction.class)))
+        when(fileControllerUtils.handleFileUpload(anyString(), anyString(), anyString(), any(FilesizeAndTypeFileValidator.class), any(List.class), any(Long.class), any(HttpServletRequest.class), any(BiFunction.class)))
                 .thenReturn(RestResult.restFailure(new Error(GENERAL_UNEXPECTED_ERROR, INTERNAL_SERVER_ERROR)));
         when(overheadFileService.createFileEntry(anyLong(), any(FileEntryResource.class), any(Supplier.class))).thenReturn(serviceSuccess(fileEntryResource));
 
@@ -207,8 +198,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
 
         FileEntryResource fileEntryResource = newFileEntryResource().withId(overHeadIdSuccess).build();
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileUpload(anyString(), anyString(), anyString(), any(FilesizeAndTypeFileValidator.class), any(List.class), any(Long.class), any(HttpServletRequest.class), any(BiFunction.class)))
+        when(fileControllerUtils.handleFileUpload(anyString(), anyString(), anyString(), any(FilesizeAndTypeFileValidator.class), any(List.class), any(Long.class), any(HttpServletRequest.class), any(BiFunction.class)))
                 .thenReturn(RestResult.restSuccess(fileEntryResource, HttpStatus.OK));
         when(overheadFileService.createFileEntry(anyLong(), any(FileEntryResource.class), any(Supplier.class))).thenReturn(serviceSuccess(fileEntryResource));
 
@@ -220,8 +210,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
 
         fileEntryResource = newFileEntryResource().withId(overHeadIdFailure).build();
 
-        mockStatic(FileControllerUtils.class);
-        when(FileControllerUtils.handleFileUpload(anyString(), anyString(), anyString(), any(FilesizeAndTypeFileValidator.class), any(List.class), any(Long.class), any(HttpServletRequest.class), any(BiFunction.class)))
+        when(fileControllerUtils.handleFileUpload(anyString(), anyString(), anyString(), any(FilesizeAndTypeFileValidator.class), any(List.class), any(Long.class), any(HttpServletRequest.class), any(BiFunction.class)))
                 .thenReturn(RestResult.restFailure(new Error(GENERAL_UNEXPECTED_ERROR, INTERNAL_SERVER_ERROR)));
         when(overheadFileService.createFileEntry(anyLong(), any(FileEntryResource.class), any(Supplier.class))).thenReturn(serviceSuccess(fileEntryResource));
 

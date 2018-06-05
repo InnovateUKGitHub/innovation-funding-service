@@ -3,11 +3,14 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;
+import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -36,6 +39,14 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     private Page<ApplicationStatistics> page;
     private ApplicationCountSummaryPageResource resource;
 
+    @Mock
+    private ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
+
+    @Mock
+    private ApplicationCountSummaryPageMapper applicationCountSummaryPageMapperMock;
+
+
+
     @Override
     protected ApplicationCountSummaryService supplyServiceUnderTest() {
         return new ApplicationCountSummaryServiceImpl();
@@ -62,7 +73,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
         when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, ofNullable("filter"));
@@ -73,7 +84,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() {
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateStateIn(eq(competitionId), eq(1L), eq(SUBMITTED_STATES) , anyString(), eq(2L), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(page);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateIn(eq(competitionId), eq(1L), eq(SUBMITTED_STATES) , anyString(), eq(2L), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(page);
         when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 1L,0, 20, ofNullable(2L), "", "");

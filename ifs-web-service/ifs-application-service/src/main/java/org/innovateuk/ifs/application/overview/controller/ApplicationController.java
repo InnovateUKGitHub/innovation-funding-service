@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -58,6 +59,9 @@ public class ApplicationController {
     @Autowired
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
 
+    @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form,
                                      Model model,
@@ -68,6 +72,10 @@ public class ApplicationController {
 
         if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
             return format("redirect:/application/%s/summary", application.getId());
+        }
+
+        if (application.isSubmitted()) {
+            return format("redirect:/application/%s/track", application.getId());
         }
 
         if (form == null) {
@@ -111,7 +119,10 @@ public class ApplicationController {
                                                       @PathVariable("questionId") long questionId) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
-        if (!applicationResource.getCompetitionStatus().isFeedbackReleased()) {
+
+        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
+
+        if (!applicationResource.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             return "redirect:/application/" + applicationId + "/summary";
         }
         model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId));

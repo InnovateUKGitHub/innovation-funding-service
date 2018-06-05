@@ -2,13 +2,14 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,11 @@ public class ProjectDetailsController {
     @Autowired
     private ProjectDetailsService projectDetailsService;
 
+    @GetMapping("/{projectId}/project-manager")
+    public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
+        return projectDetailsService.getProjectManager(projectId).toGetResponse();
+    }
+
     @PostMapping(value="/{id}/project-manager/{projectManagerId}")
     public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
         return projectDetailsService.setProjectManager(id, projectManagerId).toPostResponse();
@@ -42,13 +48,6 @@ public class ProjectDetailsController {
 
     @PostMapping("/{projectId}/duration/{durationInMonths}")
     public RestResult<Void> updateProjectDuration(@PathVariable("projectId") final long projectId,
-                                                  @PathVariable("durationInMonths") final long durationInMonths) {
-        return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
-    }
-
-    @ZeroDowntime(reference = "IFS-3323", description = "Enable both end points to support ZDD. This will be removed in the next release")
-    @PostMapping("/{projectId}/update-duration/{durationInMonths}")
-    public RestResult<Void> updateProjectDurationZDD(@PathVariable("projectId") final long projectId,
                                                   @PathVariable("durationInMonths") final long durationInMonths) {
         return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
     }
@@ -69,12 +68,12 @@ public class ProjectDetailsController {
         return projectDetailsService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
     }
 
-    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
+    @PostMapping(value = "/{projectId}/organisation/{organisationId}/partner-project-location", params = "postcode")
     public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
                                                          @PathVariable("organisationId") final long organisationId,
-                                                         @RequestParam("postCode") String postCode) {
+                                                         @RequestParam("postcode") String postcode) {
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectDetailsService.updatePartnerProjectLocation(composite, postCode).toPostResponse();
+        return projectDetailsService.updatePartnerProjectLocation(composite, postcode).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-finance-contact")

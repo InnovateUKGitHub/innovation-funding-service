@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.resource;
 
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -7,17 +8,17 @@ import java.util.*;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public enum ProjectDetailsState implements ProcessState {
+public enum ProjectDetailsState implements ProcessState, IdentifiableEnum<ProjectDetailsState> {
 
-    PENDING(State.PENDING),
-    DECIDE_IF_READY_TO_SUBMIT(State.PENDING),
-    SUBMITTED(State.SUBMITTED);
+    PENDING(6, State.PENDING),
+    DECIDE_IF_READY_TO_SUBMIT(-1, State.PENDING), // pseudo state
+    SUBMITTED(8, State.SUBMITTED);
 
-    //the status string value
-    private State backingState;
+    private final long id;
+    private final State backingState;
 
-    // creates the enum with the chosen type.
-    ProjectDetailsState(State backingState) {
+    ProjectDetailsState(long id, State backingState) {
+        this.id = id;
         this.backingState = backingState;
     }
 
@@ -37,5 +38,10 @@ public enum ProjectDetailsState implements ProcessState {
 
     public static ProjectDetailsState fromState(State state) {
         return ProcessState.fromState(ProjectDetailsState.values(), state);
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 }

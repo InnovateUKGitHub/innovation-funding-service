@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.finance.view.jes;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
@@ -11,7 +12,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -28,7 +29,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -49,50 +50,76 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     public static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
     public static final String UPLOAD_FINANCE_DOCUMENT = "upload_finance_document";
 
+    public static final String NON_DECIMAL_MESSAGE = "validation.standard.integer.non.decimal.format";
+    public static final String NON_DECIMAL_FIELD = "tsb_reference";
+
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
-        storeFinanceRowItems(request, userId, applicationId, competitionId);
-        return storeJESUpload(request, userId, applicationId);
+        ValidationMessages validationMessages = new ValidationMessages();
+        validationMessages.addAll(storeFinanceRowItems(request, userId, applicationId, competitionId));
+        validationMessages.addAll(storeJESUpload(request, userId, applicationId));
+        return validationMessages;
     }
 
-    private void storeFinanceRowItems(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
+    private ValidationMessages storeFinanceRowItems(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
+        ValidationMessages validationMessages = new ValidationMessages();
         Enumeration<String> parameterNames = request.getParameterNames();
         while(parameterNames.hasMoreElements()) {
             String parameter = parameterNames.nextElement();
             String[] parameterValues = request.getParameterValues(parameter);
 
             if(parameterValues.length > 0) {
-                storeCost(userId, applicationId, parameter, parameterValues[0], competitionId);
+                validationMessages.addAll(storeCost(userId, applicationId, parameter, parameterValues[0], competitionId));
             }
         }
+        return validationMessages;
     }
 
     @Override
     public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
-        if (fieldName != null && value != null) {
-            if (fieldName.startsWith("cost-")) {
-                return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId);
-            }
+        if (fieldName != null && value != null && fieldName.startsWith("cost-")) {
+            return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId);
         }
         return null;
     }
 
     private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId, Long competitionId) {
         FinanceFormField financeFormField = getCostFormField(competitionId, fieldName, value);
-        if(financeFormField==null)
+        if(financeFormField == null) {
             return null;
+        }
 
         FinanceRowHandler financeRowHandler = new AcademicFinanceHandler();
         Long costFormFieldId = 0L;
+
         if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
+
+        if(!financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && !inputIsLong(financeFormField.getValue())) {
+            return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-cost]",
+                    financeFormField, NON_DECIMAL_MESSAGE));
+        }
+
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
         if(costItem != null) {
         	return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
         } else {
         	return ValidationMessages.noErrors();
         }
+    }
+
+    private boolean inputIsLong(String input) {
+        // empty value is valid
+        if(StringUtils.isEmpty(input)) {
+            return true;
+        }
+        try {
+            Long.parseLong(input);
+        } catch(NumberFormatException ex) {
+            return false;
+        }
+        return true;
     }
 
     private FinanceFormField getCostFormField(Long competitionId, String costTypeKey, String value) {

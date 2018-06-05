@@ -8,9 +8,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,10 +43,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
         List<ProcessRole> processRoles = new ArrayList<>();
-        Application application = new Application(
-                "",
-                new ActivityState(ActivityType.APPLICATION, State.CREATED)
-        );
+        Application application = new Application("");
         application.setId(APPLICATION_ID);
         processRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(application).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
@@ -99,7 +93,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
      * Check if progress decreases when marking a question as incomplete.
      */
     @Test
-    public void testGetProgressPercentageByApplicationId() throws Exception {
+    public void testGetProgressPercentageByApplicationId() {
         CompletedPercentageResource response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccess();
         BigDecimal completedPercentage = response.getCompletedPercentage();
         double delta = 0.10;
@@ -114,7 +108,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
     @Rollback
     @Test
-    public void testUpdateApplicationStateApproved() throws Exception {
+    public void testUpdateApplicationStateApproved() {
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.APPROVED);
@@ -123,7 +117,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
     @Test
     @Rollback
-    public void testUpdateApplicationStateSubmittedNotPossible() throws Exception {
+    public void testUpdateApplicationStateSubmittedNotPossible() {
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
         assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccess().getApplicationState());
@@ -131,7 +125,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
     @Rollback
     @Test
-    public void testUpdateApplicationStateRejected() throws Exception {
+    public void testUpdateApplicationStateRejected() {
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.REJECTED);
@@ -139,14 +133,14 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    public void testUpdateApplicationStateOpened() throws Exception {
+    public void testUpdateApplicationStateOpened() {
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
         assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccess().getApplicationState());
     }
 
     @Rollback
     @Test
-    public void testUpdateApplicationStateSubmitted() throws Exception {
+    public void testUpdateApplicationStateSubmitted() {
         ApplicationResource applicationBefore = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess();
         assertNull(applicationBefore.getSubmittedDate());
 
@@ -158,7 +152,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    public void testGetApplicationsByCompetitionIdAndUserId() throws Exception {
+    public void testGetApplicationsByCompetitionIdAndUserId() {
         Long competitionId = 1L;
         Long userId = 1L ;
         List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, Role.LEADAPPLICANT).getSuccess();
@@ -171,7 +165,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
     @Rollback
     @Test
-    public void markAsIneligible() throws Exception {
+    public void markAsIneligible() {
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
@@ -188,7 +182,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
     @Rollback
     @Test
-    public void informIneligible() throws Exception {
+    public void informIneligible() {
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
@@ -203,4 +197,21 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertTrue(result.isSuccess());
     }
 
+    @Rollback
+    @Test
+    public void withdrawApplication() {
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.APPROVED);
+
+        loginIfsAdmin();
+
+        RestResult<Void> result = controller.withdrawApplication(APPLICATION_SUBMITTABLE_ID);
+
+        loginCompAdmin();
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess();
+
+        assertTrue(result.isSuccess());
+        assertEquals(ApplicationState.WITHDRAWN, applicationAfter.getApplicationState());
+    }
 }

@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/interview/panel/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to interview panel',subTitle=${model.competitionName},size='heading-xlarge'" />
 
     <h2 class="heading-medium">Key statistics</h2>
@@ -31,12 +31,6 @@
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
                 <small>Declined</small>
-            </div>
-        </div>
-        <div class="column-quarter">
-            <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
-                <small>Assessors on invite list</small>
             </div>
         </div>
     </div>
@@ -73,7 +67,8 @@
 
     <div class="grid-row sorting">
         <div class="column-half">
-            <span class="heading-large" th:text="${model.pagination.totalCount}">20</span> assessors
+            <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+            <span class="heading-small">assessors</span>
         </div>
     </div>
 

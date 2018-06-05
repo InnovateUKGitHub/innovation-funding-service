@@ -1,15 +1,19 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.text.RandomStringGenerator;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.UnsupportedEncodingException;
@@ -32,15 +36,25 @@ import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorController> {
+
+    @Mock
+    private AssessorService assessorServiceMock;
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    private RandomStringGenerator randomStringGeneratorAtoZ = new RandomStringGenerator.Builder()
+            .withinRange('a', 'z').build();
 
     @Override
     protected AssessorController supplyControllerUnderTest() {
@@ -93,8 +107,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .withDisability(NO)
                 .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
-                .withAddress(newAddressResource()
-                        .build())
+                .withAddress(new AddressResource())
                 .build();
 
 
@@ -171,7 +184,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
     @Test
     public void registerAssessorByHash_firstNameTooLong() throws Exception {
-        String firstName = RandomStringUtils.random(71, "abcdefghijklmnopqrstuvwxyz");
+        String firstName = randomStringGeneratorAtoZ.generate(71);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -229,7 +242,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
     @Test
     public void registerAssessorByHash_lastNameTooLong() throws Exception {
-        String lastName = RandomStringUtils.random(71, "abcdefghijklmnopqrstuvwxyz");
+        String lastName = randomStringGeneratorAtoZ.generate(71);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -287,7 +300,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
     @Test
     public void registerAssessorByHash_phoneNumberTooShort() throws Exception {
-        String phoneNumber = RandomStringUtils.random(7, "01234567890 +-");
+        String phoneNumber = new RandomStringGenerator.Builder().selectFrom("01234567890 +-".toCharArray()).build().generate(7);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -316,7 +329,8 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
     @Test
     public void registerAssessorByHash_phoneNumberTooLong() throws Exception {
-        String phoneNumber = RandomStringUtils.random(21, "01234567890 +-");
+        String phoneNumber = new RandomStringGenerator.Builder().selectFrom("01234567890 +-".toCharArray()).build()
+                .generate(21);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -345,7 +359,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
     @Test
     public void registerAssessorByHash_passwordTooShort() throws Exception {
-        String password = RandomStringUtils.random(7, "abcdefghijklmnopqrstuvwxyz");
+        String password = randomStringGeneratorAtoZ.generate(7);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -439,6 +453,20 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .andReturn();
 
         verify(assessorServiceMock, only()).getAssessorProfile(1L);
+    }
+
+    @Test
+    public void notifyAssessors() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionServiceMock.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
+        when(assessorServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessor/notify-assessors/competition/{id}", competitionId))
+                .andExpect(status().isOk());
+
+        verify(competitionServiceMock, only()).notifyAssessors(competitionId);
+        verify(assessorServiceMock).notifyAssessorsByCompetition(competitionId);
     }
 
     private void verifyResponseErrors(MvcResult mvcResult, Error... expectedErrors) throws UnsupportedEncodingException {

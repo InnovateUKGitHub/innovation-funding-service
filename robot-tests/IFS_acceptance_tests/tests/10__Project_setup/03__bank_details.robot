@@ -81,11 +81,11 @@ Bank details page
 Bank details server side validations
     [Documentation]    INFUND-3010
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link    jQuery=[role="dialog"] .button:contains("Submit")
-    Then the user should see an error    Please enter a valid account number.
-    And the user should see an error    Please enter a valid sort code.
-    And the user should see an error    You need to select an address before you can continue.
+    When the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link   id=submit-bank-details
+    Then the user should see a field and summary error  Please enter a valid account number.
+    And the user should see a field and summary error   Please enter a valid sort code.
+    And the user should see a field and summary error   You need to select an address before you can continue.
 
 The user enters bank details, wants to manually enter their address, leaves the address empty and submits
     [Documentation]  IFS-2731
@@ -95,7 +95,7 @@ The user enters bank details, wants to manually enter their address, leaves the 
     When the user selects the radio button        addressType             ADD_NEW
     And the user clicks the button/link           css = button[name = "manual-address"]        #Enter address manually
     Then the user clicks the button/link          jQuery = button:contains("Submit bank account details")
-    And the user clicks the button/link           css = button[name = "submit-app-details"]    #Submit
+    And the user clicks the button/link           id=submit-bank-details
     And the user should see a summary error       The address cannot be blank.
     And the user should see a summary error       The postcode cannot be blank.
     And the user should see a summary error       The town cannot be blank.
@@ -150,24 +150,22 @@ Bank details experian validations
     [Documentation]    INFUND-3010, INFUND-8688
     [Tags]    Experian
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
-    When the user submits the bank account details    12345673    000003
-    Then the user should see the text in the page    Bank account details are incorrect, please check and try again
+    Given the user submits the bank account details    12345673    000003
+    Then the user should see the element              jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")
     When the user submits the bank account details    00000123    000004 
-    Then the user should see the element  jQuery=.error-summary-list:contains("Bank details cannot be validated.")
+    Then the user should see the element              jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")
 
 Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
-    Given the user submits the bank account details   00000123    000004 
-    Then the user should see the element              jQuery=.error-summary-list:contains("Bank details cannot be validated.")
-    When the user enters text to a text field         name=accountNumber  ${account_two}
+    Given the user enters text to a text field        name=accountNumber  ${account_two}
     And the user enters text to a text field          name=sortCode  ${sortCode_two}
     When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link               jquery=button:contains("Cancel")
     And the user should not see the text in the page  The bank account details below are being reviewed
     When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link               jquery=button:contains("Submit")
+    And the user clicks the button/link               id=submit-bank-details
     And the user should see the text in the page      The bank account details below are being reviewed
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element               jQuery=ul li.waiting:nth-child(3)
@@ -176,7 +174,7 @@ Bank details submission
     And the user should see the text in the page      Project team status
     And the user should see the element               css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
     When log in as a different user                   &{internal_finance_credentials}
-    And the user navigates to the page               ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
+    And the user navigates to the page                ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     Then the user should see the element              css=#table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.action
 
 Submission of bank details for academic user
@@ -193,7 +191,7 @@ Submission of bank details for academic user
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
     When partner fills in his bank details         ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
-    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
+    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")
     # Added this wait so to give extra execution time
     When the user enters text to a text field      name=accountNumber   ${account_one}
     And the user enters text to a text field       name=sortCode  ${sortCode_one}
@@ -207,7 +205,7 @@ Submission of bank details for academic user
     And the user clicks the button/link            jquery=button:contains("Cancel")
     And the user should not see the text in the page  The bank account details below are being reviewed
     When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link            jquery=button:contains("Submit")
+    And the user clicks the button/link            id=submit-bank-details
     And the user should see the text in the page   The bank account details below are being reviewed
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element            jQuery=ul li.complete:nth-child(1)
@@ -237,7 +235,7 @@ User sees error response for invalid bank details for non-lead partner
     Then the user clicks the button/link           link=Bank details
     When partner fills in his bank details         ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     # Stub is configured to return error response for these values
-    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
+    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")
     # Added this wait so to give extra execution time
 
 Non lead partner submits bank details
@@ -255,7 +253,7 @@ Non lead partner submits bank details
     Then the user should not see an error in the page
     And the user should not see the text in the page  The bank account details below are being reviewed
     When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link            jQuery=.button:contains("Submit")
+    And the user clicks the button/link            id=submit-bank-details
     And the user should see the element            jQuery=p:contains("The bank account details below are being reviewed")
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element            css=ul li.complete:nth-child(1)
@@ -341,16 +339,16 @@ Project Finance approves Bank Details through the Bank Details list
 
 *** Keywords ***
 the user moves focus away from the element
-    [Arguments]    ${element}
+    [Arguments]  ${element}
     mouse out    ${element}
-    focus    jQuery=.button:contains("Submit bank account details")
+    focus        css=.button[data-js-modal="modal-bank"]
 
 the user submits the bank account details
     [Arguments]    ${account_number}    ${sort_code}
     the user enters text to a text field  name=accountNumber  ${account_number}
     the user enters text to a text field  name=sortCode  ${sort_code}
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
+    the user clicks the button/link       id=submit-bank-details
 
 finance contacts are submitted by all users
     the user logs-in in new browser            &{lead_applicant_credentials_bd}

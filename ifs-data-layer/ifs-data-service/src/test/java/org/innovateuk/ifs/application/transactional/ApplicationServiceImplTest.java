@@ -6,32 +6,36 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
+import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.user.builder.OrganisationBuilder;
+import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -50,8 +54,10 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -60,11 +66,11 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
@@ -80,7 +86,25 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Mock
-    private ApplicationFinanceHandler applicationFinanceHandlerMock;
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private ApplicationMapper applicationMapperMock;
+
+    @Mock
+    private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
 
     private FormInput formInput;
     private FormInputType formInputType;
@@ -141,7 +165,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         roles = newProcessRole().withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
         section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
-        comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
+        comp = newCompetition().withSections(singletonList(section)).withMaxResearchRatio(30).build();
         app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
 
         when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
@@ -158,7 +182,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         User user = newUser().build();
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).build();
-        ApplicationState applicationState = ApplicationState.CREATED;
+        ApplicationState applicationState = CREATED;
 
         Application application = newApplication().
                 withId(1L).
@@ -179,7 +203,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
-            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
+            assertEquals(applicationState, created.getApplicationProcess().getProcessState());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
             assertNull(created.getStartDate());
@@ -196,7 +220,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(applicationResource);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created =
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
@@ -208,15 +231,15 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void applicationServiceShouldReturnApplicationByUserId() throws Exception {
+    public void applicationServiceShouldReturnApplicationByUserId() {
         User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "testToken123abc", "my-uid");
         User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", "my-uid");
 
-        Application testApplication1 = new Application(null, "testApplication1Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication1 = new Application(null, "testApplication1Name", null, CREATED);
         testApplication1.setId(1L);
-        Application testApplication2 = new Application(null, "testApplication2Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication2 = new Application(null, "testApplication2Name", null, CREATED);
         testApplication2.setId(2L);
-        Application testApplication3 = new Application(null, "testApplication3Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication3 = new Application(null, "testApplication3Name", null, CREATED);
         testApplication3.setId(3L);
 
         ApplicationResource testApplication1Resource = newApplicationResource().with(id(1L)).withName("testApplication1Name").build();
@@ -264,7 +287,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void wildcardSearchByIdWithResultsOnSinglePage() throws Exception {
+    public void wildcardSearchByIdWithResultsOnSinglePage() {
 
         String searchString = "12";
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
@@ -278,7 +301,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void wildcardSearchByIdWithResultsAcrossMultiplePages() throws Exception {
+    public void wildcardSearchByIdWithResultsAcrossMultiplePages() {
 
         String searchString = "12";
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
@@ -318,14 +341,14 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void applicationControllerCanCreateApplication() throws Exception {
+    public void applicationControllerCanCreateApplication() {
         Long competitionId = 1L;
         Long organisationId = 2L;
         Long userId = 3L;
         Competition competition = newCompetition().with(id(1L)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         User user = newUser().with(id(userId)).build();
-        ApplicationState applicationState = ApplicationState.CREATED;
+        ApplicationState applicationState = CREATED;
 
         String applicationName = "testApplication";
 
@@ -349,13 +372,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
-            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
+            assertEquals(applicationState, created.getApplicationProcess().getProcessState());
             assertEquals(competitionId, created.getCompetition().getId());
             return true;
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccess();
         assertEquals(newApplication, created);
@@ -363,7 +385,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
 
     @Test
-    public void setApplicationFundingEmailDateTime() throws Exception {
+    public void setApplicationFundingEmailDateTime() {
 
         Long applicationId = 1L;
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
@@ -380,7 +402,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void setApplicationFundingEmailDateTime_Failure() throws Exception {
+    public void setApplicationFundingEmailDateTime_Failure() {
 
         Long applicationId = 1L;
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
@@ -397,7 +419,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void markAsIneligible() throws Exception {
+    public void markAsIneligible() {
         long applicationId = 1L;
         String reason = "reason";
 
@@ -420,11 +442,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
-        verify(applicationRepositoryMock).save(application);
     }
 
     @Test
-    public void markAsIneligible_applicationNotSubmitted() throws Exception {
+    public void markAsIneligible_applicationNotSubmitted() {
         long applicationId = 1L;
         String reason = "reason";
 
@@ -447,6 +468,69 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
+    }
+
+    @Test
+    public void withdraw() {
+        long applicationId = 1L;
+        long userId = 2L;
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.APPROVED)
+                .withId(applicationId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(applicationWorkflowHandlerMock.withdraw(application, user)).thenReturn(true);
+
+        ServiceResult<Void> result = service.withdrawApplication(applicationId);
+
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(applicationWorkflowHandlerMock).withdraw(application, user);
+    }
+
+    @Test
+    public void withdraw_applicationNotApproved() {
+        long applicationId = 1L;
+        long userId = 2L;
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.REJECTED)
+                .withId(applicationId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(applicationWorkflowHandlerMock.withdraw(application, user)).thenReturn(false);
+
+        ServiceResult<Void> result = service.withdrawApplication(applicationId);
+
+        assertTrue(result.isFailure());
+        assertEquals(APPLICATION_MUST_BE_APPROVED.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(applicationWorkflowHandlerMock).withdraw(application, user);
     }
 
     @Test
@@ -481,7 +565,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(pagedResult.getTotalPages()).thenReturn(0);
         when(pagedResult.getNumber()).thenReturn(0);
         when(pagedResult.getSize()).thenReturn(0);
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
 
         ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
         assertTrue(result.isSuccess());
@@ -531,7 +615,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(pagedResult.getNumber()).thenReturn(0);
         when(pagedResult.getSize()).thenReturn(2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
         when(applicationMapperMock.mapToResource(application1)).thenReturn(applicationResource1);
         when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
         when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
@@ -544,19 +628,5 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
         assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
         assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
-    }
-
-    @Test
-    public void getApplicationsByState() {
-        Set<ApplicationState> applicationStates = EnumSet.of(ApplicationState.SUBMITTED, ApplicationState
-                .REJECTED);
-        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-
-        List<Application> applications = newApplication()
-                .build(2);
-
-        when(applicationRepositoryMock.findByApplicationProcessActivityStateStateIn(states)).thenReturn(applications);
-        assertEquals(applications, service.getApplicationsByState(applicationStates).getSuccess());
-        verify(applicationRepositoryMock, only()).findByApplicationProcessActivityStateStateIn(states);
     }
 }

@@ -28,6 +28,7 @@ public class UserDocs {
             fieldWithPath("ethnicity").description("ethnic group of the user"),
             fieldWithPath("profileId").description("profile ID of the user"),
             fieldWithPath("allowMarketingEmails").description("allow marketing emails"),
+            fieldWithPath("termsAndConditionsIds").description("ids of accepted terms and conditions"),
             fieldWithPath("createdBy").description("user who created this user"),
             fieldWithPath("createdOn").description("when the user was created"),
             fieldWithPath("modifiedBy").description("user who modified this user"),

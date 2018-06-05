@@ -3,7 +3,7 @@ package org.innovateuk.ifs.registration.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,7 +18,7 @@ import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -37,10 +37,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
 
@@ -87,7 +87,7 @@ public class RegistrationController {
             final HttpServletRequest request, HttpServletResponse response) {
         registrationCookieService.deleteInviteHashCookie(response);
         if (referer == null || !referer.contains(request.getServerName() + "/registration/register")) {
-            throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
+            throw new ObjectNotFoundException("Attempt to access registration page directly...", emptyList());
         }
         return "registration/successful";
     }
@@ -95,7 +95,7 @@ public class RegistrationController {
     @GetMapping("/verified")
     public String verificationSuccessful(final HttpServletRequest request, final HttpServletResponse response) {
         if (!hasVerifiedCookieSet(request)) {
-            throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
+            throw new ObjectNotFoundException("Attempt to access registration page directly...", emptyList());
         } else {
             cookieFlashMessageFilter.removeFlashMessage(response);
             return "registration/verified";
@@ -127,6 +127,7 @@ public class RegistrationController {
         try {
             addRegistrationFormToModel(registrationForm, model, request, response);
         } catch (InviteAlreadyAcceptedException e) {
+            LOG.info("invite already accepted", e);
             cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
             return "redirect:/login";
         }
@@ -158,14 +159,14 @@ public class RegistrationController {
     }
 
     private void addRegistrationFormToModel(RegistrationForm registrationForm, Model model, HttpServletRequest request, HttpServletResponse response) {
-        setOrganisationIdCookie(registrationForm, request, response);
+        setOrganisationIdCookie(request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
     }
 
     /**
-     * When the current user is a invitee, user the invite email-address in the registration flow.
+     * When the current user is an invitee, use the invited email address in the registration flow.
      */
     private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
@@ -202,6 +203,7 @@ public class RegistrationController {
                 validator.validate(registrationForm, bindingResult);
             }
         } catch (InviteAlreadyAcceptedException e) {
+            LOG.info("invite already accepted", e);
             cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
 
             return "redirect:/login";
@@ -310,7 +312,7 @@ public class RegistrationController {
         return registrationCookieService.getOrganisationIdCookieValue(request).orElse(null);
     }
 
-    private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
+    private void setOrganisationIdCookie(HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
         if (organisationId != null) {
             registrationCookieService.saveToOrganisationIdCookie(organisationId, response);

@@ -47,8 +47,14 @@
                         id="competitionTypeId"
                         required="required"
                         th:attr="data-required-errormessage=#{validation.initialdetailsform.competitiontypeid.required}">
-                    <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
-                    <option th:each="(competitionType : ${model.competitionTypes})" th:if="${competitionType.active}" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
+                    <option value=""
+                            disabled="disabled"
+                            th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
+                    <option th:each="(competitionType : ${model.competitionTypes})"
+                            th:if="${competitionType.active}"
+                            th:text="${competitionType.name}"
+                            th:value="${competitionType.id}"
+                            th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
                 <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or model.general.competition.setupAndLive}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
             </div>
@@ -227,14 +233,24 @@
                 </select>
             </div>
 
-            <div class="form-group" th:attr="aria-hidden=${competitionSetupForm.competitionTypeId == null ? 'true' : 'false'}" id="stateAid">
-                <h3 class="heading-small">State aid</h3>
-                <p>
-                  <th:block th:each="(competitionType : ${model.competitionTypes})">
-                      <span class="yes" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == true}">Yes</span>
-                      <span class="no" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == false}">No</span>
-                  </th:block>
-                </p>
+            <div class="form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'form-group-error'">
+                <fieldset class="inline">
+                    <legend id="stateAid" class="heading-small">
+                        State aid
+                        <th:block th:if="${#fields.hasErrors('stateAid')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('stateAid')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice" th:each="value : ${ {true, false} }">
+                        <input
+                            type="radio"
+                            th:field="*{stateAid}"
+                            th:value="${value}"
+                            required="required"
+                            th:attr="data-required-errormessage=#{validation.initialdetailsform.stateaid.required}"/>
+                        <label th:for="${#ids.prev('stateAid')}" th:text="${value} ? 'Yes' : 'No'"></label>
+                    </div>
+                </fieldset>
             </div>
 
             <input type="hidden" name="unrestricted" value="1" th:if="${#strings.isEmpty(restrictInitialDetailsEdit)}" />
@@ -258,7 +274,6 @@
                 <dt>Innovation area</dt>
                 <dd th:text="${competitionSetupForm.innovationAreaNamesFormatted}"></dd>
 
-
                 <dt>Opening date</dt>
                 <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>
 
@@ -268,14 +283,9 @@
                 <dt>Portfolio Manager</dt>
                 <dd th:each="(competitionExecutiveUser : ${model.competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:if="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</dd>
 
-               <dt>State aid</dt>
-                <dd>
-                    <th:block th:each="(competitionType : ${model.competitionTypes})">
-                        <span class="yes" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == true}">Yes</span>
-                        <span class="no" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == false}">No</span>
-                    </th:block>
-                </dd>
-               </dl>
+                <dt>State aid</dt>
+                <dd th:text="${#bools.isTrue(competitionSetupForm.stateAid) ? 'Yes' : 'No'}"></dd>
+            </dl>
 
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
@@ -283,9 +293,9 @@
     </form>
     <ul class="pagination" th:if="${model.general.initialComplete}">
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='additional')}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='terms-and-conditions')}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Funding information</span>
+                <span class="pagination-part-title">Terms and conditions</span>
             </a>
         </li>
     </ul>

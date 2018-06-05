@@ -18,12 +18,12 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -216,7 +216,8 @@ public class ApplicationSectionController {
         switch (section.getType()) {
 
             case FUNDING_FINANCES:
-                return validateTermsAndConditionsAgreement(form, bindingResult);
+                return validateOtherFundingSelectionMade(params, bindingResult)
+                        && validateTermsAndConditionsAgreement(form, bindingResult);
 
             case PROJECT_COST_FINANCES:
                 return userIsResearch(userId) ?
@@ -240,6 +241,17 @@ public class ApplicationSectionController {
             return true;
         }
         bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
+        return false;
+    }
+
+    private boolean validateOtherFundingSelectionMade(Map<String, String[]> params, BindingResult bindingResult) {
+
+        List<String> publicFundingKeys = simpleFilter(params.keySet(), k -> k.contains("-otherPublicFunding"));
+        if (!publicFundingKeys.isEmpty()) {
+            return true;
+        }
+
+        bindingResult.rejectValue("formInput[cost-otherPublicFunding]", "validation.finance.other.funding.required");
         return false;
     }
 

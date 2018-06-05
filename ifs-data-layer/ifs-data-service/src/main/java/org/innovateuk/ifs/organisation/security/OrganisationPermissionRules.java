@@ -3,12 +3,12 @@ package org.innovateuk.ifs.organisation.security;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -60,9 +60,9 @@ public class OrganisationPermissionRules {
         // TODO DW - INFUND-1556 - this code feels pretty heavy given that all we need to do is find a link between a User and an Organisation via an Application
         List<ProcessRole> processRoles = processRoleRepository.findByUserId(user.getId());
         List<Long> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplicationId);
-        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, applicationId -> {
-            return processRoleRepository.findByApplicationId(applicationId);
-        }));
+        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, applicationId ->
+            processRoleRepository.findByApplicationId(applicationId)
+        ));
 
         return simpleMap(processRolesForAllApplications, ProcessRole::getOrganisationId).contains(organisation.getId());
     }

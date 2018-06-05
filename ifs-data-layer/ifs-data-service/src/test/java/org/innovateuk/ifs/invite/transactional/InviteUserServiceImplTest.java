@@ -9,15 +9,21 @@ import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.mapper.RoleInviteMapper;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
+import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.transactional.EmailService;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SearchCategory;
@@ -55,8 +61,8 @@ import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRol
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.transactional.InviteUserServiceImpl.Notifications.INVITE_INTERNAL_USER;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -69,6 +75,24 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Mock
     private EmailService emailService;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private RoleInviteRepository roleInviteRepositoryMock;
+
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
+
+    @Mock
+    private RoleInviteMapper roleInviteMapperMock;
+
+    @Mock
+    private ApplicationInviteRepository applicationInviteRepositoryMock;
+
+    @Mock
+    private ProjectInviteRepository projectInviteRepositoryMock;
 
     @Captor
     private ArgumentCaptor<RoleInvite> roleInviteArgumentCaptor;

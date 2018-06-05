@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,12 +22,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.innovateuk.ifs.async.AsyncExecutionTestHelper.BLOCKING_TIMEOUT_MILLIS;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isReadLocked;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isWriteLocked;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -39,7 +38,7 @@ import static org.mockito.Mockito.when;
  * single Controller call can safely share cache results and add cache results to the existing set of results
  * between the various Threads its Futures execute within.
  */
-public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMocksTest {
+public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTest {
 
     @InjectMocks
     private RestCacheMethodInterceptor interceptor;
@@ -200,7 +199,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            writeOperationFuture.get(50, TimeUnit.MILLISECONDS);
+            writeOperationFuture.get(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             fail("This write operation should have timed out because it was blocked by the read lock");
         } catch (TimeoutException e) {
             // expected behaviour - the write operation was successfully blocked from writing to the cache.  Now allow
@@ -312,7 +311,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            readOperationFuture.get(50, TimeUnit.MILLISECONDS);
+            readOperationFuture.get(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             fail("This read operation should have timed out because it was blocked by the write lock");
         } catch (TimeoutException e) {
             // expected behaviour - the write operation was successfully blocked from writing to the cache.  Now allow
@@ -360,7 +359,6 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         CountDownLatch writeOperation1LatchWhenReadingFromCache = new CountDownLatch(1);
         CountDownLatch writeOperation1LatchWhenWritingToCache = new CountDownLatch(1);
         CountDownLatch writeOperation2LatchForInitialBlocking = new CountDownLatch(1);
-        CountDownLatch writeOperation2LatchForBlockingUntilWriteOperationIsWritingToCache = new CountDownLatch(1);
         CountDownLatch completeTestLatch = new CountDownLatch(2);
 
         ReadWriteLock lockFromInterceptor =
@@ -428,8 +426,8 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
-            writeOperation1Future.get(50, TimeUnit.MILLISECONDS);
-            writeOperation2Future.get(50, TimeUnit.MILLISECONDS);
+            writeOperation1Future.get(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+            writeOperation2Future.get(BLOCKING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             fail("One of these write operations should have timed out because it was blocked by the write lock " +
                     "aquired by the other");
         } catch (TimeoutException e) {

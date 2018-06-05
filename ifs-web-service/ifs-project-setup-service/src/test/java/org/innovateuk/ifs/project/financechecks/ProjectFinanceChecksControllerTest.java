@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.project.financechecks;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
@@ -12,24 +13,30 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -57,7 +64,7 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -66,7 +73,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTest<ProjectFinanceChecksController> {
+public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockMVCTest<ProjectFinanceChecksController> {
     @Spy
     @InjectMocks
     private ProjectFinanceOverviewModelManager projectFinanceOverviewModelManager;
@@ -93,6 +100,27 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
     @Mock
     private ProjectFinanceFormHandler projectFinanceFormHandler;
 
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    private DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
+
+    @Mock
+    private ProjectFinanceService projectFinanceService;
+
+    @Mock
+    private StatusService statusService;
+
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
+
+    @Mock
+    private FinanceUtil financeUtil;
+
     private OrganisationResource industrialOrganisation;
 
     private ApplicationResource application = newApplicationResource().withId(123L).build();
@@ -108,14 +136,11 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
     @Before
     public void setUp() {
-
         super.setUp();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
-        this.loginDefaultUser();
-        this.setupUserRoles();
         this.setupFinances();
         this.setupInvites();
         this.setupQuestionStatus(applications.get(0));
@@ -151,6 +176,8 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         financeViewModel.setOrganisationGrantClaimPercentage(74);
 
         when(defaultProjectFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(loggedInUser);
     }
 
 
@@ -226,7 +253,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void testViewExternalEligibilityPage() throws Exception {
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);

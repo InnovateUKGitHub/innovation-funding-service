@@ -114,13 +114,18 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
+    public RestResult<Void> withdrawApplication(long applicationId) {
+        return postWithRestResult(applicationRestURL + "/" + applicationId + "/withdraw", Void.class);
+    }
+
+    @Override
     public RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
         return getWithRestResult(applicationRestURL + "/showApplicationTeam/" + applicationId + "/" + userId, Boolean.class);
     }
 
     @Override
-    public RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId) {
-        return getWithRestResult(applicationRestURL + "/getLatestEmailFundingDate/" + competitionId, ZonedDateTime.class);
+    public RestResult<ZonedDateTime> getLatestEmailFundingDate(Long applicationId) {
+        return getWithRestResult(applicationRestURL + "/getLatestEmailFundingDate/" + applicationId, ZonedDateTime.class);
     }
 
     @Override

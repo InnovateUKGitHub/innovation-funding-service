@@ -15,7 +15,7 @@
         <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
-    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+    <form th:object="${form}" id="other-documents-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='heading-xlarge'" />
         <hr/>
@@ -74,8 +74,8 @@
                 <th:block th:if="${model.collaborationAgreementRequired}">
                     <h2 class="heading-medium">Review documents</h2>
                     <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
-                    <button data-js-modal="modal-accept-docs" class="button">Accept documents</button>
-                    <button data-js-modal="modal-reject-docs" class="button button-warning">Reject documents</button>
+                    <button id="accept-documents" data-js-modal="modal-accept-docs" class="button">Accept documents</button>
+                    <button id="reject-documents" data-js-modal="modal-reject-docs" class="button button-warning">Reject documents</button>
                     <th:block th:insert="fragments/modals :: modal-overlay" />
                     <th:block th:insert="fragments/modals :: modal-accept-docs" />
                     <th:block th:insert="fragments/modals :: modal-reject-docs" />
@@ -83,8 +83,8 @@
                 <th:block th:unless="${model.collaborationAgreementRequired}">
                     <h2 class="heading-medium">Review document</h2>
                     <p>Please review the content of the document to ensure it meets Innovate UK's requirements.</p>
-                    <button data-js-modal="modal-accept-doc" class="button">Accept document</button>
-                    <button data-js-modal="modal-reject-doc" class="button button-warning">Reject document</button>
+                    <button id="accept-document" data-js-modal="modal-accept-doc" class="button">Accept document</button>
+                    <button id="reject-document" data-js-modal="modal-reject-doc" class="button button-warning">Reject document</button>
                     <th:block th:insert="fragments/modals :: modal-overlay" />
                     <th:block th:insert="fragments/modals :: modal-accept-doc" />
                     <th:block th:insert="fragments/modals :: modal-reject-doc" />

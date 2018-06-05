@@ -20,7 +20,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -32,16 +32,16 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.util.FinanceUtil;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -151,7 +151,7 @@ public class FinanceChecksEligibilityController {
 
         FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId());
 
-        boolean eligibilityApproved = eligibility.getEligibility() == Eligibility.APPROVED;
+        boolean eligibilityApproved = eligibility.getEligibility() == EligibilityState.APPROVED;
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisation.getId());
 
@@ -300,7 +300,7 @@ public class FinanceChecksEligibilityController {
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
         return doSaveEligibility(competition, applicationResource, projectResource, allSections, user,
-                isLeadPartnerOrganisation, organisationResource, Eligibility.APPROVED, eligibilityForm, form,
+                isLeadPartnerOrganisation, organisationResource, EligibilityState.APPROVED, eligibilityForm, form,
                 validationHandler, successView, bindingResult, model);
     }
 
@@ -325,7 +325,7 @@ public class FinanceChecksEligibilityController {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveEligibility(competition, applicationResource, projectResource, allSections, user, isLeadPartnerOrganisation, organisationResource, Eligibility.REVIEW, eligibilityForm, form, validationHandler, successView, bindingResult, model);
+        return doSaveEligibility(competition, applicationResource, projectResource, allSections, user, isLeadPartnerOrganisation, organisationResource, EligibilityState.REVIEW, eligibilityForm, form, validationHandler, successView, bindingResult, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -336,7 +336,7 @@ public class FinanceChecksEligibilityController {
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
     }
 
-    private String doSaveEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadOrganisation, OrganisationResource organisation, Eligibility eligibility, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, ValidationHandler validationHandler, Supplier<String> successView, BindingResult bindingResult, Model model) {
+    private String doSaveEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadOrganisation, OrganisationResource organisation, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, ValidationHandler validationHandler, Supplier<String> successView, BindingResult bindingResult, Model model) {
 
         Supplier<String> failureView = () -> doViewEligibility(competition, application, project, allSections, user, isLeadOrganisation, organisation, model, eligibilityForm, form, bindingResult);
 

@@ -2,9 +2,10 @@ package org.innovateuk.ifs.organisation.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +16,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -28,6 +29,9 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
 
     @Mock
     private OrganisationPatternMatcher organisationPatternMatcher;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
 
     @Override
     protected OrganisationMatchingServiceImpl supplyServiceUnderTest() {

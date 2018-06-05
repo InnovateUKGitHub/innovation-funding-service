@@ -8,7 +8,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
@@ -19,8 +19,12 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
+import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -70,6 +74,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<AffiliationResource>>() {};
     }
 
+    public static ParameterizedTypeReference<AffiliationListResource> affiliationListResourceType() {
+        return new ParameterizedTypeReference<AffiliationListResource>() {};
+    }
+
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
     }
@@ -97,6 +105,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {
         return new ParameterizedTypeReference<List<ProcessRoleResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<Role>> roleListType() {
+        return new ParameterizedTypeReference<List<Role>>() {};
     }
 
     public static ParameterizedTypeReference<List<UserResource>> userListType() {
@@ -292,6 +304,18 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<Map<CompetitionSetupSubsection, Optional<Boolean>>> competitionSetupSubsectionStatusMap() {
         return new ParameterizedTypeReference<Map<CompetitionSetupSubsection, Optional<Boolean>>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<GrantTermsAndConditionsResource>> grantTermsAndConditionsResourceListType() {
+        return new ParameterizedTypeReference<List<GrantTermsAndConditionsResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<InterviewApplicationResource>> interviewApplicationsResourceListType() {
+        return new ParameterizedTypeReference<List<InterviewApplicationResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<InterviewResource>> interviewResourceListType() {
+        return new ParameterizedTypeReference<List<InterviewResource>>() {};
     }
 
     public static ParameterizedTypeReference<Map<Long, Boolean>> longStatusMap() {

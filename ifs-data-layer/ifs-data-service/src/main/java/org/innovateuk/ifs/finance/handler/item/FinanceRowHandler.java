@@ -4,7 +4,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
+import org.innovateuk.ifs.commons.error.ValidationUtil;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;

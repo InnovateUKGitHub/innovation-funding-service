@@ -11,36 +11,46 @@ var compass = require('compass-importer')
 
 // Path variables
 var nodeModulesPath = __dirname + '/../../../../../node_modules/'
-var govukNodeModules = [
-  nodeModulesPath + 'govuk_frontend_toolkit/**/*',
-  nodeModulesPath + 'govuk_template_jinja/**/*',
-  nodeModulesPath + 'govuk-elements-sass/**/*'
+var nodeModulesRelativePath = '../../../../../node_modules/'
+var gdsFrontendToolkitPath = nodeModulesPath + 'govuk_frontend_toolkit/'
+var gdsTemplateJinjaPath = nodeModulesPath + 'govuk_template_jinja/'
+var gdsElementsPath = nodeModulesPath + 'govuk-elements-sass/'
+var vendorImages = [
+	gdsTemplateJinjaPath + 'assets/images/**/**',
+	gdsTemplateJinjaPath + 'assets/stylesheets/images/**/**',
+  gdsFrontendToolkitPath + 'images/**/**'
 ]
-
+var sassFiles = [
+  './sass/**/*.scss',
+  gdsFrontendToolkitPath + '**/*.scss',
+  gdsElementsPath + '**/*.scss'
+]
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
   nodeModulesPath + 'jquery/dist/jquery.js',
   nodeModulesPath + 'simplestatemanager/src/ssm.js',
   'js/vendor/jquery-ui/jquery-ui.min.js',
-  'js/vendor/govuk/*.js',
-  '!js/vendor/govuk/ie.js',
+	gdsFrontendToolkitPath + 'javascripts/govuk/shim-links-with-button-role.js',
+	gdsFrontendToolkitPath + 'javascripts/vendor/polyfills/bind.js',
+	gdsFrontendToolkitPath + 'javascripts/govuk/details.polyfill.js',
+  'js/vendor/govuk/application.js',
+	gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
   'js/vendor/wysiwyg-editor/*.js',
   '!js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
 
-gulp.task('copy-govuk', ['copy-npm-govuk', 'copy-fonts-govuk', 'copy-images-govuk'])
-
-gulp.task('copy-npm-govuk', function () {
-  return gulp.src(filesExist(govukNodeModules, {checkGlobs: true}), {base: nodeModulesPath}).pipe(gulp.dest('sass/vendor/'))
+gulp.task('copy-govuk', ['copy-js-govuk', 'copy-fonts-govuk', 'copy-images-govuk'])
+// copy over the vendor javascript files to the js/vendor/govuk folder
+gulp.task('copy-js-govuk', function () {
+	return gulp.src(filesExist([gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js', gdsTemplateJinjaPath + 'assets/javascripts/ie.js'])).pipe(gulp.dest('js/vendor/govuk'))
 })
-
-// copy over the font from the template to our sourced controlled folder
+// copy over the fonts from GDS node-modules to css/fonts folder
 gulp.task('copy-fonts-govuk', function () {
-  return gulp.src(filesExist('sass/vendor/govuk_template_jinja/assets/stylesheets/fonts/*')).pipe(gulp.dest('css/fonts'))
+  return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/stylesheets/fonts/*')).pipe(gulp.dest('css/fonts'))
 })
-//  copy over the images from the template  to our sourced controlled folder
+//  copy over the images from GDS node-modules to images folder
 gulp.task('copy-images-govuk', function () {
-  return gulp.src(['sass/vendor/govuk_template_jinja/assets/images/**/**', 'sass/vendor/govuk_template_jinja/assets/stylesheets/images/**/**', 'sass/vendor/govuk_frontend_toolkit/images/**/**']).pipe(gulp.dest('images'))
+  return gulp.src(vendorImages).pipe(gulp.dest('images'))
 })
 
 gulp.task('default', ['js', 'css'])
@@ -76,21 +86,22 @@ gulp.task('vendor', function () {
 })
 
 gulp.task('css', ['copy-govuk'], function () {
-  return gulp.src('./sass/**/*.scss')
+  return gulp.src(filesExist(sassFiles))
     .pipe(sassLint({
       files: {
         ignore: [
           '**/prototype.scss',
-          '**/{prototype,vendor}/**/*.scss'
+          '**/prototype/**/*.scss',
+          nodeModulesRelativePath + '**/*.scss'
         ]
       },
       config: '.sass-lint.yml'
     }))
     .pipe(sassLint.format())
     .pipe(sass({includePaths: [
-      'sass/vendor/govuk_frontend_toolkit/stylesheets',
-      'sass/vendor/govuk_template_jinja/assets/stylesheets',
-      'sass/vendor/govuk-elements-sass/public/sass'
+      gdsFrontendToolkitPath + 'stylesheets',
+      gdsElementsPath + 'public/sass',
+      gdsTemplateJinjaPath + 'assets/stylesheets'
     ],
       importer: compass,
       outputStyle: 'compressed'

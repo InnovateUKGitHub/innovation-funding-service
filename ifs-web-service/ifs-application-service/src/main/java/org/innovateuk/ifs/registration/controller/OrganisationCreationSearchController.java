@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.registration.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -39,6 +41,8 @@ import static org.springframework.web.util.UriUtils.encodeQueryParam;
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationSearchController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationSearchController extends AbstractOrganisationCreationController {
+
+    private static final Log LOG = LogFactory.getLog(OrganisationCreationSearchController.class);
 
     private static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
     private static final String ADD_ADDRESS_DETAILS = "add-address-details";
@@ -307,6 +311,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         try {
             return messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         } catch (NoSuchMessageException e) {
+            LOG.error("unable to get message", e);
             return messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
     }

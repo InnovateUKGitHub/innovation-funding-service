@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -13,8 +13,6 @@ import java.util.List;
  */
 public interface CompetitionRestService {
     RestResult<List<CompetitionResource>> getAll();
-
-    RestResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId);
 
     RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
 
@@ -41,4 +39,6 @@ public interface CompetitionRestService {
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
 
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
+
+    RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 }

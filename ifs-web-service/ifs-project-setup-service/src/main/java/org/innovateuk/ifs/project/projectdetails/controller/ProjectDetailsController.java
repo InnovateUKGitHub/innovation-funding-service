@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -36,7 +36,7 @@ import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -210,7 +210,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                              UserResource loggedInUser) {
 
         PartnerOrganisationResource partnerOrganisation = partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).getSuccess();
-        PartnerProjectLocationForm form = new PartnerProjectLocationForm(partnerOrganisation.getPostCode());
+        PartnerProjectLocationForm form = new PartnerProjectLocationForm(partnerOrganisation.getPostcode());
 
         return doViewPartnerProjectLocation(projectId, organisationId, loggedInUser, model, form);
 
@@ -243,9 +243,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, form.getPostCode());
+            ServiceResult<Void> updateResult = projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, form.getPostcode());
 
-            return validationHandler.addAnyErrors(updateResult, toField("postCode")).
+            return validationHandler.addAnyErrors(updateResult, toField("postcode")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
     }
@@ -423,12 +423,15 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
-        if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
-            RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
+
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
+        if(project.getAddress() != null && project.getAddress().getId() != null) {
+            RestResult<OrganisationAddressResource> result = organisationAddressRestService.findByOrganisationIdAndAddressId(leadOrganisation.getId(), project.getAddress().getId());
             if (result.isSuccess()) {
                 form.setAddressType(OrganisationAddressType.valueOf(result.getSuccess().getAddressType().getName()));
             }
         }
+
         model.addAttribute("model", projectDetailsAddressViewModel);
         return "project/details-address";
     }

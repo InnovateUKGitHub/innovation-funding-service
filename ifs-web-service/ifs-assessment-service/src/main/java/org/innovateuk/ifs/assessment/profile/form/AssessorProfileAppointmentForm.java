@@ -2,7 +2,9 @@ package org.innovateuk.ifs.assessment.profile.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Size;
 
 /**
  * Form field model for the Assessor Profile Declaration of Interest Appointments, directorships or consultancies
@@ -11,10 +13,12 @@ public class AssessorProfileAppointmentForm {
     public interface Appointments {
     }
 
-    @NotEmpty(message = "{validation.assessorprofileappointmentform.organisation.required}", groups=Appointments.class
-    )
+    @NotBlank(message = "{validation.assessorprofileappointmentform.organisation.required}", groups=Appointments.class)
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String organisation;
-    @NotEmpty(message = "{validation.assessorprofileappointmentform.position.required}", groups=Appointments.class)
+
+    @NotBlank(message = "{validation.assessorprofileappointmentform.position.required}", groups=Appointments.class)
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String position;
 
     public AssessorProfileAppointmentForm() {

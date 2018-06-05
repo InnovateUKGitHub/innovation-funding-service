@@ -3,6 +3,7 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
@@ -35,10 +36,6 @@ import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -61,6 +58,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -112,9 +110,6 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     @Autowired
     private ReviewRepository reviewRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private AvailableAssessorMapper availableAssessorMapper;
@@ -210,13 +205,17 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
                 reviewInviteRepository.getByIdIn(inviteIds),
-                invite -> sendInviteNotification(
-                        assessorInviteSendResource.getSubject(),
-                        customTextPlain,
-                        customTextHtml,
-                        invite.sendOrResend(loggedInUserSupplier.get(), now()),
-                        Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL
-                )
+                invite -> {
+                    updateParticipantStatus(invite);
+
+                    return sendInviteNotification(
+                            assessorInviteSendResource.getSubject(),
+                            customTextPlain,
+                            customTextHtml,
+                            invite.sendOrResend(loggedInUserSupplier.get(), now()),
+                            Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL
+                    );
+                }
         ));
     }
 
@@ -224,14 +223,14 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
             final Page<AssessmentParticipant> pagedResult = assessmentParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId, pageable);
 
-            return serviceSuccess(new AvailableAssessorPageResource(
-                    pagedResult.getTotalElements(),
-                    pagedResult.getTotalPages(),
-                    simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResource),
-                    pagedResult.getNumber(),
-                    pagedResult.getSize()
-            ));
-        }
+        return serviceSuccess(new AvailableAssessorPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResource),
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
+    }
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
@@ -272,9 +271,9 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
                                                                                    Pageable pageable,
                                                                                    List<ParticipantStatus> statuses) {
         Page<ReviewParticipant> pagedResult = reviewParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(
-                    competitionId,
-                    statuses,
-                    pageable);
+                competitionId,
+                statuses,
+                pageable);
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
@@ -311,11 +310,11 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     public ServiceResult<List<ReviewParticipantResource>> getAllInvitesByUser(long userId) {
         List<ReviewParticipantResource> reviewParticipantResources =
                 reviewParticipantRepository
-                .findByUserIdAndRole(userId, PANEL_ASSESSOR)
-                .stream()
-                .filter(participant -> now().isBefore(participant.getInvite().getTarget().getAssessmentPanelDate()))
-                .map(reviewParticipantMapper::mapToResource)
-                .collect(toList());
+                        .findByUserIdAndRole(userId, PANEL_ASSESSOR)
+                        .stream()
+                        .filter(participant -> now().isBefore(participant.getInvite().getTarget().getAssessmentPanelDate()))
+                        .map(reviewParticipantMapper::mapToResource)
+                        .collect(toList());
 
         reviewParticipantResources.forEach(this::determineStatusOfPanelApplications);
 
@@ -328,7 +327,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
 
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessors_to_assessors_panel_text.txt",
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, PREVIEW_TEMPLATES_PATH + "invite_assessors_to_assessors_panel_text.txt",
                 arguments).getSuccess();
     }
 
@@ -387,11 +386,10 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(ReviewParticipant participant) {
         Competition competition = participant.getProcess();
-        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
+        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
         applicationsInPanel.forEach(application -> {
             Review review = new Review(application, participant);
-            review.setActivityState(pendingActivityState);
+            review.setProcessState(ReviewState.PENDING);
             reviewRepository.save(review);
         });
         return serviceSuccess();
@@ -486,7 +484,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     private void determineStatusOfPanelApplications(ReviewParticipantResource reviewParticipantResource) {
 
         List<Review> reviews = reviewRepository.
-                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                         reviewParticipantResource.getUserId(),
                         reviewParticipantResource.getCompetitionId());
 
@@ -494,6 +492,14 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     }
 
     private Long getApplicationsPendingForPanelCount(List<Review> reviews) {
-        return reviews.stream().filter(review -> review.getActivityState().equals(ReviewState.PENDING)).count();
+        return reviews.stream().filter(review -> review.getProcessState().equals(ReviewState.PENDING)).count();
+    }
+
+    private void updateParticipantStatus(ReviewInvite invite){
+        ReviewParticipant reviewParticipant = reviewParticipantRepository.getByInviteHash(invite.getHash());
+        if(reviewParticipant.getStatus() != PENDING){
+            reviewParticipant.setStatus(PENDING);
+            reviewParticipantRepository.save(reviewParticipant);
+        }
     }
 }

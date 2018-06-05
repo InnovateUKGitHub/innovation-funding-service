@@ -2,11 +2,10 @@ package org.innovateuk.ifs.project.financechecks.viewmodel;
 
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
@@ -82,7 +81,7 @@ public class ProjectFinanceChecksViewModel {
         return pendingQueries;
     }
 
-    public void setPendingQueries(List<ThreadViewModel> queries) {
+    public void setPendingQueries(List<ThreadViewModel> pendingQueries) {
         this.pendingQueries = pendingQueries;
     }
 
@@ -90,7 +89,7 @@ public class ProjectFinanceChecksViewModel {
         return awaitingResponseQueries;
     }
 
-    public void setAwaitingResponseQueries(List<ThreadViewModel> queries) {
+    public void setAwaitingResponseQueries(List<ThreadViewModel> awaitingResponseQueries) {
         this.awaitingResponseQueries = awaitingResponseQueries;
     }
 
@@ -98,7 +97,7 @@ public class ProjectFinanceChecksViewModel {
         return closedQueries;
     }
 
-    public void setClosedQueries(List<ThreadViewModel> queries) {
+    public void setClosedQueries(List<ThreadViewModel> closedQueries) {
         this.closedQueries = closedQueries;
     }
 

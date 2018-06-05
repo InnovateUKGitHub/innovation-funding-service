@@ -2,61 +2,79 @@ package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
+import org.mockito.Mock;
 
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-
 public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest<GrantOfferLetterPermissionRules> {
+
     private ProjectResource projectResource1;
     private Role innovationLeadRole = Role.INNOVATION_LEAD;
     private UserResource innovationLeadUserResourceOnProject1;
+    private ProjectProcess projectProcess;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private InnovationLeadRepository innovationLeadRepository;
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Before
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(innovationLeadRole)).build();
-        AssessmentParticipant competitionParticipant = newAssessmentParticipant().withUser(innovationLeadUserOnProject1).build();
+        InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
         Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
         projectResource1 = newProjectResource().withApplication(applicationResource1).build();
+        projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
         when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
-        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(Collections.singletonList(competitionParticipant));
+        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
     }
 
     @Test
     public void testLeadPartnersCanCreateSignedGrantOfferLetter() {
-
-        ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource()
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setupUserAsLeadPartner(project, user);
 
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.leadPartnerCanUploadGrantOfferLetter(project, user));
     }
 
@@ -73,13 +91,16 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
     @Test
     public void testProjectManagerCanCreateSignedGrantOfferLetter() {
-        ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource()
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setUpUserAsProjectManager(project, user);
 
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.projectManagerCanUploadGrantOfferLetter(project, user));
-
     }
 
     @Test
@@ -228,13 +249,16 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
     @Test
     public void testProjectManagerCanSubmitOfferLetter() {
-        ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource()
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setUpUserAsProjectManager(project, user);
 
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.projectManagerSubmitGrantOfferLetter(ProjectCompositeId.id(project.getId()), user));
-
     }
 
     @Test
@@ -249,11 +273,15 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
     @Test
     public void testCompAdminsCanApproveSignedGrantOfferLetters() {
-        ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource()
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setUpUserAsCompAdmin(project, user);
 
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
     }
 
@@ -269,13 +297,16 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
     @Test
     public void testLeadPartnerCanDeleteSignedGrantOfferLetter() {
-        ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource()
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setupUserAsLeadPartner(project, user);
 
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.leadPartnerCanDeleteSignedGrantOfferLetter(project, user));
-
     }
 
     @Test
@@ -291,13 +322,21 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
     @Test
     public void testProjectFinanceUserCanSendGrantOfferLetter() {
-        ProjectResource project = newProjectResource().build();
+        ProjectResource project = newProjectResource()
+                .withProjectState(ProjectState.SETUP)
+                .build();
+
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.internalUserCanSendGrantOfferLetter(project, projectFinanceUser()));
     }
 
     @Test
     public void testCompAdminsUserCanSendGrantOfferLetter() {
-        ProjectResource project = newProjectResource().build();
+        ProjectResource project = newProjectResource()
+                .withProjectState(ProjectState.SETUP)
+                .build();
+
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.internalUserCanSendGrantOfferLetter(project, compAdminUser()));
     }
 

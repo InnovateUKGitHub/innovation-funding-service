@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
@@ -11,16 +11,16 @@ import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseReposit
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.AssessorScoreAverageCollector;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +67,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     private AssessmentRepository assessmentRepository;
 
     @Autowired
-    private ValidationUtil validationUtil;
+    private ApplicationValidationUtil validationUtil;
 
     @Autowired
     private FormInputService formInputService;
@@ -105,7 +105,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         for (AssessorFormInputResponse response : responses) {
             if (response.getFormInput().getType() == FormInputType.ASSESSOR_APPLICATION_IN_SCOPE) {
                 totalScope++;
-                if (response.getValue().equals("true")) {
+                if ("true".equals(response.getValue())) {
                     totalInScope++;
                 }
             }

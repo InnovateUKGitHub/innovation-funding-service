@@ -74,7 +74,7 @@ public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationT
         List<FinanceCostTotalResource> costTotalResources = getCostTotalResources();
 
         CompletableFuture<ResponseEntity<Void>> sendCostTotalsCompletable = asyncRestCostTotalEndpoint
-                .sendCostTotalsCompletable(costTotalResources);
+                .sendCostTotalsCompletable(1L, costTotalResources);
 
         sendCostTotalsCompletable.get();
     }
@@ -89,9 +89,9 @@ public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationT
                             OVERHEADS,
                             MATERIALS)
                     .withTotal(
-                            BigDecimal.valueOf(5970.00),
-                            BigDecimal.valueOf(552.35),
-                            BigDecimal.valueOf(3081.50)
+                            new BigDecimal("5970.999999"),
+                            new BigDecimal("552.350000"),
+                            new BigDecimal("3081.505995")
                     )
                     .build(3);
         }

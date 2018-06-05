@@ -124,7 +124,7 @@
         <div id="invite-only-guidance" class="panel">
             <p>
                 Selecting invite only excludes the competition from the competition listing page available to the public.
-                A url to the competition overview page displays below when the competition is published.
+                A URL to the competition overview page will be displayed on the public content page once the competition is published.
             </p>
         </div>
     </th:block>
@@ -372,11 +372,11 @@
 
 <!-- =================== Public content section - Supporting information  ========================================== -->
 <div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>Text entered into this section will appear within the supporting information tab.</p>
     <th:block th:if="${model.readOnly}">
         <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the supporting information tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
         <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
@@ -384,11 +384,11 @@
 
 <!-- =================== Public content section - How to apply  ==================================================== -->
 <div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>Text entered into this section will appear within the how to apply tab.</p>
     <th:block th:if="${model.readOnly}">
         <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the how to apply tab.</p>
         <h2 class="heading-medium">Content</h2>
         <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>

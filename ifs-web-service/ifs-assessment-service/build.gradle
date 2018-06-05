@@ -1,6 +1,3 @@
-configurations {
-    providedRuntime
-}
 
 project.version = assessmentServiceVersion
 tagDocker.tag = assessmentServiceVersion
@@ -18,6 +15,10 @@ def enabled = project.hasProperty('ifs.assessment-service.enabled') ? project.pr
     task.enabled = enabled
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
 
 ext.serverContext = '/assessment'
 
@@ -26,9 +27,12 @@ dependencies {
 
     compile "commons-io:commons-io:2.5"
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(":ifs-commons").sourceSets.test.output
-    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
+
+jar.dependsOn ":ifs-web-service:gulp_default"

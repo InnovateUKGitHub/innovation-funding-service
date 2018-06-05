@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,5 +60,10 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<ProjectResource> createProjectFromApplicationId(Long applicationId) {
         return postWithRestResult(projectRestURL + "/create-project/application/" + applicationId, ProjectResource.class);
+    }
+
+    @Override
+    public RestResult<Void> withdrawProject(long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/withdraw");
     }
 }

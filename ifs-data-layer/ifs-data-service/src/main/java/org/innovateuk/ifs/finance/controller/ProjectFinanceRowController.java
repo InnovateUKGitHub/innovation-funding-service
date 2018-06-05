@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.finance.controller;
 
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class ProjectFinanceRowController {
     private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
-    private ValidationUtil validationUtil;
+    private ApplicationValidationUtil validationUtil;
 
     /**
      * Used for adding new cost items to project costs table

@@ -8,6 +8,8 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.junit.Assert.assertArrayEquals;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
@@ -18,14 +20,14 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(mediaTypesString(FileTypeCategory.PDF))
+            singletonList(mediaTypesString(PDF))
     );
 
     private Error spreadsheetOnlyErrorFromDataLayer = fieldError(
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(mediaTypesString(FileTypeCategory.SPREADSHEET))
+            singletonList(mediaTypesString(SPREADSHEET))
     );
 
     private Error pdfOrSpreadsheetOnlyErrorFromDataLayer = fieldError(
@@ -33,8 +35,8 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
             singletonList(
-                    mediaTypesString(FileTypeCategory.SPREADSHEET) + ", " +
-                            mediaTypesString(FileTypeCategory.PDF)
+                    mediaTypesString(SPREADSHEET) + ", " +
+                            mediaTypesString(PDF)
             )
     );
 
@@ -42,7 +44,7 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(mediaTypesString(FileTypeCategory.PDF) + ", application/nomatch")
+            singletonList(mediaTypesString(PDF) + ", application/nomatch")
     );
 
     @Test
@@ -79,7 +81,7 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
         List<Error> errors = new ValidMediaTypesFileUploadErrorTranslator()
                 .translateFileUploadErrors(e -> "formInput[123]", singletonList(errorFromDataLayer));
 
-        Error expectedSpecialisedError = fieldError("formInput[123]", "application/madeup", expectedErrorKey);
+        Error expectedSpecialisedError = fieldError("formInput[123]", "application/madeup", expectedErrorKey, errorFromDataLayer.getArguments());
 
         assertArrayEquals(new Error[] {expectedSpecialisedError}, errors.toArray());
     }

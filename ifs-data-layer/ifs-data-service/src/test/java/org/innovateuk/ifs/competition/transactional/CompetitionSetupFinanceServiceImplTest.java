@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -25,6 +28,12 @@ import static org.mockito.Mockito.when;
  * Tests the CompetitionSetupFinanceServiceImpl with mocked repository.
  */
 public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<CompetitionSetupFinanceServiceImpl> {
+
+    @Mock
+    private CompetitionSetupTransactionalService competitionSetupTransactionalServiceMock;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
 
     @Override
     protected CompetitionSetupFinanceServiceImpl supplyServiceUnderTest() {

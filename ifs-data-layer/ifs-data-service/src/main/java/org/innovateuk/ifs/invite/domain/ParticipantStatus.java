@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.domain;
 
-import org.innovateuk.ifs.util.enums.Identifiable;
+import org.innovateuk.ifs.identity.Identifiable;
 
 /**
  * The status of a {@link Participant}.
@@ -11,6 +11,7 @@ import org.innovateuk.ifs.util.enums.Identifiable;
  *  () -> PENDING
  *  PENDING -> ACCEPTED
  *  PENDING -> REJECTED
+ *  REJECTED -> PENDING
  * </pre></blockquote>
  *
  * @see Participant#setStatus(ParticipantStatus)

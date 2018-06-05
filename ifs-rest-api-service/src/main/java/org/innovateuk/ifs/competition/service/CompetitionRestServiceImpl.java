@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +25,6 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
         return getWithRestResult(competitionsRestURL + "/findAll", competitionResourceListType());
-    }
-
-    @Override
-    public RestResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
-        return getWithRestResult(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType());
     }
 
     @Override
@@ -93,7 +88,13 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     }
 
     @Override
+    public RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
+        return putWithRestResult(competitionsRestURL + "/" + competitionId + "/updateTermsAndConditions/" + termsAndConditionsId, Void.class);
+    }
+
+    @Override
     public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
         return getWithRestResult(competitionsTypesRestURL + "/findAll", competitionTypeResourceListType());
     }
+
 }

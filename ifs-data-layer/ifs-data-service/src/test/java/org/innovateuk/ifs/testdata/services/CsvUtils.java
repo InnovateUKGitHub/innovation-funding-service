@@ -14,6 +14,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -328,6 +330,8 @@ public class CsvUtils {
         public List<String> collaborators;
         public ZonedDateTime submittedDate;
         public ApplicationState status;
+        public boolean createApplicationResponses;
+        public boolean createFinanceResponses;
         public boolean markFinancesComplete;
         public String researchCategory;
         public String innovationArea;
@@ -346,6 +350,8 @@ public class CsvUtils {
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
             status = ApplicationState.valueOf(line.get(i++).toUpperCase());
+            createApplicationResponses = nullableBoolean(line.get(i++));
+            createFinanceResponses = nullableBoolean(line.get(i++));
             markFinancesComplete = nullableBoolean(line.get(i++));
             researchCategory = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));

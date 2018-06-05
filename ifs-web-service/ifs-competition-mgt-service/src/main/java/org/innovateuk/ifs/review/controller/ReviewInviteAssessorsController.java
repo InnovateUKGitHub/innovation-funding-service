@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.review.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -45,6 +47,8 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
         " panels if they competition supports them", securedType = ReviewInviteAssessorsController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewInviteAssessorsController extends CompetitionManagementCookieController<ReviewSelectionForm> {
+
+    private static final Log LOG = LogFactory.getLog(ReviewInviteAssessorsController.class);
 
     private static final String SELECTION_FORM = "reviewSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
@@ -154,6 +158,7 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
+            LOG.error("exception thrown selecting assessors for invite list", e);
             return createFailureResponse();
         }
     }
@@ -179,6 +184,7 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
+            LOG.error("exception thrown adding assessors to invite list", e);
             return createFailureResponse();
         }
     }

@@ -64,7 +64,7 @@ the days remaining should be correct (Top of the page)
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 the days remaining should be correct (Applicant's dashboard)
-    [Arguments]    ${END_DATE}
+    [Arguments]    ${END_DATE}  ${applicationName}
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    UTC    result_format=%Y-%m-%d    exclude_millis=true
@@ -73,7 +73,7 @@ the days remaining should be correct (Applicant's dashboard)
     ...    ELSE    set variable    ${CURRENT_DATE}
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${END_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.in-progress li:nth-child(3) .days-remaining
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    jQuery=.in-progress li:contains("${applicationName}") .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 Get competitions id and set it as suite variable
@@ -214,7 +214,7 @@ get organisation id by name
 get table id by name
     [Arguments]  ${table}  ${name}
     Connect to Database  @{database}
-    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`='${name}';
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`="${name}";
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0
@@ -231,13 +231,22 @@ verify first date is greater than or equal to second
     Should be true  '${date1}'>='${date2}'
 
 Set predefined date variables
+    ${status}  ${value} =  run keyword and ignore error  Variable Should Exist  ${tomorrowday}
+    Run Keyword If  '${status}' == 'FAIL'  Set global date variables
+
+Set global date variables
     ${month} =          get tomorrow month
-    set suite variable  ${month}
+    set global variable  ${month}
     ${nextMonth} =  get next month
-    set suite variable  ${nextMonth}
+    set global variable  ${nextMonth}
     ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
+    Set global variable  ${nextyear}
     ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
+    Set global variable  ${tomorrowday}
     ${monthWord} =      get month as word
-    set suite variable  ${monthWord}
+    set global variable  ${monthWord}
+
+Delete user from terms and conditions database
+    [Arguments]    ${user_id}
+    Connect to Database  @{database}
+    execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}';

@@ -70,6 +70,7 @@ The User can Add and Remove Assessors
     [Tags]
     Given The user clicks the button/link  link=Find
     And the user clicks the button/link    jQuery=a:contains("41 to")
+    And the user clicks the button/link    jQuery=a:contains("61 to")
     Then the user clicks the button/link   jQuery=input[value="${getUserId("${invitedAssessor}")}"] ~ label
     And the user should see the element    jQuery=.form-hint:contains("1 assessors selected")
     And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
@@ -78,7 +79,6 @@ The User can Add and Remove Assessors
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
-    And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link               link=Invite
     And The user clicks the button/link                jQuery=td:contains("Will Smith") ~ td .buttonlink:contains("Remove")
     Then The user should not see the text in the page  Will Smith
@@ -117,6 +117,7 @@ The user can select the profile link
     [Documentation]    INFUND-6669
     [Tags]
     Given the user clicks the button/link  jQuery=a:contains("41 to")
+    Given the user clicks the button/link  jQuery=a:contains("61 to")
     When the user clicks the button/link   link=Will Smith
     Then the user should see the element   jQuery=h3:contains("Email address") + p:contains("${invitedAssessor}")
     Then the user should see the element   jQuery=h3:contains("Phone") + p:contains("28572565937")
@@ -240,12 +241,6 @@ The key statistics are calculated
     ${DECLINED_ASSESSORS}=    Get matching xpath count    //*[text()="Invite declined"]
     ${DECLINED_COUNT}=    Get text    css=div:nth-child(3) > div > span
     Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${DECLINED_COUNT}
-
-the calculations of the Assessors on invite list should be correct
-    #Calculation of the Assessors on invite list
-    ${ASSESSORS_ON_LIST}=    Get matching xpath count    //*[@id="content"]/form/div[2]/table/tbody/tr
-    ${ASSESSORS_COUNT}=    Get text    jQuery=.highlight-panel:contains("Assessors on invite list") .heading-large
-    Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
 
 the user invites multiple assessors
     the user selects the checkbox  assessor-row-1

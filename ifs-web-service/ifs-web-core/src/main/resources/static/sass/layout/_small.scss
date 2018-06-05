@@ -190,7 +190,7 @@ button,
 table {
   .button {
     &:last-child {
-      margin-right: 0;
+      margin-right: 3px;
     }
   }
 }
@@ -259,13 +259,13 @@ col {
 */
 .icon-print {
   @include device-pixel-ratio() {
-    background-image: file-url("icons/icon-print-2x.png");
+    background-image: file-url("ifs-images/icons/icon-print-2x.png");
     background-size: 100%;
   }
 
   width: 16px;
   height: 18px;
-  background-image: file-url("icons/icon-print.png");
+  background-image: file-url("ifs-images/icons/icon-print.png");
 }
 
 .button-secondary{

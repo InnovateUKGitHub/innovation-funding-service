@@ -5,8 +5,8 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -43,7 +43,7 @@ public class UserPermissionRules {
 
     private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole());
 
-    private static List<Role> ASSESSOR_ROLES = asList(ASSESSOR, PANEL_ASSESSOR);
+    private static List<Role> ASSESSOR_ROLES = asList(ASSESSOR, PANEL_ASSESSOR, INTERVIEW_ASSESSOR);
 
     private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> ASSESSOR_ROLES.contains(role.getRole());
 
@@ -206,6 +206,11 @@ public class UserPermissionRules {
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
     public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "AGREE_TERMS", description = "A user can accept the site terms and conditions")
+    public boolean usersCanAgreeSiteTermsAndConditions(UserResource userToUpdate, UserResource user) {
+        return userToUpdate.getId().equals(user.getId());
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {

@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,23 +20,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CompetitionPostSubmissionControllerTest extends BaseControllerMockMVCTest<CompetitionPostSubmissionController> {
 
+    @Mock
+    private CompetitionService competitionServiceMock;
+
+    @Mock
+    private ApplicationNotificationService applicationNotificationServiceMock;
+
     @Override
     protected CompetitionPostSubmissionController supplyControllerUnderTest() {
         return new CompetitionPostSubmissionController();
-    }
-
-    @Test
-    public void notifyAssessors() throws Exception {
-        final Long competitionId = 1L;
-
-        when(competitionServiceMock.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
-        when(assessorServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/competition/postSubmission/{id}/notify-assessors", competitionId))
-                .andExpect(status().isOk());
-
-        verify(competitionServiceMock, only()).notifyAssessors(competitionId);
-        verify(assessorServiceMock).notifyAssessorsByCompetition(competitionId);
     }
 
     @Test

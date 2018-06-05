@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.List;
 
@@ -17,6 +17,8 @@ public interface ProjectRestService {
     RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId);
 
     RestResult<ProjectResource> getByApplicationId(Long applicationId);
+
+    RestResult<Void> withdrawProject(long projectId);
 
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 

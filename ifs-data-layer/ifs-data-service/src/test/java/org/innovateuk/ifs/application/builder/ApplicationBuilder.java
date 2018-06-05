@@ -3,14 +3,12 @@ package org.innovateuk.ifs.application.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,7 +20,6 @@ import java.util.function.BiConsumer;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuilder> {
 
@@ -53,16 +50,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     public ApplicationBuilder withApplicationState(ApplicationState... applicationStates) {
-        return withActivityState(
-                simpleMap(
-                        applicationStates,
-                        applicationState -> new ActivityState(ActivityType.APPLICATION, applicationState.getBackingState())
-                )
-                        .toArray(new ActivityState[applicationStates.length])
-        );
+        return withActivityState(applicationStates);
     }
 
-    public ApplicationBuilder withActivityState(ActivityState... activityStates) {
+    public ApplicationBuilder withActivityState(ApplicationState... activityStates) {
         return withArray((activityState, application)
                         -> setField("applicationProcess",
                             new ApplicationProcess(application, null, activityState), application

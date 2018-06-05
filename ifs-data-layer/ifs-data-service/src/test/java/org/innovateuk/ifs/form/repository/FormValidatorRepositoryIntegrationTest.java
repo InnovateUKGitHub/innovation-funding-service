@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.application.validator.EmailValidator;
+import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.form.domain.FormValidator;
-import org.innovateuk.ifs.validation.validator.EmailValidator;
-import org.innovateuk.ifs.validation.validator.NotEmptyValidator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -10,6 +10,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 ...
 ...               INFUND-6706 Mismatch in MO status between dashboard and consortium table
+...
+...               IFS-3553 Email subject for Monitoring Officer to include competition name and application ID
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -132,11 +134,11 @@ MO details can be added
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details(email step)
-    [Documentation]    INFUND-2630, INFUND-2632, INFUND-2633
+    [Documentation]    INFUND-2630, INFUND-2632, INFUND-2633, IFS-3553
     [Tags]    Email    HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Your Monitoring Officer    has now been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
 
 MO details can be edited and viewed in the Project setup status page
     [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
@@ -159,11 +161,11 @@ MO details can be edited and viewed in the Project setup status page
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details edit(email step)
-    [Documentation]    INFUND-2630, INFUND-2634
+    [Documentation]    INFUND-2630, INFUND-2634, IFS-3553
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email from the second mailbox    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Your Monitoring Officer    has now been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
@@ -263,16 +265,16 @@ the lead partner fills in project details
     the user clicks the button/link           css=button[type="submit"]
     the user clicks the button/link           link=Project address
     the user selects the radio button         addressType    REGISTERED
-    the user clicks the button/link           css=button[type="submit"]
+    the user clicks the button/link           jQuery=.button:contains("Save project address")
     the user clicks the button/link           link=Project Manager
     the user selects the radio button         projectManager  projectManager2
-    the user clicks the button/link           css=button[type="submit"]
+    the user clicks the button/link           id=save
     the user clicks the button/link           jQuery=td:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
     the user selects the radio button         financeContact  financeContact2
-    the user clicks the button/link           css=button[type="submit"] #Save finance contact button
+    the user clicks the button/link           id=save  #Save finance contact button
     And the user clicks the button/link       jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
-    And the user enters text to a text field  css=#postCode  ${postcode}
-    And the user clicks the button/link       css=button[type="submit"] #Save project location button
+    And the user enters text to a text field  css=#postcode  ${postcode}
+    And the user clicks the button/link       css=button[type="submit"]  #Save project location button
 
 internal user can see that MO can be assigned
     log in as a different user   &{internal_finance_credentials}
@@ -285,10 +287,10 @@ the academic partner fills in their finance contact
     the user clicks the button/link       link=Project details
     the user clicks the button/link       jQuery=td:contains("${organisationEggsName}") ~ td a:contains("Select finance contact")
     the user selects the radio button     financeContact  financeContact2
-    the user clicks the button/link       css=button[type="submit"] #Save finance contact button
+    the user clicks the button/link       id=save  #Save finance contact button
     the user clicks the button/link       jQuery=#project-details-finance td:contains("EGGS") ~ td a:contains("Select project location")
-    the user enters text to a text field  css=#postCode  ${postcode}
-    the user clicks the button/link       css=button[type="submit"] #Save project location button
+    the user enters text to a text field  css=#postcode  ${postcode}
+    the user clicks the button/link       css=button[type="submit"]  #Save project location button
 
 the industrial partner fills in their finance contact
     log in as a different user            &{collaborator1_credentials}
@@ -296,7 +298,7 @@ the industrial partner fills in their finance contact
     the user clicks the button/link       link=Project details
     the user clicks the button/link       jQuery=td:contains("${organisationLudlowName}") ~ td a:contains("Select finance contact")
     the user selects the radio button     financeContact  financeContact1
-    the user clicks the button/link       css=button[type="submit"] #Save finance contact button
+    the user clicks the button/link       id=save  #Save finance contact button
     the user clicks the button/link       jQuery=#project-details-finance td:contains("Ludlow") ~ td a:contains("Select project location")
-    the user enters text to a text field  css=#postCode  ${postcode}
-    the user clicks the button/link       css=button[type="submit"] #Save project location button
+    the user enters text to a text field  css=#postcode  ${postcode}
+    the user clicks the button/link       css=button[type="submit"]  #Save project location button

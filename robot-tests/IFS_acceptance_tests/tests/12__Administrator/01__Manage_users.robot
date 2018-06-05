@@ -32,7 +32,7 @@ Administrator can see the read only view of internal user profile
     [Documentation]  INFUND-606
     [Tags]
     When the user clicks the button/link  link=John Doe
-    Then the user should see the element  jQuery=h1:contains("View internal user's details")
+    Then the user should see the element  jQuery=h1:contains("View internal user details")
     And the user should see the element   jQuery=dt:contains("Email address") + dd:contains("${Comp_admin1_credentials["email"]}")
     And the user should see the element   jQuery=dt:contains("Role") + dd:contains("Competition Administrator")
     And the user should see the element   jQuery=.form-footer__info:contains("Created by IFS Web System User")
@@ -111,9 +111,7 @@ Account creation validation checks
     [Tags]
     Given the user clicks the button/link   jQuery=.button:contains("Create account")
     Then the user should see a field error  Please enter a first name.
-    And the user should see a field error   Your first name should have at least 2 characters.
     When the user should see a field error  Please enter a last name.
-    Then the user should see a field error  Your last name should have at least 2 characters.
     And the user should see the element     jQuery=li[data-valid="false"]:contains("be at least 8 characters long")
 
 New user account is created and verified
@@ -161,18 +159,18 @@ Inviting the same user for the different role again should also give an error
     And the user clicks the button/link        jQuery=.button:contains("Send invite")
     Then The user should see a summary error   This email address is already in use.
 
-Administrator can navigate to edit page to edit the internal user's details
+Administrator can navigate to edit page to edit the internal user details
     [Documentation]  IFS-18
     [Tags]
-    [Setup]  the user navigates to the View internal users details  New Administrator  active
+    [Setup]  the user navigates to the View internal user details  New Administrator  active
     Given the user clicks the button/link         link=Edit
-    And the user should see the text in the page  Edit internal user's details
+    And the user should see the text in the page  Edit internal user details
     And the user should see the element           css=#firstName[value="New"]
     And the user should see the element           css=#lastName[value="Administrator"]
     And the user should see the element           jQuery=dt:contains("Email address") ~ dd:contains("ifs.innovationLead")
     And the user should see the dropdown option selected  IFS Administrator  id=role
 
-Server side validation for edit internal user's details
+Server side validation for edit internal user details
     [Documentation]  IFS-18
     [Tags]
     Given the user enters text to a text field  id=firstName  ${empty}
@@ -183,7 +181,7 @@ Server side validation for edit internal user's details
     And the user should see a field error       Please enter a last name.
     And the user should see a field error       Your last name should have at least 2 characters.
 
-Client side validations for edit internal user's details
+Client side validations for edit internal user details
     [Documentation]  IFS-18
     [Tags]
     Given the user enters text to a text field  id=firstName  A
@@ -193,11 +191,11 @@ Client side validations for edit internal user's details
     Then the user should not see the element   jQuery=.error-message:contains("Please enter a last name.")
     And the user should see the element        jQuery=.error-message:contains("Your last name should have at least 2 characters.")
 
-Administrator can successfully edit internal user's details
+Administrator can successfully edit internal user details
     [Documentation]  IFS-18
     [Tags]  HappyPath  InnovationLead
     [Setup]  log in as a different user                      &{ifs_admin_user_credentials}
-    Given the user navigates to the View internal users details  New Administrator  active
+    Given the user navigates to the View internal user details  New Administrator  active
     And the user clicks the button/link                      link=Edit
     When the user enters text to a text field                id=firstName  Innovation
     Then the user enters text to a text field                id=lastName  Lead
@@ -222,7 +220,7 @@ Administrator is able to disable internal users
     [Documentation]  IFS-644
     [Tags]
     [Setup]  log in as a different user   &{ifs_admin_user_credentials}
-    Given the user navigates to the View internal users details  Innovation Lead  active
+    Given the user navigates to the View internal user details  Innovation Lead  active
     And the user clicks the button/link   link=Edit
     Then the user should see the element  css=.form-group input
     When the user clicks the button/link  jQuery=button:contains("Deactivate user")
@@ -239,7 +237,7 @@ Deactivated user cannot login until he is activated
     [Setup]  the user logs out if they are logged in
     Given the deactivated user is not able to login
     When Logging in and Error Checking                  &{ifs_admin_user_credentials}
-    Then the user navigates to the View internal users details  Innovation Lead  inactive
+    Then the user navigates to the View internal user details  Innovation Lead  inactive
     When the user clicks the button/link                jQuery=button:contains("Reactivate user")
     Then the user clicks the button/link                jQuery=button:contains("Yes, reactivate")
     When the user navigates to the page                 ${server}/management/admin/users/active
@@ -283,7 +281,7 @@ the user verifies pending tab content
     # On production the accepted domain is innovateuk.gov.uk
     run keyword if  ${docker}!=1  the user should see the element  jQuery=td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("${remoteEmailInvtedUser}")
 
-the user navigates to the View internal users details
+the user navigates to the View internal user details
     [Arguments]  ${user}  ${status}
     the user navigates to the page   ${server}/management/admin/users/${status}
     the user clicks the button/link  link=${user}

@@ -1,6 +1,8 @@
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/release.gradle"
+apply from: "gradle-support/taurus.gradle"
+
 
 if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
     apply from: "gradle-support/zipkin.gradle"
@@ -28,6 +30,10 @@ def isNamedEnv() {
 
 def isNotProductionEnv() {
     !"production".equals(openshiftEnv)
+}
+
+def isSysIntEnv() {
+    "sysint".equals(openshiftEnv)
 }
 
 apply from: "gradle-support/openshift-support.gradle"

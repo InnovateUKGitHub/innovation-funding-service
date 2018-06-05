@@ -65,7 +65,7 @@
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
                                th:value="${iteration.index != 0}" />
 
-                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
+                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="button button-clear" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
@@ -206,9 +206,9 @@
     </form>
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='initial')}">
+            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='terms-and-conditions')}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Initial details</span>
+                <span class="pagination-part-title">Terms and conditions</span>
             </a>
         </li>
         <li class="next">

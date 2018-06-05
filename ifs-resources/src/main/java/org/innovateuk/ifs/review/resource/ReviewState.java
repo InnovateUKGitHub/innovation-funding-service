@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.review.resource;
 
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -11,21 +12,23 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
-public enum ReviewState implements ProcessState {
-    CREATED(State.CREATED),
-    PENDING(State.PENDING),
-    REJECTED(State.REJECTED),
-    ACCEPTED(State.ACCEPTED),
-    CONFLICT_OF_INTEREST(State.CONFLICT_OF_INTEREST),
-    WITHDRAWN(State.WITHDRAWN);
+public enum ReviewState implements ProcessState, IdentifiableEnum {
+    CREATED(34, State.CREATED),
+    PENDING(35, State.PENDING),
+    REJECTED(36, State.REJECTED),
+    ACCEPTED(37, State.ACCEPTED),
+    CONFLICT_OF_INTEREST(38, State.CONFLICT_OF_INTEREST),
+    WITHDRAWN(44, State.WITHDRAWN);
 
+    private final long id;
     private final State backingState;
 
     private static final Map<String, ReviewState> assessmentReviewStateMap =
             Stream.of(values()).collect(toMap(ReviewState::getStateName, identity()));
 
     // creates the enum with the chosen type.
-    ReviewState(State backingState) {
+    ReviewState(long id, State backingState) {
+        this.id = id;
         this.backingState = backingState;
     }
 
@@ -53,5 +56,10 @@ public enum ReviewState implements ProcessState {
 
     public static Set<State> getBackingStates(Set<ReviewState> states) {
         return simpleMapSet(states, ReviewState::getBackingState);
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 }

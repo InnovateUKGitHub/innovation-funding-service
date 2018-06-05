@@ -6,28 +6,35 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.threads.mapper.PostMapper;
+import org.innovateuk.ifs.threads.mapper.QueryMapper;
+import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.builder.UserBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.threads.resource.PostResource;
-import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -44,13 +51,14 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -66,6 +74,27 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private FinanceCheckQueriesServiceImpl service;
 
+    @Mock
+    private QueryRepository queryRepositoryMock;
+
+    @Mock
+    private QueryMapper queryMapper;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+
+    @Mock
+    private ProjectFinanceRepository projectFinanceRepositoryMock;
+
+    @Mock
+    private PostMapper postMapper;
+
+    @Mock
+    private NotificationService notificationServiceMock;
+
+    @Mock
+    private AuthenticationHelper authenticationHelperMock;
+
     @Before
     public void before() {
         ReflectionTestUtils.setField(service, "webBaseUrl", webBaseUrl);
@@ -73,9 +102,11 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_findOne() throws Exception {
+
         Long queryId = 1L;
         Query query = new Query(queryId, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, null, null, null, null, false, null, null, null);
+
         when(queryRepositoryMock.findOne(queryId)).thenReturn(query);
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
 
@@ -86,6 +117,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_findAll() throws Exception {
+
         Long contextId = 22L;
         Query query1 = new Query(1L, null, null, null, null, null);
         Query query2 = new Query(2L, null, null, null, null, null);
@@ -108,6 +140,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_create() throws Exception {
+
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
@@ -118,34 +151,64 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
-        User u = newUser().
+        User user = newUser().
                 withEmailAddress("a@b.com").
                 withFirstName("A").
                 withLastName("B").
                 build();
-        Organisation o = newOrganisation().
+
+        Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        User u2 = newUser().
+
+        User user2 = newUser().
                 withEmailAddress("Z@Y.com").
                 withFirstName("Z").
                 withLastName("Y").
                 build();
-        Organisation o2 = newOrganisation().
+
+        Organisation organisation2 = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_FINANCE_CONTACT).withUser(u, u2).withOrganisation(o, o2).build(1);
-        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withRole(PROJECT_FINANCE_CONTACT, PROJECT_FINANCE_CONTACT)
+                .withUser(user, user2)
+                .withOrganisation(organisation, organisation2)
+                .build(1);
 
-        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
+        Competition competition = newCompetition()
+                .withName("Competition 1")
+                .build();
 
-        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId());
+        Application application = newApplication()
+                .withName("Application 1")
+                .withCompetition(competition)
+                .build();
+
+        Project project = newProject()
+                .withProjectUsers(projectUsers)
+                .withPartnerOrganisations(newPartnerOrganisation()
+                .withOrganisation(organisation)
+                .build(1))
+                .withApplication(application)
+                .build();
+
+        ProjectFinance projectFinance = newProjectFinance()
+                .withProject(project)
+                .withOrganisation(organisation)
+                .build();
+
+        NotificationTarget target = new UserNotificationTarget(user.getName(), user.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "http://ifs-local-dev/project-setup/project/" + project.getId(),
+                "applicationId", project.getApplication().getId(),
+                "competitionName", "Competition 1");
 
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
         Long result = service.create(queryToCreate).getSuccess();
@@ -157,6 +220,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_createNoFinanceContact() throws Exception {
+
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
@@ -167,29 +231,44 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
-        User u = newUser().
+        User user = newUser().
                 withEmailAddress("a@b.com").
                 withFirstName("A").
                 withLastName("B").
                 build();
-        Organisation o = newOrganisation().
+
+        Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        User u2 = newUser().
+        User user2 = newUser().
                 withEmailAddress("Z@Y.com").
                 withFirstName("Z").
                 withLastName("Y").
                 build();
-        Organisation o2 = newOrganisation().
+
+        Organisation organisation2 = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(2);
-        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
+        List<ProjectUser> projectUser = newProjectUser()
+                .withRole(PROJECT_MANAGER, PROJECT_PARTNER)
+                .withUser(user, user2)
+                .withOrganisation(organisation, organisation2)
+                .build(2);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        Project project = newProject()
+                .withProjectUsers(projectUser)
+                .withPartnerOrganisations(newPartnerOrganisation()
+                .withOrganisation(organisation).build(1))
+                .build();
+
+        ProjectFinance projectFinance = newProjectFinance()
+                .withProject(project)
+                .withOrganisation(organisation)
+                .build();
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
 
         ServiceResult<Long> result = service.create(queryToCreate);
 
@@ -200,6 +279,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_createNotificationNotSent() throws Exception {
+
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
@@ -210,42 +290,71 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
-        User u = newUser().
-                withEmailAddress("a@b.com").
-                withFirstName("A").
-                withLastName("B").
-                build();
-        Organisation o = newOrganisation().
+        User user = newUser()
+                .withEmailAddress("a@b.com")
+                .withFirstName("A")
+                .withLastName("B")
+                .build();
+
+        Organisation organisation = newOrganisation()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .build();
+
+        User user2 = newUser()
+                .withEmailAddress("Z@Y.com")
+                .withFirstName("Z")
+                .withLastName("Y")
+                .build();
+
+        Organisation organisation2 = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        User u2 = newUser().
-                withEmailAddress("Z@Y.com").
-                withFirstName("Z").
-                withLastName("Y").
-                build();
-        Organisation o2 = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).
-                build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
-        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
+        List<ProjectUser> projectUser = newProjectUser()
+                .withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER)
+                .withUser(user, user2).withOrganisation(organisation, organisation2)
+                .build(1);
 
-        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
+        Competition competition = newCompetition()
+                .withName("Competition 1")
+                .build();
 
-        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId());
+        Application application = newApplication()
+                .withName("Application 1")
+                .withCompetition(competition)
+                .build();
+
+        Project project = newProject()
+                .withProjectUsers(projectUser)
+                .withPartnerOrganisations(newPartnerOrganisation()
+                .withOrganisation(organisation)
+                .build(1))
+                .withApplication(application)
+                .build();
+
+        ProjectFinance projectFinance = newProjectFinance()
+                .withProject(project)
+                .withOrganisation(organisation)
+                .build();
+
+        NotificationTarget target = new UserNotificationTarget(user.getName(), user.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "http://ifs-local-dev/project-setup/project/" + project.getId(),
+                "applicationId", project.getApplication().getId(),
+                "competitionName", "Competition 1");
 
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
 
         assertEquals(false, service.create(queryToCreate).isSuccess());
-
     }
 
     @Test
     public void test_createNoProjectFinance() throws Exception {
+
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
@@ -294,8 +403,10 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         when(queryRepositoryMock.findOne(queryId)).thenReturn(queryInDB);
         when(authenticationHelperMock.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
 
-        setLoggedInUser(newUserResource().withId(loggedInUserId)
-                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource()
+                .withId(loggedInUserId)
+                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE))
+                .build());
 
         assertNull(queryInDB.getClosedBy());
         assertNull(queryInDB.getClosedDate());
@@ -309,6 +420,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_addPost() throws Exception {
+
         Long queryId = 1L;
 
         User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
@@ -318,42 +430,69 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
-
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
-
         when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
 
-        User u = newUser().
-                withEmailAddress("a@b.com").
-                withFirstName("A").
-                withLastName("B").
-                build();
-        Organisation o = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).
-                build();
-        User u2 = newUser().
-                withEmailAddress("Z@Y.com").
-                withFirstName("Z").
-                withLastName("Y").
-                build();
-        Organisation o2 = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).
-                build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(2);
-        Application app = newApplication().withName("App1").build();
-        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
+        User user1 = newUser()
+                .withEmailAddress("a@b.com")
+                .withFirstName("A")
+                .withLastName("B")
+                .build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
+        Organisation organisation = newOrganisation()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .build();
 
-        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
+        User user2 = newUser()
+                .withEmailAddress("Z@Y.com")
+                .withFirstName("Z")
+                .withLastName("Y")
+                .build();
 
-        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
-                                                                  "applicationName", "App1");
+        Organisation organisation2 = newOrganisation()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .build();
+
+        List<ProjectUser> projecetUser = newProjectUser()
+                .withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER)
+                .withUser(user1, user2)
+                .withOrganisation(organisation, organisation2)
+                .build(2);
+
+        Competition competition = newCompetition()
+                .withName("Competition 1")
+                .build();
+
+        Application application = newApplication()
+                .withName("Application 1")
+                .withCompetition(competition)
+                .build();
+
+        Project project = newProject()
+                .withProjectUsers(projecetUser)
+                .withPartnerOrganisations(newPartnerOrganisation()
+                .withOrganisation(organisation)
+                .build(1))
+                .withApplication(application)
+                .build();
+
+        ProjectFinance projectFinance = newProjectFinance()
+                .withProject(project)
+                .withOrganisation(organisation)
+                .build();
+
+        NotificationTarget target = new UserNotificationTarget(user1.getName(), user1.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "http://ifs-local-dev/project-setup/project/" + project.getId(),
+                "applicationId", project.getApplication().getId(),
+                "competitionName", "Competition 1",
+                "applicationName", "Application 1");
 
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
         assertTrue(service.addPost(post, queryId).isSuccess());
@@ -363,6 +502,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_addPostNotFinanceTeam() throws Exception {
+
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.COMP_ADMIN)).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
@@ -458,50 +598,84 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNotificationNotSent() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
+
+        User user = newUser()
+                .withId(33L)
+                .withRoles(singleton(Role.PROJECT_FINANCE))
+                .build();
+
+        PostResource post = new PostResource(null, newUserResource()
+                .withId(33L)
+                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE))
+                .build(), null, null, null);
+
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
-
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
-
         when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
 
-        User u = newUser().
+        User user1 = newUser().
                 withEmailAddress("a@b.com").
                 withFirstName("A").
                 withLastName("B").
                 build();
-        Organisation o = newOrganisation().
+
+        Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        User u2 = newUser().
+
+        User user2 = newUser().
                 withEmailAddress("Z@Y.com").
                 withFirstName("Z").
                 withLastName("Y").
                 build();
-        Organisation o2 = newOrganisation().
+
+        Organisation organisation2 = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
-        Application app = newApplication().withName("App1").build();
-        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation()
-                .withOrganisation(o).build(1)).withApplication(app).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
+        List<ProjectUser> projectUser = newProjectUser()
+                .withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER)
+                .withUser(user1, user2).withOrganisation(organisation, organisation2)
+                .build(1);
 
-        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
+        Competition competition = newCompetition()
+                .withName("Competition 1")
+                .build();
 
-        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
-                "applicationName", "App1");
+        Application application = newApplication()
+                .withName("Application 1")
+                .withCompetition(competition)
+                .build();
+
+        Project project = newProject()
+                .withProjectUsers(projectUser)
+                .withPartnerOrganisations(newPartnerOrganisation()
+                .withOrganisation(organisation)
+                .build(1))
+                .withApplication(application)
+                .build();
+
+        ProjectFinance projectFinance = newProjectFinance()
+                .withProject(project)
+                .withOrganisation(organisation)
+                .build();
+
+        NotificationTarget target = new UserNotificationTarget(user1.getName(), user1.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "http://ifs-local-dev/project-setup/project/" + project.getId(),
+                "applicationId", project.getApplication().getId(),
+                "competitionName", "Competition 1",
+                "applicationName", "Application 1");
 
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
 
         assertTrue(service.addPost(post, queryId).isFailure());

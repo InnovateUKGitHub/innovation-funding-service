@@ -4,11 +4,11 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.FreemarkerNotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.EMAIL_NOTIFICATION_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 public class ApplicationFundingTemplateRenderTest extends BaseIntegrationTest {
@@ -26,14 +26,14 @@ public class ApplicationFundingTemplateRenderTest extends BaseIntegrationTest {
                 new UserNotificationSource("", ""),
                 new UserNotificationTarget("", ""),
                 getTemplatePath("application_funding_text_html.html"),
-                asMap("message", htmlMessage)
+                asMap("message", htmlMessage, "applicationNumber", "123", "applicationName", "something", "competitionName", "competition")
         )
-                .getSuccess();
+        .getSuccess();
 
         assertThat(renderedTemplate).contains(htmlMessage);
     }
 
     private String getTemplatePath(String templateFile) {
-        return EmailNotificationSender.EMAIL_NOTIFICATION_TEMPLATES_PATH + templateFile;
+        return EMAIL_NOTIFICATION_TEMPLATES_PATH + templateFile;
     }
 }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.validator;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.validation.validator.BaseValidator;
+import org.innovateuk.ifs.application.validator.BaseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -11,7 +11,7 @@ import org.springframework.validation.Errors;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_RESEARCH_CATEGORY;
 
 /**

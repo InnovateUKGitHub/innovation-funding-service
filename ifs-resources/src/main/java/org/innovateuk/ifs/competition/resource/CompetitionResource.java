@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.resource;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -8,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +34,7 @@ public class CompetitionResource {
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
-
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
@@ -87,7 +87,7 @@ public class CompetitionResource {
     private Boolean fullApplicationFinance = true;
     private boolean setupComplete = false;
 
-    private boolean useResubmissionQuestion;
+    private Boolean useResubmissionQuestion;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
@@ -95,9 +95,13 @@ public class CompetitionResource {
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
-    private TermsAndConditionsResource termsAndConditions;
+    private GrantTermsAndConditionsResource termsAndConditions;
 
     private boolean locationPerPartner = true;
+
+    //@ZeroDowntime(reference = "IFS-3288", description = "Default value to support requests without a stateAid flag.
+    // This should be removed in the next release.")
+    private Boolean stateAid = Boolean.TRUE;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -498,11 +502,11 @@ public class CompetitionResource {
         this.funders = funders;
     }
 
-    public boolean isUseResubmissionQuestion() {
+    public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
 
-    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+    public void setUseResubmissionQuestion(Boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
@@ -588,11 +592,11 @@ public class CompetitionResource {
         return !isNonFinanceType();
     }
 
-    public TermsAndConditionsResource getTermsAndConditions() {
+    public GrantTermsAndConditionsResource getTermsAndConditions() {
         return termsAndConditions;
     }
 
-    public void setTermsAndConditions(TermsAndConditionsResource termsAndConditions) {
+    public void setTermsAndConditions(GrantTermsAndConditionsResource termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
     }
 
@@ -618,6 +622,14 @@ public class CompetitionResource {
 
     public void setMaxProjectDuration(Integer maxProjectDuration) {
         this.maxProjectDuration = maxProjectDuration;
+    }
+
+    public Boolean getStateAid() {
+        return stateAid;
+    }
+
+    public void setStateAid(final Boolean stateAid) {
+        this.stateAid = stateAid;
     }
 
     @Override
@@ -679,6 +691,7 @@ public class CompetitionResource {
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(locationPerPartner, that.locationPerPartner)
+                .append(stateAid, that.stateAid)
                 .isEquals();
     }
 
@@ -735,6 +748,7 @@ public class CompetitionResource {
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
                 .append(locationPerPartner)
+                .append(stateAid)
                 .toHashCode();
     }
 }

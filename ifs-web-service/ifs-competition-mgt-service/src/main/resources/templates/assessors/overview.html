@@ -34,12 +34,6 @@
                         <small>Declined</small>
                     </div>
                 </div>
-                <div class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
-                        <small>Assessors on invite list</small>
-                    </div>
-                </div>
             </div>
 
             <dl class="standard-definition-list extra-margin">
@@ -74,13 +68,13 @@
             </div>
 
             <form method="GET" th:object="${filterForm}">
-                <div class="search-filters">
+                <div class="search-filters extra-margin">
                     <fieldset>
-                        <legend class="heading-medium">Filter assessors</legend>
+                        <legend class="heading-medium no-margin-top">Filter assessors</legend>
                         <div class="grid-row">
                             <div class="column-third">
                                 <div class="form-group">
-                                    <label for="filterInnovationArea">Innovation area</label>
+                                    <label class="form-label" for="filterInnovationArea">Innovation area</label>
                                     <select name="innovationArea" id="filterInnovationArea" class="form-control" th:field="*{innovationArea}">
                                         <option value="">Any</option>
                                         <option th:each="innovationArea : ${model.innovationAreaOptions}"
@@ -110,17 +104,15 @@
                                  </div>
                             </div>
                         </div>
+                        <div class="grid-row">
+                            <input type="hidden" name="filterChanged" value="1"/>
+                            <div class="column-one alignright">
+                                <button class="button no-margin" type="submit">Filter</button>
+                            </div>
+                        </div>
                    </fieldset>
-
-                    <div class="grid-row">
-                        <input type="hidden" name="filterChanged" value="1"/>
-                        <div class="column-half">
-                            <a href="?page=0&filterChanged=1" class="button button-clear no-margin">Clear filters</a>
-                        </div>
-
-                        <div class="column-half alignright">
-                            <button class="button no-margin" type="submit">Filter</button>
-                        </div>
+                    <div class="clear-search-filter">
+                        <a href="?page=0&filterChanged=1">Clear filters</a>
                     </div>
                 </div>
             </form>
@@ -132,7 +124,8 @@
 
             <div class="grid-row sorting">
                 <div class="column-half">
-                    <span class="heading-large" th:text="${model.pagination.totalCount}">20</span> assessors
+                    <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+                    <span class="heading-small">assessors</span>
                 </div>
             </div>
 
@@ -140,6 +133,7 @@
                   th:action="@{/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
                   th:object="${overviewSelectionForm}"
                   data-multipage-select=""
+                  autocomplete="off"
                   th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
                 <div class="grid-row sorting">

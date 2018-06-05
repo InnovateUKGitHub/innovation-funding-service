@@ -19,20 +19,20 @@
 
         <div class="my-applications">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='heading-large'" />
-            <section th:if="${model.projectsInSetupNotEmpty}" class="projects-in-setup">
+            <section th:unless="${model.projects.empty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="heading-medium">Set up your project</h2>
                     <ul>
-                        <li th:each="project : ${model.projectsInSetup}">
+                        <li th:each="projectView : ${model.projects}">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="@{/project-setup/project/{id}(id=${project.getId()})}" th:text="${(project.name == '' ? model.competitions.get(project.application).getName(): project.name)}">
+                                    <a th:href="${projectView.linkUrl}" th:text="${projectView.title}">
                                         PROJECT NAME
                                     </a>
                                 </h3>
                                 <ul class="application-details">
-                                    <li>Project number: <span th:text="${project.application}">PROJECT NUMBER</span></li>
-                                    <li>Competition: <span th:text="${model.competitions.get(project.application).name}">COMPETITION NAME</span></li>
+                                    <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
+                                    <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>
                             <div class="status">
@@ -45,87 +45,79 @@
                 </div>
             </section>
 
-            <section class="in-progress" th:if="${model.applicationsInProgressNotEmpty}">
+            <section class="in-progress" th:unless="${model.inProgress.empty}">
                 <div class="progress-list">
                     <h2 class="heading-medium" th:text="${model.applicationInProgressText}"/>
                     <ul>
-                        <li class="status-2-col" th:each="app : ${model.applicationsInProgress}" th:classappend="${model.applicationIsAssignedToMe(app.id) ? 'assigned-to-me' : '' }">
-                            <th:block th:unless="${model.applicationIsSubmitted(app.id)}">
-                                <div class="task">
-                                    <h3 class="heading-small" th:with="teamUrl=@{/application/{id}/team(id=${app.id})}, formUrl=@{/application/{id}(id=${app.id})}, noTitle=#{ifs.application.dashboard.no_title}">
-                                        <a th:href="${model.navigateUserToTeamPage(app.id) ? teamUrl : formUrl}"
-                                            th:text="${#strings.isEmpty(app.name) ? noTitle : app.name}"/>
-                                    </h3>
-                                    <ul class="application-details">
-                                        <li>Application number: <span th:text="${app.id}"></span></li>
-                                        <li>Competition: <span th:text="${model.competitions.get(app.id).name}">COMPETITION NAME</span></li>
-                                    </ul>
-                                    <th:block th:if="${model.applicationIsAssignedToMe(app.id)}">
-                                        <div class="action-required">
-                                            <strong>Sections are assigned to you</strong>
-                                        </div>
-                                    </th:block>
-                                </div>
-                                <div class="status">
-                                    <div class="status-msg msg-deadline" th:unless="${model.isApplicationWithin24Hours(app.id)}">
-                                      <strong class="bold-medium days-remaining" th:text="${model.competitions.get(app.id).daysLeft}">DAYS LEFT</strong> <br />
+                        <li class="status-2-col" th:each="inProgressView : ${model.inProgress}" th:classappend="${inProgressView.assignedToMe ? 'assigned-to-me' : '' }">
+                            <div class="task">
+                                <h3 class="heading-small">
+                                    <a th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" />
+                                </h3>
+                                <ul class="application-details">
+                                    <li>Application number: <span th:text="${inProgressView.applicationNumber}"></span></li>
+                                    <li>Competition: <span th:text="${inProgressView.competitionTitle}">COMPETITION NAME</span></li>
+                                </ul>
+                                <th:block th:if="${inProgressView.assignedToMe}">
+                                    <div class="action-required">
+                                        <strong>Sections are assigned to you</strong>
+                                    </div>
+                                </th:block>
+                            </div>
+                            <div class="status">
+                                <th:block th:unless="${inProgressView.submitted}">
+                                    <div class="status-msg msg-deadline" th:unless="${inProgressView.within24Hours}">
+                                      <strong class="bold-medium days-remaining" th:text="${inProgressView.daysLeft}">DAYS LEFT</strong> <br />
                                       days left <br />
                                       Deadline
-                                      <span class="day" th:text="${#temporals.day(model.competitions.get(app.id).endDate)}">END DAY</span>
-                                      <span class="month" th:text="${#temporals.monthName(model.competitions.get(app.id).endDate)}">END MONTH</span>
+                                      <span class="day" th:text="${#temporals.day(inProgressView.endDate)}">END DAY</span>
+                                      <span class="month" th:text="${#temporals.monthName(inProgressView.endDate)}">END MONTH</span>
                                     </div>
-                                    <div class="status-msg msg-deadline-today" th:if="${model.isApplicationWithin24Hours(app.id)}">
-                                        <strong class="bold-medium" th:text="${model.getHoursLeftBeforeSubmit(app.id)}"></strong><br/>
+                                    <div class="status-msg msg-deadline-today" th:if="${inProgressView.within24Hours}">
+                                        <strong class="bold-medium" th:text="${inProgressView.hoursLeftBeforeSubmit}"></strong><br/>
                                         hours left<br/>
-                                        Deadline <th:block th:text="${#temporals.format(model.competitions.get(app.id).endDate, 'hh:mm a')}"/>
-                                        <th:block th:text="${model.isClosingToday(app.id) ? 'today' : 'tomorrow'}"/>
+                                        Deadline <th:block th:text="${#temporals.format(inProgressView.endDate, 'hh:mm a')}"/>
+                                        <th:block th:text="${inProgressView.closingToday ? 'today' : 'tomorrow'}"/>
                                     </div>
-                                    <span class="status-msg msg-progress" th:text="${model.applicationProgress.get(app.id)}+'% complete'">PERCENTAGE COMPLETE</span>
-                                </div>
-                            </th:block>
-                            <th:block th:if="${model.applicationIsSubmitted(app.id)}">
-                                <div class="task">
-                                    <h3 class="heading-small" th:with="noTitle=#{ifs.application.no_title}">
-                                        <a th:href="@{/application/{id}/track(id=${app.id})}"
-                                           th:text="${#strings.isEmpty(app.name) ? noTitle : app.name}">placeholder</a>
-                                    </h3>
-                                    <ul class="application-details">
-                                        <li>Application number: <span th:text="${app.id}"></span></li>
-                                        <li>Competition: <span th:text="${model.competitions.get(app.id).name}">COMPETITION NAME</span></li>
-                                    </ul>
-                                </div>
-                                <div class="status">
-                                    <span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
-                                    <span class="status-msg msg-progress">Application submitted</span>
-                                </div>
-                            </th:block>
+                                    <span class="status-msg msg-progress" th:text="${inProgressView.applicationProgress}+'% complete'">PERCENTAGE COMPLETE</span>
+                                </th:block>
+                                <th:block th:if="${inProgressView.submitted}">
+                                    <th:block th:if="${inProgressView.assignedToInterview}">
+                                        <span class="status-msg msg-progress">Feedback available</span>
+                                        <span class="status-msg msg-progress">Invited to interview</span>
+                                    </th:block>
+                                    <th:block th:unless="${inProgressView.assignedToInterview}">
+                                        <span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
+                                        <span class="status-msg msg-progress">Application submitted</span>
+                                    </th:block>
+                                </th:block>
+                            </div>
                         </li>
                     </ul>
                 </div>
             </section>
 
-            <section class="previous-applications" th:if="${model.applicationsInFinishedNotEmpty}">
+            <section class="previous-applications" th:unless="${model.previous.empty}">
                 <div class="progress-list">
                     <h2 class="heading-medium">Previous applications</h2>
                     <ul>
-                        <li th:each="app : ${model.applicationsFinished}"
-                            th:class="${model.applicationIsApprovedAndProjectIsNotWithdrawn(app.id)} ? 'positive'">
+                        <li th:each="previousView : ${model.previous}"
+                            th:class="${previousView.approved} ? 'positive'">
                             <div class="task">
-                                <h3 class="heading-small" th:with="noTitle=#{ifs.application.no_title}">
-                                    <a th:href="@{/application/{id}/summary(id=${app.id})}"
-                                       th:text="${#strings.isEmpty(app.name) ? noTitle : app.name}">placeholder</a>
+                                <h3 class="heading-small">
+                                    <a th:href="${previousView.linkUrl}" th:text="${previousView.title}" />
                                 </h3>
                                 <ul class="application-details">
-                                    <li>Application number: <span th:text="${app.id}"></span></li>
-                                    <li>Competition: <span th:text="${model.competitions.get(app.id).name}">COMPETITION NAME</span></li>
+                                    <li>Application number: <span th:text="${previousView.applicationNumber}"></span></li>
+                                    <li>Competition: <span th:text="${previousView.competitionTitle}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>
                             <div class="status">
-                                <p th:if="${model.applicationIsRejected(app.id)}" class="status-msg msg-progress">Unsuccessful</p>
-                                <p th:if="${model.applicationIsApprovedAndProjectIsNotWithdrawn(app.id)}" class="status-msg msg-progress">Successful</p>
-                                <p th:if="${model.applicationIsCreatedOrOpen(app.id)}" class="status-msg msg-progress not-submitted">Not submitted</p>
-                                <p th:if="${model.applicationIsInformedIneligible(app.id)}" class="status-msg msg-progress">Ineligible</p>
-                                <p th:if="${model.projectIsWithdrawn(app.id)}" class="status-msg msg-progress">Project withdrawn</p>
+                                <p th:if="${previousView.rejected}" class="status-msg msg-progress">Unsuccessful</p>
+                                <p th:if="${previousView.approved}" class="status-msg msg-progress">Successful</p>
+                                <p th:if="${previousView.createdOrOpen}" class="status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${previousView.informedIneligible}" class="status-msg msg-progress">Ineligible</p>
+                                <p th:if="${previousView.withdrawn}" class="status-msg msg-progress">Project withdrawn</p>
                             </div>
                         </li>
                     </ul>

@@ -3,8 +3,10 @@ package org.innovateuk.ifs.user.transactional;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
+import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.token.domain.Token;
@@ -60,6 +62,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private TermsAndConditionsService termsAndConditionsService;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -252,6 +257,16 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
         });
+    }
+
+    @Override
+    public ServiceResult<Void> agreeNewTermsAndConditions(long userId) {
+        return termsAndConditionsService.getLatestSiteTermsAndConditions().andOnSuccess(latest ->
+                getUser(userId).andOnSuccess(user -> {
+                    user.getTermsAndConditionsIds().add(latest.getId());
+                    userRepository.save(user);
+                    return serviceSuccess();
+                }));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {

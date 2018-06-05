@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.finance.validator;
 
-import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
@@ -13,8 +11,9 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
-import org.innovateuk.ifs.finance.validator.OtherFundingValidator;
-import org.innovateuk.ifs.validation.validator.ValidatorTestUtil;
+import org.innovateuk.ifs.form.builder.QuestionBuilder;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +32,6 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
-import static org.innovateuk.ifs.validation.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -93,6 +91,12 @@ public class OtherFundingValidatorTest {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(4L, "Yes", null, "12-2014hvhvh", new BigDecimal(100));
         expectError(otherFunding, "validation.finance.secured.date.invalid");
+    }
+    @Test
+    public void testInvalidOtherPublicFunding() {
+        mockWithRadio("Bobbins");
+        OtherFunding otherFunding = new OtherFunding(4L, "Bobbins", OTHER_FUNDING, null, null);
+        expectError(otherFunding, "validation.finance.other.funding.required");
     }
     @Test
     public void testValidFullAmount() {

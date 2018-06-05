@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.finance;
 
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
@@ -45,7 +45,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public ServiceResult<Void> saveEligibility(Long projectId, Long organisationId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    public ServiceResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
         return projectFinanceRestService.saveEligibility(projectId, organisationId, eligibility, eligibilityRagStatus).toServiceResult();
     }
 

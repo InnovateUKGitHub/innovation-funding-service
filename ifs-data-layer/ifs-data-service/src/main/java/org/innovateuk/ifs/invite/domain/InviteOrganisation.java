@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.domain;
 
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import javax.persistence.*;
 import java.util.ArrayList;

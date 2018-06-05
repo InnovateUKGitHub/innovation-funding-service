@@ -16,6 +16,7 @@ public class SearchExternalUsersForm extends BaseBindingResultTarget {
     private SearchCategory searchCategory;
 
     public SearchExternalUsersForm() {
+        // for spring form binding
     }
 
     public String getSearchString() {

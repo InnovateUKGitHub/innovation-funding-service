@@ -8,10 +8,10 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +33,7 @@ public class FormInputResponseController {
     private FormInputResponseService formInputResponseService;
 
     @Autowired
-    private ValidationUtil validationUtil;
+    private ApplicationValidationUtil validationUtil;
 
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 

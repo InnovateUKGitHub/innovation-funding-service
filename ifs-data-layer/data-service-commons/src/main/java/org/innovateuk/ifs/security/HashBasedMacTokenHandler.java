@@ -16,20 +16,15 @@ import java.security.NoSuchAlgorithmException;
 @Component
 public class HashBasedMacTokenHandler {
 
-    private Mac mac;
-
     private static final String ALGORITHM = "HmacSHA256";
 
-    public HashBasedMacTokenHandler() {
+    public String calculateHash(String key, String input) throws InvalidKeyException {
+        Mac mac;
         try {
             mac = Mac.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Failed to initialise MAC object: " + e.getMessage(), e);
         }
-    }
-
-    public String calculateHash(String key, String input) throws InvalidKeyException {
-        mac.reset();
         mac.init(getKey(key));
         return Hex.encodeHexString(mac.doFinal(getInputAsByteArray(input)));
     }

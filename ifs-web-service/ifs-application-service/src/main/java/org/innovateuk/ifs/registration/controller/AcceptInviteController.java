@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,10 +23,12 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
 /**
- * This class is use as an entry point to accept a invite, to a application.
+ * This class is used as an entry point to accept an invite, to an application.
  */
 @Controller
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AcceptInviteController.class)
+@SecuredBySpring(value = "Controller",
+        description = "All users with a valid invite hash are able to view and accept the corresponding invite",
+        securedType = AcceptInviteController.class)
 @PreAuthorize("permitAll")
 public class AcceptInviteController extends AbstractAcceptInviteController {
 

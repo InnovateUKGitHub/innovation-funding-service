@@ -8,11 +8,14 @@ import org.innovateuk.ifs.management.form.ResendInviteForm;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
 import org.innovateuk.ifs.review.form.ReviewOverviewSelectionForm;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
@@ -23,6 +26,7 @@ import java.util.List;
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -42,6 +46,12 @@ public class ReviewSendInviteControllerTest extends BaseControllerMockMVCTest<Re
 
     private CompetitionResource competition;
 
+    @Mock
+    private CookieUtil cookieUtil;
+
+    @Mock
+    private ReviewInviteRestService reviewInviteRestService;
+
     @Override
     protected ReviewSendInviteController supplyControllerUnderTest() {
         return new ReviewSendInviteController();
@@ -51,7 +61,7 @@ public class ReviewSendInviteControllerTest extends BaseControllerMockMVCTest<Re
     @Before
     public void setUp() {
         super.setUp();
-        this.setupCookieUtil();
+        setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)

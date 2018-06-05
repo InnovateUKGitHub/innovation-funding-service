@@ -83,13 +83,14 @@
                     </th:block>
                 </td>
                 <td>
-                    <th:block th:unless="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}"
-                              th:text="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id)}" />
-                    <th:block th:if="${model.getPostCodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}">
+                    <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}"
+                              th:text="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id)}" />
+                    <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisationFinanceContact.key.id) == null}">
                         Not yet completed
                     </th:block>
                 </td>
             </tr>
+
             </tbody>
         </table>
     </th:block>
@@ -123,6 +124,10 @@
             </tbody>
         </table>
     </th:block>
+        <th:block th:if="${model.showWithdrawLink}">
+            <a data-js-modal="modal-withdraw-project" class="buttonlink extra-margin">Withdraw project</a>
+                <th:block th:insert="fragments/modals :: modal-withdraw-project" />
+        </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

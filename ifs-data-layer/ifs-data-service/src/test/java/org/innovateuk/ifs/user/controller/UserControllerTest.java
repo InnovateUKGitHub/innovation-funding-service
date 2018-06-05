@@ -5,9 +5,13 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
+import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.user.transactional.CrmService;
+import org.innovateuk.ifs.user.transactional.BaseUserService;
+import org.innovateuk.ifs.crm.transactional.CrmService;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +48,19 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest extends BaseControllerMockMVCTest<UserController> {
+
+
+    @Mock
+    private UserService userServiceMock;
+
+    @Mock
+    private RegistrationService registrationServiceMock;
+
+    @Mock
+    private BaseUserService baseUserServiceMock;
+
+    @Mock
+    private TokenService tokenServiceMock;
 
     @Override
     protected UserController supplyControllerUnderTest() {
@@ -305,6 +322,18 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(internalUserRegistrationResource))
         ).andExpect(status().isCreated());
+    }
+
+    @Test
+    public void agreeNewSiteTermsAndConditions() throws Exception {
+        long userId = 1L;
+
+        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/id/{userId}/agreeNewSiteTermsAndConditions", userId))
+                .andExpect(status().isOk());
+
+        verify(userServiceMock, only()).agreeNewTermsAndConditions(userId);
     }
 
     @Test

@@ -80,7 +80,7 @@ Create new application with the same user
 check if there is an existing application in progress for this competition
     wait until page contains element    css=body
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
-            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
             ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
 
 create new submit application
@@ -140,22 +140,10 @@ The user navigates to the overview page of the Robot test application
     ${id} =  get application id by name  Robot test application
     the user navigates to the page       ${server}/application/${id}
 
-The user navigates to the academic application finances
-    When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    And the user clicks the button/link    link=Your finances
-
 The user navigates to the finance overview of the academic
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Finances overview
-
-The user marks the academic application finances as incomplete
-    the user navigates to the academic application finances
-    the user clicks the button/link    link=Your project costs
-    Focus    jQuery=button:contains("Edit")
-    the user clicks the button/link    jQuery=button:contains("Edit")
-    wait for autosave
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
@@ -226,9 +214,8 @@ the invited user fills the create account form
     the user clicks the button/link  css=button[type="submit"][name="create-account"]
 
 the user clicks the forgot psw link
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=forgot your password?
-    Run Keyword If    '${status}' == 'FAIL'    click element    jQuery=summary:contains("Need help signing in or creating an account?")
-    Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?
+    The user clicks the button/link  jQuery=summary:contains("Need help signing in or creating an account?")
+    The user clicks the button/link  link=Forgotten your password?
 
 Close browser and delete emails
     Close any open browsers

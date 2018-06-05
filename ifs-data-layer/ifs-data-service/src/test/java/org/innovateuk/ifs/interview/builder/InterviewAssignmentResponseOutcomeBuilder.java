@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interview.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentResponseOutcome;
 
 import java.util.List;
@@ -35,5 +36,9 @@ public class InterviewAssignmentResponseOutcomeBuilder extends BaseBuilder<Inter
 
     public InterviewAssignmentResponseOutcomeBuilder withResponse(String... responses) {
         return withArray((response, assessmentInterviewPanelResponseOutcome) -> assessmentInterviewPanelResponseOutcome.setResponse(response), responses);
+    }
+
+    public InterviewAssignmentResponseOutcomeBuilder withFileResponse(FileEntry... responses) {
+        return withArray((fileResponse, assessmentInterviewPanelResponseOutcome) -> assessmentInterviewPanelResponseOutcome.setFileResponse(fileResponse), responses);
     }
 }

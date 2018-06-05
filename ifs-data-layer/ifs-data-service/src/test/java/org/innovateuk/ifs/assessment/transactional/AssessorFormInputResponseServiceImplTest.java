@@ -1,6 +1,11 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
+import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
+import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
@@ -12,11 +17,13 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -42,6 +49,25 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
 public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
+
+    @Mock
+    private AssessorFormInputResponseRepository assessorFormInputResponseRepositoryMock;
+
+    @Mock
+    private AssessorFormInputResponseMapper assessorFormInputResponseMapperMock;
+
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private ApplicationValidationUtil validationUtilMock;
+
+    @Mock
+    private AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
+
+    @Mock
+    private FormInputRepository formInputRepositoryMock;
+
     @InjectMocks
     private AssessorFormInputResponseService assessorFormInputResponseService = new AssessorFormInputResponseServiceImpl();
 

@@ -5,12 +5,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * An invitation for an assessor to interview an application's applicants on an interview panel.
@@ -18,7 +16,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Interview extends Process<ProcessRole, Application, InterviewState> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 
@@ -26,11 +24,23 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
+    @Column(name="activity_state_id")
+    private InterviewState activityState;
+
     public Interview() {
         super();
     }
 
+    public Interview(Application application, InterviewParticipant interviewParticipant) {
+        this.participant = new ProcessRole(interviewParticipant.getUser(), application.getId(), Role.INTERVIEW_ASSESSOR);
+        this.target = application;
+    }
+
+    @Deprecated
     public Interview(Application application, ProcessRole processRole) {
+        if (!application.getId().equals(processRole.getApplicationId())) {
+            throw new IllegalArgumentException("application.id must equal processRole.id");
+        }
         this.participant = processRole;
         this.target = application;
     }
@@ -55,26 +65,29 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
         this.target = target;
     }
 
-    public InterviewState getActivityState() {
-        return InterviewState.fromState(activityState.getState());
+    @Override
+    public InterviewState getProcessState() {
+        return activityState;
+    }
+
+    @Override
+    public void setProcessState(InterviewState status) {
+        this.activityState = status;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Interview that = (Interview) o;
+        Interview interview = (Interview) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(participant, that.participant)
-                .append(target, that.target)
+                .append(participant, interview.participant)
+                .append(target, interview.target)
+                .append(activityState, interview.activityState)
                 .isEquals();
     }
 
@@ -84,6 +97,7 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
+                .append(activityState)
                 .toHashCode();
     }
 }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * OrganisationRestServiceImpl is a utility for CRUD operations on {@link org.innovateuk.ifs.user.resource.OrganisationResource}.
+ * OrganisationRestServiceImpl is a utility for CRUD operations on {@link OrganisationResource}.
  * This class connects to the {org.innovateuk.ifs.user.controller.OrganisationController}
  * through a REST call.
  */

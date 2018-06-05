@@ -2,38 +2,34 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
+import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.review.domain.ReviewInvite;
-import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
-import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.resource.State;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -46,21 +42,14 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.ne
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
-import static org.innovateuk.ifs.assessment.transactional.AssessmentServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
-import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInvite;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -70,8 +59,32 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private AssessmentService assessmentService = new AssessmentServiceImpl();
 
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private AssessmentMapper assessmentMapperMock;
+
+    @Mock
+    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
+
+    @Mock
+    private AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
+
+    @Mock
+    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapperMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
     @Test
-    public void findById() throws Exception {
+    public void findById() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment().build();
@@ -91,12 +104,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findAssignableById() throws Exception {
+    public void findAssignableById() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING
-                        .getBackingState()))
+                .withProcessState(PENDING)
                 .build();
         AssessmentResource expected = newAssessmentResource()
                 .build();
@@ -115,12 +127,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findAssignableById_withdrawn() throws Exception {
+    public void findAssignableById_withdrawn() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, WITHDRAWN
-                        .getBackingState()))
+                .withProcessState(WITHDRAWN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -135,12 +146,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findRejectableById() throws Exception {
+    public void findRejectableById() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING
-                        .getBackingState()))
+                .withProcessState(PENDING)
                 .build();
         AssessmentResource expected = newAssessmentResource()
                 .build();
@@ -159,12 +169,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findRejectableById_withdrawn() throws Exception {
+    public void findRejectableById_withdrawn() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, WITHDRAWN
-                        .getBackingState()))
+                .withProcessState(WITHDRAWN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -179,25 +188,25 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findByUserAndCompetition() throws Exception {
-        Long userId = 2L;
-        Long competitionId = 1L;
+    public void findByUserAndCompetition() {
+        long userId = 2L;
+        long competitionId = 1L;
 
-        List<Assessment> assessments = newAssessment().build(2);
-        List<AssessmentResource> expected = newAssessmentResource().build(2);
+        List<Assessment> assessments = newAssessment().withProcessState(CREATED, WITHDRAWN).build(2);
+        List<AssessmentResource> expected = sort(newAssessmentResource().withActivityState(WITHDRAWN, CREATED).build(2), comparing(AssessmentResource::getAssessmentState));
 
-        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
 
         List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccess();
 
         assertEquals(expected, found);
-        verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
     }
 
     @Test
-    public void getTotalScore() throws Exception {
+    public void getTotalScore() {
         Long assessmentId = 1L;
 
         AssessmentTotalScoreResource expected = newAssessmentTotalScoreResource()
@@ -213,12 +222,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void recommend() throws Exception {
+    public void recommend() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .withProcessState(OPEN)
                 .build();
 
         AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome().build();
@@ -239,12 +248,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void recommend_eventNotAccepted() throws Exception {
+    public void recommend_eventNotAccepted() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .withProcessState(OPEN)
                 .build();
 
         AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome().build();
@@ -266,7 +275,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getApplicationFeedback() throws Exception {
+    public void getApplicationFeedback() {
         long applicationId = 1L;
 
         List<Assessment> expectedAssessments = newAssessment()
@@ -292,12 +301,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void rejectInvitation() throws Exception {
+    public void rejectInvitation() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .withProcessState(OPEN)
                 .build();
 
         AssessmentRejectOutcome assessmentRejectOutcome = newAssessmentRejectOutcome().build();
@@ -318,12 +327,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void rejectInvitation_eventNotAccepted() throws Exception {
+    public void rejectInvitation_eventNotAccepted() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .withProcessState(OPEN)
                 .build();
 
         AssessmentRejectOutcome assessmentRejectOutcome = newAssessmentRejectOutcome().build();
@@ -345,9 +354,9 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void withdrawAssessment() throws Exception {
+    public void withdrawAssessment() {
         Assessment assessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .withProcessState(OPEN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
@@ -363,9 +372,9 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void withdrawAssessment_eventNotAccepted() throws Exception {
+    public void withdrawAssessment_eventNotAccepted() {
         Assessment assessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .withProcessState(OPEN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
@@ -382,12 +391,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void acceptInvitation() throws Exception {
+    public void acceptInvitation() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .withProcessState(OPEN)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -403,12 +412,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void acceptInvitation_eventNotAccepted() throws Exception {
+    public void acceptInvitation_eventNotAccepted() {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
                 .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .withProcessState(PENDING)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -425,16 +434,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void submitAssessments() throws Exception {
+    public void submitAssessments() {
         AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
         List<Assessment> assessments = newAssessment()
                 .withId(1L, 2L)
-                .withActivityState(
-                        new ActivityState(APPLICATION_ASSESSMENT, READY_TO_SUBMIT.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, READY_TO_SUBMIT.getBackingState())
-                )
+                .withProcessState(READY_TO_SUBMIT)
                 .build(2);
 
         assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
@@ -442,11 +448,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(assessments);
 
         when(assessmentWorkflowHandlerMock.submit(assessments.get(0))).thenAnswer(invocation -> {
-            assessments.get(0).setActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()));
+            assessments.get(0).setProcessState(SUBMITTED);
             return Boolean.TRUE;
         });
         when(assessmentWorkflowHandlerMock.submit(assessments.get(1))).thenAnswer(invocation -> {
-            assessments.get(1).setActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()));
+            assessments.get(1).setProcessState(SUBMITTED);
             return Boolean.TRUE;
         });
 
@@ -461,7 +467,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void submitAssessments_eventNotAccepted() throws Exception {
+    public void submitAssessments_eventNotAccepted() {
         AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
                 .withAssessmentIds(singletonList(1L))
                 .build();
@@ -471,7 +477,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(1L)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .withProcessState(PENDING)
                 .with((resource) -> resource.setTarget(application))
                 .build();
 
@@ -491,7 +497,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void submitAssessments_notFound() throws Exception {
+    public void submitAssessments_notFound() {
         AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
@@ -509,7 +515,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void submitAssessments_notFoundAndEventNotAccepted() throws Exception {
+    public void submitAssessments_notFoundAndEventNotAccepted() {
         AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
@@ -520,7 +526,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         Assessment assessment = newAssessment()
                 .withId(1L)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .withProcessState(PENDING)
                 .with((resource) -> resource.setTarget(application))
                 .build();
 
@@ -540,15 +546,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void createAssessment() throws Exception {
-        State expectedBackingState = CREATED.getBackingState();
-
+    public void createAssessment() {
         Long assessorId = 1L;
         Long applicationId = 2L;
 
         User user = newUser().withId(assessorId).build();
         Application application = newApplication().withId(applicationId).build();
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, expectedBackingState);
 
         ProcessRole expectedProcessRole = newProcessRole()
                 .with(id(null))
@@ -566,13 +569,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment expectedAssessment = newAssessment()
                 .with(id(null))
                 .withApplication(application)
-                .withActivityState(activityState)
+                .withProcessState(CREATED)
                 .withParticipant(savedProcessRole)
                 .build();
         Assessment savedAssessment = newAssessment()
                 .withId(5L)
                 .withApplication(application)
-                .withActivityState(activityState)
+                .withProcessState(CREATED)
                 .withParticipant(savedProcessRole)
                 .build();
 
@@ -581,7 +584,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByIdAndRoles(assessorId, ASSESSOR)).thenReturn(Optional.of(user));
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId)).thenReturn(Optional.empty());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState)).thenReturn(activityState);
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(assessorId, singletonList(ASSESSOR), applicationId)).thenReturn(null);
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
         when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
@@ -595,14 +597,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
         InOrder inOrder = inOrder(
-                userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock,
+                userRepositoryMock, applicationRepositoryMock,
                 processRoleRepositoryMock, assessmentRepositoryMock, assessmentMapperMock
         );
 
         inOrder.verify(userRepositoryMock).findByIdAndRoles(assessorId, ASSESSOR);
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState);
         inOrder.verify(processRoleRepositoryMock).findOneByUserIdAndRoleInAndApplicationId(assessorId, singletonList(ASSESSOR), applicationId);
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
@@ -614,15 +615,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void createAssessment_existingProcessRole() throws Exception {
-        State expectedBackingState = CREATED.getBackingState();
-
+    public void createAssessment_existingProcessRole() {
         Long assessorId = 1L;
         Long applicationId = 2L;
 
         User user = newUser().withId(assessorId).build();
         Application application = newApplication().withId(applicationId).build();
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, expectedBackingState);
 
         ProcessRole expectedProcessRole = newProcessRole()
                 .withId(10L)
@@ -634,13 +632,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment expectedAssessment = newAssessment()
                 .with(id(null))
                 .withApplication(application)
-                .withActivityState(activityState)
+                .withProcessState(CREATED)
                 .withParticipant(expectedProcessRole)
                 .build();
         Assessment savedAssessment = newAssessment()
                 .withId(5L)
                 .withApplication(application)
-                .withActivityState(activityState)
+                .withProcessState(CREATED)
                 .withParticipant(expectedProcessRole)
                 .build();
 
@@ -649,7 +647,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByIdAndRoles(assessorId, ASSESSOR)).thenReturn(Optional.of(user));
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId)).thenReturn(Optional.empty());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState)).thenReturn(activityState);
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(assessorId, singletonList(ASSESSOR), applicationId)).thenReturn(expectedProcessRole);
         when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
         when(assessmentMapperMock.mapToResource(savedAssessment)).thenReturn(expectedAssessmentResource);
@@ -662,14 +659,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
         InOrder inOrder = inOrder(
-                userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock,
+                userRepositoryMock, applicationRepositoryMock,
                 processRoleRepositoryMock, assessmentRepositoryMock, assessmentMapperMock
         );
 
         inOrder.verify(userRepositoryMock).findByIdAndRoles(assessorId, ASSESSOR);
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState);
         inOrder.verify(processRoleRepositoryMock).findOneByUserIdAndRoleInAndApplicationId(assessorId, singletonList(ASSESSOR), applicationId);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
         inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);
@@ -681,19 +677,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void createAssessment_existingWithdrawnAssessment() throws Exception {
-        State expectedBackingState = WITHDRAWN.getBackingState();
-
+    public void createAssessment_existingWithdrawnAssessment() {
         Long assessorId = 1L;
         Long applicationId = 2L;
 
         User user = newUser().withId(assessorId).build();
         Application application = newApplication().withId(applicationId).build();
 
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, expectedBackingState);
-
         Assessment existingAssessment = newAssessment()
-                .withActivityState(activityState)
+                .withProcessState(WITHDRAWN)
                 .build();
 
         ProcessRole expectedProcessRole = newProcessRole()
@@ -712,13 +704,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Assessment expectedAssessment = newAssessment()
                 .with(id(null))
                 .withApplication(application)
-                .withActivityState(activityState)
+                .withProcessState(CREATED)
                 .withParticipant(savedProcessRole)
                 .build();
         Assessment savedAssessment = newAssessment()
                 .withId(5L)
                 .withApplication(application)
-                .withActivityState(activityState)
+                .withProcessState(CREATED)
                 .withParticipant(savedProcessRole)
                 .build();
 
@@ -727,7 +719,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByIdAndRoles(assessorId, ASSESSOR)).thenReturn(Optional.of(user));
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId)).thenReturn(Optional.of(existingAssessment));
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, CREATED.getBackingState())).thenReturn(activityState);
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
         when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
         when(assessmentMapperMock.mapToResource(savedAssessment)).thenReturn(expectedAssessmentResource);
@@ -740,13 +731,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
         InOrder inOrder = inOrder(
-                userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock,
+                userRepositoryMock, applicationRepositoryMock,
                 processRoleRepositoryMock, assessmentRepositoryMock, assessmentMapperMock
         );
 
         inOrder.verify(userRepositoryMock).findByIdAndRoles(assessorId, ASSESSOR);
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, CREATED.getBackingState());
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
         inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);
@@ -757,7 +747,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void createAssessment_noAssessor() throws Exception {
+    public void createAssessment_noAssessor() {
         Long assessorId = 100L;
         Long applicationId = 2L;
 
@@ -770,7 +760,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
-        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRoles(assessorId, ASSESSOR);
         inOrder.verifyNoMoreInteractions();
 
@@ -779,7 +769,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void createAssessment_noApplication() throws Exception {
+    public void createAssessment_noApplication() {
         Long assessorId = 100L;
         Long applicationId = 2L;
 
@@ -795,7 +785,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
-        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRoles(assessorId, ASSESSOR);
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verifyNoMoreInteractions();
@@ -805,7 +795,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void createAssessment_existingAssessment() throws Exception {
+    public void createAssessment_existingAssessment() {
         Long assessorId = 100L;
         Long applicationId = 2L;
 
@@ -813,7 +803,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Application application = newApplication().withId(applicationId).build();
 
         Assessment existingAssessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING.getBackingState()))
+                .withProcessState(PENDING)
                 .build();
 
         when(userRepositoryMock.findByIdAndRoles(assessorId, ASSESSOR)).thenReturn(Optional.of(user));
@@ -828,7 +818,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
-        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, assessmentRepositoryMock, activityStateRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, assessmentRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRoles(assessorId, ASSESSOR);
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
@@ -837,124 +827,5 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(serviceResult.isFailure());
         assertEquals(1, serviceResult.getErrors().size());
         assertEquals(ASSESSMENT_CREATE_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
-    }
-
-    @Test
-    public void getAssessmentPanelKeyStatistics() throws Exception {
-        Long competitionId = 1L;
-        List<String> emails = asList("john@email.com", "peter@email.com");
-        List<String> names = asList("John Barnes", "Peter Jones");
-        Profile profile = newProfile().withId(7L).build();
-        User user = newUser().withId(11L).withProfileId(profile.getId()).build();
-
-        ZonedDateTime acceptsDate = ZonedDateTime.of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
-        ZonedDateTime deadlineDate = ZonedDateTime.of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
-
-        Competition competition = newCompetition()
-                .withName("my competition")
-                .withAssessorAcceptsDate(acceptsDate)
-                .withAssessorDeadlineDate(deadlineDate)
-                .build();
-
-        List<ReviewInvite> panelInvites = newReviewInvite()
-                .withCompetition(competition)
-                .withEmail(emails.get(0), emails.get(1))
-                .withHash(Invite.generateInviteHash())
-                .withName(names.get(0), names.get(1))
-                .withStatus(SENT)
-                .withUser(user)
-                .build(2);
-
-        List<Long> panelInviteIds = simpleMap(panelInvites, ReviewInvite::getId);
-
-        List<Application> applications = newApplication()
-                .withCompetition(competition)
-                .withApplicationState(ApplicationState.SUBMITTED)
-                .build(2);
-
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                competitionId, SUBMITTED_STATES, "",  null,true)).thenReturn(applications);
-        when(reviewInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
-        when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
-                competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
-                .thenReturn(1);
-        when(reviewInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT)))
-                .thenReturn(1);
-        when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
-                competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.PENDING, panelInviteIds))
-                .thenReturn(1);
-
-        ServiceResult<ReviewKeyStatisticsResource> serviceResult = assessmentService.getAssessmentPanelKeyStatistics(competitionId);
-
-        InOrder inOrder = inOrder(applicationRepositoryMock, reviewInviteRepositoryMock, reviewParticipantRepositoryMock);
-        inOrder.verify(reviewInviteRepositoryMock).getByCompetitionId(competitionId);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                competitionId, SUBMITTED_STATES, "",  null,true);
-
-        inOrder.verify(reviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
-        inOrder.verify(reviewInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT));
-        inOrder.verifyNoMoreInteractions();
-
-        assertTrue(serviceResult.isSuccess());
-
-        ReviewKeyStatisticsResource result = serviceResult.getSuccess();
-        assertEquals(2, result.getApplicationsInPanel());
-        assertEquals(1, result.getAssessorsAccepted());
-        assertEquals(1, result.getAssessorsPending());
-    }
-
-    @Test
-    public void getAssessmentPanelInviteStatistics() throws Exception {
-        Long competitionId = 1L;
-        List<String> emails = asList("john@email.com", "peter@email.com");
-        List<String> names = asList("John Barnes", "Peter Jones");
-        Profile profile = newProfile().withId(7L).build();
-        User user = newUser().withId(11L).withProfileId(profile.getId()).build();
-
-        ZonedDateTime acceptsDate = ZonedDateTime.of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
-        ZonedDateTime deadlineDate = ZonedDateTime.of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
-
-        Competition competition = newCompetition()
-                .withName("my competition")
-                .withAssessorAcceptsDate(acceptsDate)
-                .withAssessorDeadlineDate(deadlineDate)
-                .build();
-
-        List<ReviewInvite> panelInvites = newReviewInvite()
-                .withCompetition(competition)
-                .withEmail(emails.get(0), emails.get(1))
-                .withHash(Invite.generateInviteHash())
-                .withName(names.get(0), names.get(1))
-                .withStatus(SENT)
-                .withUser(user)
-                .build(2);
-
-        List<Long> panelInviteIds = simpleMap(panelInvites, ReviewInvite::getId);
-
-        when(reviewInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(2);
-        when(reviewInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
-
-        when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
-                competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
-                .thenReturn(1);
-        when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
-                competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds))
-                .thenReturn(1);
-
-        ServiceResult<ReviewInviteStatisticsResource> serviceResult = assessmentService.getAssessmentPanelInviteStatistics(competitionId);
-
-        InOrder inOrder = inOrder(reviewInviteRepositoryMock, reviewParticipantRepositoryMock);
-        inOrder.verify(reviewInviteRepositoryMock).getByCompetitionId(competitionId);
-        inOrder.verify(reviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
-        inOrder.verify(reviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds);
-        inOrder.verifyNoMoreInteractions();
-
-        assertTrue(serviceResult.isSuccess());
-
-        ReviewInviteStatisticsResource result = serviceResult.getSuccess();
-        assertEquals(2, result.getInvited());
-        assertEquals(1, result.getAccepted());
-        assertEquals(1, result.getDeclined());
-        assertEquals(0, result.getPending());
     }
 }

@@ -2,13 +2,13 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.review.domain.ReviewInvite;
-import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -16,24 +16,36 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
+import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.review.domain.Review;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewParticipant;
+import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
+import org.innovateuk.ifs.review.mapper.ReviewParticipantMapper;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
+import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -57,14 +69,16 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_PANEL_INVITE_EXPIRED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
@@ -75,8 +89,9 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
-import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.review.builder.ReviewBuilder.newReview;
 import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInvite;
@@ -100,7 +115,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
-    private Role assessorRole;
 
     @Mock
     private AvailableAssessorMapper availableAssessorMapperMock;
@@ -108,6 +122,40 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
     @Mock
     private AssessorCreatedInviteMapper assessorCreatedInviteMapperMock;
+    @Mock
+    private UserMapper userMapperMock;
+    @Mock
+    private ReviewInviteRepository reviewInviteRepositoryMock;
+    @Mock
+    private ReviewInviteMapper reviewInviteMapperMock;
+    @Mock
+    private ReviewParticipantRepository reviewParticipantRepositoryMock;
+    @Mock
+    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+    @Mock
+    private UserRepository userRepositoryMock;
+    @Mock
+    private RejectionReasonRepository rejectionReasonRepositoryMock;
+    @Mock
+    private ProfileRepository profileRepositoryMock;
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
+    @Mock
+    private NotificationTemplateRenderer notificationTemplateRendererMock;
+    @Mock
+    private NotificationSender notificationSenderMock;
+    @Mock
+    private ReviewParticipantMapper reviewParticipantMapperMock;
+    @Mock
+    private ParticipantStatusMapper participantStatusMapperMock;
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+    @Mock
+    private ReviewRepository reviewRepositoryMock;
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
 
     @Override
     protected ReviewInviteServiceImpl supplyServiceUnderTest() {
@@ -158,7 +206,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAvailableAssessors() throws Exception {
+    public void getAvailableAssessors() {
         long competitionId = 1L;
         int page = 1;
         int pageSize = 1;
@@ -236,7 +284,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAvailableAssessors_empty() throws Exception {
+    public void getAvailableAssessors_empty() {
         long competitionId = 1L;
         int page = 0;
         int pageSize = 20;
@@ -261,7 +309,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAvailableAssessorIds() throws Exception {
+    public void getAvailableAssessorIds() {
         long competitionId = 1L;
 
         InnovationArea innovationArea = newInnovationArea()
@@ -307,7 +355,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getCreatedInvites() throws Exception {
+    public void getCreatedInvites() {
         long competitionId = 1L;
 
         InnovationArea innovationArea = newInnovationArea().build();
@@ -413,7 +461,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void inviteUsers_existing() throws Exception {
+    public void inviteUsers_existing() {
         List<User> existingUsers = newUser()
                 .withEmailAddress("fred.smith@abc.com", "joe.brown@abc.com")
                 .withFirstName("fred", "joe")
@@ -448,7 +496,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void sendAllInvites() throws Exception {
+    public void sendAllInvites() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
@@ -519,7 +567,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAllInvitesToSend() throws Exception {
+    public void getAllInvitesToSend() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
@@ -547,7 +595,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_assessors_panel_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_assessors_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(reviewInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
@@ -573,7 +621,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAllInvitesToResend() throws Exception {
+    public void getAllInvitesToResend() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
         List<Long> inviteIds = asList(1L, 2L);
@@ -602,7 +650,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_assessors_panel_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_assessors_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(reviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
@@ -628,7 +676,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void resendInvites() throws Exception {
+    public void resendInvites() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
         List<Long> inviteIds = asList(1L, 2L);
@@ -646,6 +694,15 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withName(names.get(0), names.get(1))
                 .withStatus(SENT)
                 .withUser(newUser().build())
+                .build(2);
+
+        List<ReviewParticipant> reviewParticipants = newReviewParticipant()
+                .with(id(null))
+                .withStatus(PENDING, REJECTED)
+                .withRole(ASSESSOR, ASSESSOR)
+                .withCompetition(competition, competition)
+                .withInvite(invites.get(0), invites.get(1))
+                .withUser()
                 .build(2);
 
         AssessorInviteSendResource assessorInviteSendResource = setUpAssessorInviteSendResource();
@@ -679,21 +736,25 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .build(2);
 
         when(reviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
+        when(reviewParticipantRepositoryMock.getByInviteHash(invites.get(0).getHash())).thenReturn(reviewParticipants.get(0));
+        when(reviewParticipantRepositoryMock.getByInviteHash(invites.get(1).getHash())).thenReturn(reviewParticipants.get(1));
         when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
         when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
 
         ServiceResult<Void> serviceResult = service.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(reviewInviteRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(reviewInviteRepositoryMock, reviewParticipantRepositoryMock, notificationSenderMock);
         inOrder.verify(reviewInviteRepositoryMock).getByIdIn(inviteIds);
+        inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(invites.get(0).getHash());
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(invites.get(1).getHash());
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void getInvitationOverview() throws Exception {
+    public void getInvitationOverview() {
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
         List<ReviewParticipant> expectedParticipants = newReviewParticipant()
@@ -753,7 +814,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAllInvitesByUser() throws Exception {
+    public void getAllInvitesByUser() {
         User user = newUser()
                 .withId(1L)
                 .build();
@@ -795,7 +856,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         when(reviewParticipantRepositoryMock.findByUserIdAndRole(1L, PANEL_ASSESSOR)).thenReturn(reviewParticipants);
         when(reviewParticipantMapperMock.mapToResource(reviewParticipants.get(0))).thenReturn(expected.get(0));
         when(reviewParticipantMapperMock.mapToResource(reviewParticipants.get(1))).thenReturn(expected.get(1));
-        when(reviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(1L, competition.getId())).thenReturn(reviews);
+        when(reviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(1L, competition.getId())).thenReturn(reviews);
 
         List<ReviewParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccess();
         assertEquals(actual.get(0), expected.get(0));
@@ -806,7 +867,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void getAllInvitesByUser_invitesExpired() throws Exception {
+    public void getAllInvitesByUser_invitesExpired() {
         User user = newUser()
                 .withId(1L)
                 .build();
@@ -886,7 +947,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void deleteAllInvites() throws Exception {
+    public void deleteAllInvites() {
         long competitionId = 1L;
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(newCompetition().build());
@@ -897,7 +958,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void deleteAllInvites_noCompetition() throws Exception {
+    public void deleteAllInvites_noCompetition() {
         long competitionId = 1L;
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
@@ -908,7 +969,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void openInvite() throws Exception {
+    public void openInvite() {
         Milestone milestone = newMilestone()
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().plusDays(1))
@@ -932,7 +993,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     }
 
     @Test
-    public void openInvite_inviteExpired() throws Exception {
+    public void openInvite_inviteExpired() {
         Milestone milestone = newMilestone()
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().minusDays(1))
@@ -963,18 +1024,15 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .build();
 
         when(reviewParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(reviewParticipant);
-        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(emptyList());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
-                .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
+        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED)).thenReturn(emptyList());
 
         service.acceptInvite(openedInviteHash).getSuccess();
 
         assertEquals(ParticipantStatus.ACCEPTED, reviewParticipant.getStatus());
 
-        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock);
+        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(openedInviteHash);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -988,21 +1046,17 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withCompetition(competition)
                 .build();
         List<Application> applicationsOnPanel = newApplication().build(2);
-        State expectedAssessmentReviewState = State.PENDING;
 
         when(reviewParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(reviewParticipant);
-        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(applicationsOnPanel);
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
-                .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState));
+        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED)).thenReturn(applicationsOnPanel);
 
         service.acceptInvite(openedInviteHash).getSuccess();
 
         assertEquals(ParticipantStatus.ACCEPTED, reviewParticipant.getStatus());
 
-        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock, reviewRepositoryMock);
+        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock, reviewRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(openedInviteHash);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityState(competition, ApplicationState.SUBMITTED);
         inOrder.verify(reviewRepositoryMock, times(2)).save(any(Review.class));
 
         inOrder.verifyNoMoreInteractions();
@@ -1012,15 +1066,6 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         assertNull(assessorInviteOverviewResource.getId());
         assertNull(assessorInviteOverviewResource.getBusinessType());
         assertFalse(assessorInviteOverviewResource.isCompliant());
-    }
-
-    private AssessmentInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
-        return newAssessmentInvite()
-                .withCompetition(competition)
-                .withHash(Invite.generateInviteHash())
-                .withStatus(status)
-                .withInnovationArea(innovationArea)
-                .build();
     }
 
     private ReviewInvite setUpAssessmentPanelInvite(Competition competition, InviteStatus status) {

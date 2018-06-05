@@ -2,7 +2,8 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.application.transactional.SectionStatusService;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.form.domain.Section;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,7 +18,7 @@ import java.util.Set;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
@@ -33,6 +34,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SectionStatusControllerTest extends BaseControllerMockMVCTest<SectionStatusController> {
+
+    @Mock
+    private SectionStatusService sectionStatusServiceMock;
 
     @Mock
     private BindingResult bindingResult;

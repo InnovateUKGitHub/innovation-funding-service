@@ -3,22 +3,55 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
 
+    @Mock
+    private ProjectDetailsService projectDetailsServiceMock;
+
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
         return new ProjectDetailsController();
+    }
+
+    @Test
+    public void testGetProjectManager() throws Exception {
+        Long project1Id = 1L;
+
+        ProjectUserResource projectManager = newProjectUserResource().withId(project1Id).build();
+
+        when(projectDetailsServiceMock.getProjectManager(project1Id)).thenReturn(serviceSuccess(projectManager));
+
+        mockMvc.perform(get("/project/{id}/project-manager", project1Id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectManager)));
+    }
+
+    @Test
+    public void testGetProjectManagerNotFound() throws Exception {
+        Long project1Id = -1L;
+
+        when(projectDetailsServiceMock.getProjectManager(project1Id)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+
+        mockMvc.perform(get("/project/{id}/project-manager", project1Id))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -63,13 +96,13 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
-        when(projectDetailsServiceMock.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postCode)).thenReturn(serviceSuccess());
+        String postcode = "TW14 9QG";
+        when(projectDetailsServiceMock.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postCode={postCode}", projectId, organisationId, postCode))
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postcode={postcode}", projectId, organisationId, postcode))
                 .andExpect(status().isOk());
 
-        verify(projectDetailsServiceMock).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postCode);
+        verify(projectDetailsServiceMock).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode);
     }
 
     @Test

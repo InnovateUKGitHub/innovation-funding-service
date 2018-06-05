@@ -102,12 +102,12 @@ Bank account number and sort code validations client side
 Bank account number and sort code validations server side
     [Documentation]    INFUND-4054
     [Tags]
-     When the user enters text to a text field    id=accountNumber    abcdefgh
-     And the user enters text to a text field    id=sortCode    abcdef
-     And the user clicks the button/link           jQuery=.column-half.alignright .button:contains("Update bank account details")
-     And the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
-     Then the user should see the text in the page    Please enter a valid account number
-     And the user should see the text in the page    Please enter a valid sort code
+     When the user enters text to a text field      id=accountNumber  123
+     And the user enters text to a text field       id=sortCode  123
+     And the user clicks the button/link            id=modal-change-bank-details
+     And the user clicks the button/link            id=submit-change-bank-details
+     Then the user should see the text in the page  Please enter a valid account number
+     And the user should see the text in the page   Please enter a valid sort code
 
 Project Finance cancels bank details changes
     [Documentation]    INFUND-4054,  INFUND-5899
@@ -118,7 +118,7 @@ Project Finance cancels bank details changes
     Then the text box should be editable          id=organisationName
     And the user moves focus to the element       css=[id="addressForm.selectedPostcode.addressLine1"]
     Then the user sees the text in the text field    css=[id="addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
-    When the user clicks the button/link    jQuery=.column-half.alignright .button:contains("Update bank account details")
+    When the user clicks the button/link    id=modal-change-bank-details
     And the user clicks the button/link     jQuery=.buttonlink:contains("Cancel")
     Then the text box should be editable    id=organisationName
     When the user clicks the button/link    link=Review bank details
@@ -129,13 +129,13 @@ Project Finance updates bank account details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
     When the user enters text to a text field      css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 2
-    And the user clicks the button/link            jQuery=.column-half.alignright .button:contains("Update bank account details")
-    And the user clicks the button/link            jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
+    And the user clicks the button/link            id=modal-change-bank-details
+    And the user clicks the button/link            id=submit-change-bank-details
     Then the user should see the text in the page  ${Ntag_Name} - Account details
     When the user clicks the button/link           link=Change bank account details
     Then the user sees the text in the text field  css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 2
-    When the user clicks the button/link           jQuery=.column-half.alignright button:contains("Update bank account details")
-    Then the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
+    When the user clicks the button/link           id=modal-change-bank-details
+    Then the user clicks the button/link           id=submit-change-bank-details
 
 Project Finance approves the bank details
     [Documentation]    INFUND-4054, INFUND-6714, INFUND-7161
@@ -153,8 +153,8 @@ Project Finance approves the bank details
     When the user goes back to the previous page
     And the user goes back to the previous page
     When the user enters text to a text field      css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 3
-    And the user clicks the button/link            jQuery=.column-half.alignright .button:contains("Update bank account details")
-    And the user clicks the button/link            jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
+    And the user clicks the button/link            id=modal-change-bank-details
+    And the user clicks the button/link            id=submit-change-bank-details
     Then the user should see the text in the page  Bank details have already been approved and cannot be changed
 
 Project Finance cannot approve the bank details again

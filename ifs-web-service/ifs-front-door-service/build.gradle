@@ -2,10 +2,6 @@ bootRun {
     addResources = false
 }
 
-configurations {
-    providedRuntime
-}
-
 project.version = frontDoorServiceVersion
 tagDocker.tag = frontDoorServiceVersion
 osStageRemote.tag = frontDoorServiceVersion
@@ -17,6 +13,11 @@ def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.pr
     task.enabled = enabled
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
+
 createContainer.hostName="front-door-svc"
 createContainer.containerName="front-door-svc"
 createContainer.containerId="front-door-svc"
@@ -24,13 +25,14 @@ createContainer.containerId="front-door-svc"
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
-    testCompile project(':ifs-resources').sourceSets.test.output
-    testCompile project(":ifs-commons").sourceSets.test.output
-    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile "com.openpojo:openpojo:0.8.6"
     testCompile "org.skyscreamer:jsonassert:1.5.0"
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
-
+jar.dependsOn ":ifs-web-service:gulp_default"

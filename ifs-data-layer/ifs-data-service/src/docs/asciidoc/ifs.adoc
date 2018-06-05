@@ -105,10 +105,6 @@ include::address.adoc[]
 == Affiliation
 include::affiliation.adoc[]
 
-[[alert]]
-== Alert
-include::alert.adoc[]
-
 [[analytics]]
 == Analytics
 include::analytics.adoc[]
@@ -158,9 +154,9 @@ include::competitionInvite.adoc[]
 == Competition Participant
 include::competitionParticipant.adoc[]
 
-[[competitionSetupQuestion]]
-== Competition Setup Question
-include::competitionSetupQuestion.adoc[]
+[[questionCompetitionSetup]]
+== Question Competition Setup
+include::questionCompetitionSetup.adoc[]
 
 [[competitionSetupFinance]]
 == Competition Setup Finance
@@ -202,6 +198,10 @@ include::interview-panel.adoc[]
 == Interview Panel Invite
 include::assessmentInterviewPanelInvite.adoc[]
 
+[[assessment]]
+== Interview Panel Allocation
+include::interview-allocation.adoc[]
+
 [[user]]
 == User
 include::user.adoc[]
@@ -231,17 +231,27 @@ include::formInputResponse.adoc[]
 include::project.adoc[]
 include::project-grant-offer.adoc[]
 include::bank-details.adoc[]
+include::project-finance.adoc[]
 include::project-finance-queries.adoc[]
 include::project-finance-attachments.adoc[]
+include::invite-project.adoc[]
 
 [[applicationCountSummary]]
 == ApplicationCountSummary
 include::applicationCountSummary.adoc[]
 
-[[competitionKeyStatistics]]
-== CompetitionKeyStatistics
-include::competitionKeyStatistics.adoc[]
+[[competitionApplicationStatistics]]
+== Competition Application Statistics
+include::competition-application-statistics.adoc[]
+
+[[competitionAssessmentStatistics]]
+== Competition Assessment Statistics
+include::competition-assessment-statistics.adoc[]
 
 [[applicationSummary]]
 == ApplicationSummary
 include::application-summary.adoc[]
+
+[[TermsAndConditions]]
+== Terms And Conditions
+include::terms-and-conditions.adoc[]

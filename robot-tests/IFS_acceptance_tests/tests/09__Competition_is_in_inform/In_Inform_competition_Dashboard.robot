@@ -72,7 +72,7 @@ Filtering on the Manage funding applications page
     When the user clicks the button/link                       jQuery=button:contains("Filter")
     Then the user should see the element                       jQuery=td:nth-child(2):contains("${application_ids['Climate control solution']}")
     And the user should not see the element                    jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
-    And the user clicks the button/link                        jQuery=.button:contains("Clear all filters")
+    And the user clicks the button/link                        jQuery=a:contains("Clear all filters")
     And the user should see the element                        jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
     [Teardown]    The user clicks the button/link              link=Competition
 
@@ -93,7 +93,7 @@ Release feedback
     Then The user should not see the element             jQuery=h1:contains("Inform")
     When The user clicks the button/link                 jQuery=a:contains("Live")
     Then The user should not see the element             link=${INFORM_COMPETITION_NAME}
-    And the user reads his email                         ${test_mailbox_two}+releasefeedback@gmail.com    Feedback for your application    The feedback provided by the independent assessors has been reviewed by Innovate UK
+    And the user reads his email                         ${test_mailbox_two}+releasefeedback@gmail.com    ${INFORM_COMPETITION_NAME}: Feedback for application ${application_ids['High Performance Gasoline Stratified']} is now available.    The feedback provided by the independent assessors has been reviewed by Innovate UK
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
@@ -219,6 +219,5 @@ The user checks the ineligible and unsuccessful applications in the Previous tab
     log in as a different user             ${email}  ${password}
     the user clicks the button/link        jQuery=a:contains("Previous")
     the user clicks the button/link        link=${NOT_EDITABLE_COMPETITION_NAME}
-    the user clicks the button/link        link=Unsuccessful applications
     the user should see the element        jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
     the user should not see the element    jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")

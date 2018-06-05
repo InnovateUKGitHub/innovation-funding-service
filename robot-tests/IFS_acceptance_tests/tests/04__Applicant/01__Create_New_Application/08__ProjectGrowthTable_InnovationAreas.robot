@@ -38,6 +38,7 @@ Comp Admin starts a new Competition
     Given the user navigates to the page           ${CA_UpcomingComp}
     When the user clicks the button/link           jQuery=.button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
+    And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
@@ -109,6 +110,7 @@ Once the project growth table is selected
     When the user clicks the button/link                 jQuery=.button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
+    And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones              ${month}  ${nextyear}
@@ -141,12 +143,9 @@ Organisation server side validation when no
     Given the user navigates to Your-finances page  ${applicationWithoutGrowth}
     Then the user clicks the button/link            link=Your organisation
     When the user clicks the button/link            jQuery=button:contains("Mark as complete")
-    Then the user should see the element            jQuery=.error-summary-list:contains("Enter your organisation size.")
-    When the user enters text to a text field       jQuery=label:contains("Turnover") + input    -42
-    And the user enters text to a text field        jQuery=label:contains("employees") + input    15.2
-    And the user clicks the button/link             jQuery=button:contains("Mark as complete")
-    Then the user should see the element            jQuery=.error-summary li:contains("This field should be 0 or higher.")
-    And the user should see the element             jQuery=.error-summary li:contains("This field can only accept whole numbers.")
+    Then the user should see a field and summary error    Enter your organisation size.
+    And the user should see a field and summary error    This field cannot be left blank.
+    And the user should see a field and summary error    This field cannot be left blank.
     And the user should not see the element         jQuery=h1:contains("Your finances")
     # Checking that by marking as complete, the user doesn't get redirected to the main finances page
 
@@ -154,9 +153,9 @@ Organisation client side validation when no
     [Documentation]    INFUND-6393
     [Tags]
     Given the user selects medium organisation size
-    When the user enters text to a text field           jQuery=label:contains("Turnover") + input  -33
+    When the user enters text to a text field           jQuery=label:contains("Turnover") + input  ${empty}
     And the user moves focus to the element             jQuery=label:contains("Full time employees") + input
-    Then the user should see a field and summary error  This field should be 0 or higher.
+    Then the user should see a field and summary error  This field cannot be left blank.
     And the user enters text to a text field            jQuery=label:contains("Full time employees") + input  ${empty}
     When the user moves focus to the element            jQuery=button:contains("Mark as complete")
     Then the user should see a field and summary error  This field cannot be left blank.
@@ -458,6 +457,7 @@ the user fills in the Open-All Initial details
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
     the user selects the option from the drop-down menu  Ian Cooper  id=innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
+    the user clicks the button twice                     css=label[for="stateAid2"]
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.resource;
 
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -10,18 +11,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Grant Offer Letter process.
  */
-public enum GrantOfferLetterState implements ProcessState {
+public enum GrantOfferLetterState implements ProcessState, IdentifiableEnum {
 
-    PENDING(State.PENDING),
-    SENT(State.ASSIGNED),
-    READY_TO_APPROVE(State.READY_TO_SUBMIT),
-    APPROVED(State.ACCEPTED);
+    PENDING(13, State.PENDING),
+    SENT(14, State.ASSIGNED),
+    READY_TO_APPROVE(15, State.READY_TO_SUBMIT),
+    APPROVED(16, State.ACCEPTED);
 
-    //the status string value
-    private State backingState;
+    private final long id;
+    private final State backingState;
 
-    // creates the enum with the chosen type.
-    GrantOfferLetterState(State backingState) {
+    GrantOfferLetterState(long id, State backingState) {
+        this.id = id;
         this.backingState = backingState;
     }
 
@@ -41,5 +42,10 @@ public enum GrantOfferLetterState implements ProcessState {
 
     public static GrantOfferLetterState fromState(State state) {
         return ProcessState.fromState(GrantOfferLetterState.values(), state);
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 }

@@ -140,41 +140,6 @@ public class ApplicationResource {
         this.leadOrganisationName = leadOrganisationName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ApplicationResource that = (ApplicationResource) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(name, that.name)
-                .append(startDate, that.startDate)
-                .append(durationInMonths, that.durationInMonths)
-                .append(applicationState, that.applicationState)
-                .append(ineligibleOutcome, that.ineligibleOutcome)
-                .append(competition, that.competition)
-                .append(leadOrganisationName, that.leadOrganisationName)
-                .append(isInAssessmentReviewPanel, that.isInAssessmentReviewPanel)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .append(startDate)
-                .append(durationInMonths)
-                .append(applicationState)
-                .append(ineligibleOutcome)
-                .append(competition)
-                .append(leadOrganisationName)
-                .append(isInAssessmentReviewPanel)
-                .toHashCode();
-    }
 
     public String getCompetitionName() {
         return competitionName;
@@ -219,6 +184,9 @@ public class ApplicationResource {
     public boolean isSubmitted() {
         return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
+
+    @JsonIgnore
+    public boolean isWithdrawn() { return ApplicationState.WITHDRAWN.equals(applicationState); }
 
     private boolean isInSubmittableCompetitionState() {
         return SUBMITTABLE_COMPETITION_STATES.contains(competitionStatus);
@@ -270,5 +238,41 @@ public class ApplicationResource {
 
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.isInAssessmentReviewPanel = inAssessmentReviewPanel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationResource that = (ApplicationResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(startDate, that.startDate)
+                .append(durationInMonths, that.durationInMonths)
+                .append(applicationState, that.applicationState)
+                .append(ineligibleOutcome, that.ineligibleOutcome)
+                .append(competition, that.competition)
+                .append(leadOrganisationName, that.leadOrganisationName)
+                .append(isInAssessmentReviewPanel, that.isInAssessmentReviewPanel)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(startDate)
+                .append(durationInMonths)
+                .append(applicationState)
+                .append(ineligibleOutcome)
+                .append(competition)
+                .append(leadOrganisationName)
+                .append(isInAssessmentReviewPanel)
+                .toHashCode();
     }
 }

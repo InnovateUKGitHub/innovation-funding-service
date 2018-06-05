@@ -1,23 +1,23 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.application.validator.NotEmptyValidator;
+import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
-import org.innovateuk.ifs.validation.validator.NotEmptyValidator;
-import org.innovateuk.ifs.validation.validator.WordCountValidator;
+import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<DefaultApplicationQuestionCreator> {
@@ -95,7 +95,7 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
         FormInput fileUploadFormInput = defaultQuestion.getFormInputs().get(3);
 
         assertEquals(defaultQuestion.getFormInputs().size(), 4);
-        assertNull(fileUploadFormInput.getAllowedFileTypes());
+        assertEquals(fileUploadFormInput.getAllowedFileTypes(), emptySet());
         assertNull(fileUploadFormInput.getGuidanceAnswer());
     }
 }

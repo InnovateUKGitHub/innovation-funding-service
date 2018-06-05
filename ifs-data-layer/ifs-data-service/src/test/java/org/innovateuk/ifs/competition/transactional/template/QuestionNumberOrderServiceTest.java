@@ -3,8 +3,10 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.setup.resource.QuestionSection;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -17,6 +19,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<QuestionNumberOrderService> {
+
+    @Mock
+    private QuestionRepository questionRepositoryMock;
+
 
     public QuestionNumberOrderService supplyServiceUnderTest() {
         return new QuestionNumberOrderService();

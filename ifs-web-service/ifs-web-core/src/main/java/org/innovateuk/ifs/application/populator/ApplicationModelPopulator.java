@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
@@ -13,7 +14,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -53,6 +54,12 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
+
+    @Autowired
+    protected ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
@@ -199,21 +206,32 @@ public class ApplicationModelPopulator {
     }
 
     public void addApplicationInputs(ApplicationResource application, Model model) {
-
         model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
-
         model.addAttribute("applicationTitle", application.getName());
         model.addAttribute("applicationDuration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() == null){
-            model.addAttribute("applicationStartdateDay", "");
-            model.addAttribute("applicationStartdateMonth", "");
-            model.addAttribute("applicationStartdateYear", "");
-        }
-        else{
-            model.addAttribute("applicationStartdateDay", String.valueOf(application.getStartDate().getDayOfMonth()));
-            model.addAttribute("applicationStartdateMonth", String.valueOf(application.getStartDate().getMonthValue()));
-            model.addAttribute("applicationStartdateYear", String.valueOf(application.getStartDate().getYear()));
-        }
     }
 
+    public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
+                                                                 final CompetitionResource competition,
+                                                                 final UserResource user, final Model model,
+                                                                 final ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles,
+                                                                 final Optional<Boolean> markAsCompleteEnabled) {
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
+    }
+
+    public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
+                                                                 final CompetitionResource competition,
+                                                                 final UserResource user,
+                                                                 Optional<SectionResource> section,
+                                                                 Optional<Long> currentQuestionId,
+                                                                 final Model model,
+                                                                 final ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles,
+                                                                 final Optional<Boolean> markAsCompleteEnabled) {
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
+        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
+    }
 }
+
+

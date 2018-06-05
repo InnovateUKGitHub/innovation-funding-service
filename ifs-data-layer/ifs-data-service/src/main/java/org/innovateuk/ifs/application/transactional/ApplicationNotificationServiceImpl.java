@@ -30,7 +30,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 
@@ -59,7 +58,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
     @Override
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
-        List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId,
+        List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId,
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
                 .flatMap(x -> x.getProcessRoles().stream())
@@ -84,7 +83,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
                     applicationRepository.save(application);
                     String bodyPlain = stripHtml(applicationIneligibleSendResource.getMessage());
-                    String bodyHtml = plainTextToHtml(bodyPlain);
 
                     NotificationTarget recipient = new UserNotificationTarget(
                                     application.getLeadApplicant().getName(),
@@ -95,8 +93,11 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                             singletonList(recipient),
                             Notifications.APPLICATION_INELIGIBLE,
                             asMap("subject", applicationIneligibleSendResource.getSubject(),
+                                    "applicationName", application.getName(),
+                                    "applicationId", application.getId(),
+                                    "competitionName", application.getCompetition().getName(),
                                     "bodyPlain", bodyPlain,
-                                    "bodyHtml", bodyHtml)
+                                    "bodyHtml", applicationIneligibleSendResource.getMessage())
                     );
                     return notificationSender.sendNotification(notification);
                 }).andOnSuccessReturnVoid();
@@ -114,6 +115,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                 asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
+                        "applicationId", application.getId(),
                         "competitionName", application.getCompetition().getName(),
                         "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 

@@ -17,15 +17,13 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,10 +42,9 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 
 public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<AssessorCompetitionSummaryController> {
@@ -74,9 +71,6 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
     private ProfileRepository profileRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
@@ -89,7 +83,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
     }
 
     @Test
-    public void getAssessorSummary() throws Exception {
+    public void getAssessorSummary() {
         loginCompAdmin();
 
         Competition competition = newCompetition()
@@ -156,10 +150,6 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         processRoleRepository.save(processRoles);
 
-        ActivityState submittedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState());
-        ActivityState acceptedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, ACCEPTED.getBackingState());
-        ActivityState rejectedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, REJECTED.getBackingState());
-
         AssessmentRejectOutcome rejectOutcome = newAssessmentRejectOutcome()
                 .withRejectReason(CONFLICT_OF_INTEREST)
                 .withRejectComment("rejection comment")
@@ -169,7 +159,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withId()
                 .withApplication(applications.get(0), applications.get(1), applications.get(2), applications.get(0), applications.get(1))
                 .withParticipant(processRoles.get(0), processRoles.get(1), processRoles.get(2), processRoles.get(3), processRoles.get(4))
-                .withActivityState(rejectedState, submittedState, acceptedState, submittedState, submittedState)
+                .withProcessState(REJECTED, SUBMITTED, ACCEPTED, SUBMITTED, SUBMITTED)
                 .withRejection(rejectOutcome, null, null, null, null)
                 .build(5);
 

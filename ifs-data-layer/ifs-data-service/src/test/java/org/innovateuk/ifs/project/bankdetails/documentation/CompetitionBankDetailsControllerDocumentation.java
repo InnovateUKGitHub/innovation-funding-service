@@ -6,9 +6,11 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.bankdetails.controller.CompetitionBankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -16,8 +18,8 @@ import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -30,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 
 public class CompetitionBankDetailsControllerDocumentation extends BaseControllerMockMVCTest<CompetitionBankDetailsController> {
+
+    @Mock
+    private BankDetailsRepository bankDetailsRepositoryMock;
 
     @Override
     protected CompetitionBankDetailsController supplyControllerUnderTest() {

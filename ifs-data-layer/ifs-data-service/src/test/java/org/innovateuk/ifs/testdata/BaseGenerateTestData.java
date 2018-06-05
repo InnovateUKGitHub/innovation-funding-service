@@ -21,7 +21,7 @@ import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.services.*;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -115,7 +115,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    @Value("${ifs.generate.test.data.competition.filter:ALL_COMPETITIONS}")
+    @Value("${ifs.generate.test.data.competition.filter:BY_NAME}")
     private CompetitionFilter competitionFilter;
 
     @Value("${flyway.url}")
@@ -190,7 +190,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Generic innovation}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Biosciences round three: plastic recovery in the industrial sector}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }

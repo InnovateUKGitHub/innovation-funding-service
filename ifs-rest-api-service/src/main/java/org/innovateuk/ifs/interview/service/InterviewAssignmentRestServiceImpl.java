@@ -2,8 +2,10 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.invite.resource.*;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -86,7 +88,41 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
-    public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", REST_URL, "key-statistics", competitionId), InterviewAssignmentKeyStatisticsResource.class);
+    public RestResult<Boolean> isAssignedToInterview(long applicationId) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "is-assigned", applicationId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), Boolean.class);
+    }
+
+    @Override
+    public RestResult<Void> uploadFeedback(long applicationId, String contentType, long size, String originalFilename, byte[] multipartFileBytes) {
+        String url = format("%s/%s/%s?filename=%s", REST_URL, "feedback", applicationId, originalFilename);
+        return postWithRestResult(url, multipartFileBytes, createFileUploadHeader(contentType, size), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> deleteFeedback(long applicationId) {
+        String url = format("%s/%s/%s", REST_URL, "feedback", applicationId);
+        return deleteWithRestResult(url);
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> downloadFeedback(long applicationId) {
+        String url = format("%s/%s/%s", REST_URL, "feedback", applicationId);
+        return getWithRestResult(url, ByteArrayResource.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> findFeedback(long applicationId) {
+        String url = format("%s/%s/%s", REST_URL, "feedback-details", applicationId);
+        return getWithRestResult(url, FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<InterviewApplicationSentInviteResource> getSentInvite(long applicationId) {
+        String url = format("%s/%s/%s", REST_URL, "sent-invite", applicationId);
+        return getWithRestResult(url, InterviewApplicationSentInviteResource.class);
     }
 }

@@ -115,26 +115,34 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
 
         if (isAssessorForApplication(userApplicationRoles, user)) {
 
-            List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService
+            List<AssessorFormInputResponseResource> allAssessorResponses = assessorFormInputResponseRestService
                     .getAllAssessorFormInputResponsesForPanel(applicationId)
                     .getSuccess();
 
-            if(!inputResponse.isEmpty()) {
+            if(!allAssessorResponses.isEmpty()) {
 
-                List<AssessorFormInputResponseResource> questionScore = inputResponse
+                List<AssessmentResource> feedbackSummary = assessmentRestService
+                        .getByUserAndApplication(user.getId(), applicationId)
+                        .getSuccess();
+
+                long assessmentId = feedbackSummary.get(0).getId();
+
+                List<AssessorFormInputResponseResource> assessorResponses = allAssessorResponses
                         .stream()
-                        .filter(response -> formInputRestService.getById(response.getFormInput())
-                                .getSuccess().getDescription().equals("Question score"))
+                        .filter(response -> response.getAssessment().equals(assessmentId))
                         .collect(toList());
 
-                List<AssessorFormInputResponseResource> questionFeedback = inputResponse
+                List<AssessorFormInputResponseResource> questionScore = assessorResponses
                         .stream()
-                        .filter(response -> formInputRestService.getById(response.getFormInput())
-                                .getSuccess().getDescription().equals("Feedback"))
+                        .filter(response -> "Question score".equals(formInputRestService.getById(response.getFormInput())
+                                .getSuccess().getDescription()))
                         .collect(toList());
 
-                List<AssessmentResource> feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(),
-                        applicationId).getSuccess();
+                List<AssessorFormInputResponseResource> questionFeedback = assessorResponses
+                        .stream()
+                        .filter(response -> "Feedback".equals(formInputRestService.getById(response.getFormInput())
+                                .getSuccess().getDescription()))
+                        .collect(toList());
 
                 model.addAttribute("feedback", questionFeedback);
                 model.addAttribute("score", questionScore);

@@ -1,16 +1,15 @@
 package org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration;
 
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
-import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +20,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIGIBILITY;
 
 /**
  * {@code EligibilityWorkflowService} is the entry point for triggering the workflow.
@@ -63,17 +61,12 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
 
     public EligibilityState getState(PartnerOrganisation partnerOrganisation) {
         EligibilityProcess process = getCurrentProcess(partnerOrganisation);
-        return process != null ? process.getActivityState() : EligibilityState.REVIEW;
+        return process != null ? process.getProcessState() : EligibilityState.REVIEW;
     }
 
     @Override
     protected EligibilityProcess createNewProcess(PartnerOrganisation target, ProjectUser participant) {
         return new EligibilityProcess(participant, target, null);
-    }
-
-    @Override
-    protected ActivityType getActivityType() {
-        return PROJECT_SETUP_ELIGIBILITY;
     }
 
     @Override
@@ -116,4 +109,3 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
                 .setHeader("internalParticipant", internalUser);
     }
 }
-

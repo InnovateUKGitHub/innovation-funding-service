@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.project.financecheck.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
@@ -16,7 +19,7 @@ import static org.innovateuk.ifs.documentation.FinanceCheckDocs.*;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static org.innovateuk.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
-import static org.innovateuk.ifs.project.builder.CostResourceBuilder.newCostResource;
+import static org.innovateuk.ifs.project.financecheck.builder.CostResourceBuilder.newCostResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckOverviewResourceBuilder.newFinanceCheckOverviewResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;
@@ -35,6 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTest<FinanceCheckController> {
+
+    @Mock
+    private FinanceCheckService financeCheckServiceMock;
 
     @Test
     public void getByProjectAndOrganisation() throws Exception {
@@ -71,7 +77,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         Long projectId = 123L;
         Long competitionId = 456L;
 
-        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L).withName("Organisation A", "Organisation B", "Organisation C").withEligibility(Eligibility.REVIEW, Eligibility.APPROVED, Eligibility.APPROVED).build(3);
+        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L).withName("Organisation A", "Organisation B", "Organisation C").withEligibility(EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityState.APPROVED).build(3);
 
         FinanceCheckSummaryResource expected = newFinanceCheckSummaryResource().
                 withProjectId(projectId).

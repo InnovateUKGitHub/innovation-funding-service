@@ -3,12 +3,7 @@ package org.innovateuk.ifs.project.finance.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -73,13 +68,13 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void testGetEligibility() {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
 
         setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/eligibility", EligibilityResource.class, eligibility);
 
         RestResult<EligibilityResource> results = service.getEligibility(123L, 456L);
 
-        assertEquals(Eligibility.APPROVED, results.getSuccess().getEligibility());
+        assertEquals(EligibilityState.APPROVED, results.getSuccess().getEligibility());
         assertEquals(EligibilityRagStatus.GREEN, results.getSuccess().getEligibilityRagStatus());
     }
 
@@ -87,11 +82,11 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     public void testSaveEligibility() {
 
         String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/eligibility/" +
-                Eligibility.APPROVED.name() + "/" + EligibilityRagStatus.RED.name();
+                EligibilityState.APPROVED.name() + "/" + EligibilityRagStatus.RED.name();
 
         setupPostWithRestResultExpectations(postUrl, OK);
 
-        RestResult<Void> result = service.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityRagStatus.RED);
+        RestResult<Void> result = service.saveEligibility(123L, 456L, EligibilityState.APPROVED, EligibilityRagStatus.RED);
 
         assertTrue(result.isSuccess());
 

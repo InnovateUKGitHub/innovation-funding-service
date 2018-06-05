@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.resource;
 
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -10,21 +11,22 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
-public enum AssessmentState implements ProcessState {
-    // All types of status
-    CREATED(State.CREATED),
-    PENDING(State.PENDING),
-    WITHDRAWN(State.WITHDRAWN),
-    REJECTED(State.REJECTED),
-    ACCEPTED(State.ACCEPTED),
-    OPEN(State.OPEN),
-    DECIDE_IF_READY_TO_SUBMIT(State.DECIDE_IF_READY_TO_SUBMIT),
-    READY_TO_SUBMIT(State.READY_TO_SUBMIT),
-    SUBMITTED(State.SUBMITTED);
+public enum AssessmentState implements ProcessState, IdentifiableEnum<AssessmentState> {
+    CREATED(19, State.CREATED),
+    PENDING(1, State.PENDING),
+    WITHDRAWN(20, State.WITHDRAWN),
+    REJECTED(3, State.REJECTED),
+    ACCEPTED(12, State.ACCEPTED),
+    OPEN(2, State.OPEN),
+    READY_TO_SUBMIT(4, State.READY_TO_SUBMIT),
+    SUBMITTED(5, State.SUBMITTED),
 
-    private State backingState;
+    DECIDE_IF_READY_TO_SUBMIT(-1, State.DECIDE_IF_READY_TO_SUBMIT); // pseudo state?
 
     private static final Map<String, AssessmentState> assessmentStatesMap;
+
+    private final long id;
+    private final State backingState;
 
     static {
         assessmentStatesMap = new HashMap<>();
@@ -34,8 +36,8 @@ public enum AssessmentState implements ProcessState {
         }
     }
 
-    // creates the enum with the chosen type.
-    AssessmentState(State backingState) {
+    AssessmentState(long id, State backingState) {
+        this.id = id;
         this.backingState = backingState;
     }
 
@@ -67,5 +69,10 @@ public enum AssessmentState implements ProcessState {
 
     public static Set<State> getBackingStates(List<AssessmentState> states) {
         return simpleMapSet(states, AssessmentState::getBackingState);
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 }

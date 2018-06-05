@@ -20,7 +20,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +151,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
     @Override
     public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
-        throw new NotImplementedException("JES forms dont have any cost data.");
+        throw new NotImplementedException("JES forms don't have any cost data.");
     }
 
     private ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {

@@ -46,13 +46,13 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postCode = "TW14 9QG";
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postCode=" + postCode, null, OK);
+        String postcode = "TW14 9QG";
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postcode=" + postcode, null, OK);
 
-        RestResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postCode);
+        RestResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postcode);
         assertTrue(result.isSuccess());
 
-        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postCode=" + postCode, Void.class, null);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postcode=" + postcode, Void.class, null);
     }
 
     @Test
