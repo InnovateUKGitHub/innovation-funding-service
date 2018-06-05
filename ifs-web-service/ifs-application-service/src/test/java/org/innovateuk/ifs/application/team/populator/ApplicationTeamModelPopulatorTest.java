@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.application.team.controller;
+package org.innovateuk.ifs.application.team.populator;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -19,10 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +29,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -41,20 +39,13 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<ApplicationTeamController> {
-
-    @Spy
-    @InjectMocks
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private ApplicationService applicationService;
@@ -65,13 +56,11 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     @Mock
     private UserService userService;
 
-    @Override
-    protected ApplicationTeamController supplyControllerUnderTest() {
-        return new ApplicationTeamController();
-    }
+    @InjectMocks
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator = new ApplicationTeamModelPopulator();
 
     @Test
-    public void getApplicationTeam_loggedInUserIsLead() throws Exception {
+    public void populateModel_loggedInUserIsLead() {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -105,14 +94,16 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 "Application name",
                 expectedOrganisations,
                 true,
-                false
+                false,
+                false,
+                false,
+                true
         );
 
-        setLoggedInUser(leadApplicant);
-        mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("application-team/team"));
+        ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
+                (applicationResource.getId(), leadApplicant.getId());
+
+        assertEquals(expectedViewModel, applicationTeamViewModel);
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
@@ -124,7 +115,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void getApplicationTeam_loggedInUserIsNonLead() throws Exception {
+    public void populateModel_loggedInUserIsNonLead() {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -158,15 +149,16 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 "Application name",
                 expectedOrganisations,
                 false,
+                false,
+                false,
+                false,
                 false
         );
 
-        setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
+        ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
+                (applicationResource.getId(), usersMap.get("jessica.doe@ludlow.com").getId());
 
-        mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("application-team/team"));
+        assertEquals(expectedViewModel, applicationTeamViewModel);
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
@@ -178,7 +170,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void getApplicationTeam_leadOrgHasNoInvites() throws Exception {
+    public void populateModel_leadOrgHasNoInvites() {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -212,14 +204,16 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 "Application name",
                 expectedOrganisations,
                 false,
+                false,
+                false,
+                false,
                 false
         );
 
-        setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
-        mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("application-team/team"));
+        ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
+                (applicationResource.getId(), usersMap.get("jessica.doe@ludlow.com").getId());
+
+        assertEquals(expectedViewModel, applicationTeamViewModel);
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
@@ -231,7 +225,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void getApplicationTeam_organisationUnconfirmed() throws Exception {
+    public void getApplicationTeam_organisationUnconfirmed() {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -266,14 +260,16 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 "Application name",
                 expectedOrganisations,
                 true,
-                false
+                false,
+                false,
+                false,
+                true
         );
 
-        setLoggedInUser(leadApplicant);
-        mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("application-team/team"));
+        ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
+                (applicationResource.getId(), leadApplicant.getId());
+
+        assertEquals(expectedViewModel, applicationTeamViewModel);
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
@@ -293,14 +289,11 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         setLoggedInUser(leadApplicant);
-        MvcResult result = mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("application-team/team"))
-                .andReturn();
 
-        ApplicationTeamViewModel model = (ApplicationTeamViewModel) result.getModelAndView().getModel().get("model");
-        assertTrue(model.isApplicationCanBegin());
+        ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
+                (applicationResource.getId(), leadApplicant.getId());
+
+        assertTrue(applicationTeamViewModel.isApplicationCanBegin());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
@@ -312,22 +305,17 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void getApplicationTeam_nonLeadApplicantHasNoOptionToBeginTheApplication() throws Exception {
+    public void getApplicationTeam_nonLeadApplicantHasNoOptionToBeginTheApplication() {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap, CREATED);
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
-        setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
-        MvcResult result = mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("application-team/team"))
-                .andReturn();
+        ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
+                (applicationResource.getId(), usersMap.get("jessica.doe@ludlow.com").getId());
 
-        ApplicationTeamViewModel model = (ApplicationTeamViewModel) result.getModelAndView().getModel().get("model");
-        assertFalse(model.isApplicationCanBegin());
+        assertTrue(applicationTeamViewModel.isApplicationCanBegin());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
@@ -346,6 +334,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         ApplicationResource applicationResource = newApplicationResource()
                 .withName("Application name")
                 .withApplicationState(applicationState)
+                .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);

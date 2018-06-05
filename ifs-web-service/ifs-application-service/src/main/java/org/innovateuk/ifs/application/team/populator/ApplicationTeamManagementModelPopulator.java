@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.team.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -37,6 +39,9 @@ public class ApplicationTeamManagementModelPopulator {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
 
     @Autowired
     private UserService userService;
@@ -85,6 +90,7 @@ public class ApplicationTeamManagementModelPopulator {
                 .map(InviteOrganisationResource::getInviteResources).orElse(emptyList());
 
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
+                getApplicationTeamQuestion(applicationResource.getCompetition()),
                 applicationResource.getName(),
                 organisationId,
                 ofNullable(inviteOrganisationResource).map(InviteOrganisationResource::getId).orElse(null),
@@ -102,6 +108,7 @@ public class ApplicationTeamManagementModelPopulator {
                                                                                    InviteOrganisationResource inviteOrganisationResource) {
         boolean organisationExists = inviteOrganisationResource.getOrganisation() != null;
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
+                getApplicationTeamQuestion(applicationResource.getCompetition()),
                 applicationResource.getName(),
                 inviteOrganisationResource.getOrganisation(),
                 inviteOrganisationResource.getId(),
@@ -150,6 +157,11 @@ public class ApplicationTeamManagementModelPopulator {
     private InviteOrganisationResource getInviteOrganisationByInviteOrganisationId(long inviteOrganisationId) {
         return inviteOrganisationRestService.getById(inviteOrganisationId)
                 .getSuccess();
+    }
+
+    private long getApplicationTeamQuestion(long competitionId) {
+        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                APPLICATION_TEAM).getSuccess().getId();
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {

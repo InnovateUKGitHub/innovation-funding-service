@@ -10,7 +10,8 @@ import java.util.List;
  */
 public class ApplicationTeamManagementViewModel {
 
-    private Long applicationId;
+    private long applicationId;
+    private long questionId;
     private String applicationName;
     private Long organisationId;
     private Long inviteOrganisationId;
@@ -20,7 +21,8 @@ public class ApplicationTeamManagementViewModel {
     private List<ApplicationTeamManagementApplicantRowViewModel> applicants;
     private boolean organisationExists;
 
-    public ApplicationTeamManagementViewModel(Long applicationId,
+    public ApplicationTeamManagementViewModel(long applicationId,
+                                              long questionId,
                                               String applicationName,
                                               Long organisationId,
                                               Long inviteOrganisationId,
@@ -30,6 +32,7 @@ public class ApplicationTeamManagementViewModel {
                                               List<ApplicationTeamManagementApplicantRowViewModel> applicants,
                                               boolean organisationExists) {
         this.applicationId = applicationId;
+        this.questionId = questionId;
         this.applicationName = applicationName;
         this.organisationId = organisationId;
         this.inviteOrganisationId = inviteOrganisationId;
@@ -42,6 +45,10 @@ public class ApplicationTeamManagementViewModel {
 
     public long getApplicationId() {
         return applicationId;
+    }
+
+    public long getQuestionId() {
+        return questionId;
     }
 
     public String getApplicationName() {
@@ -81,17 +88,23 @@ public class ApplicationTeamManagementViewModel {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        ApplicationTeamManagementViewModel that = (ApplicationTeamManagementViewModel) o;
+        final ApplicationTeamManagementViewModel that = (ApplicationTeamManagementViewModel) o;
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
+                .append(questionId, that.questionId)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(userLeadApplicant, that.userLeadApplicant)
+                .append(organisationExists, that.organisationExists)
                 .append(applicationName, that.applicationName)
                 .append(organisationId, that.organisationId)
                 .append(inviteOrganisationId, that.inviteOrganisationId)
@@ -104,6 +117,7 @@ public class ApplicationTeamManagementViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(applicationId)
+                .append(questionId)
                 .append(applicationName)
                 .append(organisationId)
                 .append(inviteOrganisationId)
@@ -111,6 +125,7 @@ public class ApplicationTeamManagementViewModel {
                 .append(leadOrganisation)
                 .append(userLeadApplicant)
                 .append(applicants)
+                .append(organisationExists)
                 .toHashCode();
     }
 }
