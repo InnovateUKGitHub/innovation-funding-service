@@ -61,24 +61,32 @@ public class InterviewFeedbackViewModel {
 
     public String getBannerText() {
         if (isAssessor()) {
+            return getAssessorBannerText();
+        } else {
+            return getApplicantBannerText();
+        }
+    }
+
+    public String getAssessorBannerText() {
+        if (hasResponse()) {
+            return ASSESSOR_WITH_RESPONSE_BANNER;
+        } else {
+            return COLLAB_WITHOUT_RESPONSE_BANNER;
+        }
+    }
+
+    public String getApplicantBannerText() {
+        if (isLeadApplicant()) {
             if (hasResponse()) {
-                return ASSESSOR_WITH_RESPONSE_BANNER;
+                return LEAD_WITH_RESPONSE_BANNER;
             } else {
-                return COLLAB_WITHOUT_RESPONSE_BANNER;
+                return LEAD_WITHOUT_RESPONSE_BANNER;
             }
         } else {
-            if (isLeadApplicant()) {
-                if (hasResponse()) {
-                    return LEAD_WITH_RESPONSE_BANNER;
-                } else {
-                    return LEAD_WITHOUT_RESPONSE_BANNER;
-                }
+            if (hasResponse()) {
+                return COLLAB_WITH_RESPONSE_BANNER;
             } else {
-                if (hasResponse()) {
-                    return COLLAB_WITH_RESPONSE_BANNER;
-                } else {
-                    return COLLAB_WITHOUT_RESPONSE_BANNER;
-                }
+                return COLLAB_WITHOUT_RESPONSE_BANNER;
             }
         }
     }
