@@ -49,6 +49,7 @@ import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.n
 import static org.innovateuk.ifs.interview.builder.InterviewResourceBuilder.newInterviewResource;
 import static org.innovateuk.ifs.interview.transactional.InterviewAllocationServiceImpl.Notifications.NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -313,7 +314,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         User user = newUser().build();
         String content = "content";
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
-        String templatePath = "allocate_interview_applications_to_assessor_text.txt";
+        String templatePath = PREVIEW_TEMPLATES_PATH + "allocate_interview_applications_to_assessor_text.txt";
         Map<String, Object> notificationArguments = asMap(
                 "name", user.getName(),
                 "competitionName", competition.getName()

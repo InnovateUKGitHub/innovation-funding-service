@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.assessment.profile.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.Gender;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
  */
 public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "{validation.standard.firstname.required}")
+    @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List({
             @Size(min = 2, message = "{validation.standard.firstname.length.min}"),
@@ -27,7 +27,7 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     })
     private String firstName;
 
-    @NotEmpty(message = "{validation.standard.lastname.required}")
+    @NotBlank(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List({
             @Size(min = 2, message = "{validation.standard.lastname.length.min}"),
@@ -47,7 +47,7 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     @Valid
     private AddressResource addressForm = new AddressResource();
 
-    @NotEmpty(message = "{validation.standard.phonenumber.required}")
+    @NotBlank(message = "{validation.standard.phonenumber.required}")
     @Size.List({
             @Size(min = 8, message = "{validation.standard.phonenumber.length.min}"),
             @Size(max = 20, message = "{validation.standard.phonenumber.length.max}")

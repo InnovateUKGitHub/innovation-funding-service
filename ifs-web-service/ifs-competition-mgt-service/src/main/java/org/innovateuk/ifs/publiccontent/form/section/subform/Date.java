@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.publiccontent.form.section.subform;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * The repeating date that is being used in the {@link DatesForm}
@@ -23,7 +21,7 @@ public class Date {
     @Range(min = 2000, max = 9999, message = "{validation.publiccontent.datesform.date.year}")
     private Integer year;
 
-    @NotEmpty(message = "{validation.publiccontent.datesform.content.required}")
+    @NotBlank(message = "{validation.publiccontent.datesform.content.required}")
     private String content;
 
     public Long getId() {

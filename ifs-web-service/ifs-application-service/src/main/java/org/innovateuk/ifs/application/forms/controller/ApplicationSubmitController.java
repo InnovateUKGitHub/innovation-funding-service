@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -26,7 +26,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QUESTION_PARAM;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
 
 /**
  * This controller will handle all submit requests that are related to the application overview.

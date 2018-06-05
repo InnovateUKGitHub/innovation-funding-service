@@ -1,0 +1,35 @@
+=== Get Successful
+==== Request
+include::{snippets}/application-notification-template/get-successful-notification-template/http-request.adoc[]
+include::{snippets}/application-notification-template/get-successful-notification-template/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application-notification-template/get-successful-notification-template/http-response.adoc[]
+include::{snippets}/application-notification-template/get-successful-notification-template/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application-notification-template/get-successful-notification-template/curl-request.adoc[]
+
+=== Get Unsuccessful
+==== Request
+include::{snippets}/application-notification-template/get-unsuccessful-notification-template/http-request.adoc[]
+include::{snippets}/application-notification-template/get-unsuccessful-notification-template/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application-notification-template/get-unsuccessful-notification-template/http-response.adoc[]
+include::{snippets}/application-notification-template/get-unsuccessful-notification-template/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application-notification-template/get-unsuccessful-notification-template/curl-request.adoc[]
+
+=== Get Ineligible
+==== Request
+include::{snippets}/application-notification-template/get-ineligible-notification-template/http-request.adoc[]
+include::{snippets}/application-notification-template/get-ineligible-notification-template/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application-notification-template/get-ineligible-notification-template/http-response.adoc[]
+include::{snippets}/application-notification-template/get-ineligible-notification-template/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application-notification-template/get-ineligible-notification-template/curl-request.adoc[]

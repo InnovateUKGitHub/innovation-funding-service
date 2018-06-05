@@ -2,7 +2,7 @@ package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.initialdetail.form;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -36,7 +37,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     private Integer openingDateYear;
 
-    @NotEmpty(message = "{validation.standard.title.required}")
+    @NotBlank(message = "{validation.standard.title.required}")
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String title;
 

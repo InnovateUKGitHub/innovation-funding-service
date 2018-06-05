@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.user.resource.Role;
 
 import javax.validation.constraints.Pattern;
@@ -15,7 +15,7 @@ public class EditUserResource {
 
     private Long userId;
 
-    @NotEmpty(message = "{validation.standard.firstname.required}")
+    @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.firstname.length.min}"),
@@ -23,7 +23,7 @@ public class EditUserResource {
     })
     private String firstName;
 
-    @NotEmpty(message = "{validation.standard.lastname.required}")
+    @NotBlank(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.lastname.length.min}"),
