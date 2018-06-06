@@ -13,6 +13,6 @@ ALTER TABLE process_role
 ALTER TABLE process_role ADD CONSTRAINT fk_process_role_role FOREIGN KEY (role_id) REFERENCES role(id);
 
 ALTER TABLE process_role
-  DROP FOREIGN KEY FK_20gvkjd4xrjyspmlisrd50xbj,
-  MODIFY role_id BIGINT(20) NOT NULL;
-ALTER TABLE process_role ADD CONSTRAINT fk_process_role_organisation FOREIGN KEY (organisation_id) REFERENCES organisation(id);
+  DROP FOREIGN KEY FK_gwtw85iv3vxq2914vxbluc8e9,
+  MODIFY application_id BIGINT(20) NOT NULL;
+ALTER TABLE process_role ADD CONSTRAINT fk_process_role_application FOREIGN KEY (application_id) REFERENCES application(id);
