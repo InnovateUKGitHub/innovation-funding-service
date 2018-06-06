@@ -19,7 +19,7 @@ ShibCompatValidUser On
   Header set X-XSS-Protection "1; mode=block"
   Header set X-Content-Type-Options "nosniff"
   Header set Access-Control-Allow-Origin "https://${IDP_DOMAIN}"
-  Header set Content-Security-Policy "default-src 'none'; frame-src 'self' https://${IDP_DOMAIN} https://*.hotjar.com; img-src 'self' data: https://assets.publishing.service.gov.uk http://*.hotjar.com https://*.hotjar.com; script-src 'self' 'unsafe-inline' data: https://ajax.googleapis.com https://www.google-analytics.com https://www.googletagmanager.com http://*.hotjar.com https://*.hotjar.com 'unsafe-eval'; style-src 'self' https://${IDP_DOMAIN} 'unsafe-inline'; font-src 'self' data: http://*.hotjar.com https://*.hotjar.com; connect-src 'self' http://*.hotjar.com:* https://*.hotjar.com:* ws://*.hotjar.com wss://*.hotjar.com https://www.google-analytics.com; object-src 'self' https://${SP_DOMAIN}"
+  Header set Content-Security-Policy "default-src 'none'; frame-src 'self' https://${IDP_DOMAIN} https://*.hotjar.com; img-src 'self' data: https://assets.publishing.service.gov.uk https://www.google-analytics.com http://*.hotjar.com https://*.hotjar.com; script-src 'self' 'unsafe-inline' data: https://ajax.googleapis.com https://www.google-analytics.com https://www.googletagmanager.com https://tagmanager.google.com http://*.hotjar.com https://*.hotjar.com 'unsafe-eval'; style-src 'self' https://${IDP_DOMAIN} 'unsafe-inline'; font-src 'self' data: http://*.hotjar.com https://*.hotjar.com; connect-src 'self' http://*.hotjar.com:* https://*.hotjar.com:* ws://*.hotjar.com wss://*.hotjar.com https://www.google-analytics.com; object-src 'self' https://${SP_DOMAIN}"
 
   DocumentRoot /var/www/html
 
