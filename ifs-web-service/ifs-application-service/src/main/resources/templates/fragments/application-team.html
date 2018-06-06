@@ -37,12 +37,13 @@
                 </tbody>
             </table>
         </div>
-        <div class="extra-margin">
-            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
-            <th:block th:if="${model.summary}"
-                      th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
-        </div>
     </th:block>
+
+    <div class="extra-margin">
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
+        <th:block th:if="${model.summary}"
+                  th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
+    </div>
 </th:block>
 
 </html>

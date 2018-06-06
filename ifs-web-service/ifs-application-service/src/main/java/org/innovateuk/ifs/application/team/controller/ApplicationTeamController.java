@@ -28,7 +28,7 @@ public class ApplicationTeamController {
     @PreAuthorize("hasPermission(#applicationId,'org.innovateuk.ifs.application.resource.ApplicationCompositeId' ,'VIEW_APPLICATION_TEAM_PAGE')")
     public String getApplicationTeam(Model model, @P("applicationId")@PathVariable("applicationId") long applicationId,
                                      UserResource loggedInUser) {
-        model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
+        model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId(), 1L));
         return "application-team/team";
     }
 }

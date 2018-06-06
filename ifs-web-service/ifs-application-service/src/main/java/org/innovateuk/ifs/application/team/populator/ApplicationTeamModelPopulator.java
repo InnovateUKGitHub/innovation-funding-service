@@ -1,12 +1,17 @@
 package org.innovateuk.ifs.application.team.populator;
 
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -44,24 +49,39 @@ public class ApplicationTeamModelPopulator {
     @Autowired
     private UserService userService;
 
-    public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId) {
+    @Autowired
+    private ApplicantRestService applicantRestService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId, Long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
+
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
         boolean closed = !isCompetitionOpen(applicationResource);
-        // TODO IFS-3612
-        boolean complete = false;
+        boolean complete = isComplete(applicationId, loggedInUserId, questionId);
         boolean canMarkAsComplete = userIsLeadApplicant;
         return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
                 userIsLeadApplicant, applicationCanBegin, closed, complete, canMarkAsComplete);
     }
 
-    public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId) {
-        ApplicationTeamViewModel model = populateModel(applicationId, loggedInUserId);
+    public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {
+        QuestionResource question = questionService.getByCompetitionAndQuestionSetupType(competitionId, CompetitionSetupQuestionType.APPLICATION_TEAM);
+        ApplicationTeamViewModel model = populateModel(applicationId, loggedInUserId, question.getId());
         model.setSummary(true);
         return model;
+    }
+
+    private boolean isComplete(long applicationId, long loggedInUserId, Long questionId) {
+        if (questionId == null) {
+            return false;
+        }
+        ApplicantQuestionResource question = applicantRestService.getQuestion(loggedInUserId, applicationId, questionId);
+        return question.isCompleteByApplicant(question.getCurrentApplicant());
     }
 
     private boolean isApplicationStateCreated(ApplicationResource applicationResource) {
