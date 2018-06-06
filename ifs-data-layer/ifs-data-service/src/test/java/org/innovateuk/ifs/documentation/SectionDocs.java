@@ -18,6 +18,8 @@ public class SectionDocs {
             fieldWithPath("questionGroup").description("group the question belongs to"),
             fieldWithPath("competition").description("competition the section belongs to"),
             fieldWithPath("questions").description("list of questions belonging to the section"),
+            fieldWithPath("leadQuestions").description("list of lead questions belonging to the section"),
+            fieldWithPath("generalQuestions").description("list of general questions belonging to the section"),
             fieldWithPath("parentSection").description("parent section of this section"),
             fieldWithPath("childSections").description("list of child sections"),
             fieldWithPath("displayInAssessmentApplicationSummary").description("whether to display this section in the assessment summary"),
