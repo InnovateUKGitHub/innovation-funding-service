@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
-import org.innovateuk.ifs.application.forms.controller.ApplicationSummaryController;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
@@ -32,16 +32,15 @@ public class SetupStatusController {
     @Autowired
     private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
 
-    public static final String PROJECT_SETUP_PAGE = "project/setup-status";
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_SETUP_STATUS')")
     @GetMapping("/{projectId}")
     @AsyncMethod
     public String viewProjectSetupStatus(@PathVariable("projectId") final long projectId,
                                          Model model,
                                          UserResource loggedInUser,
-                                         NativeWebRequest springRequest, @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(ApplicationSummaryController.FeedbackSummaryOrigin.PROJECT_SETUP_STATUS , queryParams);
+                                         NativeWebRequest springRequest,
+                                         @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.PROJECT_SETUP_STATUS , queryParams);
 
         HttpServletRequest request = springRequest.getNativeRequest(HttpServletRequest.class);
         String dashboardUrl = request.getScheme() + "://" +
@@ -51,7 +50,7 @@ public class SetupStatusController {
 
         model.addAttribute("model", setupStatusViewModelPopulator.populateViewModel(projectId, loggedInUser, originQuery));
         model.addAttribute("url", dashboardUrl);
-        model.addAttribute("originQuery", originQuery);
-        return PROJECT_SETUP_PAGE;
+
+        return "project/setup-status";
     }
 }

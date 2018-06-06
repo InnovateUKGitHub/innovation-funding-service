@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
 import org.innovateuk.ifs.application.forms.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -68,7 +69,6 @@ public class ApplicationSummaryController {
     private InterviewResponseRestService interviewResponseRestService;
     private String origin;
     MultiValueMap queryParams;
-    private Long projectId;
 
     public ApplicationSummaryController() {
     }
@@ -102,20 +102,6 @@ public class ApplicationSummaryController {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.interviewResponseRestService = interviewResponseRestService;
-    }
-    public enum FeedbackSummaryOrigin {
-        PROJECT_SETUP_STATUS("/project-setup/project/ + {projectId}"),
-        APPLICANT_DASHBOARD("/applicant/dashboard");
-
-        private String feedbackOriginUrl;
-
-        FeedbackSummaryOrigin(String feedbackOriginUrl) {
-            this.feedbackOriginUrl = feedbackOriginUrl;
-        }
-
-        public String getFeedbackOriginUrl() {
-            return feedbackOriginUrl;
-        }
     }
     
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
@@ -169,7 +155,7 @@ public class ApplicationSummaryController {
     }
 
     private String buildBackUrl(String origin, long applicationId, MultiValueMap<String, String> queryParams) {
-        String baseUrl = FeedbackSummaryOrigin.valueOf(origin).getFeedbackOriginUrl();
+        String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
         queryParams.remove("origin");
 
         if (queryParams.containsKey("applicationId")) {

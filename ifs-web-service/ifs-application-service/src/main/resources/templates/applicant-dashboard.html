@@ -26,9 +26,8 @@
                         <li th:each="projectView : ${model.projects}">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="${projectView.linkUrl}" th:text="${projectView.title}">
-                                        PROJECT NAME
-                                    </a>
+                                    <a th:href="${projectView.linkUrl} + ${model.originQuery}"
+                                       th:text="${projectView.title}">PROJECT NAME</a>
                                 </h3>
                                 <ul class="application-details">
                                     <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
