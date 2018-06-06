@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
@@ -60,6 +62,12 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    protected AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Autowired
+    protected AssessmentRestService assessmentRestService;
 
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
@@ -209,6 +217,14 @@ public class ApplicationModelPopulator {
         model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
         model.addAttribute("applicationTitle", application.getName());
         model.addAttribute("applicationDuration", String.valueOf(application.getDurationInMonths()));
+    }
+
+    public void addFeedbackAndScores(Model model, long applicationId) {
+        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
+        model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
+                .getSuccess()
+                .getFeedback()
+        );
     }
 
     public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,
