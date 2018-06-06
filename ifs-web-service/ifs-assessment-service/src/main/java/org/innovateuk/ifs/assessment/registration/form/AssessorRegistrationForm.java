@@ -19,6 +19,8 @@ import javax.validation.constraints.Size;
  */
 public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
+    public static final String VALID_PHONE_NUMBER_8_20_DIGITS = "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$";
+
     @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
@@ -54,11 +56,7 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     private AddressForm addressForm = new AddressForm();
 
     @NotBlank(message = "{validation.standard.phonenumber.required}")
-    @Size.List ({
-            @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
-            @Size(max=20, message="{validation.standard.phonenumber.length.max}")
-    })
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
+    @Pattern(regexp = VALID_PHONE_NUMBER_8_20_DIGITS,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     public AssessorRegistrationForm() {

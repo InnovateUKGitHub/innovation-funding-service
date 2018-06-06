@@ -7,12 +7,15 @@ import org.innovateuk.ifs.user.resource.Gender;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import static org.innovateuk.ifs.util.ProfileUtil.VALID_PHONE_NUMBER_8_20_DIGITS;
+
 /**
  * This object is used for the editing of user details. When the form is submitted the data is
  * injected into a UserDetailsForm instance, so it is easy to use and you don't need to
  * read all the request attributes to get to the form data.
  */
 public class UserDetailsForm {
+
     private String email;
 
     private String title;
@@ -45,11 +48,7 @@ public class UserDetailsForm {
     private String disability = Disability.NOT_STATED.name();
 
     @NotBlank(message = "{validation.standard.phonenumber.required}")
-    @Size.List ({
-        @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
-        @Size(max=20, message="{validation.standard.phonenumber.length.max}")
-    })
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
+    @Pattern(regexp = VALID_PHONE_NUMBER_8_20_DIGITS,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     private String actionUrl;

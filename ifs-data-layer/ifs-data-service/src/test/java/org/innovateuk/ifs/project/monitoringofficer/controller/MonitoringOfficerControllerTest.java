@@ -170,8 +170,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
           Error firstNameError = fieldError("firstName", "", "validation.standard.firstname.required", "");
           Error lastNameError = fieldError("lastName", "", "validation.standard.lastname.required", "");
           Error emailError = fieldError("email", "abc", "validation.standard.email.format", "", "", "^[a-zA-Z0-9._%+-^[^{}|]*$]+@[a-zA-Z0-9.-^[^{}|]*$]+\\.[a-zA-Z^[^0-9{}|]*$]{2,}$");
-          Error phoneNumberError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.format", "", "", "([0-9\\ +-])+");
-          Error phoneNumberLengthError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.length.min", "", "2147483647", "8");
+          Error phoneNumberError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.format", "", "", "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$");
+          Error phoneNumberLengthError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.format", "", "2147483647", "8");
 
           MvcResult result = mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                   .contentType(APPLICATION_JSON)
