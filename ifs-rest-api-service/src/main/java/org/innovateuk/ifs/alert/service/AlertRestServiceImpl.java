@@ -12,7 +12,6 @@ import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
