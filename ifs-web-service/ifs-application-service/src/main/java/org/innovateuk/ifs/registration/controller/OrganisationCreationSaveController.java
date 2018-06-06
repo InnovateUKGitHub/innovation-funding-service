@@ -67,7 +67,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         validator.validate(organisationForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "redirect:/";
+            if (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName")) {
+                return "redirect:/";
+            }
         }
 
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
