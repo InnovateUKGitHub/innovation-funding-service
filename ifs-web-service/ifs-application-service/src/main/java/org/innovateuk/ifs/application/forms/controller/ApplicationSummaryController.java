@@ -174,8 +174,8 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping("/{applicationId}/summary/download-response")
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "READ", description = "Applicants and assessors have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
@@ -184,8 +184,8 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping("/{applicationId}/summary/download-feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "READ", description = "Applicants and assessors have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
