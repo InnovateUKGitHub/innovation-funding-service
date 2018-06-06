@@ -128,7 +128,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="appointment,appointmentStat: *{appointments}">
+                            <tr th:each="appointment,appointmentStat: *{appointments}"
+                                class="form-group-row-validated"
+                                th:classappend="((${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}) or (${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')})) ? 'form-group-error'">
                                 <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')} ? 'form-group-error'">
                                     <label>
                                         <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}">
@@ -277,14 +279,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
+                            <tr th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}"
+                                class="form-group-row-validated"
+                                th:classappend="((${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')})) ? 'form-group-error'">
                                 <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'form-group-error'">
                                     <label>
-                                            <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
-                                                <span class="error-message"
-                                                      th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
-                                                      th:text="${err}"></span>
-                                            </th:block>
+                                        <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
+                                            <span class="error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
+                                                  th:text="${err}"></span>
+                                        </th:block>
                                     </label>
                                     <input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field"
                                            th:errorclass="form-control-error" type="text"

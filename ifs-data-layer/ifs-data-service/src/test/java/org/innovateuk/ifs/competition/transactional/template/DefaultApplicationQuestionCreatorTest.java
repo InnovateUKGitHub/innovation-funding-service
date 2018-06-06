@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
@@ -94,7 +95,7 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
         FormInput fileUploadFormInput = defaultQuestion.getFormInputs().get(3);
 
         assertEquals(defaultQuestion.getFormInputs().size(), 4);
-        assertNull(fileUploadFormInput.getAllowedFileTypes());
+        assertEquals(fileUploadFormInput.getAllowedFileTypes(), emptySet());
         assertNull(fileUploadFormInput.getGuidanceAnswer());
     }
 }

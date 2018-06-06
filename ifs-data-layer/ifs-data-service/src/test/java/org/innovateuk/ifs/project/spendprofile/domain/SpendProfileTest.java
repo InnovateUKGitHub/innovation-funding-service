@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;

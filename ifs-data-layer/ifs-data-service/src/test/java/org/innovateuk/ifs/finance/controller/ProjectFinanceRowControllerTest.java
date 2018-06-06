@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;

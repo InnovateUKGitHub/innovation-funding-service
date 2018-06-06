@@ -3,7 +3,7 @@ package org.innovateuk.ifs.login.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.exception.InvalidURLException;
+import org.innovateuk.ifs.commons.exception.InvalidURLException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.login.LoginController;

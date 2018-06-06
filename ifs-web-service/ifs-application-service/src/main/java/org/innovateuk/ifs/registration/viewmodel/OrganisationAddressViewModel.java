@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 /**
  * View model for Organisation address

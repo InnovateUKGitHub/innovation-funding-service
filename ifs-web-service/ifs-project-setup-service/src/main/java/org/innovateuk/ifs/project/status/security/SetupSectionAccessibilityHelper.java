@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.*;
 

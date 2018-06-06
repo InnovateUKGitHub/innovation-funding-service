@@ -38,4 +38,8 @@ public abstract class RootPermissionRules {
     protected boolean isPanelAssessor(long applicationId, UserResource user) {
         return checkProcessRole(user, applicationId, PANEL_ASSESSOR, processRoleRepository);
     }
+
+    protected boolean isInterviewAssessor(long applicationId, UserResource user) {
+        return checkProcessRole(user, applicationId, INTERVIEW_ASSESSOR, processRoleRepository);
+    }
 }

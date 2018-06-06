@@ -2,7 +2,7 @@ package org.innovateuk.ifs.testdata.builders.data;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 /**

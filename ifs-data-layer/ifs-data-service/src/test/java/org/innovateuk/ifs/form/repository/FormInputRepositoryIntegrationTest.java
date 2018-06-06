@@ -2,15 +2,30 @@ package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.FormValidator;
+import org.innovateuk.ifs.form.domain.GuidanceRow;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
+import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
+import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.hamcrest.Matchers.*;
+import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.junit.Assert.*;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
@@ -23,6 +38,12 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Autowired
     private FormInputRepository repository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private CompetitionRepository competitionRepository;
 
     @Override
     @Autowired
@@ -140,5 +161,59 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     public void test_findByQuestionIdAndScope_nonExistingQuestion() {
         List<FormInput> questionInputs = repository.findByQuestionIdAndScopeAndActiveTrueOrderByPriorityAsc(999L, APPLICATION);
         assertTrue(questionInputs.isEmpty());
+    }
+
+    @Test
+    public void test_save() {
+        Integer wordCount = 100;
+        FormInputType formInputType = FILEUPLOAD;
+        Question question = newQuestion().withId(1L).build();
+        Competition competition = newCompetition().withId(1L).build();
+        Set<FormValidator> inputValidators = asSet(
+                newFormValidator().build(),
+                newFormValidator().build()
+        );
+        String guidanceTitle = "Guidance title";
+        String guidanceAnswer = "Guidance answer";
+        String description = "Description";
+        Boolean includedInApplicationSummary = false;
+        Integer priority = 1;
+        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
+        Boolean isActive = true;
+        Set<FileTypeCategory> allowedFileTypes = asSet(PDF, SPREADSHEET);
+
+        FormInput formInput = newFormInput()
+                .withWordCount(wordCount)
+                .withType(formInputType)
+                .withQuestion(question)
+                .withCompetition(competition)
+                .withInputValidators(inputValidators)
+                .withGuidanceTitle(guidanceTitle)
+                .withGuidanceAnswer(guidanceAnswer)
+                .withDescription(description)
+                .withIncludedInApplicationSummary(includedInApplicationSummary)
+                .withPriority(priority)
+                .withGuidanceRows(guidanceRows)
+                .withActive(isActive)
+                .withAllowedFileTypes(allowedFileTypes)
+                .build();
+
+        repository.save(formInput);
+
+        FormInput savedFormInput = repository.findOne(formInput.getId());
+
+        assertEquals(savedFormInput.getWordCount(), wordCount);
+        assertEquals(savedFormInput.getType(), formInputType);
+        assertEquals(savedFormInput.getQuestion().getId(), question.getId());
+        assertEquals(savedFormInput.getCompetition().getId(), competition.getId());
+        assertEquals(savedFormInput.getInputValidators().size(), inputValidators.size());
+        assertEquals(savedFormInput.getGuidanceTitle(), guidanceTitle);
+        assertEquals(savedFormInput.getGuidanceAnswer(), guidanceAnswer);
+        assertEquals(savedFormInput.getDescription(), description);
+        assertEquals(savedFormInput.isIncludedInApplicationSummary(), includedInApplicationSummary);
+        assertEquals(savedFormInput.getPriority(), priority);
+        assertEquals(savedFormInput.getGuidanceRows().size(), guidanceRows.size());
+        assertEquals(savedFormInput.getActive(), isActive);
+        assertEquals(savedFormInput.getAllowedFileTypes(), allowedFileTypes);
     }
 }

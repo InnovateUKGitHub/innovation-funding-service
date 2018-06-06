@@ -10,7 +10,7 @@ import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDashboardViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;

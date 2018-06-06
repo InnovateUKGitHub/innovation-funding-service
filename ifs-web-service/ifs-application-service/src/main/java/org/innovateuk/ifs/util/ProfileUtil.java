@@ -2,7 +2,7 @@ package org.innovateuk.ifs.util;
 
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.Optional;
 

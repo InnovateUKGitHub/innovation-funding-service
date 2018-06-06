@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.otherdocuments.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -12,7 +12,7 @@ import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
