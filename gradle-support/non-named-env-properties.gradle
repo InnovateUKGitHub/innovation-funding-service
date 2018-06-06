@@ -1,76 +1,82 @@
 
+def props = [:]
 
 // THESE PROPERTIES ARE SPECIFIC TO NON NAMED ENVS
 // for shib
-ext.SHIBBOLETH_SP_MPM_STARTSERVERS="2"
-ext.SHIBBOLETH_SP_MPM_MINSPARETHREADS="25"
-ext.SHIBBOLETH_SP_MPM_MAXSPARETHREADS="75"
-ext.SHIBBOLETH_SP_MPM_THREADLIMIT="64"
-ext.SHIBBOLETH_SP_MPM_THREADSPERCHILD="25"
-ext.SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS="150"
-ext.SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD="0"
+props.SHIBBOLETH_SP_MPM_STARTSERVERS="2"
+props.SHIBBOLETH_SP_MPM_MINSPARETHREADS="25"
+props.SHIBBOLETH_SP_MPM_MAXSPARETHREADS="75"
+props.SHIBBOLETH_SP_MPM_THREADLIMIT="64"
+props.SHIBBOLETH_SP_MPM_THREADSPERCHILD="25"
+props.SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS="150"
+props.SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD="0"
 
-ext.SHIBBOLETH_SP_MEMORY_REQUEST="300Mi"
-ext.SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
+props.SHIBBOLETH_SP_MEMORY_REQUEST="300Mi"
+props.SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
 
 // For shib and idp
-ext.SHIBBOLETH_MEMCACHE_ENDPOINT=""
+props.SHIBBOLETH_MEMCACHE_ENDPOINT=""
 
 
-ext.LDAP_URL="ldaps://ldap:389"
-ext.LDAP_PASSWORD="default"
+props.LDAP_URL="ldaps://ldap:389"
+props.LDAP_PASSWORD="default"
 
 //for idp
-ext.SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
-ext.SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
-ext.GA_TRACKING_ID=""
+props.SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
+props.SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
+props.GA_TRACKING_ID=""
 
 
-ext.LDAP_USESSL="true"
-ext.LDAP_BASEDN="dc=nodomain"
-ext.LDAP_BINDDN="cn=admin,dc=nodomain"
-ext.LDAP_AUTHENTICATOR="anonSearchAuthenticator"
+props.LDAP_USESSL="true"
+props.LDAP_BASEDN="dc=nodomain"
+props.LDAP_BINDDN="cn=admin,dc=nodomain"
+props.LDAP_AUTHENTICATOR="anonSearchAuthenticator"
 
-ext.SHIBBOLETH_LDAP_PORT="389"
-ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
-
-
-ext.NEW_RELIC_LICENCE_KEY=""
+props.SHIBBOLETH_LDAP_PORT="389"
+props.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 
 
-ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
-
-ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+props.NEW_RELIC_LICENCE_KEY=""
 
 
-ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-ext.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+props.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 
-ext.PROTOTYPES_ADDRESS="prototypes-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+props.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+props.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
-ext.FILE_UPLOAD_CLAIM="file-upload-claim"
 
-ext.DB_NAME="ifs"
-ext.DB_USER="root"
-ext.DB_PASS="password"
-ext.DB_HOST="ifs-database"
-ext.DB_PORT=3306
+props.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+props.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+props.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
-ext.LDAP_HOST="ldap"
-ext.LDAP_PASS="default"
-ext.LDAP_DOMAIN="dc=nodomain"
-ext.LDAP_SCHEME="ldaps"
+props.PROTOTYPES_ADDRESS="prototypes-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
-ext.FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
-ext.SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
+props.FILE_UPLOAD_CLAIM="file-upload-claim"
 
-ext.FINANCE_DB_NAME="ifs_finance"
-ext.FINANCE_DB_USER="root"
-ext.FINANCE_DB_PASS="password"
-ext.FINANCE_DB_HOST="ifs-finance-database"
-ext.FINANCE_DB_PORT=3306
+props.DB_NAME="ifs"
+props.DB_USER="root"
+props.DB_PASS="password"
+props.DB_HOST="ifs-database"
+props.DB_PORT=3306
 
-ext.DATA_SERVICE_HOST="data-service"
+props.LDAP_HOST="ldap"
+props.LDAP_PASS="default"
+props.LDAP_DOMAIN="dc=nodomain"
+props.LDAP_SCHEME="ldaps"
 
+props.FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
+props.SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
+
+props.FINANCE_DB_NAME="ifs_finance"
+props.FINANCE_DB_USER="root"
+props.FINANCE_DB_PASS="password"
+props.FINANCE_DB_HOST="ifs-finance-database"
+props.FINANCE_DB_PORT=3306
+
+props.DATA_SERVICE_HOST="data-service"
+
+props.each { key, value ->
+    if(!project.hasProperty(key)) {
+        ext."$key" = value
+    }
+}
