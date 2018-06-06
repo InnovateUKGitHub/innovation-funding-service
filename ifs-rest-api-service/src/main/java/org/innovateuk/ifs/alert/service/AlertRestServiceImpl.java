@@ -41,7 +41,7 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
     @Override
 //    @HystrixCommand(fallbackMethod = "findAllVisibleFallback")
     public RestResult<List<AlertResource>> findAllVisible() {
-        return getWithRestResultAnonymous(alertRestURL + "/finzdAllVisible", ParameterizedTypeReferences.alertResourceListType());
+        return getWithRestResultAnonymous(alertRestURL + "/findAllVisible", ParameterizedTypeReferences.alertResourceListType());
     }
 
     public RestResult<List<AlertResource>> findAllVisibleFallback() {
