@@ -38,31 +38,7 @@ public class ApplicationInterviewSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
 
-//        ApplicationResource application = applicationService.getById(applicationId);
-//        CompetitionResource competition = competitionService.getById(application.getCompetition());
-//        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-//        OrganisationResource leadOrganisation = applicationService.getLeadOrganisation(applicationId);
-//        UserResource leadApplicantUser = getLeadApplicant(applicationId);
-//        ProcessRoleResource leadUserApplicationRole = userRestService.findProcessRole(leadApplicantUser.getId(), applicationId).getSuccess();
-//
-//        applicationModelPopulator.addApplicationAndSectionsInternalWithOrgDetails(application, competition, leadApplicantUser, model, form, userApplicationRoles, Optional.of(Boolean.FALSE));
-//        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, leadApplicantUser, model, form, leadOrganisation.getId());
-//        applicationModelPopulator.addFeedbackAndScores(model, applicationId);
-
-//        model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, leadUserApplicationRole, competition.getCompetitionStatus().isFeedbackReleased(), true));
         model.addAttribute("applicationInterviewSummaryViewModel", applicationInterviewSummaryViewModelPopulator.populate(applicationId));
         return "application-interview-summary";
     }
-
-//    private UserResource getLeadApplicant(long applicationId) {
-//        ApplicationTeamResource applicationTeamResource = applicationSummaryRestService.getApplicationTeam(applicationId).getSuccess();
-//        List<ApplicationTeamUserResource> applicationTeamUserResource = applicationTeamResource.getLeadOrganisation().getUsers();
-//
-//        ApplicationTeamUserResource leadUser = applicationTeamUserResource.stream()
-//                .filter(teamUserResource -> teamUserResource.getLead())
-//                .collect(Collectors.toList())
-//                .get(0);
-//
-//        return userRestService.findUserByEmail(leadUser.getEmail()).getSuccess();
-//    }
 }
