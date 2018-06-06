@@ -5,13 +5,11 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -32,6 +30,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -53,7 +52,7 @@ public class ApplicationTeamModelPopulator {
     private ApplicantRestService applicantRestService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId, Long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
@@ -70,10 +69,14 @@ public class ApplicationTeamModelPopulator {
     }
 
     public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {
-        QuestionResource question = questionService.getByCompetitionAndQuestionSetupType(competitionId, CompetitionSetupQuestionType.APPLICATION_TEAM);
-        ApplicationTeamViewModel model = populateModel(applicationId, loggedInUserId, question.getId());
+        ApplicationTeamViewModel model = populateModel(applicationId, loggedInUserId, getApplicationTeamQuestion(competitionId));
         model.setSummary(true);
         return model;
+    }
+
+    private long getApplicationTeamQuestion(long competitionId) {
+        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                APPLICATION_TEAM).getSuccess().getId();
     }
 
     private boolean isComplete(long applicationId, long loggedInUserId, Long questionId) {
