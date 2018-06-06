@@ -127,11 +127,13 @@
             <h3>Finances summary</h3>
             <div class="question">
                 <div th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true,
+                                                                                          form.isAdminMode() = false,
                                                                                           currentApplication = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.currentApplication},
                                                                                           hasFinanceSection = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.hasFinanceSection},
                                                                                           financeTotalPerType = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.financeTotalPerType},
                                                                                           applicationOrganisations = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.applicationOrganisations},
                                                                                           leadOrganisation = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.leadOrganisation},
+                                                                                          userOrganisation = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.leadOrganisation},
                                                                                           sectionsMarkedAsComplete = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.sectionsMarkedAsComplete})
 "></div>
                 <h2 class="heading-medium">Funding breakdown</h2>
