@@ -4,7 +4,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -33,10 +33,10 @@ public interface OrganisationService {
     @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
     ServiceResult<OrganisationResource> update(@P("organisation") OrganisationResource organisationResource);
 
-    @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.user.resource.OrganisationResource', 'UPDATE')")
+    @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationResource', 'UPDATE')")
     ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber);
 
-    @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.user.resource.OrganisationResource', 'UPDATE')")
+    @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationResource', 'UPDATE')")
     ServiceResult<OrganisationResource> addAddress(@P("organisationId") Long organisationId, OrganisationAddressType addressType, AddressResource addressResource);
 
     @PostFilter("hasPermission(filterObject, 'READ')")

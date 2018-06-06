@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.core.service;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.*;
@@ -21,9 +21,11 @@ import org.innovateuk.ifs.competitionsetup.fundinginformation.viewmodel.Addition
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.populator.InitialDetailsModelPopulator;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -36,9 +38,12 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -61,11 +66,14 @@ public class CompetitionSetupServiceImplTest {
     @Mock
     private CompetitionSetupPopulator competitionSetupPopulator;
 
+    @Mock
+    private CompetitionInviteRestService competitionInviteRestService;
+
     @Before
     public void setup() {
         Map<CompetitionSetupSection, Optional<Boolean>> sectionStatuses = asMap(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                 .thenReturn(RestResult.restSuccess(sectionStatuses));
+                 .thenReturn(restSuccess(sectionStatuses));
     }
 
     @Test
@@ -164,7 +172,7 @@ public class CompetitionSetupServiceImplTest {
                 .withId(COMPETITION_ID)
                 .build();
 
-        when(competitionSetupRestService.getSectionStatuses(competitionResource.getId())).thenReturn(RestResult.restSuccess(asMap(
+        when(competitionSetupRestService.getSectionStatuses(competitionResource.getId())).thenReturn(restSuccess(asMap(
                 INITIAL_DETAILS, Optional.of(true),
                 CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(false))));
 
@@ -179,7 +187,7 @@ public class CompetitionSetupServiceImplTest {
         when(matchingSaver.saveSection(competitionResource, competitionSetupForm)).thenReturn(serviceSuccess());
 
         when(competitionSetupRestService.markSectionComplete(competitionResource.getId(), CompetitionSetupSection.ADDITIONAL_INFO))
-                .thenReturn(RestResult.restSuccess());
+                .thenReturn(restSuccess());
 
         service.setCompetitionSetupSectionSavers(asList(matchingSaver, otherSaver));
 
@@ -198,7 +206,7 @@ public class CompetitionSetupServiceImplTest {
         Optional<Long> objectId = Optional.of(1L);
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
+                .thenReturn(restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
         service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
     }
@@ -213,7 +221,7 @@ public class CompetitionSetupServiceImplTest {
         Optional<Long> objectId = Optional.of(1L);
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
+                .thenReturn(restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
         service.autoSaveCompetitionSetupSubsection(competition, section, subsection, fieldName, value, objectId);
     }
@@ -225,7 +233,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSection section = CompetitionSetupSection.ADDITIONAL_INFO;
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
+                .thenReturn(restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
         service.saveCompetitionSetupSection(competitionSetupForm, competition, section);
     }
@@ -239,7 +247,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
+                .thenReturn(restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
         service.saveCompetitionSetupSubsection(competitionSetupForm, competition, section, subsection);
     }
@@ -262,7 +270,7 @@ public class CompetitionSetupServiceImplTest {
                 CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE)
         );
 
-        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
 
         assertTrue(service.isCompetitionReadyToOpen(competitionResource));
     }
@@ -282,7 +290,7 @@ public class CompetitionSetupServiceImplTest {
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withStartDate(ZonedDateTime.now().plusDays(1)).build();
 
-        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
 
         assertFalse(service.isCompetitionReadyToOpen(competitionResource));
     }
@@ -318,8 +326,8 @@ public class CompetitionSetupServiceImplTest {
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
-        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
-        when(competitionSetupRestService.markAsSetup(COMPETITION_ID)).thenReturn(RestResult.restSuccess());
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
+        when(competitionSetupRestService.markAsSetup(COMPETITION_ID)).thenReturn(restSuccess());
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
 
         service.setCompetitionAsReadyToOpen(COMPETITION_ID).getSuccess();
@@ -344,7 +352,7 @@ public class CompetitionSetupServiceImplTest {
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
-        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
 
         ServiceResult<Void> updateResult = service.setCompetitionAsReadyToOpen(COMPETITION_ID);
@@ -416,7 +424,7 @@ public class CompetitionSetupServiceImplTest {
     @Test
     public void autoSaveCompetitionSetupSection_restrictedField() throws Exception {
         CompetitionResource competition = newCompetitionResource().withId(23L).build();
-        when(competitionSetupRestService.getSectionStatuses(competition.getId())).thenReturn(RestResult.restSuccess(asMap(
+        when(competitionSetupRestService.getSectionStatuses(competition.getId())).thenReturn(restSuccess(asMap(
                 CompetitionSetupSection.INITIAL_DETAILS, Optional.of(true),
                 CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(false))));
 
@@ -452,6 +460,44 @@ public class CompetitionSetupServiceImplTest {
             service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
             verify(saver).autoSaveSectionField(competition, form, fieldName, value, objectId);
         }
+    }
+
+    @Test
+    public void deleteCompetition() {
+        CompetitionInviteStatisticsResource competitionInviteStatisticsResource =
+                newCompetitionInviteStatisticsResource()
+                        .build();
+
+        when(competitionInviteRestService.getInviteStatistics(COMPETITION_ID)).thenReturn(restSuccess(
+                competitionInviteStatisticsResource));
+        when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(restSuccess());
+
+        service.deleteCompetition(COMPETITION_ID).getSuccess();
+
+        InOrder inOrder = inOrder(competitionInviteRestService, competitionSetupRestService);
+        inOrder.verify(competitionInviteRestService).getInviteStatistics(COMPETITION_ID);
+        inOrder.verify(competitionSetupRestService).delete(COMPETITION_ID);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void deleteCompetition_assessmentInvitesExist() {
+        CompetitionInviteStatisticsResource competitionInviteStatisticsResource =
+                newCompetitionInviteStatisticsResource()
+                        .withInviteList(1)
+                        .build();
+
+        when(competitionInviteRestService.getInviteStatistics(COMPETITION_ID)).thenReturn(restSuccess(
+                competitionInviteStatisticsResource));
+        when(competitionSetupRestService.delete(COMPETITION_ID)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.deleteCompetition(COMPETITION_ID);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED));
+
+        verify(competitionInviteRestService, only()).getInviteStatistics(COMPETITION_ID);
+        verify(competitionSetupRestService, never()).delete(isA(Long.class));
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -58,7 +59,17 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
                 guidanceRowsCopy.addAll(formInput.getGuidanceRows());
             }
 
+            final Set<FileTypeCategory> allowedFileTypesCopy;
+            if (formInput.getAllowedFileTypes() != null) {
+                allowedFileTypesCopy = new HashSet<>(formInput.getAllowedFileTypes());
+            }
+            else {
+                allowedFileTypesCopy = null;
+            }
+
             entityManager.detach(formInput);
+            formInput.setAllowedFileTypes(allowedFileTypesCopy);
+
             formInput.setCompetition(question.getCompetition());
             formInput.setQuestion(question);
             formInput.setId(null);

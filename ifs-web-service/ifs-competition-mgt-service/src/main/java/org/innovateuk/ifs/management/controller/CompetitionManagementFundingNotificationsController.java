@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
+import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
@@ -100,7 +100,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     }
 
     private String getFundingDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
-        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(competitionId, applicationIds);
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(competitionId, applicationIds, form);
         if (viewModel.getApplications().isEmpty()) {
             return "redirect:" + getManageFundingApplicationsPage(competitionId);
         }
