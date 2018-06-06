@@ -42,6 +42,7 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
  */
 @Controller
 @RequestMapping("/application")
+@PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationController.class)
 public class ApplicationController {
     @Autowired
@@ -66,7 +67,6 @@ public class ApplicationController {
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @GetMapping("/{applicationId}")
-    @PreAuthorize("hasAuthority('applicant')")
     public String applicationDetails(ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
@@ -108,7 +108,6 @@ public class ApplicationController {
     }
 
     @PostMapping(value = "/{applicationId}")
-    @PreAuthorize("hasAuthority('applicant')")
     public String applicationDetails(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      HttpServletRequest request) {
@@ -120,6 +119,7 @@ public class ApplicationController {
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
+    @SecuredBySpring(value = "READ", description = "Applicants and Assessors can view question feedback for an application")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId,
