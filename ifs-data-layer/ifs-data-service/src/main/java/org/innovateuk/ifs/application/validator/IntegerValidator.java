@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import static java.lang.Long.MAX_VALUE;
 import static java.lang.Long.MIN_VALUE;
 import static java.math.BigDecimal.valueOf;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 
 public abstract class IntegerValidator extends BaseValidator {
 

@@ -16,9 +16,9 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -36,8 +36,8 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.handler.item.GrantClaimHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.handler.item.GrantClaimHandler.GRANT_CLAIM;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 

@@ -15,19 +15,19 @@
     <ul class="grid-row">
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="0"></span><br /><small>Assessors assigned</small>
+                <span class="heading-large" th:text="${model.keyStats.applicationsAssigned}"></span><br /><small>Applications assigned</small>
             </div>
         </li>
 
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="0"></span><br /><small>Applications responded to feedback</small>
+                <span class="heading-large" th:text="${model.keyStats.respondedToFeedback}"></span><br /><small>Applicants responded to feedback</small>
             </div>
         </li>
 
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="0"></span><br /><small>Assessors accepted</small>
+                <span class="heading-large" th:text="${model.keyStats.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
             </div>
         </li>
     </ul>

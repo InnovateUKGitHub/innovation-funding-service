@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.rest;
 
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

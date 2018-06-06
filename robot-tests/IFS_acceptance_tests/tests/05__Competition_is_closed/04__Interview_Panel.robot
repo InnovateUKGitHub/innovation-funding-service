@@ -54,6 +54,16 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3485 Remove applications before allocating (notifying) to assessor
 ...
 ...               IFS-3452 Allocate applications to assessors - Allocated tab
+...
+...               IFS-3535 Assign applications to interview panel - View of previously sent invite
+...
+...               IFS-3534 Assessor dashboard - List of applications
+...
+...               IFS-3524 Manage Interview panel - Key statistics
+...
+...               IFS-3542 Interview panels - View of application and feedback when competition feedback released
+...
+...               IFS-3566 Assessor dashboard - View of individual application
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -124,6 +134,15 @@ Competition Admin can send or cancel sending the invitation to the applicants
     Then the user reads his email              ${aaron_robertson_email}   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
     When log in as a different user            ${aaron_robertson_email}   ${short_password}
     Then the user should see the element       jQuery=.progress-list div:contains("Neural networks to optimise freight train routing") ~ div span:contains("Invited to interview")
+
+CompAdmin view invite sent to the applicant
+    [Documentation]  IFS-3535
+    [Tags]
+    [Setup]  log in as a different user     &{Comp_admin1_credentials}
+    Given the user navigates to the page    ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
+    When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td a:contains("View invite")
+    Then the user should see the element    jQuery=h1:contains("Review invite email")
+    And the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -196,6 +215,11 @@ Applicant can remove the uploaded response
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
 
+CompAdmin checks for interview panel key statistics
+    [Documentation]  IFS-3524
+    When the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}
+    Then the user checks for Manage interview panel key statistics
+
 CompAdmin can access the Allocate applications to assessors screen
     [Documentation]  IFS-3435  IFS-3436  IFS-3450
     [Tags]
@@ -221,6 +245,32 @@ CompAdmin allocate applications to assessor
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION}")
     Then the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Neural Industries") ~ td:contains("Remove")
     And the user reads his email             ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
+
+Assessor can view the list of allocated applications
+    [Documentation]  IFS-3534  IFS-3566
+    [Tags]
+    Given log in as a different user         ${assessor_joel_email}   ${short_password}
+    When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${CLOSED_COMPETITION}/interview
+    Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION_NAME}")
+    And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
+    When the user clicks the button/link     link=${CLOSED_COMPETITION_APPLICATION_TITLE}
+    Then the user should see the element     jQuery=h1:contains("Feedback overview")
+    And the user should see the element      jQuery=.message-alert p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
+
+Assessor marks appplications as successful and releases competition feedback
+    [Documentation]  IFS-3542
+    [Tags]
+    Given log in as a different user          &{Comp_admin1_credentials}
+    When the user navigates to the page       ${SERVER}/management/competition/18/funding
+    Then the user marks applications as successful and send funding decision email
+    And the user clicks the button/link       css=button.button.button-large  #Release feedback
+
+Applicant can still see their feedback once the comp feedback has been released
+    [Documentation]  IFS-3542
+    [Tags]
+    Given log in as a different user          ${aaron_robertson_email}   ${short_password}
+    When the user clicks the button/link      jQuery=section:contains("Previous") h3:contains("Neural network")
+    Then the user should see the element      link=testing.pdf (opens in a new window)
 
 *** Keywords ***
 Custom Suite Setup
@@ -262,15 +312,15 @@ the Competition Admin should see the assigned applications in the View status ta
     the user should see the element       jQuery=td:contains("${computer_vision_application}")
 
 the user checks for Key Statistics for submitted application
-    ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span
+    ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span   #Total number of submitted applications
     the user should see the element    jQuery=div span:contains("${Application_in_comp}") ~ small:contains("Applications in competition")
     the user should see the element    jQuery=div span:contains("0") ~ small:contains("Assigned to interview panel")
     Get the total number of submitted applications
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${Application_in_comp}
 
 the user checks for Key Statistics for assigned to interview panel
-    ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span
-    ${Application_sent}=  Get Text  css=div:nth-child(7) > div>:nth-child(1)
+    ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span    #Assigned to interview panel
+    ${Application_sent}=  Get Text  css=div:nth-child(7) > div>:nth-child(1)  #Application assigned
     Should Be Equal As Integers    ${Assigned_applications}   ${Application_sent}
 
 the user checks for the key statistics for invite assessors
@@ -315,3 +365,25 @@ the compAdmin can cancel allocating applications to assessor
     the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/unallocated-applications/${assessor_joel_id}
     the user clicks the button/link   css=.button[name="addSelected"]  #Allocate
 
+the user checks for Manage interview panel key statistics
+    ${applications_assigned}=  Get Text  css=ul li:nth-child(1) span
+    ${assessor_accepted}=      Get Text  css=ul li:nth-child(3) span
+    ${feedback_responded}=     Get Text  css=ul li:nth-child(2) span
+    the user should see the element      jQuery=div span:contains("${feedback_responded}") ~ small:contains("Applicants responded to feedback")
+    the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/find
+    ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span    #Assigned to interview panel
+    Should Be Equal As Integers   ${Assigned_applications}  ${applications_assigned}
+    the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/find
+    ${Accepted}=  Get Text  css=div:nth-child(2) > div > span
+    Should Be Equal As Integers   ${Accepted}  ${assessor_accepted}
+
+the user marks applications as successful and send funding decision email
+    the user selects the checkbox         select-all-1
+    the user clicks the button/link       jQuery=button:contains("Successful")
+    the user clicks the button/link       link=Competition
+    the user clicks the button/link       link=Manage funding notifications
+    the user selects the checkbox         select-all-1
+    the user clicks the button/link       css=button.button.button-notification.extra-margin-top   #Assessor clicks 'Write and send emails'
+    the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css=button[name="send-emails"]
+    the user clicks the button/link       link=Competition

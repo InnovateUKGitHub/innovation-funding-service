@@ -2,7 +2,7 @@ package org.innovateuk.ifs.applicant.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.util.List;

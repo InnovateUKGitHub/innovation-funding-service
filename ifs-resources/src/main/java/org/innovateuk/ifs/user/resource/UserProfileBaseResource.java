@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.user.resource;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 public abstract class UserProfileBaseResource {
     private Title title;
 
-    @NotEmpty(message = "{validation.standard.firstname.required}")
+    @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
     @Size.List({
             @Size(min = 2, message = "{validation.standard.firstname.length.min}"),
@@ -24,7 +24,7 @@ public abstract class UserProfileBaseResource {
     })
     private String firstName;
 
-    @NotEmpty(message = "{validation.standard.lastname.required}")
+    @NotBlank(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
     @Size.List({
             @Size(min = 2, message = "{validation.standard.lastname.length.min}"),
@@ -32,7 +32,7 @@ public abstract class UserProfileBaseResource {
     })
     private String lastName;
 
-    @NotEmpty(message = "{validation.standard.phonenumber.required}")
+    @NotBlank(message = "{validation.standard.phonenumber.required}")
     @Size.List({
             @Size(min = 8, message = "{validation.standard.phonenumber.length.min}"),
             @Size(max = 20, message = "{validation.standard.phonenumber.length.max}")

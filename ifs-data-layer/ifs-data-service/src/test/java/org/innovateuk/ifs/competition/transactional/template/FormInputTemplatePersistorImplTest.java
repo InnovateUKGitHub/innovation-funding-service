@@ -40,7 +40,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
         return new FormInputTemplatePersistorImpl();
     }
 
-    private static final String COMPETIITON_TYPE_SECTOR_NAME = "Sector";
+    private static final String COMPETITION_TYPE_SECTOR_NAME = "Sector";
 
     @Mock
     private GuidanceRowTemplatePersistorImpl guidanceRowTemplatePersistorMock;
@@ -53,7 +53,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
 
     @Test
     public void persistByParentEntity_resultsInExpectedInitializedResult() throws Exception {
-        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(COMPETIITON_TYPE_SECTOR_NAME).build()).build();
+        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(COMPETITION_TYPE_SECTOR_NAME).build()).build();
         Set<FormValidator> formValidators = new HashSet<>(newFormValidator().build(2));
 
         List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
@@ -87,7 +87,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
 
     @Test
     public void persistByParentEntity_isSectorCompWithScopeQuestionShouldResultnActiveIsFalse() throws Exception {
-        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(COMPETIITON_TYPE_SECTOR_NAME).build()).build();
+        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(COMPETITION_TYPE_SECTOR_NAME).build()).build();
         Set<FormValidator> formValidators = new HashSet<>(newFormValidator().build(2));
 
         List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
@@ -128,7 +128,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
 
     @Test
     public void persistByParentEntity_persistenceCallsAreMadeInOrder() throws Exception {
-        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(COMPETIITON_TYPE_SECTOR_NAME).build()).build();
+        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(COMPETITION_TYPE_SECTOR_NAME).build()).build();
         Set<FormValidator> formValidators = new HashSet<>(newFormValidator().build(2));
 
         List<FormInput> formInputsList = newFormInput()

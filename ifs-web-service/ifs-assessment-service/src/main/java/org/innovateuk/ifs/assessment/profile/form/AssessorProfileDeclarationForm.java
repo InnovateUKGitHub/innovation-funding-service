@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.profile.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BindingResultTarget;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -25,11 +25,11 @@ import java.util.List;
 @FieldRequiredIf(required = "familyFinancialInterests", argument = "hasFamilyFinancialInterests", predicate = true, message = "{validation.assessorprofiledeclarationform.familyFinancialInterests.required}")
 public class AssessorProfileDeclarationForm implements BindingResultTarget {
 
-    @NotEmpty(message = "{validation.assessorprofiledeclarationform.principalEmployer.required}")
+    @NotBlank(message = "{validation.assessorprofiledeclarationform.principalEmployer.required}")
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String principalEmployer;
 
-    @NotEmpty(message = "{validation.assessorprofiledeclarationform.role.required}")
+    @NotBlank(message = "{validation.assessorprofiledeclarationform.role.required}")
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String role;
 
