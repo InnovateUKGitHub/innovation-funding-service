@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Feedback overview'" />
 </head>
@@ -126,16 +126,7 @@
         <div class="collapsible">
             <h3>Finances summary</h3>
             <div class="question">
-                <div th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true,
-                                                                                          form.isAdminMode() = false,
-                                                                                          currentApplication = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.currentApplication},
-                                                                                          hasFinanceSection = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.hasFinanceSection},
-                                                                                          financeTotalPerType = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.financeTotalPerType},
-                                                                                          applicationOrganisations = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.applicationOrganisations},
-                                                                                          leadOrganisation = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.leadOrganisation},
-                                                                                          userOrganisation = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.leadOrganisation},
-                                                                                          sectionsMarkedAsComplete = ${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel.sectionsMarkedAsComplete})
-"></div>
+                <div ifs:global="${applicationInterviewSummaryViewModel.applicationFinanceSummaryViewModel" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></div>
                 <h2 class="heading-medium">Funding breakdown</h2>
                 <th:block th:insert="finance/finance-summary :: financial_summary_table" />
             </div>
