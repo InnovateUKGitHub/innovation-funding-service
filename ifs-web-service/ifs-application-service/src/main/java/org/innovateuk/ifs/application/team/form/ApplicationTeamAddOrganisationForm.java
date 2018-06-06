@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.team.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.springframework.validation.BindingResult;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class ApplicationTeamAddOrganisationForm implements BindingResultTarget {
 
-    @NotEmpty(message = "{validation.standard.organisationname.required}")
+    @NotBlank(message = "{validation.standard.organisationname.required}")
     private String organisationName;
     @Valid
     @NotEmpty(message = "{validation.applicationteamaddorganisationform.applicants.required}")

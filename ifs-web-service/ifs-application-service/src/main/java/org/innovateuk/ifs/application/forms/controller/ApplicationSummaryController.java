@@ -135,12 +135,12 @@ public class ApplicationSummaryController {
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
-        if (competition.getCompetitionStatus().isFeedbackReleased()) {
+        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             addFeedbackAndScores(model, applicationId);
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
             addFeedbackAndScores(model, applicationId);
-            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole));
+            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, competition.getCompetitionStatus().isFeedbackReleased()));
             return "application-interview-feedback";
         }
         else {

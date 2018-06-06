@@ -56,10 +56,7 @@
 
             <h4 class="heading-small no-margin">Accepted appendix file types</h4>
             <ul>
-                <!-- /*
-                TODO: IFS-2959 - Remove the strings.replace
-                */-->
-                <li th:text="${#strings.replace(allowedFileType.getDisplayName(),'Spreadsheet','spreadsheet')}" th:each="allowedFileType : ${formInput.allowedFileTypes}">
+                <li th:text="${allowedFileType.getDisplayName()}" th:each="allowedFileType : ${formInput.allowedFileTypes}">
                     PDF
                 </li>
             </ul>

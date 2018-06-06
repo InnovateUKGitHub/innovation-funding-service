@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.form.resource;
 
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import java.util.Collections;
 import java.util.List;

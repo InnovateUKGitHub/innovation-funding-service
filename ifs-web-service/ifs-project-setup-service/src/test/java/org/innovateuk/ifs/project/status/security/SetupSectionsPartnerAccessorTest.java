@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import java.util.function.Consumer;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.*;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

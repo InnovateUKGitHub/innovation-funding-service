@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.viewmodel;
 
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.List;
 import java.util.Map;

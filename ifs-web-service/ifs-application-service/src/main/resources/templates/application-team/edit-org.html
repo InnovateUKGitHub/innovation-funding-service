@@ -61,7 +61,9 @@
                             </td>
                         </tr>
 
-                        <tr th:if="*{stagedInvite}" class="repeatable-row">
+                        <tr th:if="*{stagedInvite}"
+                            class="repeatable-row form-group-row-validated"
+                            th:classappend="((${#fields.hasErrors('stagedInvite.name')}) or (${#fields.hasErrors('stagedInvite.email')})) ? 'form-group-error'">
                             <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'form-group-error'">
                                 <label for="stagedInvite.name">
                                     <span class="visually-hidden">Applicant name</span>
@@ -97,7 +99,7 @@
                                                 data-email-duplication-errormessage=#{email.already.in.invite}" />
                             </td>
                             <td>
-                               <button class="button" name="executeStagedInvite" value="true" type="submit">Invite</button>
+                               <button class="button no-margin" name="executeStagedInvite" value="true" type="submit">Invite</button>
                             </td>
                             <td class="alignright">
                                 <button class="remove-another-row buttonlink"
@@ -140,7 +142,9 @@
                 <p th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
                 <p class="extra-margin">
-                    <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button-secondary">Return to application team page</a>
+                    <a
+                        th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                        class="button-secondary">Return to application team page</a>
                 </p>
             </form>
 

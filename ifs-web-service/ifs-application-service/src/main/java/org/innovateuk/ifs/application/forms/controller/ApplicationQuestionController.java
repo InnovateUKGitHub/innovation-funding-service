@@ -142,7 +142,6 @@ public class ApplicationQuestionController {
             HttpServletResponse response
     ) {
         Map<String, String[]> params = request.getParameterMap();
-        ValidationMessages errors = new ValidationMessages();
 
         // Check if the request is to just open edit view or to save
         if (params.containsKey(EDIT_QUESTION)) {
@@ -151,7 +150,7 @@ public class ApplicationQuestionController {
             handleAssignedQuestions(applicationId, user, request, response);
 
             // First check if any errors already exist in bindingResult
-            checkErrorsInForm(form, applicationId, questionId, user.getId(), request, response);
+            ValidationMessages errors = checkErrorsInForm(form, applicationId, questionId, user.getId(), request, response);
 
             model.addAttribute("form", form);
 
