@@ -8,6 +8,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -59,6 +61,8 @@ public class ApplicationSummaryController {
     private FormInputResponseService formInputResponseService;
     private FormInputResponseRestService formInputResponseRestService;
     private UserRestService userRestService;
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+    private AssessmentRestService assessmentRestService;
     private ProjectService projectService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
@@ -78,6 +82,8 @@ public class ApplicationSummaryController {
                                         FormInputResponseService formInputResponseService,
                                         FormInputResponseRestService formInputResponseRestService,
                                         UserRestService userRestService,
+                                        AssessorFormInputResponseRestService assessorFormInputResponseRestService,
+                                        AssessmentRestService assessmentRestService,
                                         ProjectService projectService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
@@ -90,6 +96,8 @@ public class ApplicationSummaryController {
         this.formInputResponseService = formInputResponseService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.userRestService = userRestService;
+        this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
+        this.assessmentRestService = assessmentRestService;
         this.projectService = projectService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
@@ -130,24 +138,15 @@ public class ApplicationSummaryController {
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
-<<<<<<< HEAD
-        if (competition.getCompetitionStatus().isFeedbackReleased()) {
-            addFeedbackAndScores(model, applicationId);
+        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
+            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
             model.addAttribute("backUrl", buildBackUrl(origin, applicationId, queryParams));
 
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
-            addFeedbackAndScores(model, applicationId);
-            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole));
-
-=======
-        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
-            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
-            return "application-feedback-summary";
-        } else if (isApplicationAssignedToInterview) {
             applicationModelPopulator.addFeedbackAndScores(model, applicationId);
             model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, competition.getCompetitionStatus().isFeedbackReleased(), false));
->>>>>>> origin/development
+
             return "application-interview-feedback";
         }
         else {
@@ -155,7 +154,6 @@ public class ApplicationSummaryController {
         }
     }
 
-<<<<<<< HEAD
     private String buildBackUrl(String origin, long applicationId, MultiValueMap<String, String> queryParams) {
         String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
         queryParams.remove("origin");
@@ -171,7 +169,6 @@ public class ApplicationSummaryController {
                 .toUriString();
     }
 
-
     private void addFeedbackAndScores(Model model, long applicationId) {
         model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
         model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
@@ -180,8 +177,6 @@ public class ApplicationSummaryController {
         );
     }
 
-=======
->>>>>>> origin/development
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/summary", params = "uploadResponse")
