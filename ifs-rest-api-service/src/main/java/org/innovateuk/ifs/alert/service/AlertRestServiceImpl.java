@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.alert.service;
 
+
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.alert.resource.AlertType;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,6 +23,9 @@ import java.util.List;
  */
 @Service
 public class AlertRestServiceImpl extends BaseRestService implements AlertRestService {
+
+    private static final Log LOG = LogFactory.getLog(AlertRestServiceImpl.class);
+
 
     private String alertRestURL = "/alert";
 
@@ -33,9 +39,17 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
     }
 
     @Override
+//    @HystrixCommand(fallbackMethod = "findAllVisibleFallback")
     public RestResult<List<AlertResource>> findAllVisible() {
-        return getWithRestResultAnonymous(alertRestURL + "/findAllVisible", ParameterizedTypeReferences.alertResourceListType());
+        return getWithRestResultAnonymous(alertRestURL + "/finzdAllVisible", ParameterizedTypeReferences.alertResourceListType());
     }
+
+    public RestResult<List<AlertResource>> findAllVisibleFallback() {
+        //TODO add unit test.
+        LOG.error("AJB: Alert service is down, calling fallback");
+        return RestResult.restSuccess(Collections.emptyList());
+    }
+
 
     @Override
     public RestResult<List<AlertResource>> findAllVisibleByType(AlertType type) {
