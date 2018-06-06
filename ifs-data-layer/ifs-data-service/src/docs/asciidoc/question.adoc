@@ -54,3 +54,99 @@ include::{snippets}/question/save/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/question/save/curl-request.adoc[]
+
+=== Get question by id
+==== Request
+include::{snippets}/question/get-by-id/http-request.adoc[]
+include::{snippets}/question/get-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/get-by-id/http-response.adoc[]
+include::{snippets}/question/get-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/get-by-id/curl-request.adoc[]
+
+=== Get the next question
+==== Request
+include::{snippets}/question/get-next-question/http-request.adoc[]
+include::{snippets}/question/get-next-question/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/get-next-question/http-response.adoc[]
+include::{snippets}/question/get-next-question/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/get-next-question/curl-request.adoc[]
+
+=== Get the next question by section
+==== Request
+include::{snippets}/question/get-next-question-by-section/http-request.adoc[]
+include::{snippets}/question/get-next-question-by-section/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/get-next-question-by-section/http-response.adoc[]
+include::{snippets}/question/get-next-question-by-section/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/get-next-question-by-section/curl-request.adoc[]
+
+=== Get the previous question
+==== Request
+include::{snippets}/question/get-previous-question/http-request.adoc[]
+include::{snippets}/question/get-previous-question/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/get-previous-question/http-response.adoc[]
+include::{snippets}/question/get-previous-question/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/get-previous-question/curl-request.adoc[]
+
+=== Get the previous question by section
+==== Request
+include::{snippets}/question/get-previous-question-by-section/http-request.adoc[]
+include::{snippets}/question/get-previous-question-by-section/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/get-previous-question-by-section/http-response.adoc[]
+include::{snippets}/question/get-previous-question-by-section/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/get-previous-question-by-section/curl-request.adoc[]
+
+=== Get the question by competition and setup question type
+==== Request
+include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/http-request.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/http-response.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/curl-request.adoc[]
+
+=== Get the question by competition and form input type
+==== Request
+include::{snippets}/question/get-question-by-competition-id-and-form-input-type/http-request.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-form-input-type/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/get-question-by-competition-id-and-form-input-type/http-response.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-form-input-type/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/get-question-by-competition-id-and-form-input-type/curl-request.adoc[]
+
+=== Get the question by assessment
+==== Request
+include::{snippets}/question/get-questions-by-assessment-id/http-request.adoc[]
+include::{snippets}/question/get-questions-by-assessment-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/get-questions-by-assessment-id/http-response.adoc[]
+include::{snippets}/question/get-questions-by-assessment-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/question/get-questions-by-assessment-id/curl-request.adoc[]
