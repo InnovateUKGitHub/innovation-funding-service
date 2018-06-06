@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;

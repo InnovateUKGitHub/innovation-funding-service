@@ -59,11 +59,16 @@ ext {
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-file/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-alerts/build/classes")
     inputs.file("$rootProject.projectDir/ifs-sil-resources/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-error-util/build/classes")
 
     dependsOn ":ifs-data-layer:data-service-commons:build"
     dependsOn ":ifs-data-layer:data-service-file:build"
+    dependsOn ":ifs-data-layer:data-service-alerts:build"
     dependsOn ":ifs-sil-resources:build"
+    dependsOn ":ifs-error-util:build"
+
 }
 
 
@@ -72,6 +77,8 @@ dependencies {
     compile project(":ifs-data-layer:data-service-file")
     compile project(":ifs-data-layer:data-service-alerts")
     compile project(":ifs-sil-resources")
+    compile project(":ifs-error-util")
+
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.security:spring-security-crypto"

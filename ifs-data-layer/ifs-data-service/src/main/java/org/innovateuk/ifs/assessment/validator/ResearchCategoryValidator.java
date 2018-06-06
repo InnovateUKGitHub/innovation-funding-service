@@ -11,7 +11,7 @@ import org.springframework.validation.Errors;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_RESEARCH_CATEGORY;
 
 /**

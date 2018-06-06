@@ -267,13 +267,11 @@
                             <div class="multiple-choice"
                                  th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
                                 <input type="checkbox"
-                                       th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
                                        th:field="*{question.allowedFileTypes}"
-                                       th:value="${fileTypeCategory.name()}"
-                                       name="allowedFileTypes"
+                                       th:value="${fileTypeCategory}"
                                        required="required"
-                                       data-autosave-list/>
-                                <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}"
+                                       data-autosave-list/> <!-- data-autosave-disabled -->
+                                <label th:for="${#ids.prev('question.allowedFileTypes')}"
                                        th:text="${fileTypeCategory.displayName}">PDF</label>
                             </div>
                         </fieldset>
@@ -507,7 +505,9 @@
                                 <tbody>
                                     <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
 
-                                    <tr th:id="${'guidance-'+iteration.index}">
+                                    <tr th:id="${'guidance-'+iteration.index}"
+                                        class="form-group-row-validated"
+                                        th:classappend="((${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')})) ? 'form-group-error'">
                                         <td class="form-group"
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'form-group-error'">
                                             <label class="form-label"
@@ -596,7 +596,9 @@
                                 </thead>
                                 <tbody>
                                 <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
-                                    <tr th:id="${'guidance-'+iteration.index}">
+                                    <tr th:id="${'guidance-'+iteration.index}"
+                                        class="form-group-row-validated"
+                                        th:classappend="((${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}) or (${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')})) ? 'form-group-error'">
                                         <td class="form-group"
                                             th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'form-group-error'">
                                             <label class="form-label"

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResou
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSentInviteViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

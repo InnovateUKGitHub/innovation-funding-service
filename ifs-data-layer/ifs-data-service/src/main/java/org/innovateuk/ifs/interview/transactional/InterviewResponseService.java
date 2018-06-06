@@ -24,14 +24,14 @@ public interface InterviewResponseService {
             description = "Applicant users can delete a response")
     ServiceResult<Void> deleteResponse(long applicationId);
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     @SecuredBySpring(value = "DOWNLOAD_RESPONSE",
-            description = "Applicant users can download a response")
+            description = "Applicant users and assessors can download a response")
     ServiceResult<FileAndContents> downloadResponse(long applicationId);
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     @SecuredBySpring(value = "FIND_RESPONSE",
-            description = "Applicant users can find a response")
+            description = "Applicant users and assessors can find a response")
     ServiceResult<FileEntryResource> findResponse(long applicationId);
 
 }

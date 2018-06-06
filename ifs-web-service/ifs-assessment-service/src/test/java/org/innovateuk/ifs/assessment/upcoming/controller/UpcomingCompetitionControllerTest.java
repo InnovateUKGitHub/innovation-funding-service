@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.upcoming.populator.UpcomingCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.upcoming.viewmodel.UpcomingCompetitionViewModel;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;

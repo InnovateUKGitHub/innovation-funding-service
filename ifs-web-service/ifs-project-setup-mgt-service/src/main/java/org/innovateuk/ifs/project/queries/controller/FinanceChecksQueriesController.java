@@ -2,9 +2,9 @@ package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -21,7 +21,7 @@ import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -49,7 +49,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**

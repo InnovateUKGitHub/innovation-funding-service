@@ -3,7 +3,6 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
-import org.innovateuk.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 import javax.validation.Valid;

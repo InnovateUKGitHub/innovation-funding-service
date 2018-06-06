@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.Collections.emptySet;
 
 /**
  * Component that creates a Question object containing default values & validators.
@@ -91,7 +94,7 @@ public class DefaultApplicationQuestionCreator {
         input.setGuidanceAnswer(null);
         input.setGuidanceTitle("What should I include in the appendix?");
         input.setDescription("Appendix");
-        input.setAllowedFileTypes(null);
+        input.setAllowedFileTypes(emptySet());
 
         return input;
     }
