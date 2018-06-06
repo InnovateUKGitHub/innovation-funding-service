@@ -45,7 +45,7 @@ Funding level validations
     When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
     When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  24
-    Then the user should not see an error in the page
+    Then the user cannot see a validation error in the page
 
 Other funding validations
     [Documentation]    INFUND-6794
