@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.initialdetail.form;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
