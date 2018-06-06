@@ -9,8 +9,10 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:if="${projectId!=null}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',javascriptBackLink=true" />
-            <th:block th:unless="${projectId!=null}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',javascriptBackLink=true" />
+            <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" />
+            <!--<th:block th:if="${projectId!=null}" th:insert="fragments/layout :: header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})"  />-->
+
+            <!--<th:block th:unless="${projectId!=null}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',javascriptBackLink=true" />-->
 
             <!--<th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>-->
             <!--<th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project-setup/project/} + ${projectId}"/>-->

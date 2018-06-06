@@ -50,7 +50,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private CompetitionService competitionService;
 
-    public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId, UserResource loggedInUser) {
+    public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId, UserResource loggedInUser, String origin) {
 
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
         CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()));

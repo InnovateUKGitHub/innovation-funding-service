@@ -105,7 +105,7 @@
                             th:class="${previousView.approved} ? 'positive'">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="${previousView.linkUrl}" th:text="${previousView.title}" />
+                                    <a th:href="${previousView.linkUrl} + ${model.originQuery}" th:text="${previousView.title}" />
                                 </h3>
                                 <ul class="application-details">
                                     <li>Application number: <span th:text="${previousView.applicationNumber}"></span></li>

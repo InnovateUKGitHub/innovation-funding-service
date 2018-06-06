@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.dashboard.controller;
 
+import org.innovateuk.ifs.application.forms.controller.ApplicationSummaryController;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.dashboard.populator.ApplicantDashboardPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -7,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller will handle requests related to the current applicant's dashboard. So pages that are relative to that user
@@ -25,9 +30,11 @@ public class ApplicantDashboardController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model,
-                            UserResource user) {
+                            UserResource user,@RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(ApplicationSummaryController.FeedbackSummaryOrigin.APPLICANT_DASHBOARD , queryParams);
 
-        model.addAttribute("model", applicantDashboardPopulator.populate(user.getId()));
+        model.addAttribute("model", applicantDashboardPopulator.populate(user.getId(), originQuery));
+        model.addAttribute("originQuery", originQuery);
 
         return "applicant-dashboard";
     }

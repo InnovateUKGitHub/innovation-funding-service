@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -51,7 +50,7 @@ public class ApplicantDashboardPopulator {
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
-    public ApplicantDashboardViewModel populate(Long userId) {
+    public ApplicantDashboardViewModel populate(Long userId, String origin) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);
         List<ProjectResource> allProjects = projectService.findByUser(userId).getSuccess();

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
+import org.innovateuk.ifs.application.forms.controller.ApplicationSummaryController;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
@@ -8,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller will handle all requests that are related to a project.
@@ -35,7 +40,8 @@ public class SetupStatusController {
     public String viewProjectSetupStatus(@PathVariable("projectId") final long projectId,
                                          Model model,
                                          UserResource loggedInUser,
-                                         NativeWebRequest springRequest) {
+                                         NativeWebRequest springRequest, @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(ApplicationSummaryController.FeedbackSummaryOrigin.PROJECT_SETUP_STATUS , queryParams);
 
         HttpServletRequest request = springRequest.getNativeRequest(HttpServletRequest.class);
         String dashboardUrl = request.getScheme() + "://" +
@@ -43,8 +49,9 @@ public class SetupStatusController {
             ":" + request.getServerPort() +
             "/applicant/dashboard";
 
-        model.addAttribute("model", setupStatusViewModelPopulator.populateViewModel(projectId, loggedInUser));
+        model.addAttribute("model", setupStatusViewModelPopulator.populateViewModel(projectId, loggedInUser, originQuery));
         model.addAttribute("url", dashboardUrl);
+        model.addAttribute("originQuery", originQuery);
         return PROJECT_SETUP_PAGE;
     }
 }
