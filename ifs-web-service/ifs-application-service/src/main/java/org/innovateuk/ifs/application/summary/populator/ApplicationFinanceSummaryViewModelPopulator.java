@@ -5,10 +5,13 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -32,6 +35,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private OrganisationService organisationService;
     private ProcessRoleService processRoleService;
     private UserService userService;
+    private CompetitionService competitionService;
 
     public ApplicationFinanceSummaryViewModelPopulator(ApplicationService applicationService,
                                                        SectionService sectionService,
@@ -40,7 +44,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                                                        OrganisationRestService organisationRestService,
                                                        OrganisationService organisationService,
                                                        ProcessRoleService processRoleService,
-                                                       UserService userService) {
+                                                       UserService userService,
+                                                       CompetitionService competitionService) {
         this.applicationService = applicationService;
         this.sectionService = sectionService;
         this.financeService = financeService;
@@ -49,18 +54,27 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         this.organisationService = organisationService;
         this.processRoleService = processRoleService;
         this.userService = userService;
+        this.competitionService = competitionService;
     }
 
     public ApplicationFinanceSummaryViewModel populate(long applicationId) {
 
         ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,
                 fileEntryRestService,
                 applicationId
         );
+
+        BigDecimal totalFundingSought = organisationFinanceOverview.getTotalFundingSought();
+        BigDecimal totalOtherFunding = organisationFinanceOverview.getTotalOtherFunding();
+        BigDecimal totalContribution = organisationFinanceOverview.getTotalContribution();
+        BigDecimal financeTotal = organisationFinanceOverview.getTotal();
+
         Map<FinanceRowType, BigDecimal> financeTotalPerType = organisationFinanceOverview.getTotalPerType();
+        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
 
         List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
 
@@ -82,11 +96,13 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
 
-
-//        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
         Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
 
-
+/*
+look at changing second lead organisation to user organisation,
+look at passing in the user and if is applicant then use their user organisation,
+but if not e.g assessor then use same organisation
+ */
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
@@ -94,7 +110,14 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 applicationOrganisations,
                 sectionsMarkedAsComplete,
                 financeSectionId,
-                leadOrganisation
+                leadOrganisation,
+                competition,
+                leadOrganisation,
+                organisationFinances,
+                totalFundingSought,
+                totalOtherFunding,
+                totalContribution,
+                financeTotal
                 );
     }
 
