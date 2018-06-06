@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -40,6 +41,8 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -69,6 +72,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private ApplicantRestService applicantRestService;
+
+    @Mock
+    private QuestionRestService questionRestService;
 
     @InjectMocks
     private ApplicationTeamModelPopulator applicationTeamModelPopulator = new ApplicationTeamModelPopulator();
@@ -105,6 +111,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 ), true)
         );
 
+
         ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
                 applicationResource.getId(),
                 "Application name",
@@ -116,16 +123,18 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 true
         );
 
+        when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
+
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
                 (applicationResource.getId(), leadApplicant.getId(), questionId);
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, applicantRestService, userService);
+        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
-        inOrder.verify(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId));
+        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -148,6 +157,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
         Long inviteOrgIdEggs = inviteOrganisationsMap.get("EGGS").getId();
         Long questionId = applicantQuestion.getQuestion().getId();
+        Long userId = usersMap.get("jessica.doe@ludlow.com").getId();
 
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
                 new ApplicationTeamOrganisationRowViewModel(orgIdEmpire, inviteOrgIdEmpire, "Empire Ltd", "Business", true, asList(
@@ -174,16 +184,18 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false
         );
 
+        when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
+
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
-                (applicationResource.getId(), usersMap.get("jessica.doe@ludlow.com").getId(), questionId);
+                (applicationResource.getId(), userId, questionId);
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, applicantRestService, userService);
+        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
-        inOrder.verify(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId));
+        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -207,6 +219,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
         Long inviteOrgIdEggs = inviteOrganisationsMap.get("EGGS").getId();
         Long questionId = applicantQuestion.getQuestion().getId();
+        Long userId = usersMap.get("jessica.doe@ludlow.com").getId();
 
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
                 new ApplicationTeamOrganisationRowViewModel(orgIdEmpire, inviteOrgIdEmpire, "Empire Ltd", "Business", true, singletonList(
@@ -232,16 +245,18 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false
         );
 
+        when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
+
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
-                (applicationResource.getId(), usersMap.get("jessica.doe@ludlow.com").getId(), questionId);
+                (applicationResource.getId(), userId, questionId);
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, applicantRestService, userService);
+        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
-        inOrder.verify(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId));
+        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -290,17 +305,18 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 true
         );
+        when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
 
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
                 (applicationResource.getId(), leadApplicant.getId(), questionId);
 
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, applicantRestService, userService);
+        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
-        inOrder.verify(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId));
+        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -319,16 +335,18 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         setLoggedInUser(leadApplicant);
 
+        when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
+
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
                 (applicationResource.getId(), leadApplicant.getId(), questionId);
 
         assertTrue(applicationTeamViewModel.isApplicationCanBegin());
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, applicantRestService, userService);
+        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
-        inOrder.verify(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId));
+        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -344,17 +362,86 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         ApplicantQuestionResource applicantQuestion = setupApplicantQuestion(applicationResource.getId(), leadApplicant.getId());
 
         Long questionId = applicantQuestion.getQuestion().getId();
+        Long userId = usersMap.get("jessica.doe@ludlow.com").getId();
+
+        when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
 
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
-                (applicationResource.getId(), usersMap.get("jessica.doe@ludlow.com").getId(), questionId);
+                (applicationResource.getId(), userId, questionId);
 
         assertFalse(applicationTeamViewModel.isApplicationCanBegin());
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, applicantRestService, userService);
+        InOrder inOrder = inOrder(applicationService, userService, applicantRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
-        inOrder.verify(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId));
+        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void populateSummaryModel_userIsLead() {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithInviteForLeadOrg(
+                applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+        ApplicantQuestionResource applicantQuestion = setupApplicantQuestion(applicationResource.getId(), leadApplicant.getId());
+        CompetitionResource competition = newCompetitionResource().build();
+
+        Long orgIdEmpire = organisationsMap.get("Empire Ltd").getId();
+        Long orgIdLudlow = organisationsMap.get("Ludlow").getId();
+        Long orgIdEggs = organisationsMap.get("EGGS").getId();
+        Long inviteOrgIdEmpire = inviteOrganisationsMap.get("Empire Ltd").getId();
+        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
+        Long inviteOrgIdEggs = inviteOrganisationsMap.get("EGGS").getId();
+        QuestionResource question = applicantQuestion.getQuestion();
+
+        List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEmpire, inviteOrgIdEmpire, "Empire Ltd", "Business", true, asList(
+                        new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
+                        new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
+                ), true),
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", "Business", false, singletonList(
+                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
+                ), true),
+                new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", "Academic", false, asList(
+                        new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
+                        new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
+                ), true)
+        );
+
+
+        ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
+                applicationResource.getId(),
+                "Application name",
+                expectedOrganisations,
+                true,
+                false,
+                false,
+                false,
+                true
+        );
+        expectedViewModel.setSummary(true);
+
+        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competition.getId(), APPLICATION_TEAM))
+                .thenReturn(restSuccess(question));
+        when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), question.getId())).thenReturn(applicantQuestion);
+
+        ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateSummaryModel
+                (applicationResource.getId(), leadApplicant.getId(), competition.getId());
+
+        assertEquals(expectedViewModel, applicationTeamViewModel);
+
+        InOrder inOrder = inOrder(questionRestService, applicationService, userService, applicantRestService, inviteRestService);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competition.getId(), APPLICATION_TEAM);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), question.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -546,8 +633,6 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                         .withMarkedAsCompleteBy(newApplicantResource().build())
                         .build(3))
                 .build();
-
-        when(applicantRestService.getQuestion(userId, applicationId, question.getId())).thenReturn(applicantQuestion);
 
         return applicantQuestion;
     }
