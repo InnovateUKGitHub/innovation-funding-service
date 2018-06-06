@@ -45,19 +45,29 @@
     <th:block th:fragment="page-body">
 
         <!-- Beginning -->
-        <p>View and manage your contributors or collaborators in the application.</p>
+        <div th:unless="${model.closed or model.summary}" class="textarea-header">
 
-        <p>The lead applicant cannot submit the application until everyone has accepted their invites. Only the lead can remove team members.</p>
+            <th:block th:if="${model.complete}">
+                <div class="success-alert assignee extra-margin-bottom">
+                    <p>Application team is marked as complete</p>
+                </div>
+            </th:block>
+            <th:block th:if="${!model.complete}">
+                <p>View and manage your contributors or collaborators in the application.</p>
 
-        <p>Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
+                <p>The lead applicant cannot submit the application until everyone has accepted their invites. Only the lead can remove team members.</p>
 
-        <div th:if="${model.applicationCanBegin}" class="message-alert">
-            <h2 class="heading-small">As the lead applicant you can:</h2>
-            <ul class="list-bullet">
-                <li>add collaborating and contributing organisations and individuals</li>
-                <li>manage organisations and individuals</li>
-                <li>assign questions to individuals</li>
-            </ul>
+                <p>Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
+
+                <div th:if="${model.applicationCanBegin}" class="message-alert">
+                    <h2 class="heading-small">As the lead applicant you can:</h2>
+                    <ul class="list-bullet">
+                        <li>add collaborating and contributing organisations and individuals</li>
+                        <li>manage organisations and individuals</li>
+                        <li>assign questions to individuals</li>
+                    </ul>
+                </div>
+            </th:block>
         </div>
 
         <!-- Middle -->
@@ -94,7 +104,7 @@
                 </tbody>
             </table>
 
-            <p th:if="${organisation.editable}">
+            <p th:if="${organisation.editable and !model.complete}">
                 <!--/* Prefer linking by the InviteOrganisation id over the Organisation id except where there is no InviteOrganisation. */-->
                 <a th:unless="${organisation.organisationExists}" th:href="@{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId}, organisationId=${organisation.inviteOrganisationId})}"
                    th:text="|Update and add contributors from ${organisation.name}|">Update and add contributors from Empire Ltd</a>
@@ -104,7 +114,7 @@
         </div>
 
         <!-- End -->
-        <th:block th:if="${model.userLeadApplicant}">
+        <th:block th:if="${model.userLeadApplicant and !model.complete}">
             <p><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}">Add a collaborator organisation</a></p>
         </th:block>
     </th:block>
