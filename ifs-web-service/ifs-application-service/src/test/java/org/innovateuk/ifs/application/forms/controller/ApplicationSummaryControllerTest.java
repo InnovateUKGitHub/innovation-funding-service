@@ -181,7 +181,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
         when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
         ApplicationTeamViewModel applicationTeamViewModel = setupApplicationTeamViewModel();
-        when(applicationTeamModelPopulator.populateSummaryModel(app.getId(), loggedInUser.getId())).thenReturn
+        when(applicationTeamModelPopulator.populateSummaryModel(app.getId(), loggedInUser.getId(), competitionId)).thenReturn
                 (applicationTeamViewModel);
 
         mockMvc.perform(get("/application/" + app.getId() + "/summary"))

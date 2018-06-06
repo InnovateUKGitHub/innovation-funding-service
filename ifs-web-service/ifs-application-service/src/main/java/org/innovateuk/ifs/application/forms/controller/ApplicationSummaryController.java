@@ -131,7 +131,7 @@ public class ApplicationSummaryController {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
         model.addAttribute("projectWithdrawn", projectWithdrawn);
-        model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId()));
+        model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId()));
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 

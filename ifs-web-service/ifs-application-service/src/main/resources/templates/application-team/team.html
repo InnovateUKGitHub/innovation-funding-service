@@ -45,7 +45,7 @@
     <th:block th:fragment="page-body">
 
         <!-- Beginning -->
-        <p>View and manage your contributors or collaborators in the application. If an individual is 'pending' they have not yet joined the application.</p>
+        <p>View and manage your contributors or collaborators in the application.</p>
 
         <p>The lead applicant cannot submit the application until everyone has accepted their invites. Only the lead can remove team members.</p>
 
@@ -105,9 +105,7 @@
 
         <!-- End -->
         <th:block th:if="${model.userLeadApplicant}">
-            <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
             <p><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}">Add a collaborator organisation</a></p>
         </th:block>
-
     </th:block>
 </html>

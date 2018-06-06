@@ -115,7 +115,7 @@ public class ApplicationQuestionController {
         model = populateShowQuestion(user, applicationId, questionId, model, form);
 
         if (isQuestionType(model, APPLICATION_TEAM)) {
-            model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateModel(applicationId, user.getId()));
+            model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
             return APPLICATION_FORM_LEAD;
         }
 
