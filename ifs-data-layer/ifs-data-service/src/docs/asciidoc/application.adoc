@@ -164,9 +164,11 @@ include::{snippets}/application/get-latest-email-funding-date/curl-request.adoc[
 ==== Request
 include::{snippets}/application/find-unsuccessful-applications/http-request.adoc[]
 include::{snippets}/application/find-unsuccessful-applications/path-parameters.adoc[]
+include::{snippets}/application/find-unsuccessful-applications/request-parameters.adoc[]
 
 ==== Response
 include::{snippets}/application/find-unsuccessful-applications/http-response.adoc[]
+include::{snippets}/application/find-unsuccessful-applications/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/find-unsuccessful-applications/curl-request.adoc[]
