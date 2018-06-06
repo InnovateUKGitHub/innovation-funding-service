@@ -6,8 +6,8 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
@@ -56,6 +56,10 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((question, formInput) -> setField("question", question, formInput), questions);
     }
 
+    public FormInputResourceBuilder withCompetition(Long... competitions) {
+        return withArray((competition, formInput) -> setField("competition", competition, formInput), competitions);
+    }
+
     public FormInputResourceBuilder withPriority(Integer... priorities) {
         return withArray((priority, formInput) -> setField("priority", priority, formInput), priorities);
     }
@@ -64,7 +68,12 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
     }
 
-    public FormInputResourceBuilder withAllowedFileTypes(Collection<FileTypeCategory>... fileTypes) {
+    public FormInputResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {
         return withArray((types, formInput) -> setField("allowedFileTypes", newLinkedHashSet(types), formInput), fileTypes);
+    }
+
+    public FormInputResourceBuilder withInputValidators(Set<Long>... inputValidators) {
+        return withArray((inputValidator, formInput) -> setField("inputValidators",
+                newLinkedHashSet(inputValidator), formInput), inputValidators);
     }
 }
