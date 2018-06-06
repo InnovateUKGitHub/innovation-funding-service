@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 
 /**
@@ -113,17 +112,7 @@ public class ApplicationQuestionController {
         });
 
         model = populateShowQuestion(user, applicationId, questionId, model, form);
-
-        if (isQuestionType(model, APPLICATION_TEAM)) {
-            model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
-            return APPLICATION_FORM_LEAD;
-        }
-
-        if (isQuestionType(model, APPLICATION_DETAILS)) {
-            return APPLICATION_FORM_LEAD;
-        }
-
-        return APPLICATION_FORM;
+        return getQuestionViewForModel(model);
     }
 
     @PostMapping(value = {
@@ -158,9 +147,8 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                populateShowQuestion(user, applicationId, questionId, model, form);
-                // TODO 3088: return APPLICATION_FORM or APPLICATION_FORM_LEAD based on questionIype
-                return APPLICATION_FORM;
+                model = populateShowQuestion(user, applicationId, questionId, model, form);
+                return getQuestionViewForModel(model);
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
@@ -217,6 +205,12 @@ public class ApplicationQuestionController {
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+
+        if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
+            model.addAttribute("applicationTeamModel",
+                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
+        }
+
         return model;
     }
 
@@ -234,8 +228,8 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
-        populateShowQuestion(user, applicationId, questionId, model, form);
-        return APPLICATION_FORM;
+        model = populateShowQuestion(user, applicationId, questionId, model, form);
+        return getQuestionViewForModel(model);
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,
@@ -261,8 +255,19 @@ public class ApplicationQuestionController {
                 );
     }
 
-    private boolean isQuestionType(Model model, CompetitionSetupQuestionType questionType) {
+    private CompetitionSetupQuestionType getQuestionType(Model model) {
         QuestionViewModel questionViewModel = (QuestionViewModel) model.asMap().get(MODEL_ATTRIBUTE_MODEL);
-        return questionType == questionViewModel.getApplicantResource().getQuestion().getQuestionSetupType();
+        return questionViewModel.getApplicantResource().getQuestion().getQuestionSetupType();
+    }
+
+    private String getQuestionViewForModel(Model model) {
+        CompetitionSetupQuestionType questionType = getQuestionType(model);
+        switch (questionType) {
+            case APPLICATION_DETAILS:
+            case APPLICATION_TEAM:
+                return APPLICATION_FORM_LEAD;
+            default:
+                return APPLICATION_FORM;
+        }
     }
 }
