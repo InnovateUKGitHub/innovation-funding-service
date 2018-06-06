@@ -262,6 +262,9 @@ public class ApplicationQuestionController {
 
     private String getQuestionViewForModel(Model model) {
         CompetitionSetupQuestionType questionType = getQuestionType(model);
+        if (questionType == null) {
+            return APPLICATION_FORM;
+        }
         switch (questionType) {
             case APPLICATION_DETAILS:
             case APPLICATION_TEAM:
