@@ -5,11 +5,10 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -30,9 +29,9 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -75,7 +74,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private CompetitionRepository competitionRepositoryMock;
 
     @Mock
-    private AssessmentParticipantRepository assessmentParticipantRepositoryMock;
+    private InnovationLeadRepository innovationLeadRepository;
 
     @Before
     public void setup() {
@@ -83,7 +82,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         User innovationLeadOnApp1 = newUser().build();
         innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
-        AssessmentParticipant competitionParticipant = newAssessmentParticipant().withUser(innovationLeadOnApp1).build();
+        InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadOnApp1).build();
         leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
         user3 = newUserResource().build();
@@ -126,7 +125,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationResource1.getId(), Role.ASSESSOR)).thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(panelAssessor.getId(), applicationResource1.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
 
-        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(Collections.singletonList(competitionParticipant));
+        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(Collections.singletonList
+                (innovationLead));
     }
 
     @Test
@@ -434,7 +434,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testMarkAsInelgibileAllowedBeforeAssesment() {
+    public void testMarkAsIneligibleAllowedBeforeAssessment() {
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
             allGlobalRoleUsers.forEach(user -> {
                 Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();

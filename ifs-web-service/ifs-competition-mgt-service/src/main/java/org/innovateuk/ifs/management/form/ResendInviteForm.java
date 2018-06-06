@@ -3,9 +3,6 @@ package org.innovateuk.ifs.management.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.innovateuk.ifs.controller.BindingResultTarget;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
 import java.util.List;
 

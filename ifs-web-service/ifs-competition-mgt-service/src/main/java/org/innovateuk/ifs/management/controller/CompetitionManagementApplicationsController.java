@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
+import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.form.IneligibleApplicationsForm;

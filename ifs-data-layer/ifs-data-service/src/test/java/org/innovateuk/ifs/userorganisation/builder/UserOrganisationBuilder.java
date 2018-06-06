@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.userorganisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 

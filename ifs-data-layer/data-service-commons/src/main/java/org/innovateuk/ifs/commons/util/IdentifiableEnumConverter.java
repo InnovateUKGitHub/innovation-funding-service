@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.commons.util;
 
 
-import org.innovateuk.ifs.util.enums.Identifiable;
+import org.innovateuk.ifs.identity.Identifiable;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

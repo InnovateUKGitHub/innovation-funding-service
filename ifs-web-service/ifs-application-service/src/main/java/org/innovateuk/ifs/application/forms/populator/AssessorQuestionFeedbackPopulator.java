@@ -32,7 +32,7 @@ public class AssessorQuestionFeedbackPopulator {
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
-    public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, long questionId) {
+    public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, long questionId, boolean isInterviewAssessor) {
 
         QuestionResource questionResource = questionService.getById(questionId);
         long applicationId = applicationResource.getId();
@@ -49,6 +49,7 @@ public class AssessorQuestionFeedbackPopulator {
               questionResource,
               responseResource,
               aggregateResource,
-              navigationViewModel);
+              navigationViewModel,
+              isInterviewAssessor);
     }
 }

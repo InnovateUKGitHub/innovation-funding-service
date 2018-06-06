@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

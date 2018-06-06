@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class AssessmentController {
 
     @Autowired

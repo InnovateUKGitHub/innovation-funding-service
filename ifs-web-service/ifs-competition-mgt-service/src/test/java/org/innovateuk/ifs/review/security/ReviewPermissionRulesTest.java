@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.review.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -11,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -22,46 +22,62 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
 
     @Test
     public void reviewPanel() {
-
-        CompetitionCompositeId successId = CompetitionCompositeId.id(1L);
-        CompetitionCompositeId failureId = CompetitionCompositeId.id(2L);
-
-        CompetitionResource successCompetition = CompetitionResourceBuilder.newCompetitionResource()
-                .withHasAssessmentPanel(true).build();
-        CompetitionResource failureCompetition = CompetitionResourceBuilder.newCompetitionResource()
-                .withHasAssessmentPanel(false).build();
-
         UserResource loggedInUser = compAdminUser();
 
-        when(competitionRestService.getCompetitionById(successId.id())).thenReturn(restSuccess(successCompetition));
-        when(competitionRestService.getCompetitionById(failureId.id())).thenReturn(restSuccess(failureCompetition));
+        for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
+            final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
+                    .withHasAssessmentPanel(true)
+                    .withCompetitionStatus(competitionStatus)
+                    .build();
 
-        assertTrue(rules.reviewPanel(successId, loggedInUser));
-        assertFalse(rules.reviewPanel(failureId, loggedInUser));
+            final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
+                    .withHasAssessmentPanel(false)
+                    .withCompetitionStatus(competitionStatus)
+                    .build();
+
+            when(competitionRestService.getCompetitionById(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionWithInterviewStage));
+            when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
+
+            switch (competitionStatus) {
+                case ASSESSOR_FEEDBACK: case PROJECT_SETUP:
+                    assertFalse("With interview stage and status " + competitionStatus.toString(),
+                            rules.reviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+                    break;
+                default:
+                    assertTrue("With interview stage and status " + competitionStatus.toString(),
+                            rules.reviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+            }
+            assertFalse("Without interview stage and status " + competitionStatus.toString(),
+                    rules.reviewPanel(CompetitionCompositeId.id(competitionWithoutInterviewStage.getId()), loggedInUser));
+        }
     }
 
     @Test
     public void reviewPanelApplications() {
-
-        CompetitionCompositeId successId = CompetitionCompositeId.id(1L);
-        CompetitionCompositeId failureId = CompetitionCompositeId.id(2L);
-
-        CompetitionResource successCompetition = CompetitionResourceBuilder.newCompetitionResource()
-                .withHasAssessmentPanel(true)
-                .withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL)
-                .build();
-        CompetitionResource failureCompetition = CompetitionResourceBuilder.newCompetitionResource()
-                .withHasAssessmentPanel(true)
-                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .build();
-
         UserResource loggedInUser = compAdminUser();
 
-        when(competitionRestService.getCompetitionById(successId.id())).thenReturn(restSuccess(successCompetition));
-        when(competitionRestService.getCompetitionById(failureId.id())).thenReturn(restSuccess(failureCompetition));
+        for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
+            final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
+                    .withHasAssessmentPanel(true)
+                    .withCompetitionStatus(competitionStatus)
+                    .build();
 
-        assertTrue(rules.reviewPanelApplications(successId, loggedInUser));
-        assertFalse(rules.reviewPanelApplications(failureId, loggedInUser));
+            final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
+                    .withHasAssessmentPanel(false)
+                    .withCompetitionStatus(competitionStatus)
+                    .build();
+
+            when(competitionRestService.getCompetitionById(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionWithInterviewStage));
+            when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
+
+            if (competitionStatus == CompetitionStatus.FUNDERS_PANEL) {
+                assertTrue(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+            }
+            else {
+                assertFalse(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
+            }
+            assertFalse(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithoutInterviewStage.getId()), loggedInUser));
+        }
     }
 
     @Override
