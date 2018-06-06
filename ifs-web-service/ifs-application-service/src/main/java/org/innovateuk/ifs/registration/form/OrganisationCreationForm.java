@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -27,10 +25,8 @@ public class OrganisationCreationForm implements Serializable {
     @NotNull(message = "{validation.standard.organisationtype.required}")
     private Long organisationTypeId;
 
-    private OrganisationTypeEnum organisationTypeEnum;
     @NotBlank(message = "{validation.standard.organisationsearchname.required}")
     // on empty value don't check pattern since then there already is a validation message.
-    @NotBlank(message = "{validation.standard.organisationsearchname.required}")
     private String organisationSearchName;
     private String searchOrganisationId;
     private boolean organisationSearching;
