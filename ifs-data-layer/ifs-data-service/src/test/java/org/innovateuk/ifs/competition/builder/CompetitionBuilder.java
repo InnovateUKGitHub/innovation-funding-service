@@ -166,6 +166,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((terms, competition) -> competition.setTermsAndConditions(terms), termsAndConditions);
     }
 
+    public CompetitionBuilder withStateAid(Boolean... stateAid) {
+        return withArraySetFieldByReflection("stateAid", stateAid);
+    }
+
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
         ZonedDateTime now = ZonedDateTime.now();
         if(READY_TO_OPEN.equals(status)) {

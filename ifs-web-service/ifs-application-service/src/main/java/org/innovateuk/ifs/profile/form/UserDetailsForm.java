@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.profile.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 
@@ -19,7 +19,7 @@ public class UserDetailsForm {
 
     private boolean allowMarketingEmails;
 
-    @NotEmpty(message = "{validation.standard.firstname.required}")
+    @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
         @Size(min=2, message="{validation.standard.firstname.length.min}"),
@@ -27,7 +27,7 @@ public class UserDetailsForm {
     })
     private String firstName;
 
-    @NotEmpty(message = "{validation.standard.lastname.required}")
+    @NotBlank(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List ({
         @Size(min=2, message="{validation.standard.lastname.length.min}"),
@@ -35,16 +35,16 @@ public class UserDetailsForm {
     })
     private String lastName;
 
-    @NotEmpty(message = "{validation.standard.gender.selectionrequired}")
+    @NotBlank(message = "{validation.standard.gender.selectionrequired}")
     private String gender = Gender.NOT_STATED.name();
 
-    @NotEmpty(message = "{validation.standard.ethnicity.selectionrequired}")
+    @NotBlank(message = "{validation.standard.ethnicity.selectionrequired}")
     private String ethnicity = "7";
 
-    @NotEmpty(message = "{validation.standard.disability.selectionrequired}")
+    @NotBlank(message = "{validation.standard.disability.selectionrequired}")
     private String disability = Disability.NOT_STATED.name();
 
-    @NotEmpty(message = "{validation.standard.phonenumber.required}")
+    @NotBlank(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
         @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
         @Size(max=20, message="{validation.standard.phonenumber.length.max}")

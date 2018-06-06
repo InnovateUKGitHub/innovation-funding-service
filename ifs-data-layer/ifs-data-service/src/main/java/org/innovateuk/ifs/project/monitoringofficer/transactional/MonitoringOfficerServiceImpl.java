@@ -11,7 +11,7 @@ import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerRe
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.util.EmailService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,6 +184,8 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("projectName", project.getName());
+        globalArguments.put("competitionName", project.getApplication().getCompetition().getName());
+        globalArguments.put("applicationId", project.getApplication().getId());
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
         globalArguments.put("leadOrganisation", leadOrganisation.getName());

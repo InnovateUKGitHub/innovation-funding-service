@@ -21,7 +21,7 @@ public class InterviewFeedbackViewModelPopulator {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
     }
 
-    public InterviewFeedbackViewModel populate(long applicationId, ProcessRoleResource userApplicationRole) {
+    public InterviewFeedbackViewModel populate(long applicationId, ProcessRoleResource userApplicationRole, boolean isFeedbackReleased) {
         String responseFilename = ofNullable(interviewResponseRestService.findResponse(applicationId).getSuccess())
                 .map(FileEntryResource::getName)
                 .orElse(null);
@@ -30,6 +30,6 @@ public class InterviewFeedbackViewModelPopulator {
                 .map(FileEntryResource::getName)
                 .orElse(null);
 
-        return new InterviewFeedbackViewModel(responseFilename, feedbackFilename, Role.getById(userApplicationRole.getRole()).isLeadApplicant());
+        return new InterviewFeedbackViewModel(responseFilename, feedbackFilename, Role.getById(userApplicationRole.getRole()).isLeadApplicant(), isFeedbackReleased);
     }
 }

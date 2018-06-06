@@ -105,10 +105,6 @@ include::address.adoc[]
 == Affiliation
 include::affiliation.adoc[]
 
-[[alert]]
-== Alert
-include::alert.adoc[]
-
 [[analytics]]
 == Analytics
 include::analytics.adoc[]
@@ -244,9 +240,13 @@ include::invite-project.adoc[]
 == ApplicationCountSummary
 include::applicationCountSummary.adoc[]
 
-[[competitionKeyStatistics]]
-== CompetitionKeyStatistics
-include::competitionKeyStatistics.adoc[]
+[[competitionApplicationStatistics]]
+== Competition Application Statistics
+include::competition-application-statistics.adoc[]
+
+[[competitionAssessmentStatistics]]
+== Competition Assessment Statistics
+include::competition-assessment-statistics.adoc[]
 
 [[applicationSummary]]
 == ApplicationSummary

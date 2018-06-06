@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.forms.saver;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -24,6 +24,8 @@ import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.REMOVE_UPLOADED_FILE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -115,17 +117,17 @@ public class ApplicationQuestionFileSaverTest {
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailurePdfsOnly() {
-        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY, FileTypeCategory.PDF.getMediaTypes());
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY, PDF.getMediaTypes());
     }
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailureSpreadsheetsOnly() {
-        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY, FileTypeCategory.SPREADSHEET.getMediaTypes());
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY, SPREADSHEET.getMediaTypes());
     }
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailurePdfsOrSpreadsheetsOnly() {
-        List<String> pdfAndSPreadsheetMediaTypes = combineLists(FileTypeCategory.PDF.getMediaTypes(), FileTypeCategory.SPREADSHEET.getMediaTypes());
+        List<String> pdfAndSPreadsheetMediaTypes = combineLists(PDF.getMediaTypes(), SPREADSHEET.getMediaTypes());
         assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY, pdfAndSPreadsheetMediaTypes);
     }
 

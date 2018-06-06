@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -31,6 +32,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -47,6 +49,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Autowired
     private QuestionSetupRestService questionSetupRestService;
+
+    @Autowired
+    private CompetitionInviteRestService competitionInviteRestService;
 
 	@Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
@@ -307,7 +312,19 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		return competitionSetupRestService.returnToSetup(competitionId).toServiceResult();
 	}
 
-	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
+    @Override
+    public ServiceResult<Void> deleteCompetition(long competitionId) {
+        return competitionInviteRestService
+                .getInviteStatistics(competitionId).toServiceResult().andOnSuccess(inviteStatistics -> {
+                    if (inviteStatistics.getInvited() > 0 || inviteStatistics.getInviteList() > 0) {
+                        return serviceFailure(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED);
+                    } else {
+                        return competitionSetupRestService.delete(competitionId).toServiceResult();
+                    }
+                });
+    }
+
+    private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
         List<CompetitionSetupSection> requiredSections = new ArrayList<>();
         requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
         requiredSections.add(CompetitionSetupSection.TERMS_AND_CONDITIONS);

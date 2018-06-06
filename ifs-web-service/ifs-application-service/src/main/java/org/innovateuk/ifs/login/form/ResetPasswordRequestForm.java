@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.login.form;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
  */
 public class ResetPasswordRequestForm {
 
-    @NotEmpty(message="{validation.standard.email.required}")
+    @NotBlank(message="{validation.standard.email.required}")
     @Email(message="{validation.standard.email.format}")
     @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String email;

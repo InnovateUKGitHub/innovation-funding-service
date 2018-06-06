@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.testdata.builders.data;
 
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 /**
  * Running data context for generating Organisations

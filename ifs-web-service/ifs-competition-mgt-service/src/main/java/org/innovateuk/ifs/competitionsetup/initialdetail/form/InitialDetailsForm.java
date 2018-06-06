@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.initialdetail.form;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -36,7 +37,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     private Integer openingDateYear;
 
-    @NotEmpty(message = "{validation.standard.title.required}")
+    @NotBlank(message = "{validation.standard.title.required}")
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String title;
 
@@ -51,6 +52,9 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long innovationLeadUserId;
+
+    @NotNull(message = "{validation.initialdetailsform.stateaid.required}")
+    private Boolean stateAid;
 
     private String innovationAreaNamesFormatted;
 
@@ -139,6 +143,14 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     public void setInnovationLeadUserId(Long innovationLeadUserId) {
         this.innovationLeadUserId = innovationLeadUserId;
+    }
+
+    public Boolean getStateAid() {
+        return stateAid;
+    }
+
+    public void setStateAid(final Boolean stateAid) {
+        this.stateAid = stateAid;
     }
 
     public String getInnovationAreaNamesFormatted() {

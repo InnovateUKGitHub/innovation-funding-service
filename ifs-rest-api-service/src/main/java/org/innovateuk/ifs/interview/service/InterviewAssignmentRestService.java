@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -39,4 +40,6 @@ public interface InterviewAssignmentRestService {
     RestResult<ByteArrayResource> downloadFeedback(long applicationId);
 
     RestResult<FileEntryResource> findFeedback(long applicationId);
+
+    RestResult<InterviewApplicationSentInviteResource> getSentInvite(long applicationId);
 }

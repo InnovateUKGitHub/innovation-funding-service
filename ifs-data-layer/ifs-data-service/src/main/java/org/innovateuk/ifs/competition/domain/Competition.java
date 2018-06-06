@@ -5,7 +5,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -117,6 +117,8 @@ public class Competition implements ProcessActivity {
     private GrantTermsAndConditions termsAndConditions;
 
     private boolean locationPerPartner = true;
+
+    private Boolean stateAid;
 
     public Competition() {
         setupComplete = false;
@@ -709,6 +711,14 @@ public class Competition implements ProcessActivity {
 
     public void setMinProjectDuration(Integer minProjectDuration) {
         this.minProjectDuration = minProjectDuration;
+    }
+
+    public Boolean getStateAid() {
+        return stateAid;
+    }
+
+    public void setStateAid(final Boolean stateAid) {
+        this.stateAid = stateAid;
     }
 }
 

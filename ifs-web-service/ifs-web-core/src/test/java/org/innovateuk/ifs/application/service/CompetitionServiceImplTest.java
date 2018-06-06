@@ -93,9 +93,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void getAllCompetitionTypes() throws Exception {
-        CompetitionTypeResource type1 = newCompetitionTypeResource().withStateAid(false).withName("Type 1").withId(1L).build();
+        CompetitionTypeResource type1 = newCompetitionTypeResource().withName("Type 1").withId(1L).build();
 
-        CompetitionTypeResource type2 = newCompetitionTypeResource().withStateAid(false).withName("Type 2").withId(2L).build();
+        CompetitionTypeResource type2 = newCompetitionTypeResource().withName("Type 2").withId(2L).build();
 
         final List<CompetitionTypeResource> expected = new ArrayList<>(asList(type1, type2));
 

@@ -97,7 +97,7 @@ the user leaves all the question field empty
     The user enters text to a text field    id=question.guidanceTitle  ${EMPTY}
     The user enters text to a text field    id=question.maxWords       ${EMPTY}
     the user selects the radio button       question.appendix  1
-    the user clicks the button/link         css=label[for="allowed-file-types-PDF"]
+    the user clicks the button/link         css=label[for="question.allowedFileTypes1"]
 
 The user leaves all the assessment questions empty
     The user enters text to a text field    id=guidanceRows[0].scoreFrom      ${EMPTY}
@@ -153,5 +153,6 @@ User creates a new competition for Application tests
     And the user enters text to a text field    id=openingDateYear  ${nextYear}
     And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
+    And the user clicks the button twice             css=label[for="stateAid2"]
     And the user clicks the button/link    jQuery=button:contains("Done")
     And the user clicks the button/link    link=Competition setup
