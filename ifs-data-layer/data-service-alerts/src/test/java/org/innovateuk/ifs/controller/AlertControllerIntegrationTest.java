@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.IntegrationTestConfig;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
@@ -12,6 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,8 +26,6 @@ import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUs
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.junit.Assert.*;
-@SpringBootTest(classes= IntegrationTestConfig.class)
-@ActiveProfiles("integration-test")
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 
     private UserResource systemMaintenanceUser;
