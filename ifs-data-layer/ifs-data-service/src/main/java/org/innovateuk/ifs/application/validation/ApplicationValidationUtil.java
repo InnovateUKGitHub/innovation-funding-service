@@ -5,8 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
+import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -40,6 +42,9 @@ public class ApplicationValidationUtil {
 
     @Autowired
     private ApplicationValidatorService applicationValidatorService;
+
+    @Autowired
+    private ApplicationTeamMarkAsCompleteValidator applicationTeamMarkAsCompleteValidator;
 
     @Autowired
     private MinRowCountValidator minRowCountValidator;
@@ -86,6 +91,13 @@ public class ApplicationValidationUtil {
         return binder.getBindingResult();
     }
 
+    public BindingResult validationApplicationTeam(Application application){
+        DataBinder binder = new DataBinder(application);
+        binder.addValidators(applicationTeamMarkAsCompleteValidator);
+        binder.validate();
+        return binder.getBindingResult();
+    }
+
     public BindingResult validationJesForm(Application application) {
         DataBinder binder = new DataBinder(application);
         binder.addValidators(academicJesValidator);
@@ -110,10 +122,24 @@ public class ApplicationValidationUtil {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
             }
+
+        } else if(question.getQuestionSetupType() == CompetitionSetupQuestionType.APPLICATION_TEAM) {
+            validationMessages.addAll(isApplicationTeamValid(application, question));
         } else {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(application, formInput));
             }
+        }
+        return validationMessages;
+    }
+
+    private List<ValidationMessages> isApplicationTeamValid(Application application, Question question) {
+        List<ValidationMessages> validationMessages = new ArrayList<>();
+
+        long SOME_ID = 1L;
+        BindingResult bindingResult = validationApplicationTeam(application);
+        if (bindingResult.hasErrors()) {
+            validationMessages.add(new ValidationMessages(SOME_ID, bindingResult));
         }
         return validationMessages;
     }
