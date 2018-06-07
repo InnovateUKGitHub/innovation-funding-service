@@ -29,39 +29,38 @@ public class ProcessRoleController {
     private ApplicationService applicationService;
 
     @GetMapping("/{id}")
-    public RestResult<ProcessRoleResource> findOne(@PathVariable("id") final Long id) {
+    public RestResult<ProcessRoleResource> findOne(@PathVariable("id") final long id) {
         return usersRolesService.getProcessRoleById(id).toGetResponse();
     }
 
     @GetMapping("/findByUserApplication/{userId}/{applicationId}")
-    public RestResult<ProcessRoleResource> findByUserApplication(@PathVariable("userId") final Long userId,
-                                                         @PathVariable("applicationId") final Long applicationId) {
+    public RestResult<ProcessRoleResource> findByUserApplication(@PathVariable("userId") final long userId,
+                                                         @PathVariable("applicationId") final long applicationId) {
         return usersRolesService.getProcessRoleByUserIdAndApplicationId(userId, applicationId).toGetResponse();
     }
 
     @GetMapping("/findByApplicationId/{applicationId}")
-    public RestResult<List<ProcessRoleResource>> findByUserApplication(@PathVariable("applicationId") final Long applicationId) {
-
+    public RestResult<List<ProcessRoleResource>> findByUserApplication(@PathVariable("applicationId") final long applicationId) {
         return usersRolesService.getProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @GetMapping("/findByUserId/{userId}")
-    public RestResult<List<ProcessRoleResource>> findByUser(@PathVariable("userId") final Long userId) {
+    public RestResult<List<ProcessRoleResource>> findByUser(@PathVariable("userId") final long userId) {
         return usersRolesService.getProcessRolesByUserId(userId).toGetResponse();
     }
 
     @GetMapping("/findAssignable/{applicationId}")
-    public RestResult<List<ProcessRoleResource>> findAssignable(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<List<ProcessRoleResource>> findAssignable(@PathVariable("applicationId") final long applicationId) {
         return usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @GetMapping("{id}/application")
-    public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final Long id) {
+    public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final long id) {
         return applicationService.findByProcessRole(id).toGetResponse();
     }
 
     @GetMapping("userHasApplicationForCompetition/{userId}/{competitionId}")
-    public RestResult<Boolean> userHasApplicationForCompetition(@PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId) {
+    public RestResult<Boolean> userHasApplicationForCompetition(@PathVariable("userId") final long userId, @PathVariable("competitionId") final long competitionId) {
         return usersRolesService.userHasApplicationForCompetition(userId, competitionId).toGetResponse();
     }
 }

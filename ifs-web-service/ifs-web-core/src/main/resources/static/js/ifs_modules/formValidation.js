@@ -859,6 +859,7 @@ IFS.core.formValidation = (function () {
           errorSummary.find('li:contains(' + message + ')').remove()
         }
         if (jQuery('.error-summary-list li:not(.list-header)').length === 0) {
+          jQuery('.error-summary-list li.list-header').remove()
           jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
         }
       }
