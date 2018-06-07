@@ -66,10 +66,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
         validator.validate(organisationForm, bindingResult);
 
-        if (bindingResult.hasErrors()) {
-            if (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName")) {
-                return "redirect:/";
-            }
+        //Ignore not null errors on organisationSearchName as its not relevant here. This is due to the same form being used.
+        if (bindingResult.hasErrors() && (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName"))) {
+            return "redirect:/";
         }
 
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
