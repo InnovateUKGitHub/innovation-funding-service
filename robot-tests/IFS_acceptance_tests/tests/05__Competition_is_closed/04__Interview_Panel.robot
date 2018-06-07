@@ -62,6 +62,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3524 Manage Interview panel - Key statistics
 ...
 ...               IFS-3542 Interview panels - View of application and feedback when competition feedback released
+...
+...               IFS-3566 Assessor dashboard - View of individual application
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -245,12 +247,15 @@ CompAdmin allocate applications to assessor
     And the user reads his email             ${assessor_joel_email}   Applications for interview panel for '${CLOSED_COMPETITION_NAME}'   You have now been assigned applications.
 
 Assessor can view the list of allocated applications
-    [Documentation]  IFS-3534
+    [Documentation]  IFS-3534  IFS-3566
     [Tags]
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${CLOSED_COMPETITION}/interview
     Then the user should see the element     jQuery=h1:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery=a:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
+    When the user clicks the button/link     link=${CLOSED_COMPETITION_APPLICATION_TITLE}
+    Then the user should see the element     jQuery=h1:contains("Feedback overview")
+    And the user should see the element      jQuery=.message-alert p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
 
 Assessor marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542

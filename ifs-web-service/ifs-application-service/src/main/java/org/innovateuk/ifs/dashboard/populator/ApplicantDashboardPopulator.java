@@ -92,7 +92,7 @@ public class ApplicantDashboardPopulator {
     }
 
     private boolean isLead(Optional<ProcessRoleResource> processRole) {
-        return processRole.map(ProcessRoleResource::getRole).map(Role::getById).map(Role::isLeadApplicant).orElse(false);
+        return processRole.map(ProcessRoleResource::getRole).map(Role::isLeadApplicant).orElse(false);
     }
 
     private boolean isAssigned(ApplicationResource application, Optional<ProcessRoleResource> processRole) {
@@ -134,9 +134,9 @@ public class ApplicantDashboardPopulator {
     }
 
     private boolean hasAnApplicantRole(ProcessRoleResource processRoleResource) {
-        return processRoleResource.getRole() == APPLICANT.getId() ||
-                processRoleResource.getRole() == LEADAPPLICANT.getId() ||
-                processRoleResource.getRole() == COLLABORATOR.getId();
+        return processRoleResource.getRole() == APPLICANT ||
+                processRoleResource.getRole() == LEADAPPLICANT ||
+                processRoleResource.getRole() == COLLABORATOR;
     }
 
     private boolean applicationInProgress(ApplicationResource application) {

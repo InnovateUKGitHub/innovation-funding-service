@@ -89,6 +89,11 @@ public class ApplicationResource {
         return applicationState;
     }
 
+    @JsonIgnore
+    public String getApplicationStateDisplayName(){
+        return applicationState.getDisplayName();
+    }
+
     public void setApplicationState(ApplicationState applicationState) {
         this.applicationState = applicationState;
     }
@@ -122,6 +127,11 @@ public class ApplicationResource {
     @JsonIgnore
     public boolean isOpen(){
         return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
+    }
+
+    @JsonIgnore
+    public boolean isApproved(){
+        return applicationState == ApplicationState.APPROVED;
     }
 
     public IneligibleOutcomeResource getIneligibleOutcome() {

@@ -312,7 +312,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return fromCache(applicationId, leadApplicantsByApplicationId, () ->
                 doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                        getSuccess(), pr -> pr.getRole() == LEADAPPLICANT.getId()).get()));
+                        getSuccess(), pr -> pr.getRole() == LEADAPPLICANT).get()));
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
