@@ -139,7 +139,7 @@ public class ApplicationQuestionController {
             handleAssignedQuestions(applicationId, user, request, response);
 
             // First check if any errors already exist in bindingResult
-            ValidationMessages errors = checkErrorsInForm(form, applicationId, questionId, user.getId(), request, response);
+            ValidationMessages errors = checkErrorsInFormAndSave(form, applicationId, questionId, user.getId(), request, response);
 
             model.addAttribute("form", form);
 
@@ -166,12 +166,12 @@ public class ApplicationQuestionController {
         }
     }
 
-    private ValidationMessages checkErrorsInForm(ApplicationForm form,
-                                                 Long applicationId,
-                                                 Long questionId,
-                                                 Long userId,
-                                                 HttpServletRequest request,
-                                                 HttpServletResponse response) {
+    private ValidationMessages checkErrorsInFormAndSave(ApplicationForm form,
+                                                        Long applicationId,
+                                                        Long questionId,
+                                                        Long userId,
+                                                        HttpServletRequest request,
+                                                        HttpServletResponse response) {
         Map<String, String[]> params = request.getParameterMap();
         if (isAllowedToUpdateQuestion(questionId, applicationId, userId) || isMarkQuestionRequest(params)) {
                 /* Start save action */

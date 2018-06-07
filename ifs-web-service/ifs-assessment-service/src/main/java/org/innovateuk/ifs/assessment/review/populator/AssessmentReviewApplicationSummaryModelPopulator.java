@@ -155,6 +155,6 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
         return userApplicationRoles
                 .stream()
                 .filter(processRoleResource -> processRoleResource.getUser().equals(user.getId()))
-                .anyMatch(processRoleResource -> processRoleResource.getRole() == ASSESSOR.getId());
+                .anyMatch(processRoleResource -> processRoleResource.getRole() == ASSESSOR);
     }
 }
