@@ -66,7 +66,7 @@
             <h3 class="heading-small no-margin">
                 Panel assessment feedback
             </h3>
-            <a th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${applicationInterviewSummaryViewModel.application..id})}"
+            <a th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${applicationInterviewSummaryViewModel.application.id})}"
                th:text="${applicationInterviewSummaryViewModel.feedbackFilename + ' (opens in a new window)'}"
                target="_blank">File</a>
         </div>

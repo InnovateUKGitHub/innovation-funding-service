@@ -32,8 +32,8 @@ public class ApplicationInterviewSummaryController {
         this.applicationInterviewSummaryViewModelPopulator = applicationInterviewSummaryViewModelPopulator;
     }
 
-    @SecuredBySpring(value = "READ", description = "Assessors have permission to view the application summary page")
-    @PreAuthorize("hasAnyAuthority('assessor')")
+    @SecuredBySpring(value = "READ", description = "Assessors and Comp exec users have permission to view the application summary page for an interview panel")
+    @PreAuthorize("hasAnyAuthority('assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
     @GetMapping("/{applicationId}/interview-summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
                                      Model model,
