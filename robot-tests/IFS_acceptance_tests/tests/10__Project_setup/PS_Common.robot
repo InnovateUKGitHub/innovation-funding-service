@@ -87,8 +87,8 @@ ${A_B_Cad_Services_Name}  A B Cad Services
 ${A_B_Cad_Services_Id}    ${organisation_ids["${A_B_Cad_Services_Name}"]}
 ${Armstrong_Butler_Name}  Armstrong & Butler Ltd
 ${Armstrong_Butler_Id}    ${organisation_ids["${Armstrong_Butler_Name}"]}
-${PS_BD_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_BD_Competition_Name}       Rolling stock future developments
+${PS_BD_Competition_Id}         ${competition_ids["${PS_BD_Competition_Name}"]}
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_PROJECT}    ${project_ids["${PS_BD_APPLICATION_TITLE}"]}
@@ -112,8 +112,8 @@ ${Jetpulse_Id}    42
 ${Jetpulse_Name}  Jetpulse
 ${Wikivu_Id}      43
 ${Wikivu_Name}    Wikivu
-${PS_EF_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_EF_Competition_Name}       Rolling stock future developments
+${PS_EF_Competition_Id}         ${competition_ids["${PS_EF_Competition_Name}"]}
 ${PS_EF_APPLICATION_TITLE}      New materials for lighter stock
 ${PS_EF_APPLICATION_NO}         ${application_ids["${PS_EF_APPLICATION_TITLE}"]}
 ${PS_EF_APPLICATION_NUMBER}     ${PS_EF_APPLICATION_NO}
@@ -127,8 +127,8 @@ ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
 #Project: Magic material
-${PROJECT_SETUP_COMPETITION}          ${competition_ids["New designs for a circular economy"]}
 ${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
+${PROJECT_SETUP_COMPETITION}          ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
 ${PROJECT_SETUP_APPLICATION_1_TITLE}  Magic material
 ${PROJECT_SETUP_APPLICATION_1}        ${application_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
 ${PROJECT_SETUP_APPLICATION_1_NUMBER}    ${PROJECT_SETUP_APPLICATION_1}
