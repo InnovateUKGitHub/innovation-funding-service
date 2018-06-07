@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -40,6 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singleton;
 import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
@@ -81,7 +83,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
         Competition competition = competitionRepository.findOne(competitionId);
-        List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
+        //List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
+        List<Project> projects = projectRepository.findByApplicationCompetitionIdAndProjectProcessActivityStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN));
         List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
         CompetitionProjectsStatusResource competitionProjectsStatusResource
                 = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatuses);
