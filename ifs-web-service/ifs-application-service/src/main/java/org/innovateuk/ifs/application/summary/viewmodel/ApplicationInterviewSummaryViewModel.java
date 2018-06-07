@@ -35,6 +35,7 @@ public class ApplicationInterviewSummaryViewModel {
     private final Long eachCollaboratorFinanceSectionId;
     private final BigDecimal totalFundingSought;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
+    private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
 
     public ApplicationInterviewSummaryViewModel(ApplicationResource application,
                                                 CompetitionResource competition,
@@ -51,7 +52,8 @@ public class ApplicationInterviewSummaryViewModel {
                                                 Long financeSectionId,
                                                 Long eachCollaboratorFinanceSectionId,
                                                 BigDecimal totalFundingSought,
-                                                ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel) {
+                                                ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
+                                                ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
         this.application = application;
         this.competition = competition;
         this.responseFilename = responseFilename;
@@ -68,6 +70,7 @@ public class ApplicationInterviewSummaryViewModel {
         this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
         this.totalFundingSought = totalFundingSought;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
+        this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
     }
 
     public ApplicationResource getApplication() {
@@ -132,6 +135,10 @@ public class ApplicationInterviewSummaryViewModel {
 
     public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
         return applicationFinanceSummaryViewModel;
+    }
+
+    public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
+        return applicationFundingBreakdownViewModel;
     }
 
     /* View logic methods. */

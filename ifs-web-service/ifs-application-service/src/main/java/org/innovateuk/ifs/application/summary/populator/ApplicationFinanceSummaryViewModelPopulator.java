@@ -132,11 +132,4 @@ but if not e.g assessor then use same organisation
         );
     }
 
-//    public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
-//
-//        return userApplicationRoles.stream()
-//                .filter(uar -> uar.getUser().equals(userId) && uar.getOrganisationId() != null)
-//                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
-//                .findFirst();
-//    }
 }

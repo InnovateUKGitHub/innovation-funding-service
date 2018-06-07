@@ -34,7 +34,7 @@ public class ApplicationInterviewSummaryController {
 
     @SecuredBySpring(value = "READ", description = "Assessors have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('assessor')")
-    @GetMapping("/{applicationId}/assessor-summary")
+    @GetMapping("/{applicationId}/interview-summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,

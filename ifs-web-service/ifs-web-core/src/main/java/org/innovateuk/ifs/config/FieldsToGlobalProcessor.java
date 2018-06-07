@@ -40,7 +40,7 @@ public final class FieldsToGlobalProcessor
         doWithFields(expressionResult.getClass(), field -> {
             String name = field.getName();
             Object value = getValue(expressionResult, name);
-            structureHandler.setLocalVariable(name, value);
+                structureHandler.setLocalVariable(name, value);
         });
     }
 

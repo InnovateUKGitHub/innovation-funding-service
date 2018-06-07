@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationInterviewSummaryViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -54,6 +55,7 @@ public class ApplicationInterviewSummaryViewModelPopulator {
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
     private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
 
     public ApplicationInterviewSummaryViewModelPopulator(InterviewResponseRestService interviewResponseRestService,
                                                          InterviewAssignmentRestService interviewAssignmentRestService,
@@ -70,7 +72,8 @@ public class ApplicationInterviewSummaryViewModelPopulator {
                                                          AssessmentRestService assessmentRestService,
                                                          FinanceService financeService,
                                                          FileEntryRestService fileEntryRestService,
-                                                         ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator
+                                                         ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
+                                                         ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator
     ) {
         this.interviewResponseRestService = interviewResponseRestService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
@@ -88,6 +91,7 @@ public class ApplicationInterviewSummaryViewModelPopulator {
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
+        this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
     }
 
     public ApplicationInterviewSummaryViewModel populate(long applicationId) {
@@ -152,6 +156,7 @@ public class ApplicationInterviewSummaryViewModelPopulator {
 
 
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId);
 
         return new ApplicationInterviewSummaryViewModel(
                 application,
@@ -169,7 +174,8 @@ public class ApplicationInterviewSummaryViewModelPopulator {
                 financeSectionId,
                 eachCollaboratorFinanceSectionId,
                 totalFundingSought,
-                applicationFinanceSummaryViewModel
+                applicationFinanceSummaryViewModel,
+                applicationFundingBreakdownViewModel
         );
     }
 
