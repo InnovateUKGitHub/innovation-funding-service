@@ -1,0 +1,8 @@
+ext.ifsDatasourceHost = ""
+ext.ifsDatasourceUrl=""
+ext.ifsDatasourceUsername=""
+ext.ifsDatasourcePassword=""
+
+
+ext.serverPort=8080
+ext.activeProfile="environment"
