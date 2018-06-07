@@ -234,11 +234,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess(user);
     }
 
-    private ServiceResult<User> addUserToOrganisation(User user, Long organisationId) {
-        return find(organisation(organisationId)).andOnSuccessReturn(org -> {
-            org.addUser(user);
-            return user;
-        });
+    private ServiceResult<User> addUserToOrganisation(User user, long organisationId) {
+        // we no-longer want to add the user to the organisation at this point -- they'll be linked via process_role
+
+        return serviceSuccess(user);
+//        return find(organisation(organisationId)).andOnSuccessReturn(org -> {
+//            org.addUser(user);
+//            return user;
+//        });
     }
 
     private User assembleUserFromResource(UserResource userResource) {
@@ -269,8 +272,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
-        final Token token = createEmailVerificationToken(user, competitionId);
+    public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId) {
+        final Token token = createEmailVerificationToken(user, competitionId, organisationId);
         final Notification notification = getEmailVerificationNotification(user, token);
         return notificationService.sendNotification(notification, EMAIL);
     }
@@ -288,11 +291,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
     }
 
-    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId) {
+    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId) {
         final String emailVerificationHash = getEmailVerificationHash(user);
 
         final ObjectNode extraInfo = factory.objectNode();
         competitionId.ifPresent(aLong -> extraInfo.put("competitionId", aLong));
+        organisationId.ifPresent(aLong -> extraInfo.put("organisationId", aLong));
         final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
         return tokenRepository.save(token);
     }

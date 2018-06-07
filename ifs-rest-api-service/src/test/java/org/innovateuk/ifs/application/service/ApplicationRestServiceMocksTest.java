@@ -137,7 +137,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
     @Test
     public void test_createApplication() {
-        String expectedUrl = applicationRestURL + "/createApplicationByName/123/456";
+        String expectedUrl = applicationRestURL + "/createApplicationByName/123/456/789";
 
         ApplicationResource application = new ApplicationResource();
         application.setName("testApplicationName123");
@@ -145,7 +145,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupPostWithRestResultExpectations(expectedUrl, ApplicationResource.class, application, application, CREATED);
 
         // now run the method under test
-        ApplicationResource returnedResponse = service.createApplication(123L, 456L, "testApplicationName123").getSuccess();
+        ApplicationResource returnedResponse = service.createApplication(123L, 456L, 789L, "testApplicationName123").getSuccess();
         Assert.assertEquals(returnedResponse.getName(), application.getName());
     }
 

@@ -73,7 +73,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         super.setUp();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
-        when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
+        when(applicationService.createApplication(anyLong(), anyLong(),  anyLong(), anyString())).thenReturn(applicationResource);
         when(organisationService.getOrganisationForUser(loggedInUser.getId())).thenReturn(newOrganisationResource()
                 .withId(5L)
                 .withOrganisationType(RTO.getId())
@@ -96,7 +96,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         ApplicationResource application = new ApplicationResource();
         application.setId(99L);
 
-        when(applicationService.createApplication(anyLong(), anyLong(), eq(""))).thenReturn(application);
+        when(applicationService.createApplication(anyLong(), anyLong(),  anyLong(), eq(""))).thenReturn(application);
         when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
 
         mockMvc.perform(get("/application/create-authenticated/1"))
@@ -104,7 +104,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                 .andExpect(redirectedUrl("/application/99/team"));
 
         // application needs to be created.
-        verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), eq(""));
+        verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), anyLong(), eq(""));
         verify(userService).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
     }
 
@@ -121,14 +121,14 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     public void testPostCreateNewApplication() throws Exception {
         ApplicationResource application = new ApplicationResource();
         application.setId(99L);
-        when(applicationService.createApplication(anyLong(), anyLong(), eq(""))).thenReturn(application);
+        when(applicationService.createApplication(anyLong(), anyLong(), anyLong(), eq(""))).thenReturn(application);
 
         mockMvc.perform(post("/application/create-authenticated/1").param("createNewApplication", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/99/team"));
 
         // application needs to be created.
-        verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), eq(""));
+        verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), anyLong(), eq(""));
     }
 
     @Test

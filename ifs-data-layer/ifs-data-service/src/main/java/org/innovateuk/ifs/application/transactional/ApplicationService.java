@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'CREATE')")
-    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(final String applicationName, @P("competitionId") final Long competitionId, final Long userId);
+    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(final String applicationName, final long competitionId, final long userId, long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<ApplicationResource> saveApplicationDetails(@P("applicationId") final Long id, ApplicationResource application);

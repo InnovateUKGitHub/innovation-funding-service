@@ -23,7 +23,7 @@ public interface RegistrationService {
     ServiceResult<UserResource> createOrganisationUser(long organisationId, @P("user") UserResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
-    ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId);
+    ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
     ServiceResult<Void> resendUserVerificationEmail(@P("user") final UserResource user);

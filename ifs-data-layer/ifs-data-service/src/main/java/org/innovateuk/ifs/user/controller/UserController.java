@@ -185,7 +185,7 @@ public class UserController {
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
         return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
                 {
-                    registrationService.sendUserVerificationEmail(created, empty()).getSuccess();
+                    registrationService.sendUserVerificationEmail(created, empty(), of(organisationId)).getSuccess();
                     return created;
                 }
         ).toPostCreateResponse();
@@ -195,7 +195,7 @@ public class UserController {
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
         return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
                 {
-                    registrationService.sendUserVerificationEmail(created, of(competitionId)).getSuccess();
+                    registrationService.sendUserVerificationEmail(created, of(competitionId), of(organisationId)).getSuccess();
                     return created;
                 }
         ).toPostCreateResponse();

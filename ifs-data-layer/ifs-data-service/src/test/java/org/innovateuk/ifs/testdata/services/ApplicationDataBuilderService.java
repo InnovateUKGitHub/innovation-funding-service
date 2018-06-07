@@ -337,8 +337,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
+        long where_do_we_get_the_org_from = 123L;
+
         ApplicationDataBuilder baseBuilder = applicationDataBuilder.withCompetition(competition.getCompetition()).
-                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission).
+                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, where_do_we_get_the_org_from).
                 withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);

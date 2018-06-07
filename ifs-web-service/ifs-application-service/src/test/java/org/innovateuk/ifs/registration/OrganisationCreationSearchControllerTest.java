@@ -105,7 +105,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(organisationSearchResult);
-        when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
+        when(applicationService.createApplication(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(restSuccess(true));

@@ -101,15 +101,16 @@ public class ApplicationController {
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
 
-    @PostMapping("/createApplicationByName/{competitionId}/{userId}")
+    @PostMapping("/createApplicationByName/{competitionId}/{userId}/{organisationId}")
     public RestResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
-            @PathVariable("competitionId") final Long competitionId,
-            @PathVariable("userId") final Long userId,
+            @PathVariable("competitionId") final long competitionId,
+            @PathVariable("userId") final long userId,
+            @PathVariable("organisationId") final long organisationId,
             @RequestBody JsonNode jsonObj) {
 
         String name = jsonObj.get("name").textValue();
         ServiceResult<ApplicationResource> applicationResult =
-                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
+                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId);
         return applicationResult.toPostCreateResponse();
     }
 

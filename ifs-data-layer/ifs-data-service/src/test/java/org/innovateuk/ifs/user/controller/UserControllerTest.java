@@ -101,7 +101,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty(), empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -110,7 +110,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
         verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, userResource);
-        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, empty());
+        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, empty(), of(organisationId));
         verifyNoMoreInteractions(registrationServiceMock);
     }
 
@@ -121,7 +121,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId))).thenReturn(serviceSuccess());
+        when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId), of(organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
@@ -130,7 +130,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
         verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, userResource);
-        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, of(competitionId));
+        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, of(competitionId), of(organisationId));
         verifyNoMoreInteractions(registrationServiceMock);
     }
 

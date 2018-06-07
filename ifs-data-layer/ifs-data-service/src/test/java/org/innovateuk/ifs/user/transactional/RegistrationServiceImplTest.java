@@ -418,7 +418,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(token);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty());
+        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty(), empty());
         assertTrue(result.isSuccess());
     }
 

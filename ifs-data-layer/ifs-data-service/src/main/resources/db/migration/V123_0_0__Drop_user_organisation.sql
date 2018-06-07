@@ -1,3 +1,5 @@
+-- TODO migrate verification tokens by adding the org (anything else?)
+
 DROP TABLE user_organisation;
 
 -- process_role user_id, role_id, and application_id cannot be null

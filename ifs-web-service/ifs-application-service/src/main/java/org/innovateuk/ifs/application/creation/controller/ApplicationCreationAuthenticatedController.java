@@ -37,6 +37,7 @@ import static java.lang.String.format;
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationCreationAuthenticatedController {
     public static final String COMPETITION_ID = "competitionId";
+    public static final String ORGANISATION_ID = "organisationId";
     public static final String FORM_NAME = "form";
 
     @Autowired
@@ -53,7 +54,8 @@ public class ApplicationCreationAuthenticatedController {
 
     @GetMapping("/{competitionId}")
     public String view(Model model,
-                       @PathVariable(COMPETITION_ID) Long competitionId,
+                       @PathVariable(COMPETITION_ID) long competitionId,
+                       @PathVariable(ORGANISATION_ID) long organisationId,
                        UserResource user) {
 
         if (!isAllowedToLeadApplication(user.getId(), competitionId)) {
@@ -66,7 +68,7 @@ public class ApplicationCreationAuthenticatedController {
             model.addAttribute(FORM_NAME, new ApplicationCreationAuthenticatedForm());
             return "create-application/confirm-new-application";
         } else {
-            return createApplicationAndShowInvitees(user, competitionId);
+            return createApplicationAndShowInvitees(user, competitionId, organisationId);
         }
     }
 
@@ -74,8 +76,14 @@ public class ApplicationCreationAuthenticatedController {
         return format("redirect:/application/create-authenticated/%s/not-eligible", competitionId);
     }
 
-    @PostMapping("/{competitionId}")
-    public String post(@PathVariable(COMPETITION_ID) Long competitionId,
+
+    // how do we know what organisation this user is is applying with. They're likely to be coming from a
+    // verify email. So those tokens need to include the org? There's a handy 'extra_info' json field which we could
+    // add the organisation_id to to.
+
+    @PostMapping("/{competitionId}/{organisationId}")
+    public String post(@PathVariable(COMPETITION_ID) long competitionId,
+                       @PathVariable(ORGANISATION_ID) long organisationId,
                        @Valid @ModelAttribute(FORM_NAME) ApplicationCreationAuthenticatedForm form,
                        BindingResult bindingResult,
                        ValidationHandler validationHandler,
@@ -89,7 +97,7 @@ public class ApplicationCreationAuthenticatedController {
         Supplier<String> failureView = () -> "create-application/confirm-new-application";
         Supplier<String> successView = () -> {
             if (form.getCreateNewApplication()) {
-                return createApplicationAndShowInvitees(user, competitionId);
+                return createApplicationAndShowInvitees(user, competitionId, organisationId);
             }
             // redirect to dashboard
             return "redirect:/";
@@ -108,8 +116,8 @@ public class ApplicationCreationAuthenticatedController {
         return "create-application/authenticated-not-eligible";
     }
 
-    private String createApplicationAndShowInvitees(UserResource user, Long competitionId) {
-        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
+    private String createApplicationAndShowInvitees(UserResource user, long competitionId, long organistionId) {
+        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), organistionId, "");
 
         if (application != null) {
             return format("redirect:/application/%s/team", application.getId());
