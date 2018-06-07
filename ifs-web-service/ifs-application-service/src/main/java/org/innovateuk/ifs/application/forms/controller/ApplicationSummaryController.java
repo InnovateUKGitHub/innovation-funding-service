@@ -69,6 +69,7 @@ public class ApplicationSummaryController {
     private InterviewResponseRestService interviewResponseRestService;
     private String origin;
     MultiValueMap queryParams;
+    private Long projectId;
 
     public ApplicationSummaryController() {
     }
@@ -103,7 +104,7 @@ public class ApplicationSummaryController {
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.interviewResponseRestService = interviewResponseRestService;
     }
-    
+
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/summary")
@@ -115,7 +116,7 @@ public class ApplicationSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                     @RequestParam MultiValueMap<String, String> queryParams) {
+                                     @RequestParam MultiValueMap<String, String> queryParams, Long projectId) {
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
@@ -135,12 +136,16 @@ public class ApplicationSummaryController {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
         model.addAttribute("projectWithdrawn", projectWithdrawn);
-
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
         if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             applicationModelPopulator.addFeedbackAndScores(model, applicationId);
-            model.addAttribute("backUrl", buildBackUrl(origin, applicationId, queryParams));
+            if (project != null) {
+                projectId= project.getId();
+                model.addAttribute("projectId", projectId);
+            }
+            model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
+            model.addAttribute("origin", origin);
 
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
@@ -154,7 +159,7 @@ public class ApplicationSummaryController {
         }
     }
 
-    private String buildBackUrl(String origin, long applicationId, MultiValueMap<String, String> queryParams) {
+    private String buildBackUrl(String origin, long applicationId, Long projectId, MultiValueMap<String, String> queryParams) {
         String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
         queryParams.remove("origin");
 
@@ -164,7 +169,7 @@ public class ApplicationSummaryController {
 
         return UriComponentsBuilder.fromPath(baseUrl)
                 .queryParams(queryParams)
-                .buildAndExpand(asMap( "applicationId", applicationId))
+                .buildAndExpand(asMap( "applicationId", applicationId, "projectId", projectId))
                 .encode()
                 .toUriString();
     }
@@ -187,7 +192,7 @@ public class ApplicationSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
 
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), form, bindingResult, validationHandler, model, applicationId, user, origin, queryParams);
+        Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), form, bindingResult, validationHandler, model, applicationId, user, origin, queryParams, projectId);
         MultipartFile file = form.getResponse();
         RestResult<Void> sendResult = interviewResponseRestService
                 .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
@@ -207,7 +212,7 @@ public class ApplicationSummaryController {
                                  @PathVariable("applicationId") long applicationId,
                                  UserResource user) {
 
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, interviewResponseForm, bindingResult, validationHandler, model, applicationId, user,origin, queryParams);
+        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, interviewResponseForm, bindingResult, validationHandler, model, applicationId, user,origin, queryParams, projectId);
         RestResult<Void> sendResult = interviewResponseRestService
                 .deleteResponse(applicationId);
 
