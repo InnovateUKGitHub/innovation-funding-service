@@ -24,8 +24,10 @@
                 <h2 class="heading-small no-margin">Title:</h2>
                 <p th:text="${model.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
 
-                <h2 class="heading-small">Project summary:</h2>
-                <p th:text="${model.projectSummary}">This is the applicant response for project summary</p>
+                <th:block th:if="${model.projectSummary}">
+                    <h2 class="heading-small">Project summary:</h2>
+                    <p th:text="${model.projectSummary}">This is the applicant response for project summary</p>
+                </th:block>
             </div>
             <div class="column-half">
                 <h2 class="heading-small no-margin">Partners:</h2>
