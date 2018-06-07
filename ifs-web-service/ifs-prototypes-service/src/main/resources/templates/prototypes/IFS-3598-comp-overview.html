@@ -4,7 +4,8 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 	<link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+
+<body th:with="status=${param.status != null and param.status[0] == 'signedIn' ? 'signedIn' : 'notSignedIn'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -31,8 +32,9 @@
     </ul>
     <div>
         <p class="extra-margin-top">
-            <a class="button" href="/prototypes/IFS-3598-signin">Start new application</a>
+            <a class="button" th:href="${status == 'signedIn' ? 'IFS-3598-application-team' : 'IFS-3598-signin'}">Start new application</a>
         </p>
+
         <p class="extra-margin">
             Or go to <a href="/">your dashboard</a> to continue an existing application.
         </p>
