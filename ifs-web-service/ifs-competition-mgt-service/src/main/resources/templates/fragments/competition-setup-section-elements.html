@@ -267,13 +267,11 @@
                             <div class="multiple-choice"
                                  th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
                                 <input type="checkbox"
-                                       th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
                                        th:field="*{question.allowedFileTypes}"
-                                       th:value="${fileTypeCategory.name()}"
-                                       name="allowedFileTypes"
+                                       th:value="${fileTypeCategory}"
                                        required="required"
-                                       data-autosave-list/>
-                                <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}"
+                                       data-autosave-list/> <!-- data-autosave-disabled -->
+                                <label th:for="${#ids.prev('question.allowedFileTypes')}"
                                        th:text="${fileTypeCategory.displayName}">PDF</label>
                             </div>
                         </fieldset>

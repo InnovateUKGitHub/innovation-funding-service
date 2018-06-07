@@ -2,6 +2,7 @@ package org.innovateuk.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
@@ -68,7 +69,11 @@ public class FormInput {
 
     private boolean active = true;
 
-    private String allowedFileTypes;
+    @ElementCollection
+    @CollectionTable(name = "appendix_file_types")
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private Set<FileTypeCategory> allowedFileTypes;
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
@@ -204,11 +209,11 @@ public class FormInput {
         this.active = active;
     }
 
-    public String getAllowedFileTypes() {
+    public Set<FileTypeCategory> getAllowedFileTypes() {
         return allowedFileTypes;
     }
 
-    public void setAllowedFileTypes(String allowedFileTypes) {
+    public void setAllowedFileTypes(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
 }
