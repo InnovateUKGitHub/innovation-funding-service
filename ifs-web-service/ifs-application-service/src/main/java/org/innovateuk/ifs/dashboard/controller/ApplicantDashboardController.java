@@ -31,7 +31,8 @@ public class ApplicantDashboardController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model,
-                            UserResource user, @RequestParam MultiValueMap<String, String> queryParams) {
+                            UserResource user,
+                            @RequestParam MultiValueMap<String, String> queryParams) {
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.APPLICANT_DASHBOARD, queryParams);
         model.addAttribute("model", applicantDashboardPopulator.populate(user.getId(), originQuery));
         return "applicant-dashboard";

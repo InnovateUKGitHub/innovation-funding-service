@@ -212,7 +212,7 @@ public class ApplicationSummaryController {
                                  @PathVariable("applicationId") long applicationId,
                                  UserResource user) {
 
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, interviewResponseForm, bindingResult, validationHandler, model, applicationId, user,origin, queryParams, projectId);
+        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, interviewResponseForm, bindingResult, validationHandler, model, applicationId, user, origin, queryParams, projectId);
         RestResult<Void> sendResult = interviewResponseRestService
                 .deleteResponse(applicationId);
 
