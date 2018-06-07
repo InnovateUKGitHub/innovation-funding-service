@@ -43,7 +43,6 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
     }
 
     public RestResult<List<AlertResource>> findAllVisibleFallback( Throwable e) {
-        //TODO add unit test.
         LOG.error("Calling Alerts Fallback:",e);
         return RestResult.restSuccess(Collections.emptyList());
     }
