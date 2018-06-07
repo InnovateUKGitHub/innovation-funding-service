@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}">
+<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}, type=${param.type != null and param.type[0] =='collaborator' ?  'collaborator' : 'lead'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -13,7 +13,7 @@
 
 <main id="content">
 
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-3598-choose-org'} + ${user == 'existing' ? '/?user=existing' : ''})" />
+	<th:block th:unless="${type=='collaborator'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-3598-choose-org'} + ${user == 'existing' ? '/?user=existing' : ''})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -26,10 +26,9 @@
     <div class="message-alert">
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
-    <p>You can identify your organisation through Companies House or enter your details manually.</p>
+    <p class="extra-margin">You can identify your organisation through Companies House or enter your details manually.</p>
+
     <h2 class="heading-medium">Search on Companies House</h2>
-
-
 
     <form action="/prototypes/IFS-3598-org-selected" method="POST"><input type="hidden" name="_csrf" value="bf3eeee5911011ca0665b19a96010e9e8cc50df9f63431bfc8533dbac5a10e7c56194216ef592632eb371669dc4c99a413fe220e5f312fb9f7c476057981d2496bf6e538cc7ee198c3e88543acaa00bb985bfbee3c5d8c85ec6a982b57e3ce48">
 
@@ -48,7 +47,7 @@
         <ul id="org-results" class="results-list panel" style="display: block">
             <li class="type-company">
                 <h3>
-                    <a th:href="${'/prototypes/IFS-3598-org-selected'} + ${user == 'existing' ? '?user=existing' : ''}" title="View organisation">CERCIS LIMITED</a>
+                    <a th:href="${'/prototypes/IFS-3598-org-selected'} + ${user == 'existing' ? '?user=existing' : '?user=new'} + '&#38;type=' + ${type}" title="View organisation">CERCIS LIMITED</a>
                 </h3>
                 <p class="meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
                 <p>Queen Square, Bristol, BS1 4NT</p>

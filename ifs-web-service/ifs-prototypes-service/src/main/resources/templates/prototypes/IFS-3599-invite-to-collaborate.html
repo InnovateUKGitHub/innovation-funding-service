@@ -18,24 +18,24 @@
     <main tabindex="-1" id="content">
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='heading-xlarge'" />
-        <p>You have been invited to join an application in the competition '<a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>'.</p>
+        <p>You have been invited to join an application in the competition '<a href="#" th:text="${'Predicting market trends programme'}"></a>'.</p>
         <div>
             <h1 class="heading-large">Application details</h1>
             <dl class="extra-margin-bottom">
                 <dt>Lead organisation:</dt>
-                <dd th:text="${model.leadOrganisationName}"></dd>
+                <dd th:text="${'Empire Ltd'}"></dd>
 
                 <dt>Lead applicant:</dt>
-                <dd th:text="${model.leadApplicantName}"></dd>
+                <dd th:text="${'Steve Smith'}"></dd>
             </dl>
-            <p>You are invited to collaborate in this application as part of the following organisation: <strong th:text="${model.inviteOrganisationName}"></strong></p>
-            <p>If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a>.</p>
+            <p>You are invited to collaborate in this application as part of the following organisation: <strong th:text="${'Spoons'}"></strong></p>
+            <p>If this is not the correct organisation, you can update it when you join the application</p>
 
             <p>Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
 
             <h2 class="heading-medium">Are you happy to accept the invitation to participate?</h2>
             <p>As you are new to the service, you will be taken through the account creation process.</p>
-            <a th:href="${model.inviteOrganisationExists} ? @{/accept-invite/confirm-invited-organisation} : @{/organisation/create/new-account-organisation-type}" class="button">Yes, accept invitation</a>
+            <a href="/prototypes/IFS-3598-choose-org?type=collaborator" class="button">Yes, accept invitation</a>
             <p>If you do not wish to accept this invitation, please let the lead applicant know.</p>
         </div>
 

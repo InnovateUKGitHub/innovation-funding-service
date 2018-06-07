@@ -11,6 +11,12 @@
     </header>
 
     <ul class="inline-nav extra-margin">
+        <li th:class="${(sprint == 'decouple' ? 'selected' : '')}"><a href="/prototypes/index">Decoupling org from user</a></li>
+        <li th:class="${(sprint == 'assessorJourney' ? 'selected' : '')}"><a href="/prototypes/index-assessor-journey">Assessor journey</a></li>
+        <li th:class="${(sprint == 'demo' ? 'selected' : '')}"><a href="/prototypes/index-demo">Demo</a></li>
+    </ul>
+
+    <!--<ul class="inline-nav extra-margin">
         <li th:class="${(sprint == 'sprint1' ? 'selected' : '')}"><a href="/prototypes/index-sprint1">Sprints 1 to 10</a></li>
         <li th:class="${(sprint == 'sprint11' ? 'selected' : '')}"><a href="/prototypes/index-sprint11">11</a></li>
         <li th:class="${(sprint == 'sprint12' ? 'selected' : '')}"><a href="/prototypes/index-sprint12">12</a></li>
@@ -23,12 +29,8 @@
         <li th:class="${(sprint == 'sprint19' ? 'selected' : '')}"><a href="/prototypes/index-sprint19">19</a></li>
         <li th:class="${(sprint == 'sprint20' ? 'selected' : '')}"><a href="/prototypes/index-sprint20">20</a></li>
         <li th:class="${(sprint == 'sprint21' ? 'selected' : '')}"><a href="/prototypes/index-sprint21"><strong>21</strong></a></li>
-    </ul>
+    </ul>-->
 
-    <div class="alignright">
-        <a href="/prototypes/index-assessor-journey">Assessor journey</a> |
-        <a href="/prototypes/index-demo">Demo</a>
-    </div>
 
 </div>
 
