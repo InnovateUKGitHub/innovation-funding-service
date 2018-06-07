@@ -1,39 +1,31 @@
-def props = [:]
+ext.LDAP_BASEDN="dc=int,dc=g2g3digital,dc=net"
+ext.LDAP_BINDDN="cn=admin,dc=int,dc=g2g3digital,dc=net"
+ext.LDAP_AUTHENTICATOR="bindSearchAuthenticator"
+ext.SHIBBOLETH_LDAP_PORT="389"
 
-props.LDAP_BASEDN="dc=int,dc=g2g3digital,dc=net"
-props.LDAP_BINDDN="cn=admin,dc=int,dc=g2g3digital,dc=net"
-props.LDAP_AUTHENTICATOR="bindSearchAuthenticator"
-props.SHIBBOLETH_LDAP_PORT="389"
+ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=int,dc=g2g3digital,dc=net"
 
-props.SHIBBOLETH_LDAP_USER="cn=admin,dc=int,dc=g2g3digital,dc=net"
+ext.SHIBBOLETH_SP_MPM_STARTSERVERS="4"
+ext.SHIBBOLETH_SP_MPM_MINSPARETHREADS="75"
+ext.SHIBBOLETH_SP_MPM_MAXSPARETHREADS="250"
+ext.SHIBBOLETH_SP_MPM_THREADLIMIT="64"
+ext.SHIBBOLETH_SP_MPM_THREADSPERCHILD="25"
+ext.SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS="400"
+ext.SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD="0"
 
-props.SHIBBOLETH_SP_MPM_STARTSERVERS="4"
-props.SHIBBOLETH_SP_MPM_MINSPARETHREADS="75"
-props.SHIBBOLETH_SP_MPM_MAXSPARETHREADS="250"
-props.SHIBBOLETH_SP_MPM_THREADLIMIT="64"
-props.SHIBBOLETH_SP_MPM_THREADSPERCHILD="25"
-props.SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS="400"
-props.SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD="0"
+ext.SHIBBOLETH_SP_MEMORY_REQUEST="1536Mi"
+ext.SHIBBOLETH_SP_MEMORY_LIMIT="2000Mi"
 
-props.SHIBBOLETH_SP_MEMORY_REQUEST="1536Mi"
-props.SHIBBOLETH_SP_MEMORY_LIMIT="2000Mi"
+ext.SHIBBOLETH_IDP_MEMORY_REQUEST="1024M"
+ext.SHIBBOLETH_IDP_MEMORY_LIMIT="1500M"
 
-props.SHIBBOLETH_IDP_MEMORY_REQUEST="1024M"
-props.SHIBBOLETH_IDP_MEMORY_LIMIT="1500M"
+ext.LDAP_USESSL="false"
 
-props.LDAP_USESSL="false"
+ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 
-props.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
+ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+ext.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+ext.PROTOTYPES_ADDRESS="prototypes-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
-props.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-props.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-props.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-props.PROTOTYPES_ADDRESS="prototypes-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-
-props.FILE_UPLOAD_CLAIM=project.properties['openshiftEnv']+"-file-upload-claim"
-
-props.each { key, value ->
-    if(!project.hasProperty(key)) {
-        ext."$key" = value
-    }
-}
+ext.FILE_UPLOAD_CLAIM=project.properties['openshiftEnv']+"-file-upload-claim"
