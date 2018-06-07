@@ -47,7 +47,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
     public void test_getApplicationTeamByApplicationId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getApplicationTeamByApplicationId(1L),
-                PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD);
+                PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, ASSESSOR);
     }
 
     @Test

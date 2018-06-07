@@ -345,8 +345,9 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         expectedNavigation.setNextUrl("/application/1/question/3/feedback");
         expectedNavigation.setPreviousText("previous");
         expectedNavigation.setPreviousUrl("/application/1/question/1/feedback");
+        boolean isInterviewAssessor = false;
         AssessQuestionFeedbackViewModel expectedModel =
-                new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, aggregateResource, expectedNavigation);
+                new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, aggregateResource, expectedNavigation, isInterviewAssessor);
 
         when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
         when(questionService.getById(questionId)).thenReturn(questionResource);
