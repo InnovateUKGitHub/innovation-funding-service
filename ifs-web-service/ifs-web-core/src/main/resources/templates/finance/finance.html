@@ -629,13 +629,13 @@
 
             <div class="form-group" id="overhead-none">
                 <h3 class="heading-medium">No overhead costs</h3>
-                <p th:unless="${!internalView}">You are not currently applying for overhead costs</p>
+                <p th:unless="${internalView}">You are not currently applying for overhead costs</p>
                 <input type="hidden" value="£0" data-calculation-rawvalue="0" th:id="${'section-total-'+subSection.id+'-labour-cost-none'}"/>
             </div>
 
             <div class="form-group" id="overhead-default-percentage">
                 <h3 class="heading-medium">20% of labour costs</h3>
-                <p th:unless="${!internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
+                <p th:unless="${internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
                 <h4 class="alignright section-total-summary">
                     Total overhead costs
                     <span class="heading-small"
@@ -692,7 +692,7 @@
             <div class="form-group" th:if="${overheadCosts?.useTotalOption}" id="overhead-total">
 
                 <!--/* Applicants' view of Overheads */-->
-                <th:block th:unless="${!internalView}">
+                <th:block th:unless="${internalView}">
                     <h3 class="heading-medium">Calculate overheads</h3>
                     <p>
                         If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below.
