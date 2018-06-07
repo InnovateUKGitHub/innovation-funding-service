@@ -16,6 +16,8 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -57,7 +59,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         this.competitionService = competitionService;
     }
 
-    public ApplicationFinanceSummaryViewModel populate(long applicationId) {
+    public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -90,19 +92,19 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         }
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
 
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
 
         Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
 
-/*
-look at changing second lead organisation to user organisation,
-look at passing in the user and if is applicant then use their user organisation,
-but if not e.g assessor then use same organisation
- */
+        OrganisationResource userOrganisation = null;
+
+        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
+            ProcessRoleResource userProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
+        }
+
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
@@ -112,7 +114,7 @@ but if not e.g assessor then use same organisation
                 financeSectionId,
                 leadOrganisation,
                 competition,
-                leadOrganisation,
+                userOrganisation,
                 organisationFinances,
                 totalFundingSought,
                 totalOtherFunding,

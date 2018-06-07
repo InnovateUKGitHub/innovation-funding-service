@@ -40,7 +40,7 @@ public class ApplicationInterviewSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
 
-        model.addAttribute("applicationInterviewSummaryViewModel", applicationInterviewSummaryViewModelPopulator.populate(applicationId));
+        model.addAttribute("applicationInterviewSummaryViewModel", applicationInterviewSummaryViewModelPopulator.populate(applicationId, user));
         return "application-interview-summary";
     }
 }
