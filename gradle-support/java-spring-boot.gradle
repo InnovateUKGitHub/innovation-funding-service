@@ -81,7 +81,7 @@ processTestResources {
     }
 }
 
-ext.springCloudVersion = 'Camden.SR5'
+ext.springCloudVersion = 'Edgware.SR3'
 
 
 dependencyManagement {

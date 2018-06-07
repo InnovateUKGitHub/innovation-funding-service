@@ -12,14 +12,13 @@ import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * AlertRestServiceImpl is a utility for CRUD operations on {@link org.innovateuk.ifs.domain.Alert}.
- * This class connects to the {@link org.innovateuk.ifs.alert.controller.AlertController}
- * through a REST call.
- */
+
 @Service
 public class AlertRestServiceImpl extends BaseRestService implements AlertRestService {
 
@@ -38,17 +37,16 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
     }
 
     @Override
-//    @HystrixCommand(fallbackMethod = "findAllVisibleFallback")
+    @HystrixCommand(fallbackMethod = "findAllVisibleFallback")
     public RestResult<List<AlertResource>> findAllVisible() {
         return getWithRestResultAnonymous(alertRestURL + "/findAllVisible", ParameterizedTypeReferences.alertResourceListType());
     }
 
-    public RestResult<List<AlertResource>> findAllVisibleFallback() {
+    public RestResult<List<AlertResource>> findAllVisibleFallback( Throwable e) {
         //TODO add unit test.
-        LOG.error("AJB: Alert service is down, calling fallback");
+        LOG.error("Calling Alerts Fallback:",e);
         return RestResult.restSuccess(Collections.emptyList());
     }
-
 
     @Override
     public RestResult<List<AlertResource>> findAllVisibleByType(AlertType type) {
