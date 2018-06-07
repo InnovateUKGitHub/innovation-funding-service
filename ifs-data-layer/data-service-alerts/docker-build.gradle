@@ -3,6 +3,5 @@ ext.ifsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs"
 ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
 
-
 ext.serverPort=8080
 ext.activeProfile="local"

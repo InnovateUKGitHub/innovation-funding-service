@@ -16,11 +16,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 @SpringBootApplication
-@EnableScheduling
 @EnableSpringDataWebSupport
 public class Application extends SpringBootServletInitializer {
-    private static final Log LOG = LogFactory.getLog(Application.class);
 
+    private static final Log LOG = LogFactory.getLog(Application.class);
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
