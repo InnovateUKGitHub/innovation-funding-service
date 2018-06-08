@@ -172,10 +172,11 @@ public class ApplicationQuestionController {
                                                         Long userId,
                                                         HttpServletRequest request,
                                                         HttpServletResponse response) {
+        ValidationMessages errors = new ValidationMessages();
         Map<String, String[]> params = request.getParameterMap();
         if (isAllowedToUpdateQuestion(questionId, applicationId, userId) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-            return applicationSaver.saveApplicationForm(
+            errors = applicationSaver.saveApplicationForm(
                     applicationId,
                     form,
                     questionId,
@@ -185,7 +186,7 @@ public class ApplicationQuestionController {
                     Optional.empty()
             );
         }
-        return null;
+        return errors;
     }
 
     private boolean hasErrors(HttpServletRequest request, ValidationMessages errors, BindingResult bindingResult) {
