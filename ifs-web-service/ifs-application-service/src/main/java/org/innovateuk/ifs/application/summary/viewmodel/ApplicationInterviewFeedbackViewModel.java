@@ -13,6 +13,15 @@ import java.util.Map;
 
 public class ApplicationInterviewFeedbackViewModel {
 
+    final static String LEAD_WITH_RESPONSE_BANNER =  "Your response has been uploaded." +
+            " This response will be noted by the interview panel.";
+    final static String LEAD_WITHOUT_RESPONSE_BANNER =  "As the lead applicant you can respond to feedback." +
+            " This response will be noted by the interview panel.";
+    final static String COLLAB_WITH_RESPONSE_BANNER =  "The lead applicant has responded to feedback." +
+            " This response will be noted by the interview panel.";
+    final static String COLLAB_WITHOUT_RESPONSE_BANNER =  "The lead applicant can respond to feedback." +
+            " This response will be noted by the interview panel.";
+
     private final ApplicationResource currentApplication;
     private final CompetitionResource currentCompetition;
     private final OrganisationResource leadOrganisation;
@@ -23,6 +32,10 @@ public class ApplicationInterviewFeedbackViewModel {
     private final ApplicationAssessmentAggregateResource scores;
     private final List<String> feedback;
     private final boolean hasFinanceSection;
+    private final String feedbackFilename;
+    private final String responseFilename;
+    private final boolean isLeadApplicant;
+    private final boolean feedbackReleased;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
 
@@ -36,6 +49,10 @@ public class ApplicationInterviewFeedbackViewModel {
                                                  ApplicationAssessmentAggregateResource scores,
                                                  List<String> feedback,
                                                  boolean hasFinanceSection,
+                                                 String feedbackFilename,
+                                                 String responseFilename,
+                                                 boolean isLeadApplicant,
+                                                 boolean feedbackReleased,
                                                  ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                                  ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
         this.currentApplication = currentApplication;
@@ -48,6 +65,10 @@ public class ApplicationInterviewFeedbackViewModel {
         this.scores = scores;
         this.feedback = feedback;
         this.hasFinanceSection = hasFinanceSection;
+        this.feedbackFilename = feedbackFilename;
+        this.responseFilename = responseFilename;
+        this.isLeadApplicant = isLeadApplicant;
+        this.feedbackReleased = feedbackReleased;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
     }
@@ -92,11 +113,57 @@ public class ApplicationInterviewFeedbackViewModel {
         return hasFinanceSection;
     }
 
+    public String getFeedbackFilename() {
+        return feedbackFilename;
+    }
+
+    public String getResponseFilename() {
+        return responseFilename;
+    }
+
+    public boolean isLeadApplicant() {
+        return isLeadApplicant;
+    }
+
+    public boolean isFeedbackReleased() {
+        return feedbackReleased;
+    }
+
     public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
         return applicationFinanceSummaryViewModel;
     }
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    /* View logic methods. */
+
+    public boolean hasResponse() {
+        return responseFilename != null;
+    }
+
+    public boolean hasFeedback() {
+        return feedbackFilename != null;
+    }
+
+    public boolean isResponseSectionEnabled() {
+        return !feedbackReleased || hasResponse();
+    }
+
+    public String getBannerText() {
+            if (isLeadApplicant()) {
+                if (hasResponse()) {
+                    return LEAD_WITH_RESPONSE_BANNER;
+                } else {
+                    return LEAD_WITHOUT_RESPONSE_BANNER;
+                }
+            } else {
+                if (hasResponse()) {
+                    return COLLAB_WITH_RESPONSE_BANNER;
+                } else {
+                    return COLLAB_WITHOUT_RESPONSE_BANNER;
+                }
+            }
     }
 }

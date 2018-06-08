@@ -110,8 +110,8 @@ public class ApplicationSummaryController {
 //        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
 //        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 //
-//        ApplicationResource application = applicationService.getById(applicationId);
-//        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
 //        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 //
 //        applicationModelPopulator.addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.of(Boolean.FALSE));
@@ -125,21 +125,21 @@ public class ApplicationSummaryController {
 //        boolean projectWithdrawn = (project != null && project.isWithdrawn());
 //        model.addAttribute("projectWithdrawn", projectWithdrawn);
 //
-//        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
+        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 //
-//        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
+        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
 //            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
-//            return "application-feedback-summary";
-//        } else if (isApplicationAssignedToInterview) {
+            return "application-feedback-summary";
+        } else if (isApplicationAssignedToInterview) {
 //            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
 //            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, competition.getCompetitionStatus().isFeedbackReleased(), false));
         model.addAttribute("interviewFeedbackViewModel", applicationInterviewFeedbackViewModelPopulator.populate(applicationId, user));
 
         return "application-interview-feedback";
-//        }
-//        else {
-//            return "application-summary";
-//        }
+        }
+        else {
+            return "application-summary";
+        }
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")

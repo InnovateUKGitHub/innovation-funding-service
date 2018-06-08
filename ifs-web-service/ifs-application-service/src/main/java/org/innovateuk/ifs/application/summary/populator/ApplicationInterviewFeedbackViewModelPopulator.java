@@ -11,13 +11,18 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateReso
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Component;
@@ -28,6 +33,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
@@ -46,6 +52,9 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
     private QuestionService questionService;
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     private AssessmentRestService assessmentRestService;
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+    private InterviewResponseRestService interviewResponseRestService;
+    private ProcessRoleService processRoleService;
 
     public ApplicationInterviewFeedbackViewModelPopulator(ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
                                                           ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
@@ -59,6 +68,9 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
                                                           SectionService sectionService,
                                                           QuestionService questionService,
                                                           AssessorFormInputResponseRestService assessorFormInputResponseRestService,
+                                                          InterviewAssignmentRestService interviewAssignmentRestService,
+                                                          InterviewResponseRestService interviewResponseRestService,
+                                                          ProcessRoleService processRoleService,
                                                           AssessmentRestService assessmentRestService) {
         this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
@@ -73,12 +85,17 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
         this.questionService = questionService;
         this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
         this.assessmentRestService = assessmentRestService;
+        this.interviewAssignmentRestService = interviewAssignmentRestService;
+        this.interviewResponseRestService = interviewResponseRestService;
+        this.processRoleService = processRoleService;
     }
 
     public ApplicationInterviewFeedbackViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        boolean feedbackReleased = competition.getCompetitionStatus().isFeedbackReleased();
 
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
@@ -111,6 +128,8 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
                         s -> getQuestionsBySection(s.getQuestions(), questions)
                 ));
 
+        boolean isLeadApplicant = processRoleService.findProcessRole(user.getId(), applicationId).getRole().equals(Role.LEADAPPLICANT);
+
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
         List<String> feedback = assessmentRestService.getApplicationFeedback(applicationId).getSuccess().getFeedback();
 
@@ -125,6 +144,14 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
             financeSectionId = financeSection.getId();
         }
 
+        String feedbackFilename = ofNullable(interviewAssignmentRestService.findFeedback(applicationId).getSuccess())
+                .map(FileEntryResource::getName)
+                .orElse(null);
+
+        String responseFilename = ofNullable(interviewResponseRestService.findResponse(applicationId).getSuccess())
+                .map(FileEntryResource::getName)
+                .orElse(null);
+
         return new ApplicationInterviewFeedbackViewModel(
                 application,
                 competition,
@@ -136,6 +163,10 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
                 scores,
                 feedback,
                 hasFinanceSection,
+                feedbackFilename,
+                responseFilename,
+                isLeadApplicant,
+                feedbackReleased,
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel
                 );
