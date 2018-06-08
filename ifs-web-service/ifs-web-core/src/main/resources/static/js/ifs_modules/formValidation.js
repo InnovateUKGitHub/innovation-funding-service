@@ -972,23 +972,32 @@ IFS.core.formValidation = (function () {
       var formGroupRow = target.closest('.form-group-row')
       if (targetVisible && formGroupRow.length) {
         // it is part a date group so don't put focus on the time select
-        formGroupRow.find('input[type!=hidden]').first().focus()
+        IFS.core.formValidation.scrollToElement(formGroupRow.find('input[type!=hidden]').first())
       } else if (targetVisible) {
-        target.first().focus()
+        IFS.core.formValidation.scrollToElement(target.first())
       } else if (closedCollapsible.length) {
         // it is within a collapsible element and we open it and then put focus on it
         var stateless = closedCollapsible.hasClass(IFS.core.collapsible.settings.statelessClass)
         IFS.core.collapsible.toggleCollapsible(closedCollapsible.find('button[aria-controls]'), stateless)
-        target.first().focus()
+        IFS.core.formValidation.scrollToElement(target.first())
       } else {
         // if the target is invisible we put focus on an element that has the same label as the target
         // An example of this usecase is the wysiwyg editor
         var altTarget = jQuery('[aria-labelledby="' + id + '"]')
         var altTargetVisible = IFS.core.formValidation.isVisible(altTarget)
         if (altTargetVisible) {
-          altTarget.first().focus()
+          IFS.core.formValidation.scrollToElement(altTarget.first())
         }
       }
+    },
+    scrollToElement: function (el) {
+      jQuery('html, body').animate({
+        scrollTop: el.offset().top - (jQuery(window).height() / 2)
+      }, {
+        complete: function () {
+          el.focus()
+        }
+      })
     },
     isVisible: function (el) {
       return !(el.is('[aria-hidden="true"]') || el.is(':visible') === false || el.length === 0)

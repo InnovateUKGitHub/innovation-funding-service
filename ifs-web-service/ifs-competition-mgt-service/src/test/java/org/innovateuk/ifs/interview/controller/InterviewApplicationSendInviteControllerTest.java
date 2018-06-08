@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -156,10 +157,10 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         long competitionId = 1L;
         long applicationId = 2L;
 
-        when(interviewAssignmentRestService.uploadFeedback(applicationId,"application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
-                .thenReturn(restFailure(new Error("", HttpStatus.NOT_FOUND)));
+        when(interviewAssignmentRestService.uploadFeedback(applicationId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
+                .thenReturn(restFailure(CommonErrors.payloadTooLargeError(1)));
 
-        MockMultipartFile file = new MockMultipartFile("feedback", "testFile.pdf", "application/pdf", "My content!".getBytes());
+        MockMultipartFile file = new MockMultipartFile("feedback[2]", "testFile.pdf", "application/pdf", "My content!".getBytes());
 
         setupMocksForGet(competitionId);
 
@@ -168,10 +169,11 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                         .file(file)
                         .param("attachFeedbackApplicationId", "2"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("applicationInError", 2L))
-                .andExpect(view().name("assessors/interview/application-send-invites"));
+                .andExpect(view().name("assessors/interview/application-send-invites"))
+                .andExpect(model().attributeHasFieldErrors("form", "feedback[2]"))
+                .andReturn();
 
-        verify(interviewAssignmentRestService).uploadFeedback(applicationId,"application/pdf", 11, "testFile.pdf", "My content!".getBytes());
+        verify(interviewAssignmentRestService).uploadFeedback(applicationId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes());
     }
 
     @Test
@@ -187,7 +189,6 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("removeFeedbackApplicationId", "2"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("applicationInError", 2L))
                 .andExpect(view().name("assessors/interview/application-send-invites"));
 
         verify(interviewAssignmentRestService).deleteFeedback(applicationId);
@@ -254,13 +255,13 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
     private InterviewAssignmentApplicationsSendViewModel expectedViewModel(InterviewAssignmentStagedApplicationPageResource invites) {
         return new InterviewAssignmentApplicationsSendViewModel(competition.getId(), "Technology inspired",
-                "Transport Systems, Urban living",  "Infrastructure systems",
+                "Transport Systems, Urban living", "Infrastructure systems",
                 asList(
                         new InterviewAssignmentApplicationInviteSendRowViewModel(1L, 3L,
                                 "App 1", "Org 1", "file1"),
                         new InterviewAssignmentApplicationInviteSendRowViewModel(2L, 4L,
                                 "App 2", "Org 2", "file2")),
-                newInterviewAssignmentKeyStatisticsResource().build(),  new PaginationViewModel(invites, ""),
+                newInterviewAssignmentKeyStatisticsResource().build(), new PaginationViewModel(invites, ""),
                 "?origin=INTERVIEW_PANEL_SEND", "Some content"
         );
     }

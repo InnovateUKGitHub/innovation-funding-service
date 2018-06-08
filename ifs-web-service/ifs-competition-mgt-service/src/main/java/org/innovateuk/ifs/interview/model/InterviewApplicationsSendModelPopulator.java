@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.model;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteSendRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
@@ -31,7 +32,7 @@ public class InterviewApplicationsSendModelPopulator extends InterviewApplicatio
         this.competitionRestService = competitionRestService;
     }
 
-    public InterviewAssignmentApplicationsSendViewModel populateModel(long competitionId, int page, String originQuery) {
+    public InterviewAssignmentApplicationsSendViewModel populateModel(long competitionId, int page, String originQuery, InterviewApplicationSendForm form) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -41,6 +42,10 @@ public class InterviewApplicationsSendModelPopulator extends InterviewApplicatio
                 .getSuccess();
 
         String content = interviewAssignmentRestService.getEmailTemplate().getSuccess().getContent();
+
+        if (form.getFeedback().isEmpty()) {
+            pageResource.getContent().forEach((resource) -> form.getFeedback().add(null));
+        }
 
         return new InterviewAssignmentApplicationsSendViewModel(
                 competitionId,

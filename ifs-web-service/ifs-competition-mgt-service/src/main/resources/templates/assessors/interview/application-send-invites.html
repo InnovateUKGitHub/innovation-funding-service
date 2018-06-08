@@ -55,7 +55,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="app : ${model.applications}">
+                <tr th:each="app, iterStat : ${model.applications}">
                     <td>
                         <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${model.originQuery}"
                            th:text="${app.applicationId}">123
@@ -64,25 +64,26 @@
                     <td th:text="${app.applicationName}">Application name</td>
                     <td th:text="${app.leadOrganisation}">Lead organisation</td>
                     <td>
-                        <div th:with="isError=${applicationInError != null && applicationInError == app.applicationId}"
+                        <div th:with="fieldName=${'feedback[' + iterStat.index + ']'},isError=${#fields.hasErrors(fieldName)}"
                              th:class="${isError ? 'form-group-error' : ''}">
                             <th:block th:if="${isError}">
-                                <th:block th:each="err : ${#fields.detailedErrors('${__form__.*}')}">
-                                    <span th:if="${err.global}" class="error-message" th:text="${err.message}">PDF upload error</span>
+                                <th:block th:if="${isError}">
+                                    <span class="error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
                                 </th:block>
                                 <p class="uploaded-file">No file currently uploaded</p>
                             </th:block>
-
                             <th:block th:unless="${app.hasAttachment()}">
                                 <div class="upload-section">
-                                    <input type="file" th:id="${'attachment-' + app.applicationId}" class="inputfile" name="feedback">
-                                    <label th:for="${'attachment-' + app.applicationId}" class="button-secondary extra-margin">+ Upload</label>
-                                    <button name="attachFeedbackApplicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${'attachment-'+app.applicationId}" th:value="${app.applicationId}">Save</button>
+                                    <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
+                                    <label th:for="${fieldName}" class="button-secondary extra-margin">+ Upload</label>
+                                    <button name="attachFeedbackApplicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${fieldName}" th:value="${app.applicationId}">Save</button>
                                 </div>
                             </th:block>
                             <th:block th:if="${app.hasAttachment()}">
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
+                                        <!--/* empty file input so that spring form is complete */-->
+                                        <input type="file" name="feedback" class="visuallyhidden">
                                         <a th:text="${app.filename}"
                                            th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
                                            target="_blank">Uploaded-file.pdf</a>

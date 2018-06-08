@@ -726,7 +726,7 @@
                                            mayRemove=${viewmode != 'readonly'},
                                            removeName='overheadfiledelete',
                                            saveName='overheadfilesubmit'">
-                            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${inputField},${mayRemove},${removeName},${saveName})" />
                         </th:block>
                     </div>
                 </div>
