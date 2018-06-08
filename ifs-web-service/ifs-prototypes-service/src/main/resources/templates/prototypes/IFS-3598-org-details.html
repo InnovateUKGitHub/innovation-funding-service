@@ -13,9 +13,9 @@
 
 <main id="content">
 
-	<th:block th:unless="${type=='collaborator'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-3598-choose-org'} + ${user == 'existing' ? '/?user=existing' : ''})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to choose your organisation type'}, ${'/prototypes/IFS-3598-choose-org?user='} + ${user} + '&#38;type=' + ${type})" />
 
-	<!-- HARDCODED PROTOTYPE HTML -->
+    <!-- HARDCODED PROTOTYPE HTML -->
 
     <h1 class="heading-xlarge">
         <span class="heading-secondary">Start new application</span>
@@ -45,31 +45,48 @@
         <h2 class="heading-medium no-margin">Companies House search results</h2>
         <p class="form-hint">Select your organisation from the options below</p>
         <ul id="org-results" class="results-list panel" style="display: block">
-            <li class="type-company">
-                <h3>
-                    <a th:href="${'/prototypes/IFS-3598-org-selected'} + ${user == 'existing' ? '?user=existing' : '?user=new'} + '&#38;type=' + ${type}" title="View organisation">CERCIS LIMITED</a>
-                </h3>
-                <p class="meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
-                <p>Queen Square, Bristol, BS1 4NT</p>
+            <th:block th:unless="${type == 'collaborator'}">
+                <li class="type-company">
+                    <h3>
+                        <a th:href="${'/prototypes/IFS-3598-org-selected'} + ${user} + '&#38;type=' + ${type}" title="View organisation">CERCIS LIMITED</a>
+                    </h3>
+                    <p class="meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
+                    <p>Queen Square, Bristol, BS1 4NT</p>
 
-            </li>
-            <li class="type-company">
-                <h3>
-                    <a href="#" title="View organisation">CERCIS SERVICES LTD</a>
-                </h3>
-                <p class="meta crumbtrail">10626442 - Incorporated on 17 February 2017</p>
-                <p>Stamford Square, London, SW15 2BF</p>
+                </li>
+                <li class="type-company">
+                    <h3>
+                        <a href="#" title="View organisation">CERCIS SERVICES LTD</a>
+                    </h3>
+                    <p class="meta crumbtrail">10626442 - Incorporated on 17 February 2017</p>
+                    <p>Stamford Square, London, SW15 2BF</p>
 
-            </li>
-            <li class="type-company">
-                <h3>
-                    <a href="#" title="View organisation">CERCIS TRAINING AND CONSULTANCY LTD</a>
-                </h3>
-                <p class="meta crumbtrail">10105978 - Incorporated on  6 April 2016</p>
-                <p>Westergate Close, Worthing, BN12 5DD</p>
+                </li>
+                <li class="type-company">
+                    <h3>
+                        <a href="#" title="View organisation">CERCIS TRAINING AND CONSULTANCY LTD</a>
+                    </h3>
+                    <p class="meta crumbtrail">10105978 - Incorporated on  6 April 2016</p>
+                    <p>Westergate Close, Worthing, BN12 5DD</p>
 
-            </li>
-
+                </li>
+            </th:block>
+            <th:block th:if="${type == 'collaborator'}">
+                <li class="type-company">
+                    <h3>
+                        <a th:href="${'/prototypes/IFS-3598-org-selected?user='} + ${user} + '&#38;type=' + ${type}" title="View organisation">SPOONS</a>
+                    </h3>
+                    <p class="meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
+                    <p>Queen Square, Bristol, BS1 4NT</p>
+                </li>
+                <li class="type-company">
+                    <h3>
+                        <a href="#" title="View organisation">SPOONSAFE LTD</a>
+                    </h3>
+                    <p class="meta crumbtrail">10105978 - Incorporated on  6 April 2016</p>
+                    <p>Westergate Close, Worthing, BN12 5DD</p>
+                </li>
+            </th:block>
         </ul>
 
 

@@ -3,7 +3,7 @@
 	<head>
 	</head>
 
-	<body style="font-family: sans-serif; padding:0; margin: 0">
+	<body style="font-family: sans-serif; padding:0; margin: 0" th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}, type=${param.type != null and param.type[0] =='collaborator' ?  'collaborator' : 'lead'}">
 
 		<style>
 
@@ -93,7 +93,7 @@
                                     <table border="0" cellspacing="0" cellpadding="0">
                                         <tr>
                                             <td bgcolor="#EB7035" style="background: #00823b; color: #ffffff; text-decoration: none; padding: 10px 20px; border-bottom: 2px solid #003618; display: inline-block" align="center">
-                                                <a href="/prototypes/IFS-3598-verified" style="font-size: 19px; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block; font-family: arial, sans-serif;">Verify account</a>
+                                                <a th:href="${'/prototypes/IFS-3598-verified?user='} + ${user} + '&#38;type=' + ${type}" style="font-size: 19px; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block; font-family: arial, sans-serif;">Verify account</a>
                                             </td>
                                         </tr>
                                     </table>

@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}">
+<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}, type=${param.type != null and param.type[0] =='collaborator' ?  'collaborator' : 'lead'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -14,7 +14,7 @@
 <main id="content">
 
 
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-3598-org-details'} + ${user == 'existing' ? '/?user=existing' : ''})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-3598-org-details?user='} + ${user} + '&#38;type=' + ${type})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -33,7 +33,7 @@
     <p>Business</p>
 
     <h3 class="heading-small">Registered name</h3>
-    <p>CERCIS LIMITED</p>
+    <p th:text="${type == 'collaborator' ? 'SPOONS' : 'CERCIS LIMITED' }">COMPANY NAME</p>
 
     <h3 class="heading-small">Registration number</h3>
     <p>05750811</p>
@@ -43,9 +43,10 @@
     Bristol<br />
     BS1 4NT</p>
 
-    <a class="button" th:href="${'/prototypes/'} + ${user == 'existing' ? 'IFS-3598-application-team' : 'IFS-3598-your-details'}">Save and continue</a>
+    <a class="button" th:href="${'/prototypes/'} + ${user == 'existing' ? 'IFS-3598-application-team?type=' + type : 'IFS-3598-your-details?type=' + type}">Save and continue</a>
 
-	<!-- END OF HARDCODED PROTOTYPE HTML -->
+
+    <!-- END OF HARDCODED PROTOTYPE HTML -->
 
 	<th:block th:insert="fragments/layout :: main-content-end" />
 </main>

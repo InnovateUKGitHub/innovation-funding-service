@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}, type=${param.type != null and param.type[0] =='collaborator' ?  'collaborator' : 'lead'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -18,7 +18,7 @@
     <main id="content">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your account has been created',size='heading-large'" />
         <p>Before you can access the system you will need to sign into your account.</p>
-        <a href="/prototypes/IFS-3598-signin-dashboard" class="button">Sign into your account</a>
+        <a th:href="${'/prototypes/IFS-3598-signin-dashboard?user='} + ${user} + '&#38;type=' + ${type}" class="button">Sign into your account</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

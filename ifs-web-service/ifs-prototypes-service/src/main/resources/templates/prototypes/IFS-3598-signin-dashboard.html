@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}, type=${param.type != null and param.type[0] =='collaborator' ?  'collaborator' : 'lead'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -22,6 +22,9 @@
         </h1>
 
         <form action="/prototypes/IFS-3598-dashboard" method="get" id="sign-in-form">
+
+            <input type="hidden" name="user" th:value="${user}" />
+            <input type="hidden" name="type" th:value="${type}" />
 
 
             <div class="form-group">

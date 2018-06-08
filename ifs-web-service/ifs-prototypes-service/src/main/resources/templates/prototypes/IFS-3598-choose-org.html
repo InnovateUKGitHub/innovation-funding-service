@@ -13,8 +13,7 @@
 
 <main id="content">
 
-
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-3598-signin'})" />
+	<th:block th:unless="${type == 'collaborator'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-3598-signin'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
