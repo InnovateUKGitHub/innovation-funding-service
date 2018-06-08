@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.summary.populator.ApplicationFeedbackSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.summary.populator.ApplicationInterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.summary.populator.ApplicationInterviewSummaryViewModelPopulator;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -62,6 +63,7 @@ public class ApplicationSummaryController {
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
     private InterviewResponseRestService interviewResponseRestService;
     private ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator;
+    private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
 
     public ApplicationSummaryController() {
     }
@@ -79,7 +81,8 @@ public class ApplicationSummaryController {
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
                                         InterviewResponseRestService interviewResponseRestService,
-                                        ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator) {
+                                        ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator,
+                                        ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator) {
         this.processRoleService = processRoleService;
         this.sectionService = sectionService;
         this.applicationService = applicationService;
@@ -93,6 +96,7 @@ public class ApplicationSummaryController {
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.interviewResponseRestService = interviewResponseRestService;
         this.applicationInterviewFeedbackViewModelPopulator = applicationInterviewFeedbackViewModelPopulator;
+        this.applicationFeedbackSummaryViewModelPopulator = applicationFeedbackSummaryViewModelPopulator;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
@@ -129,6 +133,7 @@ public class ApplicationSummaryController {
 //
         if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
 //            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
+            model.addAttribute("applicationFeedbackSummaryViewModel", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user));
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
 //            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
