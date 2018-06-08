@@ -1,6 +1,11 @@
--- TODO migrate verification tokens by adding the org (anything else?)
+-- migrate verification tokens
+UPDATE token t
+INNER JOIN user_organisation uo ON uo.user_id=t.class_pk
+SET t.extra_info=concat(trim(trailing'}' from t.extra_info), ', "organisationId":', uo.organisation_id, '}')
+WHERE t.class_name='org.innovateuk.ifs.user.domain.User' AND t.extra_info IS NOT NULL;
 
 DROP TABLE user_organisation;
+
 
 -- process_role user_id, role_id, and application_id cannot be null
 -- this needs no writes to the db
