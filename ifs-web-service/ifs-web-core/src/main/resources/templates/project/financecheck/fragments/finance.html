@@ -14,8 +14,11 @@
     </th:block>
 
     <!-- ===========================Form: overheads =========================== -->
-    <th:block th:fragment="overheads(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <th:block th:insert="finance/finance :: overheads_finances" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}"/>
+    <th:block th:fragment="overheads(viewmode, internalView)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+        <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="
+            overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]},
+            overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)},
+            internalView=${internalView}"/>
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}" th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
 
