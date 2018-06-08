@@ -628,13 +628,11 @@
             </div>
 
             <div class="form-group" id="overhead-none">
-                <h3>No overhead costs</h3>
                 <p th:unless="${internalView}">You are not currently applying for overhead costs</p>
                 <input type="hidden" value="£0" data-calculation-rawvalue="0" th:id="${'section-total-'+subSection.id+'-labour-cost-none'}"/>
             </div>
 
             <div class="form-group" id="overhead-default-percentage">
-                <h3>20% of labour costs</h3>
                 <p th:unless="${internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
                 <h4 class="alignright section-total-summary">
                     Total overhead costs
@@ -748,7 +746,6 @@
 
                 <!--/* Internal users' view of Overheads */-->
                 <th:block th:if="${internalView}">
-                    <h3 class="heading-medium">Overheads calculation</h3>
                     <th:block th:if="${overheadCosts?.calculationFile == null || !overheadCosts.calculationFile.present}">
                         <p>The applicant has not uploaded a file.</p>
                     </th:block>
