@@ -40,7 +40,6 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
-    compile 'org.realityforge.gelf4j:gelf4j:1.10'
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
