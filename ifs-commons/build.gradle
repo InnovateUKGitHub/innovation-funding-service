@@ -3,13 +3,9 @@ apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile "commons-beanutils:commons-beanutils:1.9.3"
-    compile "org.springframework.boot:spring-boot-starter-security"
     compile 'org.jsoup:jsoup:1.10.2'
     compile 'net.bytebuddy:byte-buddy:1.7.11'
     compile "com.google.guava:guava:21.0"
-
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
 configurations {
