@@ -17,7 +17,7 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     @JoinColumn(name="participant_id", referencedColumnName = "id")
     private ProjectUser participant;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 

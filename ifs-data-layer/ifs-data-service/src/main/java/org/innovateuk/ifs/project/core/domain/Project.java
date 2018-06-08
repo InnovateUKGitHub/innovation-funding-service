@@ -90,8 +90,8 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpendProfile> spendProfiles;
 
-    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL)
-    private ProjectProcess projectProcess;
+/*    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL)
+    private ProjectProcess projectProcess;*/
 
     public Project() {}
 

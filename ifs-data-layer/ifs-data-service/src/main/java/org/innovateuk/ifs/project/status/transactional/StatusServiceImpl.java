@@ -81,10 +81,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private LoggedInUserSupplier loggedInUserSupplier;
 
     @Override
-    public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
+    public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
         Competition competition = competitionRepository.findOne(competitionId);
-        //List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
-        List<Project> projects = projectRepository.findByApplicationCompetitionIdAndProjectProcessActivityStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN));
+        //List<Project> projects = projectRepository.findByApplicationCompetitionIdAndProjectProcessActivityStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN));
+        List<Project> projects = projectRepository.searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(competitionId, applicationSearchString, singleton(ProjectState.WITHDRAWN));
         List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
         CompetitionProjectsStatusResource competitionProjectsStatusResource
                 = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatuses);
