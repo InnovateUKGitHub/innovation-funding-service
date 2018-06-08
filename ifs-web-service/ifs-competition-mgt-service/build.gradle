@@ -26,6 +26,8 @@ dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
     compile "commons-io:commons-io:2.5"
+    compile 'org.apache.commons:commons-collections4:4.1' //TODO needed.
+
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
