@@ -38,6 +38,11 @@ function deploy() {
         if $(isServiceEnabled "ifs.prototypes"); then
             oc create -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
         fi
+
+        # conditionally deploy alerts service
+        if $(isServiceEnabled "ifs.alert-service"); then
+            oc create -f $(getBuildLocation)/alert-service/33-alerts-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+        fi
     fi
 
     # The SIL stub is required in all environments, in one form or another, except for production
