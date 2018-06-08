@@ -3,6 +3,9 @@ package org.innovateuk.ifs.competition.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competitionsetup.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competitionsetup.domain.Milestone;
+import org.innovateuk.ifs.competitionsetup.repository.MilestoneRepository;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -39,7 +42,7 @@ import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
-import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static org.innovateuk.ifs.competitionsetup.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.junit.Assert.*;
 
