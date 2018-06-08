@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
@@ -172,10 +173,11 @@ public class ApplicationQuestionController {
                                                         Long userId,
                                                         HttpServletRequest request,
                                                         HttpServletResponse response) {
+        ValidationMessages errors = new ValidationMessages();
         Map<String, String[]> params = request.getParameterMap();
         if (isAllowedToUpdateQuestion(questionId, applicationId, userId) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-            return applicationSaver.saveApplicationForm(
+            errors = applicationSaver.saveApplicationForm(
                     applicationId,
                     form,
                     questionId,
@@ -185,7 +187,7 @@ public class ApplicationQuestionController {
                     Optional.empty()
             );
         }
-        return null;
+        return errors;
     }
 
     private boolean hasErrors(HttpServletRequest request, ValidationMessages errors, BindingResult bindingResult) {
@@ -203,14 +205,15 @@ public class ApplicationQuestionController {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
-        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
 
         if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
-            model.addAttribute("applicationTeamModel",
-                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
+            ApplicationTeamViewModel applicationTeamViewModel =
+                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId);
+            questionViewModel.setAllReadOnly(applicationTeamViewModel.isComplete());
+            model.addAttribute("applicationTeamModel",applicationTeamViewModel);
         }
-
+        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         return model;
     }
 
