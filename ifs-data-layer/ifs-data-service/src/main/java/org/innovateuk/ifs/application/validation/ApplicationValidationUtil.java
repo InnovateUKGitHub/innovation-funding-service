@@ -136,10 +136,10 @@ public class ApplicationValidationUtil {
     private List<ValidationMessages> isApplicationTeamValid(Application application, Question question) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
 
-        long SOME_ID = 1L;
         BindingResult bindingResult = validationApplicationTeam(application);
         if (bindingResult.hasErrors()) {
-            validationMessages.add(new ValidationMessages(SOME_ID, bindingResult));
+            // TODO: IFS-3088 - not sure about using the question id. Should it be the invite-org id?
+            validationMessages.add(new ValidationMessages(question.getId(), bindingResult));
         }
         return validationMessages;
     }

@@ -48,7 +48,8 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
                     .stream()
                     .anyMatch(invite -> invite.getStatus() != OPENED)) {
                 LOG.debug("MarkAsComplete application team validation message for invite organisation: " + organisation.getOrganisationName());
-                rejectValue(errors, "invite-organisation-" + organisation.getId(), "validation.applicationteam.pending.invites");
+                //TODO: IFS-3088 - currently this always rejects the first invite. need to make this more clever
+                rejectValue(errors, "invites[0]", "validation.applicationteam.pending.invites");
             }
         }
     }
