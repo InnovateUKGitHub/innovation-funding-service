@@ -141,7 +141,7 @@ public class ApplicationSummaryController {
         if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             applicationModelPopulator.addFeedbackAndScores(model, applicationId);
             if (project != null) {
-                projectId= project.getId();
+                projectId = project.getId();
                 model.addAttribute("projectId", projectId);
             }
             model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
