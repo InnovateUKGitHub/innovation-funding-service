@@ -43,12 +43,13 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
     private UserService userService;
 
     @Test
-    public void populateModel() throws Exception {
+    public void populateModel() {
 
         Long competitionId = 1L;
         int pageNumber = 0;
         int pageSize = 20;
         String sortField = "id";
+        String filter = "ALL";
         String existingQueryString = "";
         boolean isIfsAdmin = true;
 
@@ -70,12 +71,12 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
 
         when(competitionRestService.getCompetitionById(competitionId))
                 .thenReturn(restSuccess(competitionResource));
-        when(applicationRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField))
+        when(applicationRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField, filter))
                 .thenReturn(restSuccess(unsuccessfulApplicationsPagedResult));
         when(userService.existsAndHasRole(5L, IFS_ADMINISTRATOR)).thenReturn(true);
 
         UnsuccessfulApplicationsViewModel viewModel = unsuccessfulApplicationsModelPopulator.populateModel(competitionId,
-                pageNumber, pageSize, sortField, userResource, existingQueryString);
+                pageNumber, pageSize, sortField, filter, userResource, existingQueryString);
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(competitionName, viewModel.getCompetitionName());

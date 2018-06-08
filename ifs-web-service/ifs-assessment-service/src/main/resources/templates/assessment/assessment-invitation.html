@@ -36,8 +36,11 @@
                     </div>
                 </div>
 
-                <h3 class="heading-small no-margin">Project summary:</h3>
-                <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
+
+                <th:block th:if="${model.projectSummary}">
+                    <h3 class="heading-small no-margin">Project summary:</h3>
+                    <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
+                </th:block>
             </div>
 
             <h2 class="heading-medium">Review the project summary above to make sure:</h2>

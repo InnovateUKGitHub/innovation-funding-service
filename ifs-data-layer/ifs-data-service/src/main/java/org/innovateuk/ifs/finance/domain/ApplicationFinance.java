@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

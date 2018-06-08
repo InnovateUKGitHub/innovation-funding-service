@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import javax.persistence.*;
 

@@ -9,6 +9,8 @@ dependencies {
     compile "org.javassist:javassist:3.18.1-GA"
     compile "com.google.guava:guava:21.0"
     compile "org.apache.httpcomponents:httpclient:4.5.3"
+    compile project(':ifs-error-util')
+    compile project(":ifs-commons")
 
     testCompile "net.sf.opencsv:opencsv:2.3"
 }

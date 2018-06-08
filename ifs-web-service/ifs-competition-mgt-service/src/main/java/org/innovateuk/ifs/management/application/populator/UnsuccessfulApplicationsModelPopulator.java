@@ -28,12 +28,12 @@ public class UnsuccessfulApplicationsModelPopulator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
-    public UnsuccessfulApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, UserResource loggedInUser, String existingQueryString) {
+    public UnsuccessfulApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, String filter, UserResource loggedInUser, String existingQueryString) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         ApplicationPageResource unsuccessfulApplicationsPagedResult = applicationRestService
-                .findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)
+                .findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField, filter)
                 .getSuccess();
 
         boolean isIfsAdmin = userService.existsAndHasRole(loggedInUser.getId(), IFS_ADMINISTRATOR);

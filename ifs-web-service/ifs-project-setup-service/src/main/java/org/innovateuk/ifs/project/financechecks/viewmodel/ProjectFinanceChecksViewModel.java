@@ -2,11 +2,10 @@ package org.innovateuk.ifs.project.financechecks.viewmodel;
 
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 

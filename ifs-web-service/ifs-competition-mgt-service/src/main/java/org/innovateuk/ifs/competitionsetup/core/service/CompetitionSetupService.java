@@ -49,4 +49,6 @@ public interface CompetitionSetupService {
 	ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId);
 
 	ServiceResult<Void> setCompetitionAsCompetitionSetup(Long competitionId);
+
+    ServiceResult<Void> deleteCompetition(long competitionId);
 }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.application.controller;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.error.exception.IncorrectStateForPageException;
+import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.application.populator.*;
@@ -37,6 +37,8 @@ public class CompetitionManagementApplicationsController {
     private static final String DEFAULT_PAGE_SIZE = "20";
 
     private static final String DEFAULT_SORT_BY = "id";
+
+    private static final String UNSUCCESSFUL_APP_DEFAULT_FILTER = "ALL";
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
 
@@ -138,10 +140,11 @@ public class CompetitionManagementApplicationsController {
                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
+                                           @RequestParam(value = "filter", defaultValue = UNSUCCESSFUL_APP_DEFAULT_FILTER) String filter,
                                            UserResource loggedInUser) {
         checkCompetitionIsOpen(competitionId);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
-        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, loggedInUser, originQuery));
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, filter, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/previous-applications";

@@ -97,7 +97,7 @@ the user leaves all the question field empty
     The user enters text to a text field    id=question.guidanceTitle  ${EMPTY}
     The user enters text to a text field    id=question.maxWords       ${EMPTY}
     the user selects the radio button       question.appendix  1
-    the user clicks the button/link         css=label[for="allowed-file-types-PDF"]
+    the user clicks the button/link         css=label[for="question.allowedFileTypes1"]
 
 The user leaves all the assessment questions empty
     The user enters text to a text field    id=guidanceRows[0].scoreFrom      ${EMPTY}
@@ -147,7 +147,7 @@ User creates a new competition for Application tests
     And the user enters text to a text field    id=title    Test competition
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
+    And the user selects the option from the drop-down menu    Advanced therapies    name=innovationAreaCategoryIds[0]
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextYear}
