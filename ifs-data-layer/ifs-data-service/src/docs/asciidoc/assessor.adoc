@@ -21,3 +21,14 @@ include::{snippets}/assessor/get-assessor-profile/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessor/get-assessor-profile/curl-request.adoc[]
+
+=== Notify assessors of assessment period
+==== Request
+include::{snippets}/assessor/notify-assessors/http-request.adoc[]
+include::{snippets}/assessor/notify-assessors/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessor/notify-assessors/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor/notify-assessors/curl-request.adoc[]

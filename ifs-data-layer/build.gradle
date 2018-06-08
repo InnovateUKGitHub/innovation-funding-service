@@ -4,7 +4,6 @@ subprojects {
 }
 
 ext {
-    snippetsDir = file('build/generated-snippets')
     pactDir = file('ifs-data-service/build/pacts')
     javaLanguageLevel = 1.8
 }

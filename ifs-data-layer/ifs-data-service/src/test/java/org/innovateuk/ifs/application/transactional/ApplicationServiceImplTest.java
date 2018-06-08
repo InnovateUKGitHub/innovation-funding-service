@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
@@ -13,34 +14,29 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
-import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.user.builder.OrganisationBuilder;
+import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -71,8 +67,8 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -560,7 +556,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void findUnsuccessfulApplicationsWhenNoneFound() throws Exception {
+    public void findUnsuccessfulApplicationsWhenNoneFound() {
 
         Long competitionId = 1L;
 
@@ -572,7 +568,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(pagedResult.getSize()).thenReturn(0);
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
         ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccess();
@@ -581,7 +577,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void findUnsuccessfulApplications() throws Exception {
+    public void findUnsuccessfulApplications() {
 
         Long competitionId = 1L;
 
@@ -625,7 +621,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
         when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
 
-        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());
 
         ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccess();
@@ -633,5 +629,80 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
         assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
         assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
+    }
+
+    @Test
+    public void findUnsuccessfulApplicationsWithIneligibleFilter() {
+
+        Long competitionId = 1L;
+
+        Page<Application> pagedResult = mock(Page.class);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.ineligibleStates), any())).thenReturn(pagedResult);
+
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "INELIGIBLE");
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.ineligibleStates), any());
+
+    }
+
+    @Test
+    public void findUnsuccessfulApplicationsWithRejectedFilter() {
+
+        Long competitionId = 1L;
+
+        Page<Application> pagedResult = mock(Page.class);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any())).thenReturn(pagedResult);
+
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "REJECTED");
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any());
+
+    }
+
+    @Test
+    public void findUnsuccessfulApplicationsWithWithdrawnFilter() {
+
+        Long competitionId = 1L;
+
+        Page<Application> pagedResult = mock(Page.class);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any())).thenReturn(pagedResult);
+
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "WITHDRAWN");
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any());
+
+    }
+
+    @Test
+    public void findUnsuccessfulApplicationsWithAllFilter() {
+
+        Long competitionId = 1L;
+
+        Page<Application> pagedResult = mock(Page.class);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any())).thenReturn(pagedResult);
+
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "ALL");
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any());
+
+    }
+
+    @Test
+    public void findUnsuccessfulApplicationsWithInvalidFilter() {
+
+        Long competitionId = 1L;
+
+        Page<Application> pagedResult = mock(Page.class);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any())).thenReturn(pagedResult);
+
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id", "wrongFilter");
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(ApplicationState.unsuccessfulStates), any());
+
     }
 }

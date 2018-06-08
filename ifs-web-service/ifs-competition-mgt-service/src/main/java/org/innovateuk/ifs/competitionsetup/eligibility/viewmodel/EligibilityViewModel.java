@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmoun
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.util.List;
 

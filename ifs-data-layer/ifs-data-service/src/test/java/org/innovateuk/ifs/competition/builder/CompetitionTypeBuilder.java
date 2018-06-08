@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -14,8 +13,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class CompetitionTypeBuilder extends BaseBuilder<CompetitionType, CompetitionTypeBuilder> {
-
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     private CompetitionTypeBuilder(List<BiConsumer<Integer, CompetitionType>> newMultiActions) {
         super(newMultiActions);
@@ -35,10 +32,6 @@ public class CompetitionTypeBuilder extends BaseBuilder<CompetitionType, Competi
 
     public CompetitionTypeBuilder withTemplate(Competition competitionTemplate) {
         return with(competitionType -> setField("template", competitionTemplate, competitionType));
-    }
-
-    public CompetitionTypeBuilder withStateAid(Boolean stateAid) {
-        return with(competitionType -> setField("stateAid", stateAid, competitionType));
     }
 
     @Override

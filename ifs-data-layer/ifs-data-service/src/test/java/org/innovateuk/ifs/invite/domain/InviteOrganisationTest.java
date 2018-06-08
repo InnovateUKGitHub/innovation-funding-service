@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.domain;
 
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 
 public class InviteOrganisationTest {
     InviteOrganisation setInviteOrganisation;

@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.io.File.separator;
-import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
@@ -66,7 +65,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
-                "applicationNumber", 1234L,
+                "competitionName", "Competition 1",
+                "applicationId", 1234L,
                 "message", "Body of message."
         );
 
@@ -80,6 +80,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
             "projectName", "My Project",
+            "competitionName", "Competition 1",
+            "applicationId", 1234L,
             "leadOrganisation", "Lead Organisation 123",
             "projectManagerName", "ABC",
             "projectManagerEmail", "abc.xyz@gmail.com",
@@ -96,6 +98,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
             "projectName", "My Project",
+            "competitionName", "Competition 1",
+            "applicationId", 1234L,
             "monitoringOfficerName", "DEF",
             "monitoringOfficerEmail", "def.ghi@gmail.com",
             "monitoringOfficerTelephone", "0123456789"
@@ -111,7 +115,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "projectName", "My Project",
-                "applicationId", "123",
+                "applicationId", 1234L,
                 "leadOrganisation", "Lead Organisation 123",
                 "inviteOrganisationName", "Invite Organisation Name",
                 "competitionName", "Competition 1",
@@ -127,7 +131,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testSendGrantOfferLetterEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev"
+                "dashboardUrl", "https://ifs-local-dev",
+                "applicationId", 1234L,
+                "competitionName", "Competition 1"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("grant_offer_letter_project_manager_subject.txt", templateArguments);
@@ -140,7 +146,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/project",
-                "applicationName", "Application 1"
+                "applicationName", "Application 1",
+                "competitionName", "Competition 1",
+                "applicationId", 1234L
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_response_subject.txt", templateArguments);
@@ -152,7 +160,10 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testSendNewFinanceCheckQueryEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/project"
+                "dashboardUrl", "https://ifs-local-dev/project",
+                "competitionName", "Competition 1",
+                "applicationId", 1234L
+
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_subject.txt", templateArguments);
@@ -164,7 +175,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "projectName", "My Project<>\"&",
-                "applicationId", "123",
+                "applicationId", 1234L,
                 "leadOrganisation", "Lead Organisation 123",
                 "competitionName", "Competition 1",
                 "inviteUrl", "https://ifs-local-dev/invite"
@@ -190,7 +201,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testSendSpendProfileAvailableEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/spend-profile"
+                "dashboardUrl", "https://ifs-local-dev/spend-profile",
+                "applicationId", 1234L,
+                "competitionName", "Competition 1"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_subject.txt", templateArguments);
@@ -201,9 +214,14 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     @Test
     public void testSendProjectLiveEmail() throws URISyntaxException, IOException {
 
-        assertRenderedEmailTemplateContainsExpectedLines("project_live_subject.txt", emptyMap());
-        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_plain.txt", emptyMap());
-        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_html.html", emptyMap());
+        Map<String, Object> templateArguments = asMap(
+                "applicationId", 1234L,
+                "competitionName", "Competition 1"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("project_live_text_html.html", templateArguments);
     }
 
     @Test

@@ -17,16 +17,15 @@ Innovation Lead should see Submitted and Ineligible Applications
     [Tags]  HappyPath
     Given the user navigates to the page      ${CA_Live}
     Then the user should see all live competitions
-    When the user navigates to the page       ${server}/management/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}
+    When the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}
     Then the user should not see the element  jQuery=a:contains("View and update competition setup")
     When the user clicks the button/link      link=Applications: Submitted, ineligible
     And the user clicks the button/link       link=Submitted applications
-    Then the user should see the element      jQuery=td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ td:contains("57,803")
-    When the user navigates to the page       ${server}/management/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}/applications/ineligible
-    Then the user should see the element      css=#application-list
+    Then the user should see the element      jQuery=td:contains("${IN_ASSESSMENT_APPLICATION_4_TITLE}") ~ td:contains("57,803")
     When the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
-    And the user clicks the button/link       jQuery=a:contains(${application_ids["Ineligible Virtualisation"]})
-    And the user should not see the element   jQuery=.button:contains("Reinstate application")
+    Then the user should see the element      css=#application-list
+    When the user clicks the button/link       jQuery=a:contains(${application_ids["Ineligible Virtualisation"]})
+    Then the user should not see the element   jQuery=.button:contains("Reinstate application")
     When the user clicks the button/link      jQuery=a:contains("Back")
     Then the user should not see the element  jQuery=.button:contains("Inform applicant")
 

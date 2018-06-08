@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
 
 /**
  * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.

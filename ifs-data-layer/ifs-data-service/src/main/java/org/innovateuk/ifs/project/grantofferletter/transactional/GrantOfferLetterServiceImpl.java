@@ -24,20 +24,20 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.util.EmailService;
-import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.util.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,6 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static java.io.File.separator;
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -454,6 +453,8 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("dashboardUrl", webBaseUrl);
+            notificationArguments.put("applicationId", project.getApplication().getId());
+            notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
 
             ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER);
 
@@ -586,7 +587,11 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         Project project = projectRepository.findOne(projectId);
         List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
 
-        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, emptyMap(), NotificationsGol.PROJECT_LIVE);
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationId", project.getApplication().getId());
+        notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
+
+        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, notificationArguments, NotificationsGol.PROJECT_LIVE);
 
         return processAnyFailuresOrSucceed(sendEmailResult);
     }

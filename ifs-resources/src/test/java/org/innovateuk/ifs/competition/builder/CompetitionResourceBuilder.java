@@ -227,6 +227,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((template, competition) -> competition.setTermsAndConditions(template), value);
     }
 
+    public CompetitionResourceBuilder withStateAid(Boolean... stateAid) {
+        return withArraySetFieldByReflection("stateAid", stateAid);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

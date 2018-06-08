@@ -1,0 +1,22 @@
+
+if (project.hasProperty("profile")) {
+    def targetBuildFile = "${project.profile}-build.gradle"
+    if (file(targetBuildFile).exists()) {
+        apply from: targetBuildFile
+    }
+}
+
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+
+
+ext {
+    javaLanguageLevel = 1.8
+}
+
+bootRepackage.enabled=false
+
+
+dependencies {
+    compile project(':ifs-commons')
+    compile project(':ifs-error-util')
+}

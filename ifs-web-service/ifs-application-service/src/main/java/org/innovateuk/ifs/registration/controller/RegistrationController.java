@@ -3,7 +3,7 @@ package org.innovateuk.ifs.registration.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,7 +18,7 @@ import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -79,7 +79,7 @@ public class RegistrationController {
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
-    public final static String EMAIL_FIELD_NAME = "email";
+    private final static String EMAIL_FIELD_NAME = "email";
 
     @GetMapping("/success")
     public String registrationSuccessful(
@@ -146,16 +146,12 @@ public class RegistrationController {
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
-        boolean success = true;
-
         OrganisationResource organisation = getOrganisation(request);
         if (organisation != null) {
             addOrganisationNameToModel(model, organisation);
-        } else {
-            success = false;
+            return true;
         }
-
-        return success;
+        return false;
     }
 
     private void addRegistrationFormToModel(RegistrationForm registrationForm, Model model, HttpServletRequest request, HttpServletResponse response) {
