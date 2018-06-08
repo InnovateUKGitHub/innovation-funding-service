@@ -32,7 +32,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
       if (jQuery(el).attr('name') === 'hasAppointments' || jQuery(el).attr('name') === 'addAppointment') {
-        newRow = jQuery('<tr class="form-group-row-validated">' +
+        newRow = jQuery('<tr class="form-group-row-validated f">' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text" ' +
@@ -52,32 +52,32 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<tr class="form-group-row-validated">' +
-          '<td class="form-group">' +
-          '<label></label>' +
-          '<input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field" type="text" ' +
+        newRow = jQuery('<div class="form-group-row-validated">' +
+          '<div class="form-group">' +
+          '<label class="form-label"><th:block th:if="${#fields.hasErrors(\'familyAffiliations[__${familyAffiliationStat.index}__].relation\')}"><span class="error-message" th:each="err : ${#fields.errors(\'familyAffiliations[__${familyAffiliationStat.index}__].relation\')}" th:text="${err}"></span> </th:block> <span>Relation</span></label>'+
+          '<input aria-labelledby="aria-family-rel" class="form-control width-large family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.relation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].relation" value="" ' +
           'data-required-errormessage="Please enter a relation." required="required" />' +
-          '</td>' +
-          '<td class="form-group">' +
-          '<label></label>' +
-          '<input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field" type="text" ' +
+          '</div>' +
+          '<div class="form-group">' +
+          '<label class="form-label">Organisation</label>' +
+          '<input aria-labelledby="aria-family-org" class="form-control width-large family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.organisation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].organisation" value="" ' +
           'data-required-errormessage="Please enter an organisation." required="required" />' +
-          '</td>' +
-          '<td class="form-group">' +
-          '<label></label>' +
-          '<input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field" type="text" ' +
+          '</div>' +
+          '<div class="form-group">' +
+          '<label class="form-label">Position</label>' +
+          '<input aria-labelledby="aria-family-pos" class="form-control width-large family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.position" ' +
           'name="familyAffiliations[' + uniqueRowId + '].position" value="" ' +
           'data-required-errormessage="Please enter a position." required="required" />' +
-          '</td>' +
-          '<td>' +
+          '</div>' +
+          '<div class="form-group">' +
           '<button class="remove-another-row buttonlink" name="removeFamilyMemberAffiliation" type="button" value="1">Remove</button>' +
-          '</td>' +
-          '</tr>')
+          '</div>' +
+          '</div>')
       }
 
       // insert the new row with the correct values and move focus to the first field to aid keyboard users
