@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -23,6 +24,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -53,25 +55,25 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
     private FormInputRepository formInputRepositoryMock;
 
     @Test
-    public void findResponsesByFormInputIdAndQuestionName() throws Exception {
+    public void findResponsesByFormInputIdAndQuestionSetupType() throws Exception {
         long applicationId = 1L;
-        String questionName = "name";
+        CompetitionSetupQuestionType questionSetupType = PROJECT_SUMMARY;
 
         FormInputResponse formInputResponse = newFormInputResponse().build();
         FormInputResponseResource formInputResponseResource = newFormInputResponseResource().build();
 
-        when(formInputResponseRepositoryMock.findOneByApplicationIdAndFormInputQuestionName(applicationId, questionName))
+        when(formInputResponseRepositoryMock.findOneByApplicationIdAndFormInputQuestionQuestionSetupType(applicationId, questionSetupType))
                 .thenReturn(formInputResponse);
 
         when(formInputResponseMapperMock.mapToResource(formInputResponse)).thenReturn(formInputResponseResource);
 
-        ServiceResult<FormInputResponseResource> serviceResult = service.findResponseByApplicationIdAndQuestionName(applicationId, questionName);
+        ServiceResult<FormInputResponseResource> serviceResult = service.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType);
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(formInputResponseResource, serviceResult.getSuccess());
 
-        verify(formInputResponseRepositoryMock, only()).findOneByApplicationIdAndFormInputQuestionName(applicationId,
-                questionName);
+        verify(formInputResponseRepositoryMock, only()).findOneByApplicationIdAndFormInputQuestionQuestionSetupType(applicationId,
+                questionSetupType);
     }
 
     @Test
