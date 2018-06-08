@@ -263,82 +263,73 @@
                         </div>
                     </fieldset>
 
-                    <div class="panel js-hidden" id="toggle-familyAffiliations">
+                    <div class="panel margin-top js-hidden" id="toggle-familyAffiliations">
                         <th:block th:if="${#fields.hasErrors('familyAffiliations')}">
                             <span class="error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}"></span>
                         </th:block>
-                        <div class="flex-table">
-                            <div class="flex-table-wrap">
-                                <table id="family-table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" id="aria-family-rel">Relation</th>
-                                            <th scope="col" id="aria-family-org">Organisation</th>
-                                            <th scope="col" id="aria-family-pos">Position</th>
-                                            <th scope="col"><span class="visuallyhidden">Action</span></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                       <tr th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
-                                            <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'form-group-error'">
-                                                <label>
-                                                    <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
-                                                        <span class="error-message"
-                                                              th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
-                                                              th:text="${err}"></span>
-                                                    </th:block>
-                                                </label>
-                                                <input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field"
-                                                       th:errorclass="form-control-error" type="text"
-                                                       th:id="familyAffiliations[__${familyAffiliationStat.index}__].relation"
-                                                       th:name="familyAffiliations[__${familyAffiliationStat.index}__].relation"
-                                                       th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}"
-                                                       required="required"
-                                                       th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
-                                            </td>
-                                            <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'form-group-error'">
-                                                <label>
-                                                    <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
-                                                        <span class="error-message"
-                                                              th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
-                                                              th:text="${err}"></span>
-                                                    </th:block>
-                                                </label>
-                                                <input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field"
-                                                       th:errorclass="form-control-error" type="text"
-                                                       th:id="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
-                                                       th:name="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
-                                                       th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}"
-                                                       required="required"
-                                                       th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
-                                            </td>
-                                            <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'form-group-error'">
-                                                <label>
-                                                    <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
-                                                        <span class="error-message"
-                                                              th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
-                                                              th:text="${err}"></span>
-                                                    </th:block>
-                                                </label>
 
-                                                <input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field"
-                                                       th:errorclass="form-control-error" type="text"
-                                                       th:id="familyAffiliations[__${familyAffiliationStat.index}__].position"
-                                                       th:name="familyAffiliations[__${familyAffiliationStat.index}__].position"
-                                                       th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}"
-                                                       required="required"
-                                                       th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.position.required}" />
-                                            </td>
-                                            <td>
-                                                <button class="remove-another-row buttonlink" th:value="${familyAffiliationStat.index}" name="removeFamilyMemberAffiliation" type="submit">Remove</button>
-                                            </td>
-                                       </tr>
-                                    </tbody>
-                                </table>
+                        <div id="family-table">
+                           <div class="form-row no-border-top" th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
+                                <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'form-group-error'">
+                                    <label class="form-label">
+                                        <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
+                                            <span class="error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
+                                                  th:text="${err}"></span>
+                                        </th:block>
+                                        <span>Relation</span>
+                                    </label>
+                                    <input aria-labelledby="aria-family-rel" class="form-control width-large family-affiliation-field"
+                                           th:errorclass="form-control-error" type="text"
+                                           th:id="familyAffiliations[__${familyAffiliationStat.index}__].relation"
+                                           th:name="familyAffiliations[__${familyAffiliationStat.index}__].relation"
+                                           th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
+                                </div>
+
+                                <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'form-group-error'">
+                                    <label class="form-label">
+                                        <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
+                                            <span class="error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
+                                                  th:text="${err}"></span>
+                                        </th:block>
+                                        <span>Organisation</span>
+                                    </label>
+                                    <input aria-labelledby="aria-family-org" class="form-control width-large family-affiliation-field"
+                                           th:errorclass="form-control-error" type="text"
+                                           th:id="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
+                                           th:name="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
+                                           th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
+                                </div>
+
+                                <div class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'form-group-error'">
+                                    <label class="form-label">
+                                        <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
+                                            <span class="error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
+                                                  th:text="${err}"></span>
+                                        </th:block>
+                                        <span>Position</span>
+                                    </label>
+
+                                    <input aria-labelledby="aria-family-pos" class="form-control width-large family-affiliation-field"
+                                           th:errorclass="form-control-error" type="text"
+                                           th:id="familyAffiliations[__${familyAffiliationStat.index}__].position"
+                                           th:name="familyAffiliations[__${familyAffiliationStat.index}__].position"
+                                           th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.position.required}" />
+                                </div>
+
+                               <div class="form-group"><button class="remove-another-row buttonlink" th:value="${familyAffiliationStat.index}" name="removeFamilyMemberAffiliation" type="submit">Remove</button></div>
                             </div>
                         </div>
 
-                        <p class="alignright extra-margin"><button class="buttonlink" data-repeatable-rowcontainer="#family-table tbody" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></p>
+                        <div class="margin-top"><button class="buttonlink" data-repeatable-rowcontainer="#family-table tbody" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></div>
                     </div>
                 </div>
 
