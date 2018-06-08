@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
+<!---->
 <th:block th:fragment="application-summary">
   <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
 

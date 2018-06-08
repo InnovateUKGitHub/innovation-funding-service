@@ -200,7 +200,7 @@ public class ApplicationOverviewModelPopulator {
 
         boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
         boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
-
+//
         ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
         userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
 
