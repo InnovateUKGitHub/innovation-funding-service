@@ -7,9 +7,11 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -41,6 +43,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
@@ -197,7 +201,7 @@ public class ApplicationSummaryController {
         RestResult<Void> sendResult = interviewResponseRestService
                 .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
 
-        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
+        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())), fileUploadField("response"), defaultConverters())
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
