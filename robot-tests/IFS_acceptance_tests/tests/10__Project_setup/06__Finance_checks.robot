@@ -561,7 +561,7 @@ Project Finance user can Edit and Save Lead Partner's no overhead costs option
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    css=[data-target="overhead-none"] label
-    Then the user should see the element     jQuery=h3:contains("No overhead costs")
+    Then the user should see the element     jQuery=button span:contains("£0")
     When the user clicks the button/link    css=.button[name="save-eligibility"]
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button:contains("£0")
@@ -708,7 +708,7 @@ Project Finance user can edit and save Partner's no overhead costs option
     [Tags]
     When the user clicks the button/link        jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link         css=[data-target="overhead-none"] label
-    Then the user should see the element        jQuery=h3:contains("No overhead costs")
+    Then the user should see the element        jQuery=button span:contains("£0")
     When the user clicks the button/link        css=.button[name="save-eligibility"]
     Then the user should see the element        jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element         jQuery=section:nth-of-type(2) button:contains("£0")
