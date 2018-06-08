@@ -79,7 +79,7 @@ public class RegistrationController {
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
-    public final static String EMAIL_FIELD_NAME = "email";
+    private final static String EMAIL_FIELD_NAME = "email";
 
     @GetMapping("/success")
     public String registrationSuccessful(
@@ -146,16 +146,12 @@ public class RegistrationController {
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
-        boolean success = true;
-
         OrganisationResource organisation = getOrganisation(request);
         if (organisation != null) {
             addOrganisationNameToModel(model, organisation);
-        } else {
-            success = false;
+            return true;
         }
-
-        return success;
+        return false;
     }
 
     private void addRegistrationFormToModel(RegistrationForm registrationForm, Model model, HttpServletRequest request, HttpServletResponse response) {
