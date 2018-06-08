@@ -332,16 +332,16 @@ the user checks for the key statistics for invite assessors
     the user should see the element      jQuery=.column-quarter:contains("${Declined}") small:contains("Declined")
 
 the compAdmin uploads additional feedback for an application
-    the user uploads the file          id=attachment-${Neural_network_application}   ${too_large_pdf}  #checking for large file upload
+    the user uploads the file          id=feedback[0]   ${too_large_pdf}  #checking for large file upload  £id=attachment-${Neural_network_application}
     the user should see the element    jQuery=h1:contains("Attempt to upload a large file")
     the user goes back to the previous page
-    the user uploads the file          id=attachment-${Neural_network_application}    ${text_file}    #checking validation for worng fomrate file upload
+    the user uploads the file          id=feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
     the user should see a field and summary error      Your upload must be a PDF.
-    the user uploads the file          id=attachment-${Neural_network_application}   ${5mb_pdf}
+    the user uploads the file          id=feedback[0]   ${5mb_pdf}
     the user should see the element    link=testing_5MB.pdf
 
 the compAdmin removes uploaded feedback for an application
-    the user uploads the file          id=attachment-${computer_vision_application}   ${5mb_pdf}
+    the user uploads the file          id=feedback[1]   ${5mb_pdf}
     the user should see the element    link=testing_5MB.pdf
     the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 /**
@@ -53,13 +54,13 @@ public class OverheadFileSaver {
 
     private void handleRestResultUpload(RestResult<FileEntryResource> fileEntryResult, ValidationMessages messages) {
         if(fileEntryResult.isFailure()) {
-            if(fileEntryResult.getErrors().stream().anyMatch(error -> "UNSUPPORTED_MEDIA_TYPE".equals(error.getErrorKey()))) {
-                Error error = new Error("validation.finance.overhead.file.type",UNSUPPORTED_MEDIA_TYPE);
-                messages.addError(error);
-            }
-            else {
-                messages.addAll(fileEntryResult);
-            }
+            fileEntryResult.getErrors().forEach(error -> {
+                if(UNSUPPORTED_MEDIA_TYPE.name().equals(error.getErrorKey())) {
+                    messages.addError(fieldError("overheadfile", new Error("validation.finance.overhead.file.type", UNSUPPORTED_MEDIA_TYPE)));
+                } else {
+                    messages.addError(fieldError("overheadfile", error));
+                }
+            });
         }
     }
 
