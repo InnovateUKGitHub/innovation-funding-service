@@ -8,12 +8,14 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 
 /**
  * View model for each application row in the 'In progress' section of the applicant dashboard.
  */
-public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
+public class InProgressDashboardRowViewModel extends
+        AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
     private final boolean assignedToMe;
     private final ApplicationState applicationState;
     private final boolean leadApplicant;
@@ -21,11 +23,19 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final long daysLeft;
     private final int applicationProgress;
     private final boolean assignedToInterview;
+    private final Long applicationTeamQuestionId;
 
-    public InProgressDashboardRowViewModel(String title, long applicationId, String competitionTitle,
-                                           boolean assignedToMe, ApplicationState applicationState,
-                                           boolean leadApplicant, ZonedDateTime endDate, long daysLeft,
-                                           int applicationProgress, boolean assignedToInterview) {
+    public InProgressDashboardRowViewModel(String title,
+                                           long applicationId,
+                                           String competitionTitle,
+                                           boolean assignedToMe,
+                                           ApplicationState applicationState,
+                                           boolean leadApplicant,
+                                           ZonedDateTime endDate,
+                                           long daysLeft,
+                                           int applicationProgress,
+                                           boolean assignedToInterview,
+                                           Long applicationTeamQuestionId) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -34,6 +44,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.daysLeft = daysLeft;
         this.applicationProgress = applicationProgress;
         this.assignedToInterview = assignedToInterview;
+        this.applicationTeamQuestionId = applicationTeamQuestionId;
     }
 
     public boolean isAssignedToMe() {
@@ -90,21 +101,21 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     public String getLinkUrl() {
         if (isSubmitted()) {
             if (assignedToInterview) {
-                return String.format("/application/%s/summary", getApplicationNumber());
+                return format("/application/%s/summary", getApplicationNumber());
             } else {
-                return String.format("/application/%s/track", getApplicationNumber());
+                return format("/application/%s/track", getApplicationNumber());
             }
         } else if (isCreated() && leadApplicant) {
-            return String.format("/application/%s/team", getApplicationNumber());
+            return getApplicationTeamLinkUrl();
         } else {
-            return String.format("/application/%s", getApplicationNumber());
+            return format("/application/%s", getApplicationNumber());
         }
     }
 
     @Override
     public String getTitle() {
         return !isNullOrEmpty(title) ? title :
-                (isSubmitted() ? "Untitled application" :  "Untitled application (start here)");
+                (isSubmitted() ? "Untitled application" : "Untitled application (start here)");
     }
 
     @Override
@@ -113,5 +124,14 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
             return assignedToInterview ? -1 : 1;
         }
         return Long.compare(getApplicationNumber(), o.getApplicationNumber());
+    }
+
+    private String getApplicationTeamLinkUrl() {
+        boolean useNewApplicantMenu = applicationTeamQuestionId != null;
+        if (useNewApplicantMenu) {
+            return format("/application/%s/form/question/%s", getApplicationNumber(), applicationTeamQuestionId);
+        } else {
+            return String.format("/application/%s/team", getApplicationNumber());
+        }
     }
 }

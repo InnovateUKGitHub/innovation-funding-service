@@ -113,11 +113,13 @@ public class ApplicationCreationAuthenticatedController {
 
     private String createApplicationAndShowInvitees(UserResource user, Long competitionId) {
         ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
-        QuestionResource applicationTeamQuestion = questionRestService
-                .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM).getSuccess();
-
         if (application != null) {
-            return format("redirect:/application/%s/form/question/%s", application.getId(), applicationTeamQuestion.getId());
+            return questionRestService
+                    .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM)
+                    .handleSuccessOrFailure(
+                            failure ->  format("redirect:/application/%s/team", application.getId()),
+                            success -> format("redirect:/application/%s/form/question/%s", application.getId(), success.getId())
+                    );
         } else {
             // Application not created, throw exception
             List<Object> args = new ArrayList<>();
