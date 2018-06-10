@@ -52,9 +52,9 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<div class="form-group-row-validated">' +
+        newRow = jQuery('<div class="form-row no-border-top">' +
           '<div class="form-group">' +
-          '<label class="form-label"><th:block th:if="${#fields.hasErrors(\'familyAffiliations[__${familyAffiliationStat.index}__].relation\')}"><span class="error-message" th:each="err : ${#fields.errors(\'familyAffiliations[__${familyAffiliationStat.index}__].relation\')}" th:text="${err}"></span> </th:block> <span>Relation</span></label>'+
+          '<label class="form-label">Relation</label>' +
           '<input aria-labelledby="aria-family-rel" class="form-control width-large family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.relation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].relation" value="" ' +
@@ -90,11 +90,11 @@ IFS.assessment.repeatableDeclarationRows = (function () {
     },
     removeRow: function (el) {
       var $element = jQuery(el)
-      var rowParent = $element.closest('tbody')
+      var rowParent = $element.closest('#family-table')
       var rows
 
       // must remove row before getting row information to correctly count remaining rows
-      $element.closest('tr').remove()
+      $element.closest('.form-row').remove()
 
       rows = jQuery(rowParent).children()
 
