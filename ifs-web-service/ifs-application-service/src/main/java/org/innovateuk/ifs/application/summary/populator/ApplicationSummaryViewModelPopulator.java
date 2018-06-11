@@ -12,6 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -25,15 +26,18 @@ public class ApplicationSummaryViewModelPopulator {
     private ApplicationService applicationService;
     private CompetitionService competitionService;
     private SectionService sectionService;
+    private UserService userService;
     private SummaryViewModelPopulator summaryViewModelPopulator;
 
     public ApplicationSummaryViewModelPopulator(ApplicationService applicationService,
                                                 CompetitionService competitionService,
                                                 SectionService sectionService,
+                                                UserService userService,
                                                 SummaryViewModelPopulator summaryViewModelPopulator) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.sectionService = sectionService;
+        this.userService = userService;
         this.summaryViewModelPopulator = summaryViewModelPopulator;
     }
 
@@ -46,6 +50,8 @@ public class ApplicationSummaryViewModelPopulator {
 
         SummaryViewModel summaryViewModel = summaryViewModelPopulator.populate(applicationId, user);
 
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
+
 //        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
 //        Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 //
@@ -56,7 +62,8 @@ public class ApplicationSummaryViewModelPopulator {
                 application,
                 competition,
                 applicationReadyForSubmit,
-                summaryViewModel);
+                summaryViewModel,
+                userIsLeadApplicant);
     }
 
 

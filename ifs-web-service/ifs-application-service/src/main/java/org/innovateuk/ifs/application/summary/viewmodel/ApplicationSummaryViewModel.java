@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
@@ -10,15 +9,18 @@ public class ApplicationSummaryViewModel {
     private final CompetitionResource currentCompetition;
     private final boolean applicationReadyForSubmit;
     private final SummaryViewModel summaryViewModel;
+    private final boolean userIsLeadApplicant;
 
     public ApplicationSummaryViewModel(ApplicationResource currentApplication,
                                        CompetitionResource currentCompetition,
                                        boolean applicationReadyForSubmit,
-                                       SummaryViewModel summaryViewModel) {
+                                       SummaryViewModel summaryViewModel,
+                                       boolean userIsLeadApplicant) {
         this.currentApplication = currentApplication;
         this.currentCompetition = currentCompetition;
         this.applicationReadyForSubmit = applicationReadyForSubmit;
         this.summaryViewModel = summaryViewModel;
+        this.userIsLeadApplicant = userIsLeadApplicant;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -35,5 +37,9 @@ public class ApplicationSummaryViewModel {
 
     public SummaryViewModel getSummaryViewModel() {
         return summaryViewModel;
+    }
+
+    public boolean isUserIsLeadApplicant() {
+        return userIsLeadApplicant;
     }
 }

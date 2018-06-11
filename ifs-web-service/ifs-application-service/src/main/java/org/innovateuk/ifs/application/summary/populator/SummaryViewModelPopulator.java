@@ -1,26 +1,37 @@
 package org.innovateuk.ifs.application.summary.populator;
 
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.summary.viewmodel.SummaryViewModel;
+import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -39,6 +50,15 @@ public class SummaryViewModelPopulator {
     private ProcessRoleService processRoleService;
     private OrganisationService organisationService;
     private FormInputRestService formInputRestService;
+    private FormInputResponseRestService formInputResponseRestService;
+    private FormInputResponseService formInputResponseService;
+    private AssessmentRestService assessmentRestService;
+    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+    private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
+    private UserService userService;
+    private ApplicantRestService applicantRestService;
+    private FormInputViewModelGenerator formInputViewModelGenerator;
 
     public SummaryViewModelPopulator(ApplicationService applicationService,
                                      CompetitionService competitionService,
@@ -47,7 +67,16 @@ public class SummaryViewModelPopulator {
                                      AssessorFormInputResponseRestService assessorFormInputResponseRestService,
                                      ProcessRoleService processRoleService,
                                      OrganisationService organisationService,
-                                     FormInputRestService formInputRestService) {
+                                     FormInputRestService formInputRestService,
+                                     FormInputResponseRestService formInputResponseRestService,
+                                     FormInputResponseService formInputResponseService,
+                                     AssessmentRestService assessmentRestService,
+                                     ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
+                                     ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
+                                     ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
+                                     UserService userService,
+                                     ApplicantRestService applicantRestService,
+                                     FormInputViewModelGenerator formInputViewModelGenerator) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.sectionService = sectionService;
@@ -56,6 +85,15 @@ public class SummaryViewModelPopulator {
         this.processRoleService = processRoleService;
         this.organisationService = organisationService;
         this.formInputRestService = formInputRestService;
+        this.formInputResponseRestService = formInputResponseRestService;
+        this.formInputResponseService = formInputResponseService;
+        this.assessmentRestService = assessmentRestService;
+        this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
+        this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
+        this.applicationResearchParticipationViewModelPopulator = applicationResearchParticipationViewModelPopulator;
+        this.userService = userService;
+        this.applicantRestService = applicantRestService;
+        this.formInputViewModelGenerator = formInputViewModelGenerator;
     }
 
     public SummaryViewModel populate (long applicationId, UserResource user) {
@@ -92,13 +130,60 @@ public class SummaryViewModelPopulator {
                 .flatMap(a -> a.stream())
                 .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
 
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
+        Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
+
+        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.get().getId());
+
+        List<AssessmentResource> feedbackSummary = assessmentRestService
+                .getByUserAndApplication(user.getId(), applicationId)
+                .getSuccess();
+
+        ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId);
+        ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel = applicationResearchParticipationViewModelPopulator.populate(applicationId);
+
+        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
+        final boolean hasFinanceSection;
+        final Long financeSectionId;
+        if (financeSection == null) {
+            hasFinanceSection = false;
+            financeSectionId = null;
+        } else {
+            hasFinanceSection = true;
+            financeSectionId = financeSection.getId();
+        }
+
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+
+        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
+
+        Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
+
+        Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
+                .map(question -> applicantRestService.getQuestion(user.getId(), application.getId(), question.getId()))
+                .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
+                .flatMap(List::stream)
+                .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
+
         return new SummaryViewModel(
                 application,
                 sections,
                 sectionQuestions,
                 scores,
                 markedAsComplete,
-                questionFormInputs
+                questionFormInputs,
+                mappedResponses,
+                questionAssignees,
+                feedbackSummary,
+                hasFinanceSection,
+                financeSectionId,
+                applicationFinanceSummaryViewModel,
+                applicationFundingBreakdownViewModel,
+                applicationResearchParticipationViewModel,
+                sectionsMarkedAsComplete,
+                formInputViewModels
         );
     }
 
@@ -117,6 +202,13 @@ public class SummaryViewModelPopulator {
 
     private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
         return simpleFilter(list, input -> input.getQuestion().equals(id));
+    }
+
+    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation, OrganisationResource userOrganisation) {
+        return completedSectionsByOrganisation.getOrDefault(
+                userOrganisation.getId(),
+                new HashSet<>()
+        );
     }
 
 }
