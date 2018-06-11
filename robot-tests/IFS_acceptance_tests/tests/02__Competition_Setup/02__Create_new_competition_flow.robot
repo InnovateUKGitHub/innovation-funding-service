@@ -358,7 +358,7 @@ Milestones: Correct Weekdays should show
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
-    [Tags]
+    [Tags]  HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .task-status-complete
     And the user should see the element     css=#compCTA[disabled]
@@ -624,7 +624,7 @@ Application: Edit again should mark as incomplete
 
 User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}/section/application/landing-page
     And the user clicks the button/link      css=button.button
     Given the user navigates to the page     ${server}/management/competition/setup/${competitionId}
