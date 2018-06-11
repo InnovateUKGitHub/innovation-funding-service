@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.notification.populator;
 
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
-import org.innovateuk.ifs.management.form.InformIneligibleForm;
+import org.innovateuk.ifs.management.notification.form.InformIneligibleForm;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.management.notification.viewmodel.InformIneligibleViewModel;
