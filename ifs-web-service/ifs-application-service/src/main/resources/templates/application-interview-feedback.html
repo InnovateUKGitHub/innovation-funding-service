@@ -167,7 +167,6 @@
         <h2 class="heading-medium">Finance</h2>
         <div class="collapsible">
             <h3>Finances summary</h3>
-            <!--bug at the moment when error on form is causes this form to not appear causing a 200 error-->
             <div class="question">
                 <div ifs:global="${interviewFeedbackViewModel.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></div>
                 <h2 class="heading-medium">Funding breakdown</h2>

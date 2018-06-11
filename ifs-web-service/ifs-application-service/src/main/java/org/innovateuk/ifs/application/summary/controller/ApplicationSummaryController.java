@@ -115,12 +115,13 @@ public class ApplicationSummaryController {
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/summary", params = "uploadResponse")
-    public String uploadResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm form,
-                                     BindingResult bindingResult,
-                                     ValidationHandler validationHandler,
-                                     Model model,
-                                     @PathVariable("applicationId") long applicationId,
-                                     UserResource user) {
+    public String uploadResponse(@ModelAttribute("form") ApplicationForm applicationForm,
+                                 @ModelAttribute("interviewResponseForm") InterviewResponseForm form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 @PathVariable("applicationId") long applicationId,
+                                 UserResource user) {
 
         Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), form, bindingResult, validationHandler, model, applicationId, user);
         MultipartFile file = form.getResponse();
