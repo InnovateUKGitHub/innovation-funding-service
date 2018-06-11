@@ -150,7 +150,7 @@ Project Finance goes through the Generate Spend Profile tab to generate the Spen
     Then the user should see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).ok
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/queries
     Then the user should not see the element  link=${Katz_Name}
-    And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
+    And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  ${PS_SP_Competition_Name}: Your spend profile is available for project ${PS_SP_APPLICATION_NUMBER}  The finance checks for all partners in the project have now been completed
 
 Project Finance should no longer see the project in the Generate Spend Profile tab
     [Documentation]    IFS-2016

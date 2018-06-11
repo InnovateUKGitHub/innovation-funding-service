@@ -6,6 +6,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,6 +18,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -71,13 +73,13 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void getByApplicationIdAndQuestionName() {
+    public void getByApplicationIdAndQuestionSetupType() {
         long applicationId = 1L;
-        String questionName = "name";
+        CompetitionSetupQuestionType questionSetupType = PROJECT_SUMMARY;
 
         FormInputResponseResource expected = newFormInputResponseResource().build();
-        setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionName", applicationId, questionName), FormInputResponseResource.class, expected);
-        FormInputResponseResource actual = service.getByApplicationIdAndQuestionName(applicationId, questionName).getSuccess();
+        setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionSetupType", applicationId, questionSetupType), FormInputResponseResource.class, expected);
+        FormInputResponseResource actual = service.getByApplicationIdAndQuestionSetupType(applicationId, PROJECT_SUMMARY).getSuccess();
         assertEquals(expected, actual);
     }
 

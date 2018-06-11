@@ -133,17 +133,16 @@
                         <span class="error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
                     </th:block>
                 </th:block>
-                <!--/* ugly way for dealing with array kind of inputFields to a valid id formInput[1010] -> formInput-1010 */-->
-                <th:block th:if="${#strings.isEmpty(filename)}" th:with="formInputId=${#strings.replace(#strings.replace(inputField,'[','-'),']','')}">
+                <th:block th:if="${#strings.isEmpty(filename)}">
                     <p class="uploaded-file">No file currently uploaded</p>
                     <th:block th:if="${autoSaveOff}">
-                        <input type="file"  th:id="${formInputId}" th:name="${inputField}" class="inputfile" data-autosave-disabled=""/>
+                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" data-autosave-disabled=""/>
                     </th:block>
                     <th:block th:unless="${autoSaveOff}">
-                        <input type="file"  th:id="${formInputId}" th:name="${inputField}" class="inputfile" />
+                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" />
                     </th:block>
-                    <label th:for="${formInputId}" class="button-secondary extra-margin">+ Upload</label>
-                    <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${formInputId}">Save</button>
+                    <label th:for="${inputField}" class="button-secondary extra-margin">+ Upload</label>
+                    <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">
                     <a class="uploaded-file" th:href="${downloadUrl}" th:text="${filename}+' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
@@ -167,9 +166,9 @@
     </div>
 
     <!-- ===========================Form: empty / no question =========================== -->
-    <th:block th:fragment="empty(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <th:block th:fragment="empty(costViewModel, internalView)" th:with="formInput=${costViewModel.formInput}, question=${costViewModel.question}">
         <th:block ifs:utext="${question.description}" />
-        <th:block th:unless="${model.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:unless="${costViewModel.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
     </th:block>
 
 </html>
