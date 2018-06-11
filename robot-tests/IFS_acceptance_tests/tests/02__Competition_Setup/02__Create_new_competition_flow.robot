@@ -358,14 +358,14 @@ Milestones: Correct Weekdays should show
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
-    [Tags]  HappyPath
+    [Tags]
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .task-status-complete
     And the user should see the element     css=#compCTA[disabled]
 
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
-    [Tags]    HappyPath
+    [Tags]
     #Writing the following selectors using jQuery in order to avoid hardcoded numbers.
     When The user clicks the button/link  jQuery=a:contains("Next")  #link=Next  #a:contains("Next") #Navigate to next part   #Application
     Then the user should see the element  jQuery=h2:contains("Sector competition questions")
