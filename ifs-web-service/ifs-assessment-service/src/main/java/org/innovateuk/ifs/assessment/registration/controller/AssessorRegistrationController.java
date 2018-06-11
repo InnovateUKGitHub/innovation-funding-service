@@ -58,7 +58,7 @@ public class AssessorRegistrationController {
     private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
 
     @Autowired
-    private CompetitionInviteRestService compeitionInviteRestService;
+    private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -116,7 +116,7 @@ public class AssessorRegistrationController {
             return format("redirect:/invite/competition/%s", inviteHash);
         }
 
-        return compeitionInviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
+        return competitionInviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
             if (!userExists) {
                 // reached here without creating an assessor, redirect back to the invite
                 return format("redirect:/invite/competition/%s", inviteHash);
