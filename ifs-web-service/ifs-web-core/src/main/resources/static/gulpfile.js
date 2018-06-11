@@ -30,16 +30,16 @@ var vendorJsFiles = [
   nodeModulesPath + 'jquery/dist/jquery.js',
   nodeModulesPath + 'simplestatemanager/src/ssm.js',
   'js/vendor/jquery-ui/jquery-ui.min.js',
-  gdsFrontendToolkitPath + 'javascripts/govuk/shim-links-with-button-role.js',
-  gdsFrontendToolkitPath + 'javascripts/vendor/polyfills/bind.js',
-  gdsFrontendToolkitPath + 'javascripts/govuk/details.polyfill.js',
+	gdsFrontendToolkitPath + 'javascripts/govuk/shim-links-with-button-role.js',
+	gdsFrontendToolkitPath + 'javascripts/vendor/polyfills/bind.js',
+	gdsFrontendToolkitPath + 'javascripts/govuk/details.polyfill.js',
   'js/vendor/govuk/application.js',
-  gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
+	gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
   'js/vendor/wysiwyg-editor/*.js',
   '!js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
 
-
+gulp.task('copy-govuk', ['copy-js-govuk', 'copy-fonts-govuk', 'copy-images-govuk'])
 // copy over the vendor javascript files to the js/vendor/govuk folder
 gulp.task('copy-js-govuk', function () {
 	return gulp.src(filesExist([gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js', gdsTemplateJinjaPath + 'assets/javascripts/ie.js'])).pipe(gulp.dest('js/vendor/govuk'))
@@ -52,7 +52,11 @@ gulp.task('copy-fonts-govuk', function () {
 gulp.task('copy-images-govuk', function () {
   return gulp.src(vendorImages).pipe(gulp.dest('images'))
 })
-gulp.task('copy-govuk', gulp.parallel('copy-js-govuk', 'copy-fonts-govuk', 'copy-images-govuk'))
+
+gulp.task('default', ['js', 'css'])
+
+// build all js
+gulp.task('js', ['vendor', 'ifs-js'])
 
 // concat and minify all the ifs files
 gulp.task('ifs-js', function () {
@@ -81,10 +85,7 @@ gulp.task('vendor', function () {
   .pipe(gulp.dest('js/dest'))
 })
 
-// build all js
-gulp.task('js', gulp.series('vendor', 'ifs-js'))
-
-gulp.task('css', gulp.series('copy-govuk'), function () {
+gulp.task('css', ['copy-govuk'], function () {
   return gulp.src(filesExist(sassFiles))
     .pipe(sassLint({
       files: {
@@ -116,5 +117,3 @@ gulp.task('css:watch', function () {
 gulp.task('js:watch', function () {
   gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js'])
 })
-
-gulp.task('default', gulp.parallel('js', 'css'))
