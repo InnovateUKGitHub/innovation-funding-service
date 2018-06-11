@@ -23,9 +23,11 @@
                 Sign in
             </h1>
 
-            <form action="/prototypes/IFS-3598-choose-org" method="get" id="sign-in-form">
+            <form action="/prototypes/IFS-3598-org-selected" method="get" id="sign-in-form">
 
                 <input type="hidden" name="user" value="existing" />
+                <input type="hidden" name="status" value="orgAdded" />
+                <input type="hidden" name="type" value="collaborator" />
 
                 <div class="form-group">
                     <label for="username">

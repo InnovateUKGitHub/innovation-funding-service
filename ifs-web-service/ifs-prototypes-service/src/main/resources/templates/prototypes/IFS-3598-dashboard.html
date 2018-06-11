@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}, type=${param.type != null and param.type[0] =='collaborator' ?  'collaborator' : 'lead'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -30,7 +30,8 @@
                     <li class="status-2-col">
                         <div class="task">
                             <h3 class="heading-small">
-                                <a href="/application/171" th:text="${type == 'collaborator' ? 'Evolution of the global phosphorous cycle' : 'Untitled application (start here)'}">Application title</a>
+                                <a th:href="${type == 'collaborator' ? '/prototypes/IFS-3599-collaborator-application' : '/prototypes/IFS-3598-lead-application'}"
+                                   th:text="${type == 'collaborator' ? 'Evolution of the global phosphorous cycle' : 'Untitled application (start here)'}">Application title</a>
                             </h3>
                             <ul class="application-details">
                                 <li>Application number: <span>171</span></li>

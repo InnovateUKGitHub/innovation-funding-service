@@ -4,7 +4,10 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'}, type=${param.type != null and param.type[0] =='collaborator' ?  'collaborator' : 'lead'}">
+<body
+    th:with="user=${param.user != null and param.user[0] == 'existing' ? 'existing' : 'new'},
+    type=${param.type != null and param.type[0] =='collaborator' ?  'collaborator' : 'lead'},
+    status=${param.status != null and param.status[0] == 'orgAdded' ? 'orgAdded' : 'orgNotAdded'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -88,6 +91,7 @@
             <input type="hidden" name="user" th:value="${user}" />
         </th:block>
 
+        <input type="hidden" name="status" th:value="${status}" />
         <input type="hidden" name="type" th:value="${type}" />
 
         <button id="lead-organisation-type-cta" class="button button-large extra-margin" name="select-company-type" type="submit">Save and continue</button>
