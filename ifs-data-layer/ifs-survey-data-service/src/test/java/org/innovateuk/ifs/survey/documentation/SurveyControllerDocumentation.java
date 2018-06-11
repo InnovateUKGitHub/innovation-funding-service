@@ -12,7 +12,9 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.survey.builder.SurveyResourceBuilder.newSurveyResource;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -38,6 +40,8 @@ public class SurveyControllerDocumentation extends MockMvcTest<SurveyController>
                 .withSatisfaction(Satisfaction.DISSATISFIED)
                 .withComments("Some comments")
                 .build();
+
+        when(surveyService.save(surveyResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/survey")

@@ -1,21 +1,10 @@
-=== Add cost total
+=== Save
 ==== Request
-include::{snippets}/cost-totals/add-cost-total/http-request.adoc[]
-include::{snippets}/cost-totals/add-cost-total/request-fields.adoc[]
+include::{snippets}/survey/save/http-request.adoc[]
+include::{snippets}/survey/save/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/cost-totals/add-cost-total/http-response.adoc[]
+include::{snippets}/survey/save/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/cost-totals/add-cost-total/curl-request.adoc[]
-
-=== Add cost totals
-==== Request
-include::{snippets}/cost-totals/add-cost-totals/http-request.adoc[]
-include::{snippets}/cost-totals/add-cost-totals/request-fields.adoc[]
-
-==== Response
-include::{snippets}/cost-totals/add-cost-totals/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/cost-totals/add-cost-totals/curl-request.adoc[]
+include::{snippets}/survey/save/curl-request.adoc[]

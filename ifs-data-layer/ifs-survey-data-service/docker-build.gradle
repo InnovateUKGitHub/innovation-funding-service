@@ -4,18 +4,18 @@ ext.ifsSurveyAuthSecretKey="supersecretkey"
 ext.serverPort=8080
 ext.activeProfile="local"
 
-ext.ifsDatasourceHost = "ifs-database"
+ext.ifsDatasourceHost = "ifs-survey-database"
 ext.ifsDatasourceUrl="jdbc:mysql://ifs-survey-database:3306/ifs_survey"
 ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
 ext.ifsFlywayLocations="db/migration"
 
 
-ext.testIfsDatasourceUrl="jdbc:mysql://ifs-finance-database:3308/ifs_finance_test"
+ext.testIfsDatasourceUrl="jdbc:mysql://ifs-survey-database:3308/ifs_survey_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-project.ext['flyway.url']='jdbc:mysql://ifs-finance-database:3308?characterEncoding=utf8'
+project.ext['flyway.url']='jdbc:mysql://ifs-survey-database:3308?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs_survey'
 project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"
