@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
-import org.innovateuk.ifs.management.form.InformIneligibleForm;
+import org.innovateuk.ifs.management.notification.form.InformIneligibleForm;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.management.notification.controller.CompetitionManagementSendIneligibleController;
 import org.innovateuk.ifs.management.notification.populator.InformIneligibleModelPopulator;
