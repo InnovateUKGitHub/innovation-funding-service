@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
@@ -75,19 +77,19 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
     }
 
     @Test
-    public void findByApplicationIdAndQuestionName() throws Exception {
+    public void findByApplicationIdAndQuestionSetupType() throws Exception {
         long applicationId = 1L;
-        String questionName = "question";
+        CompetitionSetupQuestionType questionSetupType = PROJECT_SUMMARY;
 
         FormInputResponseResource expected = newFormInputResponseResource().build();
 
-        when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionName(applicationId, questionName)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionName/{applicationId}/{questionName}", applicationId, questionName))
+        mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionSetupType/{applicationId}/{questionSetupType}", applicationId, questionSetupType))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputResponseServiceMock, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
+        verify(formInputResponseServiceMock, only()).findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType);
     }
 
     @Test
