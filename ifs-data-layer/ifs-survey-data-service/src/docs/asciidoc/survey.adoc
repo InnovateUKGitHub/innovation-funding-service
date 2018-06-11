@@ -1,0 +1,21 @@
+=== Add cost total
+==== Request
+include::{snippets}/cost-totals/add-cost-total/http-request.adoc[]
+include::{snippets}/cost-totals/add-cost-total/request-fields.adoc[]
+
+==== Response
+include::{snippets}/cost-totals/add-cost-total/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/cost-totals/add-cost-total/curl-request.adoc[]
+
+=== Add cost totals
+==== Request
+include::{snippets}/cost-totals/add-cost-totals/http-request.adoc[]
+include::{snippets}/cost-totals/add-cost-totals/request-fields.adoc[]
+
+==== Response
+include::{snippets}/cost-totals/add-cost-totals/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/cost-totals/add-cost-totals/curl-request.adoc[]
