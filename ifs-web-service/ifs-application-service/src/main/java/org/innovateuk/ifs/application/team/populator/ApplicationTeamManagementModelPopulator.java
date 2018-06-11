@@ -159,9 +159,12 @@ public class ApplicationTeamManagementModelPopulator {
                 .getSuccess();
     }
 
-    private long getApplicationTeamQuestion(long competitionId) {
+    private Long getApplicationTeamQuestion(long competitionId) {
         return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
-                APPLICATION_TEAM).getSuccess().getId();
+                APPLICATION_TEAM).handleSuccessOrFailure(
+                        failure -> null,
+                        question -> question.getId()
+                );
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {

@@ -3,17 +3,19 @@ package org.innovateuk.ifs.application.team.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import static java.lang.String.format;
+
 /**
  * Holder of model attributes for the Add Organisation view.
  */
 public class ApplicationTeamAddOrganisationViewModel {
 
     private long applicationId;
-    private long questionId;
+    private Long questionId;
     private String applicationName;
 
     public ApplicationTeamAddOrganisationViewModel(long applicationId,
-                                                   long questionId,
+                                                   Long questionId,
                                                    String applicationName) {
         this.applicationId = applicationId;
         this.questionId = questionId;
@@ -24,12 +26,17 @@ public class ApplicationTeamAddOrganisationViewModel {
         return applicationId;
     }
 
-    public long getQuestionId() {
-        return questionId;
-    }
-
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public String getBackUrl() {
+        boolean useNewApplicantMenu = questionId != null;
+        if (useNewApplicantMenu) {
+            return format("/application/%s/form/question/%s", applicationId, questionId);
+        } else {
+            return format("/application/%s/team", applicationId);
+        }
     }
 
     @Override

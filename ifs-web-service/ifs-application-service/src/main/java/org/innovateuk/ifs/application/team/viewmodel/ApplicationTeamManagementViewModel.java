@@ -5,13 +5,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * Holder of model attributes for the Update Organisation view.
  */
 public class ApplicationTeamManagementViewModel {
 
     private long applicationId;
-    private long questionId;
+    private Long questionId;
     private String applicationName;
     private Long organisationId;
     private Long inviteOrganisationId;
@@ -22,7 +24,7 @@ public class ApplicationTeamManagementViewModel {
     private boolean organisationExists;
 
     public ApplicationTeamManagementViewModel(long applicationId,
-                                              long questionId,
+                                              Long questionId,
                                               String applicationName,
                                               Long organisationId,
                                               Long inviteOrganisationId,
@@ -45,10 +47,6 @@ public class ApplicationTeamManagementViewModel {
 
     public long getApplicationId() {
         return applicationId;
-    }
-
-    public long getQuestionId() {
-        return questionId;
     }
 
     public String getApplicationName() {
@@ -85,6 +83,15 @@ public class ApplicationTeamManagementViewModel {
 
     public void setOrganisationExists(boolean organisationExists) {
         this.organisationExists = organisationExists;
+    }
+
+    public String getBackUrl() {
+        boolean useNewApplicantMenu = questionId != null;
+        if (useNewApplicantMenu) {
+            return format("/application/%s/form/question/%s", applicationId, questionId);
+        } else {
+            return format("/application/%s/team", applicationId);
+        }
     }
 
     @Override

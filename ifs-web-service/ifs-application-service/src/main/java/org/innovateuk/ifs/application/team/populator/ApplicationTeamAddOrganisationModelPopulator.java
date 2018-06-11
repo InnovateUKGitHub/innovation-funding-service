@@ -23,9 +23,12 @@ public class ApplicationTeamAddOrganisationModelPopulator {
                 applicationResource.getName());
     }
 
-    private long getApplicationTeamQuestion(long competitionId) {
+    private Long getApplicationTeamQuestion(long competitionId) {
         return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
-                APPLICATION_TEAM).getSuccess().getId();
+                APPLICATION_TEAM).handleSuccessOrFailure(
+                        failure -> null,
+                question -> question.getId()
+        );
     }
 
 }

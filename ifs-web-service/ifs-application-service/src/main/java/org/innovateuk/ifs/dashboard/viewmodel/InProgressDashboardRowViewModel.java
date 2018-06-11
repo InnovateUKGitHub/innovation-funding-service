@@ -131,7 +131,7 @@ public class InProgressDashboardRowViewModel extends
         if (useNewApplicantMenu) {
             return format("/application/%s/form/question/%s", getApplicationNumber(), applicationTeamQuestionId);
         } else {
-            return String.format("/application/%s/team", getApplicationNumber());
+            return format("/application/%s/team", getApplicationNumber());
         }
     }
 }

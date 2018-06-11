@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -118,7 +117,8 @@ public class ApplicationCreationAuthenticatedController {
                     .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM)
                     .handleSuccessOrFailure(
                             failure ->  format("redirect:/application/%s/team", application.getId()),
-                            success -> format("redirect:/application/%s/form/question/%s", application.getId(), success.getId())
+                            question -> format("redirect:/application/%s/form/question/%s", application.getId(),
+                                    question.getId())
                     );
         } else {
             // Application not created, throw exception
