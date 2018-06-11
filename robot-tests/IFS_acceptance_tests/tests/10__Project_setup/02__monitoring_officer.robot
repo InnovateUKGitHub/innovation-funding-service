@@ -96,7 +96,7 @@ MO server-side validation
     And the user should see a field and summary error   Please enter a last name.
     And the user should see a field and summary error   Please enter an email address.
     And the user should see a field and summary error   Please enter a phone number.
-    And the user should see a field and summary error   Please enter a valid phone number.
+    And the user should see a field and summary error   Please enter a valid telephone number between 8 and 20 digits.
 
 MO client-side validation
     [Documentation]    INFUND-2630
