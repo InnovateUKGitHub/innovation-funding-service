@@ -59,19 +59,15 @@
 
          <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
                                 and !(currentApplication.isOpen() and isApplicant) and !hideDetails}">
-             one
              <div class="extra-margin">
-                 two
                <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
                     th:with="formInputIndex=(${status.index}), summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
                     th:id="'form-input-'+${formInput.getId()}">
-three
                    <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
                        <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
                    </th:block>
 
                </div>
-                 four
              </div>
 
              <h2 th:text="${section.name}" class="heading-medium" />
