@@ -300,8 +300,8 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
     @Test
     public void registerAssessorByHash_phoneNumberTooShort() throws Exception {
-        String phoneNumber = new RandomStringGenerator.Builder().selectFrom("01234567890 +-".toCharArray()).build()
-                .generate(7);
+
+        String phoneNumber = "1234567-+";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -330,8 +330,8 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
     @Test
     public void registerAssessorByHash_phoneNumberTooLong() throws Exception {
-        String phoneNumber = new RandomStringGenerator.Builder().selectFrom("01234567890 +-".toCharArray()).build()
-                .generate(21);
+
+        String phoneNumber = "123456789012345678901-+";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
