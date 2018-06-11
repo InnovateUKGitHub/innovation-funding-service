@@ -4,6 +4,8 @@ var standard = require('gulp-standard')
 var uglify = require('gulp-uglify')
 var concat = require('gulp-concat')
 
+gulp.task('default', ['js', 'css'])
+
 // build all js
 gulp.task('js', function () {
   return gulp.src([
@@ -21,6 +23,5 @@ gulp.task('js', function () {
     quiet: false
   }))
 })
-gulp.task('css', function (done) { done() })
+gulp.task('css', function () {})
 gulp.task('css:watch', function () {})
-gulp.task('default', gulp.parallel('js', 'css'))

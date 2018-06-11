@@ -15,18 +15,18 @@
 // For now this will suffice, if complexity increases we might look at a more complex loader like requireJs.
 // Please think before adding javascript, this project should work without any of this scripts.
 
-if (typeof (IFS) === 'undefined') { var IFS = {} } // eslint-disable-line
+if (typeof (IFS) === 'undefined') { var IFS = {} } // jshint ignore:line
 IFS.projectSetup = {}
 IFS.projectSetup.loadOrder = {
-  common: {
-    init: function () {
-      IFS.projectSetup.clearInputs.init()
-    }
-  },
   'spend-profile': {
     init: function () {
       IFS.core.finance.init()
       IFS.projectSetup.spendProfile.init()
+    }
+  },
+  common: {
+    init: function () {
+      IFS.projectSetup.clearInputs.init()
     }
   }
 }
