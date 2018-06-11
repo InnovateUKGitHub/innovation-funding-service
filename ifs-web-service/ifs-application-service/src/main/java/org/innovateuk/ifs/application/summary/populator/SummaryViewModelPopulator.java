@@ -183,7 +183,8 @@ public class SummaryViewModelPopulator {
                 applicationFundingBreakdownViewModel,
                 applicationResearchParticipationViewModel,
                 sectionsMarkedAsComplete,
-                formInputViewModels
+                formInputViewModels,
+                false
         );
     }
 

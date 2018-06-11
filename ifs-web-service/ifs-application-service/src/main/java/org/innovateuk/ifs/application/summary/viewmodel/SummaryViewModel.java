@@ -33,6 +33,7 @@ public class SummaryViewModel {
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final Set<Long> sectionsMarkedAsComplete;
     private final Map<Long, AbstractFormInputViewModel> formInputViewModels;
+    private final boolean fromCompManagement;
 
     public SummaryViewModel(ApplicationResource currentApplication,
                             Map<Long, SectionResource> sections,
@@ -49,7 +50,8 @@ public class SummaryViewModel {
                             ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                             ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                             Set<Long> sectionsMarkedAsComplete,
-                            Map<Long, AbstractFormInputViewModel> formInputViewModels) {
+                            Map<Long, AbstractFormInputViewModel> formInputViewModels,
+                            boolean fromCompManagement) {
         this.currentApplication = currentApplication;
         this.sections = sections;
         this.sectionQuestions = sectionQuestions;
@@ -66,6 +68,7 @@ public class SummaryViewModel {
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
         this.formInputViewModels = formInputViewModels;
+        this.fromCompManagement = fromCompManagement;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -130,5 +133,9 @@ public class SummaryViewModel {
 
     public Map<Long, AbstractFormInputViewModel> getFormInputViewModels() {
         return formInputViewModels;
+    }
+
+    public boolean isFromCompManagement() {
+        return fromCompManagement;
     }
 }
