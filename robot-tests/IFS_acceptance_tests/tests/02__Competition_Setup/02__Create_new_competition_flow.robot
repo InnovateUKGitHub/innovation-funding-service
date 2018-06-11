@@ -209,7 +209,7 @@ The user must select the Terms and Conditions they want Applicants to accept
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button/link  link=Public content
     Then the user should not see an error in the page
     And the user should see the element  jQuery=h1:contains("Public content")
@@ -224,6 +224,7 @@ Internal user can navigate to Public Content without having any issues
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
+    [Tags]    HappyPath
     Given the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element  jQuery=section:contains("In preparation") li:contains("${competitionTitle}")
 
@@ -231,34 +232,34 @@ Funding information: calculations
     [Documentation]  INFUND-2985 INFUND-4894
     [Tags]    HappyPath
     [Setup]    the user clicks the button/link  link=${competitionTitle}
-    Given the user clicks the button/link    link=Funding information
-    And the user clicks the button/link    jQuery=.button:contains("Generate code")
+    Given the user clicks the button/link       link=Funding information
+    And the user clicks the button/link         jQuery=.button:contains("Generate code")
     And the user enters text to a text field    id=funders[0].funder    FunderName
     And the user enters text to a text field    id=funders[0].funderBudget    20000
     And the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
     And the user enters text to a text field    id=activityCode    4242
-    When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
-    and the user should see the element    jQuery=Button:contains("+Add co-funder")
-    And the user should see the element    jQuery=Button:contains("Remove")
+    When the user clicks the button/link        jQuery=Button:contains("+Add co-funder")
+    and the user should see the element         jQuery=Button:contains("+Add co-funder")
+    And the user should see the element         jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=1-funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
-    Then the total should be correct    Total: £21,000
-    When the user clicks the button/link    jQuery=Button:contains("Remove")
-    Then the total should be correct    Total: £20,000
+    Then the total should be correct            Total: £21,000
+    When the user clicks the button/link        jQuery=Button:contains("Remove")
+    Then the total should be correct            Total: £20,000
 
 Funding information: can be saved
     [Documentation]    INFUND-3182
     [Tags]    HappyPath
     Given the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the text in the page    FunderName
+    When the user clicks the button/link            jQuery=button:contains("Done")
+    Then the user should see the text in the page   FunderName
     And the user should see the text in the page    £20,000
     And the user should see the text in the page    2016
     And the user should see the text in the page    2004
     And the user should see the text in the page    4242
     And the user should see the text in the page    1901-1
-    And the user should see the element    jQuery=button:contains("Edit")
+    And the user should see the element             jQuery=button:contains("Edit")
 
 Funding information: can be edited
     [Documentation]    INFUND-3002
@@ -365,9 +366,9 @@ Milestones: Green check should show
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]    HappyPath
-    #Writing the following selectors using jQuery in order to avoidhardcoded numbers.
-    When The user clicks the button/link  link=Application
-    Then the user should see the element  jQuery= h2:contains("Sector competition questions")
+    #Writing the following selectors using jQuery in order to avoid hardcoded numbers.
+    When The user clicks the button/link  jQuery=a:contains("Next")  #link=Next  #a:contains("Next") #Navigate to next part   #Application
+    Then the user should see the element  jQuery=h2:contains("Sector competition questions")
     When the user should see the element  link=Application details
     Then the user should see the element  link=Project summary
     And the user should see the element   link=Public description
