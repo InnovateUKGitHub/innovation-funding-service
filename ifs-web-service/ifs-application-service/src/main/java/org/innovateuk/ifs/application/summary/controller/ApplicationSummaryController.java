@@ -51,17 +51,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 @RequestMapping("/application")
 public class ApplicationSummaryController {
 
-    private ProcessRoleService processRoleService;
-    private SectionService sectionService;
     private ApplicationService applicationService;
     private CompetitionService competitionService;
-    private ApplicationModelPopulator applicationModelPopulator;
-    private FormInputResponseService formInputResponseService;
-    private FormInputResponseRestService formInputResponseRestService;
-    private UserRestService userRestService;
-    private ProjectService projectService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
-    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
     private InterviewResponseRestService interviewResponseRestService;
     private ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator;
     private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
@@ -71,32 +63,16 @@ public class ApplicationSummaryController {
     }
 
     @Autowired
-    public ApplicationSummaryController(ProcessRoleService processRoleService,
-                                        SectionService sectionService,
-                                        ApplicationService applicationService,
+    public ApplicationSummaryController(ApplicationService applicationService,
                                         CompetitionService competitionService,
-                                        ApplicationModelPopulator applicationModelPopulator,
-                                        FormInputResponseService formInputResponseService,
-                                        FormInputResponseRestService formInputResponseRestService,
-                                        UserRestService userRestService,
-                                        ProjectService projectService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
-                                        InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
                                         InterviewResponseRestService interviewResponseRestService,
                                         ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator,
                                         ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator,
                                         ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
-        this.processRoleService = processRoleService;
-        this.sectionService = sectionService;
         this.applicationService = applicationService;
         this.competitionService = competitionService;
-        this.applicationModelPopulator = applicationModelPopulator;
-        this.formInputResponseService = formInputResponseService;
-        this.formInputResponseRestService = formInputResponseRestService;
-        this.userRestService = userRestService;
-        this.projectService = projectService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
-        this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.interviewResponseRestService = interviewResponseRestService;
         this.applicationInterviewFeedbackViewModelPopulator = applicationInterviewFeedbackViewModelPopulator;
         this.applicationFeedbackSummaryViewModelPopulator = applicationFeedbackSummaryViewModelPopulator;
@@ -114,37 +90,17 @@ public class ApplicationSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
 
-//        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
-//        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-//        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
-//
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-//        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-//
-//        applicationModelPopulator.addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.of(Boolean.FALSE));
-//        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-//
-//        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-//
-//        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
-//
-//        ProjectResource project = projectService.getByApplicationId(applicationId);
-//        boolean projectWithdrawn = (project != null && project.isWithdrawn());
-//        model.addAttribute("projectWithdrawn", projectWithdrawn);
-//
+
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
-//
+
         if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
-//            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
             model.addAttribute("applicationFeedbackSummaryViewModel", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user));
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
-//            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
-//            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, competition.getCompetitionStatus().isFeedbackReleased(), false));
-        model.addAttribute("interviewFeedbackViewModel", applicationInterviewFeedbackViewModelPopulator.populate(applicationId, user));
-
-        return "application-interview-feedback";
+            model.addAttribute("interviewFeedbackViewModel", applicationInterviewFeedbackViewModelPopulator.populate(applicationId, user));
+            return "application-interview-feedback";
         }
         else {
             model.addAttribute("applicationSummaryViewModel", applicationSummaryViewModelPopulator.populate(applicationId, user));
