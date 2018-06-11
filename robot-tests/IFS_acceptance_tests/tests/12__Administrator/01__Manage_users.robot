@@ -116,7 +116,8 @@ Account creation validation checks - Blank
     When the user enters text to a text field  css=#firstName  New
     And the user enters text to a text field   css=#lastName  Administrator
     And the user enters text to a text field   css=#password  ${correct_password}
-    Then the user should see the element        jQuery=h3:contains("Email") + p:contains("ifs.innovationLead@innovateuk")
+    Then the user should see the element       jQuery=h3:contains("Email") + p:contains("ifs.innovationLead@innovateuk")
+    Focus                                      css=#lastName
     And the user cannot see a validation error in the page
 
 Account creation validation checks - Lowercase password
