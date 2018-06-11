@@ -288,6 +288,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
 
         model.addAttribute("model", interviewApplicationsStatusModelPopulator
                 .populateModel(competitionId, page, originQuery));
+        model.addAttribute("originQuery", originQuery);
 
         return "assessors/interview/application-view-status";
     }
