@@ -270,7 +270,7 @@ Applicant can still see their feedback once the comp feedback has been released
     [Tags]
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     When the user clicks the button/link      jQuery=section:contains("Previous") h3:contains("Neural network")
-    Then the user should see the element      link=testing.pdf (opens in a new window)
+    Then the user should see the element      link=testing.pdf
 
 *** Keywords ***
 Custom Suite Setup
@@ -348,7 +348,7 @@ the compAdmin removes uploaded feedback for an application
 
 the applicant upload the response to the interview panel
     the user uploads the file              css=.inputfile   ${valid_pdf}
-    the user should see the element        link=testing.pdf (opens in a new window)
+    the user should see the element        link=testing.pdf
 
 the compAdmin checks the status for response uploaded applicantion
     log in as a different user        &{Comp_admin1_credentials}
