@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -176,7 +175,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                     List<List<FinanceFormField>> fieldsSeparated = unsavedFieldsManager.separateFields(fields);
                     for(List<FinanceFormField> fieldGroup: fieldsSeparated) {
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
-                        if (costItem != null && fieldGroup.size() > 0) {
+                        if (costItem != null && !fieldGroup.isEmpty()) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
                             ValidationMessages addResult = financeRowRestService.add(applicationFinanceId, questionId, costItem).getSuccess();
                             Either<FinanceRowItem, ValidationMessages> either;

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.assessment.resource.AssessmentEvent.FEEDBACK;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -59,7 +59,17 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
                 guidanceRowsCopy.addAll(formInput.getGuidanceRows());
             }
 
+            final Set<FileTypeCategory> allowedFileTypesCopy;
+            if (formInput.getAllowedFileTypes() != null) {
+                allowedFileTypesCopy = new HashSet<>(formInput.getAllowedFileTypes());
+            }
+            else {
+                allowedFileTypesCopy = null;
+            }
+
             entityManager.detach(formInput);
+            formInput.setAllowedFileTypes(allowedFileTypesCopy);
+
             formInput.setCompetition(question.getCompetition());
             formInput.setQuestion(question);
             formInput.setId(null);
@@ -77,11 +87,8 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
     }
 
     private boolean isSectorCompetitionWithScopeQuestion(Competition competition, Question question, FormInput formInput) {
-        if (competition.getCompetitionType().isSector() && question.isScope()) {
-            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK)) {
-                return true;
-            }
-        }
-        return false;
+        return competition.getCompetitionType().isSector() &&
+                question.isScope() &&
+                formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE;
     }
 }

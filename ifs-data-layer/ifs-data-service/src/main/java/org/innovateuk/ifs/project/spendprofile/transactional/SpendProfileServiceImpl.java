@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -42,11 +42,11 @@ import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +146,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                     List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                                     return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                                 }))
-                                .andOnSuccess(() -> {
+                                .andOnSuccess(() ->
                                     getCurrentlyLoggedInUser().andOnSuccess(user -> {
                                         if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
                                             return serviceSuccess();
@@ -154,8 +154,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                             LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
                                             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
                                         }
-                                    });
-                                })
+                                    })
+                                )
                 );
     }
 
@@ -241,15 +241,17 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
         if (financeContact.isPresent() && financeContact.get().getUser() != null) {
             NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
-            Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail();
+            Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail(project);
             return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         }
         return serviceFailure(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
     }
 
-    private Map<String, Object> createGlobalArgsForFinanceContactSpendProfileAvailableEmail() {
+    private Map<String, Object> createGlobalArgsForFinanceContactSpendProfileAvailableEmail(Project project) {
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
+        globalArguments.put("applicationId", project.getApplication().getId());
+        globalArguments.put("competitionName", project.getApplication().getCompetition().getName());
         return globalArguments;
 
     }
@@ -434,9 +436,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private Map<String, List<Map<Long, List<BigDecimal>>>> orderResearchCategoryMap(Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap) {
         Map<String, List<Map<Long, List<BigDecimal>>>> orderedCatGroupMap = new LinkedHashMap<>();
-        RESEARCH_CAT_GROUP_ORDER.forEach(groupName -> {
-            orderedCatGroupMap.put(groupName, catGroupMap.get(groupName));
-        });
+        RESEARCH_CAT_GROUP_ORDER.forEach(groupName ->
+            orderedCatGroupMap.put(groupName, catGroupMap.get(groupName))
+        );
         return orderedCatGroupMap;
     }
 
@@ -446,6 +448,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         try {
             return serviceSuccess(generateSpendProfileCSVData(spendProfileTableResource, projectOrganisationCompositeId));
         } catch (IOException ioe) {
+            LOG.error("exception thrown getting spend profile", ioe);
             return serviceFailure(SPEND_PROFILE_CSV_GENERATION_FAILURE);
         }
     }
@@ -652,16 +655,16 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 byCategory.add(cc.getLabel());
             }
             byCategory.add(String.valueOf(cc.getName()));
-            values.forEach(val -> {
-                byCategory.add(val.toString());
-            });
+            values.forEach(val ->
+                byCategory.add(val.toString())
+            );
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
 
             if (monthsRow.size() > byCategory.size() && monthsRow.contains(EMPTY_CELL)) {
                 monthsRow.remove(EMPTY_CELL);
                 rows.add(monthsRow.stream().toArray(String[]::new));
-            } else if (monthsRow.size() > 0) {
+            } else if (!monthsRow.isEmpty()) {
                 rows.add(monthsRow.stream().toArray(String[]::new));
             }
             monthsRow.clear();

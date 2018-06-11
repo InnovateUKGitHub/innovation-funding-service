@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -101,9 +101,9 @@ public class GrantOfferLetterController {
             ValidationHandler validationHandler,
             Model model,
             UserResource loggedInUser) {
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
-            return grantOfferLetterService.removeSignedGrantOfferLetter(projectId);
-        });
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () ->
+            grantOfferLetterService.removeSignedGrantOfferLetter(projectId)
+        );
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")

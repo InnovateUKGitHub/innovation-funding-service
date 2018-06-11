@@ -12,7 +12,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -77,10 +77,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     @Override
     public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
-        if (fieldName != null && value != null) {
-            if (fieldName.startsWith("cost-")) {
-                return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId);
-            }
+        if (fieldName != null && value != null && fieldName.startsWith("cost-")) {
+            return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId);
         }
         return null;
     }

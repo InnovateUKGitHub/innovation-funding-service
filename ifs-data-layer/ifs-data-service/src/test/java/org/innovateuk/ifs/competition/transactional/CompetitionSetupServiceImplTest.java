@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
-import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
@@ -17,15 +18,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
-import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +30,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
@@ -46,8 +42,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WIT
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
-import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD;
+import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -56,7 +51,9 @@ import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -67,8 +64,6 @@ public class CompetitionSetupServiceImplTest {
 	private CompetitionSetupServiceImpl service;
     @Mock
     private CompetitionRepository competitionRepository;
-    @Mock
-    private AssessmentInviteRepository assessmentInviteRepository;
     @Mock
     private FormInputRepository formInputRepository;
     @Mock
@@ -84,7 +79,7 @@ public class CompetitionSetupServiceImplTest {
 	@Mock
 	private CompetitionFunderService competitionFunderService;
 	@Mock
-	private AssessmentParticipantRepository assessmentParticipantRepository;
+    private InnovationLeadRepository innovationLeadRepository;
 	@Mock
 	private CompetitionSetupTemplateService competitionSetupTemplateService;
 	@Mock
@@ -133,118 +128,106 @@ public class CompetitionSetupServiceImplTest {
     }
 
 	@Test
-	public void updateCompetitionInitialDetailsWhenExistingLeadTechnologistDoesNotExist() {
+	public void updateCompetitionInitialDetailsWhenExistingInnovationLeadDoesNotExist() {
 
 		Long competitionId = 1L;
-		Long existingLeadTechnologistId = null;
-		Long newLeadTechnologistId = 7L;
-		User leadTechnologist = UserBuilder.newUser().withId(newLeadTechnologistId).build();
+		Long newInnovationLeadId = 7L;
+		User innovationLead = newUser().withId(newInnovationLeadId).build();
 
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(1L)
-				.withLeadTechnologist(newLeadTechnologistId)
+				.withLeadTechnologist(newInnovationLeadId)
 				.build();
 		Competition competition = CompetitionBuilder.newCompetition()
 				.withId(competitionId)
-				.withLeadTechnologist(leadTechnologist)
+				.withLeadTechnologist(innovationLead)
 				.build();
 		when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
 		when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
 		when(competitionRepository.save(competition)).thenReturn(competition);
+        when(innovationLeadRepository.existsInnovationLead(competitionId, innovationLead.getId())).thenReturn(false);
 
-		ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, existingLeadTechnologistId);
+		ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, null);
 
 		assertTrue(result.isSuccess());
-		verify(assessmentParticipantRepository, never()).getByCompetitionIdAndUserIdAndRole(competitionId, existingLeadTechnologistId, INNOVATION_LEAD);
-		verify(assessmentParticipantRepository, never()).delete(Mockito.any(AssessmentParticipant.class));
+        verify(innovationLeadRepository).existsInnovationLead(competitionId, innovationLead.getId());
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
 
-		AssessmentParticipant savedCompetitionParticipant = new AssessmentParticipant();
-		savedCompetitionParticipant.setProcess(competition);
-		savedCompetitionParticipant.setUser(leadTechnologist);
-		savedCompetitionParticipant.setRole(INNOVATION_LEAD);
-		savedCompetitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
+		InnovationLead savedInnovationLead = new InnovationLead(competition, innovationLead);
 
 		// Verify that the correct CompetitionParticipant is saved
-		verify(assessmentParticipantRepository).save(savedCompetitionParticipant);
+		verify(innovationLeadRepository).save(savedInnovationLead);
+		verifyNoMoreInteractions(innovationLeadRepository);
 	}
 
 	@Test
-	public void updateCompetitionInitialDetailsWhenExistingLeadTechnologistExists() {
+	public void updateCompetitionInitialDetailsWhenExistingInnovationLeadExists() {
 
 		Long competitionId = 1L;
-		Long existingLeadTechnologistId = 5L;
-		Long newLeadTechnologistId = 7L;
-		User leadTechnologist = UserBuilder.newUser().withId(newLeadTechnologistId).build();
+		Long existingInnovationLeadId = 5L;
+		Long newInnovationLeadId = 7L;
+		User innovationLead = newUser().withId(newInnovationLeadId).build();
 
-		AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
+		InnovationLead competitionParticipant = newInnovationLead().build();
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(competitionId)
-				.withLeadTechnologist(newLeadTechnologistId)
+				.withLeadTechnologist(newInnovationLeadId)
 				.build();
 		Competition competition = CompetitionBuilder.newCompetition()
 				.withId(competitionId)
-				.withLeadTechnologist(leadTechnologist)
+				.withLeadTechnologist(innovationLead)
 				.build();
-		when(assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
-				existingLeadTechnologistId, INNOVATION_LEAD)).thenReturn(competitionParticipant);
+		when(innovationLeadRepository.findInnovationLead(competitionId, existingInnovationLeadId)).thenReturn(competitionParticipant);
 		when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
 		when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
 		when(competitionRepository.save(competition)).thenReturn(competition);
 
-		ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, existingLeadTechnologistId);
+		ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, existingInnovationLeadId);
 
 		assertTrue(result.isSuccess());
-		verify(assessmentParticipantRepository).getByCompetitionIdAndUserIdAndRole(competitionId, existingLeadTechnologistId, INNOVATION_LEAD);
 		// Verify that the correct CompetitionParticipant is deleted
-		verify(assessmentParticipantRepository).delete(competitionParticipant);
+		verify(innovationLeadRepository).deleteInnovationLead(competitionId, existingInnovationLeadId);
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
 
-		AssessmentParticipant savedCompetitionParticipant = new AssessmentParticipant();
-		savedCompetitionParticipant.setProcess(competition);
-		savedCompetitionParticipant.setUser(leadTechnologist);
-		savedCompetitionParticipant.setRole(INNOVATION_LEAD);
-		savedCompetitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
+		InnovationLead savedInnovationLead = new InnovationLead(competition, innovationLead);
 
 		// Verify that the correct CompetitionParticipant is saved
-		verify(assessmentParticipantRepository).save(savedCompetitionParticipant);
+		verify(innovationLeadRepository).save(savedInnovationLead);
 	}
 
 	@Test
-	public void updateCompetitionInitialDetailsWhenNewLeadTechnologistAlreadyExists() {
+	public void updateCompetitionInitialDetailsWhenNewInnovationLeadAlreadyExists() {
 
 		Long competitionId = 1L;
-		Long existingLeadTechnologistId = 5L;
-		Long newLeadTechnologistId = 7L;
+		Long existingInnovationLeadId = 5L;
+		Long newInnovationLeadId = 7L;
 
-		AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(competitionId)
-				.withLeadTechnologist(newLeadTechnologistId)
+				.withLeadTechnologist(newInnovationLeadId)
 				.build();
 		Competition competition = CompetitionBuilder.newCompetition()
 				.withId(competitionId)
-				.withLeadTechnologist(UserBuilder.newUser().withId(newLeadTechnologistId).build())
+				.withLeadTechnologist(newUser().withId(newInnovationLeadId).build())
 				.build();
-		AssessmentParticipant newLeadTechCompetitionParticipant = newAssessmentParticipant().withId(11L).build();
-		when(assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
-				existingLeadTechnologistId, INNOVATION_LEAD)).thenReturn(competitionParticipant);
+		InnovationLead newLeadTechCompetitionParticipant = newInnovationLead().withId(11L).build();
+        when(innovationLeadRepository.existsInnovationLead(competitionId, newInnovationLeadId)).thenReturn(true);
 		when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
 		when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
 		when(competitionRepository.save(competition)).thenReturn(competition);
-		when(assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(1L, newLeadTechnologistId, INNOVATION_LEAD)).thenReturn(newLeadTechCompetitionParticipant);
+		when(innovationLeadRepository.findInnovationLead(competitionId, newInnovationLeadId))
+                .thenReturn(newLeadTechCompetitionParticipant);
 
-		ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, existingLeadTechnologistId);
+		ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionId, competitionResource, existingInnovationLeadId);
 
 		assertTrue(result.isSuccess());
-		verify(assessmentParticipantRepository).getByCompetitionIdAndUserIdAndRole(competitionId, existingLeadTechnologistId, INNOVATION_LEAD);
-		verify(assessmentParticipantRepository).delete(competitionParticipant);
+		verify(innovationLeadRepository).deleteInnovationLead(competitionId, existingInnovationLeadId);
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
-		verify(assessmentParticipantRepository).getByCompetitionIdAndUserIdAndRole(1L, newLeadTechnologistId, INNOVATION_LEAD);
-		verify(assessmentParticipantRepository, never()).save(Mockito.any(AssessmentParticipant.class));
+		verify(innovationLeadRepository).existsInnovationLead(competitionId, newInnovationLeadId);
+		verify(innovationLeadRepository, never()).save(any(InnovationLead.class));
 	}
 
 	@Test
@@ -443,24 +426,20 @@ public class CompetitionSetupServiceImplTest {
         PublicContent publicContent = newPublicContent().build();
 
         when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
-        when(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), EnumSet.allOf
-                (InviteStatus.class))).thenReturn(0);
         when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository,
-                assessmentParticipantRepository, setupStatusRepository, milestoneRepository);
+        InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository,
+                setupStatusRepository, milestoneRepository);
         inOrder.verify(competitionRepository).findOne(competition.getId());
-        inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
-                EnumSet.allOf(InviteStatus.class));
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
         // Test that the competition is saved without the form validators, deleting them
         inOrder.verify(competitionRepository).save(createCompetitionExpectationsWithoutFormValidators(competition));
         inOrder.verify(milestoneRepository).deleteByCompetitionId(competition.getId());
-        inOrder.verify(assessmentParticipantRepository).deleteByCompetitionIdAndRole(competition.getId(), INNOVATION_LEAD);
+        inOrder.verify(innovationLeadRepository).deleteAllInnovationLeads(competition.getId());
         inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(),
                 competition.getId());
         inOrder.verify(competitionRepository).delete(competition);
@@ -476,27 +455,6 @@ public class CompetitionSetupServiceImplTest {
                                 assertTrue(formInput.getFormValidators().isEmpty()));
                     }));
         });
-    }
-
-    @Test
-    public void deleteCompetition_assessmentInvitesExist() throws Exception {
-        Competition competition = newCompetition().build();
-
-        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
-        when(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), EnumSet.allOf
-                (InviteStatus.class))).thenReturn(1);
-
-        ServiceResult<Void> result = service.deleteCompetition(competition.getId());
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED));
-
-        InOrder inOrder = inOrder(competitionRepository, assessmentInviteRepository, publicContentRepository,
-                assessmentParticipantRepository, setupStatusRepository, milestoneRepository);
-        inOrder.verify(competitionRepository).findOne(competition.getId());
-        inOrder.verify(assessmentInviteRepository).countByCompetitionIdAndStatusIn(competition.getId(),
-                EnumSet.allOf(InviteStatus.class));
-        inOrder.verifyNoMoreInteractions();
     }
 
     @Test

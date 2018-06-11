@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
+import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
@@ -133,7 +134,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 andOnSuccess(
                         () -> addUserToOrganisation(newUser, organisationId)).
                 andOnSuccess(
-                        user -> userResource.getRoles().size() == 0 ? addRoleToUser(user, APPLICANT) : serviceSuccess(user)).
+                        user -> userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user)).
                 andOnSuccess(
                         userWithRole -> userWithRole.hasRole(Role.APPLICANT) ?
                                 agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole)).

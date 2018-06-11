@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
@@ -23,7 +23,7 @@ public class ManageAssessmentsViewModel {
     private final int assessmentsStarted;
     private final int assessmentsCompleted;
 
-    public ManageAssessmentsViewModel(CompetitionResource competition, CompetitionInAssessmentKeyStatisticsResource keyStatistics) {
+    public ManageAssessmentsViewModel(CompetitionResource competition, CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatistics) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.inAssessment = competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;

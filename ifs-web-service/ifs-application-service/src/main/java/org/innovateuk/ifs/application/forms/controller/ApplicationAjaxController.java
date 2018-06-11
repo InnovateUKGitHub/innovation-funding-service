@@ -14,7 +14,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
@@ -217,13 +217,13 @@ public class ApplicationAjaxController {
             }
         } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
             errors = this.saveApplicationStartDate(application, fieldName, value);
-        } else if (fieldName.equals("application.resubmission")) {
+        } else if ("application.resubmission".equals(fieldName)) {
             application.setResubmission(Boolean.valueOf(value));
             applicationService.save(application);
-        } else if (fieldName.equals("application.previousApplicationNumber")) {
+        } else if ("application.previousApplicationNumber".equals(fieldName)) {
             application.setPreviousApplicationNumber(value);
             applicationService.save(application);
-        } else if (fieldName.equals("application.previousApplicationTitle")) {
+        } else if ("application.previousApplicationTitle".equals(fieldName)) {
             application.setPreviousApplicationTitle(value);
             applicationService.save(application);
         }

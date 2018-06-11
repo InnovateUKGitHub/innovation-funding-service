@@ -27,8 +27,6 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class AssessmentApplicationProgressController {
 
-    private static final String FORM_ATTR_NAME = "form";
-
     @Autowired
     private ApplicationAssessmentProgressModelPopulator applicationAssessmentProgressModelPopulator;
 

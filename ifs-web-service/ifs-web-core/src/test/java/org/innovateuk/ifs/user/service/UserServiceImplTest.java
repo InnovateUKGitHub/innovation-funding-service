@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;

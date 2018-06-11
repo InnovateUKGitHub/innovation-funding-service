@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.OrganisationSize;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import java.util.List;
 import java.util.function.BiConsumer;

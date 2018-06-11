@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
@@ -155,10 +155,10 @@ public class SetupSectionsPermissionRules {
         try {
             projectStatusResource = statusService.getProjectStatus(projectId);
         } catch (ForbiddenActionException e) {
-            LOG.error("Internal user is not allowed to access this project " + projectId);
+            LOG.error("Internal user is not allowed to access this project " + projectId, e);
             return false;
         } catch (ObjectNotFoundException e) {
-            LOG.error("Status for project " + projectId + " cannot be found.");
+            LOG.error("Status for project " + projectId + " cannot be found.", e);
             return false;
         }
 

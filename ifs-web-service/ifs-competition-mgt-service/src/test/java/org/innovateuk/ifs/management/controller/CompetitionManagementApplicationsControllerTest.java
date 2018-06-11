@@ -5,7 +5,9 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.project.ProjectService;
@@ -30,6 +32,7 @@ import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -72,6 +75,9 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private CompetitionService competitionService;
+
     @InjectMocks
     @Spy
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
@@ -91,6 +97,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .withIneligibleApplications(5)
                 .withAssesorsInvited(30)
                 .build();
+
+        when(competitionService.getById(any())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
     }
 
     @Test
@@ -546,6 +554,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         int pageIndex = 0;
         int pageSize = 20;
         String sortField = "id";
+        String filter = "ALL";
 
         String competitionName = "Competition One";
         List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
@@ -553,17 +562,16 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
                 competitionName, true, unsuccessfulApplications, unsuccessfulApplications.size(), new PaginationViewModel(applicationPageResource, ""));
 
-        when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), any(UserResource.class), any()))
+        when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), eq(filter), any(UserResource.class), any()))
                 .thenReturn(viewModel);
 
-        mockMvc.perform(get("/competition/{competitionId}/applications/previous?page={pageIndex}&size={pageSize}&sort={sortField}",
-                competitionId, pageIndex, pageSize, sortField))
+        mockMvc.perform(get("/competition/{competitionId}/applications/previous?page={pageIndex}&size={pageSize}&sort={sortField}&filter={filter}",
+                competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/previous-applications"))
                 .andExpect(model().attribute("model", viewModel))
                 .andReturn();
     }
-
 
     @Test
     public void markApplicationAsSuccessful() throws Exception {
@@ -587,7 +595,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .andExpect(view().name("redirect:/competition/{competitionId}/applications/previous"))
                 .andReturn();
 
-        verify(unsuccessfulApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), any(UserResource.class), any());
+        verify(unsuccessfulApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), anyString(), any(UserResource.class), any());
         verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class));
         verify(projectService).createProjectFromApplicationId(anyLong());
         verifyNoMoreInteractions(applicationFundingDecisionService, projectService);

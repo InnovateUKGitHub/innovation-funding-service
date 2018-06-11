@@ -2,44 +2,42 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
     <!-- ===========================Form: finance =========================== -->
-    <th:block th:fragment="finance">
-        <th:block th:fragment="finance(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-            <th:block th:unless="${model.readonly}">
-                <div th:class="form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-group-error'">
-                    <label class="form-label form-label-bold" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|">
-                        <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'"></div>
-                        <span class="form-hint" th:text="'The maximum funding level is ' + ${model.maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId})" />
-                    </label>
-                    <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                    <input type="number"
-                           min="0"
-                           required="required"
-                           class="form-control width-small"
-                           th:max="${model.maximumGrantClaimPercentage}"
-                           th:readonly="${model.readonly}"
-                           th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-control-error'"
-                           th:id="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
-                           th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
-                           th:value="${model.organisationGrantClaimPercentage}"
-                           placeholder="0"
-                           th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
-                                    data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
-                            />%
-                </div>
-            </th:block>
-            <th:block th:if="${model.readonly}">
-                <dl class="readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
-                    <dt th:text="${question.name}">Your Funding level</dt>
-                    <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
-                </dl>
-            </th:block>
+    <th:block th:fragment="finance(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
+        <th:block th:unless="${model.readonly}">
+            <div th:class="form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-group-error'">
+                <label class="form-label form-label-bold" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|">
+                    <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'"></div>
+                    <span class="form-hint" th:text="'The maximum funding level is ' + ${model.maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId})" />
+                </label>
+                <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+                <input type="number"
+                       min="0"
+                       required="required"
+                       class="form-control width-small"
+                       th:max="${model.maximumGrantClaimPercentage}"
+                       th:readonly="${model.readonly}"
+                       th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-control-error'"
+                       th:id="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
+                       th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
+                       th:value="${model.organisationGrantClaimPercentage}"
+                       placeholder="0"
+                       th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
+                                data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
+                        />%
+            </div>
+        </th:block>
+        <th:block th:if="${model.readonly}">
+            <dl class="readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
+                <dt th:text="${question.name}">Your Funding level</dt>
+                <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
+            </dl>
         </th:block>
     </th:block>
 
     <!-- ===========================Form: organisation_size =========================== -->
-    <th:block th:fragment="organisation_size(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <th:block th:fragment="organisation_size(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
             <h2 class="heading-small no-margin">Organisation size determines funding</h2>
             <p>The organisation size is used to calculate your funding level in the application.</p>
@@ -83,7 +81,7 @@
     </th:block>
 
     <!-- =========================== Form: Organisation Turnover =========================== -->
-    <th:block th:fragment="organisation_turnover(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <th:block th:fragment="organisation_turnover(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
@@ -97,6 +95,8 @@
                        th:id="|formInput[${formInput.id}]|"
                        th:name="'formInput['+${formInput.id}+']'"
                        th:value="*{formInput[__${formInput.id}__]}"
+                       pattern="[0-9]"
+                       data-prevent-input-regex="[^0-9]"
                        required="required"
                        min="0"
                        type="number" />
@@ -112,7 +112,7 @@
     </th:block>
 
     <!-- =========================== Form: Staff Count =========================== -->
-    <th:block th:fragment="staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+    <th:block th:fragment="staff_count(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
@@ -126,6 +126,8 @@
                        type="number"
                        th:id="|formInput[${formInput.id}]|"
                        th:name="'formInput['+${formInput.id}+']'"
+                       pattern="[0-9]"
+                       data-prevent-input-regex="[^0-9]"
                        min="0"
                        max="2147483647"
                        th:value="*{formInput[__${formInput.id}__]}"
@@ -142,7 +144,7 @@
     </th:block>
 
     <!-- =========================== Form: Financial Year End =========================== -->
-    <div th:fragment="financial_year_end(model)" th:with="formInput=${model.formInput}, question=${model.question}"
+    <div th:fragment="financial_year_end(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}"
          class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
         <fieldset th:with="value=(*{formInput[__${formInput.id}__]})">
             <legend th:id="|formInput[${formInput.id}]|">
@@ -195,7 +197,7 @@
     </div>
 
     <!-- =========================== Form: Financial Staff Count =========================== -->
-    <div th:fragment="financial_staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}"
+    <div th:fragment="financial_staff_count(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}"
          class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
         <th:block th:unless="${model.readonly}">
             <label class="form-label form-label-bold" th:for="|formInput[${formInput.id}]|" th:id="'form-label-'+${formInput.id}">
@@ -224,7 +226,7 @@
     </div>
 
     <!-- ===========================Form: your_finance =========================== -->
-    <th:block th:fragment="your_finance(model)">
+    <th:block th:fragment="your_finance (model, internalView)">
         <h2 class="heading-medium no-margin" th:text="${#strings.replace(model.question.name,'{organisationName}',
         model.currentApplicant.organisation.name)}" />
         <p ifs:utext="${model.question.description}" />
@@ -237,10 +239,10 @@
             <div class="collapsible-content">
                 <th:block th:each="costViewModel : ${projectCostSection.costViews}">
                     <th:block th:if="${costViewModel.formInput.type.displayableFinanceType}">
-                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
+                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel}, ${internalView})" ></th:block>
                     </th:block>
                     <th:block th:if="${costViewModel.formInput.type.displayableQuestionType}">
-                        <th:block th:insert="question-type/types :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
+                        <th:block th:insert="question-type/types :: ${costViewModel.formInput.type.nameLower} (${costViewModel}, ${internalView})" ></th:block>
                     </th:block>
                 </th:block>
             </div>
@@ -263,7 +265,7 @@
     </th:block>
 
     <!-- ===========================View: assessor_detailed_finance =========================== -->
-    <th:block th:fragment="assessment_detailed_finance(model)">
+    <th:block th:fragment="assessment_detailed_finance(model, internalView)">
         <h2 class="heading-medium">Detailed finances</h2>
 
         <section class="collapsible" th:each="projectCostSection : ${detailedCostings.defaultProjectCostSections}">
@@ -274,7 +276,7 @@
             <div class="collapsible-content">
                 <th:block th:each="costViewModel : ${projectCostSection.costViews}">
                     <th:block th:if="${costViewModel.formInput.type.displayableFinanceType}">
-                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
+                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (costViewModel=${costViewModel}, internalView=${internalView})" ></th:block>
                     </th:block>
                 </th:block>
             </div>
@@ -297,7 +299,7 @@
     </th:block>
 
     <!-- ===========================Form: labour =========================== -->
-    <th:block th:fragment="labour (costViewModel)">
+    <th:block th:fragment="labour (costViewModel, internalView)">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: labour_finances" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -407,7 +409,9 @@
 
     <th:block th:fragment="labour_row">
         <th:block  th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
+                class="form-group-row-validated"
+                th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossEmployeeCost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-role]|">
                         <span class="visuallyhidden">Role within project</span>
@@ -487,12 +491,12 @@
         </th:block>
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
-    <th:block th:fragment="overheads (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
+    <th:block th:fragment="overheads (costViewModel, internalView)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p th:if="${viewmode == 'edit'}" ifs:utext="${question.description}" />
-        <th:block th:insert="finance/finance :: overheads_finances" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
+        <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
     </th:block>
 
-    <th:block th:fragment="overheads_finances">
+    <th:block th:fragment="overheads_finances (internalView)">
         <th:block th:if="${viewmode == 'readonly'}">
             <th:block th:switch="${overheadRate.name()}">
                 <th:block th:case="'NONE'">
@@ -630,14 +634,12 @@
             </div>
 
             <div class="form-group" id="overhead-none">
-                <h3 class="heading-medium">No overhead costs</h3>
-                <p>You are not currently applying for overhead costs</p>
+                <p th:unless="${internalView}">You are not currently applying for overhead costs</p>
                 <input type="hidden" value="£0" data-calculation-rawvalue="0" th:id="${'section-total-'+subSection.id+'-labour-cost-none'}"/>
             </div>
 
             <div class="form-group" id="overhead-default-percentage">
-                <h3 class="heading-medium">20% of labour costs</h3>
-                <p>There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
+                <p th:unless="${internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
                 <h4 class="alignright section-total-summary">
                     Total overhead costs
                     <span class="heading-small"
@@ -692,63 +694,108 @@
                 </div>
             </div>
             <div class="form-group" th:if="${overheadCosts?.useTotalOption}" id="overhead-total">
-                <h3 class="heading-medium">Calculate overheads</h3>
-                <p>
-                    If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below.
-                    The model shows you which types of indirect costs associated with your project you may claim.
-                    For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review.
-                    This will assess the appropriateness of your claim if your grant application is successful.
-                </p>
-                <div class="form-group download">
-                    <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
-                    <ul>
-                        <li>Download as an Excel document <a href="/files/overheads.xlsx">overhead calculation spreadsheet.xlsx (16KB)</a></li>
-                        <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
-                    </ul>
-                </div>
-                <div class="upload-section extra-margin">
-                    <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
-                    <div class="form-group">
-                        <input type="hidden"
-                               name="fileoverheadid"
-                               th:value="${overheadCosts?.id}"/>
-                        <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'readonly' : 'edit') : 'edit',
-                                           downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
-                                           filename=${overheadCosts?.calculationFile?.get()?.name},
-                                           inputField='overheadfile',
-                                           validationField=${'formInput[cost-'+ overheadCosts?.id +'-calculationFile]'},
-                                           mayRemove=${viewmode != 'readonly'},
-                                           removeName='overheadfiledelete',
-                                           saveName='overheadfilesubmit'">
-                            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-                        </th:block>
+
+                <!--/* Applicants' view of Overheads */-->
+                <th:block th:unless="${internalView}">
+                    <h3 class="heading-medium">Calculate overheads</h3>
+                    <p>
+                        If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below.
+                        The model shows you which types of indirect costs associated with your project you may claim.
+                        For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review.
+                        This will assess the appropriateness of your claim if your grant application is successful.
+                    </p>
+                    <div class="form-group download">
+                        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+                        <ul>
+                            <li>Download as an Excel document <a href="/files/overheads.xlsx">overhead calculation spreadsheet.xlsx (16KB)</a></li>
+                            <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
+                        </ul>
                     </div>
-                </div>
-                <div class="form-group alignright inline">
-                    <label th:for="${'cost-overheads-'+overheadCosts?.id+'-calculate'}">
-                        <span>Enter the total cost of overheads as calculated in the spreadsheet &pound;</span>
-                    </label>
-                    <input type="number"
-                           th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"
-                           class="form-control form-control-1-4 alignright"
-                           th:id="${'cost-overheads-'+overheadCosts?.id+'-calculate'}"
-                           th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? ${costCategory?.total} : '0'"
-                           min="0"
-                           max="999999999"
-                           step="1"/>
-                    <input type="hidden"
-                           readonly="readonly"
-                           th:id="${'section-total-'+subSection.id+'-calculate-formatted'}"
-                           th:attr="data-calculation-fields='#'+${'cost-overheads-'+overheadCosts?.id+'-calculate'}+',1',data-calculation-rawvalue=${overheadCosts?.total}"
-                           data-calculation-operations="*"
-                           th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? '£' + ${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')} : '£0'"/>
-                </div>
+                    <div class="upload-section extra-margin">
+                        <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+                        <div class="form-group">
+                            <input type="hidden"
+                                   name="fileoverheadid"
+                                   th:value="${overheadCosts?.id}"/>
+                            <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'readonly' : 'edit') : 'edit',
+                                               downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
+                                               filename=${overheadCosts?.calculationFile?.get()?.name},
+                                               inputField='overheadfile',
+                                               validationField=${'formInput[cost-'+ overheadCosts?.id +'-calculationFile]'},
+                                               mayRemove=${viewmode != 'readonly'},
+                                               removeName='overheadfiledelete',
+                                               saveName='overheadfilesubmit'">
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${inputField},${mayRemove},${removeName},${saveName})" />
+                            </th:block>
+                        </div>
+                    </div>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'cost-overheads-'+overheadCosts?.id+'-calculate'}">
+                            <span>Enter the total cost of overheads as calculated in the spreadsheet &pound;</span>
+                        </label>
+                        <input type="number"
+                               th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               th:id="${'cost-overheads-'+overheadCosts?.id+'-calculate'}"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? ${costCategory?.total} : '0'"
+                               min="0"
+                               max="999999999"
+                               step="1"/>
+                        <input type="hidden"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id+'-calculate-formatted'}"
+                               th:attr="data-calculation-fields='#'+${'cost-overheads-'+overheadCosts?.id+'-calculate'}+',1',data-calculation-rawvalue=${overheadCosts?.total}"
+                               data-calculation-operations="*"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? '£' + ${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')} : '£0'"/>
+                    </div>
+                </th:block>
+
+                <!--/* Internal users' view of Overheads */-->
+                <th:block th:if="${internalView}">
+                    <th:block th:if="${overheadCosts?.calculationFile == null || !overheadCosts.calculationFile.present}">
+                        <p>The applicant has not uploaded a file.</p>
+                    </th:block>
+                    <th:block th:if="${overheadCosts?.calculationFile?.present}">
+                        <p>The applicant has uploaded a completed overhead costs spreadsheet.</p>
+                        <div class="upload-section extra-margin form-group download">
+                            <th:block th:with="uploadViewmode='readonly',
+                                           downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts.id}},
+                                           filename=${overheadCosts.calculationFile.get()?.name},
+                                           inputField='overheadfile',
+                                           validationField=${'formInput[cost-'+ overheadCosts.id +'-calculationFile]'},
+                                           mayRemove=false,
+                                           removeName='',
+                                           saveName=''">
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                            </th:block>
+                        </div>
+                    </th:block>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'cost-overheads-'+overheadCosts?.id+'-calculate'}">
+                            <span>Total cost of overheads &pound;</span>
+                        </label>
+                        <input type="number"
+                               th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               th:id="${'cost-overheads-'+overheadCosts?.id+'-calculate'}"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? ${costCategory?.total} : '0'"
+                               min="0"
+                               max="999999999"
+                               step="1"/>
+                        <input type="hidden"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id+'-calculate-formatted'}"
+                               th:attr="data-calculation-fields='#'+${'cost-overheads-'+overheadCosts?.id+'-calculate'}+',1',data-calculation-rawvalue=${overheadCosts?.total}"
+                               data-calculation-operations="*"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? '£' + ${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')} : '£0'"/>
+                    </div>
+                </th:block>
             </div>
         </th:block>
     </th:block>
 
     <!-- ===========================Form: materials =========================== -->
-    <th:block th:fragment="materials (costViewModel)" th:with="question=${costViewModel.question}">
+    <th:block th:fragment="materials (costViewModel, internalView)" th:with="question=${costViewModel.question}">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${question.description}">description</p>
         <th:block th:insert="finance/finance :: materials_finances" th:with="costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -829,7 +876,9 @@
 
     <th:block th:fragment="materials_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
+                class="form-group-row-validated"
+                th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-item]|">
                         <span class="visuallyhidden">Item</span>
@@ -891,8 +940,7 @@
                            th:id="${'cost-materials-'+costIdentifier+'-materialTotal'}"
                            data-calculation-operations="*"
                            readonly="readonly"
-                           th:value="'£'+${#numbers.formatInteger(cost.total, 0,'DEFAULT')}"
-                    />
+                           th:value="'£'+${#numbers.formatInteger(cost.total, 0,'DEFAULT')}" />
                 </td>
                 <td class="alignright buttoncolumn remove">
                     <button th:unless="${cost.id == null}"
@@ -910,7 +958,7 @@
 
     <!-- ===========================Form: capital usage =========================== -->
 
-    <th:block th:fragment="capital_usage (costViewModel)" >
+    <th:block th:fragment="capital_usage (costViewModel, internalView)" >
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: capital_usage_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -1129,7 +1177,7 @@
     </th:block>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
-    <th:block th:fragment="subcontracting (costViewModel)">
+    <th:block th:fragment="subcontracting (costViewModel, internalView)">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: subcontracting_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -1264,7 +1312,7 @@
 
     <!-- ===========================Form: travel cost =========================== -->
 
-    <th:block th:fragment="travel (costViewModel)">
+    <th:block th:fragment="travel (costViewModel, internalView)">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: travel_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -1346,7 +1394,9 @@
 
     <th:block th:fragment="travel_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
+                class="form-group-row-validated"
+                th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-item]|">
                         <span class="visuallyhidden">Purpose of journey or description of subsistence cost</span>
@@ -1427,7 +1477,7 @@
     </th:block>
 
     <!-- ===========================Form: other cost =========================== -->
-    <th:block th:fragment="other_costs (costViewModel)">
+    <th:block th:fragment="other_costs (costViewModel, internalView)">
         <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}" />
         <th:block th:insert="finance/finance :: other_costs_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
@@ -1499,7 +1549,9 @@
     </th:block>
 
     <th:block th:fragment="other_costs_row" th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
+            class="form-group-row-validated"
+            th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')})) ? 'form-group-error'">
             <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'form-group-error'">
                 <label th:for="|formInput[cost-${costIdentifier}-description]|">
                     <span class="visuallyhidden">Description and justification of the cost</span>

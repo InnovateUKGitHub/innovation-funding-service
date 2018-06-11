@@ -19,10 +19,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
-import org.innovateuk.ifs.util.RedirectUtils;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -121,14 +120,14 @@ public class ProjectDetailsController {
 
         projectRestService.withdrawProject(projectId)
                 .andOnSuccess(
-                        () -> { projectRestService.getProjectById(projectId)
+                        () ->  projectRestService.getProjectById(projectId)
                                 .andOnSuccess(
                                         project -> applicationRestService.withdrawApplication(project.getApplication())
                                             .andOnFailure(
                                                     () -> LOG.error("Application withdrawal failed")
                                             )
-                                );
-                        });
+                                )
+                        );
 
         return redirectToCompetitionManagementService(request,
                 "competition/" + competitionId + "/applications/previous");

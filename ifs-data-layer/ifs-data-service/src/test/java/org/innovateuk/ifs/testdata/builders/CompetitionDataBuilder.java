@@ -13,7 +13,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

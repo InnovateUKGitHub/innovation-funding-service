@@ -19,7 +19,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.util.ValidationUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;

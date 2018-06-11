@@ -45,6 +45,7 @@ Initial details: server-side validations
     And the user should see an error    Please enter a valid date.
     And the user should see an error    Please select an Innovation Lead.
     And the user should see an error    Please select a Portfolio Manager.
+    And the user should see an error    Please select a state aid option.
 
 Initial details: client-side validations
     [Documentation]  INFUND-2982  INFUND-3888
@@ -55,7 +56,7 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
+    When the user selects the option from the drop-down menu    Advanced therapies    name=innovationAreaCategoryIds[0]
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
@@ -63,6 +64,8 @@ Initial details: client-side validations
     #Then the user should not see the error any more    Please enter an opening month.
     When the user enters text to a text field    id=openingDateYear  ${nextYear}
     #Then the user should not see the error any more    Please enter an opening year.
+    When the user clicks the button twice              css=label[for="stateAid2"]
+    Then the user should not see the error any more    Please select a state aid option.
     When the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     Then the user should not see the error any more    Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id=executiveUserId
@@ -427,7 +430,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
+    And the user selects the option from the drop-down menu    Advanced therapies    name=innovationAreaCategoryIds[0]
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextYear}

@@ -103,7 +103,7 @@ public class CookieUtil {
             try {
                 return decodeCookieValue(cookie.get().getValue());
             } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException ignore) {
-                LOG.error("Failing cookie (" + cookieName + "):" + ignore.getMessage());
+                LOG.error("Failing cookie (" + cookieName + "):" + ignore.getMessage(), ignore);
             }
         }
         return "";
@@ -120,12 +120,13 @@ public class CookieUtil {
     public <T> Optional<T> getCookieAs(HttpServletRequest request, String cookieName, TypeReference<T> cookieType) {
         String jsonValue = getCookieValue(request, cookieName);
 
-        if (jsonValue != null && !"".equals(jsonValue)) {
+        if (StringUtils.hasText(jsonValue)) {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 return Optional.of(mapper.readValue(jsonValue, cookieType));
-            } catch (IOException e) {
+            } catch (IOException ignored) {
                 //ignored
+                LOG.trace(ignored);
             }
         }
         return Optional.empty();
@@ -138,8 +139,9 @@ public class CookieUtil {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 return mapper.readValue(jsonValue, cookieType);
-            } catch (IOException e) {
+            } catch (IOException ignored) {
                 //ignored
+                LOG.trace(ignored);
             }
         }
         return new ArrayList<>();

@@ -15,7 +15,7 @@ import java.time.temporal.TemporalAccessor;
 import static java.time.format.ResolverStyle.STRICT;
 import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
 import static java.time.temporal.ChronoField.YEAR;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 
 /**
  * This class validates the FormInputResponse, it checks that there is date representation present and that it is in the past
@@ -44,6 +44,7 @@ public class PastMMYYYYValidator extends BaseValidator {
                 }
             }
             catch (DateTimeException e) {
+                LOG.trace("invalid date time", e);
                 rejectValue(errors, "value", "validation.standard.mm.yyyy.format");
             }
         }

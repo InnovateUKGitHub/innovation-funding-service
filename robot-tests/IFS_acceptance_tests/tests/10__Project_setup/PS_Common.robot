@@ -11,7 +11,8 @@ ${Kazio_Name}     Kazio
 ${Kazio_Id}       ${organisation_ids["${Kazio_Name}"]}
 ${Cogilith_Name}  Cogilith
 ${Cogilith_Id}    ${organisation_ids["${Cogilith_Name}"]}
-${PS_GOL_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
+${PS_GOL_COMPETITION_NAME}       Rolling stock future developments
+${PS_GOL_Competition_Id}         ${competition_ids["${PS_GOL_COMPETITION_NAME}"]}
 ${PS_GOL_APPLICATION_TITLE}      London underground - enhancements to existing stock and logistics
 ${PS_GOL_APPLICATION_NO}         ${application_ids["${PS_GOL_APPLICATION_TITLE}"]}
 ${PS_GOL_APPLICATION_NUMBER}     ${PS_GOL_APPLICATION_NO}
@@ -24,6 +25,16 @@ ${PS_GOL_APPLICATION_PM_EMAIL}                  ${test_mailbox_one}+amy@gmail.co
 ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}     ${test_mailbox_one}+marian@gmail.com
 ${PS_GOL_APPLICATION_PARTNER_EMAIL}             ${test_mailbox_one}+karen@gmail.com
 ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.com
+
+
+${Dreambit_Name}    Dreambit
+${Dreambit_Id}      ${organisation_ids["${Dreambit_Name}"]}
+${Queries_Competition_Name}    Rolling stock future developments
+${Queries_Competition_Id}      ${competition_ids["${Queries_Competition_Name}"]}
+${Queries_Application_Title}   High-speed rail and its effects on soil compaction
+${Queries_Application_No}      ${application_ids["${Queries_Application_Title}"]}
+${Queries_Application_Project}  ${project_ids["${Queries_Application_Title}"]}
+
 
 #Project: High-speed rail and its effects on air quality
 # MD = Mandatory Documents
@@ -76,8 +87,8 @@ ${A_B_Cad_Services_Name}  A B Cad Services
 ${A_B_Cad_Services_Id}    ${organisation_ids["${A_B_Cad_Services_Name}"]}
 ${Armstrong_Butler_Name}  Armstrong & Butler Ltd
 ${Armstrong_Butler_Id}    ${organisation_ids["${Armstrong_Butler_Name}"]}
-${PS_BD_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_BD_Competition_Name}       Rolling stock future developments
+${PS_BD_Competition_Id}         ${competition_ids["${PS_BD_Competition_Name}"]}
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_PROJECT}    ${project_ids["${PS_BD_APPLICATION_TITLE}"]}
@@ -101,8 +112,8 @@ ${Jetpulse_Id}    42
 ${Jetpulse_Name}  Jetpulse
 ${Wikivu_Id}      43
 ${Wikivu_Name}    Wikivu
-${PS_EF_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_EF_Competition_Name}       Rolling stock future developments
+${PS_EF_Competition_Id}         ${competition_ids["${PS_EF_Competition_Name}"]}
 ${PS_EF_APPLICATION_TITLE}      New materials for lighter stock
 ${PS_EF_APPLICATION_NO}         ${application_ids["${PS_EF_APPLICATION_TITLE}"]}
 ${PS_EF_APPLICATION_NUMBER}     ${PS_EF_APPLICATION_NO}
@@ -116,8 +127,8 @@ ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
 #Project: Magic material
-${PROJECT_SETUP_COMPETITION}          ${competition_ids["New designs for a circular economy"]}
 ${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
+${PROJECT_SETUP_COMPETITION}          ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
 ${PROJECT_SETUP_APPLICATION_1_TITLE}  Magic material
 ${PROJECT_SETUP_APPLICATION_1}        ${application_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
 ${PROJECT_SETUP_APPLICATION_1_NUMBER}    ${PROJECT_SETUP_APPLICATION_1}

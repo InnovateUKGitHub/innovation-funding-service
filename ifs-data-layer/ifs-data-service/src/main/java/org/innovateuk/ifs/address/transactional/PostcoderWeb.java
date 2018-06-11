@@ -29,25 +29,25 @@ public class PostcoderWeb implements AddressLookupService {
     private static final Log LOG = LogFactory.getLog(PostcoderWeb.class);
 
     @Value("${ifs.data.postcode-lookup.url}")
-    private final String POSTCODE_LOOKUP_URL = null;
+    private String postcodeLookupUrl = null;
 
     @Value("${ifs.data.postcode-lookup.key}")
-    private final String POSTCODE_LOOKUP_KEY = null;
+    private String postcodeLookupKey = null;
 
     @Value("${ifs.data.postcode-lookup.lines}")
-    private final String POSTCODE_LOOKUP_LINES = "3";
+    private String postcodeLookupLines = "3";
 
     @Value("${ifs.data.postcode-lookup.format}")
-    private final String POSTCODE_LOOKUP_FORMAT = "json";
+    private String postcodeLookupFormat = "json";
 
     @Value("${ifs.data.postcode-lookup.level}")
-    private final String POSTCODE_LOOKUP_LEVEL = "address";
+    private String postcodeLookupLevel = "address";
 
     @Value("${ifs.data.postcode-lookup.validation}")
-    private final String POSTCODE_LOOKUP_VALIDATION = "validationpostcode";
+    private String postcodeLookupValidation = "validationpostcode";
 
     @Value("${ifs.data.postcode-lookup.country}")
-    private final String POSTCODE_LOOKUP_COUNTRY = "uk";
+    private String postcodeLookupCountry = "uk";
 
     private PostcodeWebMapper mapper = new PostcodeWebMapper();
 
@@ -55,7 +55,7 @@ public class PostcoderWeb implements AddressLookupService {
     public ServiceResult<List<AddressResource>> doLookup(String lookup) {
         if(StringUtils.isEmpty(lookup)) {
             return ServiceResult.serviceSuccess(new ArrayList<>());
-        } else if(StringUtils.isEmpty(POSTCODE_LOOKUP_URL) || StringUtils.isEmpty(POSTCODE_LOOKUP_KEY)) {
+        } else if(StringUtils.isEmpty(postcodeLookupUrl) || StringUtils.isEmpty(postcodeLookupKey)) {
             return ServiceResult.serviceSuccess(exampleAddresses());
         } else {
             return doAPILookup(lookup);
@@ -66,7 +66,7 @@ public class PostcoderWeb implements AddressLookupService {
     public ServiceResult<Boolean> validatePostcode(String postcode) {
         if(StringUtils.isEmpty(postcode)) {
             return ServiceResult.serviceSuccess(true);
-        } else if(StringUtils.isEmpty(POSTCODE_LOOKUP_URL) || StringUtils.isEmpty(POSTCODE_LOOKUP_KEY)) {
+        } else if(StringUtils.isEmpty(postcodeLookupUrl) || StringUtils.isEmpty(postcodeLookupKey)) {
             return ServiceResult.serviceSuccess(true);
         } else {
             return doAPIPostcodeVerification(postcode);
@@ -81,7 +81,12 @@ public class PostcoderWeb implements AddressLookupService {
             if(responseEntity!=null && responseEntity.getStatusCode().is2xxSuccessful()) {
                 return ServiceResult.serviceSuccess(mapper.toResources(responseEntity.getBody()));
             } else {
-                String failure = responseEntity.toString();
+                String failure;
+                if(responseEntity != null) {
+                    failure = responseEntity.toString();
+                } else {
+                    failure = null;
+                }
                 LOG.error(failure);
                 return ServiceResult.serviceFailure(new Error(failure, HttpStatus.INTERNAL_SERVER_ERROR));
             }
@@ -103,7 +108,12 @@ public class PostcoderWeb implements AddressLookupService {
             if(responseEntity!=null && responseEntity.getStatusCode().is2xxSuccessful()) {
                 return ServiceResult.serviceSuccess(responseEntity.getBody());
             } else {
-                String failure = responseEntity.toString();
+                String failure;
+                if(responseEntity != null) {
+                    failure = responseEntity.toString();
+                } else {
+                    failure = null;
+                }
                 LOG.error(failure);
                 return ServiceResult.serviceFailure(new Error(failure, HttpStatus.INTERNAL_SERVER_ERROR));
             }
@@ -117,15 +127,15 @@ public class PostcoderWeb implements AddressLookupService {
     }
 
     private URI getLookupURL(String lookup) throws URISyntaxException {
-        URIBuilder uriBuilder = new URIBuilder(POSTCODE_LOOKUP_URL);
-        uriBuilder.setPath(uriBuilder.getPath() + "/" + POSTCODE_LOOKUP_KEY + "/" + POSTCODE_LOOKUP_LEVEL + "/" + POSTCODE_LOOKUP_COUNTRY + "/" + lookup);
-        uriBuilder.addParameter("format", POSTCODE_LOOKUP_FORMAT);
-        uriBuilder.addParameter("lines", POSTCODE_LOOKUP_LINES);
+        URIBuilder uriBuilder = new URIBuilder(postcodeLookupUrl);
+        uriBuilder.setPath(uriBuilder.getPath() + "/" + postcodeLookupKey + "/" + postcodeLookupLevel + "/" + postcodeLookupCountry + "/" + lookup);
+        uriBuilder.addParameter("format", postcodeLookupFormat);
+        uriBuilder.addParameter("lines", postcodeLookupLines);
         return uriBuilder.build();
     }
 
     private URI getPostcodeVerificationURL(String postcode) throws URISyntaxException {
-        URIBuilder uriBuilder = new URIBuilder(POSTCODE_LOOKUP_URL + POSTCODE_LOOKUP_VALIDATION + "/" + postcode);
+        URIBuilder uriBuilder = new URIBuilder(postcodeLookupUrl + postcodeLookupValidation + "/" + postcode);
         return uriBuilder.build();
     }
 

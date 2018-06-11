@@ -163,7 +163,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
 
-        assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, ""), () -> {
+        assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, "", "ALL"), () -> {
             verify(competitionRules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
             verify(competitionRules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(competitionRules);

@@ -2,9 +2,9 @@ def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: "../flyway.gradle"
-apply plugin: 'org.asciidoctor.convert'
 
 apply from: "db-reset.gradle"
 apply from: "db-baseline.gradle"
@@ -52,7 +52,6 @@ bootRun {
 }
 
 ext {
-    snippetsDir = file('build/generated-snippets')
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
 }
 
@@ -60,18 +59,26 @@ ext {
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
     inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-file/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-alerts/build/classes")
     inputs.file("$rootProject.projectDir/ifs-sil-resources/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-error-util/build/classes")
 
     dependsOn ":ifs-data-layer:data-service-commons:build"
     dependsOn ":ifs-data-layer:data-service-file:build"
+    dependsOn ":ifs-data-layer:data-service-alerts:build"
     dependsOn ":ifs-sil-resources:build"
+    dependsOn ":ifs-error-util:build"
+
 }
 
 
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
     compile project(":ifs-data-layer:data-service-file")
+    compile project(":ifs-data-layer:data-service-alerts")
     compile project(":ifs-sil-resources")
+    compile project(":ifs-error-util")
+
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.security:spring-security-crypto"
@@ -84,6 +91,7 @@ dependencies {
     compile "org.springframework.statemachine:spring-statemachine-core:1.1.0.RELEASE"
     compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.1.0.RELEASE"
     compile 'org.apache.commons:commons-lang3:3.6'
+    compile 'org.apache.commons:commons-text:1.3'
     compile 'commons-codec:commons-codec:1.10'
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
@@ -114,7 +122,8 @@ dependencies {
 }
 
 test {
-    outputs.dir snippetsDir
+    finalizedBy asciidoctor
+
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
@@ -127,41 +136,15 @@ test {
         systemProperty 'pact.rootDir', project.getProperty('pactDir')
     }
 
-    finalizedBy asciidoctor
 
     if (targetBuild == 'docker') {
         dependsOn ":docker:ifs-mysql:ifs-database:initDB"
     }
 }
 
-asciidoctor {
-    attributes 'snippets': snippetsDir
-    backends 'html5'
-    inputs.dir snippetsDir
-    outputs.dir file("static/docs")
-
-    doLast {
-        copy {
-            from "build/asciidoc/html5"
-            into 'static/docs'
-        }
-    }
-}
-
-task asciidoctorOnly(type: Test) {
-    beforeTest { desc ->
-        println "Executing test ${desc.className}.${desc.name}"
-    }
-    useJUnit {
-        includeCategories 'org.innovateuk.ifs.ControllerTest'
-    }
-    finalizedBy asciidoctor
-}
 
 task syncShib(type:Exec) {
     commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
 flywayMigrate.dependsOn processResources
-flywayClean.dependsOn processResources
-

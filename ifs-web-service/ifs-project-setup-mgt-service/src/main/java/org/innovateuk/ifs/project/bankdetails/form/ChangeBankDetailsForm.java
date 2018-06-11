@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.bankdetails.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.form.AddressForm;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.form.AddressForm;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
@@ -20,7 +20,8 @@ public class ChangeBankDetailsForm {
     })
     private String registrationNumber;
 
-    @NotEmpty(message = "{validation.standard.organisationname.required}")
+    @NotBlank(message = "{validation.standard.organisationname.required}")
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String organisationName;
 
     @Pattern(regexp = "\\d{6}", message = "{validation.standard.sortcode.format}")

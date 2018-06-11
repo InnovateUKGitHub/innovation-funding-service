@@ -4,7 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -53,7 +53,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
 
     @Override
     public void updateFinancePosition(Long userId, Long projectId, String fieldName, String value, Long competitionId) {
-
+        // do nothing.
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
 
                         List<FinanceFormField> fieldGroup = groupedEntry.getValue();
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
-                        if (costItem != null && fieldGroup.size() > 0) {
+                        if (costItem != null && !fieldGroup.isEmpty()) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
                             ValidationMessages addResult = projectFinanceRowRestService.add(projectFinanceId, questionId, costItem).getSuccess();
                             Either<FinanceRowItem, ValidationMessages> either;
