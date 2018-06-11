@@ -58,21 +58,24 @@
             <p th:text="${type == 'collaborator' ? 'SPOONS' : 'CERCIS LIMITED' }">COMPANY NAME</p>
         </th:block>
 
-        <th:block th:if="${status == 'orgAdded'}">
-            <h3 class="heading-small">Organisation type</h3>
-            <p>Research</p>
+        <th:block th:unless="${param.entry != null and param.entry[0] == 'manual'}">
+            <th:block th:if="${status == 'orgAdded'}">
+                <h3 class="heading-small">Organisation type</h3>
+                <p>Research</p>
 
-            <h3 class="heading-small">Registered name</h3>
-            <p>EGGS</p>
+                <h3 class="heading-small">Registered name</h3>
+                <p>EGGS</p>
+            </th:block>
+
+            <h3 class="heading-small">Registration number</h3>
+            <p>05750811</p>
+
+            <h3 class="heading-small">Registered Address</h3>
+            <p>16 Queen Square
+                <br /> Bristol
+                <br /> BS1 4NT
+            </p>
         </th:block>
-
-        <h3 class="heading-small">Registration number</h3>
-        <p>05750811</p>
-
-        <h3 class="heading-small">Registered Address</h3>
-        <p>16 Queen Square
-            <br /> Bristol
-            <br /> BS1 4NT</p>
 
         <th:block th:if="${type == 'lead'}">
             <a class="button" th:href="${'/prototypes/'} + ${user == 'existing' ? 'IFS-3598-application-team?type=' + type : 'IFS-3598-your-details?type=' + type}">Save and continue</a>

@@ -36,7 +36,7 @@
 
         <h2 class="heading-medium">Search on Companies House</h2>
 
-        <form action="/prototypes/IFS-3598-org-selected" method="POST">
+        <form action="/prototypes/IFS-3598-org-selected" method="get">
             <input type="hidden" name="_csrf" value="bf3eeee5911011ca0665b19a96010e9e8cc50df9f63431bfc8533dbac5a10e7c56194216ef592632eb371669dc4c99a413fe220e5f312fb9f7c476057981d2496bf6e538cc7ee198c3e88543acaa00bb985bfbee3c5d8c85ec6a982b57e3ce48">
 
             <div class="form-group">
@@ -124,13 +124,14 @@
                             <div class="form-group">
                                 <label class="form-label" for="addressForm.postcodeInput">
                                     <span class="form-label-bold">Postcode</span>
-
-
                                 </label>
                                 <input id="addressForm.postcodeInput" class="form-control" type="text" name="addressForm.postcodeInput" value="">
                                 <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
-
                             </div>
+
+                            <input type="hidden" name="entry" value="manual" />
+                            <input type="hidden" name="status" th:value="${status}" />
+                            <input type="hidden" name="type" th:value="${type}" />
 
 
                             <button type="submit" class="buttonlink" name="manual-address">Enter address manually</button>
