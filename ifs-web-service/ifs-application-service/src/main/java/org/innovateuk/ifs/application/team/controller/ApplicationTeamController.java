@@ -34,7 +34,8 @@ public class ApplicationTeamController {
                                      @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                      @P("applicationId")@PathVariable("applicationId") long applicationId,
                                      UserResource loggedInUser) {
-        model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId(), 1L));
+        model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId(),
+                null));
         return "application-team/team";
     }
 }

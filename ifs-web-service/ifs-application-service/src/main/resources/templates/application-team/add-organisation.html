@@ -10,7 +10,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: header-sub"
-                      th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{model.backUrl}" />
+                      th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{${model.backUrl}}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
                 <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes.</h2>
@@ -95,8 +95,7 @@
 
                 <p class="extra-margin">
                     <button class="button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
-                    <a th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
-                    class="button button-clear">Cancel</a>
+                    <a th:href="@{${model.backUrl}}" class="button button-clear">Cancel</a>
                 </p>
             </form>
 

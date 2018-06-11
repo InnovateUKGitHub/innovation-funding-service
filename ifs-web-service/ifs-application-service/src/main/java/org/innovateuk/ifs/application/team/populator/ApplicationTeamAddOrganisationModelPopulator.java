@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.team.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamAddOrganisationViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +26,7 @@ public class ApplicationTeamAddOrganisationModelPopulator {
 
     private Long getApplicationTeamQuestion(long competitionId) {
         return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
-                APPLICATION_TEAM).handleSuccessOrFailure(
-                        failure -> null,
-                question -> question.getId()
-        );
+                APPLICATION_TEAM).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
     }
 
 }

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRow
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -74,9 +75,9 @@ public class ApplicationTeamModelPopulator {
         return model;
     }
 
-    private long getApplicationTeamQuestion(long competitionId) {
+    private Long getApplicationTeamQuestion(long competitionId) {
         return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
-                APPLICATION_TEAM).getSuccess().getId();
+                APPLICATION_TEAM).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
     }
 
     private boolean isComplete(long applicationId, long loggedInUserId, Long questionId) {
