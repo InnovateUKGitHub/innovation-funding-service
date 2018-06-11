@@ -98,10 +98,10 @@ Display errors for invalid inputs of the Phone field
     And browser validations have been disabled
     And the user fills in the Phone field   121212121212121212121
     And the user clicks the button/link     css=[name="create-account"]
-    And the user should see an error        Input for your phone number has a maximum length of 20 characters.
+    And the user should see an error        Please enter a valid telephone number between 8 and 20 digits.
     And browser validations have been disabled
     And the user fills in the Phone field   12
-    And the user should see an error        Input for your phone number has a minimum length of 8 characters.
+    And the user should see an error        Please enter a valid telephone number between 8 and 20 digits.
 
 *** Keywords ***
 the user enters profile details
