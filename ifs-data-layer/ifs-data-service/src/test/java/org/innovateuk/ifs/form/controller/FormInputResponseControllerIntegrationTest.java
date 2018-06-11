@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.controller.FormInputResponseController;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
 import static org.junit.Assert.*;
 
 public class FormInputResponseControllerIntegrationTest extends BaseControllerIntegrationTest<FormInputResponseController> {
@@ -123,12 +125,12 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void findByApplicationIdAndQuestionName() {
+    public void findByApplicationIdAndQuestionSetupType() {
         long applicationId = 1L;
-        String questionName = "Project summary";
+        CompetitionSetupQuestionType questionSetupType = PROJECT_SUMMARY;
 
-        FormInputResponseResource formInputResponseResource = controller.findByApplicationIdAndQuestionName(applicationId,
-                questionName).getSuccess();
+        FormInputResponseResource formInputResponseResource = controller.findByApplicationIdAndQuestionSetupType(applicationId,
+                questionSetupType).getSuccess();
 
         assertEquals(15L, formInputResponseResource.getId().longValue());
         assertTrue(formInputResponseResource.getValue().startsWith("The Project aims to identify,"));

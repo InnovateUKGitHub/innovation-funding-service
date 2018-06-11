@@ -37,19 +37,19 @@ Overhead costs
     [Documentation]    INFUND-192, INFUND-736, INFUND -6390 , INFUND-6788
     [Tags]
     # Check for No overheads costs option
-    When the user clicks the button/link         jQuery=button:contains("Overhead costs")
-    And The user clicks the button/link          jQuery=label:contains("No overhead costs")
-    then the user should see the element         jQuery=h3:contains("No overhead costs")
-    then the user clicks the button/link         jQuery=button:contains("Overhead costs")
+    Given the user clicks the button/link         jQuery=button:contains("Overhead costs")
+    When The user clicks the button/link          jQuery=label:contains("No overhead costs")
+    Then the user should see the element          jQuery=button span:contains("£0")
+    And the user clicks the button/link           jQuery=button:contains("Overhead costs")
     # Check for calculate overheads
     When the user clicks the button/link         jQuery=button:contains("Overhead costs")
-    then the user clicks the button/link         css=[data-target="overhead-total"] label
-    and the user should see the element          jQuery=a:contains("overhead calculation spreadsheet.xlsx")
-    and the user should see the element          jQuery=a:contains("overhead calculation spreadsheet.ods")
+    Then the user clicks the button/link         css=[data-target="overhead-total"] label
+    And the user should see the element          jQuery=a:contains("overhead calculation spreadsheet.xlsx")
+    And the user should see the element          jQuery=a:contains("overhead calculation spreadsheet.ods")
     # Check for 20% Labour costs option
     When the user clicks the button/link         jQuery=button:contains("Overhead costs")
-    then the user chooses 20% overheads option
-    and admin costs total should be correct      jQuery=button:contains("Overhead costs") [data-mirror^="#section-total"]  £9,600
+    Then the user chooses 20% overheads option
+    And admin costs total should be correct      jQuery=button:contains("Overhead costs") [data-mirror^="#section-total"]  £9,600
     [Teardown]  the user clicks the button/link  jQuery=button:contains("Overhead costs")
 
 Materials

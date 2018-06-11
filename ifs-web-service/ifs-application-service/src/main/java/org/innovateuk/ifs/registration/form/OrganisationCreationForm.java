@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Object to store the data that is use form the company house form, while creating a new application.
+ * Object to store the data that is used for the company house form, while creating a new application.
  */
 public class OrganisationCreationForm implements Serializable {
     @Valid
@@ -25,7 +25,6 @@ public class OrganisationCreationForm implements Serializable {
     @NotNull(message = "{validation.standard.organisationtype.required}")
     private Long organisationTypeId;
 
-    private OrganisationTypeEnum organisationTypeEnum;
     @NotBlank(message = "{validation.standard.organisationsearchname.required}")
     // on empty value don't check pattern since then there already is a validation message.
     private String organisationSearchName;
@@ -156,7 +155,6 @@ public class OrganisationCreationForm implements Serializable {
                 .append(useSearchResultAddress, that.useSearchResultAddress)
                 .append(addressForm, that.addressForm)
                 .append(organisationTypeId, that.organisationTypeId)
-                .append(organisationTypeEnum, that.organisationTypeEnum)
                 .append(organisationSearchName, that.organisationSearchName)
                 .append(searchOrganisationId, that.searchOrganisationId)
                 .append(organisationSearchResults, that.organisationSearchResults)
@@ -170,7 +168,6 @@ public class OrganisationCreationForm implements Serializable {
                 .append(addressForm)
                 .append(triedToSave)
                 .append(organisationTypeId)
-                .append(organisationTypeEnum)
                 .append(organisationSearchName)
                 .append(searchOrganisationId)
                 .append(organisationSearching)
