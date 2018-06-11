@@ -27,7 +27,7 @@ public class InterviewResponseServiceSecurityTest extends BaseServiceSecurityTes
     public void downloadResponse() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.downloadResponse(1L),
-                APPLICANT   
+                APPLICANT, ASSESSOR
         );
     }
 

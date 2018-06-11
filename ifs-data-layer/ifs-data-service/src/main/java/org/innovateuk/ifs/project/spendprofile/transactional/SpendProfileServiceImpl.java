@@ -241,15 +241,17 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
         if (financeContact.isPresent() && financeContact.get().getUser() != null) {
             NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
-            Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail();
+            Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail(project);
             return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         }
         return serviceFailure(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
     }
 
-    private Map<String, Object> createGlobalArgsForFinanceContactSpendProfileAvailableEmail() {
+    private Map<String, Object> createGlobalArgsForFinanceContactSpendProfileAvailableEmail(Project project) {
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
+        globalArguments.put("applicationId", project.getApplication().getId());
+        globalArguments.put("competitionName", project.getApplication().getCompetition().getName());
         return globalArguments;
 
     }

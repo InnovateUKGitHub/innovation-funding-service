@@ -10,7 +10,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
-
 /**
  * Abstract application saver for Question and Section
  */
@@ -22,7 +21,7 @@ abstract class AbstractApplicationSaver {
     @Autowired
     private ApplicationQuestionNonFileSaver nonFileSaver;
 
-    protected static final String MARKED_AS_COMPLETE_KEY = "application.validation.MarkAsCompleteFailed";
+    public static final String MARKED_AS_COMPLETE_KEY = "application.validation.MarkAsCompleteFailed";
 
     protected ValidationMessages sortValidationMessages(ValidationMessages validationMessages) {
         List<Error> markAsCompleteError = simpleFilter(validationMessages.getErrors(), e -> e.getErrorKey().equals(MARKED_AS_COMPLETE_KEY));

@@ -26,7 +26,7 @@ public interface InterviewResponseService {
 
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
     @SecuredBySpring(value = "DOWNLOAD_RESPONSE",
-            description = "Applicant users can download a response")
+            description = "Applicant users and assessors can download a response")
     ServiceResult<FileAndContents> downloadResponse(long applicationId);
 
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")

@@ -70,11 +70,14 @@
                                 document, including charts and diagrams. The maximum file upload size is 2MB.</p>
                         </div>
                     </details>
-                    <div th:unless="${interviewFeedbackViewModel.hasResponse()}">
+                    <div th:unless="${interviewFeedbackViewModel.hasResponse()}"th:classappend="${#fields.hasErrors('response')} ? 'form-group-error'">
+                        <th:block th:if="${#fields.hasErrors('response')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                        </th:block>
                         <p class="uploaded-file">No file currently uploaded</p>
-                        <input type="file" id="feedback-response" name="response" class="inputfile">
-                        <label for="feedback-response" class="button-secondary extra-margin">+ Upload</label>
-                        <button name="uploadResponse" class="button-secondary" data-for-file-upload="feedback-response"></button>
+                        <input type="file" id="response" name="response" class="inputfile">
+                        <label for="response" class="button-secondary extra-margin">+ Upload</label>
+                        <button name="uploadResponse" class="button-secondary" data-for-file-upload="response"></button>
                     </div>
                     <div th:if="${interviewFeedbackViewModel.hasResponse()}">
                         <p class="uploaded-file"><a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${interviewFeedbackViewModel.currentApplication.id})}"

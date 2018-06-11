@@ -2,11 +2,9 @@ package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-
 import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
-
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
@@ -15,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Handles the overheads, i.e. converts the costs to be stored into the database
@@ -87,20 +87,18 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     }
 
     private void addOptionalCalculationFile(List<FinanceRowMetaValue> financeRowMetaValues, Overhead overhead) {
-        Optional<FinanceRowMetaValue> overheadFileMetaValue = financeRowMetaValues.stream().
-                filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.CALCULATION_FILE_FIELD)).
-                findFirst();
 
-        overheadFileMetaValue.ifPresent(financeRowMetaValue -> fileEntryService.findOne(Long.valueOf(financeRowMetaValue.getValue())).
-                andOnSuccessReturnVoid(overhead::setCalculationFile));
+        Optional<FinanceRowMetaValue> overheadFileMetaValue = simpleFindFirst(financeRowMetaValues, metaValue ->
+                metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.CALCULATION_FILE_FIELD));
+
+        overheadFileMetaValue.ifPresent(financeRowMetaValue ->
+                fileEntryService.findOne(Long.valueOf(financeRowMetaValue.getValue())).
+                        andOnSuccessReturnVoid(overhead::setCalculationFile));
     }
 
     @Override
     public List<ApplicationFinanceRow> initializeCost() {
-        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeAcceptRate());
-
-        return costs;
+        return singletonList(initializeAcceptRate());
     }
 
     private ApplicationFinanceRow initializeAcceptRate() {
