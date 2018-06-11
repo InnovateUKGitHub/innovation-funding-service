@@ -6,7 +6,7 @@
     "govuk-elements-sass": "3.1.2",
     "govuk_frontend_toolkit": "7.5.0",
     "govuk_template_jinja": "0.24.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-chug": "^0.5.1",
     "gulp-concat": "^2.6.1",
     "gulp-replace": "^1.0.0",
