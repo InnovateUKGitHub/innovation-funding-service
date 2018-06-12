@@ -23,7 +23,7 @@
         Your details
     </h1>
 
-    <p>To continue with the application, you must create an account to sign in to the Innovation Funding Service.</p>
+    <p>To continue with your application, you need to create an account with the Innovation Funding Service.</p>
 
     <form action="/prototypes/IFS-3598-verify-email" method="get" novalidate="novalidate"><input type="hidden" name="_csrf" value="ad363c141cd038af53ffc48c1c0ff32cba8f80a69b4dd90c9cf7a4a13a93ccf16b009d1e567a63535ae751b51980f9e157ebd471f414f6616fc186b674c726fad1482c3a6a29ddbf221c23f33d992e0ef8b4000ab8c7677769b48b2549913200">
         <div class="form-group">
@@ -46,13 +46,26 @@
             </label>
             <input class="form-control" id="phoneNumber" type="tel" minlength="8" maxlength="20" required="required" data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters." data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters." data-required-errormessage="Please enter a phone number." name="phoneNumber" value="">
         </div>
-        <div class="form-group">
-            <label class="form-label" for="email">
-                <span class="form-label-bold">Email</span>
-                <span class="form-hint">You will need this to sign into your account.</span>
-            </label>
-            <input class="form-control" id="email" type="email" maxlength="256" required="required" data-maxlength-errormessage="Your email address has a maximum length of {2} characters." data-required-errormessage="Please enter your email address." name="email" value="">
-        </div>
+
+        <th:block th:if="${type == 'lead'}">
+            <div class="form-group">
+                <label class="form-label" for="email">
+                    <span class="form-label-bold">Email</span>
+                    <span class="form-hint">You will need this to sign in to your account.</span>
+                </label>
+                <input class="form-control" id="email" type="email" maxlength="256" required="required" data-maxlength-errormessage="Your email address has a maximum length of {2} characters." data-required-errormessage="Please enter your email address." name="email" value="">
+            </div>
+        </th:block>
+
+        <th:block th:unless="${type == 'lead'}">
+            <div class="extra-margin-bottom">
+                <h2 class="heading-small">Email</h2>
+                <p class="form-hint">You will need this to sign in to your account, the provided email is:<br />
+                    <strong>srankin.nomensa@gmail.com</strong>
+                </p>
+            </div>
+        </th:block>
+
 
         <div class="form-group">
             <label class="form-label" for="password">

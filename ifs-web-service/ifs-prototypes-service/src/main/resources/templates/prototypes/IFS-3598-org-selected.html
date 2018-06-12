@@ -39,15 +39,13 @@
         </th:block>
 
         <th:block th:if="${type == 'collaborator'}">
-            <p>This is the organisation you will be linked to in the application</p>
-
             <th:block th:if="${status == 'orgAdded'}">
                 <p>The lead applicant has invited you to participate on this application as part of the following organisation:
                 <strong>EGGS</strong></p>
 
                 <p>Please review the organisation details below and confirm that they are correct.</p>
             </th:block>
-
+            <p>This is the organisation you will be part of for the application.</p>
         </th:block>
 
         <th:block th:unless="${status == 'orgAdded'}">
@@ -70,7 +68,7 @@
             <h3 class="heading-small">Registration number</h3>
             <p>05750811</p>
 
-            <h3 class="heading-small">Registered Address</h3>
+            <h3 class="heading-small">Registered address</h3>
             <p>16 Queen Square
                 <br /> Bristol
                 <br /> BS1 4NT

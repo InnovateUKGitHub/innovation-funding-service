@@ -16,9 +16,9 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
     <main id="content">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your account has been created',size='heading-large'" />
-        <p>Before you can access the system you will need to sign into your account.</p>
-        <a th:href="${'/prototypes/IFS-3598-signin-dashboard?user='} + ${user} + '&#38;type=' + ${type}" class="button">Sign into your account</a>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Account verified',size='heading-large'" />
+        <p>Your account has been successfully verified. You can sign in with your registered email and password.</p>
+        <a th:href="${'/prototypes/IFS-3598-signin-dashboard?user='} + ${user} + '&#38;type=' + ${type}" class="button">Sign in</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
