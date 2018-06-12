@@ -13,8 +13,8 @@
 CREATE TABLE `survey` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `target_id` bigint(20) NOT NULL,
-  `target_type` bigint(20) NOT NULL,
-  `type` bigint(20) NOT NULL,
+  `target_type` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
   `satisfaction` bigint(20) DEFAULT NULL,
   `comments` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)

@@ -6,6 +6,8 @@ import org.innovateuk.ifs.survey.SurveyType;
 
 import javax.persistence.*;
 
+import static javax.persistence.EnumType.STRING;
+
 @Entity
 public class Survey {
     @Id
@@ -13,9 +15,11 @@ public class Survey {
     private Long id;
 
     @Column(name = "type")
+    @Enumerated(STRING)
     private SurveyType surveyType;
 
     @Column(name = "target_type")
+    @Enumerated(STRING)
     private SurveyTargetType targetType;
 
     @Column(name = "target_id")

@@ -17,7 +17,6 @@ import javax.servlet.ServletException;
 public class Application extends SpringBootServletInitializer {
     private static final Log LOG = LogFactory.getLog(Application.class);
 
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         LOG.info("Spring Application builder configure method");

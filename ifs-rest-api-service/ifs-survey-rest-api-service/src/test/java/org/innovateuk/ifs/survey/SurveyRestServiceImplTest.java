@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.survey;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.RootDefaultRestTemplateAdaptor;
+import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,7 +12,6 @@ import static org.innovateuk.ifs.survey.builder.SurveyResourceBuilder.newSurveyR
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SurveyRestServiceImplTest  {
@@ -21,17 +20,17 @@ public class SurveyRestServiceImplTest  {
     private SurveyRestServiceImpl surveyRestService;
 
     @Mock
-    private RootDefaultRestTemplateAdaptor rootDefaultRestTemplateAdaptor;
+    private RootAnonymousUserRestTemplateAdaptor rootAnonymousUserRestTemplateAdaptor;
 
     @Test
     public void save() {
         String baseUrl = "base";
-        setField(surveyRestService, "baseUrl", baseUrl);
+        surveyRestService.setServiceUrl(baseUrl);
 
         SurveyResource surveyResource = newSurveyResource().build();
         RestResult<Void> expected = mock(RestResult.class);
 
-        when(rootDefaultRestTemplateAdaptor.postWithRestResult(baseUrl + "/survey", surveyResource, Void.class)).thenReturn(expected);
+        when(rootAnonymousUserRestTemplateAdaptor.postWithRestResult(baseUrl + "/survey", surveyResource, Void.class)).thenReturn(expected);
 
         RestResult<Void> result = surveyRestService.save(surveyResource);
 

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.survey;
 
-import org.innovateuk.ifs.identity.Identifiable;
+import org.innovateuk.ifs.identity.IdentifiableEnum;
 
-public enum Satisfaction implements Identifiable<Satisfaction> {
+public enum Satisfaction implements IdentifiableEnum<Satisfaction> {
 
     VERY_SATISFIED(5),
     SATISFIED(4),
