@@ -26,7 +26,7 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
         return new CompetitionTypeController();
     }
 
-    @ZeroDowntime(reference = "IFS-3288", description = "Remove stateAid field from the responseFields in the next release")
+    @ZeroDowntime(reference = "IFS-3288", description = "Remove stateAid field from the responseFields after Mark Benfield's release")
     @Test
     public void findAll() throws Exception {
         when(competitionSetupService.findAllTypes()).thenReturn(ServiceResult.serviceSuccess(asList(new CompetitionTypeResource())));
