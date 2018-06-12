@@ -4,7 +4,6 @@
   <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
 
       <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and !(currentApplication.isOpen() and isApplicant)}"/>
-
       <th:block th:each="question : ${sectionQuestions.get(section.id)}">
           <div class="collapsible" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
                                                     and !(currentApplication.isOpen() and isApplicant)}">
@@ -85,7 +84,9 @@
                   <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}">Incomplete</div>
               </th:block>
           </h3>
+
           <div class="question">
+
               <p>This is the overview of the finances provided by all partners in this project.</p>
               <p th:if="${(currentApplication.isOpen() and isApplicant)}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>your                  finances</a> section.</p>
 

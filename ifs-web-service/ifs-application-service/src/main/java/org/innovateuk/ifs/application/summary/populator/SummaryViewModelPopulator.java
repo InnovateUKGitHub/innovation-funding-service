@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -96,7 +97,7 @@ public class SummaryViewModelPopulator {
         this.formInputViewModelGenerator = formInputViewModelGenerator;
     }
 
-    public SummaryViewModel populate (long applicationId, UserResource user) {
+    public SummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -166,6 +167,12 @@ public class SummaryViewModelPopulator {
                 .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
                 .flatMap(List::stream)
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
+
+        Map<String, String> values = form.getFormInput();
+        mappedResponses.forEach((k, v) ->
+                values.put(k.toString(), v.getValue())
+        );
+        form.setFormInput(values);
 
         return new SummaryViewModel(
                 application,
