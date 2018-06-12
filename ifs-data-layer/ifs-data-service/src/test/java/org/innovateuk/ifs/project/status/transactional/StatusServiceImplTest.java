@@ -39,6 +39,7 @@ import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficer
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -288,8 +289,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testGetCompetitionStatus() {
+    public void getCompetitionStatus() {
         Long competitionId = 123L;
+        String applicationSearchString = "1";
+
         Competition competition = newCompetition().withId(competitionId).build();
 
         /**
@@ -335,7 +338,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectRepositoryMock.findOne(projects.get(1).getId())).thenReturn(projects.get(1));
         when(projectRepositoryMock.findOne(projects.get(2).getId())).thenReturn(projects.get(2));
 
-        when(projectRepositoryMock.findByApplicationCompetitionId(competitionId)).thenReturn(projects);
+        when(projectRepositoryMock.searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(competitionId, applicationSearchString, singleton(ProjectState.WITHDRAWN))).thenReturn(projects);
 
         when(projectUserRepositoryMock.findByProjectId(projects.get(0).getId())).thenReturn(projectUsers);
         when(projectUserRepositoryMock.findByProjectId(projects.get(1).getId())).thenReturn(projectUsers);
@@ -406,7 +409,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(spendProfileServiceMock.getSpendProfileStatus(projects.get(1).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
         when(spendProfileServiceMock.getSpendProfileStatus(projects.get(2).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
 
-        ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId);
+        ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
 
         assertTrue(result.isSuccess());
 
@@ -1024,7 +1027,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
      * Tests MO requirement for IFS-1307
      */
     @Test
-    public void testGetProjectStatusShowMOStatusForSupportAndInnoLeadAsNotStarted() {
+    public void getProjectStatusShowMOStatusForSupportAndInnoLeadAsNotStarted() {
         Long projectId = 2345L;
         Long organisationId = 123L;
 
@@ -1080,7 +1083,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testGetProjectTeamStatus(){
+    public void getProjectTeamStatus(){
         /**
          * Create 3 organisations:
          * 2 Business, 1 Academic
@@ -1295,7 +1298,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testIsGrantOfferLetterActionRequired() {
+    public void isGrantOfferLetterActionRequired() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
@@ -1328,7 +1331,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testIsGrantOfferLetterIsPendingLeadPartner() {
+    public void isGrantOfferLetterIsPendingLeadPartner() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
@@ -1368,7 +1371,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testIsGrantOfferLetterIsPendingNonLeadPartner() {
+    public void isGrantOfferLetterIsPendingNonLeadPartner() {
         User u = newUser().withEmailAddress("a@b.com").build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -1417,7 +1420,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testIsGrantOfferLetterComplete() {
+    public void isGrantOfferLetterComplete() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
@@ -1447,7 +1450,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testSpendProfileNotComplete() {
+    public void spendProfileNotComplete() {
 
         spendProfile.setMarkedAsComplete(false);
 
@@ -1471,7 +1474,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testSpendProfileRequiresEligibility() {
+    public void spendProfileRequiresEligibility() {
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         Mockito.when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
         Mockito.when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
@@ -1492,7 +1495,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testSpendProfileRequiresViability() {
+    public void spendProfileRequiresViability() {
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         Mockito.when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1514,7 +1517,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testSpendProfileNotSubmittedViabilityNotApplicable() {
+    public void spendProfileNotSubmittedViabilityNotApplicable() {
 
         p.setSpendProfileSubmittedDate(null);
 
@@ -1538,7 +1541,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testSpendProfileCompleteNotSubmitted() {
+    public void spendProfileCompleteNotSubmitted() {
 
         p.setSpendProfileSubmittedDate(null);
 
@@ -1562,7 +1565,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testSpendProfileCompleteSubmitted() {
+    public void spendProfileCompleteSubmitted() {
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         Mockito.when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1584,7 +1587,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void testSpendProfileCompleteRejected() {
+    public void spendProfileCompleteRejected() {
         p.setSpendProfileSubmittedDate(null);
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
