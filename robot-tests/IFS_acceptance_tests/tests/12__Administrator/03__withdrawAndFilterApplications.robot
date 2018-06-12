@@ -2,6 +2,8 @@
 Documentation   IFS-2945 Withdraw a project from Project Setup
 ...
 ...             IFS-3473 Previous Applications Filter
+...
+...             IFS-3654 Filter out withdrawn projects from internal Project Setup dashboard
 Force Tags      Administrator
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
@@ -20,10 +22,16 @@ The IFS Admin withdraws a project from Project Setup
     When the user cancels then withdraws the project
     Then the user can see the previous application         ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
 
+The IFS Admin can no longer see the withdrawn project in the project setup table
+    [Documentation]  IFS-3654
+    [Tags]
+    When the user navigates to the page         ${server}/project-setup-management/competition/${NOT_EDITABLE_COMPETITION}/status/all
+    Then the user should not see the element    jQuery=tr:contains("${INFORM_COMPETITION_NAME_2}") a:contains("Incomplete")
+
 The IFS Admin filters the applications
     [Documentation]  IFS-3473
     [Tags]  HappyPath
-    [Setup]
+    [Setup]  the user navigates to the page                 ${server}/management/competition/${NOT_EDITABLE_COMPETITION}/applications/previous
     Given the user selects a filter for the applications    Withdrawn  filter
     Then the user can see the previous application          ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
     When the user selects a filter for the applications     Unsuccessful  filter
