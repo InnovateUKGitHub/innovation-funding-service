@@ -94,6 +94,7 @@
 
                 <!-- End -->
                 <th:block th:if="${model.userLeadApplicant and !model.complete}">
+                    <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
                     <p><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}">Add a collaborator organisation</a></p>
                 </th:block>
             </th:block>

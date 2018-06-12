@@ -82,7 +82,7 @@
                     th:id="'form-input-'+${formInput.getId()}">
 
                    <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                       <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
+                       <div th:replace="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})" />
                    </th:block>
 
                </div>

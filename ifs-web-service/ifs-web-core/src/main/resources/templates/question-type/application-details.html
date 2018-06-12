@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="read-only(model)"  th:with="competition=${model.competition}">
+
+    <th:block th:if="${model.complete}">
+        <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
+    </th:block>
+
+    <div class="grid-row">
+        <div class="column-half">
+            <dl class="font-xsmall">
+                <dt>Competition name</dt>
+                <dd th:text="${competition.name}"></dd>
+                <dt>When do you wish to start your project?</dt>
+                <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
+                <dd th:unless="${model.application.startDate}"><span class="invisible">Not specified</span></dd>
+                <dt>Duration in months</dt>
+                <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
+                <dt>Research category</dt>
+                <dd th:text="${model.application.researchCategory.name}"></dd>
+                <dd th:unless="${model.application.researchCategory.name}"><span class="invisible">Not specified</span></dd>
+                <dt>Innovation area</dt>
+                <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
+                <th:block th:unless="${model.application.resubmission == null}">
+                    <dt>Is this application a resubmission?</dt>
+                    <dd th:text="${model.application.resubmission ? 'Yes' : 'No'}"></dd>
+                    <th:block th:if="${model.application.resubmission == true}">
+                        <dt>Previous application number</dt>
+                        <dd th:text="${model.application.previousApplicationNumber}"></dd>
+                        <dt>Previous application title</dt>
+                        <dd th:text="${model.application.previousApplicationTitle}"></dd>
+                    </th:block>
+                </th:block>
+            </dl>
+        </div>
+        <div class="column-half">
+            <th:block th:if="${showApplicationTeamLink}">
+                <ul class="list list-bullet">
+                    <li>
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}">
+                            view contributors and collaborators
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}">
+                            view the grant terms and conditions
+                        </a>
+                    </li>
+                </ul>
+            </th:block>
+        </div>
+    </div>
+
+</th:block>
+
+
+</html>
