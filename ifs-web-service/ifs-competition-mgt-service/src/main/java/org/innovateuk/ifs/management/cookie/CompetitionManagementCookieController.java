@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.cookie.controller;
+package org.innovateuk.ifs.management.cookie;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
