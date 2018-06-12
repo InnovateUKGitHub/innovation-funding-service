@@ -13,7 +13,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
+import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -290,7 +290,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         CompetitionResource competition = getCompetitionIfExist(competitionId);
 
         ApplicationSummaryPageResource results = getApplicationsByFilters(competition.getId(), paginationForm, fundingDecisionFilterForm);
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.NavigationOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
+        String originQuery = buildOriginQueryString(NavigationOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competition.getId())

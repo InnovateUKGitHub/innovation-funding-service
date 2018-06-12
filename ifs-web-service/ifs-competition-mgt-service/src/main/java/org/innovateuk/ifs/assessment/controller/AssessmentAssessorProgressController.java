@@ -5,8 +5,8 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
-import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
+import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,7 @@ public class AssessmentAssessorProgressController {
                                    @RequestParam MultiValueMap<String, String> params,
                                    Model model) {
         params.add("assessorId", String.valueOf(assessorId));
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.NavigationOrigin.ASSESSOR_PROGRESS, params);
+        String originQuery = buildOriginQueryString(NavigationOrigin.ASSESSOR_PROGRESS, params);
         model.addAttribute("originQuery", originQuery);
         model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page, innovationArea, sortField, filter.map(String::trim).orElse(""), originQuery));
 

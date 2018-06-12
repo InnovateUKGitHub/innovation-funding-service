@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
+import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.innovateuk.ifs.review.model.ManageReviewApplicationsModelPopulator;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class ReviewManageApplicationsController {
         CompetitionResource competitionResource = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.NavigationOrigin.MANAGE_APPLICATIONS_PANEL, queryParams);
+        String originQuery = buildOriginQueryString(NavigationOrigin.MANAGE_APPLICATIONS_PANEL, queryParams);
         ApplicationSummaryPageResource applications = getSummaries(competitionResource.getId(), page, filter, sortBy);
         List<ApplicationSummaryResource> assignedApplications = getAssignedSummaries(competitionId);
         model.addAttribute("model", manageReviewApplicationsModelPopulator.populateModel(competitionResource, applications, assignedApplications, filter, sortBy, originQuery));
