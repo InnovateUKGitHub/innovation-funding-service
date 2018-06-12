@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.notification.controller;
+package org.innovateuk.ifs.management.invite.controller;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -7,11 +7,11 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.core.form.OverviewSelectionForm;
-import org.innovateuk.ifs.management.notification.form.ResendInviteForm;
-import org.innovateuk.ifs.management.notification.form.SendInviteForm;
-import org.innovateuk.ifs.management.notification.viewmodel.SendInvitesViewModel;
+import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.assessor.form.OverviewSelectionForm;
+import org.innovateuk.ifs.management.invite.form.ResendInviteForm;
+import org.innovateuk.ifs.management.invite.form.SendInviteForm;
+import org.innovateuk.ifs.management.invite.viewmodel.SendInvitesViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.notification.form;
+package org.innovateuk.ifs.management.invite.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

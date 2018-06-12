@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.application.viewmodel.UnsuccessfulApplicationsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -41,6 +41,6 @@ public class UnsuccessfulApplicationsModelPopulator {
         return new UnsuccessfulApplicationsViewModel(competitionId, competition.getName(), isIfsAdmin,
                 unsuccessfulApplicationsPagedResult.getContent(),
                 unsuccessfulApplicationsPagedResult.getTotalElements(),
-                new PaginationViewModel(unsuccessfulApplicationsPagedResult, existingQueryString));
+                new Pagination(unsuccessfulApplicationsPagedResult, existingQueryString));
     }
 }

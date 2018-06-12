@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.application.viewmodel;
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
                                     String sorting,
                                     String filter,
                                     List<AllApplicationsRowViewModel> applications,
-                                    PaginationViewModel pagination,
+                                    Pagination pagination,
                                     String backTitle,
                                     String backURL) {
         super(competitionId, competitionName, applications, pagination, sorting, filter);

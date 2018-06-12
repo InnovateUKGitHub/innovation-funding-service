@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.service;
+package org.innovateuk.ifs.management.dashboard.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;

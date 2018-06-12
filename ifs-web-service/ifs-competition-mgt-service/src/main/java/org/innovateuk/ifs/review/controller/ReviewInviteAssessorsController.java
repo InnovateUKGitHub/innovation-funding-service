@@ -10,7 +10,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.review.form.ReviewSelectionForm;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsAcceptedModelPopulator;

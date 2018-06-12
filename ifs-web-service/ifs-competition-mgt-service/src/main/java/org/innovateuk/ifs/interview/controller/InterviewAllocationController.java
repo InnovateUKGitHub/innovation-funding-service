@@ -13,12 +13,12 @@ import org.innovateuk.ifs.interview.form.InterviewAllocationSelectionForm;
 import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
-import org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.application.populator.AllocateInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.interview.model.AllocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewAcceptedAssessorsModelPopulator;
 import org.innovateuk.ifs.interview.model.UnallocatedInterviewApplicationsModelPopulator;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
+import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -36,9 +36,9 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_APPLICATION_ALLOCATION;
+import static org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl.NavigationOrigin.INTERVIEW_APPLICATION_ALLOCATION;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
-import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATED;
+import static org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl.NavigationOrigin.INTERVIEW_PANEL_ALLOCATED;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -166,7 +166,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             CompetitionResource competition = competitionService.getById(competitionId);
             form.setSubject(format("Applications for interview panel for '%s'", competition.getName()));
             queryParams.put("assessorId", singletonList(String.valueOf(userId)));
-            String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
+            String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.NavigationOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
             model.addAttribute("originQuery", originQuery);
 
             return "assessors/interview/allocate-applications";

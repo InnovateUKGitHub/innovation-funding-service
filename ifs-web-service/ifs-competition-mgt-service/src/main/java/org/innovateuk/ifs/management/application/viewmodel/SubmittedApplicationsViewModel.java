@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.application.viewmodel;
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -20,7 +20,7 @@ public class SubmittedApplicationsViewModel extends BaseApplicationsViewModel<Su
                                           String sorting,
                                           String filter,
                                           List<SubmittedApplicationsRowViewModel> applications,
-                                          PaginationViewModel pagination) {
+                                          Pagination pagination) {
         super(competitionId, competitionName, applications, pagination, sorting, filter);
         this.assessmentDeadline = assessmentDeadline;
         this.applicationsSubmitted = applicationsSubmitted;

@@ -7,7 +7,7 @@ import org.innovateuk.ifs.interview.viewmodel.InterviewInviteAssessorsInviteView
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +40,7 @@ public class InterviewInviteAssessorsInviteModelPopulator extends InterviewInvit
         List<InvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource, originQuery));
 
         return model;
     }

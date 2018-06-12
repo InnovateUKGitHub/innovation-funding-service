@@ -8,13 +8,13 @@ import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationRowV
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsFindViewModel;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
+import static org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -54,7 +54,7 @@ public class InterviewApplicationsFindModelPopulator extends InterviewApplicatio
                 competition.getInnovationSectorName(),
                 applications,
                 super.getKeyStatistics(competitionId),
-                new PaginationViewModel(pageResource, originQuery), originQuery, pageResource.getTotalElements() > SELECTION_LIMIT);
+                new Pagination(pageResource, originQuery), originQuery, pageResource.getTotalElements() > SELECTION_LIMIT);
     }
 
     private InterviewAssignmentApplicationRowViewModel getRowViewModel(AvailableApplicationResource availableApplicationResource) {

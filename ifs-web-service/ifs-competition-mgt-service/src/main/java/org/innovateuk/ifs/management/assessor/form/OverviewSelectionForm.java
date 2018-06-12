@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.core.form;
+package org.innovateuk.ifs.management.assessor.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

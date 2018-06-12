@@ -16,7 +16,7 @@ import org.innovateuk.ifs.competition.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingDecisionController;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -397,8 +397,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         )
                 .andExpect(status().isOk()).andReturn();
 
-        PaginationViewModel paginationViewModel = (PaginationViewModel) result.getModelAndView().getModel().get("pagination");
-        assertEquals("?origin=FUNDING_APPLICATIONS&page=0",paginationViewModel.getPageNames().get(0).getPath());
+        Pagination pagination = (Pagination) result.getModelAndView().getModel().get("pagination");
+        assertEquals("?origin=FUNDING_APPLICATIONS&page=0", pagination.getPageNames().get(0).getPath());
     }
 
     @Test

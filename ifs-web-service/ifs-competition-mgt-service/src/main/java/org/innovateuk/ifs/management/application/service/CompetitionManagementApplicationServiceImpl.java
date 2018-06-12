@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.management.service;
+package org.innovateuk.ifs.management.application.service;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -14,12 +15,12 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.application.populator.ApplicationOverviewIneligibilityModelPopulator;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -174,7 +175,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                                 Long competitionId,
                                 Optional<Long> assessorId,
                                 MultiValueMap<String, String> queryParams) {
-        String baseUrl = ApplicationOverviewOrigin.valueOf(origin).getBaseOriginUrl();
+        String baseUrl = NavigationOrigin.valueOf(origin).getBaseOriginUrl();
 
         queryParams.remove("origin");
 
@@ -203,38 +204,5 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                 }).
                 collect(Collectors.toList());
         model.addAttribute("appendices", appendices);
-    }
-
-    public enum ApplicationOverviewOrigin {
-        ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
-        SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
-        INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
-        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications"),
-        MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
-        FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
-        APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors"),
-        MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}"),
-        ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
-        PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status"),
-        UNSUCCESSFUL_APPLICATIONS("/competition/{competitionId}/applications/previous"),
-        MANAGE_APPLICATIONS_PANEL("/assessment/panel/competition/{competitionId}/manage-applications"),
-        INTERVIEW_PANEL_FIND("/assessment/interview/competition/{competitionId}/applications/find"),
-        INTERVIEW_PANEL_INVITE("/assessment/interview/competition/{competitionId}/applications/invite"),
-        INTERVIEW_PANEL_SEND("/assessment/interview/competition/{competitionId}/applications/invite/send"),
-        INTERVIEW_PANEL_STATUS("/assessment/interview/competition/{competitionId}/applications/view-status"),
-        INTERVIEW_PANEL_ALLOCATE("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{assessorId}"),
-        INTERVIEW_APPLICATION_ALLOCATION("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{assessorId}"),
-        INTERVIEW_PANEL_ALLOCATED("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{assessorId}"),
-        INTERVIEW_PANEL_VIEW_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view");
-
-        private String baseOriginUrl;
-
-        ApplicationOverviewOrigin(String baseOriginUrl) {
-            this.baseOriginUrl = baseOriginUrl;
-        }
-
-        public String getBaseOriginUrl() {
-            return baseOriginUrl;
-        }
     }
 }

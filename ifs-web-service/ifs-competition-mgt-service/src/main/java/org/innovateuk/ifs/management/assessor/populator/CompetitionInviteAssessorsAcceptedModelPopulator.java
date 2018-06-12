@@ -8,7 +8,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsAcceptedViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +55,7 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource, originQuery));
         model.setOriginQuery(originQuery);
 
         return model;

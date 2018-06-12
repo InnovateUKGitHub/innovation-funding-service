@@ -3,7 +3,7 @@ package org.innovateuk.ifs.admin.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -27,15 +27,15 @@ public class UserListViewModel {
 
     private long pendingCount;
 
-    private PaginationViewModel activeUsersPagination;
+    private Pagination activeUsersPagination;
 
-    private PaginationViewModel inactiveUsersPagination;
+    private Pagination inactiveUsersPagination;
 
-    private PaginationViewModel pendingInvitesPagination;
+    private Pagination pendingInvitesPagination;
 
     public UserListViewModel(String tab, List<UserResource> activeUsers, List<UserResource> inactiveUsers, List<RoleInviteResource> pendingInvites,
                              long activeCount, long inactiveCount, long pendingCount,
-                             PaginationViewModel activeUsersPagination, PaginationViewModel inactiveUsersPagination, PaginationViewModel pendingInvitesPagination) {
+                             Pagination activeUsersPagination, Pagination inactiveUsersPagination, Pagination pendingInvitesPagination) {
         this.tab = tab;
         this.activeUsers = activeUsers;
         this.inactiveUsers = inactiveUsers;
@@ -72,15 +72,15 @@ public class UserListViewModel {
         return pendingInvites;
     }
 
-    public PaginationViewModel getActiveUsersPagination() {
+    public Pagination getActiveUsersPagination() {
         return activeUsersPagination;
     }
 
-    public PaginationViewModel getInactiveUsersPagination() {
+    public Pagination getInactiveUsersPagination() {
         return inactiveUsersPagination;
     }
 
-    public PaginationViewModel getPendingInvitesPagination() {
+    public Pagination getPendingInvitesPagination() {
         return pendingInvitesPagination;
     }
 

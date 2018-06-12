@@ -9,7 +9,7 @@ import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAcceptedAssessorsRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAcceptedAssessorsViewModel;
 import org.innovateuk.ifs.management.assessment.populator.BaseManageAssessmentsModelPopulator;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +39,7 @@ public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessme
                 competition.getId(),
                 competition.getName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
-                new PaginationViewModel(pageResource, origin)
+                new Pagination(pageResource, origin)
 
         );
 

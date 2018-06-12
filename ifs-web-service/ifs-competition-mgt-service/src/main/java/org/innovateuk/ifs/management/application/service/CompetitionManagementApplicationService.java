@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.service;
+package org.innovateuk.ifs.management.application.service;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;

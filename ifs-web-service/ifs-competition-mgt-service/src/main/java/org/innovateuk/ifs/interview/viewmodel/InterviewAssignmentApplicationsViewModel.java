@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interview.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
     private final List<T> applications;
     private final String innovationSector;
     private final String innovationArea;
-    private final PaginationViewModel pagination;
+    private final Pagination pagination;
     private final String originQuery;
     private final InterviewAssignmentKeyStatisticsResource keyStatisticsResource;
 
@@ -28,7 +28,7 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
             String innovationSector,
             List<T> applications,
             InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
-            PaginationViewModel pagination,
+            Pagination pagination,
             String originQuery) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -48,7 +48,7 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
         return competitionName;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 

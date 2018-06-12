@@ -10,7 +10,7 @@ import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSentInviteViewModel;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
+import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +64,7 @@ public class InterviewApplicationSendInviteController {
                                    @ModelAttribute(name = "form", binding = false) InterviewApplicationSendForm form,
                                    BindingResult bindingResult) {
 
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_SEND, queryParams);
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.NavigationOrigin.INTERVIEW_PANEL_SEND, queryParams);
         InterviewAssignmentApplicationsSendViewModel viewModel = interviewApplicationsSendModelPopulator.populateModel(competitionId, page, originQuery, form);
 
         model.addAttribute("model", viewModel);
@@ -146,7 +146,7 @@ public class InterviewApplicationSendInviteController {
                              @PathVariable("applicationId") long applicationId,
                              @RequestParam MultiValueMap<String, String> queryParams) {
         queryParams.add("applicationId", String.valueOf(applicationId));
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_VIEW_INVITE, queryParams);
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.NavigationOrigin.INTERVIEW_PANEL_VIEW_INVITE, queryParams);
         InterviewAssignmentApplicationsSentInviteViewModel viewModel = interviewApplicationSentInviteModelPopulator.populate(competitionId, applicationId, originQuery);
         model.addAttribute("model", viewModel);
         return "assessors/interview/application-view-invite";

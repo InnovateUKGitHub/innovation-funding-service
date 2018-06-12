@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.management.notification.populator;
+package org.innovateuk.ifs.management.ineligible.populator;
 
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
-import org.innovateuk.ifs.management.notification.form.InformIneligibleForm;
+import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.management.notification.viewmodel.InformIneligibleViewModel;
+import org.innovateuk.ifs.management.ineligible.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;

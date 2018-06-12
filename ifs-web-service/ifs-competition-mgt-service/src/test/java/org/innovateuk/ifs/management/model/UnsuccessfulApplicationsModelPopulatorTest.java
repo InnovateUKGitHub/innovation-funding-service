@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.populator.UnsuccessfulApplicationsModelPopulator;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.application.viewmodel.UnsuccessfulApplicationsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -83,6 +83,6 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
         assertEquals(isIfsAdmin, viewModel.isIfsAdmin());
         assertEquals(unsuccessfulApplications, viewModel.getUnsuccessfulApplications());
         assertEquals(unsuccessfulApplications.size(), viewModel.getUnsuccessfulApplicationsSize());
-        assertEquals(new PaginationViewModel(unsuccessfulApplicationsPagedResult, existingQueryString), viewModel.getUnsuccessfulApplicationsPagination());
+        assertEquals(new Pagination(unsuccessfulApplicationsPagedResult, existingQueryString), viewModel.getUnsuccessfulApplicationsPagination());
     }
 }

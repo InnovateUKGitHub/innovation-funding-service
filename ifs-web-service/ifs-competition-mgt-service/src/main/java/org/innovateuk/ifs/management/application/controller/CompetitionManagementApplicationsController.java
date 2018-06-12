@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.application.populator.*;
 import org.innovateuk.ifs.management.application.form.IneligibleApplicationsForm;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,7 @@ public class CompetitionManagementApplicationsController {
                                   @RequestParam(value = "filterSearch") Optional<String> filter,
                                   UserResource user) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.ALL_APPLICATIONS, queryParams);
+        String originQuery = buildOriginQueryString(NavigationOrigin.ALL_APPLICATIONS, queryParams);
         model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter, user));
         model.addAttribute("originQuery", originQuery);
 
@@ -106,7 +106,7 @@ public class CompetitionManagementApplicationsController {
                                         @RequestParam(value = "sort", defaultValue = "") String sort,
                                         @RequestParam(value = "filterSearch") Optional<String> filter) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.SUBMITTED_APPLICATIONS, queryParams);
+        String originQuery = buildOriginQueryString(NavigationOrigin.SUBMITTED_APPLICATIONS, queryParams);
         model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filter));
         model.addAttribute("originQuery", originQuery);
 
@@ -124,7 +124,7 @@ public class CompetitionManagementApplicationsController {
                                          @RequestParam(value = "sort", defaultValue = "") String sort,
                                          UserResource user) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INELIGIBLE_APPLICATIONS, queryParams);
+        String originQuery = buildOriginQueryString(NavigationOrigin.INELIGIBLE_APPLICATIONS, queryParams);
         model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filterForm, user));
         model.addAttribute("originQuery", originQuery);
 
@@ -143,7 +143,7 @@ public class CompetitionManagementApplicationsController {
                                            @RequestParam(value = "filter", defaultValue = UNSUCCESSFUL_APP_DEFAULT_FILTER) String filter,
                                            UserResource loggedInUser) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
+        String originQuery = buildOriginQueryString(NavigationOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
         model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, filter, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
 

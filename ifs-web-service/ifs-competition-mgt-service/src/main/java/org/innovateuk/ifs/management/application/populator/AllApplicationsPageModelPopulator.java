@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.management.application.viewmodel.AllApplicationsRowViewModel;
 import org.innovateuk.ifs.management.application.viewmodel.AllApplicationsViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,7 +45,7 @@ public class AllApplicationsPageModelPopulator {
                 sorting,
                 filter.orElse(""),
                 getApplications(applicationSummaryPageResource),
-                new PaginationViewModel(applicationSummaryPageResource, origin),
+                new Pagination(applicationSummaryPageResource, origin),
                 user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) ? "Dashboard" : "Applications",
                 user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) ? "/dashboard/live" : "/competition/" + competitionId + "/applications"
         );

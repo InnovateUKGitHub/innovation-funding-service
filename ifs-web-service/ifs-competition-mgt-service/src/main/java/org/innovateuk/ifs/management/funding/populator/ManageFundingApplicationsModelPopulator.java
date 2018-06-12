@@ -6,11 +6,11 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.application.viewmodel.ManageFundingApplicationViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,12 +45,12 @@ public class ManageFundingApplicationsModelPopulator {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
         boolean selectAllDisabled = totalSubmittableApplications > CompetitionManagementCookieController.SELECTION_LIMIT;
-        PaginationViewModel paginationViewModel = new PaginationViewModel(results, queryString);
+        Pagination pagination = new Pagination(results, queryString);
 
         return new ManageFundingApplicationViewModel(
                 results,
                 keyStatistics,
-                paginationViewModel,
+                pagination,
                 queryForm.getSortField(),
                 competitionId,
                 competitionResource.getName(),

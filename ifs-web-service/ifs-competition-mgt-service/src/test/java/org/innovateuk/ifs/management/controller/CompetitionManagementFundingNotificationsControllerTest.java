@@ -26,7 +26,7 @@ import org.innovateuk.ifs.management.funding.populator.ManageFundingApplications
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.application.viewmodel.ManageFundingApplicationViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -153,7 +153,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
-        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new Pagination(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
 
         when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(simpleMap(applications, ApplicationSummaryResource::getId)));

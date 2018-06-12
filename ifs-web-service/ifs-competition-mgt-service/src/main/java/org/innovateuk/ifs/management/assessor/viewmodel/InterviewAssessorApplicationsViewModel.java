@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.assessor.viewmodel;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.interview.model.InterviewAllocatedApplicationRowViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class InterviewAssessorApplicationsViewModel {
     private final ProfileResource profile;
     private final List<InnovationSectorViewModel> innovationSectors;
     private final List<InterviewAllocatedApplicationRowViewModel> rows;
-    private final PaginationViewModel pagination;
+    private final Pagination pagination;
     private final long unallocatedApplications;
     private final long allocatedApplications;
     private final boolean selectAllDisabled;
@@ -28,7 +28,7 @@ public class InterviewAssessorApplicationsViewModel {
                                                   ProfileResource profile,
                                                   List<InnovationSectorViewModel> innovationSectors,
                                                   List<InterviewAllocatedApplicationRowViewModel> rows,
-                                                  PaginationViewModel pagination,
+                                                  Pagination pagination,
                                                   long unallocatedApplications,
                                                   long allocatedApplications,
                                                   boolean selectAllDisabled,
@@ -70,7 +70,7 @@ public class InterviewAssessorApplicationsViewModel {
         return rows;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 

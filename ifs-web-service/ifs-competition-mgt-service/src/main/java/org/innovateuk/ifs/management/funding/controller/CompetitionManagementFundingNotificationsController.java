@@ -15,7 +15,7 @@ import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.funding.populator.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;

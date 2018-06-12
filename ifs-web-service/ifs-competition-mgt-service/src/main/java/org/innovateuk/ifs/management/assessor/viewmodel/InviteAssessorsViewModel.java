@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.assessor.viewmodel;
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
     private String innovationSector;
     private String innovationArea;
     private List<ViewModelRowType> assessors;
-    private PaginationViewModel pagination;
+    private Pagination pagination;
     private String originQuery;
 
     protected InviteAssessorsViewModel() {
@@ -87,11 +87,11 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
         this.assessors = assessors;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 
-    public void setPagination(PaginationViewModel pagination) {
+    public void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
 

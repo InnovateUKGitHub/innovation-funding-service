@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.application.viewmodel.ManageApplicationsRowViewModel;
 import org.innovateuk.ifs.management.application.viewmodel.ManageApplicationsViewModel;
 import org.innovateuk.ifs.management.assessment.populator.BaseManageAssessmentsModelPopulator;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -24,7 +24,7 @@ public class ManageApplicationsModelPopulator extends BaseManageAssessmentsModel
                 simpleMap(applicationCounts.getContent(), this::getRowViewModel),
                 IN_ASSESSMENT.equals(competition.getCompetitionStatus()),
                 filter,
-                new PaginationViewModel(applicationCounts, origin));
+                new Pagination(applicationCounts, origin));
         return model;
     }
 

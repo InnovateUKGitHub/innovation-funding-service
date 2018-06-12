@@ -5,11 +5,11 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
-import org.innovateuk.ifs.management.notification.form.InformIneligibleForm;
+import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.management.notification.controller.CompetitionManagementSendIneligibleController;
-import org.innovateuk.ifs.management.notification.populator.InformIneligibleModelPopulator;
-import org.innovateuk.ifs.management.notification.viewmodel.InformIneligibleViewModel;
+import org.innovateuk.ifs.management.ineligible.controller.CompetitionManagementSendIneligibleController;
+import org.innovateuk.ifs.management.ineligible.populator.InformIneligibleModelPopulator;
+import org.innovateuk.ifs.management.ineligible.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;

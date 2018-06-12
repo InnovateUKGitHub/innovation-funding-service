@@ -12,9 +12,9 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -290,7 +290,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         CompetitionResource competition = getCompetitionIfExist(competitionId);
 
         ApplicationSummaryPageResource results = getApplicationsByFilters(competition.getId(), paginationForm, fundingDecisionFilterForm);
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.NavigationOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competition.getId())
@@ -300,7 +300,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());
         boolean selectAllDisabled =  submittableApplicationIds.isEmpty();
 
-        model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
+        model.addAttribute("pagination", new Pagination(results, originQuery));
         model.addAttribute("results", results);
         model.addAttribute("selectionForm", fundingDecisionSelectionForm);
         model.addAttribute("competitionSummary", competitionSummary);

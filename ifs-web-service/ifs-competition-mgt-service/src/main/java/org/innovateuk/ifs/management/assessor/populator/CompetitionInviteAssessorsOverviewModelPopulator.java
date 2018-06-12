@@ -10,7 +10,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.assessor.viewmodel.CompetitionInviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
-import static org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
+import static org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -70,7 +70,7 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
 
         model.setAssessors(assessors);
         model.setInnovationAreaOptions(innovationAreasOptions);
-        model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource, originQuery));
         model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
         model.setOriginQuery(originQuery);
 

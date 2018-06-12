@@ -10,7 +10,7 @@ import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAssessorApplicationsViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
+import static org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController.SELECTION_LIMIT;
 
 public abstract class AbstractInterviewApplicationsModelPopulator {
 
@@ -51,7 +51,7 @@ public abstract class AbstractInterviewApplicationsModelPopulator {
                 assessorProfile.getProfile(),
                 innovationSectorViewModel(assessorProfile.getProfile().getInnovationAreas()),
                 toViewModel(interviewApplicationPageResource),
-                new PaginationViewModel(interviewApplicationPageResource, ""),
+                new Pagination(interviewApplicationPageResource, ""),
                 interviewApplicationPageResource.getUnallocatedApplications(),
                 interviewApplicationPageResource.getAllocatedApplications(),
                 interviewApplicationPageResource.getTotalElements() > SELECTION_LIMIT,

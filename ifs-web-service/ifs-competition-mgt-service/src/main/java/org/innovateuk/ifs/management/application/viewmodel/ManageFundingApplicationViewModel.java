@@ -4,7 +4,7 @@ package org.innovateuk.ifs.management.application.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -20,11 +20,11 @@ public class ManageFundingApplicationViewModel {
     private long competitionId;
     private String competitionName;
     private CompetitionInFlightStatsViewModel keyStatistics;
-    private PaginationViewModel pagination;
+    private Pagination pagination;
     private boolean selectAllDisabled;
 
 
-    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, PaginationViewModel pagination, String sortField, long competitionId, String competitionName, boolean selectAllDisabled) {
+    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, Pagination pagination, String sortField, long competitionId, String competitionName, boolean selectAllDisabled) {
         this.results = results;
         this.sortField = sortField;
         this.competitionId = competitionId;
@@ -34,7 +34,7 @@ public class ManageFundingApplicationViewModel {
         this.selectAllDisabled = selectAllDisabled;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 

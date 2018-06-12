@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.assessor.viewmodel;
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -11,12 +11,12 @@ public class InterviewAcceptedAssessorsViewModel {
     private long competitionId;
     private String competitionName;
     private List<InterviewAcceptedAssessorsRowViewModel> assessors;
-    private PaginationViewModel pagination;
+    private Pagination pagination;
 
     public InterviewAcceptedAssessorsViewModel(long competitionId,
                                                String competitionName,
                                                List<InterviewAcceptedAssessorsRowViewModel> assessors,
-                                               PaginationViewModel pagination
+                                               Pagination pagination
     ) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -40,7 +40,7 @@ public class InterviewAcceptedAssessorsViewModel {
         this.assessors = assessors;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 }

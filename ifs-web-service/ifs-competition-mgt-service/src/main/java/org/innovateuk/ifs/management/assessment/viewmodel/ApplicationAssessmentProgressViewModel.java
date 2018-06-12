@@ -3,8 +3,7 @@ package org.innovateuk.ifs.management.assessment.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
-import org.innovateuk.ifs.management.assessor.viewmodel.ApplicationAvailableAssessorsRowViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class ApplicationAssessmentProgressViewModel {
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned;
     private List<InnovationSectorResource> innovationSectors;
     private Long filterInnovationArea;
-    private PaginationViewModel pagination;
+    private Pagination pagination;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
@@ -43,7 +42,7 @@ public class ApplicationAssessmentProgressViewModel {
                                                   List<ApplicationAvailableAssessorsRowViewModel> available,
                                                   List<InnovationSectorResource> innovationSectors,
                                                   Long filterInnovation,
-                                                  PaginationViewModel pagination) {
+                                                  Pagination pagination) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationInnovationArea = applicationInnovationArea;
@@ -117,7 +116,7 @@ public class ApplicationAssessmentProgressViewModel {
         return filterInnovationArea;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 

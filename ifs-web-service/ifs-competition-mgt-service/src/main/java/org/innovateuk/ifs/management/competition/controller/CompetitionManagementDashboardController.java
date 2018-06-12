@@ -8,8 +8,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
-import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
@@ -145,7 +145,7 @@ public class CompetitionManagementDashboardController {
         ApplicationSearchDashboardViewModel viewModel =
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                                                         matchedApplications.getTotalElements(),
-                                                        new PaginationViewModel(matchedApplications, "search?" + existingQueryString),
+                                                        new Pagination(matchedApplications, "search?" + existingQueryString),
                                                         trimmedSearchString);
         model.addAttribute("model", viewModel);
 

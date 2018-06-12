@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.interview.viewmodel;
 
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class InterviewAssignmentApplicationStatusViewModel  extends InterviewAss
             String innovationSector,
             List<InterviewAssignmentApplicationStatusRowViewModel> applications,
             InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
-            PaginationViewModel pagination,
+            Pagination pagination,
             String originQuery
     ) {
         super(competitionId, competitionName, innovationArea, innovationSector, applications, keyStatisticsResource,

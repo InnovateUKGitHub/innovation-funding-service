@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -17,11 +17,11 @@ public class ApplicationSearchDashboardViewModel {
 
     private long applicationCount;
 
-    private PaginationViewModel applicationPagination;
+    private Pagination applicationPagination;
 
     private String searchString;
 
-    public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, PaginationViewModel applicationPagination, String searchString) {
+    public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, Pagination applicationPagination, String searchString) {
         this.applications = applications;
         this.applicationCount = applicationCount;
         this.applicationPagination = applicationPagination;
@@ -44,11 +44,11 @@ public class ApplicationSearchDashboardViewModel {
         this.applicationCount = applicationCount;
     }
 
-    public PaginationViewModel getApplicationPagination() {
+    public Pagination getApplicationPagination() {
         return applicationPagination;
     }
 
-    public void setApplicationPagination(PaginationViewModel applicationPagination) {
+    public void setApplicationPagination(Pagination applicationPagination) {
         this.applicationPagination = applicationPagination;
     }
 

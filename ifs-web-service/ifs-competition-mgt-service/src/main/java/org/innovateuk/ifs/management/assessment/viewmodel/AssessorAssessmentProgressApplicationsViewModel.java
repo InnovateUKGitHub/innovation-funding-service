@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.assessment.viewmodel;
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,14 +10,14 @@ public class AssessorAssessmentProgressApplicationsViewModel {
     private boolean inAssessment;
     private Optional<Long> innovationArea;
     private String sortField;
-    private PaginationViewModel pagination;
+    private Pagination pagination;
     private long totalApplications;
 
     public AssessorAssessmentProgressApplicationsViewModel(List<AssessorAssessmentProgressApplicationRowViewModel> applications,
                                                            boolean inAssessment,
                                                            Optional<Long> innovationArea,
                                                            String sortField,
-                                                           PaginationViewModel pagination,
+                                                           Pagination pagination,
                                                            long totalApplications) {
         this.applications = applications;
         this.inAssessment = inAssessment;
@@ -43,7 +43,7 @@ public class AssessorAssessmentProgressApplicationsViewModel {
         return innovationArea;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 

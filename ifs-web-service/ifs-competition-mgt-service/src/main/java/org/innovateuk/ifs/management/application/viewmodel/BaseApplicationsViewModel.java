@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.application.viewmodel;
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ abstract class BaseApplicationsViewModel<ApplicationRowViewModel extends BaseApp
     protected long competitionId;
     protected String competitionName;
     protected List<ApplicationRowViewModel> applications;
-    protected PaginationViewModel pagination;
+    protected Pagination pagination;
     protected String sorting;
     protected String filter;
 
-    BaseApplicationsViewModel(long competitionId, String competitionName, List<ApplicationRowViewModel> applications, PaginationViewModel pagination, String sorting, String filter) {
+    BaseApplicationsViewModel(long competitionId, String competitionName, List<ApplicationRowViewModel> applications, Pagination pagination, String sorting, String filter) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applications = applications;
@@ -37,7 +37,7 @@ abstract class BaseApplicationsViewModel<ApplicationRowViewModel extends BaseApp
         return applications;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 

@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.management.assessor.viewmodel;
+package org.innovateuk.ifs.management.assessment.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressRowViewModel;
 
 /**
  * Holder of model attributes for the available assessors shown in the 'Application progress' page

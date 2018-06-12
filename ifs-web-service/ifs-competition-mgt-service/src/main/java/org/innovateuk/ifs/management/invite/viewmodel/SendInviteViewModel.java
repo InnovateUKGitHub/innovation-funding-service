@@ -1,24 +1,24 @@
-package org.innovateuk.ifs.management.notification.viewmodel;
+package org.innovateuk.ifs.management.invite.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.List;
-
 /**
- * Holder of model attributes for the Send Invites view.
+ * Holder of model attributes for the Send Invite view.
  */
-public class SendInvitesViewModel {
+public class SendInviteViewModel {
 
     private long competitionId;
+    private long inviteId;
     private String competitionName;
-    private List<String> recipients;
+    private String recipient;
     private String content;
 
-    public SendInvitesViewModel(long competitionId, String competitionName, List<String> recipients, String content) {
+    public SendInviteViewModel(long competitionId, long inviteId, String competitionName, String recipient, String content) {
         this.competitionId = competitionId;
+        this.inviteId = inviteId;
         this.competitionName = competitionName;
-        this.recipients = recipients;
+        this.recipient = recipient;
         this.content = content;
     }
 
@@ -26,12 +26,16 @@ public class SendInvitesViewModel {
         return competitionId;
     }
 
+    public long getInviteId() {
+        return inviteId;
+    }
+
     public String getCompetitionName() {
         return competitionName;
     }
 
-    public List<String> getRecipients() {
-        return recipients;
+    public String getRecipient() {
+        return recipient;
     }
 
     public String getContent() {
@@ -48,12 +52,13 @@ public class SendInvitesViewModel {
             return false;
         }
 
-        SendInvitesViewModel that = (SendInvitesViewModel) o;
+        SendInviteViewModel that = (SendInviteViewModel) o;
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
+                .append(inviteId, that.inviteId)
                 .append(competitionName, that.competitionName)
-                .append(recipients, that.recipients)
+                .append(recipient, that.recipient)
                 .append(content, that.content)
                 .isEquals();
     }
@@ -62,8 +67,9 @@ public class SendInvitesViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
+                .append(inviteId)
                 .append(competitionName)
-                .append(recipients)
+                .append(recipient)
                 .append(content)
                 .toHashCode();
     }

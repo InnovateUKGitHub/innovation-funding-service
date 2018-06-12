@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.application.controller.CompetitionManagementApplicationsController;
 import org.innovateuk.ifs.management.application.populator.*;
 import org.innovateuk.ifs.management.application.viewmodel.*;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -264,7 +264,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsStarted(), model.getApplicationsStarted());
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
-        PaginationViewModel actualPagination = model.getPagination();
+        Pagination actualPagination = model.getPagination();
         assertEquals(1,actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());
         assertEquals(3, actualPagination.getTotalPages());
@@ -399,7 +399,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getAssessorDeadline(), model.getAssessmentDeadline());
-        PaginationViewModel actualPagination = model.getPagination();
+        Pagination actualPagination = model.getPagination();
         assertEquals(1,actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());
         assertEquals(3, actualPagination.getTotalPages());
@@ -518,7 +518,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         assertEquals(COMPETITION_ID, model.getCompetitionId());
         assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
-        PaginationViewModel actualPagination = model.getPagination();
+        Pagination actualPagination = model.getPagination();
         assertEquals(1,actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());
         assertEquals(3, actualPagination.getTotalPages());
@@ -562,7 +562,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
         UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
-                competitionName, true, unsuccessfulApplications, unsuccessfulApplications.size(), new PaginationViewModel(applicationPageResource, ""));
+                competitionName, true, unsuccessfulApplications, unsuccessfulApplications.size(), new Pagination(applicationPageResource, ""));
 
         when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), eq(filter), any(UserResource.class), any()))
                 .thenReturn(viewModel);

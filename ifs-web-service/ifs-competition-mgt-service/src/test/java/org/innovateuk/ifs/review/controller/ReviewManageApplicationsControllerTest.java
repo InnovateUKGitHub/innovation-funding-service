@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.review.model.ManageReviewApplicationsModelPopulator;
 import org.innovateuk.ifs.review.viewmodel.ManagePanelApplicationsViewModel;
 import org.junit.Test;
@@ -97,7 +97,7 @@ public class ReviewManageApplicationsControllerTest extends BaseControllerMockMV
         assertEquals("three", model.getAssignedApplications().get(0).getTitle());
         assertEquals("four", model.getAssignedApplications().get(1).getTitle());
 
-        PaginationViewModel actualPagination = model.getPagination();
+        Pagination actualPagination = model.getPagination();
         assertEquals(1, actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());
         assertEquals(3, actualPagination.getTotalPages());

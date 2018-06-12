@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.review.viewmodel;
 
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class ManagePanelApplicationsViewModel {
     private List<ManageReviewApplicationsRowViewModel> applications;
     private String filter;
     private String sorting;
-    private PaginationViewModel pagination;
+    private Pagination pagination;
     private List<ManageReviewApplicationsRowViewModel> assignedApplications;
 
     public ManagePanelApplicationsViewModel(Long competitionId,
@@ -25,7 +25,7 @@ public class ManagePanelApplicationsViewModel {
                                             List<ManageReviewApplicationsRowViewModel> assignedApplications,
                                             String filter,
                                             String sorting,
-                                            PaginationViewModel pagination) {
+                                            Pagination pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;
@@ -60,7 +60,7 @@ public class ManagePanelApplicationsViewModel {
 
     public String getSorting() { return sorting; }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 }

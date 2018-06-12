@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.application.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ public class UnsuccessfulApplicationsViewModel {
     private String competitionName;
     private List<ApplicationResource> unsuccessfulApplications;
     private long unsuccessfulApplicationsSize;
-    private PaginationViewModel unsuccessfulApplicationsPagination;
+    private Pagination unsuccessfulApplicationsPagination;
     private boolean isIfsAdmin;
 
     public UnsuccessfulApplicationsViewModel(Long competitionId, String competitionName, boolean isIfsAdmin,
                                              List<ApplicationResource> unsuccessfulApplications,
                                              long unsuccessfulApplicationsSize,
-                                             PaginationViewModel unsuccessfulApplicationsPagination) {
+                                             Pagination unsuccessfulApplicationsPagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.isIfsAdmin = isIfsAdmin;
@@ -49,7 +49,7 @@ public class UnsuccessfulApplicationsViewModel {
         return unsuccessfulApplicationsSize;
     }
 
-    public PaginationViewModel getUnsuccessfulApplicationsPagination() {
+    public Pagination getUnsuccessfulApplicationsPagination() {
         return unsuccessfulApplicationsPagination;
     }
 

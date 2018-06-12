@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.assessor.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -16,14 +16,14 @@ public class ManageAssessorsViewModel {
     private final List<ManageAssessorsRowViewModel> assessors;
     private final boolean inAssessment;
     private final List<InnovationSectorResource> innovationSectors;
-    private final PaginationViewModel pagination;
+    private final Pagination pagination;
 
     public ManageAssessorsViewModel(long competitionId,
                                     String competitionName,
                                     List<ManageAssessorsRowViewModel> assessors,
                                     boolean inAssessment,
                                     List<InnovationSectorResource> innovationSectors,
-                                    PaginationViewModel pagination) {
+                                    Pagination pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.assessors = assessors;
@@ -48,7 +48,7 @@ public class ManageAssessorsViewModel {
         return inAssessment;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 

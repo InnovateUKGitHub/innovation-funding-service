@@ -5,7 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.review.form.ReviewOverviewSelectionForm;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;

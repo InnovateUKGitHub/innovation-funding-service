@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.application.viewmodel;
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class IneligibleApplicationsViewModel extends BaseApplicationsViewModel<I
                                            String sorting,
                                            String filter,
                                            List<IneligibleApplicationsRowViewModel> applications,
-                                           PaginationViewModel pagination,
+                                           Pagination pagination,
                                            boolean readOnly) {
         super(competitionId, competitionName, applications, pagination, sorting, filter);
         this.readOnly = readOnly;

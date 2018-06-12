@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.populator.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.application.viewmodel.ManageApplicationsViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -82,7 +82,7 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
         assertEquals(2L, model.getApplications().get(1).getCompleted());
         assertEquals("Lead Org 2", model.getApplications().get(1).getLeadOrganisation());
 
-        PaginationViewModel actualPagination = model.getPagination();
+        Pagination actualPagination = model.getPagination();
         assertEquals(1, actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());
         assertEquals(3, actualPagination.getTotalPages());

@@ -11,8 +11,8 @@ import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentP
 import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressPreviouslyAssignedRowViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressRejectedRowViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressViewModel;
-import org.innovateuk.ifs.management.assessor.viewmodel.ApplicationAvailableAssessorsRowViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAvailableAssessorsRowViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +56,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 getAvailableAssessors(availableAssessors.getContent()),
                 getInnovationSectors(),
                 filterInnovationArea,
-                new PaginationViewModel(availableAssessors, assessorOrigin));
+                new Pagination(availableAssessors, assessorOrigin));
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {

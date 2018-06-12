@@ -10,7 +10,7 @@ import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -179,7 +179,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 IN_ASSESSMENT == competition.getCompetitionStatus(),
                 innovationArea,
                 sortField,
-                new PaginationViewModel(applicationCounts, origin),
+                new Pagination(applicationCounts, origin),
                 applicationCounts.getTotalElements());
     }
 

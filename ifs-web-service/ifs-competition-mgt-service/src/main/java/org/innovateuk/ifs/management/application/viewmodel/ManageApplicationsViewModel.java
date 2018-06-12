@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.application.viewmodel;
 
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ public class ManageApplicationsViewModel {
     private List<ManageApplicationsRowViewModel> applications;
     private boolean inAssessment;
     private String filter;
-    private PaginationViewModel pagination;
+    private Pagination pagination;
 
     public ManageApplicationsViewModel(Long competitionId,
                                        String competitionName,
                                        List<ManageApplicationsRowViewModel> applications,
                                        boolean inAssessment,
                                        String filter,
-                                       PaginationViewModel pagination) {
+                                       Pagination pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applications = applications;
@@ -49,7 +49,7 @@ public class ManageApplicationsViewModel {
         return filter;
     }
 
-    public PaginationViewModel getPagination() {
+    public Pagination getPagination() {
         return pagination;
     }
 }

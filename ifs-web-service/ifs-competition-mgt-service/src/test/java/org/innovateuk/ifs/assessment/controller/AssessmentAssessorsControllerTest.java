@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -100,7 +100,7 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         assertEquals("two", model.getAssessors().get(1).getName());
         assertEquals("skill2", model.getAssessors().get(1).getSkillAreas());
 
-        PaginationViewModel actualPagination = model.getPagination();
+        Pagination actualPagination = model.getPagination();
         assertEquals(1, actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());
         assertEquals(3, actualPagination.getTotalPages());

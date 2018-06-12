@@ -1,14 +1,15 @@
-package org.innovateuk.ifs.management.core.viewmodel;
+package org.innovateuk.ifs.management.navigation;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
-public class PaginationLinkViewModel {
+public class PaginationLink {
+
     private String path;
     private String title;
 
-    public PaginationLinkViewModel(int page, int pageSize, long totalElements, String existingQuery) {
+    public PaginationLink(int page, int pageSize, long totalElements, String existingQuery) {
         this.title = ((page * pageSize) + 1) + " to " + Math.min((page + 1) * pageSize, totalElements);
         this.path = UriComponentsBuilder.fromUriString(existingQuery).replaceQueryParam("page", page).toUriString();
     }
@@ -27,7 +28,7 @@ public class PaginationLinkViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PaginationLinkViewModel that = (PaginationLinkViewModel) o;
+        PaginationLink that = (PaginationLink) o;
 
         return new EqualsBuilder()
                 .append(path, that.path)

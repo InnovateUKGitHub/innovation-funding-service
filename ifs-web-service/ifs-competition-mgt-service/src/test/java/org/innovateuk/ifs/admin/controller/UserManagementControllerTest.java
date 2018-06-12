@@ -10,7 +10,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.*;
@@ -77,7 +77,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(view().name("admin/users"))
                 .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
                         userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
+                        new Pagination(userPageResource, "active"), new Pagination(userPageResource, "inactive"), new Pagination(roleInvitePageResource, "pending"))));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(view().name("admin/users"))
                 .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
                         userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
+                        new Pagination(userPageResource, "active"), new Pagination(userPageResource, "inactive"), new Pagination(roleInvitePageResource, "pending"))));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(view().name("admin/users"))
                 .andExpect(model().attribute("model", new UserListViewModel("pending", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
                         userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                        new PaginationViewModel(userPageResource, "active"), new PaginationViewModel(userPageResource, "inactive"), new PaginationViewModel(roleInvitePageResource, "pending"))));
+                        new Pagination(userPageResource, "active"), new Pagination(userPageResource, "inactive"), new Pagination(roleInvitePageResource, "pending"))));
     }
 
     @Test

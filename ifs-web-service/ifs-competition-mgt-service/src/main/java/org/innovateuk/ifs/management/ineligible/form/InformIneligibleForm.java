@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.notification.form;
+package org.innovateuk.ifs.management.ineligible.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,14 +10,16 @@ import org.springframework.validation.ObjectError;
 import java.util.List;
 
 /**
- * Form for sending competition invites
+ * Form for informing an applicant that their application is ineligible
  */
-public class SendInviteForm implements BindingResultTarget {
+public class InformIneligibleForm implements BindingResultTarget {
 
-    @NotBlank(message = "{validation.inviteAssessors.subject.required}")
+    @NotBlank(message = "{validation.informleadapplicant.subject.required}")
     private String subject;
 
-    private String content;
+    @NotBlank(message = "{validation.informleadapplicant.message.required}")
+    private String message;
+
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
 
@@ -29,12 +31,12 @@ public class SendInviteForm implements BindingResultTarget {
         this.subject = subject;
     }
 
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
@@ -59,19 +61,15 @@ public class SendInviteForm implements BindingResultTarget {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        SendInviteForm that = (SendInviteForm) o;
+        InformIneligibleForm that = (InformIneligibleForm) o;
 
         return new EqualsBuilder()
                 .append(subject, that.subject)
-                .append(content, that.content)
+                .append(message, that.message)
                 .append(bindingResult, that.bindingResult)
                 .append(objectErrors, that.objectErrors)
                 .isEquals();
@@ -81,7 +79,7 @@ public class SendInviteForm implements BindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(subject)
-                .append(content)
+                .append(message)
                 .append(bindingResult)
                 .append(objectErrors)
                 .toHashCode();

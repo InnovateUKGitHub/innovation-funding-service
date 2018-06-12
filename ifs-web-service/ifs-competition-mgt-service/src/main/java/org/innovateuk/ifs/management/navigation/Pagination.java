@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.core.viewmodel;
+package org.innovateuk.ifs.management.navigation;
 
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,16 +10,17 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 
-public class PaginationViewModel {
+public class Pagination {
+
     private boolean hasPrevious;
     private boolean hasNext;
     private int totalPages;
     private int currentPage;
     private int pageSize;
     private long totalCount;
-    private List<PaginationLinkViewModel> pageNames;
+    private List<PaginationLink> pageNames;
 
-    public PaginationViewModel(PageResource pageResource, String existingQuery) {
+    public Pagination(PageResource pageResource, String existingQuery) {
         this.totalCount = pageResource.getTotalElements();
         this.hasPrevious = pageResource.hasPrevious();
         this.hasNext = pageResource.hasNext();
@@ -27,7 +28,7 @@ public class PaginationViewModel {
         this.currentPage = pageResource.getNumber();
         this.pageSize = pageResource.getSize();
         this.pageNames = IntStream.range(0,totalPages)
-                .mapToObj(i -> new PaginationLinkViewModel(i, pageSize, totalCount, existingQuery))
+                .mapToObj(i -> new PaginationLink(i, pageSize, totalCount, existingQuery))
                 .collect(toList());
     }
 
@@ -51,7 +52,7 @@ public class PaginationViewModel {
         return pageSize;
     }
 
-    public List<PaginationLinkViewModel> getPageNames() {
+    public List<PaginationLink> getPageNames() {
         return pageNames;
     }
 
@@ -65,7 +66,7 @@ public class PaginationViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PaginationViewModel that = (PaginationViewModel) o;
+        Pagination that = (Pagination) o;
 
         return new EqualsBuilder()
                 .append(hasPrevious, that.hasPrevious)

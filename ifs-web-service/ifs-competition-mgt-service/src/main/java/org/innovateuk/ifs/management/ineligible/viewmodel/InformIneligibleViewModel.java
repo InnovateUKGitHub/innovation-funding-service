@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.notification.viewmodel;
+package org.innovateuk.ifs.management.ineligible.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

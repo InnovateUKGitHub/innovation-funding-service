@@ -13,7 +13,7 @@ import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.core.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.cookie.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.assessor.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.assessor.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;

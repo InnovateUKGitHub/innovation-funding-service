@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.notification.controller;
+package org.innovateuk.ifs.management.ineligible.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -6,8 +6,8 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.notification.form.InformIneligibleForm;
-import org.innovateuk.ifs.management.notification.populator.InformIneligibleModelPopulator;
+import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
+import org.innovateuk.ifs.management.ineligible.populator.InformIneligibleModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

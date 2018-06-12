@@ -16,7 +16,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.application.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.management.application.populator.ReinstateIneligibleApplicationModelPopulator;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
+import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
+import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class AssessmentController {
     @GetMapping
     public String manageAssessments(@PathVariable("competitionId") long competitionId, Model model,
                                     @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.MANAGE_ASSESSMENTS, queryParams);
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.NavigationOrigin.MANAGE_ASSESSMENTS, queryParams);
         model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId));
         model.addAttribute("originQuery", originQuery);
 

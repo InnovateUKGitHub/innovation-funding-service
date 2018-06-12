@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressViewModel;
-import org.innovateuk.ifs.management.core.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -240,7 +240,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         assertEquals(2L, model.getApplicationsView().getApplications().get(1).getSubmitted());
         assertEquals("Lead Org 2", model.getApplicationsView().getApplications().get(1).getLeadOrganisation());
 
-        PaginationViewModel actualPagination = model.getApplicationsView().getPagination();
+        Pagination actualPagination = model.getApplicationsView().getPagination();
         assertEquals(1, actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());
         assertEquals(3, actualPagination.getTotalPages());

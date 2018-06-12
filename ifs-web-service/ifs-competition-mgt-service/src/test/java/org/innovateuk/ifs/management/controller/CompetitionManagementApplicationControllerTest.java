@@ -24,7 +24,7 @@ import org.innovateuk.ifs.management.application.form.ReinstateIneligibleApplica
 import org.innovateuk.ifs.management.application.populator.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.management.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.management.application.populator.ReinstateIneligibleApplicationModelPopulator;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
+import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.application.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.application.viewmodel.ReinstateIneligibleApplicationViewModel;

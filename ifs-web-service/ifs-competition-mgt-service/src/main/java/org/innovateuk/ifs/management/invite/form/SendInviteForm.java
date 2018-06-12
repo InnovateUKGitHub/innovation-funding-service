@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.notification.form;
+package org.innovateuk.ifs.management.invite.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,16 +10,14 @@ import org.springframework.validation.ObjectError;
 import java.util.List;
 
 /**
- * Form for informing an applicant that their application is ineligible
+ * Form for sending competition invites
  */
-public class InformIneligibleForm implements BindingResultTarget {
+public class SendInviteForm implements BindingResultTarget {
 
-    @NotBlank(message = "{validation.informleadapplicant.subject.required}")
+    @NotBlank(message = "{validation.inviteAssessors.subject.required}")
     private String subject;
 
-    @NotBlank(message = "{validation.informleadapplicant.message.required}")
-    private String message;
-
+    private String content;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
 
@@ -31,12 +29,12 @@ public class InformIneligibleForm implements BindingResultTarget {
         this.subject = subject;
     }
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
@@ -61,15 +59,19 @@ public class InformIneligibleForm implements BindingResultTarget {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        InformIneligibleForm that = (InformIneligibleForm) o;
+        SendInviteForm that = (SendInviteForm) o;
 
         return new EqualsBuilder()
                 .append(subject, that.subject)
-                .append(message, that.message)
+                .append(content, that.content)
                 .append(bindingResult, that.bindingResult)
                 .append(objectErrors, that.objectErrors)
                 .isEquals();
@@ -79,7 +81,7 @@ public class InformIneligibleForm implements BindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(subject)
-                .append(message)
+                .append(content)
                 .append(bindingResult)
                 .append(objectErrors)
                 .toHashCode();
