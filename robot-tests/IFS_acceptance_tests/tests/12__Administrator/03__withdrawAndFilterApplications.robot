@@ -8,7 +8,9 @@ Resource        ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${externalProjectWithdrawnMessage}    This project has been withdrawn
-${proj_electric_drive}  ${application_ids['Electric Drive']}
+${proj_electric_drive}                ${application_ids['Electric Drive']}
+${solarPowerApplication}              SPAM: Solar power aggregation meshes
+${solarPowerApplicationID}            ${application_ids['${solarPowerApplication}']}
 
 *** Test Cases ***
 The IFS Admin withdraws a project from Project Setup
@@ -28,14 +30,15 @@ The IFS Admin filters the applications
     Then the user can see the previous application          ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
     When the user selects a filter for the applications     Unsuccessful  filter
     Then the user can see the previous application          ${proj_electric_drive}  Unsuccessful
+    When the user selects a filter for the applications     Ineligible  filter
+    Then the user can see the previous application          ${solarPowerApplicationID}  Ineligible
 
 The IFS Admin clears any filters applied
     [Documentation]  IFS-3473
     [Tags]  HappyPath
     [Setup]
     When the user clicks the button/link                         link=Clear all filters
-    Then the user can see the previous application               ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
-    And the user can see the previous application                ${proj_electric_drive}  Unsuccessful
+    Then the user can see all of the previous applications when the All filter is applied
 
 *** Keywords ***
 The user cancels then withdraws the project
@@ -53,3 +56,7 @@ The user selects a filter for the applications
     Given the user selects the option from the drop-down menu    ${applicationStatusInDropDown}  id=${filterID}
     When the user clicks the button/link                         css=button[class="button"]  #Filter
 
+The user can see all of the previous applications when the All filter is applied
+    the user can see the previous application                ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
+    the user can see the previous application                ${proj_electric_drive}               Unsuccessful
+    the user can see the previous application                ${solarPowerApplicationID}           Ineligible
