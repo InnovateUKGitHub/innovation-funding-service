@@ -86,7 +86,7 @@ public class UpdateIdentityServiceTest extends MockedService<UpdateIdentityServi
 
             assertThat("Service failed to throw expected exception.", false);
         } catch (final Exception exception) {
-            assertThatExceptionIsInvalidPasswordOfType(exception, "blacklisted");
+            assertThatExceptionIsInvalidPasswordOfType(exception, InvalidPasswordException.ERROR_KEY);
         }
 
         verifyFindingIdentityByUuid();
