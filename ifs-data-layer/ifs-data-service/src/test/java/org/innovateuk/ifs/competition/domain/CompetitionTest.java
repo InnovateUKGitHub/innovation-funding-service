@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.domain;
 
-import org.innovateuk.ifs.competitionsetup.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;

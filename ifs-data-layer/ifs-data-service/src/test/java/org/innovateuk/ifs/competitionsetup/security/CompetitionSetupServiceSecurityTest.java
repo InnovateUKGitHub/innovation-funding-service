@@ -71,9 +71,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
                     .INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
-                verifyNoMoreInteractions(rules);
-            });
             assertAccessDenied(() -> classUnderTest.deleteCompetition(competitionId), () -> {
                 verifyNoMoreInteractions(rules);
             });
@@ -84,7 +81,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     public void testCompAdminAllAccessAllowed() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
 
-        classUnderTest.findAllTypes();
         Long competitionId = 2L;
         classUnderTest.create();
         classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L);
@@ -103,7 +99,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     public void testProjectFinanceAllAccessAllowed() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
 
-        classUnderTest.findAllTypes();
         Long competitionId = 2L;
         classUnderTest.create();
         classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L);

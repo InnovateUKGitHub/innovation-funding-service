@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.competitionsetup.domain.GrantTermsAndConditions;
-import org.innovateuk.ifs.competitionsetup.domain.Milestone;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.category.domain.*;

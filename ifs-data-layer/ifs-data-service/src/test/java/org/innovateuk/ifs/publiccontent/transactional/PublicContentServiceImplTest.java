@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.*;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.transactional.MilestoneService;
+import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;

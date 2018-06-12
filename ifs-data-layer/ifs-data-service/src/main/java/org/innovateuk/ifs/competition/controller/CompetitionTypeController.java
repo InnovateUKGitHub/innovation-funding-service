@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.competition.transactional.CompetitionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +18,10 @@ import java.util.List;
 public class CompetitionTypeController {
 
     @Autowired
-    private CompetitionSetupService competitionSetupService;
+    private CompetitionTypeService competitionTypeService;
 
     @GetMapping("/findAll")
     public RestResult<List<CompetitionTypeResource>> findAllTypes() {
-        return competitionSetupService.findAllTypes().toGetResponse();
+        return competitionTypeService.findAllTypes().toGetResponse();
     }
 }

@@ -5,12 +5,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -55,10 +53,6 @@ public interface CompetitionSetupService {
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark projects as setup")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> markAsSetup(Long competitionId);
-
-    @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can return read all competition types")
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<List<CompetitionTypeResource>> findAllTypes();
 
     @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can copy from a competition type template")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

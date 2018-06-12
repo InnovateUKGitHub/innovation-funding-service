@@ -2,8 +2,8 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.*;
-import org.innovateuk.ifs.competitionsetup.domain.GrantTermsAndConditions;
-import org.innovateuk.ifs.competitionsetup.domain.Milestone;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;

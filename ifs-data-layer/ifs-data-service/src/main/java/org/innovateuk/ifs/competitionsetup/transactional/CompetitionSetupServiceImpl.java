@@ -5,17 +5,15 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
-import org.innovateuk.ifs.competitionsetup.mapper.GrantTermsAndConditionsMapper;
+import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competitionsetup.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competitionsetup.domain.GrantTermsAndConditions;
-import org.innovateuk.ifs.competitionsetup.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -48,8 +46,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private CompetitionMapper competitionMapper;
-    @Autowired
-    private CompetitionTypeMapper competitionTypeMapper;
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
@@ -288,11 +284,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Competition competition = competitionRepository.findById(competitionId);
         competition.setSetupComplete(true);
         return serviceSuccess();
-    }
-
-    @Override
-    public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
-        return serviceSuccess((List) competitionTypeMapper.mapToResource(competitionTypeRepository.findAll()));
     }
 
     @Override

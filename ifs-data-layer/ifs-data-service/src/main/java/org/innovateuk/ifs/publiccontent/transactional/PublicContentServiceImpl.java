@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.transactional.MilestoneService;
+import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
