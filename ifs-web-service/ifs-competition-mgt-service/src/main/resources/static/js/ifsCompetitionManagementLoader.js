@@ -39,5 +39,11 @@ IFS.competitionManagement.loadOrder = {
       IFS.competitionManagement.repeater.init()
       IFS.core.finance.init()
     }
+  },
+  'resend-applicant-invite': {
+    init: function () {
+      IFS.competitionManagement.resendApplicantInvite.init()
+    }
   }
+
 }
