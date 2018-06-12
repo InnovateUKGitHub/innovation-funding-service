@@ -40,7 +40,7 @@ public class SetupStatusController {
                                          UserResource loggedInUser,
                                          NativeWebRequest springRequest,
                                          @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.PROJECT_SETUP_STATUS , queryParams);
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.SET_UP_YOUR_PROJECT , queryParams);
 
         HttpServletRequest request = springRequest.getNativeRequest(HttpServletRequest.class);
         String dashboardUrl = request.getScheme() + "://" +
