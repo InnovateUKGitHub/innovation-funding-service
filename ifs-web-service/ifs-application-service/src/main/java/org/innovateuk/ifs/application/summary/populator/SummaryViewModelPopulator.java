@@ -191,7 +191,7 @@ public class SummaryViewModelPopulator {
                 applicationResearchParticipationViewModel,
                 sectionsMarkedAsComplete,
                 formInputViewModels,
-                false
+                true
         );
     }
 

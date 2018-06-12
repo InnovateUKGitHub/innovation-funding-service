@@ -127,7 +127,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                 .encode()
                 .toUriString());
 
-        model.addAttribute("fromCompManagement", true);
+        model.addAttribute("fromApplicationService", false);
 
         return "competition-mgt-application-overview";
     }

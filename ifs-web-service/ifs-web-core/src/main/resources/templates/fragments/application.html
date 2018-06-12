@@ -90,14 +90,14 @@
               <p>This is the overview of the finances provided by all partners in this project.</p>
               <p th:if="${(currentApplication.isOpen() and isApplicant)}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>your                  finances</a> section.</p>
 
-              <div th:if="${!fromCompManagement}">
+              <div th:if="${fromApplicationService}">
                 <th:block ifs:global="${applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></th:block>
                 <th:block ifs:global="${applicationResearchParticipationViewModel}" th:replace="finance/finance-summary :: research_participation_alert" th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>
 
                 <h2 class="heading-small">Funding breakdown</h2>
                 <th:block ifs:global="${applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
               </div>
-              <div th:unless="${!fromCompManagement}">
+              <div th:unless="${fromApplicationService}">
                   <div th:replace="finance/finance-summary :: application_finances_summary (isApplicant=${isApplicant})"></div>
                   <div th:replace="finance/finance-summary :: research_participation_alert" th:if="${(currentApplication.isOpen() and isApplicant)}"></div>
 
