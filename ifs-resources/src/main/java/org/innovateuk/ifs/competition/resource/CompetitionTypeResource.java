@@ -1,16 +1,11 @@
 package org.innovateuk.ifs.competition.resource;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
-
 import java.util.List;
 
 public class CompetitionTypeResource {
     private Long id;
     private String name;
     private List<Long> competitions;
-    @ZeroDowntime(reference = "IFS-3288", description = "Remove stateAid flag from CompetitionTypeResource after " +
-            "Mark Benfield's release")
-    private Boolean stateAid;
     private Boolean active;
 
     public CompetitionTypeResource() {
@@ -39,12 +34,6 @@ public class CompetitionTypeResource {
 
     public void setCompetitions(List<Long> competitions) {
         this.competitions = competitions;
-    }
-
-    @ZeroDowntime(reference = "IFS-3288", description = "Remove stateAid flag from CompetitionTypeResource " +
-            "after Mark Benfield's release")
-    public Boolean getStateAid() {
-        return stateAid;
     }
 
     public Boolean getActive() {
