@@ -36,7 +36,7 @@ The IFS Admin filters the applications
     When the user selects a filter for the applications     ${ineligibleState}  filter
     Then the user can see the previous application          ${solarPowerApplicationID}  ${ineligibleState}
 
-The IFS Admin clears any filters applied and see all of the applications
+The IFS Admin clears any filters applied and can see all of the applications
     [Documentation]  IFS-3473
     [Tags]  HappyPath
     [Setup]
