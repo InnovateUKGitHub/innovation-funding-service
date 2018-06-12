@@ -79,7 +79,7 @@ IFS.core.formValidation = (function () {
       },
       tel: {
         fields: '[type="tel"]:not([readonly])',
-        messageInvalid: 'Please enter a valid telephone number between 8 and 20 digits.'
+        messageInvalid: 'Please enter a valid phone number between 8 and 20 digits.'
       },
       lowerthan: {
         fields: '[data-lowerthan]',
