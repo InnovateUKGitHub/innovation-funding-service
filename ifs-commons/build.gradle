@@ -9,7 +9,7 @@ dependencies {
 configurations {
     testArtifacts
 }
-task testJar (type: Jar) {
+task testJar(type: Jar) {
     baseName = "${project.name}-test"
     from sourceSets.test.output
 }
@@ -17,5 +17,11 @@ artifacts {
     testArtifacts testJar
 }
 
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
+}
 
-bootRepackage.enabled=false
+
+bootRepackage.enabled = false
