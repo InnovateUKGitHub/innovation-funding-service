@@ -11,9 +11,29 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
 
+    <form method="GET">
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <legend class="heading-medium no-margin-top">Filter applications</legend>
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <label class="form-label" for="applicationSearchString">Search by application number.</label>
+                        <input type="number" class="form-control" id="applicationSearchString" pattern="[0-9]" data-prevent-input-regex="[^0-9]" name="applicationSearchString" value="">
+                    </div>
+                    <div class="column-third">
+                        <button class="button" >Filter</button>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="extra-margin">
+                <a href="?">Clear all filters</a>
+            </div>
+        </div>
+    </form>
+
     <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
 
-    <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
+    <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
       <div class="grid-container">
           <hr />
           <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
