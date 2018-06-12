@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,16 +35,16 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
         this.setupApplicationResponses();
     }
 
-//    @Test
-//    public void testDashboard() throws Exception {
-//        ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-//        when(populator.populate(anyLong(), "")).thenReturn(viewModel);
-//
-//        mockMvc.perform(get("/applicant/dashboard"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("applicant-dashboard"))
-//                .andExpect(model().attribute("model", viewModel));
-//    }
+    @Test
+    public void testDashboard() throws Exception {
+        ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
+        when(populator.populate(anyLong(), anyString())).thenReturn(viewModel);
+
+        mockMvc.perform(get("/applicant/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("applicant-dashboard"))
+                .andExpect(model().attribute("model", viewModel));
+    }
 
     /**
      * Leadapplicant

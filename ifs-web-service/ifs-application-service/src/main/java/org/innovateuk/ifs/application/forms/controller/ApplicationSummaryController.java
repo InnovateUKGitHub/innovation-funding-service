@@ -173,7 +173,7 @@ public class ApplicationSummaryController {
 
         return UriComponentsBuilder.fromPath(baseUrl)
                 .queryParams(queryParams)
-                .buildAndExpand(asMap( "applicationId", applicationId, "projectId", projectId))
+                .buildAndExpand(asMap( "projectId", projectId))
                 .encode()
                 .toUriString();
     }
