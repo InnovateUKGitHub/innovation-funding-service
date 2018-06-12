@@ -11,6 +11,9 @@ ${externalProjectWithdrawnMessage}    This project has been withdrawn
 ${proj_electric_drive}                ${application_ids['Electric Drive']}
 ${solarPowerApplication}              SPAM: Solar power aggregation meshes
 ${solarPowerApplicationID}            ${application_ids['${solarPowerApplication}']}
+${unsuccessfulState}                  Unsuccessful
+${withdrawnState}                     Withdrawn
+${ineligibleState}                    Ineligible
 
 *** Test Cases ***
 The IFS Admin withdraws a project from Project Setup
@@ -20,20 +23,20 @@ The IFS Admin withdraws a project from Project Setup
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${NOT_EDITABLE_COMPETITION}/status/all
     And the user clicks the button/link                    jQuery=tr:contains("${INFORM_COMPETITION_NAME_2}") a:contains("Incomplete")
     When the user cancels then withdraws the project
-    Then the user can see the previous application         ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
+    Then the user can see the previous application         ${INFORM_COMPETITION_NAME_2_NUMBER}  ${withdrawnState}
 
 The IFS Admin filters the applications
     [Documentation]  IFS-3473
     [Tags]  HappyPath
     [Setup]
-    Given the user selects a filter for the applications    Withdrawn  filter
-    Then the user can see the previous application          ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
-    When the user selects a filter for the applications     Unsuccessful  filter
-    Then the user can see the previous application          ${proj_electric_drive}  Unsuccessful
-    When the user selects a filter for the applications     Ineligible  filter
-    Then the user can see the previous application          ${solarPowerApplicationID}  Ineligible
+    Given the user selects a filter for the applications    ${withdrawnState}  filter
+    Then the user can see the previous application          ${INFORM_COMPETITION_NAME_2_NUMBER}  ${withdrawnState}
+    When the user selects a filter for the applications     ${unsuccessfulState}  filter
+    Then the user can see the previous application          ${proj_electric_drive}  ${unsuccessfulState}
+    When the user selects a filter for the applications     ${ineligibleState}  filter
+    Then the user can see the previous application          ${solarPowerApplicationID}  ${ineligibleState}
 
-The IFS Admin clears any filters applied
+The IFS Admin clears any filters applied and see all of the applications
     [Documentation]  IFS-3473
     [Tags]  HappyPath
     [Setup]
@@ -57,6 +60,6 @@ The user selects a filter for the applications
     When the user clicks the button/link                         css=button[class="button"]  #Filter
 
 The user can see all of the previous applications when the All filter is applied
-    the user can see the previous application                ${INFORM_COMPETITION_NAME_2_NUMBER}  Withdrawn
-    the user can see the previous application                ${proj_electric_drive}               Unsuccessful
-    the user can see the previous application                ${solarPowerApplicationID}           Ineligible
+    the user can see the previous application                ${INFORM_COMPETITION_NAME_2_NUMBER}  ${withdrawnState}
+    the user can see the previous application                ${proj_electric_drive}               ${unsuccessfulState}
+    the user can see the previous application                ${solarPowerApplicationID}           ${ineligibleState}
