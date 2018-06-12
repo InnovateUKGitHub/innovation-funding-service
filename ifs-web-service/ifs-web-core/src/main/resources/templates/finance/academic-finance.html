@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-<th:block th:fragment="your_finance (model)" th:with="question=${model.applicantQuestion.question}, userOrganisation=${model.currentApplicant.organisation}, readonly=${model.allReadOnly or model.complete}">
+<th:block th:fragment="your_finance (model, internalView)" th:with="question=${model.applicantQuestion.question}, userOrganisation=${model.currentApplicant.organisation}, readonly=${model.allReadOnly or model.complete}">
     <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
     <p ifs:utext="${question.description}"/>
     <fieldset>
@@ -45,7 +45,7 @@
 
 </th:block>
 
-<th:block th:fragment="assessment_detailed_finance (model)" th:with="question=${detailedCostings.applicantQuestion.question}, userOrganisation=${detailedCostings.currentApplicant.organisation}, readonly=${detailedCostings.allReadOnly or detailedCostings.complete}">
+<th:block th:fragment="assessment_detailed_finance (model, internalView)" th:with="question=${detailedCostings.applicantQuestion.question}, userOrganisation=${detailedCostings.currentApplicant.organisation}, readonly=${detailedCostings.allReadOnly or detailedCostings.complete}">
     <th:block th:insert="finance/academic-finance :: finance_fields (${detailedCostings}, 'false')"/>
     <th:block th:insert="finance/academic-finance :: finance_upload (${detailedCostings},${detailedCostings.financeUploadQuestion},${detailedCostings.financeUploadFormInput},${readonly})" />
 </th:block>
