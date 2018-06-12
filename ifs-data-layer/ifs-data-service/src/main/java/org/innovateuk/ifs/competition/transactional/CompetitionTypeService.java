@@ -7,6 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
+/**
+ * Service for operations around the usage and processing of CompetitionTypes
+ */
 public interface CompetitionTypeService {
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can return read all competition types")
