@@ -41,15 +41,21 @@ var vendorJsFiles = [
 
 // copy over the vendor javascript files to the js/vendor/govuk folder
 gulp.task('copy-js-govuk', function () {
-	return gulp.src(filesExist([gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js', gdsTemplateJinjaPath + 'assets/javascripts/ie.js'])).pipe(gulp.dest('js/vendor/govuk'))
+	return gulp.src(filesExist([
+	  gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
+    gdsTemplateJinjaPath + 'assets/javascripts/ie.js'
+  ]))
+  .pipe(gulp.dest('js/vendor/govuk'))
 })
 // copy over the fonts from GDS node-modules to css/fonts folder
 gulp.task('copy-fonts-govuk', function () {
-  return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/stylesheets/fonts/*')).pipe(gulp.dest('css/fonts'))
+  return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/stylesheets/fonts/*'))
+  .pipe(gulp.dest('css/fonts'))
 })
 //  copy over the images from GDS node-modules to images folder
 gulp.task('copy-images-govuk', function () {
-  return gulp.src(vendorImages).pipe(gulp.dest('images'))
+  return gulp.src(filesExist(vendorImages))
+  .pipe(gulp.dest('images'))
 })
 gulp.task('copy-govuk', gulp.parallel('copy-js-govuk', 'copy-fonts-govuk', 'copy-images-govuk'))
 
@@ -81,7 +87,7 @@ gulp.task('vendor', function () {
 })
 
 // build all js
-gulp.task('js', gulp.series('vendor', 'ifs-js'))
+gulp.task('js', gulp.series('copy-govuk', gulp.parallel('vendor', 'ifs-js')))
 
 gulp.task('css', function () {
   return gulp.src(filesExist(sassFiles))
@@ -116,4 +122,4 @@ gulp.task('js:watch', function () {
   gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js'])
 })
 
-gulp.task('default', gulp.series('copy-govuk', gulp.parallel('js', 'css')))
+gulp.task('default', gulp.parallel('js', 'css'))
