@@ -16,7 +16,7 @@ osStageRemote.tag = surveyDataServiceVersion
 tagDockerLocal.tag = surveyDataServiceVersion
 osStageLocal.tag = surveyDataServiceVersion
 
-def enabled = project.hasProperty('ifs.survey-data-service.enabled') ? project.property('ifs.survey-data-service.enabled').toBoolean() : true
+def enabled = project.hasProperty('ifs.survey-data-service.enabled') ? project.property('ifs.survey-data-service.enabled').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
