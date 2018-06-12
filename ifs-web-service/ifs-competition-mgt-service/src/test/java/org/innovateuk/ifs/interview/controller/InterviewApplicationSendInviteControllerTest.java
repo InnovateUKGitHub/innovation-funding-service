@@ -196,26 +196,9 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
     @Test
     public void viewInvite() throws Exception {
-        String subject = "subject";
-        String content = "Content";
-        ZonedDateTime assigned = ZonedDateTime.now();
         long applicationId = 1L;
-
-        ApplicationResource applicationResource = newApplicationResource().withName("Application").build();
-
-        InterviewApplicationSentInviteResource sentInvite = newInterviewApplicationSentInviteResource()
-                .withSubject(subject)
-                .withContent(content)
-                .withAssigned(assigned)
-                .build();
-
-        when(interviewAssignmentRestService.getSentInvite(applicationId)).thenReturn(restSuccess(sentInvite));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(applicationService.getLeadOrganisation(applicationId)).thenReturn(newOrganisationResource().withName("Organisation").build());
-        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
-        when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Template")));
-        when(interviewAssignmentRestService.findFeedback(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("Filename").build()));
-
+        ZonedDateTime assigned = ZonedDateTime.now();
+        setupViewInvite(applicationId, assigned);
 
         MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view", competition.getId(), applicationId))
                 .andExpect(status().isOk())
@@ -225,13 +208,59 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
         InterviewAssignmentApplicationsSentInviteViewModel model = (InterviewAssignmentApplicationsSentInviteViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals(content, model.getAdditionalText());
-        assertEquals(subject, model.getSubject());
+        assertEquals("Content", model.getAdditionalText());
+        assertEquals("Subject", model.getSubject());
         assertEquals("Template", model.getContent());
         assertEquals("Organisation", model.getLeadOrganisation());
-        assertEquals(assigned, model.getDateAssigned());
         assertEquals("Filename", model.getFeedbackFilename());
+        assertEquals(assigned, model.getDateAssigned());
         assertTrue(model.hasAttachment());
+    }
+
+    @Test
+    public void editInvite_uploadFile() throws Exception {
+        long applicationId = 1L;
+        ZonedDateTime assigned = ZonedDateTime.now();
+        setupViewInvite(applicationId, assigned);
+
+        when(interviewAssignmentRestService.uploadFeedback(applicationId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
+                .thenReturn(restSuccess());
+        //Delete feedback can throw a 404, we ignore it.
+        when(interviewAssignmentRestService.deleteFeedback(applicationId)).thenReturn(restFailure(CommonErrors.notFoundError(Object.class)));
+        MockMultipartFile file = new MockMultipartFile("feedback", "testFile.pdf", "application/pdf", "My content!".getBytes());
+
+        when(interviewAssignmentRestService.resendInvite(eq(applicationId), any())).thenReturn(restSuccess());
+
+        mockMvc.perform(fileUpload("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit", competition.getId(), applicationId)
+                .file(file)
+                .param("subject", "Subject...")
+                .param("content", "Editable content..."))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/assessment/interview/competition/%s/applications/invite/%s/view", competition.getId(), applicationId)));
+
+        verify(interviewAssignmentRestService).uploadFeedback(applicationId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes());
+        verify(interviewAssignmentRestService).deleteFeedback(applicationId);
+        verify(interviewAssignmentRestService).resendInvite(applicationId, new AssessorInviteSendResource("Subject...", "Editable content..."));
+    }
+
+    @Test
+    public void editInvite_removeFile() throws Exception {
+        long applicationId = 1L;
+        ZonedDateTime assigned = ZonedDateTime.now();
+        setupViewInvite(applicationId, assigned);
+
+        when(interviewAssignmentRestService.deleteFeedback(applicationId)).thenReturn(restSuccess());
+        when(interviewAssignmentRestService.resendInvite(eq(applicationId), any())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit", competition.getId(), applicationId)
+                .param("subject", "Subject...")
+                .param("content", "Editable content...")
+                .param("removeFile", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/assessment/interview/competition/%s/applications/invite/%s/view", competition.getId(), applicationId)));
+
+        verify(interviewAssignmentRestService).deleteFeedback(applicationId);
+        verify(interviewAssignmentRestService).resendInvite(applicationId, new AssessorInviteSendResource("Subject...", "Editable content..."));
     }
 
     private InterviewAssignmentStagedApplicationPageResource setupMocksForGet(long competitionId) {
@@ -274,5 +303,25 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                 .withLeadOrganisationName("Org 1", "Org 2")
                 .withFilename("file1", "file2")
                 .build(2);
+    }
+
+    private void setupViewInvite(long applicationId, ZonedDateTime assigned) {
+        String subject = "Subject";
+        String content = "Content";
+        ApplicationResource applicationResource = newApplicationResource().withName("Application").build();
+
+        InterviewApplicationSentInviteResource sentInvite = newInterviewApplicationSentInviteResource()
+                .withSubject(subject)
+                .withContent(content)
+                .withAssigned(assigned)
+                .build();
+
+        when(interviewAssignmentRestService.getSentInvite(applicationId)).thenReturn(restSuccess(sentInvite));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(applicationService.getLeadOrganisation(applicationId)).thenReturn(newOrganisationResource().withName("Organisation").build());
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+        when(interviewAssignmentRestService.getEmailTemplate()).thenReturn(restSuccess(new ApplicantInterviewInviteResource("Template")));
+        when(interviewAssignmentRestService.findFeedback(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("Filename").build()));
+
     }
 }
