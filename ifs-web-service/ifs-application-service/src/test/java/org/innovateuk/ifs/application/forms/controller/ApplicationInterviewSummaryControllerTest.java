@@ -11,6 +11,10 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.summary.controller.ApplicationInterviewSummaryController;
+import org.innovateuk.ifs.application.summary.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.summary.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.summary.populator.ApplicationInterviewSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationInterviewSummaryViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -31,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Collections;
 
@@ -43,6 +48,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -65,6 +71,14 @@ public class ApplicationInterviewSummaryControllerTest extends AbstractApplicati
 
     @Spy
     @InjectMocks
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
+
+    @Spy
+    @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Mock
@@ -73,6 +87,10 @@ public class ApplicationInterviewSummaryControllerTest extends AbstractApplicati
     @Spy
     @InjectMocks
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationInterviewSummaryViewModelPopulator applicationInterviewSummaryViewModelPopulator;
 
     @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
@@ -175,14 +193,18 @@ public class ApplicationInterviewSummaryControllerTest extends AbstractApplicati
         DefaultFinanceModelManager financeManager = mock(DefaultFinanceModelManager.class);
         when(financeViewHandlerProvider.getFinanceModelManager(0)).thenReturn(financeManager);
 
-        mockMvc.perform(get("/application/" + application.getId() + "/assessor-summary"))
+        MvcResult result = mockMvc.perform(get("/application/" + application.getId() + "/interview-summary"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-assessor-summary"))
-                .andExpect(model().attribute("currentApplication", application))
-                .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetition())))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
-                .andExpect(model().attribute("feedback", applicationAssessmentFeedback.getFeedback()))
-                .andExpect(model().attribute("scores", applicationAssessmentAggregate));
+                .andExpect(view().name("application-interview-summary"))
+                .andReturn();
+
+        ApplicationInterviewSummaryViewModel model = (ApplicationInterviewSummaryViewModel) result.getModelAndView().getModel().get("applicationInterviewSummaryViewModel");
+
+        assertEquals(model.getApplication(), application);
+        assertEquals(model.getCompetition().getId(), competitionId);
+        assertEquals(model.getLeadOrganisation(), organisations.get(0));
+        assertEquals(model.getResponses(), formInputsToFormInputResponses);
+        assertEquals(model.getFeedback(), applicationAssessmentFeedback.getFeedback());
+        assertEquals(model.getScores(), applicationAssessmentAggregate);
     }
 }
