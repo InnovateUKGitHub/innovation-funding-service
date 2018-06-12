@@ -40,8 +40,6 @@ import static org.mockito.Mockito.when;
 public class OtherFundingValidatorTest {
 
 	private Validator validator;
-	
-    private ReloadableResourceBundleMessageSource messageSource;
 
     @Mock
     private ApplicationFinanceRowRepository financeRowRepository;
@@ -52,7 +50,6 @@ public class OtherFundingValidatorTest {
 	
 	@Before
 	public void setUp() {
-		messageSource = new ReloadableResourceBundleMessageSource();
         validator = new OtherFundingValidator(financeRowRepository, questionService);
     }
 	
@@ -79,6 +76,12 @@ public class OtherFundingValidatorTest {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", new BigDecimal(0));
         expectError(otherFunding, "validation.field.max.value.or.higher", 1);
+    }
+    @Test
+    public void testInvalidFundingAmountNull() {
+        mockWithRadio("Yes");
+        OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", null);
+        expectError(otherFunding, "validation.field.must.not.be.blank", 1);
     }
     @Test
     public void testInvalidSecuredDate() {
