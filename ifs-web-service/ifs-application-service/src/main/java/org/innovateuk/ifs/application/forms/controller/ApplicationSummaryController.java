@@ -146,7 +146,6 @@ public class ApplicationSummaryController {
             applicationModelPopulator.addFeedbackAndScores(model, applicationId);
             if (project != null) {
                 projectId = project.getId();
-                model.addAttribute("projectId", projectId);
             }
             model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
             model.addAttribute("origin", origin);

@@ -38,7 +38,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
     @Test
     public void testDashboard() throws Exception {
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-        when(populator.populate(anyLong(), anyString())).thenReturn(viewModel);
+        when(populator.populate(loggedInUser.getId(), "?origin=APPLICANT_DASHBOARD")).thenReturn(viewModel);
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
