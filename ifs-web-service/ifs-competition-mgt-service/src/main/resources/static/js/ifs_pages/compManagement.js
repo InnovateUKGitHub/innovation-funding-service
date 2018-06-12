@@ -10,8 +10,7 @@ IFS.competitionManagement.various = (function () {
       submitFundingDecisionButton: '#publish-funding-decision',
       noJsSubmitFundingDecisionButton: '#no-js-notify-applicants',
       noJsSaveFundingDecisionButton: '#no-js-save-funding-decision',
-      fundingDecisionForm: '#submit-funding-decision-form',
-
+      fundingDecisionForm: '#submit-funding-decision-form'
     },
     init: function () {
       s = this.settings

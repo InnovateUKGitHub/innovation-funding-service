@@ -296,7 +296,6 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
         verify(interviewApplicationInviteServiceMock, only()).resendInvite(applicationId, sendResource);
     }
 
-
     protected HttpHeaders createFileUploadHeader(String contentType, long contentLength) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));

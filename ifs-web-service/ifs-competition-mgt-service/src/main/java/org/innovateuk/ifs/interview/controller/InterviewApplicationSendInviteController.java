@@ -154,7 +154,6 @@ public class InterviewApplicationSendInviteController {
         return "assessors/interview/application-view-invite";
     }
 
-
     @GetMapping(value = "/{applicationId}/edit")
     public String editInvite(Model model,
                              @ModelAttribute("form") InterviewApplicationResendForm form,
@@ -204,7 +203,6 @@ public class InterviewApplicationSendInviteController {
                         .failNowOrSucceedWith(failureView, successView);
                 }
             );
-
         });
     }
 

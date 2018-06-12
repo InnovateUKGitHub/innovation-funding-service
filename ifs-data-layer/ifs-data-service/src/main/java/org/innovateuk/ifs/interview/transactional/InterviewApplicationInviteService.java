@@ -27,7 +27,6 @@ public interface InterviewApplicationInviteService {
             description = "The Competition Admin user and Project Finance users can view sent invites to applicants")
     ServiceResult<InterviewApplicationSentInviteResource> getSentInvite(long applicationId);
 
-
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATION_RESEND_INVITE",
             description = "The Competition Admin user and Project Finance users can resend invites to applicants")
