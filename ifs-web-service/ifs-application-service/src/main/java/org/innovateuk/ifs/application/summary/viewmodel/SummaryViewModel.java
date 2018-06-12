@@ -33,7 +33,7 @@ public class SummaryViewModel {
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final Set<Long> sectionsMarkedAsComplete;
     private final Map<Long, AbstractFormInputViewModel> formInputViewModels;
-    private final boolean fromApplicatrionService;
+    private final boolean fromApplicationService;
 
     public SummaryViewModel(ApplicationResource currentApplication,
                             Map<Long, SectionResource> sections,
@@ -51,7 +51,7 @@ public class SummaryViewModel {
                             ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                             Set<Long> sectionsMarkedAsComplete,
                             Map<Long, AbstractFormInputViewModel> formInputViewModels,
-                            boolean fromApplicatrionService) {
+                            boolean fromApplicationService) {
         this.currentApplication = currentApplication;
         this.sections = sections;
         this.sectionQuestions = sectionQuestions;
@@ -68,7 +68,7 @@ public class SummaryViewModel {
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
         this.formInputViewModels = formInputViewModels;
-        this.fromApplicatrionService = fromApplicatrionService;
+        this.fromApplicationService = fromApplicationService;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -135,7 +135,7 @@ public class SummaryViewModel {
         return formInputViewModels;
     }
 
-    public boolean isFromApplicatrionService() {
-        return fromApplicatrionService;
+    public boolean isFromApplicationService() {
+        return fromApplicationService;
     }
 }
