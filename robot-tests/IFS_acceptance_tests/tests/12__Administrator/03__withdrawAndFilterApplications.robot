@@ -8,8 +8,8 @@ Resource        ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${externalProjectWithdrawnMessage}    This project has been withdrawn
-${proj_electric_drive}                ${application_ids['Electric Drive']}
-${solarPowerApplication}              SPAM: Solar power aggregation meshes
+${proj_electric_drive}                ${application_ids['Electric Drive']}  # Unsuccessful application
+${solarPowerApplication}              SPAM: Solar power aggregation meshes  # Ineligible application
 ${solarPowerApplicationID}            ${application_ids['${solarPowerApplication}']}
 ${unsuccessfulState}                  Unsuccessful
 ${withdrawnState}                     Withdrawn
