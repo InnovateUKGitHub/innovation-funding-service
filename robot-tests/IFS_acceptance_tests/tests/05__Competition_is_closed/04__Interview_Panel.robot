@@ -64,6 +64,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3542 Interview panels - View of application and feedback when competition feedback released
 ...
 ...               IFS-3566 Assessor dashboard - View of individual application
+...
+...               IFS-3571 Interview panels - Internal user view of applications and associated feedback
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -196,12 +198,17 @@ Applicant can see the feedback given
     And the user should see the element       jQuery=h2:contains("Average score: 8/ 10")
 
 Applicant can upload the reponse to interview panel
-    [Documentation]  IFS-3253
+    [Documentation]  IFS-3253  IFS-3571
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link    link=Feedback overview
     When the applicant upload the response to the interview panel
     Then the compAdmin checks the status for response uploaded applicantion
     And the user should see the element         jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
+    Then the user clicks the button/link        link=139
+    And the user should see the element         jQuery=p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
+    #Put in here a test that clicks on the application and then checks for the feedback
+    #Here? - Add a test to check the feedback uploaded with John
+
 
 Applicant can remove the uploaded response
     [Documentation]  IFS-3253  IFS-3378
