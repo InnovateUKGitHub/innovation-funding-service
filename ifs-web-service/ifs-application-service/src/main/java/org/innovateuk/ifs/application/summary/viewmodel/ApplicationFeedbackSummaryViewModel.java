@@ -25,6 +25,9 @@ public class ApplicationFeedbackSummaryViewModel {
     private final ApplicationAssessmentAggregateResource scores;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
+    private final String backUrl;
+    private final String origin;
+
 
     public ApplicationFeedbackSummaryViewModel(ApplicationResource application,
                                                CompetitionResource competition,
@@ -37,7 +40,9 @@ public class ApplicationFeedbackSummaryViewModel {
                                                Map<Long, List<QuestionResource>> sectionQuestions,
                                                ApplicationAssessmentAggregateResource scores,
                                                ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
-                                               ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+                                               ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                               String backUrl,
+                                               String origin) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -50,6 +55,8 @@ public class ApplicationFeedbackSummaryViewModel {
         this.scores = scores;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
+        this.backUrl = backUrl;
+        this.origin = origin;
     }
 
     public ApplicationResource getApplication() {
@@ -98,5 +105,13 @@ public class ApplicationFeedbackSummaryViewModel {
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    public String getBackUrl() {
+        return backUrl;
+    }
+
+    public String getOrigin() {
+        return origin;
     }
 }

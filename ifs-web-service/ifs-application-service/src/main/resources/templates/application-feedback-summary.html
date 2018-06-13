@@ -9,8 +9,8 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:if="${origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Set up your project',linkClass='link-back',linkUrl=@{${backUrl}})" />
-            <th:block th:unless="${origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Dashboard',linkClass='link-back',linkUrl=@{${backUrl}})" />
+            <th:block th:if="${applicationFeedbackSummaryViewModel.origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Set up your project',linkClass='link-back',linkUrl=@{${applicationFeedbackSummaryViewModel.backUrl}})" />
+            <th:block th:unless="${applicationFeedbackSummaryViewModel.origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Dashboard',linkClass='link-back',linkUrl=@{${applicationFeedbackSummaryViewModel.backUrl}})" />
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${applicationFeedbackSummaryViewModel.competition})" />
             <th:block th:with="applicationName=${#strings.isEmpty(applicationFeedbackSummaryViewModel.application.name)} ? #{ifs.application.no_title} : ${applicationFeedbackSummaryViewModel.application.name}">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationFeedbackSummaryViewModel.application.name},size='heading-xlarge'" />

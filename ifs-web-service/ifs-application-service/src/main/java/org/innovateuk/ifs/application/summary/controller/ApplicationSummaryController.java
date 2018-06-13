@@ -18,6 +18,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -50,14 +52,15 @@ public class ApplicationSummaryController {
 
     private ApplicationService applicationService;
     private CompetitionService competitionService;
+    private ProjectService projectService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewResponseRestService interviewResponseRestService;
     private ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator;
     private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
     private String origin;
-    MultiValueMap queryParams;
     private Long projectId;
+    MultiValueMap queryParams;
 
     public ApplicationSummaryController() {
     }
@@ -69,7 +72,8 @@ public class ApplicationSummaryController {
                                         InterviewResponseRestService interviewResponseRestService,
                                         ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator,
                                         ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator,
-                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
+                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator,
+                                        ProjectService projectService) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
@@ -77,6 +81,7 @@ public class ApplicationSummaryController {
         this.applicationInterviewFeedbackViewModelPopulator = applicationInterviewFeedbackViewModelPopulator;
         this.applicationFeedbackSummaryViewModelPopulator = applicationFeedbackSummaryViewModelPopulator;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
+        this.projectService = projectService;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
@@ -97,13 +102,18 @@ public class ApplicationSummaryController {
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        if (project != null) {
+            projectId = project.getId();
+        }
+
+        String backUrl = buildBackUrl(origin, applicationId, projectId, queryParams);
+//        model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
+//        model.addAttribute("origin", origin);
+
         if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
-            model.addAttribute("applicationFeedbackSummaryViewModel", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user));
-            if (project != null) {
-                projectId = project.getId();
-            }
-            model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
-            model.addAttribute("origin", origin);
+            model.addAttribute("applicationFeedbackSummaryViewModel", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user, backUrl, origin));
+
 
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
@@ -114,21 +124,6 @@ public class ApplicationSummaryController {
             model.addAttribute("applicationSummaryViewModel", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
             return "application-summary";
         }
-    }
-
-    private String buildBackUrl(String origin, long applicationId, Long projectId, MultiValueMap<String, String> queryParams) {
-        String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
-        queryParams.remove("origin");
-
-        if (queryParams.containsKey("applicationId")) {
-            queryParams.remove("applicationId");
-        }
-
-        return UriComponentsBuilder.fromPath(baseUrl)
-                .queryParams(queryParams)
-                .buildAndExpand(asMap( "projectId", projectId))
-                .encode()
-                .toUriString();
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
@@ -188,5 +183,20 @@ public class ApplicationSummaryController {
                                                        @PathVariable("applicationId") long applicationId) {
         return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
                 interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
+    }
+
+    private String buildBackUrl(String origin, long applicationId, Long projectId, MultiValueMap<String, String> queryParams) {
+        String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
+        queryParams.remove("origin");
+
+        if (queryParams.containsKey("applicationId")) {
+            queryParams.remove("applicationId");
+        }
+
+        return UriComponentsBuilder.fromPath(baseUrl)
+                .queryParams(queryParams)
+                .buildAndExpand(asMap( "projectId", projectId))
+                .encode()
+                .toUriString();
     }
 }
