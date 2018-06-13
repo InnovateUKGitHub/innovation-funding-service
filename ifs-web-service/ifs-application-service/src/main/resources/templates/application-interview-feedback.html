@@ -66,8 +66,8 @@
                             <span class="summary">What should I include in the response?</span>
                         </summary>
                         <div class="panel" id="details-content-0" aria-hidden="true">
-                            <p>You may submit a written response to this feedback. You can upload up to 3 A4 pages in a single PDF
-                                document, including charts and diagrams. The maximum file upload size is 2MB.</p>
+                            <p>You may submit a written response to this feedback. You can upload up to 10 A4 pages in a single PDF document,
+                                including charts and diagrams. The maximum file upload size is 10MB.</p>
                         </div>
                     </details>
                     <div th:unless="${interviewFeedbackViewModel.hasResponse()}"th:classappend="${#fields.hasErrors('response')} ? 'form-group-error'">
@@ -156,7 +156,7 @@
     <th:block th:if="${interviewFeedbackViewModel.hasFeedback()}">
         <h2 class="heading-medium">Additional feedback</h2>
         <div class="form-group download">
-            <h3 class="heading-small no-margin">Panel assessment feedback</h3>
+            <h3 class="heading-small no-margin">Additional Innovate UK feedback</h3>
             <a target="_blank" href=""
                th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${currentApplication.id})}"
                th:text="${interviewFeedbackViewModel.feedbackFilename + ' (opens in a new window)'}">panel-assessment-feedback.pdf, 6 KB (opens in a new window)</a>
