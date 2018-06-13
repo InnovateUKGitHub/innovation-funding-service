@@ -20,7 +20,7 @@ The IFS Admin withdraws a project from Project Setup
     [Documentation]  IFS-2945
     [Tags]  HappyPath
     [Setup]  The user logs-in in new browser               &{ifs_admin_user_credentials}
-    Given the user navigates to the page                   ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION_NAME}/status/all
+    Given the user navigates to the page                   ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
     And the user clicks the button/link                    jQuery=tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
     When the user cancels then withdraws the project
     Then the user can see the previous application         ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
@@ -60,6 +60,6 @@ The user selects a filter for the applications
     When the user clicks the button/link                         css=button[class="button"]  #Filter
 
 The user can see all of the previous applications when the All filter is applied
-    the user can see the previous application                ${INFORM_COMPETITION_NAME_2_NUMBER}  ${withdrawnState}
+    the user can see the previous application                ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
     the user can see the previous application                ${unsuccessfulApplication}               ${unsuccessfulState}
     the user can see the previous application                ${ineligibleApplicationID}           ${ineligibleState}

@@ -108,6 +108,7 @@ ${INFORM_COMPETITION_NAME_1_NUMBER}       ${application_ids['${INFORM_COMPETITIO
 ${INFORM_COMPETITION_NAME_2}              High Performance Gasoline Stratified
 ${INFORM_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_2}']}
 ${WITHDRAWN_PROJECT_COMPETITION_NAME}     Integrated delivery programme - solar vehicles
+${WITHDRAWN_PROJECT_COMPETITION}          ${competition_ids['${WITHDRAWN_PROJECT_COMPETITION_NAME}']}
 ${WITHDRAWN_PROJECT_COMPETITION_NAME_1}   Low-friction wheel coatings
 ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}       ${application_ids['${WITHDRAWN_PROJECT_COMPETITION_NAME_1}']}
 ${WITHDRAWN_PROJECT_COMPETITION_NAME_2}    SPAM: Solar power aggregation meshes
