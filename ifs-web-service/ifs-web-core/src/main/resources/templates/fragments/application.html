@@ -1,18 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="application-summary">
-  <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
+  <section th:each="section : ${sections.values()}"
+           th:unless="${section.name.equals('Finances')}"
+           th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
 
-      <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and !(currentApplication.isOpen() and isApplicant)}"/>
+      <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and appIsClosed}"/>
 
+      <!-- Show the report view of the application details at the top -->
+      <th:block th:if="${section.name.equals('Project details')}">
+          <th:block th:each="question : ${sectionQuestions.get(section.id)}"
+                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
+                                and appIsClosed and !hideDetails}">
+                  <div class="extra-margin">
+                      <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
+                           th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                              <div th:replace="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})" />
+                      </div>
+                  </div>
+
+                  <h2 th:text="${section.name}" class="heading-medium" />
+
+          </th:block>
+      </th:block>
+
+      <!-- Show the expandable sections -->
       <th:block th:each="question : ${sectionQuestions.get(section.id)}">
           <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
-                                                    and !(currentApplication.isOpen() and isApplicant))
+                                                    and appIsClosed)
                                              or (question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM
                                                     and !isApplicant)}">
             <h3>
                 <th:block th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
-                <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
+                <th:block th:if="${!appIsClosed}">
                     <div class="section-status section-complete" th:if="${markedAsComplete.contains(question.id)}">
                         Complete
                     </div>
@@ -72,24 +92,9 @@
 
                 </th:block>
             </div>
-        </div>
+          </div>
 
-         <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
-                                and !(currentApplication.isOpen() and isApplicant) and !hideDetails}">
-             <div class="extra-margin">
-               <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
-                    th:with="formInputIndex=(${status.index}), summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
-                    th:id="'form-input-'+${formInput.getId()}">
 
-                   <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                       <div th:replace="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})" />
-                   </th:block>
-
-               </div>
-             </div>
-
-             <h2 th:text="${section.name}" class="heading-medium" />
-         </th:block>
       </th:block>
 
   </section>

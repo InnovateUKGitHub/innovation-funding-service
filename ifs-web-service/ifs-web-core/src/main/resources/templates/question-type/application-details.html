@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="read-only(model)"  th:with="competition=${model.competition}">
 
-    <th:block th:if="${model.complete}">
+    <th:block th:if="${model.complete and !appIsClosed}">
         <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
     </th:block>
 
