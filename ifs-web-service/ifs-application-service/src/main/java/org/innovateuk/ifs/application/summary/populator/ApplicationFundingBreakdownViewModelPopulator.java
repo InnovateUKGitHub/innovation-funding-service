@@ -94,39 +94,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
         SectionResource section = sectionService.getFinanceSection(competition.getId());
 
-        sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
-
-        List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competition.getId(), section);
-
-        List<QuestionResource> allQuestions = questionService.findByCompetition(competition.getId());
-
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
-                .collect(toMap(
-                        SectionResource::getId,
-                        s -> filterQuestions(s.getQuestions(), allQuestions)
-                ));
-
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
-                competition.getId(),
-                APPLICATION
-        )
-                .getSuccess();
-
-        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
-                .values().stream().flatMap(a -> a.stream())
-                .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
-
-
-        //Remove all questions without non-empty form inputs.
-        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
-                .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
-        questionsWithoutNonEmptyFormInput.forEach(questionId -> {
-            financeSectionChildrenQuestionFormInputs.remove(questionId);
-            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
-                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
-        });
-
-
         final List<String> activeApplicationOrganisationNames = applicationOrganisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
 
         final List<String> pendingOrganisationNames = pendingInvitations(applicationId).stream()
@@ -135,18 +102,64 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .filter(orgName -> StringUtils.hasText(orgName)
                         && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
 
-        return new ApplicationFundingBreakdownViewModel(
-                financeTotalPerType,
-                applicationOrganisations,
-                section,
-                financeSubSectionChildren,
-                financeSectionChildrenQuestionsMap,
-                financeSectionChildrenQuestionFormInputs,
-                leadOrganisation,
-                organisationFinances,
-                pendingOrganisationNames
+        // Finance Section will be null for EOI Competitions
+        if (section != null) {
+            sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
+            List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competition.getId(), section);
 
-        );
+
+            List<QuestionResource> allQuestions = questionService.findByCompetition(competition.getId());
+
+            Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
+                    .collect(toMap(
+                            SectionResource::getId,
+                            s -> filterQuestions(s.getQuestions(), allQuestions)
+                    ));
+
+            List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
+                    competition.getId(),
+                    APPLICATION
+            )
+                    .getSuccess();
+
+            Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
+                    .values().stream().flatMap(a -> a.stream())
+                    .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
+
+
+            //Remove all questions without non-empty form inputs.
+            Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
+                    .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
+            questionsWithoutNonEmptyFormInput.forEach(questionId -> {
+                financeSectionChildrenQuestionFormInputs.remove(questionId);
+                    financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
+                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
+            });
+
+            return new ApplicationFundingBreakdownViewModel(
+                    financeTotalPerType,
+                    applicationOrganisations,
+                    section,
+                    financeSubSectionChildren,
+                    financeSectionChildrenQuestionsMap,
+                    financeSectionChildrenQuestionFormInputs,
+                    leadOrganisation,
+                    organisationFinances,
+                    pendingOrganisationNames
+
+            );
+        } else {
+            return new ApplicationFundingBreakdownViewModel(
+                    financeTotalPerType,
+                    applicationOrganisations,
+                    section,
+                    leadOrganisation,
+                    organisationFinances,
+                    pendingOrganisationNames
+
+            );
+        }
+
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
