@@ -177,14 +177,6 @@ public class ApplicationSummaryController {
                 .toUriString();
     }
 
-    private void addFeedbackAndScores(Model model, long applicationId) {
-        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
-        model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
-                .getSuccess()
-                .getFeedback()
-        );
-    }
-
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/summary", params = "uploadResponse")
