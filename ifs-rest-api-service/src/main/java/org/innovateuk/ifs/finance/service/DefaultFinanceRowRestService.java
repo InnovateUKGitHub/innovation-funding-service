@@ -6,8 +6,8 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 /**
  * Interface for CRUD operations on {@link FinanceRowItem} related data.
  */
-public interface ProjectFinanceRowRestService extends FinanceRowRestService {
+public interface DefaultFinanceRowRestService extends FinanceRowRestService {
 
-    RestResult<Void> delete(Long projectId, Long organisationId, Long costId);
+    RestResult<Void> delete(Long costId);
 
 }
