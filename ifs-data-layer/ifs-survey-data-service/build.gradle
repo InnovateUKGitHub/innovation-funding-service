@@ -5,6 +5,7 @@ apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
+apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 
 apply from: "../flyway.gradle"
@@ -61,16 +62,15 @@ prepareDockerBaseInput {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'mysql:mysql-connector-java'
+    compile 'com.h2database:h2'
 
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
     compile project(':ifs-resources:ifs-survey-resources')
     compile project(':ifs-security')
-
     compile project(':ifs-data-layer:data-service-commons')
 
-    testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
@@ -87,10 +87,6 @@ test {
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
-
-    if (project.hasProperty('testGroups')) {
-        systemProperty 'testGroups', project.getProperty('testGroups')
-    }
     finalizedBy asciidoctor
 
     if (targetBuild == 'docker') {
@@ -99,20 +95,5 @@ test {
 
 }
 
-asciidoctor {
-    attributes 'snippets': snippetsDir
-    backends 'html5'
-    inputs.dir snippetsDir
-}
-
-task asciidoctorOnly(type: Test) {
-    beforeTest { desc ->
-        println "Executing test ${desc.className}.${desc.name}"
-    }
-    useJUnit {
-        includeCategories 'org.innovateuk.ifs.ControllerTest'
-    }
-    finalizedBy asciidoctor
-}
 
 flywayMigrate.dependsOn processResources
