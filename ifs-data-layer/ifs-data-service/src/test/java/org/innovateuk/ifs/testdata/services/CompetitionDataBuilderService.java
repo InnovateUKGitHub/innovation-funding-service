@@ -120,7 +120,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withBasicData(line.name, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null, null, AssessorFinanceView.OVERVIEW, null,
-                        null, emptyList(), null, null, line.nonIfsUrl);
+                        null, emptyList(), null, null, line.nonIfsUrl, line.includeApplicationTeamQuestion);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionWithoutMilestones);
 
@@ -137,7 +137,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 withBasicData(line.name, line.type, line.innovationAreas,
                     line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                     line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
-                    line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
+                    line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.includeApplicationTeamQuestion).
                 withApplicationFormFromTemplate().
                 withNewMilestones();
 
