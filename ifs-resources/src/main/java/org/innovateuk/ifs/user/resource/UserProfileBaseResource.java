@@ -10,12 +10,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER_8_20_DIGITS;
+
 /**
  * Base class for user profile DTOs
  */
 public abstract class UserProfileBaseResource {
-
-    public static final String VALID_PHONE_NUMBER_8_20_DIGITS = "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$";
 
     private Title title;
 

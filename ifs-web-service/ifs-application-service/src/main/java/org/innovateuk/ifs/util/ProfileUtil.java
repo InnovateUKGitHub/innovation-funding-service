@@ -11,8 +11,6 @@ import java.util.Optional;
  */
 public final class ProfileUtil {
 
-    public static final String VALID_PHONE_NUMBER_8_20_DIGITS = "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$";
-
     private ProfileUtil() {}
 
     public static Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation) {

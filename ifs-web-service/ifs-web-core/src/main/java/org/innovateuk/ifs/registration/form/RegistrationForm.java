@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER_8_20_DIGITS;
+
 /**
  * This object is used for the account registration form. When the form is submitted the data is
  * injected into a RegistrationForm instance, so it is easy to use and you don't need to
@@ -18,8 +20,6 @@ import javax.validation.constraints.Size;
  */
 
 public class RegistrationForm extends BaseBindingResultTarget {
-
-    public static final String VALID_PHONE_NUMBER_8_20_DIGITS = "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$";
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @NotBlank(message = "{validation.standard.email.required}")

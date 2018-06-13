@@ -10,9 +10,9 @@ import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class MonitoringOfficerResource {
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER_8_20_DIGITS;
 
-    public static final String VALID_PHONE_NUMBER_8_20_DIGITS = "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$";
+public class MonitoringOfficerResource {
 
     private Long id;
 

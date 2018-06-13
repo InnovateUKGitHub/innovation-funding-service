@@ -7,7 +7,7 @@ import org.innovateuk.ifs.user.resource.Gender;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import static org.innovateuk.ifs.util.ProfileUtil.VALID_PHONE_NUMBER_8_20_DIGITS;
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER_8_20_DIGITS;
 
 /**
  * This object is used for the editing of user details. When the form is submitted the data is
