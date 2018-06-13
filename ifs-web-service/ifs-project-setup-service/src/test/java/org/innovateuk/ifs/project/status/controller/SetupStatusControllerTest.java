@@ -27,7 +27,7 @@ public class SetupStatusControllerTest extends BaseControllerMockMVCTest<SetupSt
 
         Long projectId = 1L;
 
-        when(populator.populateViewModel(projectId, loggedInUser)).thenReturn(completedFuture(new SetupStatusViewModel()));
+        when(populator.populateViewModel(projectId, loggedInUser, "origin")).thenReturn(completedFuture(new SetupStatusViewModel()));
 
         mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())
