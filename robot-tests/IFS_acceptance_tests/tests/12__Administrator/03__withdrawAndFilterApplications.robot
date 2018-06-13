@@ -8,8 +8,8 @@ Resource        ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${externalProjectWithdrawnMessage}    This project has been withdrawn
-${unsuccessfulApplication}            ${WITHDRAWN_PROJECT_COMPETITION_NAME_3_NUMBER}  # Unsuccessful application
-${ineligibleApplication}              ${WITHDRAWN_PROJECT_COMPETITION_NAME_2}  # Ineligible application
+${unsuccessfulApplication}            ${WITHDRAWN_PROJECT_COMPETITION_NAME_3_NUMBER}
+${ineligibleApplication}              ${WITHDRAWN_PROJECT_COMPETITION_NAME_2} 
 ${ineligibleApplicationID}            ${WITHDRAWN_PROJECT_COMPETITION_NAME_2_NUMBER}
 ${unsuccessfulState}                  Unsuccessful
 ${withdrawnState}                     Withdrawn
