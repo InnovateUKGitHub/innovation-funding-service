@@ -1,12 +1,15 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.feedback.populator;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFeedbackSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackSummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -14,6 +17,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -46,6 +50,8 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
     private SectionService sectionService;
     private QuestionService questionService;
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
 
     public ApplicationFeedbackSummaryViewModelPopulator(OrganisationRestService organisationRestService,
                                                         ApplicationService applicationService,
@@ -59,7 +65,9 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
                                                         QuestionService questionService,
                                                         AssessorFormInputResponseRestService assessorFormInputResponseRestService,
                                                         ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
-                                                        ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator) {
+                                                        ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
+                                                        InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
+                                                        InterviewAssignmentRestService interviewAssignmentRestService) {
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionService = competitionService;
@@ -73,6 +81,8 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
         this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
         this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
+        this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
+        this.interviewAssignmentRestService = interviewAssignmentRestService;
     }
 
     public ApplicationFeedbackSummaryViewModel populate(long applicationId, UserResource user) {
@@ -97,13 +107,10 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
 
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         final boolean hasFinanceSection;
-        final Long financeSectionId;
         if (financeSection == null) {
             hasFinanceSection = false;
-            financeSectionId = null;
         } else {
             hasFinanceSection = true;
-            financeSectionId = financeSection.getId();
         }
 
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
@@ -126,6 +133,13 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId);
 
+        InterviewFeedbackViewModel interviewFeedbackViewModel;
+        if (interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess()) {
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, competition.getCompetitionStatus().isFeedbackReleased());
+        } else {
+            interviewFeedbackViewModel = null;
+        }
+
         return new ApplicationFeedbackSummaryViewModel(
                 application,
                 competition,
@@ -138,7 +152,8 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
                 sectionQuestions,
                 scores,
                 applicationFinanceSummaryViewModel,
-                applicationFundingBreakdownViewModel
+                applicationFundingBreakdownViewModel,
+                interviewFeedbackViewModel
         );
     }
 

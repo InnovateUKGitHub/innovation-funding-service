@@ -1,0 +1,111 @@
+package org.innovateuk.ifs.application.feedback.controller;
+
+import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.function.Supplier;
+
+import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
+
+@Controller
+@RequestMapping("/application")
+public class ApplicationFeedbackController {
+
+    @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+    @Autowired
+    private InterviewResponseRestService interviewResponseRestService;
+    @Autowired
+    private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
+
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
+    @GetMapping("/{applicationId}/feedback")
+    public String feedback(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
+                           BindingResult bindingResult,
+                           ValidationHandler validationHandler,
+                           Model model,
+                           @PathVariable("applicationId") long applicationId,
+                           UserResource user) {
+
+        model.addAttribute("model", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user));
+        return "application-feedback";
+    }
+
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping(value = "/{applicationId}/feedback", params = "uploadResponse")
+    public String uploadResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 @PathVariable("applicationId") long applicationId,
+                                 UserResource user) {
+
+        Supplier<String> failureAndSuccessView = () -> feedback(form, bindingResult, validationHandler, model, applicationId, user);
+        MultipartFile file = form.getResponse();
+        RestResult<Void> sendResult = interviewResponseRestService
+                .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+
+        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())), fileUploadField("response"), defaultConverters())
+                .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
+    }
+
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to remove interview feedback.")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping(value = "/{applicationId}/feedback", params = "removeResponse")
+    public String removeResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 @PathVariable("applicationId") long applicationId,
+                                 UserResource user) {
+
+        Supplier<String> failureAndSuccessView = () -> feedback(interviewResponseForm, bindingResult, validationHandler, model, applicationId, user);
+        RestResult<Void> sendResult = interviewResponseRestService
+                .deleteResponse(applicationId);
+
+        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
+                .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
+    }
+
+    @GetMapping("/{applicationId}/feedback/download-response")
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadResponse(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+        return getFileResponseEntity(interviewResponseRestService.downloadResponse(applicationId).getSuccess(),
+                interviewResponseRestService.findResponse(applicationId).getSuccess());
+    }
+
+    @GetMapping("/{applicationId}/feedback/download-feedback")
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+        return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
+                interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
+    }
+}

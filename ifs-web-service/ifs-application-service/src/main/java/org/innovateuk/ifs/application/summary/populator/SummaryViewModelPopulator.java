@@ -1,16 +1,18 @@
 package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFundingBreakdownViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.summary.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;

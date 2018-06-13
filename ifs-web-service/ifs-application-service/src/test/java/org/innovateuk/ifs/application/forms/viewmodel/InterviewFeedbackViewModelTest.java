@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.viewmodel;
 
+import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.application.forms.populator;
+package org.innovateuk.ifs.application.feedback.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.forms.viewmodel.AssessQuestionFeedbackViewModel;
+import org.innovateuk.ifs.application.feedback.viewmodel.AssessQuestionFeedbackViewModel;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;

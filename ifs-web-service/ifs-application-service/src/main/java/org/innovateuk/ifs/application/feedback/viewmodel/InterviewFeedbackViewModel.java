@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.viewmodel;
+package org.innovateuk.ifs.application.feedback.viewmodel;
 
 public class InterviewFeedbackViewModel {
     final static String LEAD_WITH_RESPONSE_BANNER =  "Your response has been uploaded." +

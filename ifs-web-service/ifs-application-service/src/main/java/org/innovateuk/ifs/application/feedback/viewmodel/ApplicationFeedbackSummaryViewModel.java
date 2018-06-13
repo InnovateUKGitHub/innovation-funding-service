@@ -1,5 +1,7 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.feedback.viewmodel;
 
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -25,6 +27,7 @@ public class ApplicationFeedbackSummaryViewModel {
     private final ApplicationAssessmentAggregateResource scores;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
+    private final InterviewFeedbackViewModel interviewFeedbackViewModel;
 
     public ApplicationFeedbackSummaryViewModel(ApplicationResource application,
                                                CompetitionResource competition,
@@ -37,7 +40,8 @@ public class ApplicationFeedbackSummaryViewModel {
                                                Map<Long, List<QuestionResource>> sectionQuestions,
                                                ApplicationAssessmentAggregateResource scores,
                                                ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
-                                               ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+                                               ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                               InterviewFeedbackViewModel interviewFeedbackViewModel) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -50,6 +54,7 @@ public class ApplicationFeedbackSummaryViewModel {
         this.scores = scores;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
+        this.interviewFeedbackViewModel = interviewFeedbackViewModel;
     }
 
     public ApplicationResource getApplication() {
@@ -98,5 +103,9 @@ public class ApplicationFeedbackSummaryViewModel {
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    public InterviewFeedbackViewModel getInterviewFeedbackViewModel() {
+        return interviewFeedbackViewModel;
     }
 }

@@ -5,34 +5,21 @@ import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.summary.populator.ApplicationFeedbackSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.summary.populator.ApplicationInterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.function.Supplier;
-
-import static org.innovateuk.ifs.commons.rest.RestFailure.error;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
-import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
-import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * This controller will handle all requests that are related to the application summary.
@@ -41,12 +28,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 @RequestMapping("/application")
 public class ApplicationSummaryController {
 
+
     private ApplicationService applicationService;
     private CompetitionService competitionService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
-    private InterviewResponseRestService interviewResponseRestService;
-    private ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator;
-    private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
 
     public ApplicationSummaryController() {
@@ -56,16 +41,10 @@ public class ApplicationSummaryController {
     public ApplicationSummaryController(ApplicationService applicationService,
                                         CompetitionService competitionService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
-                                        InterviewResponseRestService interviewResponseRestService,
-                                        ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator,
-                                        ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator,
                                         ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
-        this.interviewResponseRestService = interviewResponseRestService;
-        this.applicationInterviewFeedbackViewModelPopulator = applicationInterviewFeedbackViewModelPopulator;
-        this.applicationFeedbackSummaryViewModelPopulator = applicationFeedbackSummaryViewModelPopulator;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
     }
 
@@ -82,78 +61,12 @@ public class ApplicationSummaryController {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
-
-        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
-            model.addAttribute("applicationFeedbackSummaryViewModel", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user));
-            return "application-feedback-summary";
-        } else if (isApplicationAssignedToInterview) {
-            model.addAttribute("interviewFeedbackViewModel", applicationInterviewFeedbackViewModelPopulator.populate(applicationId, user));
-            return "application-interview-feedback";
+        if (competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) {
+            return String.format("redirect:/application/%s/feedback", applicationId);
         }
-        else {
-            model.addAttribute("applicationSummaryViewModel", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
-            return "application-summary";
-        }
-    }
 
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
-    @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping(value = "/{applicationId}/summary", params = "uploadResponse")
-    public String uploadResponse(@ModelAttribute("form") ApplicationForm applicationForm,
-                                 @ModelAttribute("interviewResponseForm") InterviewResponseForm form,
-                                 BindingResult bindingResult,
-                                 ValidationHandler validationHandler,
-                                 Model model,
-                                 @PathVariable("applicationId") long applicationId,
-                                 UserResource user) {
-
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), form, bindingResult, validationHandler, model, applicationId, user);
-        MultipartFile file = form.getResponse();
-        RestResult<Void> sendResult = interviewResponseRestService
-                .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-
-        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())), fileUploadField("response"), defaultConverters())
-                .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
-    }
-
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to remove interview feedback.")
-    @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping(value = "/{applicationId}/summary", params = "removeResponse")
-    public String removeResponse(@ModelAttribute("form") ApplicationForm form,
-                                 @ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
-                                 BindingResult bindingResult,
-                                 ValidationHandler validationHandler,
-                                 Model model,
-                                 @PathVariable("applicationId") long applicationId,
-                                 UserResource user) {
-
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, interviewResponseForm, bindingResult, validationHandler, model, applicationId, user);
-        RestResult<Void> sendResult = interviewResponseRestService
-                .deleteResponse(applicationId);
-
-        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
-                .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
-    }
-
-    @GetMapping("/{applicationId}/summary/download-response")
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadResponse(Model model,
-                                                       @PathVariable("applicationId") long applicationId) {
-        return getFileResponseEntity(interviewResponseRestService.downloadResponse(applicationId).getSuccess(),
-                interviewResponseRestService.findResponse(applicationId).getSuccess());
-    }
-
-    @GetMapping("/{applicationId}/summary/download-feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
-                                                       @PathVariable("applicationId") long applicationId) {
-        return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
-                interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
+        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
+        return "application-summary";
     }
 }

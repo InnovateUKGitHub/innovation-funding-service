@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.viewmodel;
+package org.innovateuk.ifs.application.feedback.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

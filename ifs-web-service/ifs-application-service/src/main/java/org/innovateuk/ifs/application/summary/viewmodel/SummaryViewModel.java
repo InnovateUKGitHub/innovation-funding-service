@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
