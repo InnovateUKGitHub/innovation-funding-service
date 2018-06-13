@@ -120,7 +120,7 @@ Lead should not be able to see GOL until it is sent by IUK
     When the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
-    When the user clicks the button/link             link=Project setup status
+    When the user clicks the button/link             link=Set up your project
     Then the user should not see the element         link=Grant offer letter
 
 Lead cannot change project manager, project address and finance contact after GOL generation
@@ -140,7 +140,7 @@ Non lead should not be able to see GOL until it is sent by IUK
     When the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
-    When the user clicks the button/link             link=Project setup status
+    When the user clicks the button/link             link=Set up your project
     Then the user should not see the element         link=Grant offer letter
 
 Project finance user removes the grant offer letter
@@ -176,7 +176,7 @@ Comp Admin user uploads new grant offer letter
     Then the user should not see the element    css=[name="removeGrantOfferLetterClicked"]
     When the user navigates to the page         ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element        css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.waiting   # GOL
-    And the user reads his email                ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  Your grant offer letter is available  We are pleased to inform you that your grant offer letter is now ready for you to sign
+    And the user reads his email                ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${PS_GOL_COMPETITION_NAME}: Your grant offer letter is available for project ${PS_GOL_APPLICATION_NUMBER}  We are pleased to inform you that your grant offer letter is now ready for you to sign
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848, INFUND-6091
@@ -232,7 +232,7 @@ PM should be able upload a file and then access the Send button
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
     Then the user should see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
-    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=Set up your project
     And the user should see the element    css=li.require-action:nth-child(7)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the text in the page    Project team status
@@ -471,23 +471,23 @@ Non lead cannot see the signed GOL
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]    Email    HappyPath
-    Then the user reads his email    ${PS_GOL_APPLICATION_PM_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${PS_GOL_APPLICATION_PM_EMAIL}    ${PS_GOL_COMPETITION_NAME}: Grant offer letter approval for project ${PS_GOL_APPLICATION_NUMBER}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 Lead finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]    Email    HappyPath
-    Then the user reads his email    ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}    ${PS_GOL_COMPETITION_NAME}: Grant offer letter approval for project ${PS_GOL_APPLICATION_NUMBER}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 
 Industrial finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]    Email    HappyPath
-    Then the user reads his email    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    ${PS_GOL_COMPETITION_NAME}: Grant offer letter approval for project ${PS_GOL_APPLICATION_NUMBER}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 Academic finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]    Email    HappyPath
-    Then the user reads his email    ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    ${PS_GOL_COMPETITION_NAME}: Grant offer letter approval for project ${PS_GOL_APPLICATION_NUMBER}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
 Verify support users permissions in project setup tab
     [Documentation]  IFS-1307

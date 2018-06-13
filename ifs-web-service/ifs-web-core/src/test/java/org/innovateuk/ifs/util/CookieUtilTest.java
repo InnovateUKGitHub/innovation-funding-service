@@ -51,7 +51,7 @@ public class CookieUtilTest {
     }
 
     @Test
-    public void saveToCookie() throws Exception {
+    public void saveToCookie() {
         String fieldName =  "cookie_fieldname";
         String value =  "cookieValue";
 
@@ -66,7 +66,7 @@ public class CookieUtilTest {
     }
 
     @Test
-    public void saveToCompressedCookie() throws Exception {
+    public void saveToCompressedCookie() {
         String fieldName =  "cookie_fieldname";
         String value =  "cookieValue";
 
@@ -80,7 +80,7 @@ public class CookieUtilTest {
     }
 
     @Test
-    public void removeCookie() throws Exception {
+    public void removeCookie() {
         String fieldName = "cookie_fieldname";
 
         cookieUtil.removeCookie(response, fieldName);
@@ -92,7 +92,7 @@ public class CookieUtilTest {
     }
 
     @Test
-    public void getCookie() throws Exception {
+    public void getCookie() {
         String fieldName = "cookie_fieldname";
         String value =  "cookieValue";
 
@@ -109,7 +109,7 @@ public class CookieUtilTest {
     }
 
     @Test
-    public void getCookieValueWithMissingCookie() throws Exception {
+    public void getCookieValueWithMissingCookie() {
         String fieldName = "cookie_fieldname";
 
         String cookieValue = cookieUtil.getCookieValue(request, fieldName);
@@ -118,7 +118,7 @@ public class CookieUtilTest {
     }
 
     @Test
-    public void getCookieValue() throws Exception {
+    public void getCookieValue() {
         String fieldName = "cookie_fieldname";
         String value =  "cookieValue";
 
@@ -130,7 +130,7 @@ public class CookieUtilTest {
     }
 
     @Test
-    public void getCompressedCookieValue() throws Exception {
+    public void getCompressedCookieValue() {
         String fieldName = "cookie_fieldname";
         String value =  "cookieValue";
 

@@ -7,7 +7,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 public enum FileTypeCategory {
-    SPREADSHEET("Spreadsheet", asList(
+    SPREADSHEET("spreadsheet", asList(
             "application/vnd.ms-excel",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "application/vnd.oasis.opendocument.spreadsheet"

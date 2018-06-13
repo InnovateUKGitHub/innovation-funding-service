@@ -70,7 +70,7 @@ public interface ApplicationSummaryService {
 																								   Optional<String> filter,
 																								   Optional<Boolean> informFilter);
 
-	@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
+	@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'assessor')")
 	@SecuredBySpring(value = "READ", description = "Internal users can access application team contacts", securedType = ApplicationTeamResource.class)
 	ServiceResult<ApplicationTeamResource> getApplicationTeamByApplicationId(long applicationId);
 }

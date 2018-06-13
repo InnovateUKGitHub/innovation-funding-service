@@ -38,7 +38,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "An assessor can see the application finances for organisations in the applications they assess")
     public boolean assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isAssessor(applicationFinanceResource.getApplication(), user);
+        return isAssessor(applicationFinanceResource.getApplication(), user) || isInterviewAssessor(applicationFinanceResource.getApplication(), user);
     }
 
     @PermissionRule(value = "READ", description = "An internal user can see application finances for organisations")
