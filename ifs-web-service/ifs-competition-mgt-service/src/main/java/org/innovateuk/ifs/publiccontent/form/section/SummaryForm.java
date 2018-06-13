@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.publiccontent.form.section;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
 
 import javax.validation.Valid;
@@ -11,12 +11,12 @@ import javax.validation.constraints.Size;
  */
 public class SummaryForm extends AbstractContentGroupForm {
 
-    @NotEmpty (message="{validation.publiccontent.summaryform.description.required}")
+    @NotBlank (message="{validation.publiccontent.summaryform.description.required}")
     private String description;
-    @NotEmpty (message="{validation.publiccontent.summaryform.fundingType.required}")
+    @NotBlank (message="{validation.publiccontent.summaryform.fundingType.required}")
     private String fundingType;
     @Valid
-    @NotEmpty (message="{validation.publiccontent.summaryform.projectSize.required}")
+    @NotBlank (message="{validation.publiccontent.summaryform.projectSize.required}")
     @Size(max = 255, message = "{validation.publiccontent.summaryform.projectSize.max}")
     private String projectSize;
 

@@ -150,7 +150,7 @@ Project Finance goes through the Generate Spend Profile tab to generate the Spen
     Then the user should see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).ok
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/queries
     Then the user should not see the element  link=${Katz_Name}
-    And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
+    And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  ${PS_SP_Competition_Name}: Your spend profile is available for project ${PS_SP_APPLICATION_NUMBER}  The finance checks for all partners in the project have now been completed
 
 Project Finance should no longer see the project in the Generate Spend Profile tab
     [Documentation]    IFS-2016
@@ -166,7 +166,7 @@ Lead partner can view spend profile page
     When the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
-    When the user clicks the button/link             link=Project setup status
+    When the user clicks the button/link             link=Set up your project
     Then the user should see the element      css=li.require-action:nth-child(5)
     When the user clicks the button/link     link=Spend profile
     And the user should not see the element    link=Total project profile spend
@@ -272,11 +272,11 @@ Lead partner marks spend profile as complete
     When the user clicks the button/link       css=[name="mark-as-complete"]
     Then the user should not see the element   jQuery=.success-alert p:contains("Your spend profile is marked as complete. You can still edit this page.")
     And the user should not see the element    css=table a[type="number"]    # checking here that the table has become read-only
-    When the user clicks the button/link            link=Project setup status
+    When the user clicks the button/link            link=Set up your project
     And the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
-    When the user clicks the button/link             link=Project setup status
+    When the user clicks the button/link             link=Set up your project
     Then the user should see the element             css=li.require-action:nth-child(5)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -298,13 +298,13 @@ Non-lead partner can view spend profile page
     When the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
-    When the user clicks the button/link             link=Project setup status
+    When the user clicks the button/link             link=Set up your project
     Then the user should see the element             css=li.require-action:nth-child(5)
     When the user clicks the button/link             link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Meembee_Name} - Spend profile
-    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=Set up your project
     And the user should see the element  jQuery=.message-alert:contains("You must complete your project and bank details within 30 days of our notification to you.")
     [Teardown]    the user goes back to the previous page
 
@@ -345,7 +345,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     And the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
-    When the user clicks the button/link             link=Project setup status
+    When the user clicks the button/link             link=Set up your project
     Then the user should see the element             jQuery=li.require-action:nth-child(5)
     When the user clicks the button/link        link=Spend profile
     Then the user should not see the element    jQuery=.button:contains("Review spend profiles")
@@ -360,7 +360,7 @@ Academic partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Zooveo_Name} - Spend profile
-    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=Set up your project
     And the user should see the element  jQuery=.message-alert:contains("You must complete your project and bank details within 30 days of our notification to you.")
     [Teardown]    the user goes back to the previous page
 
@@ -398,7 +398,7 @@ Academic partner spend profile client side validations
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    2  # Estates
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(1) input    0  # Other - Directly allocated
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
-    And the user moves focus to the element            link=Project setup status
+    And the user moves focus to the element            link=Set up your project
     Then the user should not see the text in the page  This field should be 0 or higher
     When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
@@ -711,7 +711,7 @@ Industrial partner receives edit rights and can submit their spend profile
     And the user clicks the button/link     jQuery=button.button:contains("Submit")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
-    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=Set up your project
     And the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
@@ -728,7 +728,7 @@ Academic partner receives edit rights and can submit their spend profile
     And the user clicks the button/link    jQuery=button.button:contains("Submit")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
-    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=Set up your project
     And the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 

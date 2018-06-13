@@ -5,9 +5,7 @@ import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackSe
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackServiceImpl;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class InterviewApplicationFeedbackServiceSecurityTest extends BaseServiceSecurityTest<InterviewApplicationFeedbackService> {
 
@@ -28,7 +26,7 @@ public class InterviewApplicationFeedbackServiceSecurityTest extends BaseService
     public void downloadFeedback() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.downloadFeedback(1L),
-                COMP_ADMIN, PROJECT_FINANCE, APPLICANT
+                COMP_ADMIN, PROJECT_FINANCE, APPLICANT, ASSESSOR
         );
     }
 
@@ -44,7 +42,7 @@ public class InterviewApplicationFeedbackServiceSecurityTest extends BaseService
     public void findFeedback() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.findFeedback(1L),
-                COMP_ADMIN, PROJECT_FINANCE, APPLICANT
+                COMP_ADMIN, PROJECT_FINANCE, APPLICANT, ASSESSOR
         );
     }
 

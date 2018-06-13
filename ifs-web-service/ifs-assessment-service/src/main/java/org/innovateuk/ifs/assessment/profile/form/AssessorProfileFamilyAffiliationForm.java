@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.profile.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
@@ -13,14 +13,14 @@ public class AssessorProfileFamilyAffiliationForm {
     public interface FamilyAffiliations {
     }
 
-    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.relation.required}", groups=FamilyAffiliations.class)
+    @NotBlank(message = "{validation.assessorprofilefamilyaffiliationform.relation.required}", groups=FamilyAffiliations.class)
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String relation;
-    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.organisation.required}", groups=FamilyAffiliations.class)
+    @NotBlank(message = "{validation.assessorprofilefamilyaffiliationform.organisation.required}", groups=FamilyAffiliations.class)
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String organisation;
     @Size(max = 255, message = "{validation.field.too.many.characters}")
-    @NotEmpty(message = "{validation.assessorprofilefamilyaffiliationform.position.required}", groups=FamilyAffiliations.class)
+    @NotBlank(message = "{validation.assessorprofilefamilyaffiliationform.position.required}", groups=FamilyAffiliations.class)
     private String position;
 
     public AssessorProfileFamilyAffiliationForm() {

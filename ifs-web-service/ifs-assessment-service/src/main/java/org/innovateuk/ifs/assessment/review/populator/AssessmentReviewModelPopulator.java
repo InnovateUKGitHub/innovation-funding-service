@@ -17,6 +17,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
+
 /**
  * Build the model for the Assessment Assignment view.
  */
@@ -73,8 +75,12 @@ public class AssessmentReviewModelPopulator {
     }
 
     private String getProjectSummary(ReviewResource reviewResource) {
-        FormInputResponseResource formInputResponseResource = formInputResponseRestService.getByApplicationIdAndQuestionName(
-                reviewResource.getApplication(), "Project summary").getSuccess();
-        return formInputResponseResource.getValue();
+        Optional<FormInputResponseResource> formInputResponseResource = formInputResponseRestService.getByApplicationIdAndQuestionSetupType(
+                reviewResource.getApplication(), PROJECT_SUMMARY).getOptionalSuccessObject();
+
+        if(formInputResponseResource.isPresent()) {
+            return formInputResponseResource.get().getValue();
+        }
+        return null;
     }
 }

@@ -90,7 +90,7 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
         mockMvc.perform(put("/assessor/notify-assessors/competition/{id}", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document(
-                        "competition/{method-name}",
+                        "assessor/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the competition for the notifications")
                         ))

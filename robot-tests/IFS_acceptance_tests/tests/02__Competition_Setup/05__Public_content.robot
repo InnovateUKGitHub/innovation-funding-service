@@ -124,7 +124,7 @@ Summary: User enters valid values and saves
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
     When the user enters text to a text field  id=contentGroups[0].heading  A nice new Heading
     Then the user enters text to a text field   jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
-    And the user uploads the file              id=contentGroups-0.attachment  ${valid_pdf}
+    And the user uploads the file              name=contentGroups[0].attachment  ${valid_pdf}
     When the user clicks the button/link       jQuery=button:contains("Save and review")
     Then the user clicks the button/link        jQuery=.button:contains("Return to public content")
     And the user should be redirected to the correct page  ${public_content_overview}
@@ -481,19 +481,19 @@ the user enters valid data in How-to-apply details
 the user can add and remove multiple content groups
     When the user enters text to a text field  id=contentGroups[0].heading    Heading 1
     And the user enters text to a text field   jQuery=.editor:eq(0)     Content 1
-    And the user uploads the file              id=contentGroups-0.attachment  ${5mb_pdf}
+    And the user uploads the file              name=contentGroups[0].attachment  ${5mb_pdf}
     Then the user should see the element       jQuery=.uploaded-file:contains("testing_5MB.pdf")
     And the user clicks the button/link        jQuery=button:contains("Remove")
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
     And the user enters text to a text field   id=contentGroups[1].heading    Heading 2
     And the user enters text to a text field   jQuery=.editor:eq(1)     Content 2
-    And the user uploads the file              id=contentGroups-1.attachment  ${valid_pdf}
+    And the user uploads the file              name=contentGroups[1].attachment  ${valid_pdf}
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
     And the user enters text to a text field   id=contentGroups[2].heading    Heading 3
     And the user enters text to a text field   jQuery=.editor:eq(2)     Content 3
-    When the user uploads the file             id=contentGroups-2.attachment  ${text_file}
+    When the user uploads the file             name=contentGroups[2].attachment  ${text_file}
     Then the user should see the element       jQuery=.error-summary-list:contains("${wrong_filetype_validation_error}")
-    And the user uploads the file              id=contentGroups-2.attachment  ${too_large_pdf}
+    And the user uploads the file              name=contentGroups[2].attachment  ${too_large_pdf}
     Then the user should see the element       jQuery=h1:contains("Attempt to upload a large file")
     And the user goes back to the previous page
     And the user reloads the page
