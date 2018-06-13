@@ -120,7 +120,7 @@ Lead should not be able to see GOL until it is sent by IUK
     When the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
-    When the user clicks the button/link             link=Project setup status
+    When the user clicks the button/link             link=Set up your project
     Then the user should not see the element         link=Grant offer letter
 
 Lead cannot change project manager, project address and finance contact after GOL generation
@@ -140,7 +140,7 @@ Non lead should not be able to see GOL until it is sent by IUK
     When the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
-    When the user clicks the button/link             link=Project setup status
+    When the user clicks the button/link             link=Set up your project
     Then the user should not see the element         link=Grant offer letter
 
 Project finance user removes the grant offer letter
@@ -232,7 +232,7 @@ PM should be able upload a file and then access the Send button
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
     Then the user should see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
-    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=Set up your project
     And the user should see the element    css=li.require-action:nth-child(7)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the text in the page    Project team status

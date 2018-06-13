@@ -98,10 +98,7 @@ public class CompetitionResource {
     private GrantTermsAndConditionsResource termsAndConditions;
 
     private boolean locationPerPartner = true;
-
-    //@ZeroDowntime(reference = "IFS-3288", description = "Default value to support requests without a stateAid flag.
-    // This should be removed in the next release.")
-    private Boolean stateAid = Boolean.TRUE;
+    private Boolean stateAid;
 
     public CompetitionResource() {
         // no-arg constructor
