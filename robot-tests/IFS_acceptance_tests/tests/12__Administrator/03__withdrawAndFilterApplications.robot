@@ -19,8 +19,7 @@ The IFS Admin searches for a project
     [Tags]
     Given The user logs-in in new browser              &{ifs_admin_user_credentials}
     And the user navigates to the page                 ${server}/project-setup-management/competition/${NOT_EDITABLE_COMPETITION}/status/all
-    #When the user enters a project to search for and clicks the filter button    ${INFORM_COMPETITION_NAME_1_NUMBER}  # Climate control solution
-    When the user enters a project to search for and clicks the filter button    9  # Climate control solution
+    When the user enters a project to search for and clicks the filter button    9  # This is a partial search, which will show the Climate control solution project
     Then the user should only see the Climate control solution project
 
 The IFS Admin clears all filters after searching for a project
