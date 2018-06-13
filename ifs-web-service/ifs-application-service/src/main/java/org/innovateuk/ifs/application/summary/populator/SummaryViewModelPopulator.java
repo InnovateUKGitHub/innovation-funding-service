@@ -159,9 +159,6 @@ public class SummaryViewModelPopulator {
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
 
-        Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
-
-
         ApplicationOverviewCompletedViewModel completedViewModel = getCompletedDetails(application, userOrganisation);
 
         Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
@@ -169,6 +166,12 @@ public class SummaryViewModelPopulator {
                 .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
                 .flatMap(List::stream)
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
+
+        formInputViewModels.values().forEach(viewModel -> {
+            viewModel.setClosed(true);
+            viewModel.setReadonly(true);
+            viewModel.setSummary(true);
+        });
 
         Map<String, String> values = form.getFormInput();
         mappedResponses.forEach((k, v) ->
@@ -242,13 +245,6 @@ public class SummaryViewModelPopulator {
 
     private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
         return simpleFilter(list, input -> input.getQuestion().equals(id));
-    }
-
-    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation, OrganisationResource userOrganisation) {
-        return completedSectionsByOrganisation.getOrDefault(
-                userOrganisation.getId(),
-                new HashSet<>()
-        );
     }
 
 }

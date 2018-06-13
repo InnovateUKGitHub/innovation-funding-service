@@ -13,8 +13,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Future;
 
 public class SummaryViewModel {
 
