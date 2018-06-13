@@ -50,13 +50,13 @@ public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicat
     private Function<Error, Error> mapErrorToApplicationFieldError() {
         return e -> {
             if ("validation.applicationteam.pending.invites".equals(e.getErrorKey())) {
-                return mapErrorToApplicationTeamError().apply(e);
+                return mapErrorToApplicationTeamFieldError().apply(e);
             }
             return mapErrorToApplicationDetailsFieldError().apply(e);
         };
     }
 
-    private Function<Error, Error> mapErrorToApplicationTeamError() {
+    private Function<Error, Error> mapErrorToApplicationTeamFieldError() {
         return e -> fieldError("organisation." + e.getArguments().get(0), e.getFieldRejectedValue(), e.getErrorKey());
     }
 
