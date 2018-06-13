@@ -27,6 +27,7 @@ public class ApplicationFinanceSummaryViewModel {
     private final BigDecimal totalOtherFunding;
     private final BigDecimal totalContribution;
     private final BigDecimal financeTotal;
+    private final Map<Long, Set<Long>> completedSectionsByOrganisation;
 
     public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication,
                                               Boolean hasFinanceSection,
@@ -41,7 +42,8 @@ public class ApplicationFinanceSummaryViewModel {
                                               BigDecimal totalFundingSought,
                                               BigDecimal totalOtherFunding,
                                               BigDecimal totalContribution,
-                                              BigDecimal financeTotal) {
+                                              BigDecimal financeTotal,
+                                              Map<Long, Set<Long>> completedSectionsByOrganisation) {
         this.currentApplication = currentApplication;
         this.hasFinanceSection = hasFinanceSection;
         this.financeTotalPerType = financeTotalPerType;
@@ -56,6 +58,7 @@ public class ApplicationFinanceSummaryViewModel {
         this.totalOtherFunding = totalOtherFunding;
         this.totalContribution = totalContribution;
         this.financeTotal = financeTotal;
+        this.completedSectionsByOrganisation = completedSectionsByOrganisation;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -116,5 +119,9 @@ public class ApplicationFinanceSummaryViewModel {
 
     public BigDecimal getFinanceTotal() {
         return financeTotal;
+    }
+
+    public Map<Long, Set<Long>> getCompletedSectionsByOrganisation() {
+        return completedSectionsByOrganisation;
     }
 }

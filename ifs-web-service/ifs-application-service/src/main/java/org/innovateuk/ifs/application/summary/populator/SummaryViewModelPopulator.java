@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.form.Form;
+import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -38,6 +38,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
@@ -122,8 +123,6 @@ public class SummaryViewModelPopulator {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
 
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccess();
 
@@ -162,6 +161,9 @@ public class SummaryViewModelPopulator {
 
         Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
 
+
+        ApplicationOverviewCompletedViewModel completedViewModel = getCompletedDetails(application, userOrganisation);
+
         Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
                 .map(question -> applicantRestService.getQuestion(user.getId(), application.getId(), question.getId()))
                 .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
@@ -179,7 +181,6 @@ public class SummaryViewModelPopulator {
                 sections,
                 sectionQuestions,
                 scores,
-                markedAsComplete,
                 questionFormInputs,
                 mappedResponses,
                 questionAssignees,
@@ -189,10 +190,41 @@ public class SummaryViewModelPopulator {
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,
                 applicationResearchParticipationViewModel,
-                sectionsMarkedAsComplete,
+                completedViewModel,
                 formInputViewModels,
                 true
         );
+    }
+
+    private ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
+        boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
+        boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
+
+        ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
+        userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
+
+        return viewModel;
+    }
+
+    private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
+        Set<Long> combinedMarkedAsComplete = new HashSet<>();
+
+        completedSectionsByOrganisation.forEach((organisationId, completedSections) -> combinedMarkedAsComplete.addAll(completedSections));
+        completedSectionsByOrganisation.forEach((key, values) -> combinedMarkedAsComplete.retainAll(values));
+
+        return combinedMarkedAsComplete;
+    }
+
+    private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
+
+        return sectionService.getAllByCompetitionId(application.getCompetition())
+                .stream()
+                .filter(section -> section.getType().equals(FINANCE))
+                .map(SectionResource::getId)
+                .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
