@@ -23,7 +23,9 @@
                         <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
                                th:value="${assessorOption.optionValue}" type="radio"
                                th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}"
-                               th:disabled="${model.setupAndAfterNotifications and (assessorOption.optionValue != competitionSetupForm.assessorCount)}"/>
+                               th:disabled="${model.setupAndAfterNotifications and (assessorOption.optionValue != competitionSetupForm.assessorCount)}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.assessorsform.assessorCount.required}"/>
                         <label th:for="${'assessors-' + '__${assessorOption.id}__'}">
                             <th:block th:text="${assessorOption.optionName}" />
                         </label>
