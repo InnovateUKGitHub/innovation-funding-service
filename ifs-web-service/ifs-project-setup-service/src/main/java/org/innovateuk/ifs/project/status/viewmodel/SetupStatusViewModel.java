@@ -31,6 +31,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private boolean collaborationAgreementRequired;
     private boolean projectManager;
     private boolean pendingQuery;
+    private String originQuery;
 
     public SetupStatusViewModel() {}
 
@@ -43,7 +44,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 SectionStatusList sectionStatuses,
                                 boolean collaborationAgreementRequired,
                                 boolean projectManager,
-                                boolean pendingQuery) {
+                                boolean pendingQuery,
+                                String originQuery) {
 
         this.projectId = project.getId();
         this.projectName = project.getName();
@@ -61,6 +63,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.collaborationAgreementRequired = collaborationAgreementRequired;
         this.projectManager = projectManager;
         this.pendingQuery = pendingQuery;
+        this.originQuery = originQuery;
     }
 
     public Long getProjectId() {
@@ -175,5 +178,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowFinanceChecksPendingQueryWarning() {
         return pendingQuery;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
     }
 }
