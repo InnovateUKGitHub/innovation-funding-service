@@ -54,7 +54,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
     }
 
     private void setCompetitionName(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request) {
-        final Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         if (pathVariables.containsKey(COMPETITION_ID)) {
             setCompetitionNameFromRestService(dataLayer,
@@ -92,7 +92,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
             dataLayer.setUserRoles(userRoles);
         }
 
-        final Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         if (pathVariables.containsKey(APPLICATION_ID)) {
             setApplicationOrProjectSpecificRolesFromRestService(dataLayer,
@@ -108,7 +108,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
     }
 
     private void setApplicationId(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request) {
-        final Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         if (pathVariables.containsKey(APPLICATION_ID)) {
             final long applicationId = getIdFromPathVariable(pathVariables, APPLICATION_ID);
@@ -136,8 +136,8 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         dl.addUserRoles(roles);
     }
 
-    private long getIdFromPathVariable(final Map pathVariables, final String pathVariable) {
-        return parseLong ((String) pathVariables.get(pathVariable));
+    private long getIdFromPathVariable(final Map<String,String> pathVariables, final String pathVariable) {
+        return parseLong(pathVariables.get(pathVariable));
     }
 
 
