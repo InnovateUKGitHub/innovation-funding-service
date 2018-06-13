@@ -80,11 +80,11 @@
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and status == 'orgNotAdded' and user == 'new'}">
-            <a class="button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Confirm and accept invitation</a>
+            <a class="button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Save and continue</a>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and user == 'existing'}">
-            <a class="button" th:href="${'/prototypes/IFS-3599-collaborator-application?type=' + type}">Confirm and accept invitation</a>
+            <a class="button" th:href="${'/prototypes/IFS-3599-collaborator-application?type=' + type}">Save and continue</a>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and status == 'orgAdded' and user == 'new'}">

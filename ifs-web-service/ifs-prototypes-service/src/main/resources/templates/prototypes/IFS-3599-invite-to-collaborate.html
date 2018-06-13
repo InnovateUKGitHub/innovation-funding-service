@@ -35,7 +35,7 @@
                     <dd th:text="${'Steve Smith'}"></dd>
                 </dl>
                 <p>You are invited to collaborate in this application as part of the following organisation:
-                    <strong th:text="${'Spoons'}"></strong>
+                    <strong th:text="${status == 'orgSelected' ? 'EGGS' :'Spoons'}"></strong>
                 </p>
                 <p>If this is not the correct organisation, you can update it when you join the application.</p>
 
@@ -43,15 +43,28 @@
                     <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
                         target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
 
-                <h2 class="heading-medium">Are you happy to accept the invitation to participate?</h2>
-                <p>As this email address is new to the service, you will need to create an account.</p>
 
-                <th:block th:unless="${status == 'orgAdded'}">
-                    <a href="/prototypes/IFS-3598-choose-org?type=collaborator" class="button">Yes, accept invitation</a>
+                <th:block th:unless="${user == 'existing'}">
+
+                    <h2 class="heading-medium">Are you happy to accept the invitation to participate?</h2>
+                    <p>As this email address is new to the service, you will need to create an account.</p>
+
+                    <th:block th:unless="${status == 'orgAdded'}">
+                        <a href="/prototypes/IFS-3598-choose-org?type=collaborator" class="button">Yes, accept invitation</a>
+                    </th:block>
+
+                    <th:block th:if="${status == 'orgAdded'}">
+                        <a href="/prototypes/IFS-3598-org-selected?type=collaborator&#38;user=new&#38;status=orgAdded" class="button">Yes, accept invitation</a>
+                    </th:block>
+
                 </th:block>
 
-                <th:block th:if="${status == 'orgAdded'}">
-                    <a href="/prototypes/IFS-3598-org-selected?type=collaborator&#38;user=new&#38;status=orgAdded" class="button">Yes, accept invitation</a>
+                <th:block th:if="${user == 'existing'}">
+                    <h2 class="heading-medium">We have found an account with the invited email address</h2>
+                    <p>Please sign in to accept the invitation and continue with your application.</p>
+
+                    <a th:href="${status == 'orgAdded' ? '/prototypes/IFS-3599-signin-collab-with' : '/prototypes/IFS-3599-signin-collab-without'} + ${'-org?type=' + type + '&user=' + user + '&status=' + status}" class="button">Sign in</a>
+
                 </th:block>
 
                 <p>If you do not wish to accept this invitation, please let the lead applicant know.</p>
