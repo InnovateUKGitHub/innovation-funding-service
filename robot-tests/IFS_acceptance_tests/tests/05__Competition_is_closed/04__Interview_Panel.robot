@@ -204,11 +204,9 @@ Applicant can upload the reponse to interview panel
     When the applicant upload the response to the interview panel
     Then the compAdmin checks the status for response uploaded applicantion
     And the user should see the element         jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
-    Then the user clicks the button/link        link=139
+    ${applicationId} =  get application id by name  ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    Then the user clicks the button/link        link=${applicationId}
     And the user should see the element         jQuery=p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
-    #Put in here a test that clicks on the application and then checks for the feedback
-    #Here? - Add a test to check the feedback uploaded with John
-
 
 Applicant can remove the uploaded response
     [Documentation]  IFS-3253  IFS-3378
@@ -240,7 +238,7 @@ CompAdmin can access the Allocate applications to assessors screen
     And the user should see the element      jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
 
 CompAdmin allocate applications to assessor
-    [Documentation]  IFS-3451  IFS-3485  IFS-3451
+    [Documentation]  IFS-3451  IFS-3485
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
     And the user clicks the button/link      jQuery=tr:contains("${computer_vision_application}") label
