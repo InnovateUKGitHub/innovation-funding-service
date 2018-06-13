@@ -9,7 +9,8 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
+            <th:block th:if="${origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Set up your project',linkClass='link-back',linkUrl=@{${backUrl}})" />
+            <th:block th:unless="${origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Dashboard',linkClass='link-back',linkUrl=@{${backUrl}})" />
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
             <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationName},size='heading-xlarge'" />
