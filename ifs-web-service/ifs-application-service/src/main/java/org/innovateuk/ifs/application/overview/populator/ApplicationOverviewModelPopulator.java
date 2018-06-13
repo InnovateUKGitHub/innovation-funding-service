@@ -202,7 +202,6 @@ public class ApplicationOverviewModelPopulator {
 
         ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
         userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
-
         return viewModel;
     }
 
@@ -214,7 +213,6 @@ public class ApplicationOverviewModelPopulator {
 
         return combinedMarkedAsComplete;
     }
-
 
     private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
 

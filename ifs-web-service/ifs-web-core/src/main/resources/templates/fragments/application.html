@@ -10,11 +10,11 @@
             <h3>
                 <th:block th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
                 <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
-                    <div class="section-status section-complete" th:if="${markedAsComplete.contains(question.id)}">
+                    <div class="section-status section-complete" th:if="${completedViewModel.markedAsComplete.contains(question.id)}">
                         Complete
                     </div>
                     <div class="section-status section-incomplete"
-                         th:unless="${markedAsComplete.contains(question.id)}">
+                         th:unless="${completedViewModel.markedAsComplete.contains(question.id)}">
                         Incomplete
                     </div>
                 </th:block>
@@ -80,8 +80,8 @@
       <div class="collapsible">
           <h3>Finances summary
               <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
-                  <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(financeSectionId)}">Complete</div>
-                  <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}">Incomplete</div>
+                  <div class="section-status section-complete" th:if="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">Complete</div>
+                  <div class="section-status section-incomplete" th:unless="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">Incomplete</div>
               </th:block>
           </h3>
 
