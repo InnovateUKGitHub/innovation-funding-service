@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Function;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -18,20 +20,20 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicationSaver {
 
-    public ValidationMessages handleApplicationDetailsValidationMessages(List<ValidationMessages> applicationMessages) {
-        ValidationMessages toFieldErrors = new ValidationMessages();
+    public ValidationMessages handleApplicationDetailsValidationMessages(List<ValidationMessages> validationMessagesList) {
 
-        applicationMessages.forEach(validationMessage ->
-                validationMessage.getErrors().stream()
-                        .filter(Objects::nonNull)
+        List<Error> fieldErrors = validationMessagesList
+                .stream()
+                .filter(validationMessages -> "target".equals(validationMessages.getObjectName()))
+                .map(ValidationMessages::getErrors)
+                .flatMap(errors -> errors
+                        .stream()
                         .filter(e -> hasText(e.getErrorKey()))
-                        .forEach(e -> {
-                            if ("target".equals(validationMessage.getObjectName()) && hasText(e.getErrorKey())) {
-                                toFieldErrors.addError(fieldError("application." + e.getFieldName(), e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
-                            }
-                        }));
+                        .map(mapErrorToApplicationFieldError())
+                )
+                .collect(toList());
 
-        return toFieldErrors;
+        return new ValidationMessages(fieldErrors);
     }
 
     public void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
@@ -43,6 +45,24 @@ public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicat
         setResubmissionDetails(application, updatedApplication);
         setStartDateDetails(application, updatedApplication);
         setDurationInMonths(application, updatedApplication);
+    }
+
+    private Function<Error, Error> mapErrorToApplicationFieldError() {
+        return e -> {
+            if ("validation.applicationteam.pending.invites".equals(e.getErrorKey())) {
+                return mapErrorToApplicationTeamError().apply(e);
+            }
+            return mapErrorToApplicationDetailsFieldError().apply(e);
+        };
+    }
+
+    private Function<Error, Error> mapErrorToApplicationTeamError() {
+        return e -> fieldError("organisation." + e.getArguments().get(0), e.getFieldRejectedValue(), e.getErrorKey());
+    }
+
+    private Function<Error, Error> mapErrorToApplicationDetailsFieldError() {
+        return e -> fieldError("application." + e.getFieldName(), e.getFieldRejectedValue(),
+                e.getErrorKey(), e.getArguments());
     }
 
     private void setApplicationName(ApplicationResource application, ApplicationResource updatedApplication) {
