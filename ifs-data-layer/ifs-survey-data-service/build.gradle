@@ -23,8 +23,10 @@ def enabled = project.hasProperty('ifs.survey-data-service.enabled') ? project.p
 }
 createContainer.portBindings = ['9013:8000', '8087:8080']
 
-deploy.dependsOn ":docker:ifs-mysql:ifs-survey-database:wait"
-deploy.mustRunAfter ":docker:ifs-mysql:ifs-survey-database:deploy"
+if (enabled) {
+    deploy.dependsOn ":docker:ifs-mysql:ifs-survey-database:wait"
+    deploy.mustRunAfter ":docker:ifs-mysql:ifs-survey-database:deploy"
+}
 
 createContainer.networkAliases=["ifs-survey-data-service"]
 
@@ -89,7 +91,7 @@ test {
     }
     finalizedBy asciidoctor
 
-    if (targetBuild == 'docker') {
+    if (targetBuild == 'docker' && enabled) {
         dependsOn ":docker:ifs-mysql:ifs-survey-database:initDB"
     }
 
