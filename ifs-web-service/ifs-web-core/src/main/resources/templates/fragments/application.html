@@ -15,7 +15,7 @@
                   <div class="extra-margin">
                       <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
                            th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                              <div th:replace="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})" />
+                              <th:block th:insert="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})" />
                       </div>
                   </div>
 
@@ -44,7 +44,7 @@
             </h3>
 
             <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
-                <div th:replace="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
+                <th:block th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
             </th:block>
 
             <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
@@ -54,15 +54,11 @@
                  th:id="'form-input-'+${formInput.getId()}">
 
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                    <th:block
-                        th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                        <div
-                            th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
+                    <th:block th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                        <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
                     </th:block>
-                    <th:block
-                        th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                        <div
-                            th:replace="fragments/application-details :: application_details(${formInputViewModels.get(formInput.id)})" />
+                    <th:block th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                        <th:block th:insert="fragments/application-details :: application_details(${formInputViewModels.get(formInput.id)})" />
                     </th:block>
                     <th:block th:if="${question.questionNumber!=null && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FILEUPLOAD}">
                         <th:block th:if="!${#lists.isEmpty(feedback)}">
@@ -93,7 +89,6 @@
                 </th:block>
             </div>
           </div>
-
 
       </th:block>
 
