@@ -236,7 +236,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/assessment/interview/competition/%s/applications/invite/%s/view", competition.getId(), applicationId)));
+                .andExpect(redirectedUrl(String.format("/assessment/interview/competition/%s/applications/view-status", competition.getId())));
 
         verify(interviewAssignmentRestService).uploadFeedback(applicationId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes());
         verify(interviewAssignmentRestService).deleteFeedback(applicationId);
@@ -257,7 +257,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                 .param("content", "Editable content...")
                 .param("removeFile", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/assessment/interview/competition/%s/applications/invite/%s/view", competition.getId(), applicationId)));
+                .andExpect(redirectedUrl(String.format("/assessment/interview/competition/%s/applications/view-status", competition.getId())));
 
         verify(interviewAssignmentRestService).deleteFeedback(applicationId);
         verify(interviewAssignmentRestService).resendInvite(applicationId, new AssessorInviteSendResource("Subject...", "Editable content..."));

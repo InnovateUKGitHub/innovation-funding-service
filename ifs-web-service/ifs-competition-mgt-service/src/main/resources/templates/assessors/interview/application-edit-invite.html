@@ -60,11 +60,7 @@
                                     <div class="column-two-thirds">
                                         <!--/* empty file input so that spring form is complete */-->
                                         <input type="file" name="feedback" class="visuallyhidden">
-                                        <a th:text="${model.feedbackFilename}"
-                                           th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
-                                           id="file-name"
-                                           target="_blank">Uploaded-file.pdf</a>
-                                        <p class="form-hint">(opens in a new window)</p>
+                                        <p th:text="${model.feedbackFilename}" id="file-name">Uploaded-file.pdf</p>
                                     </div>
                                     <div class="column-third">
                                         <button id="remove-applicant-resend-file" class="button button-clear">Remove</button>
@@ -115,8 +111,8 @@
             </p>
 
             <div class="extra-margin">
-                <button type="submit" class="button">Send invite</button>
-                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}"
+                <button type="submit" class="button">Resend invite</button>
+                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}"
                    class="button button-clear">Cancel</a>
             </div>
 
