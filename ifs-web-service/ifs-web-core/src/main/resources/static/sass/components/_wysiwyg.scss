@@ -118,6 +118,7 @@ button {
 
   > div {
     @extend p;
+    margin-top: em(20, 16);
   }
 }
 

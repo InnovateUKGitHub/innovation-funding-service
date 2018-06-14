@@ -5,10 +5,13 @@ import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
 import org.innovateuk.ifs.application.forms.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -29,18 +32,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * This controller will handle all requests that are related to the application summary.
@@ -63,6 +71,9 @@ public class ApplicationSummaryController {
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
     private InterviewResponseRestService interviewResponseRestService;
+    private String origin;
+    MultiValueMap queryParams;
+    private Long projectId;
 
     public ApplicationSummaryController() {
     }
@@ -107,7 +118,9 @@ public class ApplicationSummaryController {
                                      ValidationHandler validationHandler,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     UserResource user) {
+                                     UserResource user,
+                                     @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                     @RequestParam MultiValueMap<String, String> queryParams, Long projectId) {
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
@@ -127,15 +140,21 @@ public class ApplicationSummaryController {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
         model.addAttribute("projectWithdrawn", projectWithdrawn);
-
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
         if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
-            addFeedbackAndScores(model, applicationId);
+            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
+            if (project != null) {
+                projectId = project.getId();
+            }
+            model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
+            model.addAttribute("origin", origin);
+
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
-            addFeedbackAndScores(model, applicationId);
-            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, competition.getCompetitionStatus().isFeedbackReleased()));
+            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
+            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, competition.getCompetitionStatus().isFeedbackReleased(), false));
+
             return "application-interview-feedback";
         }
         else {
@@ -143,12 +162,19 @@ public class ApplicationSummaryController {
         }
     }
 
-    private void addFeedbackAndScores(Model model, long applicationId) {
-        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
-        model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
-                .getSuccess()
-                .getFeedback()
-        );
+    private String buildBackUrl(String origin, long applicationId, Long projectId, MultiValueMap<String, String> queryParams) {
+        String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
+        queryParams.remove("origin");
+
+        if (queryParams.containsKey("applicationId")) {
+            queryParams.remove("applicationId");
+        }
+
+        return UriComponentsBuilder.fromPath(baseUrl)
+                .queryParams(queryParams)
+                .buildAndExpand(asMap( "projectId", projectId))
+                .encode()
+                .toUriString();
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
@@ -161,12 +187,12 @@ public class ApplicationSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
 
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), form, bindingResult, validationHandler, model, applicationId, user);
+        Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), form, bindingResult, validationHandler, model, applicationId, user, origin, queryParams, projectId);
         MultipartFile file = form.getResponse();
         RestResult<Void> sendResult = interviewResponseRestService
                 .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
 
-        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
+        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())), fileUploadField("response"), defaultConverters())
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
@@ -181,7 +207,7 @@ public class ApplicationSummaryController {
                                  @PathVariable("applicationId") long applicationId,
                                  UserResource user) {
 
-        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, interviewResponseForm, bindingResult, validationHandler, model, applicationId, user);
+        Supplier<String> failureAndSuccessView = () -> applicationSummary(form, interviewResponseForm, bindingResult, validationHandler, model, applicationId, user, origin, queryParams, projectId);
         RestResult<Void> sendResult = interviewResponseRestService
                 .deleteResponse(applicationId);
 
@@ -190,8 +216,8 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping("/{applicationId}/summary/download-response")
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "READ", description = "Applicants and assessors have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
@@ -200,8 +226,8 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping("/{applicationId}/summary/download-feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "READ", description = "Applicants and assessors have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
                                                        @PathVariable("applicationId") long applicationId) {

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.form.InternalUserRegistrationForm;
 
 /**
- * Created by rav on 30/06/2017.
+ * Interface for converting registration form into resource to be sent across via REST for creation of new user.
  */
 public interface InternalUserService {
     ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationForm registrationForm);

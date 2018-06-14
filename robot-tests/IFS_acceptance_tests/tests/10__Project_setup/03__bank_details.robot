@@ -72,7 +72,7 @@ Bank details page
     Then the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element     css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
-    And the user clicks the button/link     link=Project setup status
+    And the user clicks the button/link     link=Set up your project
     And the user should see the text in the page   We need bank details for those partners eligible for funding
     And the user clicks the button/link     link=Bank details
     Then the user should see the element    jQuery=.button:contains("Submit bank account details")
@@ -188,7 +188,7 @@ Submission of bank details for academic user
     Then the user should be redirected to the correct page  ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the element            jQuery=h1:contains("Project team status")
     And the user should see the element            css=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
-    And the user clicks the button/link            link=Project setup status
+    And the user clicks the button/link            link=Set up your project
     And the user clicks the button/link            link=Bank details
     When partner fills in his bank details         ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")

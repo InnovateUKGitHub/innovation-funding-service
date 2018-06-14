@@ -29,7 +29,6 @@ import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResour
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceFields;
 import static org.innovateuk.ifs.documentation.ApplicationIneligibleSendResourceDocs.applicationIneligibleSendResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationIneligibleSendResourceDocs.applicationIneligibleSendResourceFields;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -322,22 +321,31 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         int pageIndex = 0;
         int pageSize = 20;
         String sortField = "id";
+        String filter = "ALL";
 
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
+        List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
+        ApplicationPageResource applicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageIndex, pageSize);
 
-        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
+        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(applicationPageResource));
 
-        mockMvc.perform(get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
+        mockMvc.perform(get("/application/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(applicationPage)))
+                .andExpect(content().json(JsonMappingUtil.toJson(applicationPageResource)))
                 .andDo(document(
                         "application/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
-                        )
+                        ),
+                        requestParameters(
+                                parameterWithName("page").description("The page number to be retrieved"),
+                                parameterWithName("size").description("The page size"),
+                                parameterWithName("sort").description("The field by which sorting needs to be performed"),
+                                parameterWithName("filter").description("The filter to be applied")
+                        ),
+                        responseFields(PageResourceDocs.pageResourceFields)
                 ));
 
-        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
+        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter);
 
     }
 

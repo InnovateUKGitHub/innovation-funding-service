@@ -38,7 +38,7 @@ public class InterviewFeedbackViewModelPopulatorTest {
         when(interviewResponseRestService.findResponse(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("response").build()));
         when((interviewAssignmentRestService.findFeedback(applicationId))).thenReturn(restSuccess(newFileEntryResource().withName("feedback").build()));
 
-        InterviewFeedbackViewModel viewModel = viewModelPopulator.populate(applicationId, role, true);
+        InterviewFeedbackViewModel viewModel = viewModelPopulator.populate(applicationId, role, true, false);
 
         assertThat(viewModel.getResponseFilename(), is(equalTo("response")));
         assertThat(viewModel.getFeedbackFilename(), is(equalTo("feedback")));

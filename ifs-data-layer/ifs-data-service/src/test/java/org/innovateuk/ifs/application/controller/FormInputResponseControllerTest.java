@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -20,6 +21,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
@@ -97,22 +99,22 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
     }
 
     @Test
-    public void findByApplicationIdAndQuestionName() throws Exception {
+    public void findByApplicationIdAndQuestionSetupType() throws Exception {
         long applicationId = 1L;
-        String questionName = "name";
+        CompetitionSetupQuestionType questionSetupType = PROJECT_SUMMARY;
 
         FormInputResponseResource formInputResponseResource = newFormInputResponseResource().build();
 
-        when(formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName))
+        when(formInputResponseService.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType))
                 .thenReturn(serviceSuccess(formInputResponseResource));
 
         mockMvc.perform(MockMvcRequestBuilders.get(
-                "/forminputresponse/findByApplicationIdAndQuestionName/{applicationId}/{questionName}",
-                applicationId, questionName))
+                "/forminputresponse/findByApplicationIdAndQuestionSetupType/{applicationId}/{questionSetupType}",
+                applicationId, questionSetupType))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(formInputResponseResource)));
 
-        verify(formInputResponseService, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
+        verify(formInputResponseService, only()).findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType);
     }
 
     private void assertGetByFormInputIdAndApplicationIdButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedErrorKey) throws Exception {

@@ -26,9 +26,8 @@
                         <li th:each="projectView : ${model.projects}">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="${projectView.linkUrl}" th:text="${projectView.title}">
-                                        PROJECT NAME
-                                    </a>
+                                    <a th:href="${projectView.linkUrl} + ${model.originQuery}"
+                                       th:text="${projectView.title}">PROJECT NAME</a>
                                 </h3>
                                 <ul class="application-details">
                                     <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
@@ -105,7 +104,7 @@
                             th:class="${previousView.approved} ? 'positive'">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="${previousView.linkUrl}" th:text="${previousView.title}" />
+                                    <a th:href="${previousView.linkUrl} + ${model.originQuery}" th:text="${previousView.title}" />
                                 </h3>
                                 <ul class="application-details">
                                     <li>Application number: <span th:text="${previousView.applicationNumber}"></span></li>

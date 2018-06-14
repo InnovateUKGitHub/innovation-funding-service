@@ -29,6 +29,8 @@ public class ApplicationController {
 
     private static final String DEFAULT_SORT_BY = "id";
 
+    private static final String UNSUCCESSFUL_APP_DEFAULT_FILTER = "ALL";
+
     @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
@@ -144,8 +146,9 @@ public class ApplicationController {
     public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
-        return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
+                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
+                                                                            @RequestParam(value = "filter", defaultValue = UNSUCCESSFUL_APP_DEFAULT_FILTER) String filter) {
+        return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
     }
 
     @GetMapping("/getLatestEmailFundingDate/{competitionId}")
