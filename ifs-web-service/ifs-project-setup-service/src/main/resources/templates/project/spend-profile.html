@@ -18,7 +18,7 @@
 
 <main tabindex="-1" id="content" class="no-grid">
     <div class="grid-container">
-        <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+        <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
         <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
         <th:block th:if="${form != null}">

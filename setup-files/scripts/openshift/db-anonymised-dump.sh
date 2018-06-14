@@ -34,7 +34,6 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PORT=3306
 fi
 
-injectDBVariables
 useContainerRegistry
 pushAnonymisedDatabaseDumpImages
 startupPod "/db-anonymised-data/67-db-anonymised-data.yml" ${SVC_ACCOUNT_CLAUSE}

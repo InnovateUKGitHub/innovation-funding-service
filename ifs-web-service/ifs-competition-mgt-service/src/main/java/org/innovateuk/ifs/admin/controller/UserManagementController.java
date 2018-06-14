@@ -5,7 +5,7 @@ import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
-import org.innovateuk.ifs.async.util.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;

@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * This class is used to setup and submit the form input values. On submit the values are converted into an Form object.
@@ -24,6 +25,8 @@ public class ApplicationForm extends Form {
     @Length(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 400, message = "{validation.field.max.word.count}")
     private String ineligibleReason;
+
+    private MultipartFile overheadfile;
 
     public ApplicationForm() {
         super();
@@ -90,5 +93,13 @@ public class ApplicationForm extends Form {
 
     public void setIneligibleReason(String ineligibleReason) {
         this.ineligibleReason = ineligibleReason;
+    }
+
+    public MultipartFile getOverheadfile() {
+        return overheadfile;
+    }
+
+    public void setOverheadfile(MultipartFile overheadfile) {
+        this.overheadfile = overheadfile;
     }
 }

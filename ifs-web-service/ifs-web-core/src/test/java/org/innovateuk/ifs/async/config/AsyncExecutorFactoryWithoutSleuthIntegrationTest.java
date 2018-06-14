@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.config;
 
+import org.innovateuk.ifs.async.executor.AsyncExecutorFactory;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
