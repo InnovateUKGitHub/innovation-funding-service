@@ -7,7 +7,7 @@
 
       <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and appIsClosed}"/>
 
-      <!-- Show the report view of the application details at the top -->
+      <!--/* (In e.g. internal view) show the 'report' version of the application details above the collapsible sections */-->
       <th:block th:if="${section.name.equals('Project details')}">
           <th:block th:each="question : ${sectionQuestions.get(section.id)}"
                     th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
@@ -24,7 +24,7 @@
           </th:block>
       </th:block>
 
-      <!-- Show the expandable sections -->
+      <!--/* Show the collapsible sections */-->
       <th:block th:each="question : ${sectionQuestions.get(section.id)}">
           <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
                                                     and appIsClosed)

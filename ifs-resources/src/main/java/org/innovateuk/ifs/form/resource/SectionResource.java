@@ -17,7 +17,6 @@ public class SectionResource {
     private Long competition;
     private List<Long> questions = new ArrayList<>();
     private List<Long> leadQuestions = new ArrayList<>();
-    private List<Long> generalQuestions = new ArrayList<>();
     private Long parentSection;
     private List<Long> childSections;
     private Boolean displayInAssessmentApplicationSummary = false;
@@ -135,13 +134,6 @@ public class SectionResource {
     }
     public void setLeadQuestions(List<Long> questions) {
         this.leadQuestions = questions;
-    }
-
-    public List<Long> getGeneralQuestions() {
-        return generalQuestions;
-    }
-    public void setGeneralQuestions(List<Long> questions) {
-        this.generalQuestions = questions;
     }
 
 }

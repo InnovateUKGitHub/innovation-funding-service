@@ -32,10 +32,6 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
         return withArraySetFieldByReflection("questions", questions);
     }
 
-    public SectionResourceBuilder withGeneralQuestions(List<Long>... generalQuestions) {
-        return withArraySetFieldByReflection("generalQuestions", generalQuestions);
-    }
-
     public SectionResourceBuilder withLeadQuestions(List<Long>... leadQuestions) {
         return withArraySetFieldByReflection("leadQuestions", leadQuestions);
     }
