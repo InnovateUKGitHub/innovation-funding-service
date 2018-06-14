@@ -32,7 +32,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
       if (jQuery(el).attr('name') === 'hasAppointments' || jQuery(el).attr('name') === 'addAppointment') {
-        newRow = jQuery('<tr class="form-group-row-validated f">' +
+        newRow = jQuery('<tr class="form-group-row-validated">' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text" ' +
@@ -52,32 +52,32 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<div class="form-row no-border-top">' +
-          '<div class="form-group">' +
-          '<label class="form-label">Relation</label>' +
-          '<input aria-labelledby="aria-family-rel" class="form-control width-large family-affiliation-field" type="text" ' +
+        newRow = jQuery('<tr class="form-group-row-validated border-top">' +
+          '<td class="form-group">' +
+          '<label><span class="form-label">Relation</span></label>' +
+          '<input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.relation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].relation" value="" ' +
           'data-required-errormessage="Please enter a relation." required="required" />' +
-          '</div>' +
-          '<div class="form-group">' +
-          '<label class="form-label">Organisation</label>' +
-          '<input aria-labelledby="aria-family-org" class="form-control width-large family-affiliation-field" type="text" ' +
+          '</td>' +
+          '<td class="form-group">' +
+          '<label><span class="form-label">Organisation</span></label>' +
+          '<input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.organisation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].organisation" value="" ' +
           'data-required-errormessage="Please enter an organisation." required="required" />' +
-          '</div>' +
-          '<div class="form-group">' +
-          '<label class="form-label">Position</label>' +
-          '<input aria-labelledby="aria-family-pos" class="form-control width-large family-affiliation-field" type="text" ' +
+          '</td>' +
+          '<td class="form-group">' +
+          '<label><span class="form-label">Position</span></label>' +
+          '<input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.position" ' +
           'name="familyAffiliations[' + uniqueRowId + '].position" value="" ' +
           'data-required-errormessage="Please enter a position." required="required" />' +
-          '</div>' +
-          '<div class="form-group">' +
+          '</td>' +
+          '<td>' +
           '<button class="remove-another-row buttonlink" name="removeFamilyMemberAffiliation" type="button" value="1">Remove</button>' +
-          '</div>' +
-          '</div>')
+          '</td>' +
+          '</tr>')
       }
 
       // insert the new row with the correct values and move focus to the first field to aid keyboard users
@@ -90,11 +90,11 @@ IFS.assessment.repeatableDeclarationRows = (function () {
     },
     removeRow: function (el) {
       var $element = jQuery(el)
-      var rowParent = $element.closest('#family-table')
+      var rowParent = $element.closest('tbody')
       var rows
 
       // must remove row before getting row information to correctly count remaining rows
-      $element.closest('.form-row').remove()
+      $element.closest('tr').remove()
 
       rows = jQuery(rowParent).children()
 
