@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -68,16 +67,11 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
         List<QuestionResource> questions = getSortedQuestions(questionResources, parentSections);
         List<QuestionResource> projectDetails = getSortedProjectDetails(questionResources, parentSections);
 
-        // TODO: this is temporary. there is a better way of doing this.
-        //       ideally by filtering the questions based on context of comp setup, at the point of providing the list of questions
-        //       and (for completeness) it would be good to be filtered on the Section resources too
-        List<QuestionResource> compSetupProjectDetails = getCompSetupProjectDetails(projectDetails);
-
-        Boolean allStatusesComplete = checkStatusesComplete(subSectionsStatuses, questionStatuses, questions, compSetupProjectDetails);
+        Boolean allStatusesComplete = checkStatusesComplete(subSectionsStatuses, questionStatuses, questions, projectDetails);
 
         return new LandingViewModel(generalViewModel,
                 questions,
-                compSetupProjectDetails,
+                projectDetails,
                 subSectionsStatuses,
                 questionStatuses,
                 allStatusesComplete);
@@ -97,15 +91,9 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Project details".equals(sectionResource.getName())).findFirst();
         return section.isPresent() ? questionResources.stream()
                 .filter(questionResource ->  section.get().getQuestions().contains(questionResource.getId()))
-                .filter(questionResource -> !questionResource.getQuestionSetupType().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS))
+                .filter(questionResource -> questionResource.getType() != LEAD_ONLY)
                 .collect(Collectors.toList())
                 : new ArrayList<>();
-    }
-
-    private List<QuestionResource> getCompSetupProjectDetails(List<QuestionResource> questionResources) {
-        return questionResources.stream()
-                .filter(questionResource -> questionResource.getType() != LEAD_ONLY)
-                .collect(Collectors.toList());
     }
 
     private Boolean checkStatusesComplete(Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses, Map<Long, Boolean> questionStatuses,
