@@ -52,6 +52,7 @@
                 <!-- Middle -->
                 <div class="form-group"
                      th:each="organisation : ${model.organisations}"
+                     th:id="|organisation.${organisation.inviteOrganisationId}|"
                      th:with="organisationErrorKey=${'${form.organisation.' + organisation.inviteOrganisationId + '*}'}"
                      th:classappend="${#fields.hasErrors(organisationErrorKey)} ? 'form-group-error'">
                     <h2 class="heading-medium">
