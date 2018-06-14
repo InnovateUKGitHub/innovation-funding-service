@@ -4,6 +4,9 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.jsoup:jsoup:1.10.2'
     compile "com.google.guava:guava:21.0"
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
 }
 
 configurations {
@@ -16,12 +19,5 @@ task testJar(type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
-dependencies {
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
-}
-
 
 bootRepackage.enabled = false
