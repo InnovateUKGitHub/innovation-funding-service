@@ -15,6 +15,8 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -46,6 +48,7 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
     private SectionService sectionService;
     private QuestionService questionService;
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+    private ProjectService projectService;
 
     public ApplicationFeedbackSummaryViewModelPopulator(OrganisationRestService organisationRestService,
                                                         ApplicationService applicationService,
@@ -59,7 +62,8 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
                                                         QuestionService questionService,
                                                         AssessorFormInputResponseRestService assessorFormInputResponseRestService,
                                                         ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
-                                                        ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator) {
+                                                        ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
+                                                        ProjectService projectService) {
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionService = competitionService;
@@ -73,6 +77,7 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
         this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
         this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
+        this.projectService = projectService;
     }
 
     public ApplicationFeedbackSummaryViewModel populate(long applicationId, UserResource user, String backUrl, String origin) {
@@ -126,6 +131,9 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId);
 
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        boolean projectWithdrawn = (project != null && project.isWithdrawn());
+
         return new ApplicationFeedbackSummaryViewModel(
                 application,
                 competition,
@@ -140,7 +148,8 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,
                 backUrl,
-                origin
+                origin,
+                projectWithdrawn
         );
     }
 
