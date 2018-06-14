@@ -64,7 +64,7 @@
 
         <div class="form-group download" th:if="${interviewFeedbackViewModel.hasFeedback()}">
             <h3 class="heading-small no-margin">
-                Panel assessment feedback
+                Additional Innovate UK feedback
             </h3>
             <a th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${currentApplication.id})}"
                th:text="${interviewFeedbackViewModel.feedbackFilename}"

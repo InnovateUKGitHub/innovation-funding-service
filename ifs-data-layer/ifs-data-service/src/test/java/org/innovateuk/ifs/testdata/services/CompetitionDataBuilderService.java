@@ -105,6 +105,10 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
     }
 
+    public void removeApplicationTeamForCompetition(CompetitionData data){
+        competitionDataBuilder.removeApplicationTeamFromCompetition(data.getCompetition().getId());
+    }
+
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line) {
         if (line.nonIfs) {
             return nonIfsCompetitionDataBuilder(line);
@@ -118,10 +122,9 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionWithoutMilestones = this.competitionDataBuilder
                 .createNonIfsCompetition()
                 .withBasicData(line.name, null, line.innovationAreas,
-                        line.innovationSector, null, null, null,
+                        line.innovationSector, null, null, null, null,
                         null, null, null, null, null, null, null, null, AssessorFinanceView.OVERVIEW, null,
-                        null, emptyList(), null, null, line.nonIfsUrl, line.includeApplicationTeamQuestion).
-                        withCorrectQuestions(line.includeApplicationTeamQuestion.equals("Yes"));
+                        null, emptyList(), null, null, line.nonIfsUrl, line.includeApplicationTeamQuestion);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionWithoutMilestones);
 
@@ -136,12 +139,11 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionBeforeMilestones = this.competitionDataBuilder.
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
-                    line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                    line.innovationSector, true, line.researchCategory, line.leadTechnologist, line.compExecutive,
                     line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
                     line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.includeApplicationTeamQuestion).
                 withApplicationFormFromTemplate().
-                withNewMilestones().
-                withCorrectQuestions(line.includeApplicationTeamQuestion.equals("Yes"));
+                withNewMilestones();
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
         return competitionWithMilestones.

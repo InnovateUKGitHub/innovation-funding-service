@@ -87,10 +87,30 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String competitionTypeName, List<String> innovationAreaNames,
-                                                String innovationSectorName, String researchCategoryName, String leadTechnologist,
-                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay, Boolean hasAssessmentPanel, Boolean hasInterviewStage, AssessorFinanceView assessorFinanceView,
-                                                Boolean multiStream, String collaborationLevelCode, List<OrganisationTypeEnum> leadApplicantTypes, Integer researchRatio, Boolean resubmission, String nonIfsUrl, String includeApplicationTeamQuestion) {
+    public CompetitionDataBuilder withBasicData(String name,
+                                                String competitionTypeName,
+                                                List<String> innovationAreaNames,
+                                                String innovationSectorName,
+                                                Boolean stateAidAllowed,
+                                                String researchCategoryName,
+                                                String leadTechnologist,
+                                                String compExecutive,
+                                                String budgetCode,
+                                                String pafCode,
+                                                String code,
+                                                String activityCode,
+                                                Integer assessorCount,
+                                                BigDecimal assessorPay,
+                                                Boolean hasAssessmentPanel,
+                                                Boolean hasInterviewStage,
+                                                AssessorFinanceView assessorFinanceView,
+                                                Boolean multiStream,
+                                                String collaborationLevelCode,
+                                                List<OrganisationTypeEnum> leadApplicantTypes,
+                                                Integer researchRatio,
+                                                Boolean resubmission,
+                                                String nonIfsUrl,
+                                                String includeApplicationTeamQuestion) {
 
         return asCompAdmin(data -> {
 
@@ -116,6 +136,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(researchCategory == null ? emptySet() : singleton(researchCategory));
+                competition.setStateAid(stateAidAllowed);
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
@@ -423,12 +444,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         }));
     }
 
-    public CompetitionDataBuilder withCorrectQuestions(boolean includeApplicationTeamQuestion) {
-        return asCompAdmin(data -> {
-//            if (!includeApplicationTeamQuestion) {
-                removeApplicationTeamFromCompetition(data.getCompetition().getId());
-//            }
-        });
+    public void removeApplicationTeamFromCompetition(Long competitionId) {
+        List<QuestionResource> questions = questionService.findByCompetition(competitionId).getSuccess();
+        QuestionResource applicationTeamQuestion = questions.stream()
+                .findAny()
+                .filter(q -> q.getQuestionSetupType() == APPLICATION_TEAM)
+                .orElse(null);
+
+        if (applicationTeamQuestion != null) {
+            questionSetupTemplateService.deleteQuestionInCompetition(applicationTeamQuestion.getId());
+        }
     }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
@@ -463,17 +488,5 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     private ZonedDateTime adjustTimeForMilestoneType(ZonedDateTime day, MilestoneType milestoneType) {
         return asList(SUBMISSION_DATE, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE).contains(milestoneType) ? day.withHour(12) : day;
-    }
-
-    private void removeApplicationTeamFromCompetition(Long competitionId) {
-        List<QuestionResource> questions = questionService.findByCompetition(competitionId).getSuccess();
-        QuestionResource applicationTeamQuestion = questions.stream()
-                .findAny()
-                .filter(q -> q.getQuestionSetupType() == APPLICATION_TEAM)
-                .orElse(null);
-
-        if (applicationTeamQuestion != null) {
-            questionSetupTemplateService.deleteQuestionInCompetition(applicationTeamQuestion.getId());
-        }
     }
 }

@@ -23,10 +23,10 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
  @Component
  public class ApplicationTeamMarkAsCompleteValidator implements Validator {
 
-    @Autowired
-    ApplicationInviteService applicationInviteService;
-
     private static final Log LOG = LogFactory.getLog(ApplicationTeamMarkAsCompleteValidator.class);
+
+    @Autowired
+    private ApplicationInviteService applicationInviteService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -48,7 +48,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
                     .stream()
                     .anyMatch(invite -> invite.getStatus() != OPENED)) {
                 LOG.debug("MarkAsComplete application team validation message for invite organisation: " + organisation.getOrganisationName());
-                reject(errors, "validation.applicationteam.pending.invites");
+                reject(errors, "validation.applicationteam.pending.invites", new Object[] {organisation.getId()});
             }
         }
     }

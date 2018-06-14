@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,7 +46,7 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
 
     @Mock
-    private FinanceRowRestService financeRowRestService;
+    private DefaultFinanceRowRestService financeRowRestService;
 
     private ApplicationResource application;
     private Long questionId;
