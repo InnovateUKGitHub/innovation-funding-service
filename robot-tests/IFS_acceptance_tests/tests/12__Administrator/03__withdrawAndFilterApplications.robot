@@ -17,7 +17,6 @@ ${withdrawnState}                     Withdrawn
 ${ineligibleState}                    Ineligible
 
 *** Test Cases ***
-# This is placed before withdrawing the project in the next test case as we want to verify that it what we don't search for isn't showing.
 The IFS Admin searches for a project
     [Documentation]  IFS-3565
     [Tags]
@@ -34,8 +33,7 @@ The IFS Admin clears all filters after searching for a project
 The IFS Admin withdraws a project from Project Setup
     [Documentation]  IFS-2945
     [Tags]  HappyPath
-    [Setup]
-    Given the user clicks the button/link                  jQuery=tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
+    Given the user clicks the button/link                  jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
     When the user cancels then withdraws the project
     Then the user can see the previous application         ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
 
@@ -65,19 +63,19 @@ The IFS Admin clears any filters applied and can see all of the applications
 
 *** Keywords ***
 The user cancels then withdraws the project
-    the user clicks the button/link            link=Withdraw project
-    the user clicks the button/link            jQuery=button:contains("Withdraw project") ~ button:contains("Cancel")  #Cancel the modal
-    the user clicks the button/link            link=Withdraw project
-    the user clicks the button/link            css=button[type="submit"]  #Withdraw the project on the modal
+    the user clicks the button/link            link = Withdraw project
+    the user clicks the button/link            jQuery = button:contains("Withdraw project") ~ button:contains("Cancel")  #Cancel the modal
+    the user clicks the button/link            link = Withdraw project
+    the user clicks the button/link            css = button[type="submit"]  #Withdraw the project on the modal
 
 The user can see the previous application
     [Arguments]  ${filteredApplication}  ${applicationStatusInTable}
-    the user should see the element            jQuery=td:contains("${filteredApplication}") ~ td:contains("${applicationStatusInTable}")
+    the user should see the element            jQuery = td:contains("${filteredApplication}") ~ td:contains("${applicationStatusInTable}")
 
 The user selects a filter for the applications
     [Arguments]  ${applicationStatusInDropDown}  ${filterID}
     Given the user selects the option from the drop-down menu    ${applicationStatusInDropDown}  id=${filterID}
-    When the user clicks the button/link                         css=button[class="button"]  #Filter
+    When the user clicks the button/link                         css = button[class = "button"]  #Filter
 
 The user can see all of the previous applications when the All filter is applied
     the user can see the previous application                ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
