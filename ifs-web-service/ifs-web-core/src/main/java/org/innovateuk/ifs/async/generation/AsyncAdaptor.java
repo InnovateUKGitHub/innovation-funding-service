@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.async.util;
+package org.innovateuk.ifs.async.generation;
 
-import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
-import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
+import org.innovateuk.ifs.async.generation.handler.*;
 import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;

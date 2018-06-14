@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.async.controller;
+package org.innovateuk.ifs.async.util;
 
 /**
  * A ThreadLocal that allows us to test whether or not async code is allowed to be executed within the current callstack

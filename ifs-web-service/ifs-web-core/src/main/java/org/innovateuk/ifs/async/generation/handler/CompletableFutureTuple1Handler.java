@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.async.util;
+package org.innovateuk.ifs.async.generation.handler;
 
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
