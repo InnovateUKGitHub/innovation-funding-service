@@ -54,10 +54,6 @@ public class OtherFundingHandler extends FinanceRowHandler {
         	return null;
         }
 
-        if(id==null){
-            fundingAmount = BigDecimal.ZERO;
-        }
-
         return new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
     }
 }
