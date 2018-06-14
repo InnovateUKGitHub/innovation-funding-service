@@ -226,7 +226,7 @@ Mandatory document submission
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
-    When the user clicks the button/link    link=Project setup status
+    When the user clicks the button/link    link=Set up your project
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    css=ul li.waiting:nth-child(6)
     When the user navigates to the page    ${project_in_setup_page}
@@ -394,7 +394,7 @@ After rejection, non-lead partner cannot view both documents
 After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]    HappyPath
-    When the user clicks the button/link    link=Project setup status
+    When the user clicks the button/link    link=Set up your project
     Then the user should not see the element    css=ul li.complete:nth-child(6)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
@@ -480,7 +480,7 @@ After rejection, mandatory document submission
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
-    When the user clicks the button/link    link=Project setup status
+    When the user clicks the button/link    link=Set up your project
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    css=ul li.waiting:nth-child(6)
     When the user navigates to the page    ${project_in_setup_page}
@@ -595,7 +595,7 @@ Sole applicant uploads only exploitation plan and submits
     When choose file  name=exploitationPlan  ${upload_folder}/${valid_pdf}  # This line uploads valid pdf file as exploitation plan
     And the user clicks the button/link  jQuery=.button:contains("Submit document")
     And the user clicks the button/link  jQuery=.button:contains("Submit")
-    And the user clicks the button/link  link=Project setup status
+    And the user clicks the button/link  link=Set up your project
     Then the user should see the element   jQuery=ul li.waiting h2:contains("Other documents")
 
 CompAdmin sees uploaded file and approves it

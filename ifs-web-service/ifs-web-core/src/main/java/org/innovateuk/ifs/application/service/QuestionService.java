@@ -25,8 +25,6 @@ public interface QuestionService {
 
     List<QuestionResource> findByCompetition(Long competitionId);
 
-    //List<QuestionResource> findByCompetitionForCompAdmin(Long competitionId);
-
     List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId);
 
     void removeNotifications(List<QuestionStatusResource> questionStatuses);

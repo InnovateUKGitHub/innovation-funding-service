@@ -23,10 +23,10 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
  @Component
  public class ApplicationTeamMarkAsCompleteValidator implements Validator {
 
-    @Autowired
-    ApplicationInviteService applicationInviteService;
-
     private static final Log LOG = LogFactory.getLog(ApplicationTeamMarkAsCompleteValidator.class);
+
+    @Autowired
+    private ApplicationInviteService applicationInviteService;
 
     @Override
     public boolean supports(Class<?> clazz) {
