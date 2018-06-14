@@ -13,7 +13,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,10 +86,29 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String competitionTypeName, List<String> innovationAreaNames,
-                                                String innovationSectorName, String researchCategoryName, String leadTechnologist,
-                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay, Boolean hasAssessmentPanel, Boolean hasInterviewStage, AssessorFinanceView assessorFinanceView,
-                                                Boolean multiStream, String collaborationLevelCode, List<OrganisationTypeEnum> leadApplicantTypes, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
+    public CompetitionDataBuilder withBasicData(String name,
+                                                String competitionTypeName,
+                                                List<String> innovationAreaNames,
+                                                String innovationSectorName,
+                                                Boolean stateAidAllowed,
+                                                String researchCategoryName,
+                                                String leadTechnologist,
+                                                String compExecutive,
+                                                String budgetCode,
+                                                String pafCode,
+                                                String code,
+                                                String activityCode,
+                                                Integer assessorCount,
+                                                BigDecimal assessorPay,
+                                                Boolean hasAssessmentPanel,
+                                                Boolean hasInterviewStage,
+                                                AssessorFinanceView assessorFinanceView,
+                                                Boolean multiStream,
+                                                String collaborationLevelCode,
+                                                List<OrganisationTypeEnum> leadApplicantTypes,
+                                                Integer researchRatio,
+                                                Boolean resubmission,
+                                                String nonIfsUrl) {
 
         return asCompAdmin(data -> {
 
@@ -115,6 +134,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(researchCategory == null ? emptySet() : singleton(researchCategory));
+                competition.setStateAid(stateAidAllowed);
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));

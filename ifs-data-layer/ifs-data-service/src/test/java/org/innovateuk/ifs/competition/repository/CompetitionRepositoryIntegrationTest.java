@@ -2,14 +2,13 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
-import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -20,9 +19,9 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +40,7 @@ import java.util.stream.Collectors;
 import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.junit.Assert.*;
@@ -96,7 +96,17 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     @Rollback
     public void testFundedAndInformed() {
-        Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
+        CompetitionType competitionType = newCompetitionType()
+                .withId(1L)
+                .withName("Programme")
+                .build();
+
+        Competition compFundedAndInformed = newCompetition()
+                .withNonIfs(false)
+                .withSetupComplete(true)
+                .withCompetitionType(competitionType)
+                .build();
+
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
@@ -112,16 +122,32 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     @Rollback
     public void testMultipleFundedAndInformed() {
-        Competition compWithFeedBackReleased = newCompetition().withName("Comp1").withNonIfs(false).withSetupComplete
-                (true).build();
+
+        CompetitionType competitionType = newCompetitionType()
+                .withId(1L)
+                .withName("Programme")
+                .build();
+
+        Competition compWithFeedBackReleased = newCompetition()
+                .withName("Comp1")
+                .withNonIfs(false)
+                .withSetupComplete(true)
+                .withCompetitionType(competitionType)
+                .build();
+
         compWithFeedBackReleased = repository.save(compWithFeedBackReleased);
 
         Application applicationFeedbackReleased = newApplication().withCompetition(compWithFeedBackReleased)
                 .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
         applicationRepository.save(applicationFeedbackReleased);
 
-        Competition compFundedAndInformed = newCompetition().withName("Comp2").withNonIfs(false).withSetupComplete
-                (true).build();
+        Competition compFundedAndInformed = newCompetition()
+                .withName("Comp2")
+                .withNonIfs(false)
+                .withSetupComplete(true)
+                .withCompetitionType(competitionType)
+                .build();
+
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)

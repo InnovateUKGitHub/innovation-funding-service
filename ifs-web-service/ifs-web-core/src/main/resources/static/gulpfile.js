@@ -30,33 +30,34 @@ var vendorJsFiles = [
   nodeModulesPath + 'jquery/dist/jquery.js',
   nodeModulesPath + 'simplestatemanager/src/ssm.js',
   'js/vendor/jquery-ui/jquery-ui.min.js',
-	gdsFrontendToolkitPath + 'javascripts/govuk/shim-links-with-button-role.js',
-	gdsFrontendToolkitPath + 'javascripts/vendor/polyfills/bind.js',
-	gdsFrontendToolkitPath + 'javascripts/govuk/details.polyfill.js',
+  gdsFrontendToolkitPath + 'javascripts/govuk/shim-links-with-button-role.js',
+  gdsFrontendToolkitPath + 'javascripts/vendor/polyfills/bind.js',
+  gdsFrontendToolkitPath + 'javascripts/govuk/details.polyfill.js',
   'js/vendor/govuk/application.js',
-	gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
+  gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
   'js/vendor/wysiwyg-editor/*.js',
   '!js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
 
-gulp.task('copy-govuk', ['copy-js-govuk', 'copy-fonts-govuk', 'copy-images-govuk'])
-// copy over the ie javascript file to the js/vendor/govuk folder
+// copy over the vendor javascript files to the js/vendor/govuk folder
 gulp.task('copy-js-govuk', function () {
-	return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/javascripts/ie.js')).pipe(gulp.dest('js/vendor/govuk'))
+	return gulp.src(filesExist([
+	  gdsTemplateJinjaPath + 'assets/javascripts/govuk-template.js',
+    gdsTemplateJinjaPath + 'assets/javascripts/ie.js'
+  ]))
+  .pipe(gulp.dest('js/vendor/govuk'))
 })
 // copy over the fonts from GDS node-modules to css/fonts folder
 gulp.task('copy-fonts-govuk', function () {
-  return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/stylesheets/fonts/*')).pipe(gulp.dest('css/fonts'))
+  return gulp.src(filesExist(gdsTemplateJinjaPath + 'assets/stylesheets/fonts/*'))
+  .pipe(gulp.dest('css/fonts'))
 })
 //  copy over the images from GDS node-modules to images folder
 gulp.task('copy-images-govuk', function () {
-  return gulp.src(vendorImages).pipe(gulp.dest('images'))
+  return gulp.src(filesExist(vendorImages))
+  .pipe(gulp.dest('images'))
 })
-
-gulp.task('default', ['js', 'css'])
-
-// build all js
-gulp.task('js', ['vendor', 'ifs-js'])
+gulp.task('copy-govuk', gulp.parallel('copy-js-govuk', 'copy-fonts-govuk', 'copy-images-govuk'))
 
 // concat and minify all the ifs files
 gulp.task('ifs-js', function () {
@@ -85,7 +86,10 @@ gulp.task('vendor', function () {
   .pipe(gulp.dest('js/dest'))
 })
 
-gulp.task('css', ['copy-govuk'], function () {
+// build all js
+gulp.task('js', gulp.series('copy-govuk', gulp.parallel('vendor', 'ifs-js')))
+
+gulp.task('css', function () {
   return gulp.src(filesExist(sassFiles))
     .pipe(sassLint({
       files: {
@@ -117,3 +121,5 @@ gulp.task('css:watch', function () {
 gulp.task('js:watch', function () {
   gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js'])
 })
+
+gulp.task('default', gulp.parallel('js', 'css'))

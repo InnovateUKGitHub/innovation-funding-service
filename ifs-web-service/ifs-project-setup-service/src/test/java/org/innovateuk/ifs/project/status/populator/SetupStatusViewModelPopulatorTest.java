@@ -22,7 +22,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -49,7 +49,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
@@ -134,10 +134,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .build(1))
                 .build();
 
@@ -145,7 +147,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertStatuses(viewModel);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertFalse(viewModel.isProjectComplete());
 
@@ -1140,7 +1143,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser).get();
+        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser, "origin").get();
         assertStandardViewModelValuesCorrect(viewModel, monitoringOfficerExpected);
 
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -1282,10 +1285,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(NOT_STARTED)
                         .build(1))
                 .build();
 
@@ -1294,7 +1299,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertStatuses(viewModel);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertEquals(false, viewModel.isCollaborationAgreementRequired());
 
@@ -1303,7 +1309,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     }
 
     private SetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) throws Exception {
-        return populator.populateViewModel(projectId, loggedInUser).get();
+        return populator.populateViewModel(projectId, loggedInUser, "origin").get();
     }
 
     private void setupLookupProjectDetailsExpectations(Optional<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {

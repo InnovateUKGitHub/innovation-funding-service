@@ -6,11 +6,12 @@ import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.testdata.builders.data.ProjectData;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
@@ -107,6 +108,16 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
                 bankDetailsService.submitBankDetails(bankDetails).getSuccess();
             });
+        });
+    }
+
+    public ProjectDataBuilder withAmendedStatus(ProjectState state) {
+
+        return asIfsAdmin(data -> {
+            if (ProjectState.WITHDRAWN.equals(state)) {
+                projectService.withdrawProject(data.getProject().getId()).getSuccess();
+                applicationService.withdrawApplication(data.getApplication().getId()).getSuccess();
+            }
         });
     }
 

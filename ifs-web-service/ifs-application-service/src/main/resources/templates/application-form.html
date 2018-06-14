@@ -16,7 +16,8 @@
                 <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">There is a problem on this page.</h2>
 
                 <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}"
+                        th:classappend="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)} ? 'list-header'">
                         <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">Non-field specific message</th:block>
                         <th:block th:unless="${err.global || err.fieldName == 'formInput[cost]'}">
                           <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
@@ -65,7 +66,7 @@
                 <!--/* Application Form for a Section. */-->
                 <th:block th:if="${model.isSection()}">
                     <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}" />
-                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (${model})" />
+                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (model=${model}, internalView=${false})" />
                 </th:block>
 
                 <input type="hidden" id="application_id" th:value="${model.application.id}"/>

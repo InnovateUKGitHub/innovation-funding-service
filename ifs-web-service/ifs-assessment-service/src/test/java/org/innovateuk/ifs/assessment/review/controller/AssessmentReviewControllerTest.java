@@ -7,7 +7,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -29,9 +29,10 @@ import static java.util.Comparator.comparingLong;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Mockito.inOrder;
@@ -46,7 +47,6 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
     private static final long COMPETITION_ID = 3L;
     private static final long REVIEW_ID = 4L;
     private static final String APPLICATION_NAME = "Application name";
-    private static final String PROJECT_SUMMARY_QUESTION_NAME = "Project summary";
     private static final String PROJECT_SUMMARY_TEXT = "Project summary text";
 
     private SortedSet<OrganisationResource> partners;
@@ -81,7 +81,7 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
     public void setup() {
         super.setup();
 
-        when(formInputResponseRestService.getByApplicationIdAndQuestionName(APPLICATION_ID, PROJECT_SUMMARY_QUESTION_NAME))
+        when(formInputResponseRestService.getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY))
                 .thenReturn(restSuccess(newFormInputResponseResource()
                         .withValue(PROJECT_SUMMARY_TEXT)
                         .build()));
@@ -139,7 +139,7 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
 
         InOrder inOrder = inOrder(reviewRestService, formInputResponseRestService, processRoleService, organisationRestService);
         inOrder.verify(reviewRestService).getAssessmentReview(REVIEW_ID);
-        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, PROJECT_SUMMARY_QUESTION_NAME);
+        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY);
         inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
         asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
                 inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));

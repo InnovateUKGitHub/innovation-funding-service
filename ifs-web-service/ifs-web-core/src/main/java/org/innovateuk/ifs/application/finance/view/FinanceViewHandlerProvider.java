@@ -3,11 +3,12 @@ package org.innovateuk.ifs.application.finance.view;
 import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.jes.JESFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.jes.JESProjectFinanceModelManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 
 /**
  * Finance handler for application and project
@@ -16,19 +17,28 @@ import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
 @Configuration
 public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
 
+    @Autowired
+    private ProjectFinanceFormHandler projectFinanceFormHandler;
+
+    @Autowired
+    private DefaultFinanceFormHandler defaultFinanceFormHandler;
+
+    @Autowired
+    private JESFinanceFormHandler jesFinanceFormHandler;
+
     public FinanceFormHandler getFinanceFormHandler(long organisationType) {
         if(RESEARCH.getId().longValue() == organisationType) {
-            return getJESFinanceFormHandler();
+            return jesFinanceFormHandler;
         } else {
-            return getDefaultFinanceFormHandler();
+            return defaultFinanceFormHandler;
         }
     }
 
     public FinanceFormHandler getProjectFinanceFormHandler(long organisationType) {
         if(RESEARCH.getId().longValue() == organisationType) {
-            return getJESFinanceFormHandler();
+            return jesFinanceFormHandler;
         } else {
-            return getProjectFinanceFormHandler();
+            return projectFinanceFormHandler;
         }
     }
 
@@ -46,21 +56,6 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
         } else {
             return getDefaultProjectFinanceModelManager();
         }
-    }
-
-    @Bean
-    protected FinanceFormHandler getJESFinanceFormHandler() {
-        return new JESFinanceFormHandler();
-    }
-
-    @Bean
-    protected FinanceFormHandler getDefaultFinanceFormHandler() {
-        return new DefaultFinanceFormHandler();
-    }
-
-    @Bean
-    protected FinanceFormHandler getProjectFinanceFormHandler() {
-        return new ProjectFinanceFormHandler();
     }
 
     @Bean

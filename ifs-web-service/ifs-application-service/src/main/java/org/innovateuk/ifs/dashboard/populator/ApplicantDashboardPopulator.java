@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -51,7 +50,7 @@ public class ApplicantDashboardPopulator {
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
-    public ApplicantDashboardViewModel populate(Long userId) {
+    public ApplicantDashboardViewModel populate(Long userId, String originQuery) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);
         List<ProjectResource> allProjects = projectService.findByUser(userId).getSuccess();
@@ -88,11 +87,11 @@ public class ApplicantDashboardPopulator {
                         .sorted()
                         .collect(toList());
 
-        return new ApplicantDashboardViewModel(projectViews, inProgressViews, previousViews);
+        return new ApplicantDashboardViewModel(projectViews, inProgressViews, previousViews, originQuery);
     }
 
     private boolean isLead(Optional<ProcessRoleResource> processRole) {
-        return processRole.map(ProcessRoleResource::getRole).map(Role::getById).map(Role::isLeadApplicant).orElse(false);
+        return processRole.map(ProcessRoleResource::getRole).map(Role::isLeadApplicant).orElse(false);
     }
 
     private boolean isAssigned(ApplicationResource application, Optional<ProcessRoleResource> processRole) {
@@ -134,9 +133,9 @@ public class ApplicantDashboardPopulator {
     }
 
     private boolean hasAnApplicantRole(ProcessRoleResource processRoleResource) {
-        return processRoleResource.getRole() == APPLICANT.getId() ||
-                processRoleResource.getRole() == LEADAPPLICANT.getId() ||
-                processRoleResource.getRole() == COLLABORATOR.getId();
+        return processRoleResource.getRole() == APPLICANT ||
+                processRoleResource.getRole() == LEADAPPLICANT ||
+                processRoleResource.getRole() == COLLABORATOR;
     }
 
     private boolean applicationInProgress(ApplicationResource application) {

@@ -1,20 +1,15 @@
 package org.innovateuk.ifs.competition.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionOpenQueryResourceListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.spendProfileStatusResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 
 /**
  * Implements {@link CompetitionPostSubmissionRestService}
@@ -23,11 +18,6 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.spe
 public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService implements CompetitionPostSubmissionRestService {
 
     private String competitionsRestURL = "/competition/postSubmission";
-
-    @Override
-    public RestResult<Void> notifyAssessors(long competitionId) {
-        return putWithRestResult(String.format("%s/%s/notify-assessors", competitionsRestURL, competitionId), Void.class);
-    }
 
     @Override
     public RestResult<Void> releaseFeedback(long competitionId) {

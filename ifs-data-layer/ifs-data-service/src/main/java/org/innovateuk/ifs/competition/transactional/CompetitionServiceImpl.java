@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -10,17 +8,18 @@ import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.repository.CompetitionRepository.EOI_COMPETITION_TYPE;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -61,7 +61,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private UserRepository userRepository;
 
     @Autowired
-    private AssessmentParticipantRepository assessmentParticipantRepository;
+    private InnovationLeadRepository innovationLeadRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -85,12 +85,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private PublicContentService publicContentService;
 
     @Autowired
-    private CompetitionKeyStatisticsService competitionKeyStatisticsService;
+    private CompetitionKeyApplicationStatisticsService competitionKeyApplicationStatisticsService;
 
     @Autowired
     private MilestoneService milestoneService;
-
-    private static final String EOI = "Expression of interest";
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -100,11 +98,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
-        List<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<InnovationLead> innovationLeads = innovationLeadRepository.findInnovationsLeads(competitionId);
+        List<UserResource> innovationLeadUsers = simpleMap(innovationLeads, competitionParticipant -> userMapper
+                .mapToResource(competitionParticipant.getUser()));
 
-        List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
-
-        return serviceSuccess(innovationLeads);
+        return serviceSuccess(innovationLeadUsers);
     }
 
     @Override
@@ -117,14 +115,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 find(userRepository.findOne(innovationLeadUserId),
                      notFoundError(User.class, innovationLeadUserId))
                 .andOnSuccess(innovationLead -> {
-                    AssessmentParticipant competitionParticipant = new AssessmentParticipant();
-                    competitionParticipant.setProcess(competition);
-                    competitionParticipant.setUser(innovationLead);
-                    competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
-                    competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
-
-                    assessmentParticipantRepository.save(competitionParticipant);
-
+                    innovationLeadRepository.save(new InnovationLead(competition, innovationLead));
                     return serviceSuccess();
                 })
             );
@@ -133,10 +124,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
-
-        return find(assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
-                    notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
-                .andOnSuccessReturnVoid(competitionParticipant -> assessmentParticipantRepository.delete(competitionParticipant));
+        return find(innovationLeadRepository.findInnovationLead(competitionId, innovationLeadUserId),
+                    notFoundError(InnovationLead.class, competitionId, innovationLeadUserId))
+                .andOnSuccessReturnVoid(innovationLead -> innovationLeadRepository.delete(innovationLead));
     }
 
     @Override
@@ -168,7 +158,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             }
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
-                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
+                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI_COMPETITION_TYPE))
                             .collect(Collectors.toList())),
                     this::searchResultFromCompetition));
         });
@@ -296,8 +286,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> releaseFeedback(long competitionId) {
-        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
-                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+        CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
@@ -311,8 +301,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> manageInformState(long competitionId) {
-        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
-                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+        CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);

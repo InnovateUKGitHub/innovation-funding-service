@@ -1,0 +1,21 @@
+ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
+
+ext.server_url = project.properties['serverUrl'] ?: "ifs.local-dev"
+ext.authorisation_url = project.properties['authorisationUrl'] ?: "auth.local-dev:9443"
+
+task prepareTaurusDeployment(type: Copy) {
+
+    destinationDir = file('./')
+
+    from('taurus') {
+        include '**/taurus.yml'
+    }
+    filesMatching("**/**.*") {
+        expand project.properties
+    }
+}
+
+task osRunTaurus(type: Exec) {
+    dependsOn prepareTaurusDeployment
+    executable = 'setup-files/scripts/openshift/os-taurus.sh'
+}

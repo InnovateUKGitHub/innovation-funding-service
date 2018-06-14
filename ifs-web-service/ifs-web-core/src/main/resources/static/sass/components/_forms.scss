@@ -118,12 +118,20 @@ table {
       }
     }
 
+    &.cta {
+      vertical-align: bottom;
+    }
+
     .control {
       padding-left: 20px;
     }
 
     .buttonlink {
       margin: 0;
+    }
+
+    .button {
+      margin: 0 0 1px 0;
     }
   }
 
@@ -214,6 +222,19 @@ select {
 }
 
 tr {
+  &.form-group-row-validated {
+    &.form-group-error {
+      td {
+        vertical-align: bottom;
+
+        &:first-child {
+          border-left: 5px solid $error-colour;
+          padding-left: 15px;
+        }
+      }
+    }
+  }
+
   &.form-group-row {
     &.form-group-error {
       border:none;
@@ -332,6 +353,11 @@ tr {
         border: 4px solid $error-colour;
       }
     }
+  }
+
+  select {
+    @include box-shadow(none);
+    border: 4px solid $error-colour;
   }
 }
 

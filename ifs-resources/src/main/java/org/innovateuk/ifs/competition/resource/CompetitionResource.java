@@ -98,6 +98,7 @@ public class CompetitionResource {
     private GrantTermsAndConditionsResource termsAndConditions;
 
     private boolean locationPerPartner = true;
+    private Boolean stateAid;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -620,6 +621,14 @@ public class CompetitionResource {
         this.maxProjectDuration = maxProjectDuration;
     }
 
+    public Boolean getStateAid() {
+        return stateAid;
+    }
+
+    public void setStateAid(final Boolean stateAid) {
+        this.stateAid = stateAid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -679,6 +688,7 @@ public class CompetitionResource {
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(locationPerPartner, that.locationPerPartner)
+                .append(stateAid, that.stateAid)
                 .isEquals();
     }
 
@@ -735,6 +745,7 @@ public class CompetitionResource {
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
                 .append(locationPerPartner)
+                .append(stateAid)
                 .toHashCode();
     }
 }

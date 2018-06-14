@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
@@ -164,6 +166,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withTermsAndConditions(GrantTermsAndConditions... termsAndConditions) {
         return withArray((terms, competition) -> competition.setTermsAndConditions(terms), termsAndConditions);
+    }
+
+    public CompetitionBuilder withStateAid(Boolean... stateAid) {
+        return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {

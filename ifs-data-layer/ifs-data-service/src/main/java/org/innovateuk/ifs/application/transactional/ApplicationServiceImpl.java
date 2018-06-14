@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
@@ -11,7 +12,7 @@ import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflow
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -26,14 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
@@ -290,14 +289,44 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
                                                                                int pageIndex,
                                                                                int pageSize,
-                                                                               String sortField) {
+                                                                               String sortField,
+                                                                               String filter) {
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, ApplicationState.unsuccessfulStates, pageable);
+        Collection<ApplicationState> applicationStates = getApplicationStatesFromFilter(filter);
+
+        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, applicationStates, pageable);
         List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
+
+        Collection<ApplicationState> applicationStates;
+
+        switch (filter.toUpperCase()) {
+            case "INELIGIBLE":
+                applicationStates = ApplicationState.ineligibleStates;
+                break;
+
+            case "REJECTED":
+                applicationStates = Sets.immutableEnumSet(ApplicationState.REJECTED);
+                break;
+
+            case "WITHDRAWN":
+                applicationStates = Sets.immutableEnumSet(ApplicationState.WITHDRAWN);
+                break;
+
+            case "ALL":
+            default:
+                applicationStates = ApplicationState.unsuccessfulStates;
+                break;
+        }
+
+        return applicationStates;
+
     }
 
     private Sort getApplicationSortField(String sortBy) {
