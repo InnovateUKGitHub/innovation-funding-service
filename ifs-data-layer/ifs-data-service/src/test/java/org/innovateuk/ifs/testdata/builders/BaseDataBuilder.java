@@ -385,6 +385,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return with(data -> doAs(compAdmin(), () -> action.accept(data)));
     }
 
+    protected S asIfsAdmin(Consumer<T> action) {
+        return with(data -> doAs(ifsAdmin(), () -> action.accept(data)));
+    }
+
     protected UserResource retrieveUserByEmailInternal(String email, Role role) {
         return fromCache(email, usersByEmailAddressInternal, () -> {
             User user = userRepository.findByEmail(email).get();
