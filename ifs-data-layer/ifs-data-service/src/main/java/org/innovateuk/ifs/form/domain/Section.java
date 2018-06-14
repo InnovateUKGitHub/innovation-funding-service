@@ -87,13 +87,6 @@ public class Section implements Comparable<Section> {
         return questions.stream().filter(question -> question.isType(QuestionType.LEAD_ONLY)).collect(Collectors.toList());
     }
 
-    /**
-     * Get questions not of type GENERAL
-     */
-    public List<Question> getGeneralQuestions() {
-        return questions.stream().filter(question -> !question.isType(QuestionType.LEAD_ONLY)).collect(Collectors.toList());
-    }
-
     public Long getId() {
         return id;
     }

@@ -23,7 +23,7 @@
 
             <th:block th:fragment="page-body">
 
-                <!-- Beginning -->
+                <!--/* Beginning - the content at the top of the page */-->
                 <div th:unless="${model.closed or model.summary}" class="textarea-header">
 
                     <th:block th:if="${model.complete}">
@@ -49,7 +49,7 @@
                     </th:block>
                 </div>
 
-                <!-- Middle -->
+                <!--/* Middle - show details for each organisation */-->
                 <div class="form-group"
                      th:each="organisation : ${model.organisations}"
                      th:id="|organisation.${organisation.inviteOrganisationId}|"
@@ -96,7 +96,7 @@
                     </p>
                 </div>
 
-                <!-- End -->
+                <!--/* End - show the link to add another organisation (lead only) */-->
                 <th:block th:if="${model.userLeadApplicant and !model.complete}">
                     <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
                     <p><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}">Add a collaborator organisation</a></p>
