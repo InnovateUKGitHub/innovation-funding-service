@@ -153,11 +153,12 @@ IFS.core.formValidation = (function () {
     },
     checkPasswordPolicy: function (field, errorStyles) {
       var hasUppercase = IFS.core.formValidation.checkFieldContainsUppercase(field)
+      var hasLowercase = IFS.core.formValidation.checkFieldContainsLowercase(field)
       var hasNumber = IFS.core.formValidation.checkFieldContainsNumber(field)
       var isMinlength = IFS.core.formValidation.checkMinLength(field)
       var isFilledOut = IFS.core.formValidation.checkRequired(field)
       var formGroup = field.closest('.form-group')
-      var confirmsToPasswordPolicy = hasUppercase && hasNumber && isMinlength && isFilledOut
+      var confirmsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength && isFilledOut
       if (errorStyles) {
         if (confirmsToPasswordPolicy) {
           formGroup.removeClass('form-group-error')
@@ -188,6 +189,26 @@ IFS.core.formValidation = (function () {
       IFS.core.formValidation.setStatus(field, uppercaseDataAttribute, hasUppercase)
 
       if (hasUppercase) {
+        IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+        return true
+      } else {
+        IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+        return false
+      }
+    },
+    checkFieldContainsLowercase: function (field) {
+      var fieldVal = field.val()
+      var lowercaseDataAttribute = 'containsLowercase'
+
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, lowercaseDataAttribute)
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, lowercaseDataAttribute)
+
+      var lowercase = /(?=\S*?[a-z])/
+      var hasLowercase = lowercase.test(fieldVal) !== false
+
+      IFS.core.formValidation.setStatus(field, lowercaseDataAttribute, hasLowercase)
+
+      if (hasLowercase) {
         IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
         return true
       } else {
@@ -972,23 +993,32 @@ IFS.core.formValidation = (function () {
       var formGroupRow = target.closest('.form-group-row')
       if (targetVisible && formGroupRow.length) {
         // it is part a date group so don't put focus on the time select
-        formGroupRow.find('input[type!=hidden]').first().focus()
+        IFS.core.formValidation.scrollToElement(formGroupRow.find('input[type!=hidden]').first())
       } else if (targetVisible) {
-        target.first().focus()
+        IFS.core.formValidation.scrollToElement(target.first())
       } else if (closedCollapsible.length) {
         // it is within a collapsible element and we open it and then put focus on it
         var stateless = closedCollapsible.hasClass(IFS.core.collapsible.settings.statelessClass)
         IFS.core.collapsible.toggleCollapsible(closedCollapsible.find('button[aria-controls]'), stateless)
-        target.first().focus()
+        IFS.core.formValidation.scrollToElement(target.first())
       } else {
         // if the target is invisible we put focus on an element that has the same label as the target
         // An example of this usecase is the wysiwyg editor
         var altTarget = jQuery('[aria-labelledby="' + id + '"]')
         var altTargetVisible = IFS.core.formValidation.isVisible(altTarget)
         if (altTargetVisible) {
-          altTarget.first().focus()
+          IFS.core.formValidation.scrollToElement(altTarget.first())
         }
       }
+    },
+    scrollToElement: function (el) {
+      jQuery('html, body').animate({
+        scrollTop: el.offset().top - (jQuery(window).height() / 2)
+      }, {
+        complete: function () {
+          el.focus()
+        }
+      })
     },
     isVisible: function (el) {
       return !(el.is('[aria-hidden="true"]') || el.is(':visible') === false || el.length === 0)
