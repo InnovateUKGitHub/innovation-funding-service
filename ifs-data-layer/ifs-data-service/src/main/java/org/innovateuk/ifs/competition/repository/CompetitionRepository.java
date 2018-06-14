@@ -289,10 +289,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findByInnovationSectorCategoryId(Long id);
 
     @Query(COUNT_OPEN_QUERIES)
-    Long countOpenQueries(@Param("competitionId") Long competitionId, @Param("states") Collection<ProjectState> projectStates);
+    Long countOpenQueriesByCompetitionAndProjectStateNotIn(@Param("competitionId") Long competitionId, @Param("states") Collection<ProjectState> projectStates);
 
     @Query(GET_OPEN_QUERIES)
-    List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId, @Param("states") Collection<ProjectState> projectStates);
+    List<CompetitionOpenQueryResource> getOpenQueryByCompetitionAndProjectStateNotIn(@Param("competitionId") long competitionId, @Param("states") Collection<ProjectState> projectStates);
 
     @Query(value = GET_PENDING_SPEND_PROFILES, nativeQuery = true)
     List<Object[]> getPendingSpendProfiles(@Param("competitionId") long competitionId);

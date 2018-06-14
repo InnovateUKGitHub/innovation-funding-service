@@ -24,12 +24,10 @@ public interface BankDetailsRepository extends PagingAndSortingRepository<BankDe
             + " OR bd.addressScore <= " + EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS
             + ")";
 
-    //TODO - This query will need to be modified once IFS-468 is completed. IFS-468 is about having a workflow in place for the Bank Details process.
     String PENDING_BANK_DETAILS_APPROVALS_QUERY = " SELECT NEW org.innovateuk.ifs.competition.resource.BankDetailsReviewResource("
             + " p.application.id, c.id, c.name, p.id, p.name, bd.organisation.id, bd.organisation.name)"
             + PENDING_BANK_DETAILS_APPROVALS_FROM_CLAUSE;
 
-    //TODO - This query will need to be modified once IFS-468 is completed. IFS-468 is about having a workflow in place for the Bank Details process.
     String COUNT_PENDING_BANK_DETAILS_APPROVALS_QUERY = " SELECT COUNT(DISTINCT bd.organisation.id)"
             + PENDING_BANK_DETAILS_APPROVALS_FROM_CLAUSE;
 
@@ -39,8 +37,8 @@ public interface BankDetailsRepository extends PagingAndSortingRepository<BankDe
     List<BankDetails> findByProjectApplicationCompetitionId(Long competitionId);
 
     @Query(PENDING_BANK_DETAILS_APPROVALS_QUERY)
-    List<BankDetailsReviewResource> getPendingBankDetailsApprovals(@Param("states") Collection<ProjectState> projectStates);
+    List<BankDetailsReviewResource> getPendingBankDetailsApprovalsForProjectStateNotIn(@Param("states") Collection<ProjectState> projectStates);
 
     @Query(COUNT_PENDING_BANK_DETAILS_APPROVALS_QUERY)
-    Long countPendingBankDetailsApprovals(@Param("states") Collection<ProjectState> projectStates);
+    Long countPendingBankDetailsApprovalsForProjectStateNotIn(@Param("states") Collection<ProjectState> projectStates);
 }

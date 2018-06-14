@@ -299,7 +299,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
 
-        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovals(singleton(ProjectState.WITHDRAWN));
+        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovalsForProjectStateNotIn(singleton(ProjectState.WITHDRAWN));
 
         return serviceSuccess(pendingBankDetails);
     }
@@ -307,7 +307,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ServiceResult<Long> countPendingBankDetailsApprovals() {
 
-        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovals(singleton(ProjectState.WITHDRAWN));
+        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovalsForProjectStateNotIn(singleton(ProjectState.WITHDRAWN));
 
         return serviceSuccess(countBankDetails);
     }
