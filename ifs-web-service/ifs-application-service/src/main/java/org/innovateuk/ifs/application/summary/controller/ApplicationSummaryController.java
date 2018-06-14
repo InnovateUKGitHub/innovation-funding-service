@@ -104,6 +104,7 @@ public class ApplicationSummaryController {
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
         ProjectResource project = projectService.getByApplicationId(applicationId);
+
         if (project != null) {
             projectId = project.getId();
         }
