@@ -279,6 +279,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
                 createAssessorsAndAssessments(createCompetitionFutures, createApplicationsFutures), taskExecutor);
 
+        CompletableFuture<Void> competitionQuestionsFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
+                handleCorrectQuestionForApplication(createCompetitionFutures), taskExecutor);
+
         CompletableFuture<Void> competitionsFinalisedFuture = assessorFutures.thenRunAsync(() -> {
 
             List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
@@ -290,7 +293,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         }, taskExecutor);
 
-        CompletableFuture.allOf(competitionFundersFutures, publicContentFutures, assessorFutures, competitionsFinalisedFuture).join();
+        CompletableFuture.allOf(competitionFundersFutures,
+                                publicContentFutures,
+                                assessorFutures,
+                                competitionQuestionsFutures,
+                                competitionsFinalisedFuture
+        ).join();
 
         long after = System.currentTimeMillis();
 
@@ -331,6 +339,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessmentDataBuilderService.createAssessors(competitions, filteredAssessorLines, filteredAssessorInviteLines);
         assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions, filteredAssessorInviteLines);
         assessmentDataBuilderService.createAssessments(applications, filteredAssessmentLines, filteredAssessorResponseLines);
+    }
+
+    private void handleCorrectQuestionForApplication(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        competitions.forEach(competition -> {
+//            if (competition.getCompetition().getUseNewApplicantMenu()) {
+                competitionDataBuilderService.removeApplicationTeamForCompetition(competition);
+//            }
+        });
     }
 
     private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {

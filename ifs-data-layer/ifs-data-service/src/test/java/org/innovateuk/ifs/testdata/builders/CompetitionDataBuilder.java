@@ -32,6 +32,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -108,7 +109,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 List<OrganisationTypeEnum> leadApplicantTypes,
                                                 Integer researchRatio,
                                                 Boolean resubmission,
-                                                String nonIfsUrl) {
+                                                String nonIfsUrl,
+                                                String includeApplicationTeamQuestion) {
 
         return asCompAdmin(data -> {
 
@@ -154,6 +156,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setHasInterviewStage(hasInterviewStage);
                 competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
+                competition.setUseNewApplicantMenu(includeApplicationTeamQuestion.equals("Yes"));
             });
         });
     }
@@ -439,6 +442,18 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             }
 
         }));
+    }
+
+    public void removeApplicationTeamFromCompetition(Long competitionId) {
+        List<QuestionResource> questions = questionService.findByCompetition(competitionId).getSuccess();
+        QuestionResource applicationTeamQuestion = questions.stream()
+                .findAny()
+                .filter(q -> q.getQuestionSetupType() == APPLICATION_TEAM)
+                .orElse(null);
+
+        if (applicationTeamQuestion != null) {
+            questionSetupTemplateService.deleteQuestionInCompetition(applicationTeamQuestion.getId());
+        }
     }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
