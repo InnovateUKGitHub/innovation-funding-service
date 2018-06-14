@@ -43,7 +43,9 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 @Controller
 @RequestMapping("/application")
 @PreAuthorize("hasAuthority('applicant')")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationController.class)
+@SecuredBySpring(value="Controller",
+        description = "Only applicants on an application are allowed to view the corresponding application overview",
+        securedType = ApplicationController.class)
 public class ApplicationController {
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;

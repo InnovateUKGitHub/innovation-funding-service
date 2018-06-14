@@ -75,6 +75,7 @@ public class AssessmentOverviewModelPopulator {
                 assessment.getApplication(),
                 assessment.getApplicationName(),
                 assessment.getCompetition(),
+                competition.getName(),
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
                 getSections(assessment, questions),
