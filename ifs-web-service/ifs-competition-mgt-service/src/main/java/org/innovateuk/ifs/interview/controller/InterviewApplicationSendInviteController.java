@@ -161,7 +161,7 @@ public class InterviewApplicationSendInviteController {
                              @PathVariable("applicationId") long applicationId,
                              @RequestParam MultiValueMap<String, String> queryParams) {
         queryParams.add("applicationId", String.valueOf(applicationId));
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_VIEW_INVITE, queryParams);
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_EDIT_INVITE, queryParams);
         InterviewAssignmentApplicationsSentInviteViewModel viewModel = interviewApplicationSentInviteModelPopulator.populate(competitionId, applicationId, originQuery);
         model.addAttribute("model", viewModel);
         if (form.getSubject() == null) {
@@ -179,7 +179,7 @@ public class InterviewApplicationSendInviteController {
                              @PathVariable("applicationId") long applicationId,
                              @RequestParam MultiValueMap<String, String> queryParams) {
         Supplier<String> failureView = () -> editInvite(model,  form, competitionId, applicationId, queryParams);
-        Supplier<String> successView = () -> redirectToViewInvite(competitionId, applicationId);
+        Supplier<String> successView = () -> redirectToStatusTab(competitionId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             RestResult<Void> fileResult;
@@ -204,10 +204,6 @@ public class InterviewApplicationSendInviteController {
                 }
             );
         });
-    }
-
-    private String redirectToViewInvite(long competitionId, long applicationId) {
-        return format("redirect:/assessment/interview/competition/%s/applications/invite/%s/view", competitionId, applicationId);
     }
 
     private String redirectToStatusTab(long competitionId) {

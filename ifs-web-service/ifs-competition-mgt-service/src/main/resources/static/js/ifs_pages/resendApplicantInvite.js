@@ -23,7 +23,8 @@ IFS.competitionManagement.resendApplicantInvite = (function () {
       jQuery(IFS.competitionManagement.resendApplicantInvite.settings.toggleClass).toggle()
       var filePath = jQuery(IFS.competitionManagement.resendApplicantInvite.settings.fileInput).val()
       var fileName = filePath.split(/(\\|\/)/g).pop()
-      jQuery(IFS.competitionManagement.resendApplicantInvite.settings.fileNameLabel).text(fileName)
+      jQuery(IFS.competitionManagement.resendApplicantInvite.settings.fileNameLabel)
+        .text(fileName)
     },
     handleRemoveClick: function (evt) {
       evt.preventDefault()
