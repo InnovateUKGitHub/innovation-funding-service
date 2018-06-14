@@ -55,7 +55,7 @@ public class ApplicantDashboardPopulator {
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
-    public ApplicantDashboardViewModel populate(Long userId) {
+    public ApplicantDashboardViewModel populate(Long userId, String originQuery) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);
         List<ProjectResource> allProjects = projectService.findByUser(userId).getSuccess();
@@ -95,7 +95,7 @@ public class ApplicantDashboardPopulator {
                         .sorted()
                         .collect(toList());
 
-        return new ApplicantDashboardViewModel(projectViews, inProgressViews, previousViews);
+        return new ApplicantDashboardViewModel(projectViews, inProgressViews, previousViews, originQuery);
     }
 
     private boolean isLead(Optional<ProcessRoleResource> processRole) {
