@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
 import org.innovateuk.ifs.application.forms.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -63,8 +64,6 @@ public class ApplicationSummaryController {
     private FormInputResponseService formInputResponseService;
     private FormInputResponseRestService formInputResponseRestService;
     private UserRestService userRestService;
-    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-    private AssessmentRestService assessmentRestService;
     private ProjectService projectService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
@@ -86,8 +85,6 @@ public class ApplicationSummaryController {
                                         FormInputResponseService formInputResponseService,
                                         FormInputResponseRestService formInputResponseRestService,
                                         UserRestService userRestService,
-                                        AssessorFormInputResponseRestService assessorFormInputResponseRestService,
-                                        AssessmentRestService assessmentRestService,
                                         ProjectService projectService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
@@ -101,8 +98,6 @@ public class ApplicationSummaryController {
         this.formInputResponseService = formInputResponseService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.userRestService = userRestService;
-        this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
-        this.assessmentRestService = assessmentRestService;
         this.projectService = projectService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
@@ -150,7 +145,7 @@ public class ApplicationSummaryController {
             if (project != null) {
                 projectId = project.getId();
             }
-            model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
+            model.addAttribute("backUrl", buildBackUrl(origin, projectId, queryParams));
             model.addAttribute("origin", origin);
 
             return "application-feedback-summary";
@@ -165,7 +160,7 @@ public class ApplicationSummaryController {
         }
     }
 
-    private String buildBackUrl(String origin, long applicationId, Long projectId, MultiValueMap<String, String> queryParams) {
+    private String buildBackUrl(String origin, Long projectId, MultiValueMap<String, String> queryParams) {
         String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
         queryParams.remove("origin");
 
