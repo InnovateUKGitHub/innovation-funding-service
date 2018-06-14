@@ -27,6 +27,7 @@ public class ApplicationFeedbackSummaryViewModel {
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final String backUrl;
     private final String origin;
+    private final  boolean projectWithdrawn;
 
 
     public ApplicationFeedbackSummaryViewModel(ApplicationResource application,
@@ -42,7 +43,8 @@ public class ApplicationFeedbackSummaryViewModel {
                                                ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                                ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                                                String backUrl,
-                                               String origin) {
+                                               String origin,
+                                               boolean projectWithdrawn) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -57,6 +59,7 @@ public class ApplicationFeedbackSummaryViewModel {
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.backUrl = backUrl;
         this.origin = origin;
+        this.projectWithdrawn = projectWithdrawn;
     }
 
     public ApplicationResource getApplication() {
@@ -113,5 +116,9 @@ public class ApplicationFeedbackSummaryViewModel {
 
     public String getOrigin() {
         return origin;
+    }
+
+    public boolean isProjectWithdrawn() {
+        return projectWithdrawn;
     }
 }
