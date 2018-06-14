@@ -20,13 +20,13 @@ import static org.junit.Assert.assertTrue;
 /**
  *
  */
-public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<FinanceRowRestServiceImpl> {
+public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<DefaultFinanceRowRestServiceImpl> {
 
     private static final String costRestURL = "/cost";
 
     @Override
-    protected FinanceRowRestServiceImpl registerRestServiceUnderTest() {
-        FinanceRowRestServiceImpl costService = new FinanceRowRestServiceImpl();
+    protected DefaultFinanceRowRestServiceImpl registerRestServiceUnderTest() {
+        DefaultFinanceRowRestServiceImpl costService = new DefaultFinanceRowRestServiceImpl();
         return costService;
     }
 

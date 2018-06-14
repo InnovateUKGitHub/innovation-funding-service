@@ -33,10 +33,6 @@ dependencies {
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
-    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
-
-    testCompile "com.openpojo:openpojo:0.8.6"
-    testCompile "org.skyscreamer:jsonassert:1.5.0"
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
