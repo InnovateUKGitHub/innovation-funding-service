@@ -141,7 +141,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate() {
-        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser.getId());
+        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser.getId(), "originQuery");
 
         assertFalse(viewModel.getInProgress().isEmpty());
         assertFalse(viewModel.getPrevious().isEmpty());
