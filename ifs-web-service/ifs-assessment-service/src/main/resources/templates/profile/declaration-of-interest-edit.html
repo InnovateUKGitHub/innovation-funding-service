@@ -12,8 +12,8 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading">We were unable to save your changes.</h2>
-                <ul class="error-summary-list">
+              <h2 class="heading-medium error-summary-heading">We were unable to save your changes.</h2>
+              <ul class="error-summary-list">
                     <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
                         <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
                         <!--/* Add a 1 to radio button and checkbox inputs for error message links*/-->
@@ -28,7 +28,7 @@
                     </li>
                 </ul>
             </div>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='heading-xlarge extra-margin-bottom'" />
+              <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='heading-xlarge extra-margin-bottom'" />
             <p>We need to record if you, or an immediate family member, is connected to a body which has any financial interests.</p>
 
             <p>Please complete the sections below declaring to the best of your knowledge, all active interests currently held.
@@ -73,17 +73,17 @@
                         </th:block>
                     </label>
                     <div class="textarea-wrapped word-count">
-                                <textarea
-                                    class="form-control width-full"
-                                    cols="30"
-                                    rows="3"
-                                    maxlength="5000"
-                                    data-max_words="100"
-                                    data-maxwordslength="100"
-                                    data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                    th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
-                                    th:errorclass="field-error"
-                                    th:field="*{professionalAffiliations}"></textarea>
+                        <textarea
+                            class="form-control width-full"
+                            cols="30"
+                            rows="3"
+                            maxlength="5000"
+                            data-max_words="100"
+                            data-maxwordslength="100"
+                            data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                            th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
+                            th:errorclass="field-error"
+                            th:field="*{professionalAffiliations}"></textarea>
                         <div class="textarea-footer" th:with="professionalAffiliations=*{professionalAffiliations}" aria-live="polite" aria-atomic="true" role="status">
                             <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, professionalAffiliations)})" />
                         </div>
@@ -135,9 +135,9 @@
                                     <label>
                                         Organisation
                                         <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}">
-                                                    <span class="error-message"
-                                                          th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}"
-                                                          th:text="${err}"></span>
+                                            <span class="error-message"
+                                                  th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}"
+                                                  th:text="${err}"></span>
                                         </th:block>
                                     </label>
                                     <input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text"
@@ -151,11 +151,11 @@
                                 </td>
                                 <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')} ? 'form-group-error'">
                                     <label>Position
-                                        <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}">
-                                                        <span class="error-message"
-                                                              th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}"
-                                                              th:text="${err}"></span>
-                                        </th:block>
+                                            <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}">
+                                                <span class="error-message"
+                                                      th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}"
+                                                      th:text="${err}"></span>
+                                            </th:block>
                                     </label>
                                     <input aria-labelledby="aria-position-pos" class="form-control width-full appointment-field" type="text"
                                            th:errorclass="form-control-error"
@@ -183,9 +183,9 @@
                         <legend class="heading-small">
                             Do you have any other financial interests?
                             <th:block th:if="${#fields.hasErrors('hasFinancialInterests')}">
-                                        <span class="error-message"
-                                              th:each="err : ${#fields.errors('hasFinancialInterests')}"
-                                              th:text="${err}"></span>
+                                <span class="error-message"
+                                      th:each="err : ${#fields.errors('hasFinancialInterests')}"
+                                      th:text="${err}"></span>
                             </th:block>
                         </legend>
 
@@ -218,17 +218,17 @@
                         </label>
 
                         <div class="textarea-wrapped word-count">
-                                    <textarea
-                                        class="form-control width-full"
-                                        cols="30"
-                                        rows="3"
-                                        data-max_words="100"
-                                        data-maxwordslength="100"
-                                        data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                        th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)},data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"
-                                        th:errorclass="form-control-error"
-                                        th:field="*{financialInterests}"
-                                        th:required="*{hasFinancialInterests}"></textarea>
+                            <textarea
+                                class="form-control width-full"
+                                cols="30"
+                                rows="3"
+                                data-max_words="100"
+                                data-maxwordslength="100"
+                                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)},data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"
+                                th:errorclass="form-control-error"
+                                th:field="*{financialInterests}"
+                                th:required="*{hasFinancialInterests}"></textarea>
                             <div class="textarea-footer" th:with="financialInterests=*{financialInterests}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, financialInterests)})" />
                             </div>
@@ -243,9 +243,9 @@
                         <legend class="heading-small">
                             Do any of your immediate family members have any appointments or directorships?
                             <th:block th:if="${#fields.hasErrors('hasFamilyAffiliations')}">
-                                        <span class="error-message"
-                                              th:each="err : ${#fields.errors('hasFamilyAffiliations')}"
-                                              th:text="${err}"></span>
+                                <span class="error-message"
+                                      th:each="err : ${#fields.errors('hasFamilyAffiliations')}"
+                                      th:text="${err}"></span>
                             </th:block>
                         </legend>
 
@@ -266,7 +266,7 @@
                         </div>
                     </fieldset>
 
-                    <div class="panel js-hidden testig123" id="toggle-familyAffiliations">
+                    <div class="panel js-hidden" id="toggle-familyAffiliations">
                         <th:block th:if="${#fields.hasErrors('familyAffiliations')}">
                             <span class="error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}"></span>
                         </th:block>
@@ -287,9 +287,9 @@
                                     <label>
                                         <span class="form-label">Relation</span>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
-                                                    <span class="error-message"
-                                                          th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
-                                                          th:text="${err}"></span>
+                                            <span class="error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
+                                                  th:text="${err}"></span>
                                         </th:block>
                                     </label>
                                     <input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field"
@@ -304,9 +304,9 @@
                                     <label>
                                         <span class="form-label">Organisation</span>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
-                                                    <span class="error-message"
-                                                          th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
-                                                          th:text="${err}"></span>
+                                            <span class="error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
+                                                  th:text="${err}"></span>
                                         </th:block>
                                     </label>
                                     <input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field"
@@ -321,9 +321,9 @@
                                     <label>
                                         <span class="form-label">Position</span>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
-                                                    <span class="error-message"
-                                                          th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
-                                                          th:text="${err}"></span>
+                                            <span class="error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
+                                                  th:text="${err}"></span>
                                         </th:block>
                                     </label>
 
@@ -351,9 +351,9 @@
                         <legend class="heading-small">
                             Do any of your immediate family members have any other financial interests?
                             <th:block th:if="${#fields.hasErrors('hasFamilyFinancialInterests')}">
-                                        <span class="error-message"
-                                              th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}"
-                                              th:text="${err}"></span>
+                                <span class="error-message"
+                                      th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}"
+                                      th:text="${err}"></span>
                             </th:block>
                         </legend>
                         <div class="multiple-choice" data-target="toggle-family-interest">
@@ -381,17 +381,17 @@
                             </th:block>
                         </label>
                         <div class="textarea-wrapped word-count">
-                                    <textarea
-                                        class="form-control width-full"
-                                        cols="30"
-                                        rows="3"
-                                        data-max_words="100"
-                                        data-maxwordslength="100"
-                                        data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                        th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required},data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
-                                        th:errorclass="form-control-error"
-                                        th:field="*{familyFinancialInterests}"
-                                        th:required="*{hasFamilyFinancialInterests}"></textarea>
+                            <textarea
+                                class="form-control width-full"
+                                cols="30"
+                                rows="3"
+                                data-max_words="100"
+                                data-maxwordslength="100"
+                                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required},data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
+                                th:errorclass="form-control-error"
+                                th:field="*{familyFinancialInterests}"
+                                th:required="*{hasFamilyFinancialInterests}"></textarea>
                             <div class="textarea-footer" th:with="familyFinancialInterests=*{familyFinancialInterests}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, familyFinancialInterests)})" />
                             </div>
@@ -404,7 +404,7 @@
                         <legend>
                             <span class="visuallyhidden">Confirm declaration of interest</span>
                             <th:block th:if="${#fields.hasErrors('accurateAccount')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}"></span>
+                              <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}"></span>
                             </th:block>
                         </legend>
 
@@ -427,10 +427,10 @@
             <input type="hidden" id="cacheTest" value="" />
 
             <th:block th:insert="fragments/layout :: main-content-end" />
-    </main>
+        </main>
 
-    <th:block th:insert="fragments/layout :: footer" />
-    <th:block th:insert="fragments/layout :: body-end" />
-    <th:block th:insert="fragments/service-layout :: body-end" />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>
