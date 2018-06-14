@@ -52,7 +52,8 @@
                 <!-- Middle -->
                 <div class="form-group"
                      th:each="organisation : ${model.organisations}"
-                     th:classappend="${#fields.hasErrors('${form.organisation*}')} ? 'form-group-error'">
+                     th:with="organisationErrorKey=${'${form.organisation.' + organisation.inviteOrganisationId + '*}'}"
+                     th:classappend="${#fields.hasErrors(organisationErrorKey)} ? 'form-group-error'">
                     <h2 class="heading-medium">
                         <th:block th:text="${organisation.name}">Organisation name</th:block>
                         <th:block th:if="${organisation.lead}"> (Lead)</th:block>
@@ -62,9 +63,9 @@
                     <h3 class="heading-small">Organisation type</h3>
                     <p th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
 
-                    <th:block th:if="${#fields.hasErrors('${form.organisation*}')}">
+                    <th:block th:if="${#fields.hasErrors(organisationErrorKey)}">
                         <span class="error-message"
-                              th:each="err : ${#fields.errors('${form.organisation*}')}"
+                              th:each="err : ${#fields.errors(organisationErrorKey)}"
                            th:text="${err}"></span>
                     </th:block>
 
