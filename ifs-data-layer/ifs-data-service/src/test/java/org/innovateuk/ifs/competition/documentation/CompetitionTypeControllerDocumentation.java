@@ -5,7 +5,8 @@ import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.controller.CompetitionTypeController;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.competition.transactional.CompetitionTypeService;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -19,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CompetitionTypeControllerDocumentation extends BaseControllerMockMVCTest<CompetitionTypeController> {
     @Mock
-    CompetitionSetupService competitionSetupService;
+    CompetitionTypeService competitionTypeService;
 
     @Override
     protected CompetitionTypeController supplyControllerUnderTest() {
@@ -28,7 +29,7 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
 
     @Test
     public void findAll() throws Exception {
-        when(competitionSetupService.findAllTypes()).thenReturn(ServiceResult.serviceSuccess(asList(new CompetitionTypeResource())));
+        when(competitionTypeService.findAllTypes()).thenReturn(ServiceResult.serviceSuccess(asList(new CompetitionTypeResource())));
 
         mockMvc.perform(get("/competition-type/findAll"))
                 .andExpect(status().isOk())
