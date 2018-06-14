@@ -32,6 +32,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -422,10 +423,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         }));
     }
 
-    public CompetitionDataBuilder withoutApplicationTeamQuestion() {
+    public CompetitionDataBuilder withCorrectQuestions(boolean includeApplicationTeamQuestion) {
         return asCompAdmin(data -> {
-
-            CompetitionResource competition = data.getCompetition();
+//            if (!includeApplicationTeamQuestion) {
+                removeApplicationTeamFromCompetition(data.getCompetition().getId());
+//            }
         });
     }
 
@@ -461,5 +463,17 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     private ZonedDateTime adjustTimeForMilestoneType(ZonedDateTime day, MilestoneType milestoneType) {
         return asList(SUBMISSION_DATE, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE).contains(milestoneType) ? day.withHour(12) : day;
+    }
+
+    private void removeApplicationTeamFromCompetition(Long competitionId) {
+        List<QuestionResource> questions = questionService.findByCompetition(competitionId).getSuccess();
+        QuestionResource applicationTeamQuestion = questions.stream()
+                .findAny()
+                .filter(q -> q.getQuestionSetupType() == APPLICATION_TEAM)
+                .orElse(null);
+
+        if (applicationTeamQuestion != null) {
+            questionSetupTemplateService.deleteQuestionInCompetition(applicationTeamQuestion.getId());
+        }
     }
 }
