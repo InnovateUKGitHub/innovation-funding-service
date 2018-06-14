@@ -60,7 +60,7 @@ ext.DB_PORT=3306
 
 ext.LDAP_HOST="ldap"
 ext.LDAP_PASS="default"
-ext.LDAP_DOMAIN="dc=nodomain"
+ext.LDAP_DOMAIN="dc=int,dc=g2g3digital,dc=net"
 ext.LDAP_SCHEME="ldaps"
 
 ext.FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
