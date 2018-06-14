@@ -89,6 +89,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
         Map<FinanceRowType, BigDecimal> financeTotalPerType = organisationFinanceOverview.getTotalPerType();
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
+        BigDecimal financeTotal = organisationFinanceOverview.getTotal();
 
         List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
 
@@ -138,6 +139,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
             return new ApplicationFundingBreakdownViewModel(
                     financeTotalPerType,
+                    financeTotal,
                     applicationOrganisations,
                     section,
                     financeSubSectionChildren,

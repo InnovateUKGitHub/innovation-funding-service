@@ -108,9 +108,8 @@ public class ApplicationSummaryController {
             projectId = project.getId();
         }
 
-        String backUrl = buildBackUrl(origin, applicationId, projectId, queryParams);
-
         if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
+            String backUrl = buildBackUrl(origin, applicationId, projectId, queryParams);
             model.addAttribute("applicationFeedbackSummaryViewModel", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user, backUrl, origin));
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {

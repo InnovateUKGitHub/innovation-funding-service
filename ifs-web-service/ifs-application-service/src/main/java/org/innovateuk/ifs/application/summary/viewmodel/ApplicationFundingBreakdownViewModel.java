@@ -19,6 +19,7 @@ public class ApplicationFundingBreakdownViewModel {
     private final Map<FinanceRowType, BigDecimal> financeTotalPerType;
     private final List<OrganisationResource> applicationOrganisations;
     private final SectionResource financeSection;
+    private BigDecimal financeTotal;
     private Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap;
     private List<SectionResource> financeSectionChildren;
     private Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs;
@@ -28,6 +29,7 @@ public class ApplicationFundingBreakdownViewModel {
 
     public ApplicationFundingBreakdownViewModel(
                                               Map<FinanceRowType, BigDecimal> financeTotalPerType,
+                                              BigDecimal financeTotal,
                                               List<OrganisationResource> applicationOrganisations,
                                               SectionResource financeSection,
                                               List<SectionResource> financeSectionChildren,
@@ -38,6 +40,7 @@ public class ApplicationFundingBreakdownViewModel {
                                               List<String> pendingOrganisationNames
     ) {
         this.financeTotalPerType = financeTotalPerType;
+        this.financeTotal = financeTotal;
         this.applicationOrganisations = applicationOrganisations;
         this.financeSection = financeSection;
         this.financeSectionChildren = financeSectionChildren;
@@ -65,6 +68,10 @@ public class ApplicationFundingBreakdownViewModel {
 
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
         return financeTotalPerType;
+    }
+
+    public BigDecimal getFinanceTotal() {
+        return financeTotal;
     }
 
     public List<OrganisationResource> getApplicationOrganisations() {
