@@ -1,17 +1,23 @@
 package org.innovateuk.ifs.application.summary.controller;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.summary.populator.ApplicationInterviewSummaryViewModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * This controller will handle all requests that are related to the application summary for an assessor.
@@ -22,14 +28,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ApplicationInterviewSummaryController {
 
     private ApplicationInterviewSummaryViewModelPopulator applicationInterviewSummaryViewModelPopulator;
+    private ApplicationService applicationService;
+    private ProcessRoleService processRoleService;
 
 
     public ApplicationInterviewSummaryController() {
     }
 
     @Autowired
-    public ApplicationInterviewSummaryController(ApplicationInterviewSummaryViewModelPopulator applicationInterviewSummaryViewModelPopulator) {
+    public ApplicationInterviewSummaryController(ApplicationInterviewSummaryViewModelPopulator applicationInterviewSummaryViewModelPopulator,
+                                                 ApplicationService applicationService,
+                                                 ProcessRoleService processRoleService) {
         this.applicationInterviewSummaryViewModelPopulator = applicationInterviewSummaryViewModelPopulator;
+        this.applicationService = applicationService;
+        this.processRoleService = processRoleService;
     }
 
     @SecuredBySpring(value = "READ", description = "Assessors and Comp exec users have permission to view the application summary page for an interview panel")
@@ -38,9 +50,32 @@ public class ApplicationInterviewSummaryController {
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     UserResource user) {
+                                     UserResource user,
+                                     @RequestParam(value = "origin", defaultValue = "ASSESSOR_INTERVIEW") String origin,
+                                     @RequestParam MultiValueMap<String, String> queryParams) {
 
-        model.addAttribute("applicationInterviewSummaryViewModel", applicationInterviewSummaryViewModelPopulator.populate(applicationId, user));
+        String backUrl = buildBackUrl(origin, applicationId, queryParams);
+
+        model.addAttribute("applicationInterviewSummaryViewModel", applicationInterviewSummaryViewModelPopulator.populate(applicationId, user, backUrl, origin));
         return "application-interview-summary";
+    }
+
+    private String buildBackUrl(String origin, long applicationId, MultiValueMap<String, String> queryParams) {
+
+        ApplicationResource application = applicationService.getById(applicationId);
+        long competitionId = application.getCompetition();
+
+        String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
+        queryParams.remove("origin");
+
+//        if (queryParams.containsKey("applicationId")) {
+//            queryParams.remove("applicationId");
+//        }
+
+        return UriComponentsBuilder.fromPath(baseUrl)
+                .queryParams(queryParams)
+                .buildAndExpand(asMap( "competitionId", competitionId))
+                .encode()
+                .toUriString();
     }
 }

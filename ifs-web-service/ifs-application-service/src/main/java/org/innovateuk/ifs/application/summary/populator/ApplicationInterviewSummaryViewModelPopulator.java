@@ -95,7 +95,7 @@ public class ApplicationInterviewSummaryViewModelPopulator {
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
     }
 
-    public ApplicationInterviewSummaryViewModel populate(long applicationId, UserResource user) {
+    public ApplicationInterviewSummaryViewModel populate(long applicationId, UserResource user, String backUrl, String origin) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -175,7 +175,9 @@ public class ApplicationInterviewSummaryViewModelPopulator {
                 eachCollaboratorFinanceSectionId,
                 totalFundingSought,
                 applicationFinanceSummaryViewModel,
-                applicationFundingBreakdownViewModel
+                applicationFundingBreakdownViewModel,
+                backUrl,
+                origin
         );
     }
 

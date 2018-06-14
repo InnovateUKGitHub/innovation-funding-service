@@ -36,6 +36,8 @@ public class ApplicationInterviewSummaryViewModel {
     private final BigDecimal totalFundingSought;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
+    private final String backUrl;
+    private final String origin;
 
     public ApplicationInterviewSummaryViewModel(ApplicationResource application,
                                                 CompetitionResource competition,
@@ -53,7 +55,9 @@ public class ApplicationInterviewSummaryViewModel {
                                                 Long eachCollaboratorFinanceSectionId,
                                                 BigDecimal totalFundingSought,
                                                 ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
-                                                ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+                                                ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                                String backUrl,
+                                                String origin) {
         this.application = application;
         this.competition = competition;
         this.responseFilename = responseFilename;
@@ -71,6 +75,8 @@ public class ApplicationInterviewSummaryViewModel {
         this.totalFundingSought = totalFundingSought;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
+        this.backUrl = backUrl;
+        this.origin = origin;
     }
 
     public ApplicationResource getApplication() {
@@ -139,6 +145,14 @@ public class ApplicationInterviewSummaryViewModel {
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    public String getBackUrl() {
+        return backUrl;
+    }
+
+    public String getOrigin() {
+        return origin;
     }
 
     /* View logic methods. */

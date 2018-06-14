@@ -95,7 +95,8 @@ public class ApplicationSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                     @RequestParam MultiValueMap<String, String> queryParams, Long projectId) {
+                                     @RequestParam MultiValueMap<String, String> queryParams,
+                                     Long projectId) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -108,13 +109,9 @@ public class ApplicationSummaryController {
         }
 
         String backUrl = buildBackUrl(origin, applicationId, projectId, queryParams);
-//        model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
-//        model.addAttribute("origin", origin);
 
         if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             model.addAttribute("applicationFeedbackSummaryViewModel", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user, backUrl, origin));
-
-
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
             model.addAttribute("interviewFeedbackViewModel", applicationInterviewFeedbackViewModelPopulator.populate(applicationId, user));

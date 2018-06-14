@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -284,7 +285,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam MultiValueMap<String, String> queryParams) {
 
-        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INTERVIEW_PANEL_STATUS, queryParams);
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.COMP_EXEC_INTERVIEW, queryParams);
 
         model.addAttribute("model", interviewApplicationsStatusModelPopulator
                 .populateModel(competitionId, page, originQuery));
