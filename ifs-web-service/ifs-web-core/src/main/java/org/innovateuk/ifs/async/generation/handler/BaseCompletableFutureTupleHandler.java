@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.async.util;
+package org.innovateuk.ifs.async.generation.handler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
+import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 
 import java.util.List;

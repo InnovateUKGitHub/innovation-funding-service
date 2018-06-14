@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.async.executor;
+package org.innovateuk.ifs.async.generation;
 
-import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
-import org.innovateuk.ifs.async.generation.RegisteredAsyncFutureDetails;
+import org.innovateuk.ifs.async.executor.AsyncThreadLocalCopier;
 import org.springframework.stereotype.Component;
 
 import java.util.Queue;
