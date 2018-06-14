@@ -135,14 +135,19 @@ Competition Admin can send or cancel sending the invitation to the applicants
     When log in as a different user            ${aaron_robertson_email}   ${short_password}
     Then the user should see the element       jQuery=.progress-list div:contains("Neural networks to optimise freight train routing") ~ div span:contains("Invited to interview")
 
-CompAdmin view invite sent to the applicant
-    [Documentation]  IFS-3535
+CompAdmin view invite sent to the applicant and resend invite
+    [Documentation]  IFS-3535  IFS-3541
     [Tags]
     [Setup]  log in as a different user     &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
     When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td a:contains("View invite")
     Then the user should see the element    jQuery=h1:contains("Review invite email")
     And the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
+    When the user clicks the button/link    link=Edit and resend invite
+    And the user clicks the button/link     jQuery=td:contains("${Neural_network_application}") ~ td div:nth-child(2):contains("Remove")
+    Then the compAdmin upload correct additional feedback    css=.inputfile
+    And the user clicks the button/link     css=.button[type="submit"]  #Send invite
+
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -259,7 +264,7 @@ Assessor can view the list of allocated applications
 
 Assessor marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
-    [Tags]
+    [Tags]  Pending
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/18/funding
     Then the user marks applications as successful and send funding decision email
@@ -267,7 +272,7 @@ Assessor marks appplications as successful and releases competition feedback
 
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
-    [Tags]
+    [Tags]  Pending
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     When the user clicks the button/link      jQuery=section:contains("Previous") h3:contains("Neural network")
     Then the user should see the element      link=testing.pdf (opens in a new window)
@@ -337,8 +342,12 @@ the compAdmin uploads additional feedback for an application
     the user goes back to the previous page
     the user uploads the file          id=feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
     the user should see a field and summary error      Your upload must be a PDF.
-    the user uploads the file          id=feedback[0]   ${5mb_pdf}
-    the user should see the element    link=testing_5MB.pdf
+    the compAdmin upload correct additional feedback    id=feedback[0]
+
+the compAdmin upload correct additional feedback
+    [Arguments]   ${upload_id}
+    the user uploads the file          ${upload_id}  ${5mb_pdf}
+    the user should see the element    jQuery=.upload-section a:contains("testing_5MB.pdf")
 
 the compAdmin removes uploaded feedback for an application
     the user uploads the file          id=feedback[1]   ${5mb_pdf}
