@@ -118,7 +118,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionWithoutMilestones = this.competitionDataBuilder
                 .createNonIfsCompetition()
                 .withBasicData(line.name, null, line.innovationAreas,
-                        line.innovationSector, null, null, null,
+                        line.innovationSector, null, null, null, null,
                         null, null, null, null, null, null, null, null, AssessorFinanceView.OVERVIEW, null,
                         null, emptyList(), null, null, line.nonIfsUrl);
 
@@ -135,7 +135,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionBeforeMilestones = this.competitionDataBuilder.
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
-                    line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                    line.innovationSector, true, line.researchCategory, line.leadTechnologist, line.compExecutive,
                     line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
                     line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().

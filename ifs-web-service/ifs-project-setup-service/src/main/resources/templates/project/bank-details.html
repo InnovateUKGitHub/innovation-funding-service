@@ -10,7 +10,7 @@
   <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <main tabindex="-1" id="content">
-  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
+  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
 
   <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
       <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your bank account details.</h2>

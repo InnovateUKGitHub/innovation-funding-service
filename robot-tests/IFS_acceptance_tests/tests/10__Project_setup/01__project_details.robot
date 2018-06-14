@@ -369,7 +369,7 @@ Non lead partner invites finance contact
     Then the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View the status of partners
     Then the user should not see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
-    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=Set up your project
     And the user clicks the button/link    link=Project details
     When the user clicks the button/link       link=Select finance contact
     And the user selects the radio button  financeContact  new
@@ -521,7 +521,7 @@ Academic Partner nominates Finance contact
     Then the user navigates to the page     ${project_in_setup_page}
     When the user clicks the button/link    link=View the status of partners
     Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
-    When the user clicks the button/link    link=Project setup status
+    When the user clicks the button/link    link=Set up your project
     Then the user should not see the element    jQuery=li.require-action:nth-child(3)
     When the user clicks the button/link    link=Project details
     And the user clicks the button/link            jQuery=td:contains("${organisationEggsName}") ~ td a:contains("Select finance contact")
@@ -733,4 +733,4 @@ Select the project location
     the user clicks the button/link       jQuery=#project-details-finance td:contains("${org}") ~ td a:contains("Select project location")
     the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
-    the user clicks the button/link       link=Project setup status
+    the user clicks the button/link       link=Set up your project

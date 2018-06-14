@@ -10,13 +10,16 @@ public class ApplicantDashboardViewModel {
     private final List<ProjectDashboardRowViewModel> projects;
     private final List<InProgressDashboardRowViewModel> inProgress;
     private final List<PreviousDashboardRowViewModel> previous;
+    private final String originQuery;
 
     public ApplicantDashboardViewModel(List<ProjectDashboardRowViewModel> projects,
                                        List<InProgressDashboardRowViewModel> inProgress,
-                                       List<PreviousDashboardRowViewModel> previous) {
+                                       List<PreviousDashboardRowViewModel> previous,
+                                       String originQuery) {
         this.projects = projects;
         this.inProgress = inProgress;
         this.previous = previous;
+        this.originQuery = originQuery;
     }
 
     public List<ProjectDashboardRowViewModel> getProjects() {
@@ -29,6 +32,10 @@ public class ApplicantDashboardViewModel {
 
     public List<PreviousDashboardRowViewModel> getPrevious() {
         return previous;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
     }
 
     /* View logic */
