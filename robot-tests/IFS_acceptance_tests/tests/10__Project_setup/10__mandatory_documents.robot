@@ -34,6 +34,7 @@ Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
+Library          /Users/fahadahmed/innovation-funding-service/robot-tests/IFS_acceptance_tests/libs/CloseTabsLibrary.py
 
 *** Variables ***
 
@@ -240,6 +241,7 @@ PM can still view both documents after submitting
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And close tab
     Then the user goes back to the previous tab
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
@@ -654,3 +656,7 @@ the user should see the file without error
 partners submit bank details
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+
+Close tab
+    Select Window    ${SERVER}/project-setup/project/4/partner/documents/collaboration-agreement
+    Close Window
