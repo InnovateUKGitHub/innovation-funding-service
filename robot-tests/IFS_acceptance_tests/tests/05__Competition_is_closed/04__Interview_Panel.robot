@@ -204,8 +204,7 @@ Applicant can upload the reponse to interview panel
     When the applicant upload the response to the interview panel
     Then the compAdmin checks the status for response uploaded applicantion
     And the user should see the element         jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
-    ${applicationId} =  get application id by name  ${CLOSED_COMPETITION_APPLICATION_TITLE}
-    Then the user clicks the button/link        link=${applicationId}
+    Then the user clicks the button/link        link=${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
     And the user should see the element         jQuery=p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
 
 Applicant can remove the uploaded response
