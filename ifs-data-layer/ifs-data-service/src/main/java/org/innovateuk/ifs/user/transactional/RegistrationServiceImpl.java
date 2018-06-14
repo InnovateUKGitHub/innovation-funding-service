@@ -88,9 +88,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
-    private BaseUserService baseUserService;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -128,13 +125,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createOrganisationUser(UserResource userResource) {
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource).
                 andOnSuccess(
-                        () -> addUserToOrganisation(newUser, organisationId)).
-                andOnSuccess(
-                        user -> userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user)).
+                        () -> userResource.getRoles().isEmpty() ? addRoleToUser(newUser, APPLICANT) : serviceSuccess(newUser)).
                 andOnSuccess(
                         userWithRole -> userWithRole.hasRole(Role.APPLICANT) ?
                                 agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole)).
@@ -232,16 +227,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             user.addRole(role);
         }
         return serviceSuccess(user);
-    }
-
-    private ServiceResult<User> addUserToOrganisation(User user, long organisationId) {
-        // we no-longer want to add the user to the organisation at this point -- they'll be linked via process_role
-
-        return serviceSuccess(user);
-//        return find(organisation(organisationId)).andOnSuccessReturn(org -> {
-//            org.addUser(user);
-//            return user;
-//        });
     }
 
     private User assembleUserFromResource(UserResource userResource) {

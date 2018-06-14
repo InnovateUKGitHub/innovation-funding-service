@@ -247,14 +247,15 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, organisationId, userId)).thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
+        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}/{organisationId}", competitionId, userId, organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition the new application is being created for."),
-                                parameterWithName("userId").description("Id of the user the new application is being created for.")
+                                parameterWithName("userId").description("Id of the user the new application is being created for."),
+                                parameterWithName("organisationId").description("Id of the organisation the new application is being created for.")
                         ),
                         requestFields(
                                 fieldWithPath("name").description("name of the application that will be created")

@@ -73,17 +73,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private void generateProcessRolesForApplication(User user, Role role, Application application, long organisationId) {
-//        List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
-
-
-        // we don't have the organisation here
-//        List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-
-
-
-//        Long userOrganisationId = !usersProcessRoles.isEmpty()
-//                ? usersProcessRoles.get(0).getOrganisationId()
-//                : usersOrganisations.get(0).getId();
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisationId);
         processRoleRepository.save(processRole);
         List<ProcessRole> processRoles = new ArrayList<>();
