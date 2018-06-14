@@ -271,7 +271,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         assertEquals(expected, result.getSuccess());
     }
 
-    @Test
+/*    @Test
     public void getPendingBankDetailsApprovals() throws Exception {
 
         List<BankDetailsReviewResource> pendingBankDetails = Collections.singletonList(new BankDetailsReviewResource(1L, 11L, "Comp1", 12L, "project1", 22L, "Org1"));
@@ -295,7 +295,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
         assertTrue(result.isSuccess());
         assertEquals(pendingBankDetailsCount, result.getSuccess());
-    }
+    }*/
 
     @Override
     protected BankDetailsService supplyServiceUnderTest() {

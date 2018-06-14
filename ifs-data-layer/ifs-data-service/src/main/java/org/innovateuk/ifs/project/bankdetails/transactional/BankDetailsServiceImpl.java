@@ -24,6 +24,7 @@ import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusS
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.Address;
 import org.innovateuk.ifs.sil.experian.resource.Condition;
@@ -44,6 +45,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -297,7 +299,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
 
-        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovals();
+        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovals(singleton(ProjectState.WITHDRAWN));
 
         return serviceSuccess(pendingBankDetails);
     }
@@ -305,7 +307,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ServiceResult<Long> countPendingBankDetailsApprovals() {
 
-        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovals();
+        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovals(singleton(ProjectState.WITHDRAWN));
 
         return serviceSuccess(countBankDetails);
     }
