@@ -8,6 +8,8 @@ import org.innovateuk.ifs.application.summary.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
@@ -24,23 +26,29 @@ public class ApplicationSummaryViewModelPopulator {
     private SectionService sectionService;
     private UserService userService;
     private SummaryViewModelPopulator summaryViewModelPopulator;
+    private ProjectService projectService;
 
     public ApplicationSummaryViewModelPopulator(ApplicationService applicationService,
                                                 CompetitionService competitionService,
                                                 SectionService sectionService,
                                                 UserService userService,
-                                                SummaryViewModelPopulator summaryViewModelPopulator) {
+                                                SummaryViewModelPopulator summaryViewModelPopulator,
+                                                ProjectService projectService) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.sectionService = sectionService;
         this.userService = userService;
         this.summaryViewModelPopulator = summaryViewModelPopulator;
+        this.projectService = projectService;
     }
 
     public ApplicationSummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        boolean projectWithdrawn = (project != null && project.isWithdrawn());
 
         boolean applicationReadyForSubmit = applicationService.isApplicationReadyForSubmit(application.getId());
 
@@ -53,7 +61,8 @@ public class ApplicationSummaryViewModelPopulator {
                 competition,
                 applicationReadyForSubmit,
                 summaryViewModel,
-                userIsLeadApplicant);
+                userIsLeadApplicant,
+                projectWithdrawn);
     }
 
 
