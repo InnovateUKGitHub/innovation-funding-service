@@ -445,19 +445,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public void removeApplicationTeamFromCompetition(Long competitionId) {
-        List<QuestionResource> questions = questionService.findByCompetition(competitionId).getSuccess();
-        QuestionResource applicationTeamQuestion = questions.stream()
-                .findAny()
-                .filter(q -> q.getQuestionSetupType() == APPLICATION_TEAM)
-                .orElse(null);
-
-        if (applicationTeamQuestion != null) {
-            questionSetupTemplateService.deleteQuestionInCompetition(applicationTeamQuestion.getId());
-        }
+        asCompAdmin(data -> questionService
+                .getQuestionByCompetitionIdAndCompetitionSetupQuestionType
+                        (competitionId, APPLICATION_TEAM).andOnSuccess(
+                        question -> questionSetupTemplateService.deleteQuestionInCompetition(question
+                                .getId())));
     }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccess();
+        //newCompetitionSaved.setUseNewApplicantMenu(competitionData.getCompetition().getUseNewApplicantMenu());
         competitionData.setCompetition(newCompetitionSaved);
     }
 

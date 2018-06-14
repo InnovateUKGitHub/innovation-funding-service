@@ -217,7 +217,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
-        competitionLines = readCompetitions();
     }
 
     @PostConstruct
@@ -267,6 +266,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
                 createCompetitions(competitionsToProcess);
 
+        CompletableFuture<Void> competitionQuestionsForApplicantMenuFutures =
+                waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                handleCorrectQuestionsForApplicantMenu(createCompetitionFutures), taskExecutor);
+
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 fillInAndCompleteApplications(createCompetitionFutures);
 
@@ -279,9 +282,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
                 createAssessorsAndAssessments(createCompetitionFutures, createApplicationsFutures), taskExecutor);
 
-        CompletableFuture<Void> competitionQuestionsFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
-                handleCorrectQuestionForApplication(createCompetitionFutures), taskExecutor);
-
         CompletableFuture<Void> competitionsFinalisedFuture = assessorFutures.thenRunAsync(() -> {
 
             List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
@@ -293,10 +293,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         }, taskExecutor);
 
-        CompletableFuture.allOf(competitionFundersFutures,
+        CompletableFuture.allOf(competitionQuestionsForApplicantMenuFutures,
+                                competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
-                                competitionQuestionsFutures,
                                 competitionsFinalisedFuture
         ).join();
 
@@ -341,12 +341,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessmentDataBuilderService.createAssessments(applications, filteredAssessmentLines, filteredAssessorResponseLines);
     }
 
-    private void handleCorrectQuestionForApplication(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+    private void handleCorrectQuestionsForApplicantMenu(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
         competitions.forEach(competition -> {
-//            if (competition.getCompetition().getUseNewApplicantMenu()) {
+            if (!competition.getCompetition().getUseNewApplicantMenu()) {
                 competitionDataBuilderService.removeApplicationTeamForCompetition(competition);
-//            }
+            }
         });
     }
 
