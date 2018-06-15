@@ -58,7 +58,9 @@
         <th:block th:if="${model.isQuestion()}">
             <div class="question" th:with="question=${model.applicantResource.question}">
                 <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
-                    <th:block th:insert="fragments/application-details :: application_details(${model.formInputViewModels[0]})" />
+                    <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
+                        <th:block th:insert="fragments/application-details :: application_details(${formInputViewModel})" />
+                    </th:block>
                 </th:block>
                 <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
                     <th:block th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
