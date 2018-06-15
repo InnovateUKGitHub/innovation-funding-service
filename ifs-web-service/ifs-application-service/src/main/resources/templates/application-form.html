@@ -12,12 +12,18 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
 
+
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
                 <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">There is a problem on this page.</h2>
 
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.detailedErrors('${form.*}')}"
-                        th:classappend="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)} ? 'list-header'">
+                        th:if="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)}"
+                        class="list-header">
+                        <th:block th:text="${err.message}">Non-field specific message</th:block>
+                    </li>
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}"
+                        th:unless="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)}">
                         <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">Non-field specific message</th:block>
                         <th:block th:unless="${err.global || err.fieldName == 'formInput[cost]'}">
                           <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
@@ -81,5 +87,12 @@
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />
+        <table>
+        <tr th:each="err : ${#fields.detailedErrors('${form.*}')}">
+            <td th:text="${err.fieldName}"></td>
+            <td th:text="${err.global}"></td>
+            <td th:text="${err.message}"></td>
+        </tr>
+        </table>
     </body>
 </html>
