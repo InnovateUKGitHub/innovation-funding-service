@@ -10,7 +10,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{(${backUrl.contains(T(org.innovateuk.ifs.management.service.CompetitionManagementApplicationService).PROJECT_SETUP_MANAGEMENT_SERVICE)} ? ${'~'+backUrl} : ${backUrl})})" />
+    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{(${backUrl.contains(T(org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationService).PROJECT_SETUP_MANAGEMENT_SERVICE)} ? ${'~'+backUrl} : ${backUrl})})" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to mark this application as ineligible.</h2>
