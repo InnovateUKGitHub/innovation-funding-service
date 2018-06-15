@@ -200,12 +200,12 @@ Applicant can see the feedback given
 Applicant can upload the reponse to interview panel
     [Documentation]  IFS-3253  IFS-3571
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link    link=Feedback overview
+    [Setup]  the user clicks the button/link    link = Feedback overview
     When the applicant upload the response to the interview panel
     Then the compAdmin checks the status for response uploaded applicantion
-    And the user should see the element         jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
-    Then the user clicks the button/link        link=${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
-    And the user should see the element         jQuery=p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
+    And the user should see the element         jQuery = td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
+    Then the user clicks the button/link        link = ${Neural_network_application}
+    And the user should see the element         jQuery = p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
 
 Applicant can remove the uploaded response
     [Documentation]  IFS-3253  IFS-3378
