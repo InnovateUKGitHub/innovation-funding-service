@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -40,6 +41,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
+
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
     private FinanceService financeService;
@@ -257,8 +261,21 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     @Override
     public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
-        // not to be implemented, there are not any finance positions for the JES form
-        throw new NotImplementedException("There are not any finance positions for the JES form");
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
+        updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
+        applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
+    }
+
+
+    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value, Long competitionId, Long userId) {
+        String fieldNameReplaced = fieldName.replace("financePosition-", "");
+        switch (fieldNameReplaced) {
+            case "projectLocation":
+                applicationFinance.setProjectLocation(value);
+                break;
+            default:
+                LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
+        }
     }
 
     @Override

@@ -248,31 +248,33 @@
 
 
     <th:block th:fragment="project_location(model)">
-        <th:block th:unless="${model.readonly}">
-            <!--/* edit */-->
-            <div class="form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'form-group-error'">
-                <label class="form-label" for="projectLocation">
-                    <span class="form-label-bold">Postcode</span>
-                    <th:block th:if="${#fields.hasErrors('projectLocation')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
-                    </th:block>
-                </label>
-                <input class="form-control width-large"
-                       id="projectLocation"
-                       th:errorclass="form-control-error"
-                       type="text"
-                       name="projectLocation"
-                       th:value="${model.projectLocationValue}" />
-            </div>
+        <div class="extra-margin">
+            <th:block th:unless="${model.complete}">
+                <!--/* edit */-->
+                <div class="form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'form-group-error'">
+                    <label class="form-label" for="projectLocation">
+                        <span class="form-label-bold">Postcode</span>
+                        <th:block th:if="${#fields.hasErrors('projectLocation')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
+                        </th:block>
+                    </label>
+                    <input class="form-control width-large"
+                           id="projectLocation"
+                           th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
+                           type="text"
+                           name="financePosition-projectLocation"
+                           th:value="${model.projectLocationValue}" />
+                </div>
 
-        </th:block>
-        <th:block th:if="${model.readonly}">
-            <!--/* view  */-->
-            <dl class="readonly-data">
-                <dt th:text="${formInput.description}">Project location</dt>
-                <dd th:if="${model.projectLocationValue != null}" th:text="${projectLocationValue}">Postcode</dd>
-            </dl>
-        </th:block>
+            </th:block>
+            <th:block th:if="${model.complete}">
+                <!--/* view  */-->
+                <dl class="readonly-data">
+                    <dt>Project location</dt>
+                    <dd th:if="${model.projectLocationValue != null}" th:text="${model.projectLocationValue}">Postcode</dd>
+                </dl>
+            </th:block>
+        </div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 

@@ -221,6 +221,9 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
                     if (applicationFinance.getOrganisationSize() != null) {
                         dbFinance.setOrganisationSize(organisationSizeRepository.findOne(applicationFinance.getOrganisationSize()));
                     }
+                    if (applicationFinance.getProjectLocation() != null) {
+                        dbFinance.setProjectLocation(applicationFinance.getProjectLocation());
+                    }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
                     dbFinance = applicationFinanceRepository.save(dbFinance);
