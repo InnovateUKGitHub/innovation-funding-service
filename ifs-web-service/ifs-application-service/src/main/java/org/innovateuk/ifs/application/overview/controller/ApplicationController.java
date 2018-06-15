@@ -142,7 +142,7 @@ public class ApplicationController {
 
     }
 
-    public boolean userIsInternal(List<Role> userroles){
+    private boolean userIsInternal(List<Role> userroles){
         for (Role ur : userroles) {
             if(Role.internalRoles().contains(ur)){
                 return true;

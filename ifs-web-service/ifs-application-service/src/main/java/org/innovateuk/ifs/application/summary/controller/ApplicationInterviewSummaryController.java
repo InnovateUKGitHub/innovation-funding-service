@@ -16,6 +16,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -50,7 +52,7 @@ public class ApplicationInterviewSummaryController {
                                      @RequestParam(value = "origin", defaultValue = "ASSESSOR_INTERVIEW") String origin,
                                      @RequestParam MultiValueMap<String, String> queryParams) {
 
-        if(!user.hasAnyRoles(Role.INTERVIEW_ASSESSOR)){
+        if(userIsInternal(user.getRoles())){
             origin = "COMP_EXEC_INTERVIEW";
         }
 
@@ -74,4 +76,14 @@ public class ApplicationInterviewSummaryController {
                 .encode()
                 .toUriString();
     }
+
+    private boolean userIsInternal(List<Role> userroles){
+        for (Role ur : userroles) {
+            if(Role.internalRoles().contains(ur)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
