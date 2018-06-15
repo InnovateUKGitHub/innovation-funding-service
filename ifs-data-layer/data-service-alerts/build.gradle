@@ -67,7 +67,12 @@ task deployAlerts(type: Exec) {
     dependsOn prepareDeployment
     executable 'oc'
     args 'create',  '-f', "${project.buildDir}/os-files/alerts-data-service.yml", "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
+}
 
+
+task stopAlerts(type: Exec) {
+    executable = 'oc'
+    args 'delete',  'dc', 'data-service-alerts', "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
 }
 
 createContainer.networkAliases=["data-service-alerts"]
