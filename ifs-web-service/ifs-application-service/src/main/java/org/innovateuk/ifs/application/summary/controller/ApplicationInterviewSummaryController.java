@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.summary.populator.ApplicationInterviewSumm
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -29,7 +28,6 @@ public class ApplicationInterviewSummaryController {
 
     private ApplicationInterviewSummaryViewModelPopulator applicationInterviewSummaryViewModelPopulator;
     private ApplicationService applicationService;
-    private ProcessRoleService processRoleService;
 
 
     public ApplicationInterviewSummaryController() {
@@ -37,11 +35,9 @@ public class ApplicationInterviewSummaryController {
 
     @Autowired
     public ApplicationInterviewSummaryController(ApplicationInterviewSummaryViewModelPopulator applicationInterviewSummaryViewModelPopulator,
-                                                 ApplicationService applicationService,
-                                                 ProcessRoleService processRoleService) {
+                                                 ApplicationService applicationService) {
         this.applicationInterviewSummaryViewModelPopulator = applicationInterviewSummaryViewModelPopulator;
         this.applicationService = applicationService;
-        this.processRoleService = processRoleService;
     }
 
     @SecuredBySpring(value = "READ", description = "Assessors and Comp exec users have permission to view the application summary page for an interview panel")
@@ -53,6 +49,10 @@ public class ApplicationInterviewSummaryController {
                                      UserResource user,
                                      @RequestParam(value = "origin", defaultValue = "ASSESSOR_INTERVIEW") String origin,
                                      @RequestParam MultiValueMap<String, String> queryParams) {
+
+        if(!user.hasAnyRoles(Role.INTERVIEW_ASSESSOR)){
+            origin = "COMP_EXEC_INTERVIEW";
+        }
 
         String backUrl = buildBackUrl(origin, applicationId, queryParams);
 
@@ -67,10 +67,6 @@ public class ApplicationInterviewSummaryController {
 
         String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
         queryParams.remove("origin");
-
-//        if (queryParams.containsKey("applicationId")) {
-//            queryParams.remove("applicationId");
-//        }
 
         return UriComponentsBuilder.fromPath(baseUrl)
                 .queryParams(queryParams)
