@@ -1,9 +1,7 @@
-package org.innovateuk.ifs.application.forms.controller;
+package org.innovateuk.ifs.application.summary.controller;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
-import org.innovateuk.ifs.application.forms.populator.InterviewFeedbackViewModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -11,21 +9,18 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.summary.populator.ApplicationFeedbackSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.summary.populator.ApplicationInterviewFeedbackViewModelPopulator;
+import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.service.FormInputResponseRestService;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +33,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
@@ -57,56 +50,38 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @RequestMapping("/application")
 public class ApplicationSummaryController {
 
-    private ProcessRoleService processRoleService;
-    private SectionService sectionService;
     private ApplicationService applicationService;
     private CompetitionService competitionService;
-    private ApplicationModelPopulator applicationModelPopulator;
-    private FormInputResponseService formInputResponseService;
-    private FormInputResponseRestService formInputResponseRestService;
-    private UserRestService userRestService;
-    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-    private AssessmentRestService assessmentRestService;
     private ProjectService projectService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
-    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
     private InterviewResponseRestService interviewResponseRestService;
+    private ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator;
+    private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
+    private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
     private String origin;
-    MultiValueMap queryParams;
     private Long projectId;
+    MultiValueMap queryParams;
 
     public ApplicationSummaryController() {
     }
 
     @Autowired
-    public ApplicationSummaryController(ProcessRoleService processRoleService,
-                                        SectionService sectionService,
-                                        ApplicationService applicationService,
+    public ApplicationSummaryController(ApplicationService applicationService,
                                         CompetitionService competitionService,
-                                        ApplicationModelPopulator applicationModelPopulator,
-                                        FormInputResponseService formInputResponseService,
-                                        FormInputResponseRestService formInputResponseRestService,
-                                        UserRestService userRestService,
-                                        AssessorFormInputResponseRestService assessorFormInputResponseRestService,
-                                        AssessmentRestService assessmentRestService,
-                                        ProjectService projectService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
-                                        InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
-                                        InterviewResponseRestService interviewResponseRestService) {
-        this.processRoleService = processRoleService;
-        this.sectionService = sectionService;
+                                        InterviewResponseRestService interviewResponseRestService,
+                                        ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator,
+                                        ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator,
+                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator,
+                                        ProjectService projectService) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
-        this.applicationModelPopulator = applicationModelPopulator;
-        this.formInputResponseService = formInputResponseService;
-        this.formInputResponseRestService = formInputResponseRestService;
-        this.userRestService = userRestService;
-        this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
-        this.assessmentRestService = assessmentRestService;
-        this.projectService = projectService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
-        this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.interviewResponseRestService = interviewResponseRestService;
+        this.applicationInterviewFeedbackViewModelPopulator = applicationInterviewFeedbackViewModelPopulator;
+        this.applicationFeedbackSummaryViewModelPopulator = applicationFeedbackSummaryViewModelPopulator;
+        this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
+        this.projectService = projectService;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
@@ -120,72 +95,44 @@ public class ApplicationSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                     @RequestParam MultiValueMap<String, String> queryParams, Long projectId) {
-
-        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
-        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
+                                     @RequestParam MultiValueMap<String, String> queryParams,
+                                     Long projectId) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
-        applicationModelPopulator.addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.of(Boolean.FALSE));
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-
-        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
-
-        ProjectResource project = projectService.getByApplicationId(applicationId);
-        boolean projectWithdrawn = (project != null && project.isWithdrawn());
-        model.addAttribute("projectWithdrawn", projectWithdrawn);
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
-        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
-            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
-            if (project != null) {
-                projectId = project.getId();
-            }
-            model.addAttribute("backUrl", buildBackUrl(origin, applicationId, projectId, queryParams));
-            model.addAttribute("origin", origin);
+        ProjectResource project = projectService.getByApplicationId(applicationId);
 
+        if (project != null) {
+            projectId = project.getId();
+        }
+
+        if (competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
+            String backUrl = buildBackUrl(origin, applicationId, projectId, queryParams);
+            model.addAttribute("applicationFeedbackSummaryViewModel", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user, backUrl, origin));
             return "application-feedback-summary";
         } else if (isApplicationAssignedToInterview) {
-            applicationModelPopulator.addFeedbackAndScores(model, applicationId);
-            model.addAttribute("interviewFeedbackViewModel", interviewFeedbackViewModelPopulator.populate(applicationId, userApplicationRole, competition.getCompetitionStatus().isFeedbackReleased(), false));
-
+            model.addAttribute("interviewFeedbackViewModel", applicationInterviewFeedbackViewModelPopulator.populate(applicationId, user));
             return "application-interview-feedback";
         }
         else {
+            model.addAttribute("applicationSummaryViewModel", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
             return "application-summary";
         }
-    }
-
-    private String buildBackUrl(String origin, long applicationId, Long projectId, MultiValueMap<String, String> queryParams) {
-        String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
-        queryParams.remove("origin");
-
-        if (queryParams.containsKey("applicationId")) {
-            queryParams.remove("applicationId");
-        }
-
-        return UriComponentsBuilder.fromPath(baseUrl)
-                .queryParams(queryParams)
-                .buildAndExpand(asMap( "projectId", projectId))
-                .encode()
-                .toUriString();
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/summary", params = "uploadResponse")
-    public String uploadResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm form,
-                                     BindingResult bindingResult,
-                                     ValidationHandler validationHandler,
-                                     Model model,
-                                     @PathVariable("applicationId") long applicationId,
-                                     UserResource user) {
+    public String uploadResponse(@ModelAttribute("form") ApplicationForm applicationForm,
+                                 @ModelAttribute("interviewResponseForm") InterviewResponseForm form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 @PathVariable("applicationId") long applicationId,
+                                 UserResource user) {
 
         Supplier<String> failureAndSuccessView = () -> applicationSummary(new ApplicationForm(), form, bindingResult, validationHandler, model, applicationId, user, origin, queryParams, projectId);
         MultipartFile file = form.getResponse();
@@ -216,8 +163,8 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping("/{applicationId}/summary/download-response")
-    @SecuredBySpring(value = "READ", description = "Applicants and assessors have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
@@ -226,12 +173,27 @@ public class ApplicationSummaryController {
     }
 
     @GetMapping("/{applicationId}/summary/download-feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants and assessors have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
         return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
                 interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
+    }
+
+    private String buildBackUrl(String origin, long applicationId, Long projectId, MultiValueMap<String, String> queryParams) {
+        String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
+        queryParams.remove("origin");
+
+        if (queryParams.containsKey("applicationId")) {
+            queryParams.remove("applicationId");
+        }
+
+        return UriComponentsBuilder.fromPath(baseUrl)
+                .queryParams(queryParams)
+                .buildAndExpand(asMap( "projectId", projectId))
+                .encode()
+                .toUriString();
     }
 }
