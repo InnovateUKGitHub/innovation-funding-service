@@ -20,7 +20,7 @@ import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -261,7 +261,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                                 "App 1", "Org 1", "file1"),
                         new InterviewAssignmentApplicationInviteSendRowViewModel(2L, 4L,
                                 "App 2", "Org 2", "file2")),
-                newInterviewAssignmentKeyStatisticsResource().build(), new PaginationViewModel(invites, ""),
+                newInterviewAssignmentKeyStatisticsResource().build(), new Pagination(invites, ""),
                 "?origin=INTERVIEW_PANEL_SEND", "Some content"
         );
     }

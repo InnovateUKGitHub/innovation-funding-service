@@ -105,8 +105,6 @@ public enum Role implements Identifiable {
 
     public static List<Role> applicantProcessRoles() { return Arrays.asList(LEADAPPLICANT, COLLABORATOR); }
 
-    public static List<Role> assessorProcessRoles() { return Arrays.asList(ASSESSOR, PANEL_ASSESSOR, INTERVIEW_ASSESSOR); }
-
     public static Set<Role> internalRoles(){
         return new HashSet<>(asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
     }
