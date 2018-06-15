@@ -23,7 +23,7 @@ items:
           deploymentconfig: data-service-alerts
       spec:
         containers:
-        - image: innovateuk/data-service-alerts:${alertServiceVersion}
+        - image: ${internalRegistry}/${openshiftEnv}/data-service-alerts:${alertServiceVersion}
           name: data-service-alerts
           livenessProbe:
             httpGet:

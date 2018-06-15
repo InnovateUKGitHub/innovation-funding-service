@@ -8,19 +8,8 @@ bootRepackage.enabled = false
 build.enabled = false
 // End workaround
 
-
-if (!isNamedEnv()) {
-    apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
-} else {
-    apply from: rootProject.file("gradle-support/named-env-properties.gradle")
-    if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
-        apply from: openshiftEnv + "-named-env-properties.gradle"
-    }
-}
-
-
-
-
+apply from: rootProject.file("gradle-support/openshift-util.gradle")
+//TODO remove duplication
 def getSvcAccountToken() {
     "oc whoami -t".execute().text.trim()
 }
@@ -30,6 +19,18 @@ def getSvcAccountClauseServer(target) {
         return "https://localhost:8443"
     } else if (target == 'remote') {
         return "https://console.prod.ifs-test-clusters.com:443"
+    }
+}
+
+
+
+
+if (!isNamedEnv()) {
+    apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
+} else {
+    apply from: rootProject.file("gradle-support/named-env-properties.gradle")
+    if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
+        apply from: openshiftEnv + "-named-env-properties.gradle"
     }
 }
 

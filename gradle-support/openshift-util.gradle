@@ -1,0 +1,12 @@
+def getSvcAccountToken() {
+    "oc whoami -t".execute().text.trim()
+}
+
+def getSvcAccountClauseServer(target) {
+    if(target == 'local') {
+        return "https://localhost:8443"
+    } else if (target == 'remote') {
+        return "https://console.prod.ifs-test-clusters.com:443"
+    }
+}
+
