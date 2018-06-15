@@ -180,9 +180,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         updateFn.accept(competition);
 
+        // Copy the value of the useNewApplicantMenu flag so that it can restored in the resource after the
+        // competition is updated. This is eventually used to determine whether the Application Team question should
+        // be updated.
+        boolean useNewApplicantMenu = competition.getUseNewApplicantMenu();
+
         competitionSetupService.save(competition.getId(), competition).getSuccess();
 
         updateCompetitionInCompetitionData(data, competition.getId());
+
+        data.getCompetition().setUseNewApplicantMenu(useNewApplicantMenu);
     }
 
     public CompetitionDataBuilder withApplicationFormFromTemplate() {
@@ -454,7 +461,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccess();
-        //newCompetitionSaved.setUseNewApplicantMenu(competitionData.getCompetition().getUseNewApplicantMenu());
         competitionData.setCompetition(newCompetitionSaved);
     }
 
