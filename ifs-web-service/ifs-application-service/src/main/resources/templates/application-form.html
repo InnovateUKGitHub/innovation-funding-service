@@ -87,12 +87,5 @@
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />
-        <table>
-        <tr th:each="err : ${#fields.detailedErrors('${form.*}')}">
-            <td th:text="${err.fieldName}"></td>
-            <td th:text="${err.global}"></td>
-            <td th:text="${err.message}"></td>
-        </tr>
-        </table>
     </body>
 </html>
