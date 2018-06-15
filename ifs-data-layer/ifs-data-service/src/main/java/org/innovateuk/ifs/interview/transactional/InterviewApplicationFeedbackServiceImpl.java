@@ -67,7 +67,7 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                         .andOnSuccessReturnVoid(created -> {
                             InterviewAssignmentMessageOutcome messageOutcome;
-                            if (InterviewAssignmentState.CREATED.equals(interviewAssignment.getProcessState())) {
+                            if (InterviewAssignmentState.CREATED == interviewAssignment.getProcessState()) {
                                 messageOutcome = new InterviewAssignmentMessageOutcome();
                             } else {
                                 messageOutcome = interviewAssignment.getMessage();
@@ -84,7 +84,7 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment -> {
             long fileId = interviewAssignment.getMessage().getFeedback().getId();
             return fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() -> {
-                if (InterviewAssignmentState.CREATED.equals(interviewAssignment.getProcessState())) {
+                if (InterviewAssignmentState.CREATED == interviewAssignment.getProcessState()) {
                     InterviewAssignmentMessageOutcome messageOutcome = interviewAssignment.getMessage();
                     interviewAssignment.removeMessage();
                     interviewAssignmentMessageOutcomeRepository.delete(messageOutcome);

@@ -182,7 +182,7 @@ public class InterviewApplicationSendInviteController {
         Supplier<String> successView = () -> redirectToStatusTab(competitionId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> fileResult;
+            final RestResult<Void> fileResult;
             if (form.getFeedback() != null && !form.getFeedback().isEmpty()) {
                 MultipartFile file = form.getFeedback();
                 interviewAssignmentRestService.deleteFeedback(applicationId);
