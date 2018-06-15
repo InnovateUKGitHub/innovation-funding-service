@@ -83,9 +83,9 @@ public class RestIdentityProviderService implements IdentityProviderService {
     }
 
     private static List<Error> errors(HttpStatus code, IdentityProviderError... errors) {
-        if (errors.length == 0) {
+        if (errors == null || errors.length == 0) {
             LOG.warn("Expected to get some error messages in the response body from the IDP Rest API, but got none.  Returning an error with same HTTP status code");
-            return singletonList(new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR, "Empty error response encountered from IDP API", code));
+            return singletonList(new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR, code));
         }
         return simpleMap(asList(errors), e -> buildErrorFromIdentityProviderError(e, code));
     }

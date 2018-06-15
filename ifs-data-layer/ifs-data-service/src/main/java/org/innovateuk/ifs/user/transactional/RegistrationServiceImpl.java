@@ -31,7 +31,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,9 +87,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
-    private BaseUserService baseUserService;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -116,7 +112,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
+    public ServiceResult<UserResource> createUser(UserRegistrationResource userRegistrationResource) {
         final UserResource userResource = userRegistrationResource.toUserResource();
 
         return validateUser(userResource).
