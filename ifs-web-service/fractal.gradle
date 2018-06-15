@@ -1,6 +1,7 @@
 import com.bmuschko.gradle.docker.tasks.image.*
 import com.bmuschko.gradle.docker.tasks.container.*
 import com.bmuschko.gradle.docker.tasks.container.extras.*
+
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
@@ -24,7 +25,7 @@ repositories {
 
 
 task prepareFractalDockerInput {
-
+    dependsOn ":ifs-web-service:gulp_default"
     def inputDir = project.file("$project.buildDir/fractal")
     inputDir.delete();
 
@@ -71,11 +72,11 @@ task removeFractal(type: DockerRemoveContainer, dependsOn: stopFractal) {
 
 task createFractal(type: DockerCreateContainer, dependsOn: [buildFractal, removeFractal]) {
     targetImageId { buildFractal.getImageId() }
-    hostName="fractal"
-    containerName="fractal"
-    containerId="fractal"
+    hostName = "fractal"
+    containerName = "fractal"
+    containerId = "fractal"
     portBindings = ['4000:3000']
-    network="ifs"
+    network = "ifs"
 }
 
 task deployFractal(type: DockerStartContainer, dependsOn: createFractal) {

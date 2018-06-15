@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.async.controller.endtoend;
 
-import org.innovateuk.ifs.async.util.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
