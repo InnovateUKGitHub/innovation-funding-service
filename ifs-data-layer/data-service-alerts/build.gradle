@@ -10,21 +10,6 @@ apply from: rootProject.file("gradle-support/asciidoc.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
 
-//TODO remove duplication
-def getSvcAccountToken() {
-    "oc whoami -t".execute().text.trim()
-}
-
-def getSvcAccountClauseServer(target) {
-    if(target == 'local') {
-        return "https://localhost:8443"
-    } else if (target == 'remote') {
-        return "https://console.prod.ifs-test-clusters.com:443"
-    }
-}
-
-ext.internalRegistry = "172.30.80.28:5000" // TODO support for local registry
-
 
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
@@ -66,13 +51,13 @@ task deployAlerts(type: Exec) {
     dependsOn osStageRemote
     dependsOn prepareDeployment
     executable 'oc'
-    args 'create',  '-f', "${project.buildDir}/os-files/alerts-data-service.yml", "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
+    args 'create',  '-f', "${project.buildDir}/os-files/alerts-data-service.yml", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
 }
 
 
 task stopAlerts(type: Exec) {
     executable = 'oc'
-    args 'delete',  'dc', 'data-service-alerts', "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
+    args 'delete',  'dc', 'data-service-alerts', "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
 }
 
 createContainer.networkAliases=["data-service-alerts"]
