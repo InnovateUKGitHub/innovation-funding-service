@@ -145,8 +145,8 @@ CompAdmin view invite sent to the applicant and resend invite
     And the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
     When the user clicks the button/link    link=Edit and resend invite
     And the user clicks the button/link     jQuery=td:contains("${Neural_network_application}") ~ td div:nth-child(2):contains("Remove")
-    Then the compAdmin upload correct additional feedback    css=.inputfile
-    And the user clicks the button/link     css=.button[type="submit"]  #Send invite
+    Then the compAdmin/applicant upload feedback    css=.inputfile  jQuery=div td:contains("139") ~ td:contains("testing_5MB.pdf")
+    And the user clicks the button/link     css=.button[type="submit"]  #Resend invite
 
 
 Assessors accept the invitation to the interview panel
@@ -204,16 +204,17 @@ Applicant can upload the reponse to interview panel
     [Documentation]  IFS-3253
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link    link=Feedback overview
-    When the applicant upload the response to the interview panel
+    When the compAdmin/applicant upload feedback    css=.inputfile  link=testing_5MB.pdf (opens in a new window)
     Then the compAdmin checks the status for response uploaded applicantion
     And the user should see the element         jQuery=td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
 
 Applicant can remove the uploaded response
     [Documentation]  IFS-3253  IFS-3378
+    [Tags]
     [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
     Given the user clicks the button/link    link=${computer_vision_application_name}
     And the user should see the element      jQuery=.message-alert p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
-    When the applicant upload the response to the interview panel
+    When the compAdmin/applicant upload feedback    css=.inputfile  link=testing_5MB.pdf (opens in a new window)
     Then the user should see the element     jQuery=.message-alert p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
     When the user clicks the button/link     css=.button-secondary  #remove
     Then the user should see the element     jQuery=p:contains("No file currently uploaded") ~ label:contains("+ Upload")
@@ -221,7 +222,8 @@ Applicant can remove the uploaded response
     And the user should see the element      jQuery=td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
 
 CompAdmin checks for interview panel key statistics
-    [Documentation]  IFS-3524
+    [Documentation]  IFS-352
+    [Tags]
     When the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}
     Then the user checks for Manage interview panel key statistics
 
@@ -264,7 +266,7 @@ Assessor can view the list of allocated applications
 
 Assessor marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
-    [Tags]  Pending
+    [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/18/funding
     Then the user marks applications as successful and send funding decision email
@@ -272,10 +274,10 @@ Assessor marks appplications as successful and releases competition feedback
 
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
-    [Tags]  Pending
+    [Tags]
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     When the user clicks the button/link      jQuery=section:contains("Previous") h3:contains("Neural network")
-    Then the user should see the element      link=testing.pdf (opens in a new window)
+    Then the user should see the element      css=.uploaded-file     #testing.pdf(opens in a new window)
 
 *** Keywords ***
 Custom Suite Setup
@@ -342,22 +344,18 @@ the compAdmin uploads additional feedback for an application
     the user goes back to the previous page
     the user uploads the file          id=feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
     the user should see a field and summary error      Your upload must be a PDF.
-    the compAdmin upload correct additional feedback    id=feedback[0]
+    the compAdmin/applicant upload feedback     id=feedback[0]   link=testing_5MB.pdf
 
-the compAdmin upload correct additional feedback
-    [Arguments]   ${upload_id}
-    the user uploads the file          ${upload_id}  ${5mb_pdf}
-    the user should see the element    jQuery=.upload-section a:contains("testing_5MB.pdf")
+the compAdmin/applicant upload feedback
+    [Arguments]   ${uploadId}  ${uploadedFile}
+    the user uploads the file          ${uploadId}  ${5mb_pdf}
+    the user should see the element    ${uploadedFile}
 
 the compAdmin removes uploaded feedback for an application
     the user uploads the file          id=feedback[1]   ${5mb_pdf}
     the user should see the element    link=testing_5MB.pdf
     the user clicks the button/link    jQuery=td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
-
-the applicant upload the response to the interview panel
-    the user uploads the file              css=.inputfile   ${valid_pdf}
-    the user should see the element        link=testing.pdf (opens in a new window)
 
 the compAdmin checks the status for response uploaded applicantion
     log in as a different user        &{Comp_admin1_credentials}
