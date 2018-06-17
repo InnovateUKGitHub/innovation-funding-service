@@ -1,0 +1,12 @@
+ext.sqlContainer = "ifs-survey-database"
+ext.testSchema = "ifs_survey_test"
+
+
+createContainer.containerName = "ifs-survey-database"
+createContainer.containerId = "ifs-survey-database"
+createContainer.env = ["MYSQL_ROOT_PASSWORD=password", "MYSQL_DATABASE=ifs_survey"]
+createContainer.cmd = ["--character-set-server=utf8, --collation-server=utf8_bin"]
+createContainer.portBindings = ['3308:3306']
+createContainer.hostName = "ifs-survey-database"
+
+startDbIfNotStarted.containerId = "ifs-survey-database"

@@ -47,7 +47,6 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
 fi
 
-injectDBVariables
 injectFlywayVariables
 
 useContainerRegistry
