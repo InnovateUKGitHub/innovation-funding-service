@@ -42,7 +42,6 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
         this.financeService = financeService;
     }
 
-    // TODO DW - INFUND-1555 - handle rest results
     public void addFinanceDetails(Model model, Long competitionId, Long projectId, Optional<Long> organisationId) {
         addFinanceSections(competitionId, model);
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationProjectFinanceOverviewImpl(financeService, projectId);

@@ -89,12 +89,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(questionResource.getFormInputs().contains(activeFormInput.getId()));
     }
 
-    @Ignore
-    @Test
-    public void testAssignMultiple() throws Exception {
-        //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
-    }
-
     @Test
     public void testFindByCompetition() throws Exception {
         List<QuestionResource> questions = controller.findByCompetition(competitionId).getSuccess();
