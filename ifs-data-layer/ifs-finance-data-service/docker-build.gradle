@@ -1,5 +1,3 @@
-ext.ifsDataServiceRestBaseURL="http://data-service:8080"
-ext.ifsWebBaseURL="https://ifs.local-dev"
 ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
 
 ext.activeProfile="local"
