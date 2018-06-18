@@ -12,10 +12,10 @@ public class PhoneNumberValidator {
 
     Pattern pattern;
     private Matcher matcher;
-    public static final String VALID_PHONE_NUMBER_8_20_DIGITS = "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$";
+    public static final String VALID_PHONE_NUMBER = "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$";
 
     public PhoneNumberValidator(){
-        pattern = Pattern.compile(VALID_PHONE_NUMBER_8_20_DIGITS);
+        pattern = Pattern.compile(VALID_PHONE_NUMBER);
     }
 
     public boolean validate(final String phonenumber){

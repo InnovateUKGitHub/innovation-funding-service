@@ -10,7 +10,7 @@ import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER_8_20_DIGITS;
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
 
 public class MonitoringOfficerResource {
 
@@ -38,7 +38,7 @@ public class MonitoringOfficerResource {
     private String email;
 
     @NotBlank(message = "{validation.standard.phonenumber.required}")
-    @Pattern(regexp = VALID_PHONE_NUMBER_8_20_DIGITS,  message= "{validation.standard.phonenumber.format}")
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     private Long project;

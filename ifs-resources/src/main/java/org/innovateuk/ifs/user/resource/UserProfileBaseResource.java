@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER_8_20_DIGITS;
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
 
 /**
  * Base class for user profile DTOs
@@ -36,7 +36,7 @@ public abstract class UserProfileBaseResource {
     private String lastName;
 
     @NotBlank(message = "{validation.standard.phonenumber.required}")
-    @Pattern(regexp = VALID_PHONE_NUMBER_8_20_DIGITS,  message= "{validation.standard.phonenumber.format}")
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     @NotNull(message = "validation.standard.gender.selectionrequired")
