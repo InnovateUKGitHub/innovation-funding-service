@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="app-dashboard">
+
+    <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+    <th:block th:insert="fragments/layout :: body-start" />
+
+    <header role="banner" id="global-header" class="">
+        <div class="header-wrapper">
+            <div class="header-global">
+                <div th:include="fragments/elements :: header-logo"></div>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='separateServices'" />
+
+        <h1 class="heading-large">Separate services</h1>
+
+        <h2 class="heading-medium">
+            GDS satisfaction survey
+            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-3603">IFS-3603</a>
+        </h2>
+
+        <ul class="list list-bullet">
+            <li>
+                <a href="/prototypes/IFS-3603-gds-survey">Satisfaction survey front end form</a>
+            </li>
+        </ul>
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+    <th:block th:insert="fragments/layout :: body-end" />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-js" />
+
+</body>
+
+</html>
