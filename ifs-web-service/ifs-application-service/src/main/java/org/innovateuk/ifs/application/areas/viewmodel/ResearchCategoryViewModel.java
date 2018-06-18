@@ -5,11 +5,10 @@ import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import java.util.List;
 
 /**
- * View Model for an Research category selection overview.
+ * View Model for a Research category selection overview.
  */
 public class ResearchCategoryViewModel {
 
-    private Long selectedResearchCategoryId;
     private String currentCompetitionName;
     private Long applicationId;
     private Long questionId;
@@ -22,14 +21,6 @@ public class ResearchCategoryViewModel {
 
     public void setAvailableResearchCategories(List<ResearchCategoryResource> availableResearchCategories) {
         this.availableResearchCategories = availableResearchCategories;
-    }
-
-    public Long getSelectedResearchCategoryId() {
-        return selectedResearchCategoryId;
-    }
-
-    public void setSelectedResearchCategoryId(Long selectedResearchCategoryId) {
-        this.selectedResearchCategoryId = selectedResearchCategoryId;
     }
 
     public Long getApplicationId() {
