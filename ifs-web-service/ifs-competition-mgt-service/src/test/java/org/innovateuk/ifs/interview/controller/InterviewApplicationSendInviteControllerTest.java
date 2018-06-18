@@ -197,8 +197,8 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     @Test
     public void viewInvite() throws Exception {
         long applicationId = 1L;
-        ZonedDateTime assigned = ZonedDateTime.now();
-        setupViewInvite(applicationId, assigned);
+        ZonedDateTime dateAssigned = ZonedDateTime.now();
+        setupViewInvite(applicationId, dateAssigned);
 
         MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view", competition.getId(), applicationId))
                 .andExpect(status().isOk())
@@ -213,15 +213,15 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         assertEquals("Template", model.getContent());
         assertEquals("Organisation", model.getLeadOrganisation());
         assertEquals("Filename", model.getFeedbackFilename());
-        assertEquals(assigned, model.getDateAssigned());
+        assertEquals(dateAssigned, model.getDateAssigned());
         assertTrue(model.hasAttachment());
     }
 
     @Test
     public void editInvite_uploadFile() throws Exception {
         long applicationId = 1L;
-        ZonedDateTime assigned = ZonedDateTime.now();
-        setupViewInvite(applicationId, assigned);
+        ZonedDateTime dateAssigned = ZonedDateTime.now();
+        setupViewInvite(applicationId, dateAssigned);
 
         when(interviewAssignmentRestService.uploadFeedback(applicationId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
                 .thenReturn(restSuccess());
@@ -246,8 +246,8 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     @Test
     public void editInvite_removeFile() throws Exception {
         long applicationId = 1L;
-        ZonedDateTime assigned = ZonedDateTime.now();
-        setupViewInvite(applicationId, assigned);
+        ZonedDateTime dateAssigned = ZonedDateTime.now();
+        setupViewInvite(applicationId, dateAssigned);
 
         when(interviewAssignmentRestService.deleteFeedback(applicationId)).thenReturn(restSuccess());
         when(interviewAssignmentRestService.resendInvite(eq(applicationId), any())).thenReturn(restSuccess());
@@ -305,7 +305,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                 .build(2);
     }
 
-    private void setupViewInvite(long applicationId, ZonedDateTime assigned) {
+    private void setupViewInvite(long applicationId, ZonedDateTime dateAssigned) {
         String subject = "Subject";
         String content = "Content";
         ApplicationResource applicationResource = newApplicationResource().withName("Application").build();
@@ -313,7 +313,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
         InterviewApplicationSentInviteResource sentInvite = newInterviewApplicationSentInviteResource()
                 .withSubject(subject)
                 .withContent(content)
-                .withAssigned(assigned)
+                .withAssigned(dateAssigned)
                 .build();
 
         when(interviewAssignmentRestService.getSentInvite(applicationId)).thenReturn(restSuccess(sentInvite));
