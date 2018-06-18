@@ -41,6 +41,9 @@ items:
       port: 9410
       targetPort: 9410
     - name: 9411-tcp
+      port: 9411
+      targetPort: 9411
+    - name: 443-tcp
       port: 443
       targetPort: 9411
     selector:
@@ -54,7 +57,7 @@ items:
   spec:
     host: ${ZIPKIN_ADDRESS}
     port:
-      targetPort: 9411-tcp
+      targetPort: 443-tcp
     tls:
       termination: edge
     to:
