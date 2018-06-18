@@ -1,20 +1,9 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Research category'" />
-</head>
-<body class="application details innovation-areas">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
-
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle='Research category',subTitle=${researchCategoryModel.currentCompetitionName},size='heading-xlarge'" />
-
+<th:block th:fragment="research_category(model)">
     <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{researchCategory}')} ? 'form-group-error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
             <div class="message-alert extra-margin-bottom" th:if="${researchCategoryModel.hasApplicationFinances}">
                 <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
                 <p>The type of research affects the level of funding a business can receive under UK state aid rules.
@@ -47,15 +36,5 @@
                 </th:block>
             </fieldset>
         </div>
-        <button class="button" name="save-research-category">Save</button>
-        <a class="button button-clear" th:href="@{/application/__${researchCategoryModel.applicationId}__/form/question/__${researchCategoryModel.questionId}__}">Cancel</a>
     </form>
-
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
-</body>
-</html>
+</th:block>

@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
-    private ApplicationResearchCategoryPopulator populator;
+    private ApplicationResearchCategoryModelPopulator populator;
 
     @Mock
     private CategoryRestService categoryRestServiceMock;

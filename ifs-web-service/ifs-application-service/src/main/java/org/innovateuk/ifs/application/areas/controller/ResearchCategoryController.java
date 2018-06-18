@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.application.areas.controller;
 
 import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryPopulator;
+import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
@@ -35,7 +36,10 @@ public class ResearchCategoryController {
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
-    private ApplicationResearchCategoryPopulator researchCategoryPopulator;
+    private ApplicationResearchCategoryModelPopulator researchCategoryModelPopulator;
+
+    @Autowired
+    private ApplicationResearchCategoryFormPopulator researchCategoryFormPopulator;
 
     @Autowired
     private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
@@ -65,15 +69,16 @@ public class ResearchCategoryController {
             throw new ForbiddenActionException();
         }
 
-        model.addAttribute("model", researchCategoryPopulator.populate(applicationResource, questionId));
-        populateForm(applicationResource, researchCategoryForm);
+        model.addAttribute("researchCategoryModel", researchCategoryModelPopulator.populate(
+                applicationResource, questionId));
+        researchCategoryFormPopulator.populate(applicationResource, researchCategoryForm);
 
         return "application/research-categories";
     }
 
     @PostMapping
     public String submitResearchCategoryChoice(@ModelAttribute(FORM_ATTR_NAME) @Valid ResearchCategoryForm
-                                                           researchCategoryForm,
+                                                       researchCategoryForm,
                                                BindingResult bindingResult,
                                                HttpServletResponse response,
                                                ValidationHandler validationHandler,
@@ -93,12 +98,6 @@ public class ResearchCategoryController {
                     cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
                     return "redirect:/application/" + applicationId + "/form/question/" + questionId;
                 });
-    }
-
-    private void populateForm(ApplicationResource applicationResource, ResearchCategoryForm form) {
-        if (applicationResource.getResearchCategory() != null) {
-            form.setResearchCategory(applicationResource.getResearchCategory().getId());
-        }
     }
 
     private ServiceResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm

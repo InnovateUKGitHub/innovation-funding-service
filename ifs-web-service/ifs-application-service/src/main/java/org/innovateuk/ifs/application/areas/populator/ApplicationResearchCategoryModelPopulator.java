@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Populates the research category selection viewmodel.
  */
 @Component
-public class ApplicationResearchCategoryPopulator {
+public class ApplicationResearchCategoryModelPopulator {
 
     @Autowired
     private CategoryRestService categoryRestService;

@@ -65,6 +65,9 @@
                 <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
                     <th:block th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
                 </th:block>
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).RESEARCH_CATEGORY}">
+                    <th:block th:insert="fragments/research-category :: research_category(${formInputViewModel})" />
+                </th:block>
             </div>
             <th:block th:if="${model.allReadOnly}">
                 <a th:href="${backURL}" class="button-secondary"
