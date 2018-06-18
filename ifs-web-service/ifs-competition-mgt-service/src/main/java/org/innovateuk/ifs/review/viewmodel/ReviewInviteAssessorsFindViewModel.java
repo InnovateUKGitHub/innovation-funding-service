@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.review.viewmodel;
 
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
 
 /**
  * Holder of model attributes for the Invite assessors for Assessment Panel 'Find' view.
