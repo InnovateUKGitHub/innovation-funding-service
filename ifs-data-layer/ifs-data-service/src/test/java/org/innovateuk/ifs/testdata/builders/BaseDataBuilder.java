@@ -27,7 +27,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -383,6 +383,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected S asCompAdmin(Consumer<T> action) {
         return with(data -> doAs(compAdmin(), () -> action.accept(data)));
+    }
+
+    protected S asIfsAdmin(Consumer<T> action) {
+        return with(data -> doAs(ifsAdmin(), () -> action.accept(data)));
     }
 
     protected UserResource retrieveUserByEmailInternal(String email, Role role) {

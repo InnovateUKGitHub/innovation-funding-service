@@ -14,6 +14,7 @@ import java.util.List;
 public class ApplicationOverviewViewModel {
     private ApplicationResource currentApplication;
     private ProjectResource currentProject;
+    private boolean projectWithdrawn;
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
 
@@ -27,13 +28,14 @@ public class ApplicationOverviewViewModel {
 
     private List<ResearchCategoryResource> researchCategories;
 
-    public ApplicationOverviewViewModel(ApplicationResource currentApplication, ProjectResource currentProject, CompetitionResource currentCompetition,
+    public ApplicationOverviewViewModel(ApplicationResource currentApplication, ProjectResource currentProject, boolean projectWithdrawn, CompetitionResource currentCompetition,
                                         OrganisationResource userOrganisation, Integer completedQuestionsPercentage, Long financeSectionId,
                                         ApplicationOverviewUserViewModel user, ApplicationOverviewAssignableViewModel assignable,
                                         ApplicationOverviewCompletedViewModel completed, ApplicationOverviewSectionViewModel section,
                                         List<ResearchCategoryResource> researchCategories) {
         this.currentApplication = currentApplication;
         this.currentProject = currentProject;
+        this.projectWithdrawn = projectWithdrawn;
         this.currentCompetition = currentCompetition;
         this.userOrganisation = userOrganisation;
         this.completedQuestionsPercentage = completedQuestionsPercentage;
@@ -51,6 +53,10 @@ public class ApplicationOverviewViewModel {
 
     public ProjectResource getCurrentProject() {
         return currentProject;
+    }
+
+    public boolean isProjectWithdrawn() {
+        return projectWithdrawn;
     }
 
     public CompetitionResource getCurrentCompetition() {

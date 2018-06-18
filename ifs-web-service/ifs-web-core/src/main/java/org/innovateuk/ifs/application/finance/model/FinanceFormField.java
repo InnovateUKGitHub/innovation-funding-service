@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.application.finance.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class FinanceFormField {
+
     private String fieldName;
     private String costName;
     private String keyType;
@@ -39,6 +43,40 @@ public class FinanceFormField {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final FinanceFormField that = (FinanceFormField) o;
+
+        return new EqualsBuilder()
+                .append(fieldName, that.fieldName)
+                .append(costName, that.costName)
+                .append(keyType, that.keyType)
+                .append(value, that.value)
+                .append(questionId, that.questionId)
+                .append(id, that.id)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(fieldName)
+                .append(costName)
+                .append(keyType)
+                .append(value)
+                .append(questionId)
+                .append(id)
+                .toHashCode();
     }
 
     @Override

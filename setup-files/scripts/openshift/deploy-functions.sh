@@ -136,47 +136,6 @@ function convertFileToBlock() {
     cat "$1" | tr -d '\r' | tr '\n' '^' | sed "s/\^/<<>>/g" | rev | cut -c 5- | rev
 }
 
-function injectDBVariables() {
-    if [ -z "$DB_USER" ]; then echo "Set DB_USER environment variable"; exit -1; fi
-    if [ -z "$DB_PASS" ]; then echo "Set DB_PASS environment variable"; exit -1; fi
-    if [ -z "$DB_NAME" ]; then echo "Set DB_NAME environment variable"; exit -1; fi
-    if [ -z "$DB_HOST" ]; then echo "Set DB_HOST environment variable"; exit -1; fi
-
-    DB_PORT=${DB_PORT:-3306}
-
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-reset/*.yml
-
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-baseline/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-baseline/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-baseline/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-baseline/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-baseline/*.yml
-
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-anonymised-data/*.yml
-
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-}
-
-function injectFinanceDBVariables() {
-    sed -i.bak "s#<<FINANCE-DB-USER>>#$FINANCE_DB_USER#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<FINANCE-DB-PASS>>#$FINANCE_DB_PASS#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<FINANCE-DB-NAME>>#$FINANCE_DB_NAME#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<FINANCE-DB-HOST>>#$FINANCE_DB_HOST#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<FINANCE-DB-PORT>>#$FINANCE_DB_PORT#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-}
-
 
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
@@ -187,24 +146,6 @@ function injectFlywayVariables() {
 
     [ -z "$SYSTEM_USER_UUID" ] && { echo "Set SYSTEM_USER_UUID environment variable"; exit -1; }
     sed -i.bak "s#<<SYSTEM-USER-UUID>>#${SYSTEM_USER_UUID}#g" $(getBuildLocation)/db-reset/*.yml
-}
-
-function injectLDAPVariables() {
-    if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
-    LDAP_PORT=${LDAP_PORT:-8389}
-    ONLY_SYNC_LDAP=${ONLY_SYNC_LDAP:false}
-    sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<LDAP-SCHEME>>#$LDAP_SCHEME#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<ONLY-SYNC-LDAP>>#$ONLY_SYNC_LDAP#g" $(getBuildLocation)/db-reset/*.yml
-}
-
-function injectDataServiceVariables() {
-    DATA_SERVICE_PORT=${DATA_SERVICE_PORT:-8080}
-    sed -i.bak "s#<<DATA-SERVICE-HOST>>#$DATA_SERVICE_HOST#g" $(getBuildLocation)/finance-data-service-sync/*.yml
-    sed -i.bak "s#<<DATA-SERVICE-PORT>>#$DATA_SERVICE_PORT#g" $(getBuildLocation)/finance-data-service-sync/*.yml
 }
 
 function getEnvVariableValue() {
@@ -356,12 +297,6 @@ function createProject() {
       oc delete project $PROJECT ${SVC_ACCOUNT_CLAUSE} || true
       sleep 10
     done
-}
-
-function createProjectIfNecessaryForNonNamedEnvs() {
-    if ! $(isNamedEnvironment $TARGET); then
-        createProject
-    fi
 }
 
 function getClusterAddress() {
