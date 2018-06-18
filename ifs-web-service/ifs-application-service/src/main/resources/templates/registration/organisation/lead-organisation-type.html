@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Start new application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
 </head>
 <body class="create-application-organisation">
 
@@ -22,13 +22,15 @@
     </div>
 
     <h1 class="heading-xlarge">
-        <span class="heading-secondary">Create your account</span>
-        Choose your organisation type
+        <span class="heading-secondary">Start new application</span>
+        Choose organisation type
     </h1>
 
     <div class="message-alert extra-margin-bottom">
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
+
+    <p class="extra-margin">This is the organisation that will lead the application.</p>
 
     <form id="lead-organisation-type-form"
           th:object="${organisationForm}"
