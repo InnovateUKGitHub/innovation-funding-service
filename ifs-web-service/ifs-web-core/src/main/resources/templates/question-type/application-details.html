@@ -16,9 +16,11 @@
                 <dd th:unless="${model.application.startDate}"><span class="invisible">Not specified</span></dd>
                 <dt>Duration in months</dt>
                 <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
-                <dt>Research category</dt>
-                <dd th:text="${model.application.researchCategory.name}"></dd>
-                <dd th:unless="${model.application.researchCategory.name}"><span class="invisible">Not specified</span></dd>
+                <th:block th:unless="${model.competition.useNewApplicantMenu}">
+                    <dt>Research category</dt>
+                    <dd th:text="${model.application.researchCategory.name}"></dd>
+                    <dd th:unless="${model.application.researchCategory.name}"><span class="invisible">Not specified</span></dd>
+                </th:block>
                 <dt>Innovation area</dt>
                 <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
                 <th:block th:unless="${model.application.resubmission == null}">

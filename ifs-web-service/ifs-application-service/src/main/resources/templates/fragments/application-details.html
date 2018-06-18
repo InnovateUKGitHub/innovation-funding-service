@@ -45,22 +45,24 @@
                                 data-range-errormessage=#{validation.project.duration.input.invalid(${competition.minProjectDuration}, ${competition.maxProjectDuration})}" />
         </div>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'form-group-error'">
-            <label for="application.researchCategory">
-                <span class="heading-medium">Research category</span>
-                <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
-                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
-            </label>
-            <div th:if="${model.researchCategoryHasBeenSelected}">
-                Chosen research category: <th:block th:text="${model.selectedResearchCategoryName}"/>
+        <th:block th:unless="${competition.useNewApplicantMenu}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'form-group-error'">
+                <label for="application.researchCategory">
+                    <span class="heading-medium">Research category</span>
+                    <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
+                </label>
+                <div th:if="${model.researchCategoryHasBeenSelected}">
+                    Chosen research category: <th:block th:text="${model.selectedResearchCategoryName}"/>
 
-                <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
-                <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>
+                    <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
+                    <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>
+                </div>
+                <button id="application.researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
+                    <span th:text="${model.researchCategoryText}">Choose your research category</span>
+                </button>
             </div>
-            <button id="application.researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
-                <span th:text="${model.researchCategoryText}">Choose your research category</span>
-            </button>
-        </div>
+        </th:block>
 
         <div class="form-group"
              th:if="${model.canSelectInnovationArea}"
