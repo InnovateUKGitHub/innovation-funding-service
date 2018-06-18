@@ -28,15 +28,15 @@ public abstract class BaseRestService {
     @Autowired
     private RootAnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor;
 
-    protected String dataRestServiceURL;
+    protected String serviceUrl;
 
-    protected String getDataRestServiceURL() {
-        return dataRestServiceURL;
+    private String getServiceUrl() {
+        return serviceUrl;
     }
 
     @Value("${ifs.data.service.rest.baseURL}")
-    public void setDataRestServiceUrl(String dataRestServiceURL) {
-        this.dataRestServiceURL = dataRestServiceURL;
+    public void setServiceUrl(String serviceUrl) {
+        this.serviceUrl = serviceUrl;
     }
 
     public void setRestTemplateAdaptor(RootDefaultRestTemplateAdaptor adaptor) {
@@ -49,27 +49,27 @@ public abstract class BaseRestService {
 
     // Synchronous calls
     protected <T> RestResult<T> getWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
+        return adaptor.getWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <T> RestResult<T> getWithRestResultAnonymous(String path, ParameterizedTypeReference<T> returnType) {
-        return anonymousRestTemplateAdaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
+        return anonymousRestTemplateAdaptor.getWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <T> RestResult<T> getWithRestResult(String path, Class<T> returnType) {
-        return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
+        return adaptor.getWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <T> RestResult<T> getWithRestResultAnonymous(String path, Class<T> returnType) {
-        return anonymousRestTemplateAdaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
+        return anonymousRestTemplateAdaptor.getWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <T> RestResult<T> putWithRestResultAnonymous(String path, Class<T> returnType) {
-        return anonymousRestTemplateAdaptor.putWithRestResult(getDataRestServiceURL() + path, returnType);
+        return anonymousRestTemplateAdaptor.putWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return adaptor.postWithRestResult(getDataRestServiceURL() + path, returnType);
+        return adaptor.postWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected RestResult<Void> postWithRestResult(String path) {
@@ -77,67 +77,67 @@ public abstract class BaseRestService {
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, Class<T> returnType) {
-        return adaptor.postWithRestResult(getDataRestServiceURL() + path, returnType);
+        return adaptor.postWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
-        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+        return adaptor.postWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType) {
-        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+        return adaptor.postWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResultAnonymous(String path, Object objectToSend, Class<R> returnType) {
-        return anonymousRestTemplateAdaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+        return anonymousRestTemplateAdaptor.postWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResultAnonymous(String path, Class<R> returnType) {
-        return anonymousRestTemplateAdaptor.postWithRestResult(getDataRestServiceURL() + path, returnType);
+        return anonymousRestTemplateAdaptor.postWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, HttpHeaders additionalHeaders, Class<R> returnType) {
-        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, additionalHeaders, returnType);
+        return adaptor.postWithRestResult(getServiceUrl() + path, objectToSend, additionalHeaders, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
+        return adaptor.postWithRestResult(getServiceUrl() + path, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
+        return adaptor.postWithRestResult(getServiceUrl() + path, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
     }
 
     protected <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return adaptor.putWithRestResult(getDataRestServiceURL() + path, returnType);
+        return adaptor.putWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <T> RestResult<T> putWithRestResult(String path, Class<T> returnType) {
-        return adaptor.putWithRestResult(getDataRestServiceURL() + path, returnType);
+        return adaptor.putWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <R> RestResult<R> putWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
-        return adaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+        return adaptor.putWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> putWithRestResult(String path, Object objectToSend, Class<R> returnType) {
-        return adaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+        return adaptor.putWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> putWithRestResultAnonymous(String path, Object objectToSend, Class<R> returnType) {
-        return anonymousRestTemplateAdaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+        return anonymousRestTemplateAdaptor.putWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }
 
     protected <T> RestResult<T> deleteWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
+        return adaptor.deleteWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected <T> RestResult<T> deleteWithRestResult(String path, Class<T> returnType) {
-        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
+        return adaptor.deleteWithRestResult(getServiceUrl() + path, returnType);
     }
 
     protected RestResult<Void> deleteWithRestResult(String path) {
-        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, Void.class);
+        return adaptor.deleteWithRestResult(getServiceUrl() + path, Void.class);
     }
 
     protected <T> T restGet(String path, Class<T> c) {
@@ -149,19 +149,19 @@ public abstract class BaseRestService {
     }
 
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
-        return adaptor.restGetEntity(getDataRestServiceURL() + path, c);
+        return adaptor.restGetEntity(getServiceUrl() + path, c);
     }
 
     protected <T> ResponseEntity<T> restGetEntityAnonymous(String path, Class<T> c) {
-        return anonymousRestTemplateAdaptor.restGetEntity(getDataRestServiceURL() + path, c);
+        return anonymousRestTemplateAdaptor.restGetEntity(getServiceUrl() + path, c);
     }
 
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {
-        return adaptor.restGetEntity(getDataRestServiceURL() + path, c, headers);
+        return adaptor.restGetEntity(getServiceUrl() + path, c, headers);
     }
 
     protected <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType) {
-        return adaptor.restGet(getDataRestServiceURL() + path, returnType);
+        return adaptor.restGet(getServiceUrl() + path, returnType);
     }
 
     protected <T> T restPost(String path, Object postEntity, Class<T> c) {
@@ -169,52 +169,52 @@ public abstract class BaseRestService {
     }
 
     protected <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPostWithEntity(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.restPostWithEntity(getDataRestServiceURL() + path, postEntity, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
+        return adaptor.restPostWithEntity(getServiceUrl() + path, postEntity, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
     }
 
     protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
-        return adaptor.restPostWithEntity(getDataRestServiceURL() + path, postEntity, responseType);
+        return adaptor.restPostWithEntity(getServiceUrl() + path, postEntity, responseType);
     }
 
     protected void restPut(String path) {
-        adaptor.restPutWithEntity(getDataRestServiceURL() + path, Void.class);
+        adaptor.restPutWithEntity(getServiceUrl() + path, Void.class);
     }
 
     protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c) {
-        return adaptor.restPutWithEntity(getDataRestServiceURL() + path, c);
+        return adaptor.restPutWithEntity(getServiceUrl() + path, c);
     }
 
     protected void restPut(String path, Object entity) {
-        adaptor.restPut(getDataRestServiceURL() + path, entity);
+        adaptor.restPut(getServiceUrl() + path, entity);
     }
 
     protected <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
-        return adaptor.restPut(getDataRestServiceURL() + path, entity, c);
+        return adaptor.restPut(getServiceUrl() + path, entity, c);
     }
 
     protected <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPutWithEntity(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.restPutWithEntity(getDataRestServiceURL() + path, postEntity, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
+        return adaptor.restPutWithEntity(getServiceUrl() + path, postEntity, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
     }
 
     protected void restDelete(String path) {
-        adaptor.restDelete(getDataRestServiceURL() + path);
+        adaptor.restDelete(getServiceUrl() + path);
     }
 
     // Asynchronous public calls
     protected <T> CompletableFuture<RestResult<T>> getWithRestResultAsync(String path, Class<T> returnType) {
-        return adaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
+        return adaptor.getWithRestResultAsyc(getServiceUrl() + path, returnType);
     }
 
     protected <T> CompletableFuture<RestResult<T>> getWithRestResultAsync(String path, ParameterizedTypeReference<T> returnType) {
-        return adaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
+        return adaptor.getWithRestResultAsyc(getServiceUrl() + path, returnType);
     }
 
     public <T> CompletableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
-        return adaptor.restGetAsync(getDataRestServiceURL() + path, clazz);
+        return adaptor.restGetAsync(getServiceUrl() + path, clazz);
     }
 
     protected <T> CompletableFuture<RestResult<T>> getWithRestResultAsyncAnonymous(String path, Class<T> returnType) {
-        return anonymousRestTemplateAdaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
+        return anonymousRestTemplateAdaptor.getWithRestResultAsyc(getServiceUrl() + path, returnType);
     }
 
     protected HttpHeaders createFileUploadHeader(String contentType, long contentLength){

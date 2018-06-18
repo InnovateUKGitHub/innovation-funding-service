@@ -19,7 +19,7 @@ public class AssessorCountOptionsRestServiceImplTest extends BaseRestServiceUnit
     @Override
     protected AssessorCountOptionsRestServiceImpl registerRestServiceUnderTest() {
         final AssessorCountOptionsRestServiceImpl competitionTypeAssessorOptionsRestService = new AssessorCountOptionsRestServiceImpl();
-        competitionTypeAssessorOptionsRestService.setDataRestServiceUrl(COMPETITION_TYPE_ASSESSOR_OPTION_URL);
+        competitionTypeAssessorOptionsRestService.setServiceUrl(COMPETITION_TYPE_ASSESSOR_OPTION_URL);
         return competitionTypeAssessorOptionsRestService;
     }
 
