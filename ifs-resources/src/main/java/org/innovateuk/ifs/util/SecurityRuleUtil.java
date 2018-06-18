@@ -16,7 +16,8 @@ public final class SecurityRuleUtil {
         return user.hasRole(COMP_ADMIN) ||
                 user.hasRole(PROJECT_FINANCE) ||
                 user.hasRole(SUPPORT) ||
-                user.hasRole(INNOVATION_LEAD);
+                user.hasRole(INNOVATION_LEAD) ||
+                user.hasRole(IFS_ADMINISTRATOR);
     }
 
     public static boolean isInternalAdmin(UserResource user) {
