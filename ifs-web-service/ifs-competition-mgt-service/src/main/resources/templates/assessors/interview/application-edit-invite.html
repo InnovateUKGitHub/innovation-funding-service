@@ -17,6 +17,21 @@
             <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to send your invite.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
+        <p>Upload additional assessment feedback for applicants, edit the email and click send. The applications will then be assigned to this interview panel.</p>
+        <details>
+            <summary>
+                <span class="summary">Additional feedback guidance</span>
+            </summary>
+            <div class="panel">
+                <p>You may upload additional assessment feedback per application, if available. The applicant can download this along with their overall feedback document which is sent out automatically.</p>
+                <p>The feedback document should be:</p>
+                <ul class="list list-bullet">
+                    <li>a portable document format (.pdf)</li>
+                    <li>readable with 100% magnification</li>
+                    <li>less than 10MB in size</li>
+                </ul>
+            </div>
+        </details>
 
         <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit(competitionId=${model.competitionId}, applicationId=${model.applicationId})}"
               method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate">
@@ -60,10 +75,10 @@
                                     <div class="column-two-thirds">
                                         <!--/* empty file input so that spring form is complete */-->
                                         <input type="file" name="feedback" class="visuallyhidden">
-                                        <p th:text="${model.feedbackFilename}" id="file-name">Uploaded-file.pdf</p>
+                                        <span th:text="${model.feedbackFilename}" id="file-name">Uploaded-file.pdf</span>
                                     </div>
                                     <div class="column-third">
-                                        <button id="remove-applicant-resend-file" class="button button-clear">Remove</button>
+                                        <button style="padding:0" id="remove-applicant-resend-file" class="button button-clear">Remove</button>
                                     </div>
                                 </div>
                                 <input type="hidden" id="remove-file" name="removeFile" th:value="${model.hasAttachment()}" />
