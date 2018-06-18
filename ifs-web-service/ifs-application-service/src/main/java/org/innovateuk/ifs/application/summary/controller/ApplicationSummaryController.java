@@ -57,8 +57,7 @@ public class ApplicationSummaryController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                     @RequestParam MultiValueMap<String, String> queryParams,
-                                     Long projectId) {
+                                     @RequestParam MultiValueMap<String, String> queryParams) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());

@@ -90,7 +90,7 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
         this.projectService = projectService;
     }
 
-    public ApplicationFeedbackSummaryViewModel populate(long applicationId, UserResource user, String backUrl, String origin) {
+    public ApplicationFeedbackSummaryViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -162,8 +162,6 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,
                 interviewFeedbackViewModel,
-                backUrl,
-                origin,
                 projectWithdrawn
         );
     }
