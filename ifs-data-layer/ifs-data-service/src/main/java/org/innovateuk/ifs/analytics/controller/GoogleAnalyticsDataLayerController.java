@@ -44,4 +44,9 @@ public class GoogleAnalyticsDataLayerController {
     public RestResult<String> getCompetitionNameForAssessment(@PathVariable("assessmentId") long assessmentId) {
         return googleAnalyticsDataLayerService.getCompetitionNameByAssessmentId(assessmentId).toGetResponse();
     }
+
+    @GetMapping("/project/{projectId}/application-id")
+    public RestResult<Long> getApplicationIdForProject(@PathVariable("projectId") long projectId) {
+        return googleAnalyticsDataLayerService.getApplicationIdForProject(projectId).toGetResponse();
+    }
 }

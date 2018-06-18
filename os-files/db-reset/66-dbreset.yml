@@ -6,29 +6,29 @@ items:
   metadata:
     name: db-config
   data:
-    DB_NAME: "<<DB-NAME>>"
-    DB_USER: "<<DB-USER>>"
-    DB_PASS: "<<DB-PASS>>"
-    DB_HOST: "<<DB-HOST>>"
-    DB_PORT: "<<DB-PORT>>"
+    DB_NAME: "${DB_NAME}"
+    DB_USER: "${DB_USER}"
+    DB_PASS: "${DB_PASS}"
+    DB_HOST: "${DB_HOST}"
+    DB_PORT: "${DB_PORT}"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
     name: flyway-config
   data:
-    FLYWAY_LOCATIONS: "<<FLYWAY-LOCATIONS>>"
-    SYSTEM_USER_UUID: "<<SYSTEM-USER-UUID>>"
+    FLYWAY_LOCATIONS: "${FLYWAY_LOCATIONS}"
+    SYSTEM_USER_UUID: "${SYSTEM_USER_UUID}"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
     name: ldap-config
   data:
-    LDAP_HOST: "<<LDAP-HOST>>"
-    LDAP_PORT: "<<LDAP-PORT>>"
-    LDAP_PASS: "<<LDAP-PASS>>"
-    LDAP_DOMAIN: "<<LDAP-DOMAIN>>"
-    LDAP_SCHEME: "<<LDAP-SCHEME>>"
-    ONLY_SYNC_LDAP: "<<ONLY-SYNC-LDAP>>"
+    LDAP_HOST: "${LDAP_HOST}"
+    LDAP_PORT: "${LDAP_PORT}"
+    LDAP_PASS: "${LDAP_PASS}"
+    LDAP_DOMAIN: "${LDAP_DOMAIN}"
+    LDAP_SCHEME: "${LDAP_SCHEME}"
+    ONLY_SYNC_LDAP: "${ONLY_SYNC_LDAP}"
 - apiVersion: v1
   kind: Pod
   metadata:

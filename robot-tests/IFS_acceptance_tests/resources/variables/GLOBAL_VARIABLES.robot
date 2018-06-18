@@ -107,7 +107,19 @@ ${INFORM_COMPETITION_NAME_1}              Climate control solution
 ${INFORM_COMPETITION_NAME_1_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_1}']}
 ${INFORM_COMPETITION_NAME_2}              High Performance Gasoline Stratified
 ${INFORM_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_2}']}
+${WITHDRAWN_PROJECT_COMPETITION_NAME}     Integrated delivery programme - solar vehicles
+${WITHDRAWN_PROJECT_COMPETITION}          ${competition_ids['${WITHDRAWN_PROJECT_COMPETITION_NAME}']}
+${WITHDRAWN_PROJECT_COMPETITION_NAME_1}   Low-friction wheel coatings
+${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}       ${application_ids['${WITHDRAWN_PROJECT_COMPETITION_NAME_1}']}
+${INELIGIBLE_PROJECT_COMPETITION_NAME_2}    SPAM: Solar power aggregation meshes
+${INELIGIBLE_PROJECT_COMPETITION_NAME_2_NUMBER}       ${application_ids['${WITHDRAWN_PROJECT_COMPETITION_NAME_2}']}
+${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}     Electricity harvesting from rough terrain driving
+${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3_NUMBER}       ${application_ids['${WITHDRAWN_PROJECT_COMPETITION_NAME_3}']}
+
+
+
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
+
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
