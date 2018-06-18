@@ -35,7 +35,6 @@ public interface FormInputResponseService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponseByApplicationIdAndQuestionId(long applicationId, long questionId);
 
-    // TODO we need to have separate methods for save and update
     @PreAuthorize("hasPermission(#formInputResponseCommand, 'SAVE')")
     ServiceResult<FormInputResponse> saveQuestionResponse(@P("formInputResponseCommand") FormInputResponseCommand formInputResponseCommand);
 
