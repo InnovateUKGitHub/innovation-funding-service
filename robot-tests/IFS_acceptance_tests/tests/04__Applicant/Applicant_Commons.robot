@@ -340,14 +340,6 @@ logged in user applies to competition
     navigate to next page if not found  ${competition}
     the user clicks the button/link  link=${competition}
     the user clicks the button/link  link=Start new application
-    the user clicks the button/link  jQuery=button:contains("Save and return to application overview")
-
-logged in user applies to new competition
-    [Arguments]  ${competition}
-    the user navigates to the page  ${frontDoor}
-    navigate to next page if not found  ${competition}
-    the user clicks the button/link  link=${competition}
-    the user clicks the button/link  link=Start new application
     the user clicks the button/link  id=application-question-save
 
 navigate to next page if not found
