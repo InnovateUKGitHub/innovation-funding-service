@@ -188,7 +188,6 @@ public class ApplicationModelPopulator {
                                                      ApplicationForm form,
                                                      Long organisationId) {
         model.addAttribute("currentUser", user);
-
         SectionResource financeSection = sectionService.getFinanceSection(competitionId);
         boolean hasFinanceSection = financeSection != null;
 
