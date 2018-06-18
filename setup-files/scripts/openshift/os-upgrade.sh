@@ -51,7 +51,7 @@ function upgradeServices {
 
     # conditionally deploy zipkin
     if $(isPerfEnvironment ${TARGET}); then
-        oc create -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
