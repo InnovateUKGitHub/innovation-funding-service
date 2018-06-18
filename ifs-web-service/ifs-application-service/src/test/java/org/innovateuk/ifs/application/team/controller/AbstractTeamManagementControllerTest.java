@@ -56,7 +56,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore  // TODO: IFS-2598 - For now we will redirect to the team page when the organisation is invalid. To be resolved under IFS-2598.
+    @Ignore
     public void getUpdateOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
 
@@ -229,7 +229,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore  // TODO: IFS-2598 - For now we will redirect to the team page when the organisation is invalid. To be resolved under IFS-2598.
+    @Ignore
     public void confirmDeleteInviteOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
 
