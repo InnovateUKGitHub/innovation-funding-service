@@ -84,3 +84,5 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 
 }
+
+ext.serverPort=8080
