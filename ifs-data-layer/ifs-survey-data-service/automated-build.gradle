@@ -1,7 +1,5 @@
-ext.ifsWebBaseURL="http://localhost:8080"
 ext.ifsSurveyAuthSecretKey="supersecretkey"
 
-ext.serverPort=""
 ext.activeProfile="environment"
 
 ext.ifsDatasourceUrl=""
