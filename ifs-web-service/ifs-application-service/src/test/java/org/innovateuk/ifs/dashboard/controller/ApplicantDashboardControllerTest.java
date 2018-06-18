@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,7 +38,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
     @Test
     public void testDashboard() throws Exception {
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-        when(populator.populate(anyLong())).thenReturn(viewModel);
+        when(populator.populate(loggedInUser.getId(), "?origin=APPLICANT_DASHBOARD")).thenReturn(viewModel);
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
@@ -53,7 +54,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
         setLoggedInUser(applicant);
 
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-        when(populator.populate(applicant.getId())).thenReturn(viewModel);
+        when(populator.populate(applicant.getId(), "?origin=APPLICANT_DASHBOARD")).thenReturn(viewModel);
 
 
         mockMvc.perform(get("/applicant/dashboard"))
@@ -71,7 +72,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
         setLoggedInUser(collabUsers);
 
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-        when(populator.populate(collabUsers.getId())).thenReturn(viewModel);
+        when(populator.populate(collabUsers.getId(), "?origin=APPLICANT_DASHBOARD")).thenReturn(viewModel);
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())

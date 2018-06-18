@@ -19,14 +19,15 @@ import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
-import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
-import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
-import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
-import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
-import org.innovateuk.ifs.management.viewmodel.SendNotificationsViewModel;
+import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingNotificationsController;
+import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightModelPopulator;
+import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.funding.populator.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
+import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.application.viewmodel.ManageFundingApplicationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -152,7 +153,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
-        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new Pagination(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName(), false);
 
         when(applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 COMPETITION_ID, empty(), sendFilter, fundingFilter)).thenReturn(restSuccess(simpleMap(applications, ApplicationSummaryResource::getId)));

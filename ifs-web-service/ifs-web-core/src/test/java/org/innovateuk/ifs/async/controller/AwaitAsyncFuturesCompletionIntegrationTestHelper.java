@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.async.controller;
 
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
-import org.innovateuk.ifs.async.util.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

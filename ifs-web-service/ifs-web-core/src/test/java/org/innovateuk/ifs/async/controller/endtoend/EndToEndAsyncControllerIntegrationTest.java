@@ -2,7 +2,7 @@ package org.innovateuk.ifs.async.controller.endtoend;
 
 import com.jayway.awaitility.core.ConditionTimeoutException;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
+import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
