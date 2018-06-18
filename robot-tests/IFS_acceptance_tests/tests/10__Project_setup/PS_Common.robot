@@ -279,7 +279,7 @@ Select project location
     the user navigates to the page        ${server}/project-setup/project/${projectId}/organisation/${org_id}/partner-project-location
     the user enters text to a text field  css=#postcode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
-    the user clicks the button/link       link=Project setup status
+    the user clicks the button/link       link=Set up your project
 
 bank details are approved for all businesses
     partners submit bank details
