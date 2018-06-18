@@ -1,0 +1,108 @@
+def targetBuild = hasProperty('profile') ? profile : 'docker'
+if(targetBuild == 'docker') {
+    apply from: "docker-build.gradle"
+} else {
+    apply from: "automated-build.gradle"
+    //TODO IFS-3746 currently this service is not deployed to any environments
+    //This workaround can be removed once this work is done
+    //currently fails bamboo as - for example it is looking for sysint-build.gradle which doesn't exist.
+}
+
+
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/mapstruct.gradle")
+apply from: rootProject.file("gradle-support/asciidoc.gradle")
+
+
+apply from: "../flyway.gradle"
+apply plugin: 'org.asciidoctor.convert'
+
+project.version = surveyDataServiceVersion
+tagDocker.tag = surveyDataServiceVersion
+osStageRemote.tag = surveyDataServiceVersion
+tagDockerLocal.tag = surveyDataServiceVersion
+osStageLocal.tag = surveyDataServiceVersion
+
+def enabled = project.hasProperty('ifs.survey-data-service.enabled') ? project.property('ifs.survey-data-service.enabled').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+createContainer.portBindings = ['9013:8000', '8087:8080']
+
+if (enabled) {
+    deploy.dependsOn ":docker:ifs-mysql:ifs-survey-database:wait"
+    deploy.mustRunAfter ":docker:ifs-mysql:ifs-survey-database:deploy"
+}
+
+createContainer.networkAliases=["ifs-survey-data-service"]
+
+ext.dockerDir = "$project.parent.projectDir/docker/"
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+buildDocker.dependsOn prepareDockerInput
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
+
+bootRun {
+    addResources = false
+}
+
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-resources/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-security/build/classes")
+
+
+    dependsOn ":ifs-commons:build"
+    dependsOn ":ifs-resources:build"
+    dependsOn ":ifs-data-layer:data-service-commons:build"
+    dependsOn ":ifs-security:build"
+
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'mysql:mysql-connector-java'
+
+    compile project(':ifs-commons')
+    compile project(':ifs-resources')
+    compile project(':ifs-resources:ifs-survey-resources')
+    compile project(':ifs-security')
+    compile project(':ifs-data-layer:data-service-commons')
+
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testCompile 'com.h2database:h2'
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+
+    testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
+}
+
+test {
+    outputs.dir snippetsDir
+    if (project.hasProperty('excludeTests')) {
+        exclude "${project.excludeTests}"
+    }
+    finalizedBy asciidoctor
+
+    if (targetBuild == 'docker' && enabled) {
+        dependsOn ":docker:ifs-mysql:ifs-survey-database:initDB"
+    }
+
+}
+
+
+flywayMigrate.dependsOn processResources
