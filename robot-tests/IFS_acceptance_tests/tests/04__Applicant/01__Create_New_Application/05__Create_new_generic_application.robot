@@ -38,7 +38,7 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879
     [Tags]
     [Setup]  Log in as a different user             becky.mason@gmail.com  ${short_password}
-    Given logged in user applies to competition     ${competitionName}
+    Given logged in user applies to new competition     ${competitionName}
     When the user clicks the button/link            link=Application details
     Then the user fills in the Application details  Application Ts&Cs  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link            link=view the grant terms and conditions

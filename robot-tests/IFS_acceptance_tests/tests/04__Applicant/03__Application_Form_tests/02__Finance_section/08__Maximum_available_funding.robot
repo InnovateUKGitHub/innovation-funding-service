@@ -20,7 +20,7 @@ Maximum funding level available for lead business
     [Tags]
     Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                     link=Untitled application (start here)
-    And the user clicks the button/link                      link=Begin application
+    And the user clicks the button/link                      jQuery=button:contains("Save and return to application overview")
     And the applicant completes the application details      Application details  Experimental development
     And the user fills the organisation details with Project growth table     ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     When the user fills in the project costs                 labour costs  n/a
@@ -45,7 +45,7 @@ Invite existing academic collaborator
     [Tags]
     [Setup]  log in as a different user                           ${lead_business_email}  ${correct_password}
     When the user clicks the button/link                          link=${Application_name_business}
-    And the user clicks the button/link                          link=view and manage contributors and collaborators
+    And the user clicks the button/link                          link=Application team
     And the user clicks the button/link                          link=Add a collaborator organisation
     Then the user enters text to a text field                     css=#organisationName  eggs
     And the user enters text to a text field                     css=input[id="applicants[0].name"]  Pete
@@ -61,7 +61,7 @@ Maximum funding level available for RTO lead
     [Tags]
     Given we create a new user                                              ${openCompetitionRTO}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
     When the user clicks the button/link                                    link=Untitled application (start here)
-    And the user clicks the button/link                                     link=Begin application
+    And the user clicks the button/link                                     jQuery=button:contains("Save and return to application overview")
     And the applicant completes the application details for RTO lead appln  Application details  Experimental development
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                 labour costs  n/a
@@ -103,7 +103,7 @@ Invite existing business user into RTO lead application
     [Tags]
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link=${Application_name_RTO}
-    And the user clicks the button/link                link=view and manage contributors and collaborators
+    And the user clicks the button/link                link=Application team
     And the user clicks the button/link                link=Add a collaborator organisation
     And the user enters text to a text field           css=#organisationName  innovate bus
     And the user enters text to a text field           css=input[id="applicants[0].name"]  oscar

@@ -45,7 +45,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     [Tags]  HappyPath  MySQL
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
-    And logged in user applies to competition     ${compResearch}
+    And logged in user applies to new competition     ${compResearch}
     Then the user should see the element          jQuery=li:contains("${customQuestion}")
     When the user should see the element          jQuery=li:contains("Scope")
     Then the user should not see the element      jQuery=li:contains("Public description")
@@ -145,6 +145,7 @@ the lead is able to submit the application
     [Arguments]  ${user}  ${application}
     log in as a different user       ${user}  ${short_password}
     the user clicks the button/link  link=${application}
+    then the applicant completes application team
     the user clicks the button/link  link=Review and submit
     the user should see the element  jQuery=.message-alert:contains("You will not be able to make changes")
     the user clicks the button/link  css=#submit-application-button

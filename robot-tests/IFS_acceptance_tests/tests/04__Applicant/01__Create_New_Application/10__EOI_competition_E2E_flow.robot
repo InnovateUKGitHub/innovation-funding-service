@@ -133,6 +133,7 @@ The competition admin creates a EOI Comp
 the lead applicant fills all the questions and marks as complete(EOI comp type)
     the lead applicant marks every question as complete   Project summary
     the lead applicant marks every question as complete   Scope
+    the applicant completes application team
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
