@@ -130,7 +130,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testUsersConnectedToTheApplicationCanView() {
+    public void usersConnectedToTheApplicationCanView() {
         assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
         assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource2, user2));
         assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource1, user2));
@@ -138,7 +138,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testUsersConnectedToTheApplicationCanViewInnovationAreas() {
+    public void usersConnectedToTheApplicationCanViewInnovationAreas() {
         assertTrue(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, leadOnApplication1));
         assertTrue(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource2, user2));
         assertFalse(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, user2));
@@ -146,7 +146,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testInternalUsersOtherThanInnovationLeadUserCanViewApplications() {
+    public void internalUsersOtherThanInnovationLeadUserCanViewApplications() {
         assertTrue(rules.internalUsersCanViewApplications(applicationResource1, compAdmin));
         assertTrue(rules.internalUsersCanViewApplications(applicationResource1, projectFinanceUser()));
         assertFalse(rules.internalUsersCanViewApplications(applicationResource1, innovationLeadUser()));
@@ -154,13 +154,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testOnlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
+    public void onlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
         assertTrue(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
         assertFalse(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
     }
 
     @Test
-    public void testAssessorCanSeeTheApplicationFinancesTotals() {
+    public void assessorCanSeeTheApplicationFinancesTotals() {
         assertTrue(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, assessor));
         assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, user2));
         assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, leadOnApplication1));
@@ -168,13 +168,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testInternalUsersCanSeeApplicationFinanceTotals() {
+    public void internalUsersCanSeeApplicationFinanceTotals() {
         ApplicationResource applicationResource = newApplicationResource().build();
         allGlobalRoleUsers.forEach(user -> {
             if (user.hasRole(COMP_ADMIN) ||
                     user.hasRole(PROJECT_FINANCE) ||
                     user.hasRole(SUPPORT) ||
-                    user.hasRole(INNOVATION_LEAD)) {
+                    user.hasRole(INNOVATION_LEAD) ||
+                    user.hasRole(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {
                 assertFalse(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
@@ -183,33 +184,33 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void onlyUsersPartOfTheApplicationCanChangeApplicationResourceTest() {
+    public void onlyUsersPartOfTheApplicationCanChangeApplicationResource() {
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
         assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, user2));
         assertFalse(rules.applicantCanUpdateApplicationResource(applicationResource1, user3));
     }
 
     @Test
-    public void userIsConnectedToApplicationResourceTest() {
+    public void userIsConnectedToApplicationResource() {
         assertTrue(rules.userIsConnectedToApplicationResource(applicationResource1, leadOnApplication1));
     }
 
     @Test
-    public void assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssessTest() {
+    public void assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess() {
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, assessor));
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, panelAssessor));
         assertFalse(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, compAdmin));
     }
 
     @Test
-    public void assessorCanSeeTheAssessmentScoresInApplicationsTheyAssessTest() {
+    public void assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess() {
         assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, assessor));
         assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, panelAssessor));
         assertFalse(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, compAdmin));
     }
 
     @Test
-    public void consortiumCanSeeTheResearchParticipantPercentageTest() {
+    public void consortiumCanSeeTheResearchParticipantPercentage() {
         assertTrue(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, leadOnApplication1));
         assertFalse(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
     }
@@ -221,7 +222,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void leadApplicantCanSeeTheApplicationFinanceDetailsTest() {
+    public void leadApplicantCanSeeTheApplicationFinanceDetails() {
         assertTrue(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, leadOnApplication1));
         assertFalse(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, user2));
     }
@@ -246,7 +247,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testInternalUserCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
+    public void internalUserCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -273,7 +274,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testCompAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
+    public void compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -303,7 +304,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testInternalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
+    public void internalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -329,7 +330,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testApplicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications() {
+    public void applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications() {
 
         long competitionId = 123L;
 
@@ -393,21 +394,21 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testLeadApplicantCanUpdateApplicationState() throws Exception {
+    public void leadApplicantCanUpdateApplicationState() throws Exception {
         assertTrue(rules.leadApplicantCanUpdateApplicationState(applicationResource1, leadOnApplication1));
         assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, compAdmin));
         assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, user2));
     }
 
     @Test
-    public void testCompAdminCanUpdateApplicationState() throws Exception {
+    public void compAdminCanUpdateApplicationState() throws Exception {
         assertTrue(rules.compAdminCanUpdateApplicationState(applicationResource1, compAdmin));
         assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, leadOnApplication1));
         assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, user2));
     }
 
     @Test
-    public void testProjectFinanceCanUpdateApplicationState() throws Exception {
+    public void projectFinanceCanUpdateApplicationState() throws Exception {
         assertTrue(rules.projectFinanceCanUpdateApplicationState(applicationResource1, projectFinance));
         assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, compAdmin));
         assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, leadOnApplication1));
@@ -415,7 +416,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testUserCanCreateNewApplication() {
+    public void userCanCreateNewApplication() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -434,7 +435,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testMarkAsIneligibleAllowedBeforeAssessment() {
+    public void markAsIneligibleAllowedBeforeAssessment() {
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
             allGlobalRoleUsers.forEach(user -> {
                 Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
