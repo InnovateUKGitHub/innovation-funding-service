@@ -78,7 +78,6 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return simpleFilter(allGlobalRoleUsers, user -> user.hasRole(type)).get(0);
     }
 
-
     protected void setUpUserNotAsProjectManager(UserResource user) {
         List<Role> projectManagerUser = emptyList();
         user.setRoles(projectManagerUser);

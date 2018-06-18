@@ -142,14 +142,19 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     public void testAddCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
-        assertTrue(rules.supportCanAddACostToApplicationFinance(applicationFinance, supportUser()));
-        assertTrue(rules.innovationLeadCanAddACostToApplicationFinance(applicationFinance, innovationLeadUser()));
+
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, supportUser()));
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, innovationLeadUser()));
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, ifsAdminUser()));
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, compAdminUser()));
+        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, projectFinanceUser()));
+
         assertTrue(rules.assessorCanAddACostToApplicationFinance(applicationFinance, assessor));
 
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
-        assertFalse(rules.supportCanAddACostToApplicationFinance(applicationFinance, compAdmin));
-        assertFalse(rules.innovationLeadCanAddACostToApplicationFinance(applicationFinance, compAdmin));
+
+        assertFalse(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, systemRegistrationUser()));
     }
 
     @Test
