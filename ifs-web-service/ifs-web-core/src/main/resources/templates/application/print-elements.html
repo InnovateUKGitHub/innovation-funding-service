@@ -17,10 +17,10 @@
 
     <h2 class="heading-small">Estimated timescales</h2>
     <p>Project start date:<br/>
-       [[${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}]]
+        <th:block th:text="${currentApplication.startDate} ? ${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')} : 'This field has not been completed'"></th:block>
     </p>
     <p>Duration in months:<br/>
-      <th:block th:text="${applicationDuration}" />
+        <th:block th:text="${applicationDuration} ?: 'This field has not been completed'"></th:block>
     </p>
 
     <h2 class="heading-small">Lead organisation</h2>
