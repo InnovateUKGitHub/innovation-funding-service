@@ -36,7 +36,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testInternalUsersCanViewMonitoringOfficersOnProjects() {
+    public void internalUsersCanViewMonitoringOfficersOnProjects() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -50,7 +50,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjects() {
+    public void partnersCanViewMonitoringOfficersOnTheirOwnProjects() {
 
         UserResource user = newUserResource().build();
         ProjectResource project = newProjectResource().build();
@@ -61,7 +61,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjectsButUserNotPartner() {
+    public void partnersCanViewMonitoringOfficersOnTheirOwnProjectsButUserNotPartner() {
 
         UserResource user = newUserResource().build();
 
@@ -73,7 +73,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testInternalUsersCanEditMonitoringOfficersOnProjects() {
+    public void internalUsersCanEditMonitoringOfficersOnProjects() {
 
         ProjectResource project = newProjectResource()
                 .withProjectState(ProjectState.SETUP)
