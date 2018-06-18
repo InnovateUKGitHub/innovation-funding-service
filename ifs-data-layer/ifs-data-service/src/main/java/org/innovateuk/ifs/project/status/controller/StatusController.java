@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -24,8 +25,9 @@ public class StatusController {
     private StatusService statusService;
 
     @GetMapping("/competition/{competitionId}")
-    public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(@PathVariable final Long competitionId){
-        return statusService.getCompetitionStatus(competitionId).toGetResponse();
+    public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(@PathVariable final Long competitionId,
+                                                                              @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString){
+        return statusService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).toGetResponse();
     }
 
     @GetMapping("/{projectId}/team-status")
