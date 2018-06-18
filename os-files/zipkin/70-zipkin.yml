@@ -41,7 +41,7 @@ items:
       port: 9410
       targetPort: 9410
     - name: 9411-tcp
-      port: 9411
+      port: 443
       targetPort: 9411
     selector:
       deploymentconfig: zipkin
@@ -52,9 +52,11 @@ items:
   metadata:
     name: zipkin
   spec:
-    host: <<ZIPKIN-ADDRESS>>
+    host: ${ZIPKIN_ADDRESS}
     port:
       targetPort: 9411-tcp
+    tls:
+      termination: edge
     to:
       kind: Service
       name: zipkin
