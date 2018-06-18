@@ -45,7 +45,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     [Tags]  HappyPath  MySQL
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
-    And logged in user applies to new competition     ${compResearch}
+    And logged in user applies to competition     ${compResearch}
     Then the user should see the element          jQuery=li:contains("${customQuestion}")
     When the user should see the element          jQuery=li:contains("Scope")
     Then the user should not see the element      jQuery=li:contains("Public description")

@@ -234,8 +234,8 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
-                .andReturn()
-                .andExpect(model().attribute("applicationTeamModel", applicationTeamViewModel));
+                .andExpect(model().attribute("applicationTeamModel", applicationTeamViewModel))
+                .andReturn();
 
         ApplicationSummaryViewModel model = (ApplicationSummaryViewModel) result.getModelAndView().getModel().get("applicationSummaryViewModel");
 
