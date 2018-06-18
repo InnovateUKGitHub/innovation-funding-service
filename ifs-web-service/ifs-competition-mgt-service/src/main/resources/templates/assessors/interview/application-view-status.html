@@ -73,7 +73,7 @@
                 <tbody>
                 <tr th:each="app : ${model.applications}">
                     <td>
-                        <a th:href="@{~/application/{applicationId}/interview-summary(applicationId=${app.applicationId})}"
+                        <a th:href="@{~/application/{applicationId}/interview-summary(applicationId=${app.applicationId})} + ${originQuery}"
                            th:text="${app.applicationId}">123
                         </a>
                     </td>

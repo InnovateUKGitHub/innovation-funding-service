@@ -5,7 +5,7 @@ import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
-import org.innovateuk.ifs.async.util.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -14,7 +14,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
@@ -121,9 +121,9 @@ public class UserManagementController extends AsyncAdaptor {
                     activeInternalUsers.getTotalElements(),
                     inactiveInternalUsers.getTotalElements(),
                     pendingInternalUserInvites.getTotalElements(),
-                    new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
-                    new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
-                    new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString));
+                    new Pagination(activeInternalUsers, "active?" + existingQueryString),
+                    new Pagination(inactiveInternalUsers, "inactive?" + existingQueryString),
+                    new Pagination(pendingInternalUserInvites, "pending?" + existingQueryString));
 
             model.addAttribute("model",
                     viewModel);

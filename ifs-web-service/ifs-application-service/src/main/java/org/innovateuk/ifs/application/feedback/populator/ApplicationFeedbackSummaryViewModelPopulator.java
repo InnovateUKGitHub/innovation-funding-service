@@ -19,6 +19,8 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -52,6 +54,7 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
+    private ProjectService projectService;
 
     public ApplicationFeedbackSummaryViewModelPopulator(OrganisationRestService organisationRestService,
                                                         ApplicationService applicationService,
@@ -67,7 +70,8 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
                                                         ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
                                                         ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
                                                         InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
-                                                        InterviewAssignmentRestService interviewAssignmentRestService) {
+                                                        InterviewAssignmentRestService interviewAssignmentRestService,
+                                                        ProjectService projectService) {
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionService = competitionService;
@@ -83,9 +87,10 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
         this.interviewFeedbackViewModelPopulator = interviewFeedbackViewModelPopulator;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
+        this.projectService = projectService;
     }
 
-    public ApplicationFeedbackSummaryViewModel populate(long applicationId, UserResource user) {
+    public ApplicationFeedbackSummaryViewModel populate(long applicationId, UserResource user, String backUrl, String origin) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -140,6 +145,9 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
             interviewFeedbackViewModel = null;
         }
 
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        boolean projectWithdrawn = (project != null && project.isWithdrawn());
+
         return new ApplicationFeedbackSummaryViewModel(
                 application,
                 competition,
@@ -153,7 +161,10 @@ public class ApplicationFeedbackSummaryViewModelPopulator {
                 scores,
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,
-                interviewFeedbackViewModel
+                interviewFeedbackViewModel,
+                backUrl,
+                origin,
+                projectWithdrawn
         );
     }
 

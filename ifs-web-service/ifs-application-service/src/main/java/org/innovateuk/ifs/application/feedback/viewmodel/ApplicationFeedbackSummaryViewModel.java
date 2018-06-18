@@ -28,6 +28,10 @@ public class ApplicationFeedbackSummaryViewModel {
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final InterviewFeedbackViewModel interviewFeedbackViewModel;
+    private final String backUrl;
+    private final String origin;
+    private final boolean projectWithdrawn;
+
 
     public ApplicationFeedbackSummaryViewModel(ApplicationResource application,
                                                CompetitionResource competition,
@@ -41,7 +45,10 @@ public class ApplicationFeedbackSummaryViewModel {
                                                ApplicationAssessmentAggregateResource scores,
                                                ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                                ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
-                                               InterviewFeedbackViewModel interviewFeedbackViewModel) {
+                                               InterviewFeedbackViewModel interviewFeedbackViewModel,
+                                               String backUrl,
+                                               String origin,
+                                               boolean projectWithdrawn) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -55,6 +62,9 @@ public class ApplicationFeedbackSummaryViewModel {
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.interviewFeedbackViewModel = interviewFeedbackViewModel;
+        this.backUrl = backUrl;
+        this.origin = origin;
+        this.projectWithdrawn = projectWithdrawn;
     }
 
     public ApplicationResource getApplication() {
@@ -107,5 +117,17 @@ public class ApplicationFeedbackSummaryViewModel {
 
     public InterviewFeedbackViewModel getInterviewFeedbackViewModel() {
         return interviewFeedbackViewModel;
+    }
+
+    public String getBackUrl() {
+        return backUrl;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public boolean isProjectWithdrawn() {
+        return projectWithdrawn;
     }
 }

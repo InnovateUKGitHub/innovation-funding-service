@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.summary.viewmodel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -15,8 +16,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Future;
 
 public class SummaryViewModel {
 
@@ -24,7 +23,6 @@ public class SummaryViewModel {
     private final Map<Long, SectionResource> sections;
     private final Map<Long, List<QuestionResource>> sectionQuestions;
     private final ApplicationAssessmentAggregateResource scores;
-    private final Future<Set<Long>> markedAsComplete;
     private final Map<Long, List<FormInputResource>> questionFormInputs;
     private final Map<Long, FormInputResponseResource> responses;
     private final Map<Long, QuestionStatusResource> questionAssignees;
@@ -34,7 +32,7 @@ public class SummaryViewModel {
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
-    private final Set<Long> sectionsMarkedAsComplete;
+    private final ApplicationOverviewCompletedViewModel completedViewModel;
     private final Map<Long, AbstractFormInputViewModel> formInputViewModels;
     private final boolean fromApplicationService;
 
@@ -42,7 +40,6 @@ public class SummaryViewModel {
                             Map<Long, SectionResource> sections,
                             Map<Long, List<QuestionResource>> sectionQuestions,
                             ApplicationAssessmentAggregateResource scores,
-                            Future<Set<Long>> markedAsComplete,
                             Map<Long, List<FormInputResource>> questionFormInputs,
                             Map<Long, FormInputResponseResource> responses,
                             Map<Long, QuestionStatusResource> questionAssignees,
@@ -52,14 +49,13 @@ public class SummaryViewModel {
                             ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                             ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                             ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
-                            Set<Long> sectionsMarkedAsComplete,
+                            ApplicationOverviewCompletedViewModel completedViewModel,
                             Map<Long, AbstractFormInputViewModel> formInputViewModels,
                             boolean fromApplicationService) {
         this.currentApplication = currentApplication;
         this.sections = sections;
         this.sectionQuestions = sectionQuestions;
         this.scores = scores;
-        this.markedAsComplete = markedAsComplete;
         this.questionFormInputs = questionFormInputs;
         this.responses = responses;
         this.questionAssignees = questionAssignees;
@@ -69,7 +65,7 @@ public class SummaryViewModel {
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
-        this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
+        this.completedViewModel = completedViewModel;
         this.formInputViewModels = formInputViewModels;
         this.fromApplicationService = fromApplicationService;
     }
@@ -88,10 +84,6 @@ public class SummaryViewModel {
 
     public ApplicationAssessmentAggregateResource getScores() {
         return scores;
-    }
-
-    public Future<Set<Long>> getMarkedAsComplete() {
-        return markedAsComplete;
     }
 
     public Map<Long, List<FormInputResource>> getQuestionFormInputs() {
@@ -130,8 +122,8 @@ public class SummaryViewModel {
         return applicationResearchParticipationViewModel;
     }
 
-    public Set<Long> getSectionsMarkedAsComplete() {
-        return sectionsMarkedAsComplete;
+    public ApplicationOverviewCompletedViewModel getCompletedViewModel() {
+        return completedViewModel;
     }
 
     public Map<Long, AbstractFormInputViewModel> getFormInputViewModels() {

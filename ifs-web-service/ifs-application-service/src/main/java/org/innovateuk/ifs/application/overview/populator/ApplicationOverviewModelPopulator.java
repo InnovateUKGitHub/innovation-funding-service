@@ -88,6 +88,7 @@ public class ApplicationOverviewModelPopulator {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
         ProjectResource projectResource = projectService.getByApplicationId(application.getId());
+        boolean projectWithdrawn = (projectResource != null && projectResource.isWithdrawn());
 
         ApplicationOverviewUserViewModel userViewModel = getUserDetails(application, userId);
         ApplicationOverviewAssignableViewModel assignableViewModel = getAssignableDetails(application, userOrganisation, userId);
@@ -99,7 +100,7 @@ public class ApplicationOverviewModelPopulator {
 
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
 
-        return new ApplicationOverviewViewModel(application, projectResource, competition, userOrganisation.orElse(null),
+        return new ApplicationOverviewViewModel(application, projectResource, projectWithdrawn, competition, userOrganisation.orElse(null),
                 completedQuestionsPercentage, yourFinancesSectionId, userViewModel, assignableViewModel, completedViewModel, sectionViewModel,
                 researchCategories);
     }
@@ -202,7 +203,6 @@ public class ApplicationOverviewModelPopulator {
 
         ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
         userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
-
         return viewModel;
     }
 
@@ -214,7 +214,6 @@ public class ApplicationOverviewModelPopulator {
 
         return combinedMarkedAsComplete;
     }
-
 
     private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
 

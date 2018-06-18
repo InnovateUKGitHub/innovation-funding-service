@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.status.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.async.util.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
@@ -50,7 +50,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private CompetitionService competitionService;
 
-    public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId, UserResource loggedInUser) {
+    public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId,
+                                                                     UserResource loggedInUser,
+                                                                     String originQuery) {
 
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
         CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()));
@@ -72,11 +74,22 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             boolean isProjectManager = isProjectManagerRequest.get();
             List<OrganisationResource> partnerOrganisations = partnerOrganisationsRequest.get();
 
-            return getSetupStatusViewModel(basicDetails, teamStatus, monitoringOfficer, isProjectManager, partnerOrganisations);
+            return getSetupStatusViewModel(
+                    basicDetails,
+                    teamStatus,
+                    monitoringOfficer,
+                    isProjectManager,
+                    partnerOrganisations,
+                    originQuery);
         });
     }
 
-    private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager, List<OrganisationResource> partnerOrganisations) {
+    private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails,
+                                                         ProjectTeamStatusResource teamStatus,
+                                                         Optional<MonitoringOfficerResource> monitoringOfficer,
+                                                         boolean isProjectManager,
+                                                         List<OrganisationResource> partnerOrganisations,
+                                                         String originQuery) {
         SectionAccessList sectionAccesses = getSectionAccesses(basicDetails, teamStatus);
         SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager);
 
@@ -96,7 +109,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 sectionStatuses,
                 collaborationAgreementRequired,
                 isProjectManager,
-                pendingQueries);
+                pendingQueries,
+                originQuery);
     }
 
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager) {

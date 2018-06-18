@@ -15,11 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * This controller will handle all requests that are related to the application summary.
@@ -57,7 +55,10 @@ public class ApplicationSummaryController {
                                      ValidationHandler validationHandler,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     UserResource user) {
+                                     UserResource user,
+                                     @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                     @RequestParam MultiValueMap<String, String> queryParams,
+                                     Long projectId) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -65,8 +66,7 @@ public class ApplicationSummaryController {
         if (competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) {
             return String.format("redirect:/application/%s/feedback", applicationId);
         }
-
-        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
+        model.addAttribute("applicationSummaryViewModel", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
         return "application-summary";
     }
 }

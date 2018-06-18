@@ -119,7 +119,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 totalFundingSought,
                 totalOtherFunding,
                 totalContribution,
-                financeTotal
+                financeTotal,
+                completedSectionsByOrganisation
                 );
     }
 

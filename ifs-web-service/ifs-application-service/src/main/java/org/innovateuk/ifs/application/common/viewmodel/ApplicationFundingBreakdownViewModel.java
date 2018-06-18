@@ -19,15 +19,17 @@ public class ApplicationFundingBreakdownViewModel {
     private final Map<FinanceRowType, BigDecimal> financeTotalPerType;
     private final List<OrganisationResource> applicationOrganisations;
     private final SectionResource financeSection;
-    private final Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap;
-    private final List<SectionResource> financeSectionChildren;
-    private final Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs;
+    private BigDecimal financeTotal;
+    private Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap;
+    private List<SectionResource> financeSectionChildren;
+    private Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs;
     private final OrganisationResource leadOrganisation;
     private final Map<Long, BaseFinanceResource> organisationFinances;
     private final List<String> pendingOrganisationNames;
 
     public ApplicationFundingBreakdownViewModel(
                                               Map<FinanceRowType, BigDecimal> financeTotalPerType,
+                                              BigDecimal financeTotal,
                                               List<OrganisationResource> applicationOrganisations,
                                               SectionResource financeSection,
                                               List<SectionResource> financeSectionChildren,
@@ -38,6 +40,7 @@ public class ApplicationFundingBreakdownViewModel {
                                               List<String> pendingOrganisationNames
     ) {
         this.financeTotalPerType = financeTotalPerType;
+        this.financeTotal = financeTotal;
         this.applicationOrganisations = applicationOrganisations;
         this.financeSection = financeSection;
         this.financeSectionChildren = financeSectionChildren;
@@ -48,8 +51,27 @@ public class ApplicationFundingBreakdownViewModel {
         this.pendingOrganisationNames = pendingOrganisationNames;
     }
 
+    //For EOI Competitions
+    public ApplicationFundingBreakdownViewModel(Map<FinanceRowType, BigDecimal> financeTotalPerType,
+                                                List<OrganisationResource> applicationOrganisations,
+                                                SectionResource financeSection,
+                                                OrganisationResource leadOrganisation,
+                                                Map<Long, BaseFinanceResource> organisationFinances,
+                                                List<String> pendingOrganisationNames) {
+        this.financeTotalPerType = financeTotalPerType;
+        this.applicationOrganisations = applicationOrganisations;
+        this.financeSection = financeSection;
+        this.leadOrganisation = leadOrganisation;
+        this.organisationFinances = organisationFinances;
+        this.pendingOrganisationNames = pendingOrganisationNames;
+    }
+
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
         return financeTotalPerType;
+    }
+
+    public BigDecimal getFinanceTotal() {
+        return financeTotal;
     }
 
     public List<OrganisationResource> getApplicationOrganisations() {

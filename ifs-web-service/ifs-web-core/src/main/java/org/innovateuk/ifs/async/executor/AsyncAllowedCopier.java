@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.async.executor;
 
-import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
+import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.springframework.stereotype.Component;
 
 /**
