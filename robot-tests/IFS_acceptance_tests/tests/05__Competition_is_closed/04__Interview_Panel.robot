@@ -146,10 +146,11 @@ CompAdmin view invite sent to the applicant and resend invite
     Given the user navigates to the page    ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
     When the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td a:contains("View invite")
     Then the user should see the element    jQuery = h1:contains("Review invite email")
-    And the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
+    And the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("testing.pdf")
     When the user clicks the button/link    link = Edit and resend invite
-    And the user clicks the button/link     jQuery = td:contains("${Neural_network_application}") ~ td div:nth-child(2):contains("Remove")
-    Then the compAdmin/applicant upload feedback    css = .inputfile  jQuery=div td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
+    Then the compAdmin can cancel resend inivte to an applicant
+    When the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td div:nth-child(2):contains("Remove")
+    Then the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  jQuery = div td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
     And the user clicks the button/link     css = .button[type="submit"]  #Resend invite
 
 Assessors accept the invitation to the interview panel
@@ -194,11 +195,12 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     Then the user should see the element     jQuery = td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
 
 Applicant can see the feedback given
-    [Documentation]  IFS-3291
+    [Documentation]  IFS-3291  IFS-3541
     [Tags]  HappyPath
     Given log in as a different user          ${aaron_robertson_email}  ${short_password}
     When the user should see the element      jQuery = .progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + div:nth-child(2) span:contains("Invited to interview")
     Then The user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user should see the element       jQuery = h3:contains("Additional Innovate UK feedback") ~ a:contains("testing_5MB.pdf")
     And the user clicks the button/link       jQuery = a:contains("Business opportunity")
     Then the user should see the element      jQuery = p:contains("This is the business opportunity feedback")
     And the user should see the element       jQuery = h2:contains("Average score: 8/ 10")
@@ -207,7 +209,7 @@ Applicant can upload the reponse to interview panel
     [Documentation]  IFS-3253  IFS-3571
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link        link = Feedback overview
-    When the compAdmin/applicant upload feedback    css = .inputfile  link=testing_5MB.pdf (opens in a new window)
+    When the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf
     Then the compAdmin checks the status for response uploaded applicantion
     And the user should see the element             jQuery = td:contains("${Neural_network_application}") ~ td:contains("Responded to feedback")
     Then the user clicks the button/link            link = ${Neural_network_application}
@@ -219,7 +221,7 @@ Applicant can remove the uploaded response
     [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
     Given the user clicks the button/link    link = ${computer_vision_application_name}
     And the user should see the element      jQuery = .message-alert p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
-    When the compAdmin/applicant upload feedback    css = .inputfile  link=testing_5MB.pdf (opens in a new window)
+    When the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link=testing_5MB.pdf
     Then the user should see the element     jQuery = .message-alert p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
     When the user clicks the button/link     css = .button-secondary  #remove
     Then the user should see the element     jQuery = p:contains("No file currently uploaded") ~ label:contains("+ Upload")
@@ -243,7 +245,7 @@ CompAdmin can access the Allocate applications to assessors screen
     And the user should see the element      jQuery = td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
 
 CompAdmin allocate applications to assessor
-    [Documentation]  IFS-3451  IFS-3485  IFS-3451
+    [Documentation]  IFS-3451  IFS-3485
     Given the user clicks the button/link    jQuery = tr:contains("${Neural_network_application}") label
     And the user clicks the button/link      jQuery = tr:contains("${computer_vision_application}") label
     When the user clicks the button/link     css = .button[name="addSelected"]  #Allocate
@@ -276,7 +278,7 @@ Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     When the user clicks the button/link      jQuery = section:contains("Previous") h3:contains("Neural network")
-    Then the user should see the element      link = testing.pdf
+    Then the user should see the element      link = testing_5MB.pdf
 
 *** Keywords ***
 Custom Suite Setup
@@ -308,7 +310,7 @@ the compAdmin navigates to the send invite email page
 the assessor declines the interview invitation and no longer sees the competition in the dashboard
     the user selects the radio button    acceptInvitation  false
     the user clicks the button/link      css = .button[type = "submit"]   #Confirm
-    the user should see the element      jQuery=p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
+    the user should see the element      jQuery = p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
     the user navigates to the page       ${server}/assessment/assessor/dashboard
     the user should not see the element  jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
@@ -338,16 +340,16 @@ the user checks for the key statistics for invite assessors
     the user should see the element      jQuery = .column-quarter:contains("${Declined}") small:contains("Declined")
 
 the compAdmin uploads additional feedback for an application
-    the user uploads the file          id = feedback[0]   ${too_large_pdf}  #checking for large file upload  £id=attachment-${Neural_network_application}
+    the user uploads the file          id = feedback[0]   ${too_large_pdf}  #checking for large file upload
     the user should see the element    jQuery = h1:contains("Attempt to upload a large file")
     the user goes back to the previous page
     the user uploads the file          id = feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
     the user should see a field and summary error      Your upload must be a PDF.
-    the compAdmin/applicant upload feedback     id = feedback[0]   link = testing_5MB.pdf
+    the compAdmin/applicant upload feedback     id = feedback[0]  ${valid_pdf}  link = testing.pdf
 
 the compAdmin/applicant upload feedback
-    [Arguments]   ${uploadId}  ${uploadedFile}
-    the user uploads the file          ${uploadId}  ${5mb_pdf}
+    [Arguments]   ${uploadId}  ${FileToUpload}  ${uploadedFile}
+    the user uploads the file          ${uploadId}  ${FileToUpload}
     the user should see the element    ${uploadedFile}
 
 the compAdmin removes uploaded feedback for an application
@@ -397,3 +399,9 @@ the user marks applications as successful and send funding decision email
     the user clicks the button/link       css = .button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       css = button[name="send-emails"]
     the user clicks the button/link       link = Competition
+
+the compAdmin can cancel resend inivte to an applicant
+    the user should see the element    jQuery = h1:contains("Resend invites to interview panel")
+    the user clicks the button/link    link = Cancel
+    the user navigates to the page     ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
+    the user navigates to the page     ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite/${Neural_network_application}/edit
