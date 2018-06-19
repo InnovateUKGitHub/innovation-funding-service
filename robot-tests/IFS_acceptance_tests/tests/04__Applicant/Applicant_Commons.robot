@@ -274,8 +274,8 @@ the user should see all finance subsections complete
     the user should see the element  css=li:nth-of-type(3) .task-status-complete
 
 the user should see all finance subsections incomplete
-    the user should see the element  css=li:nth-of-type(1) .action-required
-    the user should see the element  css=li:nth-of-type(2) .action-required
+    the user should see the element  css=li:nth-of-type(1) .task-status-incomplete
+    the user should see the element  css=li:nth-of-type(2) .task-status-incomplete
     the user should see the element  jQuery=h3:contains("Your funding")
 
 Invite a non-existing collaborator
