@@ -403,5 +403,5 @@ the user marks applications as successful and send funding decision email
 the compAdmin can cancel resend inivte to an applicant
     the user should see the element    jQuery = h1:contains("Resend invites to interview panel")
     the user clicks the button/link    link = Cancel
-    the user navigates to the page     ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status
-    the user navigates to the page     ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite/${Neural_network_application}/edit
+    the user navigates to the page     ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite/${Neural_network_application}/view
+    the user clicks the button/link    link = Edit and resend invite
