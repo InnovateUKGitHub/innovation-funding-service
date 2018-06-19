@@ -20,7 +20,6 @@ import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuild
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -49,8 +48,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/findByQuestionAndApplication/1/2"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)))
-                .andDo(document("questionStatus/findByQuestionAndApplication"));
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)));
     }
 
     @Test
@@ -67,8 +65,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         mockMvc.perform(get("/questionStatus/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" +
                 applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)))
-                .andDo(document("questionStatus/findByQuestionAndApplicationAndOrganisation"));
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)));
     }
 
     @Test
@@ -87,8 +84,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
                 .stream().map(id -> id.toString()).collect(Collectors.joining(",")) + "/" + applicationId + "/" +
                 organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)))
-                .andDo(document("questionStatus/findByQuestionIdsAndApplicationIdAndOrganisationId"));
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)));
     }
 
     @Test
@@ -103,8 +99,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)))
-                .andDo(document("questionStatus/findByQuestionIdsAndApplicationIdAndOrganisationId"));
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)));
     }
 
     @Test
@@ -117,8 +112,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/" + questionStatusId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(questionStatus)))
-                .andDo(document("questionStatus/findById"));
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatus)));
     }
 
     @Test
@@ -133,8 +127,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         mockMvc.perform(get("/questionStatus/getAssignedQuestionsCountByApplicationIdAndAssigneeId/" + applicationId
                 + "/" + assigneeId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(count)))
-                .andDo(document("questionStatus/getAssignedQuestionsCountByApplicationIdAndAssigneeId"));
+                .andExpect(content().string(objectMapper.writeValueAsString(count)));
     }
 
     @Test
@@ -150,8 +143,8 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(put("/questionStatus/mark-team-as-in-complete/{questionId}/{applicationId" +
                         "}/{markedAsInCompleteById}",
-                questionId, applicationId, markedAsInCompleteById)).andExpect(status().isOk())
-                .andDo(document("questionStatus/markTeamAsInComplete"));
+                questionId, applicationId, markedAsInCompleteById))
+                .andExpect(status().isOk());
 
         verify(questionStatusService, only()).markTeamAsInComplete(ids, markedAsInCompleteById);
     }

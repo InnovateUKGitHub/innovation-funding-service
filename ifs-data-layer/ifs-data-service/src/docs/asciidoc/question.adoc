@@ -10,40 +10,6 @@ include::{snippets}/question/find-by-competition/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/question/find-by-competition/curl-request.adoc[]
 
-=== Retrieve questions that have been marked as complete
-==== Request
-include::{snippets}/question/get-marked-as-complete/http-request.adoc[]
-include::{snippets}/question/get-marked-as-complete/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/get-marked-as-complete/http-response.adoc[]
-include::{snippets}/question/get-marked-as-complete/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/question/get-marked-as-complete/curl-request.adoc[]
-
-=== Mark question as complete
-==== Request
-include::{snippets}/question/mark-as-complete/http-request.adoc[]
-include::{snippets}/question/mark-as-complete/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/mark-as-complete/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/question/mark-as-complete/curl-request.adoc[]
-
-=== Mark question as incomplete
-==== Request
-include::{snippets}/question/mark-as-incomplete/http-request.adoc[]
-include::{snippets}/question/mark-as-incomplete/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/question/mark-as-incomplete/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/question/mark-as-incomplete/curl-request.adoc[]
-
 === Save question
 ==== Request
 include::{snippets}/question/save/http-request.adoc[]
