@@ -22,14 +22,14 @@
         <dd th:classappend="${currentApplication.startDate == null} ? 'form-hint'">
             <span
                 th:classappend="${currentApplication.startDate == null} ? 'font-xsmall'"
-                th:text="${currentApplication.startDate} ? ${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')} : 'This field has not been completed'"
+                th:text="${currentApplication.startDate} ? ${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')} : 'This field has not been completed.'"
             />
         </dd>
         <dt>Duration in months:</dt>
         <dd th:classappend="${applicationDuration == null} ? 'form-hint'">
             <span
                 th:classappend="${applicationDuration == null} ? 'font-xsmall'"
-                th:text="${applicationDuration} ?: 'This field has not been completed'"
+                th:text="${applicationDuration} ?: 'This field has not been completed.'"
             />
         </dd>
     </dl>
