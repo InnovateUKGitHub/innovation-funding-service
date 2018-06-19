@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 /**
  * Class to validate several objects
- * TODO: INFUND-9548 adding unit tests for this class
+ * TODO: adding unit tests for this class IFS-3760
  */
 @Service
 public class ApplicationValidatorServiceImpl extends BaseTransactionalService implements ApplicationValidatorService {

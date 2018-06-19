@@ -24,7 +24,6 @@ public class Milestone {
     @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
 
-    // TODO INFUND-5908 make this package protected
     public Milestone() {
     }
 
