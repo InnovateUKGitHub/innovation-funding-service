@@ -29,6 +29,10 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
     }
 
+    public S withProjectLocation(String... value) {
+        return withArray((v, finance) -> finance.setProjectLocation(v), value);
+    }
+
     public S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
         return withArray((financeOrganisationDetail, finance) -> setField("financeOrganisationDetails", financeOrganisationDetail, finance), financeOrganisationDetails);
     }

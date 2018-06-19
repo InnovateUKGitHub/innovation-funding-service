@@ -19,7 +19,7 @@ import java.util.Optional;
  * Your organisation populator section view models.
  */
 @Component
-public class YourProjectLocationPopulator extends AbstractSectionPopulator<YourProjectLocationSectionViewModel> {
+public class YourProjectLocationSectionPopulator extends AbstractSectionPopulator<YourProjectLocationSectionViewModel> {
 
     @Autowired
     private SectionService sectionService;
