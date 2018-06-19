@@ -161,8 +161,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         processRoleRepository.save(processRole);
 
-
-
         flushAndClearSession();
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "id"));

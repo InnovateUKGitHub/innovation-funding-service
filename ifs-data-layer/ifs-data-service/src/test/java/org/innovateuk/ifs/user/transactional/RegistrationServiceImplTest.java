@@ -316,7 +316,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        UserResource result = service.createOrganisationUser(userToCreate).getSuccess();
+        UserResource result = service.createUser(userToCreate).getSuccess();
 
         assertEquals(userToCreate, result);
     }
@@ -337,12 +337,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Organisation selectedOrganisation = newOrganisation().build();
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
-//        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        ServiceResult<UserResource> result = service.createOrganisationUser(userToCreate);
+        ServiceResult<UserResource> result = service.createUser(userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
     }
@@ -353,12 +352,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserResource userToCreate = newUserResource().withPassword("thepassword").build();
         Organisation selectedOrganisation = newOrganisation().build();
 
-//        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceFailure(badRequestError("bad password")));
 
-        ServiceResult<UserResource> result = service.createOrganisationUser(userToCreate);
+        ServiceResult<UserResource> result = service.createUser(userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(Error.fieldError("password", null, "bad password")));
     }
@@ -663,7 +661,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        UserResource result = service.createOrganisationUser(userToCreate).getSuccess();
+        UserResource result = service.createUser(userToCreate).getSuccess();
 
         assertEquals(userToCreate, result);
     }

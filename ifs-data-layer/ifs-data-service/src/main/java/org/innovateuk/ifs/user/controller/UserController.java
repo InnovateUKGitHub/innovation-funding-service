@@ -183,7 +183,7 @@ public class UserController {
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(userResource).andOnSuccessReturn(created ->
+        return registrationService.createUser(userResource).andOnSuccessReturn(created ->
                 {
                     registrationService.sendUserVerificationEmail(created, empty(), of(organisationId)).getSuccess();
                     return created;
@@ -193,7 +193,7 @@ public class UserController {
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(userResource).andOnSuccessReturn(created ->
+        return registrationService.createUser(userResource).andOnSuccessReturn(created ->
                 {
                     registrationService.sendUserVerificationEmail(created, of(competitionId), of(organisationId)).getSuccess();
                     return created;

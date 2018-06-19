@@ -21,7 +21,7 @@ public interface RegistrationService {
 
     // TODO rename
     @PreAuthorize("hasPermission(#user, 'CREATE')")
-    ServiceResult<UserResource> createOrganisationUser(UserResource user);
+    ServiceResult<UserResource> createUser(UserResource user);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
     ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId);

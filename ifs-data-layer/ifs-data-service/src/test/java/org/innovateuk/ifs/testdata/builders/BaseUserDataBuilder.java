@@ -68,7 +68,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
 
     private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, String phoneNumber, List<Role> roles, Long organisationId) {
 
-        UserResource created = registrationService.createOrganisationUser(newUserResource().
+        UserResource created = registrationService.createUser(newUserResource().
                 withFirstName(firstName).
                 withLastName(lastName).
                 withEmail(emailAddress).
