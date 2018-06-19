@@ -53,6 +53,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     @Override
+    public ServiceResult<T> andOnSuccessDo(Consumer<T> successHandler) {
+        return (ServiceResult<T>) super.andOnSuccessDo(successHandler);
+    }
+
+    @Override
     public <R> ServiceResult<R> andOnFailure(Supplier<FailingOrSucceedingResult<R, ServiceFailure>> failureHandler) {
         return (ServiceResult<R>) super.andOnFailure(failureHandler);
     }

@@ -6,6 +6,8 @@ import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -49,6 +51,9 @@ public class RegistrationServiceImplIntegrationTest extends BaseAuthenticationAw
     private OrganisationRepository organisationRepository;
 
     @Autowired
+    private CompetitionRepository competitionRepository;
+
+    @Autowired
     private TestService testService;
 
     @Test
@@ -89,6 +94,8 @@ public class RegistrationServiceImplIntegrationTest extends BaseAuthenticationAw
 
         doWithMockIdpRestTemplate(mockRestTemplate -> {
 
+            Competition competition = competitionRepository.findByName("Connected digital additive manufacturing").get(0);
+
             Either<ResponseEntity<Object>, ResponseEntity<Object>> responseFromRegistrationApi =
                     left(new ResponseEntity<>(SERVICE_UNAVAILABLE));
 
@@ -110,7 +117,7 @@ public class RegistrationServiceImplIntegrationTest extends BaseAuthenticationAw
                     build();
 
             // assert that we got a failure indicating that the Registration API was not available
-            ServiceResult<UserResource> result = registrationService.createOrganisationUser(organisation.getId(), registrationInfo);
+            ServiceResult<UserResource> result = registrationService.createOrganisationUser(organisation.getId(), competition.getId(), registrationInfo);
             assertThat(result.isFailure()).isTrue();
             assertThat(result.getFailure().is(new Error(GENERAL_UNEXPECTED_ERROR, SERVICE_UNAVAILABLE))).isTrue();
 
