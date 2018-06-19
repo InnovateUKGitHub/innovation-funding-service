@@ -178,7 +178,7 @@
         </th:block>
 
         <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Return to finance checks</button>
-        <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}" th:th:classappend="${summaryModel.isApproved() ? 'extra-large-margin' : ''}">Return to finance checks</a>
+        <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}" th:classappend="${summaryModel.isApproved() ? 'extra-large-margin' : ''}">Return to finance checks</a>
     </form>
     <div class="extra-margin" th:unless="${summaryModel.isExternalView()}">
         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button button-secondary">Queries</a>
