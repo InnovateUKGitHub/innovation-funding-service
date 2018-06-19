@@ -127,7 +127,7 @@
 
             <div class="extra-margin">
                 <button type="submit" class="button">Resend invite</button>
-                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}"
+                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId}, applicationId=${model.applicationId})}"
                    class="button button-clear">Cancel</a>
             </div>
 
