@@ -115,4 +115,19 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
 
         assertEquals(expectedRoles, roles);
     }
+
+    @Test
+    public void getApplicationIdForProject() {
+        long projectId = 987L;
+        long applicationId = 654L;
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%d/application-id", restUrl, "project", projectId),
+                Long.class,
+                applicationId
+        );
+
+        long expectedApplicationId = service.getApplicationIdForProject(projectId).getSuccess();
+
+        assertEquals(expectedApplicationId, applicationId);
+    }
 }
