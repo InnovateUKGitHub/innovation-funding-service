@@ -55,7 +55,7 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     public void setupServiceWithMockTemplateAndSpringSecurity() {
 
         service = registerRestServiceUnderTest();
-        service.setDataRestServiceUrl(dataServicesUrl);
+        service.setServiceUrl(dataServicesUrl);
 
         RootDefaultRestTemplateAdaptor adaptor = new RootDefaultRestTemplateAdaptor();
         adaptor.setRestTemplate(mockRestTemplate);
