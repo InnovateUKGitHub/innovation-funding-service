@@ -18,6 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URISyntaxException;
 
 /**
  * This controller will handle all requests that are related to the application summary.
@@ -56,16 +59,23 @@ public class ApplicationSummaryController {
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
-                                     @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                     @RequestParam MultiValueMap<String, String> queryParams) {
+                                     @RequestParam MultiValueMap<String, String> queryParams) throws URISyntaxException {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
         if (competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) {
-            return String.format("redirect:/application/%s/feedback", applicationId);
+            return redirectToFeedback(applicationId, queryParams);
         }
-        model.addAttribute("applicationSummaryViewModel", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
+        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
         return "application-summary";
+    }
+
+    private String redirectToFeedback(long applicationId, MultiValueMap<String, String> queryParams) throws URISyntaxException {
+        return UriComponentsBuilder.fromPath(String.format("redirect:/application/%s/feedback", applicationId))
+                .queryParams(queryParams)
+                .build()
+                .encode()
+                .toUriString();
     }
 }

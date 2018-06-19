@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,8 +47,9 @@ public class ApplicationFeedbackController {
                            ValidationHandler validationHandler,
                            Model model,
                            @PathVariable("applicationId") long applicationId,
-                           UserResource user) {
-
+                           UserResource user,
+                           @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                           @RequestParam MultiValueMap<String, String> queryParams) {
         model.addAttribute("model", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user));
         return "application-feedback";
     }
@@ -60,9 +62,11 @@ public class ApplicationFeedbackController {
                                  ValidationHandler validationHandler,
                                  Model model,
                                  @PathVariable("applicationId") long applicationId,
-                                 UserResource user) {
+                                 UserResource user,
+                                 @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                 @RequestParam MultiValueMap<String, String> queryParams) {
 
-        Supplier<String> failureAndSuccessView = () -> feedback(form, bindingResult, validationHandler, model, applicationId, user);
+        Supplier<String> failureAndSuccessView = () -> feedback(form, bindingResult, validationHandler, model, applicationId, user, origin, queryParams);
         MultipartFile file = form.getResponse();
         RestResult<Void> sendResult = interviewResponseRestService
                 .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
@@ -79,9 +83,11 @@ public class ApplicationFeedbackController {
                                  ValidationHandler validationHandler,
                                  Model model,
                                  @PathVariable("applicationId") long applicationId,
-                                 UserResource user) {
+                                 UserResource user,
+                                 @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                 @RequestParam MultiValueMap<String, String> queryParams) {
 
-        Supplier<String> failureAndSuccessView = () -> feedback(interviewResponseForm, bindingResult, validationHandler, model, applicationId, user);
+        Supplier<String> failureAndSuccessView = () -> feedback(interviewResponseForm, bindingResult, validationHandler, model, applicationId, user, origin, queryParams);
         RestResult<Void> sendResult = interviewResponseRestService
                 .deleteResponse(applicationId);
 
