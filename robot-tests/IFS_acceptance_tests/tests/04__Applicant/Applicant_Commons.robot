@@ -387,3 +387,4 @@ the applicant completes Application Team
     the user clicks the button/link  link=Application team
     the user clicks the button/link  id=application-question-complete
     the user clicks the button/link  link=Application overview
+    the user should see the element  jQuery=li:contains("Application team") > .task-status-complete
