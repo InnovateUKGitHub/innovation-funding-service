@@ -245,24 +245,24 @@
         <div class="table-overflow extra-margin-bottom">
             <table>
                 <thead>
-                <tr>
-                    <th scope="col">Start date</th>
-                    <th scope="col">Duration</th>
-                    <th scope="col" class="numeric">Total project cost</th>
-                    <th scope="col" class="numeric">Grant applied for (&pound;)</th>
-                    <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
-                    <th scope="col" class="numeric">Total % grant</th>
-                </tr>
+                    <tr>
+                        <th scope="col">Start date</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col" class="numeric">Total project cost</th>
+                        <th scope="col" class="numeric">Grant applied for (&pound;)</th>
+                        <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
+                        <th scope="col" class="numeric">Total % grant</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
-                    <td th:text="${overview.durationInMonths+' months'}" />
-                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
-                    <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
-                    <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
-                    <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
-                </tr>
+                    <tr>
+                        <td th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
+                        <td th:text="${overview.durationInMonths+' months'}" />
+                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
+                        <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
+                        <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
+                        <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -321,7 +321,7 @@
 
     <!-- ===========================Project Finance Cost Breakdown =========================== -->
     <th:block th:fragment="project-finance-cost-breakdown(breakdowns)">
-        <div class="table-overflow">
+        <div class="table-overflow extra-margin-bottom">
             <table>
                 <thead>
                     <tr>
