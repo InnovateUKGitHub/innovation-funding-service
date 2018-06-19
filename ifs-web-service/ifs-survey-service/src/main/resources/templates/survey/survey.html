@@ -1,43 +1,77 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head"  th:with="pageTitle=${title != null ? title : 'Internal Server Error'}" />
 
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Satisfaction survey'" />
 </head>
-<body class="error">
+<body class="survey">
 
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" th:with="hidePropositionLinks=true" />
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <main tabindex="-1" id="content">
-    <h1 class="heading-large" th:if="${title != null}" th:text="${title}">Internal Server Error</h1>
-    <h1 class="heading-large" th:unless="${title != null}">Internal Server Error</h1>
+    <h1 class="heading-large">Satisfaction survey</h1>
 
-    <p th:if="${url}">
-        <b>Page:</b> <span th:text="${url}">Page URL</span>
-    </p>
-    <!--/*
-      <p th:if="${timestamp}" id='created'>
-          <b>Occurred:</b> <span th:text="${timestamp}">Timestamp</span>
-      </p> */-->
+    <legend class="heading-small">
+        Overall, how did you feel about the service you received today?
+    </legend>
 
-    <p th:if="${status}">
-        <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
-        th:if="${error}" th:text="'('+${error}+')'">error ...</span>
-    </p>
+    <!--<div class="multiple-choice">-->
 
-    <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
-           ${exception} or ${message} are set internally by Spring Boot. */-->
+        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-1">-->
+            <!--<input id="satisfaction-radio-1" type="radio" name="satisfaction-radio-group" value="Very satisfied" />-->
+            <!--Very satisfied-->
+        <!--</label>-->
+        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-2">-->
+            <!--<input id="satisfaction-radio-2" type="radio" name="satisfaction-radio-group" value="Satisfied" />-->
+            <!--Satisfied-->
+        <!--</label>-->
+        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-3">-->
+            <!--<input id="satisfaction-radio-3" type="radio" name="satisfaction-radio-group" value="Neither satisfied or dissatisfied" />-->
+            <!--Neither satisfied or dissatisfied-->
+        <!--</label>-->
+        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-4">-->
+            <!--<input id="satisfaction-radio-4" type="radio" name="satisfaction-radio-group" value="Dissatisfied" />-->
+            <!--Dissatisfied-->
+        <!--</label>-->
+        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-5">-->
+            <!--<input id="satisfaction-radio-5" type="radio" name="satisfaction-radio-group" value="Very dissatisfied" />-->
+            <!--Very dissatisfied-->
+        <!--</label>-->
+    <!--</div>-->
+    <fieldset>
+        <div class="multiple-choice">
+            <input id="satisfaction-radio-1" type="radio" name="satisfaction-radio-group" value="Very satisfied" />
+            <label class="block-label selection-button-radio" for="satisfaction-radio-1">
+                Very satisfied
+            </label>
+        </div>
+        <div class="multiple-choice">
+            <input id="satisfaction-radio-2" type="radio" name="satisfaction-radio-group" value="Satisfied" />
+            <label class="block-label selection-button-radio" for="satisfaction-radio-2">
+                Satisfied
+            </label>
+        </div>
+        <div class="multiple-choice">
+            <input id="satisfaction-radio-3" type="radio" name="satisfaction-radio-group" value="Neither satisfied or dissatisfied" />
+            <label class="block-label selection-button-radio" for="satisfaction-radio-3">
+                Neither satisfied or dissatisfied
+            </label>
+        </div>
+        <div class="multiple-choice">
+            <input id="satisfaction-radio-4" type="radio" name="satisfaction-radio-group" value="Dissatisfied" />
+            <label class="block-label selection-button-radio" for="satisfaction-radio-4">
+                Dissatisfied
+            </label>
+        </div>
+        <div class="multiple-choice">
+            <input id="satisfaction-radio-5" type="radio" name="satisfaction-radio-group" value="Very dissatisfied" />
+            <label class="block-label selection-button-radio" for="satisfaction-radio-5">
+                Very dissatisfied
+            </label>
+        </div>
 
-    <div>
-        We are unable to complete your request.
-        This could be because something went wrong at our end, or you are trying to perform an action that does not exist.
-        You can either go back to the page you were previously on or to the <a th:href="${userDashboardLink}">Innovation Funding Service sign in page</a>.
-    </div>
-
-    <p th:unless="${#strings.isEmpty(stacktrace)}" th:text="${'Stack trace for debugging: ' + stacktrace}" style="margin-top: 2em;">
-        Stack trace will be printed here when using the "debug" active profile
-    </p>
+    </fieldset>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

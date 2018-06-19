@@ -6,6 +6,7 @@ def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.proper
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
+
 project.version = surveyServiceVersion
 tagDocker.tag = surveyServiceVersion
 osStageRemote.tag = surveyServiceVersion
@@ -17,6 +18,7 @@ createContainer.containerName="survey-svc"
 createContainer.containerId="survey-svc"
 createContainer.portBindings = ['2020:8000']
 
+ext.serverContext = '/survey'
 
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
@@ -35,9 +37,9 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
-jar {
-    baseName = 'ifs-survey-service'
-}
+//jar {
+//    baseName = 'ifs-survey-service'
+//}
 
 jar.dependsOn ":ifs-web-service:gulp_default"
 
