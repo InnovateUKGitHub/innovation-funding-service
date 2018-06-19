@@ -18,6 +18,8 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -55,6 +57,7 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewResponseRestService interviewResponseRestService;
     private ProcessRoleService processRoleService;
+    private ProjectService projectService;
 
     public ApplicationInterviewFeedbackViewModelPopulator(ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
                                                           ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
@@ -71,7 +74,8 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
                                                           InterviewAssignmentRestService interviewAssignmentRestService,
                                                           InterviewResponseRestService interviewResponseRestService,
                                                           ProcessRoleService processRoleService,
-                                                          AssessmentRestService assessmentRestService) {
+                                                          AssessmentRestService assessmentRestService,
+                                                          ProjectService projectService) {
         this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
         this.applicationService = applicationService;
@@ -88,6 +92,7 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewResponseRestService = interviewResponseRestService;
         this.processRoleService = processRoleService;
+        this.projectService = projectService;
     }
 
     public ApplicationInterviewFeedbackViewModel populate(long applicationId, UserResource user) {
@@ -152,6 +157,9 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
                 .map(FileEntryResource::getName)
                 .orElse(null);
 
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        boolean projectWithdrawn = (project != null && project.isWithdrawn());
+
         return new ApplicationInterviewFeedbackViewModel(
                 application,
                 competition,
@@ -168,7 +176,8 @@ public class ApplicationInterviewFeedbackViewModelPopulator {
                 isLeadApplicant,
                 feedbackReleased,
                 applicationFinanceSummaryViewModel,
-                applicationFundingBreakdownViewModel
+                applicationFundingBreakdownViewModel,
+                projectWithdrawn
                 );
     }
 

@@ -101,3 +101,15 @@
     margin-top: 1em;
   }
 }
+
+.collapsible-finances-summary{
+  section{
+    &:last-child{
+      .collapsible{
+        >div{
+          padding: 0;
+        }
+      }
+    }
+  }
+}
