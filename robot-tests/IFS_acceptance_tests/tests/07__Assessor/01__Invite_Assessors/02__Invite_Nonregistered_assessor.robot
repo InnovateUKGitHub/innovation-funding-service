@@ -51,8 +51,7 @@ Create assessor account: server-side validations
     And the user should see an error       Please enter a last name.
     And the user should see an error       Please enter a phone number.
     And the user should see an error       Please enter your password.
-    And the user should see an error       Please enter a valid phone number.
-    And the user should see an error       Input for your phone number has a minimum length of 8 characters.
+    And the user should see an error       Please enter a valid phone number between 8 and 20 digits.
     And the user should see an error       Your last name should have at least 2 characters.
     And the user should see an error       Your first name should have at least 2 characters.
     And the user should see an error       Password must be at least 8 characters.
@@ -66,8 +65,7 @@ Create assessor account: client-side validations
     Then the user should not see the validation error in the create assessor form  Please enter a last name.
     When the user enters text to a text field                                      id=phoneNumber    123123123123
     Then the user should not see the validation error in the create assessor form  Please enter a phone number.
-    And the user should not see the validation error in the create assessor form   Please enter a valid phone number.
-    And the user should not see the validation error in the create assessor form   Input for your phone number has a minimum length of 8 characters.
+    And the user should not see the validation error in the create assessor form   Please enter a valid phone number between 8 and 20 digits.
     When The user enters text to a text field                                      id=password    ${correct_password}
     Then the user should not see the validation error in the create assessor form  Please enter your password.
     And the user should not see the validation error in the create assessor form   Password must be at least 8 characters.

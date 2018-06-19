@@ -81,6 +81,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, null);
 
         addAssessmentDetails(userApplicationRoles, user, model, applicationId);
+        model.addAttribute("fromApplicationService", false);
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(ApplicationResource application,

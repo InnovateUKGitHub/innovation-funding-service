@@ -112,4 +112,17 @@ public class GoogleAnalyticsDataLayerControllerTest extends BaseControllerMockMV
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(roles)));
     }
+
+    @Test
+    public void getApplicationIdForProject() throws Exception {
+        final long projectId = 345L;
+        final long applicationId = 678L;
+
+        when(googleAnalyticsDataLayerServiceMock.getApplicationIdForProject(projectId))
+                .thenReturn(serviceSuccess(applicationId));
+
+        mockMvc.perform(get("/analytics/project/{projectId}/application-id", projectId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(applicationId)));
+    }
 }

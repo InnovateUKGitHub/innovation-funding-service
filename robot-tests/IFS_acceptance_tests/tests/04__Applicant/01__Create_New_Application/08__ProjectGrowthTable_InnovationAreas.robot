@@ -81,8 +81,8 @@ Applicant visits his Finances
     [Tags]
     Given the user should see the element  jQuery=h1:contains("Application overview")
     When the user clicks the button/link   link=Your finances
-    Then the user should see the element   jQuery=li:contains("Your project costs") > .action-required
-    And the user should see the element    jQuery=li:contains("Your organisation") > .action-required
+    Then the user should see the element   jQuery=li:contains("Your project costs") > .task-status-incomplete
+    And the user should see the element    jQuery=li:contains("Your organisation") > .task-status-incomplete
     And the user should see that the funding depends on the research area
     And the user should see his finances empty
     [Teardown]  the user clicks the button/link  jQuery=a:contains("Return to application overview")
@@ -190,7 +190,7 @@ Funding subsection opens when Appl details and organisation info are provided
     When the user should see the element    jQuery=li:contains("Application details") > .task-status-complete
     And the user clicks the button/link     link=Your finances
     And the user should see the element     jQuery=li:contains("Your organisation") > .task-status-complete
-    Then the user should see the element    jQuery=li:contains("Your funding") > .action-required
+    Then the user should see the element    jQuery=li:contains("Your funding") > .task-status-incomplete
 
 Organisation server side validation when yes
     [Documentation]    INFUND-6393
