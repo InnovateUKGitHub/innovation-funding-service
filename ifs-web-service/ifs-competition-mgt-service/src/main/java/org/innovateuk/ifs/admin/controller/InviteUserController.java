@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.groups.Default;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 
 /**
  * Controller for handling requests related to invitation of new users by the IFS Administrator
@@ -64,10 +66,21 @@ public class InviteUserController {
 
             ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
 
-            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+            return handleSaveUserInviteErrors(saveResult, validationHandler).
                     failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/pending");
 
         });
+    }
+
+    private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {
+
+        if (saveResult.isFailure() && saveResult.getFailure().getErrors().get(0).getErrorKey().equals(USER_ROLE_INVITE_INVALID_EMAIL.toString())) {
+            validationHandler.addAnyErrors(saveResult, toField("emailAddress"));
+        } else {
+            validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors());
+        }
+
+        return validationHandler;
     }
 
     private InviteUserResource constructInviteUserResource(InviteUserForm form) {
