@@ -43,6 +43,7 @@ subprojects {
 apply from: "documentation.gradle"
 
 endpointDocumentation.dependsOn "ifs-application-service:test"
+endpointDocumentation.dependsOn "ifs-survey-service:test"
 endpointDocumentation.dependsOn "ifs-assessment-service:test"
 endpointDocumentation.dependsOn "ifs-competition-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"

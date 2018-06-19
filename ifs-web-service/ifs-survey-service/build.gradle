@@ -1,0 +1,44 @@
+bootRun {
+    addResources = false
+}
+
+def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.property('ifs.survey-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+project.version = surveyServiceVersion
+tagDocker.tag = surveyServiceVersion
+osStageRemote.tag = surveyServiceVersion
+tagDockerLocal.tag = surveyServiceVersion
+osStageLocal.tag = surveyServiceVersion
+
+createContainer.hostName="survey-svc"
+createContainer.containerName="survey-svc"
+createContainer.containerId="survey-svc"
+createContainer.portBindings = ['2020:8000']
+
+
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
+
+dependencies {
+    compile project(':ifs-web-service:ifs-web-core')
+
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+
+    testCompile "net.sf.opencsv:opencsv:2.3"
+}
+
+jar {
+    baseName = 'ifs-survey-service'
+}
+
+jar.dependsOn ":ifs-web-service:gulp_default"
+
+
