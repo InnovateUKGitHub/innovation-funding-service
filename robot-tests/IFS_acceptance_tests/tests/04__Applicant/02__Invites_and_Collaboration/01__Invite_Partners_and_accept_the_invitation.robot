@@ -138,6 +138,11 @@ Valid invitation submit
     Then the user should see the element  jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
     And the user should see the element   jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
 
+Cannot mark as complete with pending invites
+    [Documentation]  IFS-3088
+    Given the user clicks the button/link  id=application-question-complete
+    Then The user should see a field and summary error  Contributors must accept their invites or be removed by the lead applicant.
+
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
     [Tags]
