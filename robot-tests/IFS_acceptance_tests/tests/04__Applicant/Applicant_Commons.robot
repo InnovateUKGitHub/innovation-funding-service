@@ -274,8 +274,8 @@ the user should see all finance subsections complete
     the user should see the element  css=li:nth-of-type(3) .task-status-complete
 
 the user should see all finance subsections incomplete
-    the user should see the element  css=li:nth-of-type(1) .action-required
-    the user should see the element  css=li:nth-of-type(2) .action-required
+    the user should see the element  css=li:nth-of-type(1) .task-status-incomplete
+    the user should see the element  css=li:nth-of-type(2) .task-status-incomplete
     the user should see the element  jQuery=h3:contains("Your funding")
 
 Invite a non-existing collaborator
@@ -387,3 +387,4 @@ the applicant completes Application Team
     the user clicks the button/link  link=Application team
     the user clicks the button/link  id=application-question-complete
     the user clicks the button/link  link=Application overview
+    the user should see the element  jQuery=li:contains("Application team") > .task-status-complete

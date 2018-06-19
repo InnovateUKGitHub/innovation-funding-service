@@ -20,6 +20,8 @@
         <th:block th:insert="fragments/elements :: error-summary-list(interviewResponseForm)" />
     </div>
 
+    <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
+
     <div class="grid-row">
         <div class="column-half">
             <h3 class="heading-small">Project title</h3>
