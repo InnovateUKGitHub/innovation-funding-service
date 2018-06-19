@@ -20,6 +20,8 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+
 /**
  * This class contains methods to retrieve and store {@link QuestionResource} related data,
  * through the RestService {@link QuestionRestService}.
@@ -53,7 +55,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void markAsIncomplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
         LOG.debug(String.format("mark section as incomplete %s / %s /%s ", questionId, applicationId, markedAsInCompleteById));
-        if (isApplicationTeamQuestion(questionId, applicationId)) {
+        if (isApplicationTeamQuestion(questionId)) {
             questionStatusRestService.markTeamAsInComplete(questionId, applicationId, markedAsInCompleteById);
         } else {
             questionStatusRestService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
@@ -61,9 +63,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     }
 
-    private boolean isApplicationTeamQuestion(Long questionId, Long application_id) {
-        // TODO: IFS-3088 - check whether it's the APPLICATION_TEAM question
-        return true;
+    private boolean isApplicationTeamQuestion(Long questionId) {
+        return getById(questionId).getQuestionSetupType() == APPLICATION_TEAM;
     }
 
     @Override

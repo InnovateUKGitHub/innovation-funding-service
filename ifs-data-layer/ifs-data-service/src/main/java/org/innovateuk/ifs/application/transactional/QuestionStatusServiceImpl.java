@@ -45,7 +45,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     private QuestionStatusMapper questionStatusMapper;
 
     @Autowired
-    private ApplicationProgressServiceImpl applicationProgressService;
+    private ApplicationProgressService applicationProgressService;
 
     @Autowired
     private QuestionStatusRepository questionStatusRepository;

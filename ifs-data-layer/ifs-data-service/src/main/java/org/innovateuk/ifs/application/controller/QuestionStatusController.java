@@ -74,7 +74,7 @@ public class QuestionStatusController {
                                              @PathVariable("applicationId") final long applicationId,
                                              @PathVariable("markedAsInCompleteById") final long markedAsInCompleteById) {
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
-        return questionStatusService.markAsInComplete(ids, markedAsInCompleteById).toPutResponse();
+        return questionStatusService.markTeamAsInComplete(ids, markedAsInCompleteById).toPutResponse();
     }
 
     @PutMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
