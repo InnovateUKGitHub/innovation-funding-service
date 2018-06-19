@@ -89,7 +89,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Application application = new Application(applicationName);
         application.setStartDate(null);
 
-        application.setDurationInMonths(3L);
         application.setCompetition(competition);
         setInnovationArea(application, competition);
 

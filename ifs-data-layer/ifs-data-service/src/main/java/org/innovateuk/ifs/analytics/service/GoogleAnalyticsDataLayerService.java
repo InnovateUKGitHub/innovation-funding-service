@@ -29,8 +29,11 @@ public interface GoogleAnalyticsDataLayerService {
     @PreAuthorize("isAuthenticated()")
     ServiceResult<List<Role>> getRolesByApplicationIdForCurrentUser(long applicationId);
 
-
     @SecuredBySpring(value = "READ", description = "Any authenticated user can see their roles on a project")
     @PreAuthorize("isAuthenticated()")
     ServiceResult<List<Role>> getRolesByProjectIdForCurrentUser(long projectId);
+
+    @SecuredBySpring(value = "READ", description = "Any authenticated user can see the corresponding application id for a project")
+    @PreAuthorize("isAuthenticated()")
+    ServiceResult<Long> getApplicationIdForProject(long projectId);
 }
