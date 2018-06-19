@@ -42,6 +42,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     @Test
     public void getCompetitionStatus() throws Exception {
         Long competitionId = 1L;
+        String applicationSearchString = "12";
+
         CompetitionProjectsStatusResource competitionProjectsStatusResource = newCompetitionProjectsStatusResource().
                 withCompetitionName("ABC").
                 withCompetitionNumber(competitionId).
@@ -60,12 +62,15 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         build(3)).
                 build();
 
-        when(statusServiceMock.getCompetitionStatus(competitionId)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
+        when(statusServiceMock.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
 
-        mockMvc.perform(get("/project/competition/{id}", competitionId))
+        mockMvc.perform(get("/project/competition/{id}?applicationSearchString=" + applicationSearchString, competitionId))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition for which project status details are being requested")
+                        ),
+                        requestParameters(
+                                parameterWithName("applicationSearchString").description("The filter to search by application number.")
                         ),
                         responseFields(competitionProjectsStatusResourceFields)
                 ));
