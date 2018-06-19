@@ -2,6 +2,13 @@ ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 
 ext.server_url = project.properties['serverUrl'] ?: "ifs.local-dev"
 ext.authorisation_url = project.properties['authorisationUrl'] ?: "auth.local-dev:9443"
+ext.invite_users = project.properties['inviteUsers'] ?: 1
+ext.registration_users = project.properties['registrationUsers'] ?: 1
+ext.front_door_users = project.properties['frontDoorUsers'] ?: 1
+ext.comp_management_users = project.properties['compManagementUsers'] ?: 1
+ext.applicant_users = project.properties['applicantUsers'] ?: 1
+ext.assessor_users = project.properties['assessorUsers'] ?: 1
+
 
 task prepareTaurusDeployment(type: Copy) {
 
