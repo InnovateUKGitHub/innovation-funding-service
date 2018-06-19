@@ -79,6 +79,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         boolean isMarkAsCompleteRequest = markAsCompleteRequest.orElse(false);
         if (isMarkAsCompleteRequest || (isMarkQuestionRequest(params) && !errors.hasErrors())) {
             if (isMarkQuestionAsIncompleteRequest(request.getParameterMap())) {
+
                 questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
             } else {
                 errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), questionId, processRole.getId(), errors));

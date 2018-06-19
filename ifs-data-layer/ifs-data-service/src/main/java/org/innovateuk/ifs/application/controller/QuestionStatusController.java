@@ -69,6 +69,14 @@ public class QuestionStatusController {
         return questionStatusService.markAsInComplete(ids, markedAsInCompleteById).toPutResponse();
     }
 
+    @PutMapping("/mark-team-as-in-complete/{questionId}/{applicationId}/{markedAsInCompleteById}")
+    public RestResult<Void> markTeamAsInComplete(@PathVariable("questionId") final long questionId,
+                                             @PathVariable("applicationId") final long applicationId,
+                                             @PathVariable("markedAsInCompleteById") final long markedAsInCompleteById) {
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
+        return questionStatusService.markAsInComplete(ids, markedAsInCompleteById).toPutResponse();
+    }
+
     @PutMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
     public RestResult<Void> assign(@PathVariable("questionId") final long questionId,
                                    @PathVariable("applicationId") final long applicationId,

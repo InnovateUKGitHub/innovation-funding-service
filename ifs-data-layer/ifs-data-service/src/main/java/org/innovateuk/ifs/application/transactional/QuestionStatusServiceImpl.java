@@ -75,6 +75,13 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     @Override
     @Transactional
+    public ServiceResult<List<ValidationMessages>> markTeamAsInComplete(final QuestionApplicationCompositeId ids,
+                                                                        final long markedAsInCompleteById) {
+        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final long assigneeId, final long assignedById) {
         return find(getQuestionSupplier(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById))
                 .andOnSuccess((question, application, assignee, assignedBy) -> {
