@@ -9,13 +9,13 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
+            <th:block th:insert="fragments/layout :: header-sub (linkTitle=${model.backLinkTitle},linkClass='link-back',linkUrl=@{${model.backUrl}})" />
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.competition})" />
             <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${model.application.name},size='heading-xlarge'" />
             </th:block>
 
-            <th:block th:insert="fragments/elements :: competition-status-message (app=${model.application}, competition=${model.competition})" />
+            <th:block th:insert="fragments/elements :: competition-status-message (app=${model.application}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
 
             <h2 class="heading-medium no-margin-bottom">Application details</h2>
             <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>

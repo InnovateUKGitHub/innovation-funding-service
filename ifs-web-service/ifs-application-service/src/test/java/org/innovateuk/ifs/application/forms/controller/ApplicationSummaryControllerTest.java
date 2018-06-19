@@ -6,7 +6,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
-import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.feedback.populator.ApplicationInterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
@@ -16,7 +16,7 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryController;
 import org.innovateuk.ifs.application.summary.populator.*;
-import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackSummaryViewModel;
+import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackViewModel;
 import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationInterviewFeedbackViewModel;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
@@ -102,7 +102,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
     @Spy
     @InjectMocks
-    private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
+    private ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator;
 
     @Spy
     @InjectMocks
@@ -314,7 +314,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("application-feedback-summary"))
                 .andReturn();
 
-        ApplicationFeedbackSummaryViewModel model = (ApplicationFeedbackSummaryViewModel) result.getModelAndView().getModel().get("applicationFeedbackSummaryViewModel");
+        ApplicationFeedbackViewModel model = (ApplicationFeedbackViewModel) result.getModelAndView().getModel().get("applicationFeedbackSummaryViewModel");
 
         assertEquals(model.getApplication(), app);
         assertEquals(model.getCompetition().getId(), app.getCompetition());

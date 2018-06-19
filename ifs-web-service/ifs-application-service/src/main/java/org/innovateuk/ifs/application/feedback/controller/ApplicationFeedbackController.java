@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.feedback.controller;
 
-import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -37,7 +37,7 @@ public class ApplicationFeedbackController {
     @Autowired
     private InterviewResponseRestService interviewResponseRestService;
     @Autowired
-    private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
+    private ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator;
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
@@ -50,7 +50,7 @@ public class ApplicationFeedbackController {
                            UserResource user,
                            @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
                            @RequestParam MultiValueMap<String, String> queryParams) {
-        model.addAttribute("model", applicationFeedbackSummaryViewModelPopulator.populate(applicationId, user));
+        model.addAttribute("model", applicationFeedbackViewModelPopulator.populate(applicationId, user, queryParams, origin));
         return "application-feedback";
     }
 

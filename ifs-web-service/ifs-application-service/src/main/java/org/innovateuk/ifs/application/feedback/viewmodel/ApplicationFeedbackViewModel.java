@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.feedback.viewmodel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class ApplicationFeedbackSummaryViewModel {
+public class ApplicationFeedbackViewModel {
 
     private final ApplicationResource application;
     private final CompetitionResource competition;
@@ -29,22 +30,27 @@ public class ApplicationFeedbackSummaryViewModel {
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final InterviewFeedbackViewModel interviewFeedbackViewModel;
     private final boolean projectWithdrawn;
+    private final ApplicationSummaryOrigin origin;
+    private final String backUrl;
 
 
-    public ApplicationFeedbackSummaryViewModel(ApplicationResource application,
-                                               CompetitionResource competition,
-                                               OrganisationResource leadOrganisation,
-                                               List<OrganisationResource> applicationOrganisations,
-                                               BigDecimal totalFundingSought,
-                                               List<String> feedback,
-                                               boolean hasFinanceSection,
-                                               Map<Long, SectionResource> sections,
-                                               Map<Long, List<QuestionResource>> sectionQuestions,
-                                               ApplicationAssessmentAggregateResource scores,
-                                               ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
-                                               ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
-                                               InterviewFeedbackViewModel interviewFeedbackViewModel,
-                                               boolean projectWithdrawn) {
+
+    public ApplicationFeedbackViewModel(ApplicationResource application,
+                                        CompetitionResource competition,
+                                        OrganisationResource leadOrganisation,
+                                        List<OrganisationResource> applicationOrganisations,
+                                        BigDecimal totalFundingSought,
+                                        List<String> feedback,
+                                        boolean hasFinanceSection,
+                                        Map<Long, SectionResource> sections,
+                                        Map<Long, List<QuestionResource>> sectionQuestions,
+                                        ApplicationAssessmentAggregateResource scores,
+                                        ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
+                                        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                        InterviewFeedbackViewModel interviewFeedbackViewModel,
+                                        boolean projectWithdrawn,
+                                        ApplicationSummaryOrigin origin,
+                                        String backUrl) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -59,6 +65,8 @@ public class ApplicationFeedbackSummaryViewModel {
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.interviewFeedbackViewModel = interviewFeedbackViewModel;
         this.projectWithdrawn = projectWithdrawn;
+        this.origin = origin;
+        this.backUrl = backUrl;
     }
 
     public ApplicationResource getApplication() {
@@ -115,5 +123,18 @@ public class ApplicationFeedbackSummaryViewModel {
 
     public boolean isProjectWithdrawn() {
         return projectWithdrawn;
+    }
+
+    public ApplicationSummaryOrigin getOrigin() {
+        return origin;
+    }
+
+    public String getBackUrl() {
+        return backUrl;
+    }
+
+    /* View logic */
+    public String getBackLinkTitle() {
+        return origin.getTitle();
     }
 }
