@@ -1,6 +1,8 @@
 def targetBuildFile = project.hasProperty("profile") ? "${project.profile}-build.gradle" : "docker-build.gradle"
 if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile
+} else {
+    apply from: "automated-build.gradle"
 }
 
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
@@ -9,7 +11,6 @@ apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
-
 
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
