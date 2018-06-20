@@ -1,6 +1,7 @@
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 
+
 description = """"""
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -20,10 +21,6 @@ dependencies {
     testCompile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.0.0'
     testCompile group: 'org.springframework.ldap', name: 'spring-ldap-test', version: '2.0.4.RELEASE'
     testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.8.0'
-}
-
-bootRun {
-    addResources = false
 }
 
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")

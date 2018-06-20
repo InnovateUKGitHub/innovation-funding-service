@@ -4,8 +4,8 @@ ext {
     javaLanguageLevel = 1.8
 }
 
-bootRepackage.enabled=false
-
+bootJar.enabled=false
+jar.enabled=true
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"

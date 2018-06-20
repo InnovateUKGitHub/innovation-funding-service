@@ -1,6 +1,3 @@
-bootRun {
-    addResources = false
-}
 
 project.version = applicationServiceVersion
 tagDocker.tag = applicationServiceVersion

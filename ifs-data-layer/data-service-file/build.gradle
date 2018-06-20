@@ -1,9 +1,8 @@
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
-bootRepackage {
-    enabled = false
-}
+bootJar.enabled=false
+jar.enabled=true
 
 configurations {
     testArtifacts

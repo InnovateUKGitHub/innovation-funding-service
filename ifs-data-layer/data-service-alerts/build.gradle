@@ -7,12 +7,10 @@ apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
-
-bootRepackage {
-    enabled = false
-}
-
 test.finalizedBy asciidoctor
+
+bootJar.enabled=false
+jar.enabled=true
 
 dependencies {
     compile project(":ifs-commons")

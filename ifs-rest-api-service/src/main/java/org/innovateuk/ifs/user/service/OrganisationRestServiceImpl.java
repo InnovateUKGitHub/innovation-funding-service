@@ -59,7 +59,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
         String organisationName;
         try {
             organisationName = UriUtils.encode(organisation.getName(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             log.error(e);
             organisationName = organisation.getName();
         }

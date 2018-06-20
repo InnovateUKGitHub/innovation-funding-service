@@ -64,8 +64,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"INNER JOIN Project p ON p.application = app " +
 			"WHERE p.id = :projectId";
 
-    Application findById(long applicationId);
-
     @Override
     List<Application> findAll();
     Page<Application> findByCompetitionId(long competitionId, Pageable pageable);

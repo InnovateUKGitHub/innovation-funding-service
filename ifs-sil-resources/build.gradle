@@ -4,4 +4,5 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
 }
 
-bootRepackage.enabled=false
+bootJar.enabled=false
+jar.enabled=true

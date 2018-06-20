@@ -42,7 +42,7 @@ public class AlertServiceImpl extends RootTransactionalService implements AlertS
 
     @Override
     public ServiceResult<AlertResource> findById(Long id) {
-        return find(alertRepository.findOne(id), notFoundError(Alert.class, id)).andOnSuccessReturn(alertMapper::mapToResource);
+        return find(alertRepository.findById(id), notFoundError(Alert.class, id)).andOnSuccessReturn(alertMapper::mapToResource);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class AlertServiceImpl extends RootTransactionalService implements AlertS
     @Override
     @Transactional
     public ServiceResult<Void> delete(Long id) {
-        alertRepository.delete(id);
+        alertRepository.deleteById(id);
         return serviceSuccess();
     }
 

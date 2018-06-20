@@ -47,10 +47,6 @@ ext.companyHouseKey = ext.get('ifs.company-house.key')
 
 ext.companiesHouseLookupEnabled = ext.has('ifs.companies-house.enabled') ? ext.get('ifs.companies-house.enabled') : true
 
-bootRun {
-    addResources = false
-}
-
 ext {
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
 }

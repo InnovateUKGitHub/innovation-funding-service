@@ -10,6 +10,8 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Optional;
+
 /**
  * Configuration to enable Spring Data JPA Auditing. Has an auditorProvider to give the provide the logged in
  * {@link org.innovateuk.ifs.user.domain.User} as the auditor.
@@ -27,10 +29,10 @@ public class AuditConfig {
             UserAuthentication authentication = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
 
             if (authentication == null || !authentication.isAuthenticated()) {
-                return null;
+                return Optional.empty();
             }
             else {
-                return userMapper.mapToDomain(authentication.getDetails());
+                return Optional.of(userMapper.mapToDomain(authentication.getDetails()));
             }
         };
     }

@@ -5,7 +5,8 @@ ext {
     javaLanguageLevel = 1.8
 }
 
-bootRepackage.enabled=false
+bootJar.enabled=false
+jar.enabled=true
 
 dependencies {
     compile "commons-io:commons-io:2.5"

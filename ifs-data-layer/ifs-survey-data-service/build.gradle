@@ -50,11 +50,6 @@ buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
-
-bootRun {
-    addResources = false
-}
-
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
     inputs.file("$rootProject.projectDir/ifs-resources/build/classes")

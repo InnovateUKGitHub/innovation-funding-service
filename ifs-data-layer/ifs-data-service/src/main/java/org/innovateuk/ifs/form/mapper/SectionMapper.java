@@ -24,6 +24,6 @@ public abstract class SectionMapper extends BaseMapper<Section, SectionResource,
     }
 
     public SectionResource mapIdToSectionResource(Long id) {
-        return mapToResource(repository.findOne(id));
+        return mapToResource(repository.findById(id).orElse(null));
     }
 }

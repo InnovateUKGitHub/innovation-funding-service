@@ -4,7 +4,7 @@ if (project.hasProperty('profile') && profile == 'automated') {
 }
 //Workaround because of process resources.  dependency should be removed.
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
-bootRepackage.enabled = false
+
 build.enabled = false
 // End workaround
 

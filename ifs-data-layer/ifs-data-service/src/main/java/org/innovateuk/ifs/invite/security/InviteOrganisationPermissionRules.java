@@ -56,7 +56,7 @@ public class InviteOrganisationPermissionRules {
     }
 
     private boolean applicationIsEditableById(final Long applicationId) {
-        return applicationIsEditable(applicationRepository.findOne(applicationId));
+        return applicationIsEditable(applicationRepository.findById(applicationId).orElse(null));
     }
 
     private boolean applicationIsEditable(final Application application) {

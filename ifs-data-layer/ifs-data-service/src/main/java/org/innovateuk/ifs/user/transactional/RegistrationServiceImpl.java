@@ -375,7 +375,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType) {
 
         return validateInternalUserRole(userRoleType)
-                .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findOne(userToEdit.getId()), notFoundError(User.class)))
+                .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findById(userToEdit.getId()).orElse(null), notFoundError(User.class)))
                 .andOnSuccess(user -> getInternalRoleResources(userRoleType)
                     .andOnSuccess(roleResources -> {
                         Set<Role> roleList = new HashSet<>(roleResources);

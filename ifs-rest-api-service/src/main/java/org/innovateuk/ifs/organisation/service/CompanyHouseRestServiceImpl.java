@@ -27,7 +27,7 @@ public class CompanyHouseRestServiceImpl extends BaseRestService implements Comp
     	String searchTextEncoded;
         try {
         	searchTextEncoded = UriUtils.encode(searchText, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             log.error(e);
             searchTextEncoded = searchText;
         }

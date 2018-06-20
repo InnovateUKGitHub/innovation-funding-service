@@ -53,7 +53,7 @@ configure(subprojects - project(":ifs-auth-service")) {
 buildscript {
 
     ext {
-        springBootVersion = '1.5.11.RELEASE'
+        springBootVersion = '2.0.3.RELEASE'
         springCloudVersion = 'Dalston.RELEASE'
     }
 

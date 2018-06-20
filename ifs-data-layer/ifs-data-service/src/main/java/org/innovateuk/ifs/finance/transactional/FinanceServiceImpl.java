@@ -158,6 +158,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
-        return find(applicationFinanceRepository.findOne(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
+        return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
     }
 }

@@ -30,7 +30,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
         String searchStringEncoded = null;
         try {
             searchStringEncoded = UriUtils.encode(searchString.orElse(null), "UTF8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             LOG.error("searchString can not be encoded", e);
         }
 

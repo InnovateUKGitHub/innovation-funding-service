@@ -244,7 +244,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private ServiceResult<RoleInvite> findRoleInvite(long inviteId) {
-        return find(ofNullable(roleInviteRepository.findOne(inviteId)), notFoundError(RoleInvite.class, inviteId));
+        return find(roleInviteRepository.findById(inviteId), notFoundError(RoleInvite.class, inviteId));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {
