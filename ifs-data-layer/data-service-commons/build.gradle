@@ -13,7 +13,7 @@ bootRepackage {
 configurations {
     testArtifacts
 }
-task testJar (type: Jar) {
+task testJar(type: Jar) {
     baseName = "${project.name}-test"
     from sourceSets.test.output
 }
@@ -23,21 +23,18 @@ artifacts {
 
 
 dependencies {
-    compile project(":ifs-commons")
+    compile project(":ifs-resources")
     compile project(":ifs-security")
-    compile project(":ifs-rest-util")
-    compile project(":ifs-error-util")
 
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.14"
     compile "org.apache.httpcomponents:httpasyncclient"
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
 
-    testCompile "com.h2database:h2:1.4.196"
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "net.sf.opencsv:opencsv:2.3"
 
