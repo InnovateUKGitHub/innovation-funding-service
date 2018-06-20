@@ -92,6 +92,7 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
                                 .build()
 
                 )
+                .withState(InterviewAssignmentState.CREATED)
                 .build(1);
 
         InterviewAssignmentMessageOutcome outcome = new InterviewAssignmentMessageOutcome();
@@ -140,5 +141,39 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
         assertTrue(result.isSuccess());
 
         assertEquals(expected, result.getSuccess());
+    }
+
+    @Test
+    public void resendInvite() {
+        long applicationId = 1L;
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+        InterviewAssignmentMessageOutcome message = newInterviewAssignmentMessageOutcome().build();
+        InterviewAssignment interviewAssignment = newInterviewAssignment()
+                .withParticipant(
+                        newProcessRole()
+                                .withRole(Role.INTERVIEW_LEAD_APPLICANT)
+                                .withOrganisationId(LEAD_ORGANISATION.getId())
+                                .withUser(newUser()
+                                        .withFirstName("Someone").withLastName("SomeName").withEmailAddress("someone@example.com").build())
+                                .build()
+                )
+                .withTarget(
+                        newApplication()
+                                .withCompetition(newCompetition().build())
+                                .build()
+
+                )
+                .withState(InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE)
+                .withMessage(message)
+                .build();
+
+        when(interviewAssignmentRepositoryMock.findOneByTargetId(applicationId)).thenReturn(interviewAssignment);
+        when(notificationSenderMock.sendNotification(any(Notification.class))).thenReturn(serviceSuccess(null));
+
+        ServiceResult<Void> result = service.resendInvite(applicationId, sendResource);
+
+        assertTrue(result.isSuccess());
+        verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
+        verify(interviewAssignmentWorkflowHandlerMock).notifyInterviewPanel(interviewAssignment, message);
     }
 }
