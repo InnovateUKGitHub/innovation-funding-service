@@ -46,6 +46,7 @@ Applicant submits his application
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes

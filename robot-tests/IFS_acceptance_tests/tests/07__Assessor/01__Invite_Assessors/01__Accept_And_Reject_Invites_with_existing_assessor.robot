@@ -252,15 +252,11 @@ Reset competition's milestone
 Retrieve original milestones
     Connect to Database  @{database}
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='SUBMISSION_DATE';
-    ${result} =  get from list  ${result}  0
-    ${assessorsNotified} =  get from list  ${result}  0
     Set suite variable  ${openDate}
     Set suite variable  ${submissionDate}
-    Set suite variable  ${assessorsNotified}
 
 Reset milestones back to the original values
     Connect to Database  @{database}
     execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `type`='OPEN_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
     execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${assessorsNotified}' WHERE `type`='ASSESSORS_NOTIFIED' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `type`='ASSESSORS_NOTIFIED' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
