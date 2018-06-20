@@ -27,6 +27,7 @@ public class Application extends SpringBootServletInitializer {
         LOG.info("======== org.innovateuk.ifs.Application.configure()");
         return application.sources(Application.class);
     }
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
@@ -41,7 +42,7 @@ public class Application extends SpringBootServletInitializer {
         return new DefaultFormattingConversionService();
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         LOG.info("======== org.innovateuk.ifs.Application.main()");
         SpringApplication.run(Application.class, args);
     }
