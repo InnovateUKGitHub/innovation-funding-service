@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.application.feedback.populator;
 
-import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
-import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackViewModel;
+import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -29,21 +29,15 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.innovateuk.ifs.util.MapFunctions.toMap;
 
 @Component
 public class ApplicationFeedbackViewModelPopulator {
@@ -173,7 +167,7 @@ public class ApplicationFeedbackViewModelPopulator {
                 interviewFeedbackViewModel,
                 projectWithdrawn,
                 ApplicationSummaryOrigin.valueOf(origin),
-                buildBackUrl(origin, queryParams)
+                buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "competitionId", "projectId")
         );
     }
 
@@ -181,40 +175,4 @@ public class ApplicationFeedbackViewModelPopulator {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    private String buildBackUrl(String origin, MultiValueMap<String, String> queryParams) {
-        String baseUrl = ApplicationSummaryOrigin.valueOf(origin).getOriginUrl();
-        queryParams.remove("origin");
-
-        if (queryParams.containsKey("applicationId")) {
-            queryParams.remove("applicationId");
-        }
-
-        String competitionId = getSingleValue(queryParams, "competitionId");
-        String projectId = getSingleValue(queryParams, "projectId");
-
-        return UriComponentsBuilder.fromPath(baseUrl)
-                .queryParams(queryParams)
-                .buildAndExpand(asMap(
-                        "competitionId", competitionId,
-                        "projectId", projectId
-                ))
-                .encode()
-                .toUriString();
-    }
-
-    private String getSingleValue(MultiValueMap<String, String> queryParams, String key) {
-        List<String> value = queryParams.get(key);
-        if (value != null && value.size() == 1) {
-            return value.get(0);
-        }
-        return null;
-    }
-
-    private Map<String, String> handleParameters(MultiValueMap<String, String> queryParams, String... keys) {
-        return Arrays.stream(keys)
-                .filter(queryParams::containsKey)
-                .peek(queryParams::remove)
-                .collect(Collectors.toMap(Function::identity, key -> getSingleValue(queryParams, key)));
-
-    }
 }

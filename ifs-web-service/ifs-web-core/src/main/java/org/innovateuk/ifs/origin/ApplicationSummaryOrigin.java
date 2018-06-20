@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.application.resource;
+package org.innovateuk.ifs.origin;
 
-public enum ApplicationSummaryOrigin {
+public enum ApplicationSummaryOrigin implements BackLinkOrigin {
 
     SET_UP_YOUR_PROJECT("/project-setup/project/{projectId}", "Set up your project"),
     APPLICANT_DASHBOARD("/applicant/dashboard", "Dashboard"),
@@ -15,6 +15,7 @@ public enum ApplicationSummaryOrigin {
         this.title = title;
     }
 
+    @Override
     public String getOriginUrl() {
         return originUrl;
     }

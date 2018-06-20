@@ -22,7 +22,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 
 /**

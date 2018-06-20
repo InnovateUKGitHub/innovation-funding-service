@@ -36,9 +36,9 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * Implementation of {@link CompetitionManagementApplicationService}
@@ -114,7 +114,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application, competition));
         model.addAttribute("showApplicationTeamLink", applicationService.showApplicationTeam(application.getId(), user.getId()));
 
-        model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, assessorId, queryParams));
+        model.addAttribute("backUrl", buildBackUrl(NavigationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId"));
         UriComponentsBuilder builder =  UriComponentsBuilder.newInstance()
                 .queryParam("origin", origin)
                 .queryParams(queryParams);
@@ -170,30 +170,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         } else {
             throw new ObjectNotFoundException();
         }
-    }
-
-    private String buildBackUrl(String origin,
-                                Long applicationId,
-                                Long competitionId,
-                                Optional<Long> assessorId,
-                                MultiValueMap<String, String> queryParams) {
-        String baseUrl = NavigationOrigin.valueOf(origin).getBaseOriginUrl();
-
-        queryParams.remove("origin");
-
-        if (queryParams.containsKey("assessorId")) {
-            queryParams.remove("assessorId");
-        }
-
-        return UriComponentsBuilder.fromPath(baseUrl)
-                .queryParams(queryParams)
-                .buildAndExpand(asMap(
-                        "competitionId", competitionId,
-                        "applicationId", applicationId,
-                        "assessorId", assessorId.orElse(null)
-                ))
-                .encode()
-                .toUriString();
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
