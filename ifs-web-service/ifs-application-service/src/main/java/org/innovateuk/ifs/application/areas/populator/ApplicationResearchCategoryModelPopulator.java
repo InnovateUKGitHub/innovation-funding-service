@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.areas.populator;
 
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * Populates the research category selection viewmodel.
@@ -13,11 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationResearchCategoryModelPopulator {
 
-    @Autowired
     private CategoryRestService categoryRestService;
-
-    @Autowired
     private FinanceService financeService;
+
+    public ApplicationResearchCategoryModelPopulator(CategoryRestService categoryRestService,
+                                                     FinanceService financeService) {
+        this.categoryRestService = categoryRestService;
+        this.financeService = financeService;
+    }
 
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource, Long questionId) {
 
@@ -31,6 +37,12 @@ public class ApplicationResearchCategoryModelPopulator {
         setHasApplicationFinances(researchCategoryViewModel, applicationResource);
 
         return researchCategoryViewModel;
+    }
+
+    public ResearchCategorySummaryViewModel populateSummaryViewModel(ApplicationResource applicationResource) {
+        String researchCategoryName = Optional.of(applicationResource.getResearchCategory()).map
+                (ResearchCategoryResource::getName).orElse(null);
+        return new ResearchCategorySummaryViewModel(researchCategoryName);
     }
 
     private void setHasApplicationFinances(ResearchCategoryViewModel researchCategoryViewModel,

@@ -38,3 +38,11 @@
         </div>
     </form>
 </th:block>
+
+<th:block th:fragment="research_category_summary(model)">
+    <dl class="font-xsmall">
+        <dt>Selected research category</dt>
+        <dd th:text="${model.researchCategory} ?: 'This field has not been completed'"
+        th:classappend="${#strings.isEmpty(model.researchCategory)}? 'TODO IFS-2123 class for not completed'">Experimental development</dd>
+    </dl>
+</th:block>

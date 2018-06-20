@@ -101,7 +101,6 @@ public class ApplicationSummaryController {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId()));
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 

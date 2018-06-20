@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 public class ApplicationSummaryViewModel {
@@ -9,6 +11,8 @@ public class ApplicationSummaryViewModel {
     private final CompetitionResource currentCompetition;
     private final boolean applicationReadyForSubmit;
     private final SummaryViewModel summaryViewModel;
+    private final ApplicationTeamViewModel applicationTeamViewModel;
+    private final ResearchCategorySummaryViewModel researchCategorySummaryViewModel;
     private final boolean userIsLeadApplicant;
     private final boolean projectWithdrawn;
 
@@ -16,12 +20,16 @@ public class ApplicationSummaryViewModel {
                                        CompetitionResource currentCompetition,
                                        boolean applicationReadyForSubmit,
                                        SummaryViewModel summaryViewModel,
+                                       ApplicationTeamViewModel applicationTeamViewModel,
+                                       ResearchCategorySummaryViewModel researchCategorySummaryViewModel,
                                        boolean userIsLeadApplicant,
                                        boolean projectWithdrawn) {
         this.currentApplication = currentApplication;
         this.currentCompetition = currentCompetition;
         this.applicationReadyForSubmit = applicationReadyForSubmit;
         this.summaryViewModel = summaryViewModel;
+        this.applicationTeamViewModel = applicationTeamViewModel;
+        this.researchCategorySummaryViewModel = researchCategorySummaryViewModel;
         this.userIsLeadApplicant = userIsLeadApplicant;
         this.projectWithdrawn = projectWithdrawn;
     }
@@ -40,6 +48,14 @@ public class ApplicationSummaryViewModel {
 
     public SummaryViewModel getSummaryViewModel() {
         return summaryViewModel;
+    }
+
+    public ApplicationTeamViewModel getApplicationTeamViewModel() {
+        return applicationTeamViewModel;
+    }
+
+    public ResearchCategorySummaryViewModel getResearchCategorySummaryViewModel() {
+        return researchCategorySummaryViewModel;
     }
 
     public boolean isUserIsLeadApplicant() {
