@@ -31,7 +31,7 @@
                    th:value="${academicFinance.tsbReference?.value}"
                    th:readonly="${readonly}"
                    required="required"
-                   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +'item]}')} ? 'form-control-error'" />
+                   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +'-item]}')} ? 'form-control-error'" />
         </div>
     </fieldset>
 
