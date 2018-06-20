@@ -21,7 +21,7 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
     @Override
     protected ApplicationAssessmentSummaryRestServiceImpl registerRestServiceUnderTest() {
         ApplicationAssessmentSummaryRestServiceImpl applicationAssessmentSummaryRestService = new ApplicationAssessmentSummaryRestServiceImpl();
-        applicationAssessmentSummaryRestService.setDataRestServiceUrl(applicationAssessmentSummaryRestUrl);
+        applicationAssessmentSummaryRestService.setServiceUrl(applicationAssessmentSummaryRestUrl);
         return applicationAssessmentSummaryRestService;
     }
 

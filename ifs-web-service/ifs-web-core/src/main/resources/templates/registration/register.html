@@ -83,12 +83,8 @@
                    th:errorclass="form-control-error"
                    type="tel"
                    th:field="*{phoneNumber}"
-                   minlength="8"
-                   maxlength="20"
                    required="required"
-                   th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
-                            data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
-                            data-required-errormessage=#{validation.standard.phonenumber.required}" />
+                   th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('email') and invitee == null} ? 'form-group-error'">
             <label class="form-label" for="email">
