@@ -62,6 +62,11 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
     }
 
     @Override
+    public RestResult<Void> markTeamAsInComplete(long questionId, long applicationId, long markedAsInCompleteById) {
+        return putWithRestResult(questionStatusRestURL + "/mark-team-as-in-complete/" + questionId + "/" + applicationId + "/" + markedAsInCompleteById, Void.class);
+    }
+
+    @Override
     public RestResult<Void> assign(long questionId, long applicationId, long assigneeId, long assignedById) {
         return putWithRestResult(questionStatusRestURL + "/assign/" + questionId + "/" + applicationId + "/" + assigneeId + "/" + assignedById, Void.class);
     }

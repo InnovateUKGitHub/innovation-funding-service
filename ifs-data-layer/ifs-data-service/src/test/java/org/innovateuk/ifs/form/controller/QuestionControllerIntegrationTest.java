@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -147,5 +148,16 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         // Since the assessment is for an application of competition 1, expect all of the questions of this competition that are visible for assessment
         assertEquals(asList(9L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L),
                 simpleMap(questions, QuestionResource::getId));
+    }
+
+    @Test
+    public void getQuestionByCompetitionIdAndCompetitionSetupQuestionType() {
+        long competitionId = 1L;
+        CompetitionSetupQuestionType type = CompetitionSetupQuestionType.APPLICATION_DETAILS;
+
+        QuestionResource question = questionService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType
+                (competitionId, type).getSuccess();
+
+        assertEquals(9L, question.getId().longValue());
     }
 }

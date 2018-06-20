@@ -68,7 +68,7 @@ the user enters profile details
 the user should see the change in the view team members page
     The user clicks the button/link  link=Dashboard
     The user clicks the button/link  css=#content section:nth-of-type(1) li:nth-child(2) h3 a
-    The user clicks the button/link  link=view and manage contributors and collaborators
+    The user clicks the button/link  link=Application team
     The user should see the element  jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation
@@ -86,7 +86,7 @@ Existing user creates a new application and invites a user from the same organis
     the user reloads the page
     the user should see the element       jQuery=.table-overflow td:contains(${test_mailbox_one}+invite2@gmail.com) + td:contains("Invite pending for 0 days")
     the user clicks the button/link       link=Return to application team page
-    the user clicks the button/link       jQuery=a:contains("Begin application")
+    the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link       link=Application details
     the user enters text to a text field  css=[id="application.name"]    Invite a user with the same org
     the user clicks the button/link       jQuery=button:contains("Save and return")

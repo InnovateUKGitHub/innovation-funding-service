@@ -3,21 +3,23 @@ package org.innovateuk.ifs.application.validation;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -53,6 +55,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     private ApplicationValidationUtil applicationValidationUtil;
 
     @Autowired
+    private AcademicJesValidator academicJesValidator;
+
+    @Autowired
     private OrganisationService organisationService;
 
     @Override
@@ -70,7 +75,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         FormInput formInput = formInputRepository.findOne(formInputId);
         if (formInput.getType().equals(FormInputType.APPLICATION_DETAILS)) {
             Application application = applicationRepository.findOne(applicationId);
-            results.add(applicationValidationUtil.validationApplicationDetails(application));
+            results.add(applicationValidationUtil.addValidation(application, new ApplicationMarkAsCompleteValidator()));
         }
 
         return results;
@@ -113,7 +118,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         FormInput formInput = formInputRepository.findOne(formInputId);
 
         if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
-            errors.addAll(applicationValidationUtil.validationJesForm(application).getAllErrors());
+            errors.addAll(applicationValidationUtil.addValidation(application, academicJesValidator).getAllErrors());
         }
 
         return errors;

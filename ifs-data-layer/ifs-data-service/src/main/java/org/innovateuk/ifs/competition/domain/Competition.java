@@ -718,5 +718,12 @@ public class Competition implements ProcessActivity {
     public void setStateAid(final Boolean stateAid) {
         this.stateAid = stateAid;
     }
+
+    public boolean getUseNewApplicantMenu() {
+
+        return questions.stream().anyMatch(
+                question -> (question.getQuestionSetupType() == CompetitionSetupQuestionType.APPLICATION_TEAM)
+        );
+    }
 }
 

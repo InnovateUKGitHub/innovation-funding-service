@@ -64,7 +64,7 @@ public class ApplicationController {
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @GetMapping("/{applicationId}")
-    public String applicationDetails(ApplicationForm form,
+    public String applicationOverview(ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -89,7 +89,7 @@ public class ApplicationController {
         Long userId = user.getId();
         model.addAttribute("form", form);
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
-        return "application-details";
+        return "application-overview";
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
@@ -105,7 +105,7 @@ public class ApplicationController {
     }
 
     @PostMapping(value = "/{applicationId}")
-    public String applicationDetails(@PathVariable("applicationId") long applicationId,
+    public String applicationOverview(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      HttpServletRequest request) {
 
