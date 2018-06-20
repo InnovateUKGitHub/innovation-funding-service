@@ -20,6 +20,11 @@ items:
         - image: openzipkin/zipkin
           name: zipkin
           imagePullPolicy: IfNotPresent
+          env:
+          - name: STORAGE_TYPE
+            value: mysql
+          - name: MYSQL_HOST
+            value: zipkin-database
           ports:
           - containerPort: 9410
           - containerPort: 9411
