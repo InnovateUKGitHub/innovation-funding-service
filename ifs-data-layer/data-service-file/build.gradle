@@ -1,11 +1,5 @@
-def targetBuildFile = project.hasProperty("profile") ? "${project.profile}-build.gradle" : "docker-build.gradle"
-if (file(targetBuildFile).exists()) {
-    apply from: targetBuildFile
-}
-
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-
 
 bootRepackage {
     enabled = false
@@ -29,11 +23,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.14"
 
-
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
-
 
     testCompile "com.h2database:h2:1.4.196"
 }

@@ -96,7 +96,7 @@ MO server-side validation
     And the user should see a field and summary error   Please enter a last name.
     And the user should see a field and summary error   Please enter an email address.
     And the user should see a field and summary error   Please enter a phone number.
-    And the user should see a field and summary error   Please enter a valid phone number.
+    And the user should see a field and summary error   Please enter a valid phone number between 8 and 20 digits.
 
 MO client-side validation
     [Documentation]    INFUND-2630
@@ -112,9 +112,9 @@ MO client-side validation
     When the user enters text to a text field    id=phoneNumber    0123
     And the user should not see the validation error    Please enter a phone number.
     And the user should not see the validation error    Please enter a valid phone number.
-    And the user should see an error    Input for your phone number has a minimum length of 8 characters.
+    And the user should see an error    Please enter a valid phone number between 8 and 20 digits.
     When the user enters text to a text field    id=phoneNumber    07438620303
-    Then the user should not see the validation error    Input for your phone number has a minimum length of 8 characters.
+    Then the user should not see the validation error    Please enter a valid phone number between 8 and 20 digits.
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
@@ -140,7 +140,7 @@ MO details(email step)
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
     And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
 
-MO details can be edited and viewed in the Project setup status page
+MO details can be edited and viewed in the Set up your project page
     [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}

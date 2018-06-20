@@ -206,13 +206,13 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         CompetitionData competition = competitionDataBuilder.
                 withExistingCompetition(competitionCreation).
                 withBasicData("APC Competition", "Advanced Propulsion Centre",
-                        singletonList("Digital manufacturing"), "Materials and manufacturing",
+                        singletonList("Digital manufacturing"), "Materials and manufacturing", true,
                         researchCategory, "ian.cooper@innovateuk.test",
                         "john.doe@innovateuk.test", "DET1536/1537", "875",
                         "CCCC", "16014", 1, BigDecimal.valueOf(100L),
                         false, false, AssessorFinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
-                        50, false, "").
+                        50, false, "", "Yes").
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).

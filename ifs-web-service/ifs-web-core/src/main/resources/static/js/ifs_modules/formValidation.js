@@ -79,7 +79,7 @@ IFS.core.formValidation = (function () {
       },
       tel: {
         fields: '[type="tel"]:not([readonly])',
-        messageInvalid: 'Please enter a valid phone number.'
+        messageInvalid: 'Please enter a valid phone number between 8 and 20 digits.'
       },
       lowerthan: {
         fields: '[data-lowerthan]',
@@ -153,11 +153,12 @@ IFS.core.formValidation = (function () {
     },
     checkPasswordPolicy: function (field, errorStyles) {
       var hasUppercase = IFS.core.formValidation.checkFieldContainsUppercase(field)
+      var hasLowercase = IFS.core.formValidation.checkFieldContainsLowercase(field)
       var hasNumber = IFS.core.formValidation.checkFieldContainsNumber(field)
       var isMinlength = IFS.core.formValidation.checkMinLength(field)
       var isFilledOut = IFS.core.formValidation.checkRequired(field)
       var formGroup = field.closest('.form-group')
-      var confirmsToPasswordPolicy = hasUppercase && hasNumber && isMinlength && isFilledOut
+      var confirmsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength && isFilledOut
       if (errorStyles) {
         if (confirmsToPasswordPolicy) {
           formGroup.removeClass('form-group-error')
@@ -188,6 +189,26 @@ IFS.core.formValidation = (function () {
       IFS.core.formValidation.setStatus(field, uppercaseDataAttribute, hasUppercase)
 
       if (hasUppercase) {
+        IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+        return true
+      } else {
+        IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+        return false
+      }
+    },
+    checkFieldContainsLowercase: function (field) {
+      var fieldVal = field.val()
+      var lowercaseDataAttribute = 'containsLowercase'
+
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, lowercaseDataAttribute)
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, lowercaseDataAttribute)
+
+      var lowercase = /(?=\S*?[a-z])/
+      var hasLowercase = lowercase.test(fieldVal) !== false
+
+      IFS.core.formValidation.setStatus(field, lowercaseDataAttribute, hasLowercase)
+
+      if (hasLowercase) {
         IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
         return true
       } else {
@@ -486,7 +507,8 @@ IFS.core.formValidation = (function () {
       var telAttribute = 'tel'
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, telAttribute)
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, telAttribute)
-      var re = /^(?=.*[0-9])[- +()0-9]+$/
+      var re = /^$|^[\\)\\(\\+\s-]*(?:\d[\\)\\(\\+\s-]*){8,20}$/
+
       var tel = field.val()
       var validPhone = re.test(tel)
 

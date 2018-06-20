@@ -19,6 +19,7 @@ public class GoogleAnalyticsDataLayer {
 
     private String competitionName;
     private List<Role> userRoles = new ArrayList<>();
+    private Long applicationId;
 
     public String getCompetitionName() {
         return competitionName;
@@ -47,6 +48,10 @@ public class GoogleAnalyticsDataLayer {
         userRoles.addAll(newRoles);
     }
 
+    public Long getApplicationId() { return applicationId; }
+
+    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +63,7 @@ public class GoogleAnalyticsDataLayer {
         return new EqualsBuilder()
                 .append(competitionName, that.competitionName)
                 .append(userRoles, that.userRoles)
+                .append(applicationId, that.applicationId)
                 .isEquals();
     }
 
@@ -66,6 +72,7 @@ public class GoogleAnalyticsDataLayer {
         return new HashCodeBuilder(17, 37)
                 .append(competitionName)
                 .append(userRoles)
+                .append(applicationId)
                 .toHashCode();
     }
 
@@ -74,6 +81,7 @@ public class GoogleAnalyticsDataLayer {
         return new ToStringBuilder(this)
                 .append("competitionName", competitionName)
                 .append("userRoles", userRoles)
+                .append("applicationId", applicationId)
                 .toString();
     }
 }

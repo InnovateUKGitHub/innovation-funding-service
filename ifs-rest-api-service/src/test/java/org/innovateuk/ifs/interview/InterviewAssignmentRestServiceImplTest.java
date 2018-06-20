@@ -222,4 +222,16 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
 
         assertEquals(invite, actual.getSuccess());
     }
+
+    @Test
+    public void resendInvite() {
+        long applicationId = 1L;
+        AssessorInviteSendResource sendResource = AssessorInviteSendResourceBuilder.newAssessorInviteSendResource()
+                .withContent("content").withSubject("subject").build();
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", REST_URL, "resend-invite", applicationId), sendResource, OK);
+
+        RestResult<Void> actual = service.resendInvite(applicationId, sendResource);
+        assertTrue(actual.isSuccess());
+    }
 }
