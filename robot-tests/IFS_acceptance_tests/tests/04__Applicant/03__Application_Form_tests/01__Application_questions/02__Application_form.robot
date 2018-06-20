@@ -171,7 +171,7 @@ the text box should turn to green
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    The user should see the element    jQuery=li:nth-child(2) span:contains("Complete")
+    The user should see the element    jQuery=li:nth-child(3) span:contains("Complete")
 
 the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css= textarea
@@ -196,7 +196,7 @@ Log in and create a new application for the Aerospace competition
             Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
             ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
 
-    The user clicks the button/link    link=Begin application
+    The user clicks the button/link    jQuery=button:contains("Save and return to application overview")
     The user clicks the button/link    link=Application details
     The user enters text to a text field  id=application.name  ${aeroApplication}
     The user clicks the button/link       id=application-question-save

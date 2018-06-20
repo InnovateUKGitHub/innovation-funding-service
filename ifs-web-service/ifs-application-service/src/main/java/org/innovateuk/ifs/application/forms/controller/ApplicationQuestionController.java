@@ -10,8 +10,11 @@ import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -36,6 +39,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -65,6 +69,9 @@ public class ApplicationQuestionController {
 
     @Autowired
     private ApplicantRestService applicantRestService;
+
+    @Autowired
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
@@ -105,12 +112,14 @@ public class ApplicationQuestionController {
             }
         });
 
-        populateShowQuestion(user, applicationId, questionId, model, form);
-
-        return APPLICATION_FORM;
+        model = populateShowQuestion(user, applicationId, questionId, model, form);
+        return getQuestionViewForModel(model);
     }
 
-    @PostMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
+    @PostMapping(value = {
+            QUESTION_URL + "{" + QUESTION_ID + "}",
+            QUESTION_URL + "edit/{" + QUESTION_ID + "}"
+    })
     public String questionFormSubmit(
             @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
             BindingResult bindingResult,
@@ -123,30 +132,15 @@ public class ApplicationQuestionController {
             HttpServletResponse response
     ) {
         Map<String, String[]> params = request.getParameterMap();
-        ValidationMessages errors = new ValidationMessages();
 
         // Check if the request is to just open edit view or to save
         if (params.containsKey(EDIT_QUESTION)) {
             return handleEditQuestion(form, model, applicationId, questionId, user);
         } else {
-            if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-                questionService.assignQuestion(applicationId, user, request);
-                cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-            }
+            handleAssignedQuestions(applicationId, user, request, response);
 
             // First check if any errors already exist in bindingResult
-            if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
-                /* Start save action */
-                errors = applicationSaver.saveApplicationForm(
-                        applicationId,
-                        form,
-                        questionId,
-                        user.getId(),
-                        request,
-                        response,
-                        Optional.empty()
-                );
-            }
+            ValidationMessages errors = checkErrorsInFormAndSave(form, applicationId, questionId, user.getId(), request, response);
 
             model.addAttribute("form", form);
 
@@ -154,12 +148,46 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                populateShowQuestion(user, applicationId, questionId, model, form);
-                return APPLICATION_FORM;
+                model = populateShowQuestion(user, applicationId, questionId, model, form);
+                return getQuestionViewForModel(model);
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
         }
+    }
+
+    private void handleAssignedQuestions(Long applicationId,
+                                         UserResource user,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
+            questionService.assignQuestion(applicationId, user, request);
+            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+        }
+    }
+
+    private ValidationMessages checkErrorsInFormAndSave(ApplicationForm form,
+                                                        Long applicationId,
+                                                        Long questionId,
+                                                        Long userId,
+                                                        HttpServletRequest request,
+                                                        HttpServletResponse response) {
+        ValidationMessages errors = new ValidationMessages();
+        Map<String, String[]> params = request.getParameterMap();
+        if (isAllowedToUpdateQuestion(questionId, applicationId, userId) || isMarkQuestionRequest(params)) {
+                /* Start save action */
+            errors = applicationSaver.saveApplicationForm(
+                    applicationId,
+                    form,
+                    questionId,
+                    userId,
+                    request,
+                    response,
+                    Optional.empty()
+            );
+        }
+        return errors;
     }
 
     private boolean hasErrors(HttpServletRequest request, ValidationMessages errors, BindingResult bindingResult) {
@@ -167,7 +195,7 @@ public class ApplicationQuestionController {
                 || isMarkAsCompleteRequestWithValidationErrors(request.getParameterMap(), errors, bindingResult);
     }
 
-    private void populateShowQuestion(
+    private Model populateShowQuestion(
             UserResource user,
             Long applicationId,
             Long questionId,
@@ -177,8 +205,16 @@ public class ApplicationQuestionController {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
-        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+
+        if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
+            ApplicationTeamViewModel applicationTeamViewModel =
+                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId);
+            questionViewModel.setAllReadOnly(applicationTeamViewModel.isComplete());
+            model.addAttribute("applicationTeamModel",applicationTeamViewModel);
+        }
+        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
+        return model;
     }
 
     private String handleEditQuestion(
@@ -195,8 +231,8 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
-        populateShowQuestion(user, applicationId, questionId, model, form);
-        return APPLICATION_FORM;
+        model = populateShowQuestion(user, applicationId, questionId, model, form);
+        return getQuestionViewForModel(model);
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,
@@ -220,5 +256,24 @@ public class ApplicationQuestionController {
                         && (questionStatusResource.getMarkedAsComplete() == null
                                 || !questionStatusResource.getMarkedAsComplete())
                 );
+    }
+
+    private CompetitionSetupQuestionType getQuestionType(Model model) {
+        QuestionViewModel questionViewModel = (QuestionViewModel) model.asMap().get(MODEL_ATTRIBUTE_MODEL);
+        return questionViewModel.getApplicantResource().getQuestion().getQuestionSetupType();
+    }
+
+    private String getQuestionViewForModel(Model model) {
+        CompetitionSetupQuestionType questionType = getQuestionType(model);
+        if (questionType == null) {
+            return APPLICATION_FORM;
+        }
+        switch (questionType) {
+            case APPLICATION_DETAILS:
+            case APPLICATION_TEAM:
+                return APPLICATION_FORM_LEAD;
+            default:
+                return APPLICATION_FORM;
+        }
     }
 }

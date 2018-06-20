@@ -27,6 +27,7 @@ import java.util.function.UnaryOperator;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
@@ -86,7 +87,25 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                                 .getCompetition()
                                 .getId())
                                 .getSuccess(),
-                        x -> APPLICATION_DETAILS.getShortName().equals(x.getName())).get();
+                        x -> APPLICATION_DETAILS.equals(x.getQuestionSetupType())).get();
+
+                questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
+                                .getApplication()
+                                .getId()),
+                        retrieveLeadApplicant(data.getApplication().getId()).getId())
+                        .getSuccess();
+            }
+        });
+    }
+
+    public ApplicationDataBuilder markApplicationTeamComplete(boolean markAsComplete) {
+        return asLeadApplicant(data -> {
+            if (markAsComplete) {
+                QuestionResource questionResource = simpleFindFirst(questionService.findByCompetition(data
+                                .getCompetition()
+                                .getId())
+                                .getSuccess(),
+                        x -> APPLICATION_TEAM.equals(x.getQuestionSetupType())).get();
 
                 questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()

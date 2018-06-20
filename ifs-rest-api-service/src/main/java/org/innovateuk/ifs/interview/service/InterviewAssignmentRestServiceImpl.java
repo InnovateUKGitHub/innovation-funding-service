@@ -125,4 +125,9 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
         String url = format("%s/%s/%s", REST_URL, "sent-invite", applicationId);
         return getWithRestResult(url, InterviewApplicationSentInviteResource.class);
     }
+
+    @Override
+    public RestResult<Void> resendInvite(long applicationId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "resend-invite", applicationId), assessorInviteSendResource, Void.class);
+    }
 }

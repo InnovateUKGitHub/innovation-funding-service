@@ -35,7 +35,9 @@
             </p>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview" novalidate="novalidate">
-                <th:block ifs:global="${applicationSummaryViewModel.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${applicationSummaryViewModel.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false)" />
+                <div class="collapsible-finances-summary">
+                    <th:block ifs:global="${applicationSummaryViewModel.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${applicationSummaryViewModel.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false)" />
+                </div>
             </form>
 
             <div th:if="${!applicationSummaryViewModel.currentCompetition.isOpen() and !applicationSummaryViewModel.currentApplication.isSubmitted()}">
@@ -43,8 +45,7 @@
                     Registration is now closed, you are no longer able to submit your application.
                 </div>
             </div>
-            <div th:if="${applicationSummaryViewModel.currentCompetition.isOpen() and applicationSummaryViewModel.currentApplication.isOpen()}">
-                <hr/>
+            <div th:if="${applicationSummaryViewModel.currentCompetition.isOpen() and applicationSummaryViewModel.currentApplication.isOpen()}" class="extra-large-margin">
 
                 <th:block th:if="${applicationSummaryViewModel.userIsLeadApplicant}">
                     <div class="message-alert">

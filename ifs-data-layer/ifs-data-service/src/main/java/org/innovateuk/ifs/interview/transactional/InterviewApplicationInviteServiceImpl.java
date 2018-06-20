@@ -90,6 +90,12 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
                 .orElse(serviceFailure(GENERAL_NOT_FOUND));
     }
 
+    @Override
+    public ServiceResult<Void> resendInvite(long applicationId, AssessorInviteSendResource assessorInviteSendResource) {
+        InterviewAssignment assignment = interviewAssignmentRepository.findOneByTargetId(applicationId);
+        return sendInvite(assessorInviteSendResource, assignment);
+    }
+
     private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment) {
         User user = assignment.getParticipant().getUser();
         NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
