@@ -51,6 +51,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     public static final String UPLOAD_FINANCE_DOCUMENT = "upload_finance_document";
 
     public static final String NON_DECIMAL_MESSAGE = "validation.standard.integer.non.decimal.format";
+    public static final String BLANK_FIELD_MESSAGE = "validation.field.must.not.be.blank";
+
     public static final String NON_DECIMAL_FIELD = "tsb_reference";
 
     @Override
@@ -99,6 +101,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if(!financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && !inputIsLong(financeFormField.getValue())) {
             return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-cost]",
                     financeFormField, NON_DECIMAL_MESSAGE));
+        } else if(financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
+            return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-item]",
+                    financeFormField, BLANK_FIELD_MESSAGE));
         }
 
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
