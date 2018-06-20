@@ -30,6 +30,27 @@ function financeDataServiceSync() {
 
 # Entry point
 
+if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
+
+    export DB_NAME=ifs
+    export DB_USER=root
+    export DB_PASS=password
+    export DB_HOST=ifs-database
+    export DB_PORT=3306
+
+    export FINANCE_DB_NAME=ifs_finance
+    export FINANCE_DB_USER=root
+    export FINANCE_DB_PASS=password
+    export FINANCE_DB_HOST=ifs-finance-database
+    export FINANCE_DB_PORT=3306
+
+    export DATA_SERVICE_HOST=data-service
+    export DATA_SERVICE_PORT=8080
+fi
+
+injectDBVariables
+injectFinanceDBVariables
+injectDataServiceVariables
 
 useContainerRegistry
 pushFinanceDataServiceSyncImages
