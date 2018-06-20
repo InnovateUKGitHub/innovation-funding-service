@@ -181,12 +181,12 @@ public class UserController {
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(organisationId, userResource).toPostCreateResponse();
+        return registrationService.createOrganisationUserWithCompetitionContext(organisationId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUser(organisationId, competitionId, userResource).toPostCreateResponse();
+        return registrationService.createOrganisationUserWithCompetitionContext(organisationId, competitionId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/id/{userId}/agreeNewSiteTermsAndConditions")

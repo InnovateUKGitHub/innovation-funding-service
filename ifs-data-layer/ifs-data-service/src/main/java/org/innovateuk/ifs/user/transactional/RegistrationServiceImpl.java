@@ -13,6 +13,7 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -73,6 +74,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private RegistrationEmailService registrationEmailService;
 
+    @Autowired
+    private TransactionalHelper transactionalHelper;
+
     @Override
     @Transactional
     public ServiceResult<UserResource> createUser(UserRegistrationResource userRegistrationResource) {
@@ -87,13 +91,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createOrganisationUserWithCompetitionContext(long organisationId, UserResource userResource) {
         return createOrganisationUser(organisationId, Optional.empty(), userResource);
     }
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createOrganisationUser(long organisationId, long competitionId, UserResource userResource) {
+    public ServiceResult<UserResource> createOrganisationUserWithCompetitionContext(long organisationId, long competitionId, UserResource userResource) {
         return createOrganisationUser(organisationId, Optional.of(competitionId), userResource);
     }
 
@@ -108,6 +112,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<UserResource> sendUserVerificationEmailSafely(Optional<Long> competitionId, UserResource createdUser) {
+
+        // ensure that all IFS database updates go ahead without issue before committing to sending out the verification
+        // email.
+        transactionalHelper.flushWithNoCommit();
+
         return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId).
                 andOnSuccessReturn(() -> createdUser);
     }

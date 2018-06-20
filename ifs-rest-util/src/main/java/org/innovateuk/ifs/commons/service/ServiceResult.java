@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -321,6 +322,15 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      */
     public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, ServiceResult<T> failureResponse, ServiceResult<T> successResponse) {
         return results.stream().anyMatch(ServiceResult::isFailure) ? failureResponse : successResponse;
+    }
+
+    /**
+     * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
+     * all ServiceResults are successful, and return a specific failure in the event that there were any errors detected.
+     */
+    public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, Function<List<ServiceResult<R>>, ServiceResult<T>> failureResponseFn, ServiceResult<T> successResponse) {
+        List<ServiceResult<R>> failures = simpleFilter(results, ServiceResult::isFailure);
+        return !failures.isEmpty() ? failureResponseFn.apply(failures) : successResponse;
     }
 
     /**

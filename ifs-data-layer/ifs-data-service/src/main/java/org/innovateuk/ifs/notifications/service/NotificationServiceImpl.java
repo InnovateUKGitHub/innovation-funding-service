@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.notifications.service;
 
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
@@ -14,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
+import static org.innovateuk.ifs.commons.service.ServiceResult.getNonNullValue;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -45,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService {
                 getNotificationSender(medium).andOnSuccess(serviceForMedium ->
                         serviceForMedium.sendNotification(notification)));
 
-        return processAnyFailuresOrSucceed(results, serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)), serviceSuccess());
+        return aggregate(results).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<NotificationSender> getNotificationSender(NotificationMedium medium) {

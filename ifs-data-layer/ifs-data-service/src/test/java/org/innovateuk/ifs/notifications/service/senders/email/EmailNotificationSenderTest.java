@@ -135,14 +135,16 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     @Test
     public void testSendNotificationButRenderTemplateFails() {
 
-        when(notificationTemplateRendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getGlobalArguments())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE, INTERNAL_SERVER_ERROR)));
-
+        when(notificationTemplateRendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getGlobalArguments())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE, "subject")));
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getGlobalArguments())).thenReturn(serviceSuccess("My subject 2"));
-        when(notificationTemplateRendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getGlobalArguments())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE, INTERNAL_SERVER_ERROR)));
+        when(notificationTemplateRendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getGlobalArguments())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE, "text")));
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isFailure());
-        assertTrue(results.getFailure().is(EMAILS_NOT_SENT_MULTIPLE));
+        assertEquals(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE.name(), results.getFailure().getErrors().get(0).getErrorKey());
+        assertEquals("subject", results.getFailure().getErrors().get(0).getArguments().get(0));
+        assertEquals(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE.name(), results.getFailure().getErrors().get(1).getErrorKey());
+        assertEquals("text", results.getFailure().getErrors().get(1).getArguments().get(0));
 
         verify(emailServiceMock, never()).sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body");
         verify(emailServiceMock, never()).sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2");

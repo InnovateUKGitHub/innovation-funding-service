@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  * Transactional component providing functions for persisting copies of a Competition template entity object.
@@ -21,7 +20,7 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
     @Autowired
     private CompetitionRepository competitionRepository;
 
-    @PersistenceContext
+    @Autowired
     private EntityManager entityManager;
 
     @Transactional

@@ -4,19 +4,20 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.LOGGING;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -102,7 +103,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         Notification notificationToSend = newNotification().build();
         ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+        assertTrue(result.getFailure().is(notFoundError(NotificationMedium.class, EMAIL)));
     }
 
     @Test
@@ -110,10 +111,12 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
+        Error errorResponse = new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR);
+
+        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceFailure(errorResponse));
 
         ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+        assertTrue(result.getFailure().is(errorResponse));
     }
 }

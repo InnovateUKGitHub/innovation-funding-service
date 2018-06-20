@@ -97,7 +97,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long organisationId = 9999L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.createOrganisationUserWithCompetitionContext(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -105,7 +105,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, userResource);
+        verify(registrationServiceMock, times(1)).createOrganisationUserWithCompetitionContext(organisationId, userResource);
         verifyNoMoreInteractions(registrationServiceMock);
     }
 
@@ -115,7 +115,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUser(organisationId, competitionId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.createOrganisationUserWithCompetitionContext(organisationId, competitionId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
@@ -123,7 +123,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createOrganisationUser(organisationId, competitionId, userResource);
+        verify(registrationServiceMock, times(1)).createOrganisationUserWithCompetitionContext(organisationId, competitionId, userResource);
         verifyNoMoreInteractions(registrationServiceMock);
     }
 
