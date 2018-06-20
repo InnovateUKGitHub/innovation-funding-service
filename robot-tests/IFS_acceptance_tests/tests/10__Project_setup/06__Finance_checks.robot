@@ -1362,14 +1362,14 @@ the Total calculation for Finances summary are verified
 
 all the categories are verified
     [Arguments]  ${row_number}  ${total}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${subcontracting}  ${travel}   ${other_costs}
-    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${total}
-    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${labour}
-    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${overheads}
-    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${materials}
-    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${capital_usage}
-    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${subcontracting}
-    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)  ${travel}
-    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}
+    the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${total}
+    the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${labour}
+    the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${overheads}
+    the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${materials}
+    the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${capital_usage}
+    the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${subcontracting}
+    the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)  ${travel}
+    the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}
 
 # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
 the categories are verified for Project finances section
