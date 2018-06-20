@@ -35,17 +35,24 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ApplicationTeamManagementModelPopulator {
 
-    @Autowired
     private InviteOrganisationRestService inviteOrganisationRestService;
 
-    @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
     private QuestionRestService questionRestService;
 
-    @Autowired
     private UserService userService;
+    
+    @Autowired
+    public ApplicationTeamManagementModelPopulator(InviteOrganisationRestService inviteOrganisationRestService,
+                                         ApplicationService applicationService,
+                                         QuestionRestService questionRestService,
+                                         UserService userService) {
+        this.inviteOrganisationRestService = inviteOrganisationRestService;
+        this.applicationService = applicationService;
+        this.questionRestService = questionRestService;
+        this.userService = userService;
+    }
 
     public ApplicationTeamManagementViewModel populateModelByOrganisationId(Long applicationId, Long organisationId, long loggedInUserId) {
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null);

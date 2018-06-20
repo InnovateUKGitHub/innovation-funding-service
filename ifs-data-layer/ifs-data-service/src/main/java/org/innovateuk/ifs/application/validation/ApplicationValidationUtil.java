@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
 import org.innovateuk.ifs.finance.validator.MinRowCountValidator;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
@@ -49,9 +47,6 @@ public class ApplicationValidationUtil {
     @Autowired
     private MinRowCountValidator minRowCountValidator;
 
-    @Autowired
-    private AcademicJesValidator academicJesValidator;
-
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
         if (response == null) {
@@ -84,23 +79,9 @@ public class ApplicationValidationUtil {
         return binder.getBindingResult();
     }
 
-    public BindingResult validationApplicationDetails(Application application){
+    public BindingResult addValidation(Application application, Validator validator) {
         DataBinder binder = new DataBinder(application);
-        binder.addValidators(new ApplicationMarkAsCompleteValidator());
-        binder.validate();
-        return binder.getBindingResult();
-    }
-
-    public BindingResult validationApplicationTeam(Application application){
-        DataBinder binder = new DataBinder(application);
-        binder.addValidators(applicationTeamMarkAsCompleteValidator);
-        binder.validate();
-        return binder.getBindingResult();
-    }
-
-    public BindingResult validationJesForm(Application application) {
-        DataBinder binder = new DataBinder(application);
-        binder.addValidators(academicJesValidator);
+        binder.addValidators(validator);
         binder.validate();
         return binder.getBindingResult();
     }
@@ -136,9 +117,8 @@ public class ApplicationValidationUtil {
     private List<ValidationMessages> isApplicationTeamValid(Application application, Question question) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
 
-        BindingResult bindingResult = validationApplicationTeam(application);
+        BindingResult bindingResult = addValidation(application, applicationTeamMarkAsCompleteValidator);
         if (bindingResult.hasErrors()) {
-            // TODO: IFS-3088 - not sure about using the question id. Should it be the invite-org id?
             validationMessages.add(new ValidationMessages(question.getId(), bindingResult));
         }
         return validationMessages;

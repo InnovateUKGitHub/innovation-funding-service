@@ -17,7 +17,9 @@ public class ApplicationOverviewCompletedViewModel {
     private Set<Long> completedSections;
     private Boolean userFinanceSectionCompleted;
 
-    public ApplicationOverviewCompletedViewModel(Set<Long> sectionsMarkedAsComplete, Boolean allQuestionsCompleted, Future<Set<Long>> markedAsComplete,
+    public ApplicationOverviewCompletedViewModel(Set<Long> sectionsMarkedAsComplete,
+                                                 Boolean allQuestionsCompleted,
+                                                 Future<Set<Long>> markedAsComplete,
                                                  Boolean userFinanceSectionCompleted) {
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
         this.allQuestionsCompleted = allQuestionsCompleted;

@@ -41,7 +41,7 @@ Applicant shouldn't see the Mark as complete-Edit-Save buttons
     Then The user should not see the element    jQuery=.button:contains(Mark as complete)
     And the user should not see the element    jQuery=button:contains(Edit)
     And the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}/form/question/44
-    Then The user should not see the element    jQuery=button:contains(Save and return to application overview)
+    Then The user should not see the element    jQuery=button:contains("Save and return to application overview")
 
 Already submitted application should not show error when the competition is closed
     [Documentation]    INFUND-3175

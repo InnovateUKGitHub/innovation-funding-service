@@ -21,7 +21,7 @@ ${EOI_application}   EOI Application
 Comp Admin Creates EOI type competition
     [Documentation]  IFS-2192
     [Tags]  CompAdmin  HappyPath
-    Given Logging in and Error Checking                     &{Comp_admin1_credentials}
+    Given Logging in and Error Checking               &{Comp_admin1_credentials}
     Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
 
 Applicant applies to newly created EOI competition
@@ -35,9 +35,9 @@ Applicant submits his application
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${EOI_application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
-    and the lead applicant fills all the questions and marks as complete(EOI comp type)
-    and the user should not see the element             jQuery=h2:contains("Finances")
-    Then the applicant submits the application
+    And the lead applicant fills all the questions and marks as complete(EOI comp type)
+    Then the user should not see the element            jQuery=h2:contains("Finances")
+    And the applicant submits the application
 
 Invite a registered assessor
     [Documentation]  IFS-2376
@@ -58,7 +58,7 @@ Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
     [Tags]  HappyPath
     [Setup]  Milestones are updated in database to move competition to assessment state
-    Given Log in as a different user                              &{assessor_credentials}
+    Given Log in as a different user                        &{assessor_credentials}
     When The user clicks the button/link                    Link=${comp_name}
     And the user selects the radio button                   acceptInvitation  true
     And The user clicks the button/link                     jQuery=button:contains("Confirm")
@@ -133,6 +133,7 @@ The competition admin creates a EOI Comp
 the lead applicant fills all the questions and marks as complete(EOI comp type)
     the lead applicant marks every question as complete   Project summary
     the lead applicant marks every question as complete   Scope
+    the applicant completes application team
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 

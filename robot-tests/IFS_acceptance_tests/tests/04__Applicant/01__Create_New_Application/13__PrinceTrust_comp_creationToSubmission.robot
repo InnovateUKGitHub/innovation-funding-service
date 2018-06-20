@@ -61,6 +61,7 @@ The competition admin creates The Prince's Trust Comp
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
+    the applicant completes application team
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 

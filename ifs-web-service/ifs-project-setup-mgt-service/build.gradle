@@ -24,15 +24,11 @@ ext.serverContext = '/project-setup-management'
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
-    compile "commons-io:commons-io:2.5"
-
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
-    testCompile "com.openpojo:openpojo:0.8.6"
-    testCompile "org.skyscreamer:jsonassert:1.5.0"
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
