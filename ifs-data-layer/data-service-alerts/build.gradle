@@ -9,7 +9,7 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 def apply(profiles) {
     profiles.each { profile ->
-        if(file("${profile}-build.gradle").exists()) {
+        if (file("${profile}-build.gradle").exists()) {
             apply from: "${profile}-build.gradle"
             println "Applying profile ${profile}"
         }
@@ -18,9 +18,9 @@ def apply(profiles) {
 
 task applyProfiles() {
     doFirst {
-        if(project.hasProperty("profile")) {
+        if (project.hasProperty("profile")) {
             //Always apply docker, THEN automated and THEN the specific project profile.
-            apply(['docker','automated', project.profile])
+            apply(['docker', 'automated', project.profile])
         } else {
             apply(['docker'])
         }
@@ -66,17 +66,22 @@ task prepareDeployment(type: Copy) {
 task deployAlerts(type: Exec) {
     dependsOn osStageRemote
     dependsOn prepareDeployment
-    executable 'oc'
-    args 'create',  '-f', "${project.buildDir}/os-files/alerts-data-service.yml", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+    doFirst {
+        executable 'oc'
+        args 'create', '-f', "${project.buildDir}/os-files/alerts-data-service.yml", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+
+    }
 }
 
 
 task stopAlerts(type: Exec) {
-    executable = 'oc'
-    args 'delete',  'dc', 'data-service-alerts', "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+    doFirst {
+        executable = 'oc'
+        args 'delete', 'dc', 'data-service-alerts', "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+    }
 }
 
-createContainer.networkAliases=["data-service-alerts"]
+createContainer.networkAliases = ["data-service-alerts"]
 
 
 test.finalizedBy asciidoctor
@@ -90,10 +95,10 @@ dependencies {
     compile "mysql:mysql-connector-java"
 
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
     testCompile "com.h2database:h2:1.4.196"
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
@@ -101,4 +106,4 @@ dependencies {
 
 }
 
-ext.serverPort=8080
+ext.serverPort = 8080
