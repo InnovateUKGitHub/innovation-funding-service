@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
@@ -10,9 +12,6 @@ import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHa
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -100,7 +99,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Transactional
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
 
-        // TODO: Handle failures gracefully and hand them back to the webservice
         return retrieveInvite(inviteHash).andOnSuccess(inviteResource -> {
             userRegistrationResource.setEmail(inviteResource.getEmail());
             userRegistrationResource.setRoles(singletonList(Role.ASSESSOR));
@@ -173,9 +171,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", webBaseUrl + WEB_CONTEXT, competition.getId()))
         );
 
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccess().get(recipient);
-
-        return notificationSender.sendEmailWithContent(notification, recipient, content).andOnSuccessReturnVoid();
+        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<Profile> getProfile(Long profileId) {

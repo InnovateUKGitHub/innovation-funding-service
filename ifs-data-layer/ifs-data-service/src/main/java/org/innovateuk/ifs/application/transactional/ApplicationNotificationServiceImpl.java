@@ -6,8 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.email.resource.EmailAddress;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
@@ -28,6 +26,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUS
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
@@ -65,10 +64,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)
                 .collect(toList());
 
-        return processAnyFailuresOrSucceed(applicants
-                .stream()
-                .map(this::sendNotification)
-                .collect(toList()));
+        return processAnyFailuresOrSucceed(simpleMap(applicants, this::sendNotification));
     }
 
     @Override
@@ -103,7 +99,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 }).andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<List<EmailAddress>> sendNotification(ProcessRole processRole) {
+    private ServiceResult<Notification> sendNotification(ProcessRole processRole) {
+
         Application application = applicationRepository.findOne(processRole.getApplicationId());
 
         NotificationTarget recipient =
@@ -119,9 +116,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                         "competitionName", application.getCompetition().getName(),
                         "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccess().get(recipient);
-
-        return notificationSender.sendEmailWithContent(notification, recipient, content);
+        return notificationSender.sendNotification(notification);
     }
 
     @Override

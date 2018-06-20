@@ -3,6 +3,8 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -18,8 +20,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -53,7 +53,6 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -376,14 +375,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
-        when(notificationSenderMock.renderTemplates(expectedNotification1))
-                .thenReturn(serviceSuccess(asMap(recipients.get(0), emailContents.get(0))));
-        when(notificationSenderMock.renderTemplates(expectedNotification2))
-                .thenReturn(serviceSuccess(asMap(recipients.get(1), emailContents.get(1))));
-        when(notificationSenderMock.sendEmailWithContent(expectedNotification1, recipients.get(0), emailContents.get(0)))
-                .thenReturn(serviceSuccess(emptyList()));
-        when(notificationSenderMock.sendEmailWithContent(expectedNotification2, recipients.get(1), emailContents.get(1)))
-                .thenReturn(serviceSuccess(emptyList()));
+        List<Notification> notifications = asList(expectedNotification1, expectedNotification2);
+
+        notifications.forEach(notification -> when(notificationSenderMock.sendNotification(notification)).thenReturn(serviceSuccess(notification)));
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
 
@@ -392,10 +386,8 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
-        inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification1);
-        inOrder.verify(notificationSenderMock).sendEmailWithContent(expectedNotification1, recipients.get(0), emailContents.get(0));
-        inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification2);
-        inOrder.verify(notificationSenderMock).sendEmailWithContent(expectedNotification2, recipients.get(1), emailContents.get(1));
+        notifications.forEach(notification -> inOrder.verify(notificationSenderMock).sendNotification(notification));
+
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
@@ -448,10 +440,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
-        when(notificationSenderMock.renderTemplates(expectedNotification))
-                .thenReturn(serviceSuccess(asMap(recipient, emailContent)));
-        when(notificationSenderMock.sendEmailWithContent(expectedNotification, recipient, emailContent))
-                .thenReturn(serviceSuccess(emptyList()));
+        when(notificationSenderMock.sendNotification(expectedNotification)).thenReturn(serviceSuccess(expectedNotification));
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
 
@@ -460,8 +449,8 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
-        inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification);
-        inOrder.verify(notificationSenderMock).sendEmailWithContent(expectedNotification, recipient, emailContent);
+        inOrder.verify(notificationSenderMock).sendNotification(expectedNotification);
+
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());

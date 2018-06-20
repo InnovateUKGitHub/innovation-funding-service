@@ -59,8 +59,7 @@ public class EmailNotificationSender implements NotificationSender {
         });
     }
 
-    @Override
-    public ServiceResult<Map<NotificationTarget, EmailContent>> renderTemplates(Notification notification) {
+    private ServiceResult<Map<NotificationTarget, EmailContent>> renderTemplates(Notification notification) {
 
         Map<NotificationTarget, EmailContent> contents = new HashMap<>();
 
@@ -77,8 +76,7 @@ public class EmailNotificationSender implements NotificationSender {
         return aggregate(results).andOnSuccessReturn(() -> contents);
     }
 
-    @Override
-    public ServiceResult<List<EmailAddress>> sendEmailWithContent(Notification notification, NotificationTarget recipient, EmailContent emailContent) {
+    private ServiceResult<List<EmailAddress>> sendEmailWithContent(Notification notification, NotificationTarget recipient, EmailContent emailContent) {
         return emailService.sendEmail(
                 fromNotificationSource(notification.getFrom()),
                 singletonList(fromNotificationTarget(recipient)),
