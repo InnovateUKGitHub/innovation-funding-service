@@ -91,7 +91,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createOrganisationUserWithCompetitionContext(long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
         return createOrganisationUser(organisationId, Optional.empty(), userResource);
     }
 

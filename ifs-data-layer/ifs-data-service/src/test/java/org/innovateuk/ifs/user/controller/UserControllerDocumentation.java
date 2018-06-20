@@ -75,7 +75,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final Long organisationId = 9999L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUserWithCompetitionContext(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)

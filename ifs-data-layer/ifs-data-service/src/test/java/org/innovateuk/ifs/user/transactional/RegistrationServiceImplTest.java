@@ -281,7 +281,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
         when(registrationEmailServiceMock.sendUserVerificationEmail(savedUserResource, Optional.empty())).thenReturn(serviceSuccess());
 
-        UserResource result = service.createOrganisationUserWithCompetitionContext(123L, userToCreate).getSuccess();
+        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccess();
         assertEquals(savedUserResource, result);
 
         verify(userMapperMock).mapToResource(savedUser);
@@ -308,7 +308,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        ServiceResult<UserResource> result = service.createOrganisationUserWithCompetitionContext(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Organisation.class, 123L)));
     }
@@ -334,7 +334,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        ServiceResult<UserResource> result = service.createOrganisationUserWithCompetitionContext(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
     }
@@ -350,7 +350,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceFailure(badRequestError("bad password")));
 
-        ServiceResult<UserResource> result = service.createOrganisationUserWithCompetitionContext(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(Error.fieldError("password", null, "bad password")));
     }
@@ -584,7 +584,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
         when(registrationEmailServiceMock.sendUserVerificationEmail(userToCreate, Optional.empty())).thenReturn(serviceSuccess());
 
-        UserResource result = service.createOrganisationUserWithCompetitionContext(123L, userToCreate).getSuccess();
+        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccess();
 
         assertEquals(userToCreate, result);
 

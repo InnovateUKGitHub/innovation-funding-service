@@ -181,7 +181,7 @@ public class UserController {
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createOrganisationUserWithCompetitionContext(organisationId, userResource).toPostCreateResponse();
+        return registrationService.createOrganisationUser(organisationId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")

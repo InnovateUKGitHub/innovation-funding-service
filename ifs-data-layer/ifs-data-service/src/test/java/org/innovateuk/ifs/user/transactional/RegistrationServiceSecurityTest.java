@@ -43,7 +43,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         UserResource userToCreate = newUserResource().build();
 
-        assertAccessDenied(() -> classUnderTest.createOrganisationUserWithCompetitionContext(123L, userToCreate), () -> {
+        assertAccessDenied(() -> classUnderTest.createOrganisationUser(123L, userToCreate), () -> {
             verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });

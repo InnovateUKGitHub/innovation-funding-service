@@ -18,7 +18,7 @@ public interface RegistrationService {
     ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
-    ServiceResult<UserResource> createOrganisationUserWithCompetitionContext(long organisationId, @P("user") UserResource userResource);
+    ServiceResult<UserResource> createOrganisationUser(long organisationId, @P("user") UserResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createOrganisationUserWithCompetitionContext(long organisationId, long competitionId, @P("user") UserResource userResource);

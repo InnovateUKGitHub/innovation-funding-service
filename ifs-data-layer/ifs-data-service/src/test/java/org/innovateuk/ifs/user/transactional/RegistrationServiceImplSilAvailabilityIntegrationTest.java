@@ -49,6 +49,51 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends BaseA
     private TestService testService;
 
     @Test
+    public void createOrganisationUserWithEmailServiceUnavailableDoesntLeavePartialDataInDatabase() {
+
+        regApiHelper.doWithMockIdpRestTemplate(mockIdpRestTemplate -> {
+
+            silHelper.doWithMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
+
+                Organisation organisation = getOrganisationForTest();
+                int originalUserCount = organisation.getUsers().size();
+                int originalProcessRoleCount = organisation.getProcessRoles().size();
+
+                regApiHelper.setupSuccessfulResponseExpectationsFromCreateUserCall(mockIdpRestTemplate);
+
+                silHelper.setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+
+                testService.doWithinTransaction(this::loginSystemRegistrationUser);
+
+                UserResource registrationInfo = newUserResource().
+                        withTitle(Title.Dr).
+                        withFirstName("Bob").
+                        withLastName("Spiggot").
+                        withEmail("thebspig@example.com").
+                        withGender(Gender.MALE).
+                        withPassword("thebspig").
+                        build();
+
+                // assert that we got a failure indicating that the Registration API was not available
+                ServiceResult<UserResource> result = registrationService.createOrganisationUser(organisation.getId(), registrationInfo);
+                assertThat(result.isFailure()).isTrue();
+                assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+
+                // assert that no partial user data remains in the database
+                assertThat(userRepository.findByEmail("thebspig@example.com")).isEmpty();
+
+                Organisation freshOrganisation = getOrganisationForTest();
+
+                // assert no association data is changed for this organisation
+                int freshUserCount = freshOrganisation.getUsers().size();
+                int freshProcessRoleCount = freshOrganisation.getProcessRoles().size();
+                assertThat(freshUserCount).isEqualTo(originalUserCount);
+                assertThat(freshProcessRoleCount).isEqualTo(originalProcessRoleCount);
+            });
+        });
+    }
+
+    @Test
     public void createOrganisationUserWithCompetitionContextWithEmailServiceUnavailableDoesntLeavePartialDataInDatabase() {
 
         regApiHelper.doWithMockIdpRestTemplate(mockIdpRestTemplate -> {
