@@ -136,13 +136,14 @@ Lead partner cannot remove either document
 
 Non-lead partner can view both documents
     [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428
-    [Tags]
+    [Tags]  FAHAD
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  css=ul li:nth-child(6)
     And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    And close tabs
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
@@ -656,7 +657,3 @@ the user should see the file without error
 partners submit bank details
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
-
-Close tab
-    Select Window    ${SERVER}/project-setup/project/4/partner/documents/collaboration-agreement
-    Close Window
