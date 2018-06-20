@@ -24,7 +24,11 @@ public class Milestone {
     @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
 
-    public Milestone() {
+    Milestone() {
+    }
+
+    public static Milestone getInstance(){
+        return new Milestone();
     }
 
     public Milestone(MilestoneType type, Competition competition) {

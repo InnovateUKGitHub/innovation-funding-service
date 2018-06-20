@@ -121,7 +121,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
         Competition competition = competitionRepository.findById(id);
 
-        Milestone milestone = new Milestone();
+        Milestone milestone = Milestone.getInstance();
         milestone.setType(type);
         milestone.setCompetition(competition);
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
