@@ -87,6 +87,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
         expectedDataLayer.setUserRoles(emptyList());
+        expectedDataLayer.setApplicationId(expectedApplicationId);
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
 
@@ -111,6 +112,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
         expectedDataLayer.setUserRoles(expectedRoles);
+        expectedDataLayer.setApplicationId(expectedApplicationId);
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
         verify(googleAnalyticsDataLayerRestServiceMock).getCompetitionNameForApplication(expectedApplicationId);
@@ -120,9 +122,11 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
     @Test
     public void postHandle_projectId() {
         final long expectedProjectId = 7L;
+        final long expectedApplicationId = 8L;
 
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForProject(expectedProjectId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
         when(googleAnalyticsDataLayerRestServiceMock.getRolesByProjectId(expectedProjectId)).thenReturn(RestResult.restSuccess(emptyList()));
+        when(googleAnalyticsDataLayerRestServiceMock.getApplicationIdForProject(expectedProjectId)).thenReturn(RestResult.restSuccess(expectedApplicationId));
 
         when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("projectId", Long.toString(expectedProjectId)));
 
@@ -131,20 +135,24 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
         expectedDataLayer.setUserRoles(emptyList());
+        expectedDataLayer.setApplicationId(expectedApplicationId);
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
 
         verify(googleAnalyticsDataLayerRestServiceMock).getCompetitionNameForProject(expectedProjectId);
         verify(googleAnalyticsDataLayerRestServiceMock).getRolesByProjectId(expectedProjectId);
+        verify(googleAnalyticsDataLayerRestServiceMock).getApplicationIdForProject(expectedProjectId);
     }
 
     @Test
     public void postHandle_projectRoles() {
         final long expectedProjectId = 123L;
+        final long expectedApplicationId = 456L;
         final List<Role> expectedRoles = asList(Role.PARTNER, Role.PROJECT_MANAGER);
 
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForProject(expectedProjectId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
         when(googleAnalyticsDataLayerRestServiceMock.getRolesByProjectId(expectedProjectId)).thenReturn(RestResult.restSuccess(expectedRoles));
+        when(googleAnalyticsDataLayerRestServiceMock.getApplicationIdForProject(expectedProjectId)).thenReturn(RestResult.restSuccess(expectedApplicationId));
 
         when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("projectId", Long.toString(expectedProjectId)));
 
@@ -153,11 +161,13 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
         expectedDataLayer.setUserRoles(expectedRoles);
+        expectedDataLayer.setApplicationId(expectedApplicationId);
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
 
         verify(googleAnalyticsDataLayerRestServiceMock).getCompetitionNameForProject(expectedProjectId);
         verify(googleAnalyticsDataLayerRestServiceMock).getRolesByProjectId(expectedProjectId);
+        verify(googleAnalyticsDataLayerRestServiceMock).getApplicationIdForProject(expectedProjectId);
     }
 
     @Test
