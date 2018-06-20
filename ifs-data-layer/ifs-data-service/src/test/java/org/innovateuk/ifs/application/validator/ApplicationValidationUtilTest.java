@@ -3,12 +3,11 @@ package org.innovateuk.ifs.application.validator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
+import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
-import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -23,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit test for {@link ValidationUtil}
+ * Unit test for {@link ApplicationValidationUtil}
  */
 
 public class ApplicationValidationUtilTest extends BaseUnitTestMocksTest {
@@ -37,16 +36,13 @@ public class ApplicationValidationUtilTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private ApplicationValidationUtil validationUtil;
 
-    private ProjectFinanceRow materialCost;
-
-
 
     @Test
     public void testValidationJesForm() {
         Application application = newApplication().build();
         when(academicJesValidatorMock.supports(Application.class)).thenReturn(true);
 
-        BindingResult result = validationUtil.validationJesForm(application);
+        BindingResult result = validationUtil.addValidation(application, academicJesValidatorMock);
 
         assertEquals(application, result.getTarget());
     }

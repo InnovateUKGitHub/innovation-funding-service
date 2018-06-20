@@ -13,6 +13,7 @@ public final class ApplicationFormUtil {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
     public static final String APPLICATION_ID = "applicationId";
     public static final String APPLICATION_FORM = "application-form";
+    public static final String APPLICATION_FORM_LEAD = "application-lead-form";
     public static final String SECTION_URL = "/section/";
     public static final String EDIT_QUESTION = "edit_question";
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
