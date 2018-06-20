@@ -45,4 +45,6 @@ public class CompetitionSearchControllerTest extends BaseControllerMockMVCTest<C
 
         verify(competitionSearchPopulatorMock, times(1)).createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
     }
+
+    //TODO: test conversion from GET parameters to optionals - IFS-3774
 }
