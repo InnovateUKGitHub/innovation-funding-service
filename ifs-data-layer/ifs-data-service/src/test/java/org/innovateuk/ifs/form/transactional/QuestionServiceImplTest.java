@@ -19,7 +19,6 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -40,6 +39,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -51,7 +51,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
-public class QuestionServiceTest extends BaseUnitTestMocksTest {
+public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     protected QuestionService questionService = new QuestionServiceImpl();
@@ -76,9 +76,6 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private SectionMapper sectionMapperMock;
-
-    @Mock
-    private UserService userService;
 
     @Test
     public void getNextQuestionTest() throws Exception {
@@ -432,5 +429,29 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
 
         assertThat(question.isFailure(), is(equalTo(true)));
+    }
+
+    @Test
+    public void getQuestionByCompetitionIdAndCompetitionSetupQuestionType() {
+        long competitionId = 1L;
+
+        Question question = newQuestion().build();
+
+        QuestionResource questionResource = newQuestionResource()
+                .build();
+
+        when(questionRepositoryMock.findFirstByCompetitionIdAndQuestionSetupType(competitionId,
+                APPLICATION_DETAILS)).thenReturn(question);
+        when(questionMapperMock.mapToResource(same(question))).thenReturn(questionResource);
+
+        ServiceResult<QuestionResource> result = questionService
+                .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                        APPLICATION_DETAILS);
+
+        assertTrue(result.isSuccess());
+        assertEquals(questionResource, result.getSuccess());
+
+        verify(questionRepositoryMock).findFirstByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_DETAILS);
+        verify(questionMapperMock, only()).mapToResource(question);
     }
 }
