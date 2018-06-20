@@ -254,17 +254,17 @@ Project finance can see finance breakdown for different categories
     Given the user navigates to the page                      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link                      link=View finances
     #Check finances summary for lead partner
-    Then the user should see the text in the element          css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    Then the user should see the text in the element          css=.table-overflow tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
     And all the categories are verified    1    200,903    3,081    0    100,200    552    90,000    5,970    1,100
     #Check finances summary for academic user
-    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${organisationEggsName}
+    When the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(2) th strong  ${organisationEggsName}
     Then all the categories are verified  2   990      286 	 154 	66     0    0        44     440
     #Check finances summary for non lead partner
-    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
+    When the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
     Then all the categories are verified  3   200,903 	3,081   0   100,200  552  90,000   5,970  1,100
     #Check total
-    And the user should see the text in the element    css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong    £402,797
+    And the user should see the text in the element    css=.table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong    £402,797
 
 IFS Admin user can review Lead partner's finance changes page before the revisions made
     [Documentation]    INFUND-4837, IFS-603
@@ -800,17 +800,17 @@ Project finance can see updated finance breakdown for different categories
     [Tags]
     When the user clicks the button/link   link=View finances
     #check breakdown for lead partner
-    Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    Then the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are in this order    Total 	      Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
     And all the categories are verified  1   £177,784 	 59,430  1,954 	80,000   5,050   10,600  10,000   10,750
     #check breakdown for academic user
-    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${organisationEggsName}
+    When the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(2) th strong  ${organisationEggsName}
     Then all the categories are verified  2   £990 	     286 	   154    66       0 	      0 	    44      440
     #check breakdown for non lead partner
-    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
+    When the user should see the text in the element   css=.table-overflow tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
     Then all the categories are verified  3   £177,784   59,430  1,954  80,000    5,050   10,600  10,000   10,750
     #Check total
-    And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£356,559
+    And the user should see the text in the element  css=.table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£356,559
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can approve academic eligibility
@@ -1338,12 +1338,12 @@ Project finance user amends other costs details in eligibility for lead
 
 the categories are verified for Overview section
     [Arguments]  ${row_number}  ${start_date}  ${duration}  ${total_project_cost}  ${grant_applied_for}  ${other_public_sector_fund}  ${total_percent_grant}
-    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${start_date}
-    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${duration}
-    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${total_project_cost}
-    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${grant_applied_for}
-    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${other_public_sector_fund}
-    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
+    the user should see the text in the element     css=.table-overflow tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${start_date}
+    the user should see the text in the element     css=.table-overflow tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${duration}
+    the user should see the text in the element     css=.table-overflow tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${total_project_cost}
+    the user should see the text in the element     css=.table-overflow tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${grant_applied_for}
+    the user should see the text in the element     css=.table-overflow tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${other_public_sector_fund}
+    the user should see the text in the element     css=.table-overflow tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
 
 the categories are verified for Finances summary section
     [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
