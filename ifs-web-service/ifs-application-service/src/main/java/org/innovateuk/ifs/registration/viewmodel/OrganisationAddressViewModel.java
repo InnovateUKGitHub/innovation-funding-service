@@ -31,7 +31,7 @@ public class OrganisationAddressViewModel {
         return organisationType.getName().toLowerCase();
     }
 
-    public Boolean isShowOrgType() {
-        return !isLeadApplicant;
+    public boolean isShowOrgType() {
+        return true;
     }
 }

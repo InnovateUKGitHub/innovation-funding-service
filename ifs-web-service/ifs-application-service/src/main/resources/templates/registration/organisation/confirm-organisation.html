@@ -16,7 +16,6 @@
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
-    <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
     <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
 
     <form method="post" th:action="@{/organisation/create/save-organisation}">

@@ -142,7 +142,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
-            return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
+            return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
         }
     }
 
@@ -250,7 +250,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         OrganisationCreationForm organisationCreationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
         organisationCreationForm.setOrganisationName(organisationForm.getOrganisationName());
         organisationCreationForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
-        organisationCreationForm.setUseSearchResultAddress(organisationForm.isUseSearchResultAddress());
+//        organisationCreationForm.setUseSearchResultAddress(organisationForm.isUseSearchResultAddress());
         organisationCreationForm.setAddressForm(organisationForm.getAddressForm());
         organisationCreationForm.setTriedToSave(true);
         organisationForm.setTriedToSave(true);
@@ -264,7 +264,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
         organisationFormAddressFormValidate(organisationForm, bindingResult, addressBindingResult);
 
-        if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
+        if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !addressBindingResult.hasErrors()) {
             registrationCookieService.saveToOrganisationCreationCookie(organisationCreationForm, response);
             return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
 

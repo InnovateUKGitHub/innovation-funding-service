@@ -134,7 +134,6 @@
             </div>
 
             <div th:if="${confirmDetails == true
-                            and organisationForm.useSearchResultAddress == false
                             and organisationForm.addressForm.selectedPostcode != null}">
                 <h3 class="heading-small">Operating Address</h3>
                 <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine1}"></div>
