@@ -51,26 +51,3 @@ ext.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+proje
 ext.PROTOTYPES_ADDRESS="prototypes-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
 ext.FILE_UPLOAD_CLAIM="file-upload-claim"
-
-ext.DB_NAME="ifs"
-ext.DB_USER="root"
-ext.DB_PASS="password"
-ext.DB_HOST="ifs-database"
-ext.DB_PORT=3306
-
-ext.LDAP_HOST="ldap"
-ext.LDAP_PASS="default"
-ext.LDAP_DOMAIN="dc=int,dc=g2g3digital,dc=net"
-ext.LDAP_SCHEME="ldaps"
-
-ext.FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
-ext.SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
-
-ext.FINANCE_DB_NAME="ifs_finance"
-ext.FINANCE_DB_USER="root"
-ext.FINANCE_DB_PASS="password"
-ext.FINANCE_DB_HOST="ifs-finance-database"
-ext.FINANCE_DB_PORT=3306
-
-ext.DATA_SERVICE_HOST="data-service"
-

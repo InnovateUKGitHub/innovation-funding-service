@@ -19,21 +19,6 @@ if (!isNamedEnv()) {
 }
 
 
-
-
-def getSvcAccountToken() {
-    "oc whoami -t".execute().text.trim()
-}
-
-def getSvcAccountClauseServer(target) {
-    if(target == 'local') {
-        return "https://localhost:8443"
-    } else if (target == 'remote') {
-        return "https://console.prod.ifs-test-clusters.com:443"
-    }
-}
-
-
 task prepareDeployment(type: Copy) {
 
     destinationDir = file('build/resources/main')
@@ -46,53 +31,32 @@ task prepareDeployment(type: Copy) {
     }
 }
 
-task setDatabaseDefaults {
-    if (!project.hasProperty('DB_PORT')) {
-        project.ext.DB_PORT = 3306
-    }
-}
-prepareDeployment.mustRunAfter setDatabaseDefaults
-
-task setFinanceDataServiceSyncDefaults {
-    if (!project.hasProperty('DATA_SERVICE_PORT')) {
-        project.ext.DATA_SERVICE_PORT = 8080
-    }
-}
-prepareDeployment.mustRunAfter setFinanceDataServiceSyncDefaults
-
-task setDbResetDefaults {
-    if (!project.hasProperty('LDAP_PORT')) {
-        project.ext.LDAP_PORT = 389
-    }
-
-    if (!project.hasProperty('ONLY_SYNC_LDAP')) {
-        project.ext.ONLY_SYNC_LDAP = false
-    }
-}
-prepareDeployment.mustRunAfter setDbResetDefaults
-
-
-task osDeployProduction(type: Exec, dependsOn: prepareDeployment) {
+task osDeployProduction(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
-task osUpgradeProduction(type: Exec, dependsOn: prepareDeployment) {
+task osUpgradeProduction(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
-task dbAnonymisedDumpProduction(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbAnonymisedDumpProduction(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
-task dbBaselineProduction(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbBaselineProduction(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
-task financeDataSyncProduction(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
+task financeDataSyncProduction(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "production", project.version]
 }
@@ -100,37 +64,44 @@ task financeDataSyncProduction(type: Exec, dependsOn: [setDatabaseDefaults, setF
 // UAT tasks
 
 
-task osDeployUat(type: Exec, dependsOn: prepareDeployment) {
+task osDeployUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task osUpgradeUat(type: Exec, dependsOn: prepareDeployment) {
+task osUpgradeUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task dbResetUat(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task dbBaselineUat(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbBaselineUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task financeDataSyncUat(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
+task financeDataSyncUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task dbAnonymisedDumpUat(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbAnonymisedDumpUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task importAnonDataIntoUat(type: Exec, dependsOn: prepareDeployment) {
+task importAnonDataIntoUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
     args = [openshiftEnv, "uat", project.version]
 }
@@ -138,22 +109,26 @@ task importAnonDataIntoUat(type: Exec, dependsOn: prepareDeployment) {
 // Demo tasks
 
 
-task osDeployDemo(type: Exec, dependsOn: prepareDeployment) {
+task osDeployDemo(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
-task osUpgradeDemo(type: Exec, dependsOn: prepareDeployment) {
+task osUpgradeDemo(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
-task dbBaselineDemo(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbBaselineDemo(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
-task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
+task financeDataSyncDemo(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "demo", project.version]
 }
@@ -161,32 +136,38 @@ task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinance
 // Sysint tasks
 
 
-task osDeploySysint(type: Exec, dependsOn: prepareDeployment) {
+task osDeploySysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task osUpgradeSysint(type: Exec, dependsOn: prepareDeployment) {
+task osUpgradeSysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task dbResetSysint(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetSysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task dbBaselineSysint(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbBaselineSysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
+task financeDataSyncSysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task osDeployFractalSysint(type: Exec, dependsOn: prepareDeployment) {
+task osDeployFractalSysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
@@ -194,27 +175,32 @@ task osDeployFractalSysint(type: Exec, dependsOn: prepareDeployment) {
 // Perf tasks
 
 
-task osDeployPerf(type: Exec, dependsOn: prepareDeployment) {
+task osDeployPerf(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
-task osUpgradePerf(type: Exec, dependsOn: prepareDeployment) {
+task osUpgradePerf(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
-task dbResetPerf(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetPerf(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
-task dbBaselinePerf(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbBaselinePerf(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
-task financeDataSyncPerf(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
+task financeDataSyncPerf(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "perf", project.version]
 }
@@ -226,111 +212,105 @@ task osInitClusterLocal(type: Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
-task osDeployLocal(type: Exec, dependsOn: prepareDeployment) {
+task osDeployLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task osUpgradeLocal(type: Exec, dependsOn: prepareDeployment) {
+task osUpgradeLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task dbResetLocal(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task dbBaselineLocal(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbBaselineLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task financeDataSyncLocal(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
+task financeDataSyncLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task dbAnonymisedDumpLocal(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbAnonymisedDumpLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task deleteProjectLocal(type: Exec) {
-    executable 'oc'
-    args 'delete', 'project', openshiftEnv, "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('local')}", "--insecure-skip-tls-verify=true"
-
-    ignoreExitValue true
-
-    doLast {
-        sleep 10_000L
-    }
+task createProjectLocal(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-create-project.sh'
+    args = [openshiftEnv, "local"]
 }
 
-task createProjectLocal(type: Exec, dependsOn: deleteProjectLocal) {
-    executable 'oc'
-    args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('local')}", "--insecure-skip-tls-verify=true"
-}
-
-task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
+task importAnonDataIntoLocal(type:Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
     args = [openshiftEnv, "local",  project.version]
 }
 
 // Remote tasks
 
-task deleteProject(type: Exec) {
-    executable 'oc'
-    args 'delete', 'project', openshiftEnv, "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
 
-    ignoreExitValue true
-
-    doLast {
-        sleep 10_000L
-    }
+task createProject(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-create-project.sh'
+    args = [openshiftEnv, "remote"]
 }
 
-task createProject(type: Exec, dependsOn: deleteProject) {
-    executable 'oc'
-    args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
-}
-
-task osDeployFractalRemote(type: Exec, dependsOn: prepareDeployment) {
+task osDeployFractalRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task osDeployRemote(type: Exec, dependsOn: prepareDeployment) {
+task osDeployRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task osUpgradeRemote(type: Exec, dependsOn: prepareDeployment) {
+task osUpgradeRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task dbAnonymisedDumpRemote(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbAnonymisedDumpRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task importAnonDataIntoRemote(type: Exec, dependsOn: prepareDeployment) {
+task importAnonDataIntoRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task dbResetRemote(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task dbBaselineRemote(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
+task dbBaselineRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task financeDataSyncRemote(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
+task financeDataSyncRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "remote", project.version]
 }
@@ -345,7 +325,8 @@ task robotTestsFilter(type: Copy) {
 
 import org.apache.tools.ant.filters.*
 
-task osTestRemote(type: Exec, dependsOn: robotTestsFilter) {
+task osTestRemote(type: Exec) {
+    dependsOn robotTestsFilter
     executable = 'setup-files/scripts/openshift/os-test-remote.sh'
     args = [openshiftEnv]
 }

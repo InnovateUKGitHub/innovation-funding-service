@@ -6,11 +6,11 @@ items:
   metadata:
     name: db-config
   data:
-    DB_NAME: "${DB_NAME}"
-    DB_USER: "${DB_USER}"
-    DB_PASS: "${DB_PASS}"
-    DB_HOST: "${DB_HOST}"
-    DB_PORT: "${DB_PORT}"
+    DB_NAME: "<<DB-NAME>>"
+    DB_USER: "<<DB-USER>>"
+    DB_PASS: "<<DB-PASS>>"
+    DB_HOST: "<<DB-HOST>>"
+    DB_PORT: "<<DB-PORT>>"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
