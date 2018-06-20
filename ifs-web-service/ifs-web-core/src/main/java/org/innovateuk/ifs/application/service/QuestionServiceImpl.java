@@ -1,15 +1,15 @@
 
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 
 /**
  * This class contains methods to retrieve and store {@link QuestionResource} related data,
@@ -53,7 +55,16 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void markAsIncomplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
         LOG.debug(String.format("mark section as incomplete %s / %s /%s ", questionId, applicationId, markedAsInCompleteById));
-        questionStatusRestService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
+        if (isApplicationTeamQuestion(questionId)) {
+            questionStatusRestService.markTeamAsInComplete(questionId, applicationId, markedAsInCompleteById);
+        } else {
+            questionStatusRestService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
+        }
+
+    }
+
+    private boolean isApplicationTeamQuestion(Long questionId) {
+        return getById(questionId).getQuestionSetupType() == APPLICATION_TEAM;
     }
 
     @Override

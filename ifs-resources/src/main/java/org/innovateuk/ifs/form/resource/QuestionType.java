@@ -5,5 +5,6 @@ package org.innovateuk.ifs.form.resource;
  */
 public enum QuestionType {
 	COST,
-	GENERAL
+	GENERAL,
+	LEAD_ONLY
 }
