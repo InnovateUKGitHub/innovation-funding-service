@@ -2,6 +2,11 @@ package org.innovateuk.ifs.survey;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.commons.validation.constraints.WordCount;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class SurveyResource {
 
@@ -11,8 +16,12 @@ public class SurveyResource {
 
     private Long targetId;
 
+    @NotNull(message = "{validation.standard.satisfaction.selectionrequired}")
     private Satisfaction satisfaction;
 
+    @NotBlank(message = "{validation.standard.comments.required}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
+    @WordCount(max = 400, message = "{validation.field.max.word.count}")
     private String comments;
 
     public SurveyType getSurveyType() {

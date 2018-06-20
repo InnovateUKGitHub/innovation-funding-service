@@ -77,7 +77,7 @@
     </p>
 
     <div class="extra-margin">
-      <a href="/survey/feedback" class="button">Finished</a>
+      <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}" class="button">Finished</a>
     </div>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

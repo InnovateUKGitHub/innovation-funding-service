@@ -10,68 +10,73 @@
 <th:block th:insert="fragments/layout :: global-header"/>
 
 <main tabindex="-1" id="content">
-    <h1 class="heading-large">Satisfaction survey</h1>
 
-    <legend class="heading-small">
-        Overall, how did you feel about the service you received today?
-    </legend>
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to submit your survey.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
 
-    <!--<div class="multiple-choice">-->
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Satisfaction survey',size='heading-xlarge'" />
 
-        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-1">-->
-            <!--<input id="satisfaction-radio-1" type="radio" name="satisfaction-radio-group" value="Very satisfied" />-->
-            <!--Very satisfied-->
-        <!--</label>-->
-        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-2">-->
-            <!--<input id="satisfaction-radio-2" type="radio" name="satisfaction-radio-group" value="Satisfied" />-->
-            <!--Satisfied-->
-        <!--</label>-->
-        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-3">-->
-            <!--<input id="satisfaction-radio-3" type="radio" name="satisfaction-radio-group" value="Neither satisfied or dissatisfied" />-->
-            <!--Neither satisfied or dissatisfied-->
-        <!--</label>-->
-        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-4">-->
-            <!--<input id="satisfaction-radio-4" type="radio" name="satisfaction-radio-group" value="Dissatisfied" />-->
-            <!--Dissatisfied-->
-        <!--</label>-->
-        <!--<label class="block-label selection-button-radio" for="satisfaction-radio-5">-->
-            <!--<input id="satisfaction-radio-5" type="radio" name="satisfaction-radio-group" value="Very dissatisfied" />-->
-            <!--Very dissatisfied-->
-        <!--</label>-->
-    <!--</div>-->
-    <fieldset>
-        <div class="multiple-choice">
-            <input id="satisfaction-radio-1" type="radio" name="satisfaction-radio-group" value="Very satisfied" />
-            <label class="block-label selection-button-radio" for="satisfaction-radio-1">
-                Very satisfied
-            </label>
-        </div>
-        <div class="multiple-choice">
-            <input id="satisfaction-radio-2" type="radio" name="satisfaction-radio-group" value="Satisfied" />
-            <label class="block-label selection-button-radio" for="satisfaction-radio-2">
-                Satisfied
-            </label>
-        </div>
-        <div class="multiple-choice">
-            <input id="satisfaction-radio-3" type="radio" name="satisfaction-radio-group" value="Neither satisfied or dissatisfied" />
-            <label class="block-label selection-button-radio" for="satisfaction-radio-3">
-                Neither satisfied or dissatisfied
-            </label>
-        </div>
-        <div class="multiple-choice">
-            <input id="satisfaction-radio-4" type="radio" name="satisfaction-radio-group" value="Dissatisfied" />
-            <label class="block-label selection-button-radio" for="satisfaction-radio-4">
-                Dissatisfied
-            </label>
-        </div>
-        <div class="multiple-choice">
-            <input id="satisfaction-radio-5" type="radio" name="satisfaction-radio-group" value="Very dissatisfied" />
-            <label class="block-label selection-button-radio" for="satisfaction-radio-5">
-                Very dissatisfied
-            </label>
+    <form th:action="@{/{competitionId}/feedback(competitionId=${competitionId})}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
+
+        <legend class="heading-medium">
+            Overall, how did you feel about the service you received today?
+        </legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{satisfaction}')} ? 'form-group-error'">
+            <fieldset>
+                <legend id="satisfaction">
+                    <span class="visuallyhidden">Please select your satisfaction</span>
+                    <th:block th:if="${#fields.hasErrors('*{satisfaction}')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('satisfaction')}" th:text="${err}"></span>
+                    </th:block>
+                </legend>
+                <div class="multiple-choice" th:each="satisfaction : ${form.getSatisfactionList()}">
+                    <input type="radio"
+                           th:field="*{satisfaction}"
+                           th:value="${satisfaction.id}"
+                           th:id="'satisfaction-radio-'+${satisfaction.id}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.satisfaction.selectionrequired}"/>
+                    <label class="block-label selection-button-radio"
+                           th:for="'satisfaction-radio-'+${satisfaction.id}"
+                           th:text="${satisfaction.displayName}"></label>
+                </div>
+            </fieldset>
         </div>
 
-    </fieldset>
+        <legend class="heading-medium">
+            How could we improve this service?
+        </legend>
+
+        <div th:id="comments">
+            <div class="form-group" th:classappend="${#fields.hasErrors('comments')} ? 'form-group-error'">
+                    <th:block th:if="${#fields.hasErrors('comments')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('comments')}" th:text="${err}"></span>
+                    </th:block>
+                <div class="textarea-wrapped word-count">
+                                <textarea
+                                    class="form-control width-full"
+                                    cols="30"
+                                    rows="3"
+                                    maxlength="5000"
+                                    data-max_words="400"
+                                    data-maxwordslength="400"
+                                    data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                    th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 400)}"
+                                    th:errorclass="field-error"
+                                    th:field="*{comments}"></textarea>
+                    <div class="textarea-footer" aria-live="polite" aria-atomic="true" role="status">
+                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, comments)})" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p>Please don't include any personal or financial information, for example your credit card numbers.</p>
+
+        <button class="button button-large" type="submit">Send feedback</button>
+    </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

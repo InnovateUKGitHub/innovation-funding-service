@@ -1,3 +1,6 @@
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild + "-build.gradle";
+
 bootRun {
     addResources = false
 }
@@ -27,7 +30,8 @@ prepareDockerBaseInput {
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
-
+    compile project(':ifs-resources:ifs-survey-resources')
+    compile project(':ifs-rest-api-service:ifs-survey-rest-api-service')
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')

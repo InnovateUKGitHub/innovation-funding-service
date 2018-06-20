@@ -9,6 +9,10 @@ public class RedirectUtils {
         return buildRedirect(request, url, "");
     }
 
+    public static String redirectToSurveyService(HttpServletRequest request, String url) {
+        return buildRedirect(request, url, "survey");
+    }
+
     public static String redirectToAssementService(HttpServletRequest request, String url) {
         return buildRedirect(request, url, "assessment");
     }
