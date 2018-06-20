@@ -19,10 +19,10 @@ def apply(profiles) {
 task applyProfiles() {
     doFirst {
         if(project.hasProperty("profile")) {
-            //Always apply automated and THEN the specific project profile.
-            apply(['automated', project.profile])
+            //Always apply docker, THEN automated and THEN the specific project profile.
+            apply(['docker','automated', project.profile])
         } else {
-            apply from: "docker-build.gradle"
+            apply(['docker'])
         }
     }
 }
