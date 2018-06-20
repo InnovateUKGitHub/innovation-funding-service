@@ -16,12 +16,8 @@ public class SurveyResource {
 
     private Long targetId;
 
-    @NotNull(message = "{validation.standard.satisfaction.selectionrequired}")
     private Satisfaction satisfaction;
 
-    @NotBlank(message = "{validation.standard.comments.required}")
-    @Size(max = 5000, message = "{validation.field.too.many.characters}")
-    @WordCount(max = 400, message = "{validation.field.max.word.count}")
     private String comments;
 
     public SurveyType getSurveyType() {
