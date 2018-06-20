@@ -215,7 +215,7 @@ public class ApplicationModelPopulator {
     public void addApplicationInputs(ApplicationResource application, Model model) {
         model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
         model.addAttribute("applicationTitle", application.getName());
-        model.addAttribute("applicationDuration", String.valueOf(application.getDurationInMonths()));
+        model.addAttribute("applicationDuration", application.getDurationInMonths());
     }
 
     public void addFeedbackAndScores(Model model, long applicationId) {

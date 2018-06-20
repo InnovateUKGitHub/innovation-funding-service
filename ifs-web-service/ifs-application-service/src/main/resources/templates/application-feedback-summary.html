@@ -57,7 +57,9 @@
             <section th:each="section : ${applicationFeedbackSummaryViewModel.sections.values()}" th:unless="${section.name.equals('Finances')}">
                 <th:block th:if="${section.name.equals('Project details')}">
                     <ul class="list-overview extra-margin">
-                        <th:block th:each="question : ${applicationFeedbackSummaryViewModel.sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
+                        <th:block th:each="question : ${applicationFeedbackSummaryViewModel.sectionQuestions.get(section.id)}"
+                                  th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
+                                  or question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
                             <li class="section-status">
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
