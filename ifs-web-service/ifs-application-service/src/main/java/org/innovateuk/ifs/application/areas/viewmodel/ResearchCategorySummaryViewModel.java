@@ -8,7 +8,7 @@ public class ResearchCategorySummaryViewModel extends AbstractLeadOnlyViewModel 
     private String researchCategory;
 
     public ResearchCategorySummaryViewModel(long applicationId,
-                                            Long questionId,
+                                            long questionId,
                                             String researchCategory,
                                             boolean closed,
                                             boolean complete,
