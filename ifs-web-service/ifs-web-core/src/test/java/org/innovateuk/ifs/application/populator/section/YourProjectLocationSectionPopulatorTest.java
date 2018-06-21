@@ -90,6 +90,7 @@ public class YourProjectLocationSectionPopulatorTest {
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
+        assertThat(viewModel.isReadonly(), equalTo(false));
         assertThat(viewModel.getFormInputViewModels(), equalTo(formInputViewModels));
         assertThat(viewModel.getApplicantOrganisationId(), equalTo(2L));
         assertThat(viewModel.isReadOnlyAllApplicantApplicationFinances(), equalTo(true));

@@ -249,7 +249,7 @@
 
     <th:block th:fragment="project_location(model)">
         <div class="extra-margin">
-            <th:block th:unless="${model.complete}">
+            <th:block th:unless="${model.readonly}">
                 <!--/* edit */-->
                 <div class="form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'form-group-error'">
                     <label class="form-label" for="projectLocation">
@@ -267,7 +267,7 @@
                 </div>
 
             </th:block>
-            <th:block th:if="${model.complete}">
+            <th:block th:if="${model.readonly}">
                 <!--/* view  */-->
                 <dl class="readonly-data">
                     <dt>Project location</dt>

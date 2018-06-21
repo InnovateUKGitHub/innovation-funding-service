@@ -37,6 +37,8 @@ public class YourProjectLocationSectionPopulator extends AbstractSectionPopulato
 
         String projectLocation = applicationFinanceRestService.getApplicationFinance(viewModel.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId()).getSuccess().getProjectLocation();
         viewModel.setProjectLocationValue(projectLocation);
+
+        viewModel.setReadonly(viewModel.isComplete() || !section.getCompetition().isOpen() || !section.getApplication().isOpen());
     }
 
     @Override

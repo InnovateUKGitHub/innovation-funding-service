@@ -12,6 +12,7 @@ import java.util.Optional;
  */
 public class YourProjectLocationSectionViewModel extends AbstractSectionViewModel {
     private boolean complete;
+    private boolean readonly;
     private String projectLocationValue;
 
     public YourProjectLocationSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
@@ -24,6 +25,15 @@ public class YourProjectLocationSectionViewModel extends AbstractSectionViewMode
 
     public void setComplete(boolean complete) {
         this.complete = complete;
+    }
+
+
+    public boolean isReadonly() {
+        return readonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
     }
 
     public String getProjectLocationValue() {
