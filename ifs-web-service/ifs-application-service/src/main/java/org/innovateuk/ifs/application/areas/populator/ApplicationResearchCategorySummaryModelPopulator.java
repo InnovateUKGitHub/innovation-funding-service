@@ -32,11 +32,13 @@ public class ApplicationResearchCategorySummaryModelPopulator {
                                                      boolean userIsLeadApplicant) {
         String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
                 .map(ResearchCategoryResource::getName).orElse(null);
-        boolean canMarkAsComplete = userIsLeadApplicant;
-        boolean closed = !isCompetitionOpen(applicationResource);
-        boolean complete = isComplete(applicationResource, loggedInUserId);
-        return new ResearchCategorySummaryViewModel(applicationResource.getId(), researchCategoryName,
-                canMarkAsComplete, closed, complete);
+
+        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = new ResearchCategorySummaryViewModel(applicationResource.getId(), researchCategoryName);
+        researchCategorySummaryViewModel.setCanMarkAsComplete(userIsLeadApplicant);
+        researchCategorySummaryViewModel.setClosed(!isCompetitionOpen(applicationResource));
+        researchCategorySummaryViewModel.setComplete(isComplete(applicationResource, loggedInUserId));
+
+        return researchCategorySummaryViewModel;
     }
 
     private boolean isCompetitionOpen(ApplicationResource applicationResource) {

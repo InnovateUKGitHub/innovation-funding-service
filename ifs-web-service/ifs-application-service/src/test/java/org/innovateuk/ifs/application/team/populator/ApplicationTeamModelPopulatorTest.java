@@ -117,11 +117,12 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 "Application name",
                 expectedOrganisations,
                 true,
-                false,
-                false,
-                false,
-                true
+                false
         );
+
+        expectedViewModel.setClosed(false);
+        expectedViewModel.setComplete(false);
+        expectedViewModel.setCanMarkAsComplete(true);
 
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
 
@@ -178,11 +179,12 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 "Application name",
                 expectedOrganisations,
                 false,
-                false,
-                false,
-                false,
                 false
         );
+
+        expectedViewModel.setClosed(false);
+        expectedViewModel.setComplete(false);
+        expectedViewModel.setCanMarkAsComplete(false);
 
         when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
 
@@ -239,11 +241,12 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 "Application name",
                 expectedOrganisations,
                 false,
-                false,
-                false,
-                false,
                 false
         );
+
+        expectedViewModel.setClosed(false);
+        expectedViewModel.setComplete(false);
+        expectedViewModel.setCanMarkAsComplete(false);
 
         when(applicantRestService.getQuestion(userId, applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
 
@@ -300,11 +303,13 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 "Application name",
                 expectedOrganisations,
                 true,
-                false,
-                false,
-                false,
-                true
+                false
         );
+
+        expectedViewModel.setClosed(false);
+        expectedViewModel.setComplete(false);
+        expectedViewModel.setCanMarkAsComplete(true);
+
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
 
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
@@ -420,11 +425,12 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 "Application name",
                 expectedOrganisations,
                 true,
-                false,
-                false,
-                false,
-                true
+                false
         );
+
+        expectedViewModel.setClosed(false);
+        expectedViewModel.setComplete(false);
+        expectedViewModel.setCanMarkAsComplete(true);
         expectedViewModel.setSummary(true);
 
         when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competition.getId(), APPLICATION_TEAM))

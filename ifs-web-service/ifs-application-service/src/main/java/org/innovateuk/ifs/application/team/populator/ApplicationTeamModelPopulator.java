@@ -61,12 +61,16 @@ public class ApplicationTeamModelPopulator {
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
-        boolean closed = !isCompetitionOpen(applicationResource);
-        boolean complete = isComplete(applicationId, loggedInUserId, questionId);
-        boolean canMarkAsComplete = userIsLeadApplicant;
-        return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
+        ApplicationTeamViewModel teamViewModel = new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
-                userIsLeadApplicant, applicationCanBegin, closed, complete, canMarkAsComplete);
+                userIsLeadApplicant, applicationCanBegin);
+
+        teamViewModel.setClosed(!isCompetitionOpen(applicationResource));
+        teamViewModel.setComplete(isComplete(applicationId, loggedInUserId, questionId));
+        teamViewModel.setCanMarkAsComplete(userIsLeadApplicant);
+
+
+        return teamViewModel;
     }
 
     public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {

@@ -405,11 +405,12 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 "Application name",
                 emptyList(),
                 false,
-                false,
-                false,
-                false,
                 false);
         applicationTeamViewModel.setSummary(true);
+        applicationTeamViewModel.setClosed(false);
+        applicationTeamViewModel.setComplete(false);
+        applicationTeamViewModel.setCanMarkAsComplete(false);
+
         return applicationTeamViewModel;
     }
 }

@@ -43,20 +43,20 @@ public class ApplicationResearchCategoryModelPopulator {
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource,
                                               long loggedInUserId,
                                               long questionId) {
-        boolean canMarkAsComplete = userService.isLeadApplicant(loggedInUserId, applicationResource);
-        boolean closed = !isCompetitionOpen(applicationResource);
-        boolean complete = isComplete(applicationResource, loggedInUserId);
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
 
-        return new ResearchCategoryViewModel(applicationResource.getCompetitionName(),
+        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(applicationResource.getCompetitionName(),
                 applicationResource.getId(),
                 questionId,
                 researchCategories,
-                canMarkAsComplete,
-                closed,
-                complete,
                 hasApplicationFinances);
+
+        researchCategoryViewModel.setCanMarkAsComplete(userService.isLeadApplicant(loggedInUserId, applicationResource));
+        researchCategoryViewModel.setClosed(!isCompetitionOpen(applicationResource));
+        researchCategoryViewModel.setComplete(isComplete(applicationResource, loggedInUserId));
+
+        return researchCategoryViewModel;
     }
 
     private boolean isCompetitionOpen(ApplicationResource applicationResource) {
