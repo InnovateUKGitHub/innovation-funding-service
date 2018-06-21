@@ -42,7 +42,8 @@ public class ApplicationResearchCategoryModelPopulator {
 
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource,
                                               long loggedInUserId,
-                                              long questionId) {
+                                              long questionId,
+                                              boolean useNewApplicantMenu) {
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
 
@@ -51,6 +52,7 @@ public class ApplicationResearchCategoryModelPopulator {
                 questionId,
                 researchCategories,
                 hasApplicationFinances,
+                useNewApplicantMenu,
                 !isCompetitionOpen(applicationResource),
                 isComplete(applicationResource, loggedInUserId),
                 userService.isLeadApplicant(loggedInUserId, applicationResource));

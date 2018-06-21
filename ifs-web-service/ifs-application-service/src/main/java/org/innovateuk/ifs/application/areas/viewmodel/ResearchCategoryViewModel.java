@@ -14,12 +14,14 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private long applicationId;
     private List<ResearchCategoryResource> availableResearchCategories;
     private boolean hasApplicationFinances;
+    private boolean useNewApplicantMenu;
 
     public ResearchCategoryViewModel(String currentCompetitionName,
                                      long applicationId,
                                      long questionId,
                                      List<ResearchCategoryResource> availableResearchCategories,
                                      boolean hasApplicationFinances,
+                                     boolean useNewApplicantMenu,
                                      boolean closed,
                                      boolean complete,
                                      boolean canMarkAsComplete) {
@@ -28,6 +30,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         this.applicationId = applicationId;
         this.availableResearchCategories = availableResearchCategories;
         this.hasApplicationFinances = hasApplicationFinances;
+        this.useNewApplicantMenu = useNewApplicantMenu;
     }
 
     public String getCurrentCompetitionName() {
@@ -44,6 +47,10 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public boolean isHasApplicationFinances() {
         return hasApplicationFinances;
+    }
+
+    public boolean isUseNewApplicantMenu() {
+        return useNewApplicantMenu;
     }
 
     @Override

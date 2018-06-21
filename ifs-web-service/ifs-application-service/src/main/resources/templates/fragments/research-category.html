@@ -39,15 +39,14 @@
             </fieldset>
         </div>
 
-        <!-- Support for old Applicant menu view -->
-        <button class="button" name="save-research-category">Save</button>
-        <a class="button button-clear"
-           th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}">Cancel
-        </a>
-        <!-- End of support for old Applicant menu view -->
+        <div class="extra-margin" th:unless="${model.useNewApplicantMenu}">
+            <button class="button" name="save-research-category">Save</button>
+            <a class="button button-clear"
+               th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}">Cancel
+            </a>
+        </div>
 
-        <!-- TODO disable for old Applicant menu -->
-        <div class="extra-margin">
+        <div class="extra-margin" th:if="${model.useNewApplicantMenu}">
             <!--/* 'Mark as complete' / 'Edit' links */-->
             <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})" />
         </div>
