@@ -71,7 +71,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private TermsAndConditionsService termsAndConditionsService;
 
     @Autowired
-    private RegistrationEmailService registrationEmailService;
+    private RegistrationNotificationService registrationEmailService;
 
     @Override
     @Transactional

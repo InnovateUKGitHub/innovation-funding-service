@@ -95,12 +95,13 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getApplicantNotificationTargets(fundingNotificationResource.calculateApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
 
+        // TODO DW - possibility of partial email send-outs
         return aggregatedFundingTargets.handleSuccessOrFailure(
                 failure -> serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS),
                 success -> {
 
                     Notification fundingNotification = createFundingDecisionNotification(applications, fundingNotificationResource, aggregatedFundingTargets.getSuccess(), APPLICATION_FUNDING);
-                    ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
+                    ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotificationWithFlush(fundingNotification, EMAIL);
 
                     ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
                             aggregate(simpleMap(

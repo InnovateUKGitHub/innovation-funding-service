@@ -15,7 +15,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 @Service
-class RegistrationEmailService {
+class RegistrationNotificationService {
 
     final JsonNodeFactory factory = JsonNodeFactory.instance;
 
@@ -59,10 +58,10 @@ class RegistrationEmailService {
     ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
         final Token token = createEmailVerificationToken(user, competitionId);
         final Notification notification = getEmailVerificationNotification(user, token);
-        return notificationService.sendNotification(notification, EMAIL);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
-    ServiceResult<Void> resendUserVerificationEmail(@P("user") final UserResource user) {
+    ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
         final Token token = refreshEmailVerificationToken(user);
         final Notification notification = getEmailVerificationNotification(user, token);
         return notificationService.sendNotification(notification, EMAIL);

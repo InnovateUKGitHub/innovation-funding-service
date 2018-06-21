@@ -119,7 +119,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private RoleInviteRepository roleInviteRepositoryMock;
 
     @Mock
-    private RegistrationEmailService registrationEmailServiceMock;
+    private RegistrationNotificationService registrationEmailServiceMock;
 
     @Mock
     @SuppressWarnings("unused")

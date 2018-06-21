@@ -13,10 +13,12 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
-import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
@@ -43,7 +45,6 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.util.EmailService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -79,6 +80,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.builder.InviteProjectResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
@@ -98,7 +100,7 @@ import static org.mockito.Mockito.*;
 public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDetailsService> {
 
     @Mock
-    private EmailService projectEmailService;
+    private NotificationService notificationService;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -108,9 +110,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Mock
     private ProjectRepository projectRepositoryMock;
-
-    @Mock
-    private ProjectInviteRepository projectInviteRepositoryMock;
 
     @Mock
     private LoggedInUserSupplier loggedInUserSupplierMock;
@@ -159,6 +158,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Mock
     private AddressTypeRepository addressTypeRepositoryMock;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSource;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -726,7 +728,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
             assertTrue(e instanceof IllegalArgumentException);
 
             assertNull(result);
-            verify(projectEmailService, never()).sendEmail(any(), any(), any());
+            verify(notificationService, never()).sendNotificationWithFlush(any(Notification.class), eq(EMAIL));
 
             // This exception flow is the only expected flow, so return from here and assertFalse if no exception
             return;
@@ -790,8 +792,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
-                thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+        Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER, globalArguments);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(
+                serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
                 .withEmail("a@b.com")
@@ -838,13 +841,17 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
+
+        Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER, globalArguments);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
+
+        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Test
@@ -904,7 +911,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
-        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
+
+        Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT, globalArguments);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
                 .withName("A B")
@@ -914,6 +923,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         ServiceResult<Void> result = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
         assertTrue(result.isSuccess());
+        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Test
@@ -1024,7 +1034,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
-        verify(organisationAddressRepositoryMock).delete(organisationAddress);
+        verify(organisationAddressRepositoryMock).delete(singletonList(organisationAddress));
         assertEquals(newAddress, project.getAddress());
     }
 
@@ -1069,7 +1079,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        when(projectEmailService.sendEmail(singletonList(to), globalArguments, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
+        Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT, globalArguments);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite()
                 .withEmail("a@b.com")
                 .withName("A B")
@@ -1078,6 +1090,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         ServiceResult<Void> success = service.inviteFinanceContact(projectInDB.getId(), inviteResource);
 
         assertTrue(success.isSuccess());
+        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Override
