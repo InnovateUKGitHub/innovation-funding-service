@@ -115,3 +115,5 @@ task asciidoctorOnly(type: Test) {
 }
 
 flywayMigrate.dependsOn processResources
+
+ext.serverPort=8080

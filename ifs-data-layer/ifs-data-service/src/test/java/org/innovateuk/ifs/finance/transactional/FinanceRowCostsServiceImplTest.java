@@ -34,6 +34,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -118,7 +119,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
 
 
     @Test
-    public void testAddCost() {
+    public void addCost() {
         Organisation organisation = newOrganisation().withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         Application application = newApplication().withCompetition(openCompetition).build();
@@ -151,7 +152,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
     }
 
     @Test
-    public void testAddWhenApplicationNotOpen() {
+    public void addWhenApplicationNotOpen() {
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
         Application application = newApplication().withCompetition(openCompetition).build();
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
@@ -162,13 +163,13 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
 
 
     @Test
-    public void testAlreadyExistingMetaValueShouldBeUpdated() {
-        List<FinanceRowMetaValue> currentFinanceRowMetaValue = Collections.singletonList(newFinanceRowMetaValue()
+    public void alreadyExistingMetaValueShouldBeUpdated() {
+        List<FinanceRowMetaValue> currentFinanceRowMetaValue = singletonList(newFinanceRowMetaValue()
                 .withFinanceRowMetaField(financeRowMetaField)
                 .withValue("England")
                 .build());
 
-        List<FinanceRowMetaValue> newFinanceRowMetaValue = Collections.singletonList(newFinanceRowMetaValue()
+        List<FinanceRowMetaValue> newFinanceRowMetaValue = singletonList(newFinanceRowMetaValue()
                 .withFinanceRowMetaField(financeRowMetaField)
                 .withValue("purring")
                 .build());
@@ -197,8 +198,8 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
     }
 
     @Test
-    public void testNonExistingMetaValueShouldBeCreated() {
-        List<FinanceRowMetaValue> financeRowMetaValue = Collections.singletonList(
+    public void nonExistingMetaValueShouldBeCreated() {
+        List<FinanceRowMetaValue> financeRowMetaValue = singletonList(
                 newFinanceRowMetaValue()
                         .withFinanceRowMetaField(financeRowMetaField)
                         .withValue("England")
@@ -225,7 +226,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
     }
 
     @Test
-    public void testNoAttachedMetaValueDoesNotCreateOrUpdateMetaValue() {
+    public void noAttachedMetaValueDoesNotCreateOrUpdateMetaValue() {
         ApplicationFinanceRow convertedApplicationFinanceRow = newApplicationFinanceRow()
                 .withTarget(applicationFinance).build();
 

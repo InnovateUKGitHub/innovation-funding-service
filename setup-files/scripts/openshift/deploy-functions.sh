@@ -38,6 +38,17 @@ function isSysIntEnvironment() {
     fi
 }
 
+function isPerfEnvironment() {
+
+    TARGET=$1
+
+    if [[ ${TARGET} != "perf" ]]; then
+        exit 1
+    else
+        exit 0
+    fi
+}
+
 function isServiceEnabled() {
 
     SERVICE=$1
