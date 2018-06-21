@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -14,8 +15,8 @@ import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsFindViewModel;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
-import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_INVITE;
+import static org.innovateuk.ifs.management.navigation.NavigationOrigin.INTERVIEW_PANEL_INVITE;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -82,7 +83,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INTERVIEW_PANEL_FIND, queryParams);
+        String originQuery = buildOriginQueryString(NavigationOrigin.INTERVIEW_PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
 
         InterviewAssignmentApplicationsFindViewModel interviewPanelApplicationsFindModel =
@@ -284,7 +285,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam MultiValueMap<String, String> queryParams) {
 
-        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INTERVIEW_PANEL_STATUS, queryParams);
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.COMP_EXEC_INTERVIEW, queryParams);
 
         model.addAttribute("model", interviewApplicationsStatusModelPopulator
                 .populateModel(competitionId, page, originQuery));

@@ -86,11 +86,13 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, partner));
     }
 
+    @Test
     public void testThatProjectFinanceUsersCannotCreateQueriesWhenProjectIsInLive() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInLive);
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
     }
 
+    @Test
     public void testThatProjectFinanceUsersCannotCreateQueriesWhenProjectIsInWithdrawn() {
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInWithdrawn);
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));

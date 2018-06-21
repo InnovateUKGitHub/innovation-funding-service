@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Feedback overview'" />
     </head>
 
-    <body class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+    <body class="app-summary" th:classappend="${applicationFeedbackSummaryViewModel.application.isOpen() ? 'is-open' : 'is-closed' }">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:if="${origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Set up your project',linkClass='link-back',linkUrl=@{${backUrl}})" />
-            <th:block th:unless="${origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Dashboard',linkClass='link-back',linkUrl=@{${backUrl}})" />
-            <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
-            <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationName},size='heading-xlarge'" />
+            <th:block th:if="${applicationFeedbackSummaryViewModel.origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Set up your project',linkClass='link-back',linkUrl=@{${applicationFeedbackSummaryViewModel.backUrl}})" />
+            <th:block th:unless="${applicationFeedbackSummaryViewModel.origin} == SET_UP_YOUR_PROJECT" th:insert="fragments/layout :: header-sub (linkTitle='Dashboard',linkClass='link-back',linkUrl=@{${applicationFeedbackSummaryViewModel.backUrl}})" />
+            <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${applicationFeedbackSummaryViewModel.competition})" />
+            <th:block th:with="applicationName=${#strings.isEmpty(applicationFeedbackSummaryViewModel.application.name)} ? #{ifs.application.no_title} : ${applicationFeedbackSummaryViewModel.application.name}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationFeedbackSummaryViewModel.application.name},size='heading-xlarge'" />
             </th:block>
 
-            <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
+            <th:block th:insert="fragments/elements :: competition-status-message (app=${applicationFeedbackSummaryViewModel.application}, competition=${applicationFeedbackSummaryViewModel.competition}, projectWithdrawn=${applicationFeedbackSummaryViewModel.projectWithdrawn})" />
 
             <h2 class="heading-medium no-margin-bottom">Application details</h2>
             <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
@@ -25,17 +25,17 @@
                 <div class="grid-row">
                     <div class="column-half">
                         <h3 class="heading-small">Project title</h3>
-                        <p th:text="${currentApplication.name}">Machine learning in robots</p>
+                        <p th:text="${applicationFeedbackSummaryViewModel.application.name}">Machine learning in robots</p>
 
                         <h3 class="heading-small">Application number</h3>
-                        <p th:text="${currentApplication.id}">Machine learning in robots</p>
+                        <p th:text="${applicationFeedbackSummaryViewModel.application.id}">Machine learning in robots</p>
 
                         <h3 class="heading-small">Lead organisation</h3>
-                        <p th:text="${leadOrganisation.name}">Aptrans Ltd</p>
+                        <p th:text="${applicationFeedbackSummaryViewModel.leadOrganisation.name}">Aptrans Ltd</p>
 
                         <h3 class="heading-small">Partners</h3>
                         <ul class="list">
-                            <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
+                            <li th:each="organisation : ${applicationFeedbackSummaryViewModel.applicationOrganisations}" th:unless="${organisation.equals(applicationFeedbackSummaryViewModel.leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
                         </ul>
                     </div>
 
@@ -43,34 +43,36 @@
                         <h3 class="heading-small">Project timescales</h3>
                         <p>Project start date: <br />
                             <th:block
-                                th:if="${currentApplication.startDate}"
-                                th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" />
+                                th:if="${applicationFeedbackSummaryViewModel.application.startDate}"
+                                th:text="${#temporals.format(applicationFeedbackSummaryViewModel.application.startDate, 'd MMMM yyyy')}" />
                         </p>
-                        <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
+                        <p>Duration: <br /><th:block th:text="${applicationFeedbackSummaryViewModel.application.durationInMonths}" /> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
-                        <p>&pound;<th:block th:text="${totalFundingSought} ? ${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
+                        <p>&pound;<th:block th:text="${applicationFeedbackSummaryViewModel.totalFundingSought} ? ${#numbers.formatInteger(applicationFeedbackSummaryViewModel.totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
                     </div>
                 </div>
             </div>
 
-            <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
+            <section th:each="section : ${applicationFeedbackSummaryViewModel.sections.values()}" th:unless="${section.name.equals('Finances')}">
                 <th:block th:if="${section.name.equals('Project details')}">
                     <ul class="list-overview extra-margin">
-                        <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
+                        <th:block th:each="question : ${applicationFeedbackSummaryViewModel.sectionQuestions.get(section.id)}"
+                                  th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
+                                  or question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
                             <li class="section-status">
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
                                         <h3 class="heading-small">
-                                            <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                            <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${applicationFeedbackSummaryViewModel.application.id},qId=${question.id})}"
                                             th:text="${question.shortName}" >Project summary</a>
                                         </h3>
                                     </div>
                                     <div class="column-third">
                                         <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
-                                            <p th:unless="${scores.scopeAssessed}" class="form-hint no-margin">No feedback provided</p>
-                                            <p th:if="${scores.scopeAssessed}">
-                                                In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span>
+                                            <p th:unless="${applicationFeedbackSummaryViewModel.scores.scopeAssessed}" class="form-hint no-margin">No feedback provided</p>
+                                            <p th:if="${applicationFeedbackSummaryViewModel.scores.scopeAssessed}">
+                                                In scope? <span th:text="${applicationFeedbackSummaryViewModel.scores.inScope}">4</span>/<span th:text="${applicationFeedbackSummaryViewModel.scores.totalScope}">5</span>
                                             </p>
                                         </th:block>
                                         <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
@@ -87,16 +89,16 @@
                     <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
 
                     <ul class="list-overview">
-                        <li class="section-status" th:each="question : ${sectionQuestions.get(section.id)}">
+                        <li class="section-status" th:each="question : ${applicationFeedbackSummaryViewModel.sectionQuestions.get(section.id)}">
                         <div class="grid-row">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                    <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${applicationFeedbackSummaryViewModel.application.id},qId=${question.id})}"
                                         th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
                                 </h3>
                             </div>
                             <div>
-                                <div class="column-third" th:text="|Average score ${scores.scores.get(question.id)} / ${question.assessorMaximumScore}|">Average score 7 / 10</div>
+                                <div class="column-third" th:text="|Average score ${applicationFeedbackSummaryViewModel.scores.scores.get(question.id)} / ${question.assessorMaximumScore}|">Average score 7 / 10</div>
                             </div>
                         </div>
                         </li>
@@ -106,30 +108,28 @@
                             &nbsp;
                         </div>
                         <div class="column-third">
-                            <p>Average overall: <strong class="heading-" th:text="|${scores.averagePercentage}%|">70%</strong></p>
+                            <p>Average overall: <strong class="heading-" th:text="|${applicationFeedbackSummaryViewModel.scores.averagePercentage}%|">70%</strong></p>
                         </div>
                     </div>
                 </th:block>
             </section>
 
-            <section th:if="${hasFinanceSection}">
+            <section th:if="${applicationFeedbackSummaryViewModel.hasFinanceSection}">
                 <h2 class="heading-medium">Finance</h2>
                 <div class="collapsible">
                     <h3>Finances summary</h3>
                     <div class="question">
-                        <div th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></div>
-
+                        <div ifs:global="${applicationFeedbackSummaryViewModel.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></div>
                         <h2 class="heading-medium">Funding breakdown</h2>
-                        <th:block th:insert="finance/finance-summary :: financial_summary_table" />
-
+                        <th:block ifs:global="${applicationFeedbackSummaryViewModel.applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
                     </div>
                 </div>
             </section>
 
-            <div th:if="!${#lists.isEmpty(feedback)}">
+            <div th:if="!${#lists.isEmpty(applicationFeedbackSummaryViewModel.feedback)}">
                 <h2 class="heading-medium">Assessor feedback</h2>
                 <ul class="boxed-list">
-                    <li th:each="item, iterStat : ${feedback}">
+                    <li th:each="item, iterStat : ${applicationFeedbackSummaryViewModel.feedback}">
                         <h3 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
                         <div th:text="${item}" data-text-to-html="" class="wysiwyg-styles">Feedback text</div>
                     </li>

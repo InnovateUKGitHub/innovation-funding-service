@@ -57,5 +57,6 @@ Custom Suite Setup
 
 the lead applicant fills all the questions and marks as complete(APC)
     the user marks the project details as complete
+    the applicant completes application team
     :FOR  ${ELEMENT}    IN    @{APC_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}

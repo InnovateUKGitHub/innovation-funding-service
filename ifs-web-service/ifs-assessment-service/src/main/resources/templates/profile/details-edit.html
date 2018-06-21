@@ -135,11 +135,7 @@
                            type="tel"
                            th:field="*{phoneNumber}"
                            required="required"
-                           minlength="8"
-                           maxlength="20"
-                           th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
-                                    data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
-                                    data-required-errormessage=#{validation.standard.phonenumber.required}" />
+                           th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
 
                 </div>
 
