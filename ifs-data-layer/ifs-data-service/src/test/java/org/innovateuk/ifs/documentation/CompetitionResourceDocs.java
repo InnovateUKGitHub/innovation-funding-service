@@ -66,7 +66,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("locationPerPartner").description("Indicates if the project location per partner is required during project setup for this competition"),
             fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last"),
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last"),
-            fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility")
+            fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility"),
+            fieldWithPath("useNewApplicantMenu").description("This is temporary until all competitions with the old menu view are complete")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

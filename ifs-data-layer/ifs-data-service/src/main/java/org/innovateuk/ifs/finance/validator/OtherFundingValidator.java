@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_K
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 
 /**
- * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
+ * This class validates the financial 'other funding' inputs
  */
 @Component
 public class OtherFundingValidator implements Validator {
@@ -73,9 +73,10 @@ public class OtherFundingValidator implements Validator {
     }
 
     private void validateFundingAmount(BigDecimal fundingAmount, Errors errors) {
-        if (fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) != 1) {
+        if (fundingAmount == null) {
+            rejectValue(errors, "fundingAmount", "validation.field.must.not.be.blank");
+        } else if (fundingAmount.compareTo(BigDecimal.ZERO) != 1) {
             rejectValue(errors, "fundingAmount", "validation.field.max.value.or.higher", 1);
-
         }
     }
 
