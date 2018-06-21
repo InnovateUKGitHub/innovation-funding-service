@@ -12,6 +12,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -57,6 +58,7 @@ public class ResearchCategoryController {
 
     @GetMapping
     public String getResearchCategories(Model model,
+                                        UserResource loggedInUser,
                                         @ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm researchCategoryForm,
                                         @PathVariable long applicationId,
                                         @PathVariable long questionId) {
@@ -70,7 +72,7 @@ public class ResearchCategoryController {
         }
 
         model.addAttribute("researchCategoryModel", researchCategoryModelPopulator.populate(
-                applicationResource, questionId));
+                applicationResource, loggedInUser.getId(), questionId));
         researchCategoryFormPopulator.populate(applicationResource, researchCategoryForm);
 
         return "application/research-categories";
@@ -83,6 +85,7 @@ public class ResearchCategoryController {
                                                HttpServletResponse response,
                                                ValidationHandler validationHandler,
                                                Model model,
+                                               UserResource loggedInUser,
                                                @PathVariable long applicationId,
                                                @PathVariable long questionId) {
 
@@ -90,8 +93,8 @@ public class ResearchCategoryController {
 
         checkIfAllowed(questionId, applicationResource);
 
-        Supplier<String> failureView = () -> getResearchCategories(model, researchCategoryForm, applicationId,
-                questionId);
+        Supplier<String> failureView = () -> getResearchCategories(model, loggedInUser, researchCategoryForm,
+                applicationId, questionId);
 
         return validationHandler.addAnyErrors(saveResearchCategoryChoice(applicationId, researchCategoryForm))
                 .failNowOrSucceedWith(failureView, () -> {

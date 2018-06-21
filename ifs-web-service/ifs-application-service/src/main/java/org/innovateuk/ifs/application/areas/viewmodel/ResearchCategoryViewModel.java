@@ -10,47 +10,65 @@ import java.util.List;
 public class ResearchCategoryViewModel {
 
     private String currentCompetitionName;
-    private Long applicationId;
-    private Long questionId;
+    private long applicationId;
+    private long questionId;
     private List<ResearchCategoryResource> availableResearchCategories;
+    private boolean canMarkAsComplete;
+    private boolean closed;
+    private boolean complete;
     private boolean hasApplicationFinances;
+
+    public ResearchCategoryViewModel(final String currentCompetitionName,
+                                     final long applicationId,
+                                     final long questionId,
+                                     final List<ResearchCategoryResource> availableResearchCategories,
+                                     final boolean canMarkAsComplete,
+                                     final boolean closed,
+                                     final boolean complete,
+                                     final boolean hasApplicationFinances) {
+        this.currentCompetitionName = currentCompetitionName;
+        this.applicationId = applicationId;
+        this.questionId = questionId;
+        this.availableResearchCategories = availableResearchCategories;
+        this.canMarkAsComplete = canMarkAsComplete;
+        this.closed = closed;
+        this.complete = complete;
+        this.hasApplicationFinances = hasApplicationFinances;
+    }
+
+    public String getCurrentCompetitionName() {
+        return currentCompetitionName;
+    }
+
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public long getQuestionId() {
+        return questionId;
+    }
 
     public List<ResearchCategoryResource> getAvailableResearchCategories() {
         return availableResearchCategories;
     }
 
-    public void setAvailableResearchCategories(List<ResearchCategoryResource> availableResearchCategories) {
-        this.availableResearchCategories = availableResearchCategories;
+    public boolean isCanMarkAsComplete() {
+        return canMarkAsComplete;
     }
 
-    public Long getApplicationId() {
-        return applicationId;
+    public boolean isClosed() {
+        return closed;
     }
 
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
+    public boolean isComplete() {
+        return complete;
     }
 
-    public Long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
-    }
-    public String getCurrentCompetitionName() {
-        return currentCompetitionName;
-    }
-
-    public void setCurrentCompetitionName(String currentCompetitionName) {
-        this.currentCompetitionName = currentCompetitionName;
-    }
-
-    public boolean getHasApplicationFinances() {
+    public boolean isHasApplicationFinances() {
         return hasApplicationFinances;
     }
 
-    public void setHasApplicationFinances(boolean hasApplicationFinances) {
-        this.hasApplicationFinances = hasApplicationFinances;
+    public boolean isSummary() {
+        return false;
     }
 }

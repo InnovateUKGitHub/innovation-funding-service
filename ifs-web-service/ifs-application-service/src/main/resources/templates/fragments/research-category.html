@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="research_category(model)">
+<th:block th:fragment="research_category(model, question)">
     <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
         <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
-            <div class="message-alert extra-margin-bottom" th:if="${researchCategoryModel.hasApplicationFinances}">
+            <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
                 <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
                 <p>The type of research affects the level of funding a business can receive under UK state aid rules.
                     Changing the research category will reset the funding level for all business participants.
@@ -21,7 +21,7 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('researchCategory')}" th:text="${err}"></span>
                     </th:block>
                 </legend>
-                <th:block th:each="item : ${researchCategoryModel.availableResearchCategories}">
+                <th:block th:each="item : ${model.availableResearchCategories}">
                     <div class="multiple-choice">
                         <input type="radio"
                                th:field="*{researchCategory}"
@@ -35,6 +35,11 @@
                     </div>
                 </th:block>
             </fieldset>
+        </div>
+
+        <div class="extra-margin">
+            <!--/* 'Mark as complete' / 'Edit' links */-->
+            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
         </div>
     </form>
 </th:block>

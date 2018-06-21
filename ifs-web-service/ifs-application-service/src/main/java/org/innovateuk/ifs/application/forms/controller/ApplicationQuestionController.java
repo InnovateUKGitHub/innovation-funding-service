@@ -231,7 +231,7 @@ public class ApplicationQuestionController {
         } else if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
             model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
-                    applicationResource, questionId));
+                    applicationResource, user.getId(), questionId));
             model.addAttribute("form", researchCategoryFormPopulator.populate(applicationResource,
                     new ResearchCategoryForm()));
         }
