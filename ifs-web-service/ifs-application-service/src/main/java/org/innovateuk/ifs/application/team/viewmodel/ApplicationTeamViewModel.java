@@ -22,7 +22,11 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
                                     String applicationName,
                                     List<ApplicationTeamOrganisationRowViewModel> organisations,
                                     boolean userLeadApplicant,
-                                    boolean applicationCanBegin) {
+                                    boolean applicationCanBegin,
+                                    boolean closed,
+                                    boolean complete,
+                                    boolean canMarkAsComplete) {
+        super(closed, complete, canMarkAsComplete);
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.organisations = organisations;
@@ -50,6 +54,7 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
         return applicationCanBegin;
     }
 
+    @Override
     public boolean isSummary() {
         return summary;
     }

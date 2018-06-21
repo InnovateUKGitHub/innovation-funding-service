@@ -16,11 +16,15 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private List<ResearchCategoryResource> availableResearchCategories;
     private boolean hasApplicationFinances;
 
-    public ResearchCategoryViewModel(final String currentCompetitionName,
-                                     final long applicationId,
-                                     final long questionId,
-                                     final List<ResearchCategoryResource> availableResearchCategories,
-                                     final boolean hasApplicationFinances) {
+    public ResearchCategoryViewModel(String currentCompetitionName,
+                                     long applicationId,
+                                     long questionId,
+                                     List<ResearchCategoryResource> availableResearchCategories,
+                                     boolean hasApplicationFinances,
+                                     boolean closed,
+                                     boolean complete,
+                                     boolean canMarkAsComplete) {
+        super(closed, complete, canMarkAsComplete);
         this.currentCompetitionName = currentCompetitionName;
         this.applicationId = applicationId;
         this.questionId = questionId;
@@ -48,6 +52,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         return hasApplicationFinances;
     }
 
+    @Override
     public boolean isSummary() {
         return false;
     }

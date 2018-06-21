@@ -28,17 +28,18 @@ public class ApplicationResearchCategorySummaryModelPopulator {
         this.questionRestService = questionRestService;
     }
 
-    public ResearchCategorySummaryViewModel populate(ApplicationResource applicationResource, long loggedInUserId,
+    public ResearchCategorySummaryViewModel populate(ApplicationResource applicationResource,
+                                                     long loggedInUserId,
                                                      boolean userIsLeadApplicant) {
         String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
                 .map(ResearchCategoryResource::getName).orElse(null);
 
-        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = new ResearchCategorySummaryViewModel(applicationResource.getId(), researchCategoryName);
-        researchCategorySummaryViewModel.setCanMarkAsComplete(userIsLeadApplicant);
-        researchCategorySummaryViewModel.setClosed(!isCompetitionOpen(applicationResource));
-        researchCategorySummaryViewModel.setComplete(isComplete(applicationResource, loggedInUserId));
-
-        return researchCategorySummaryViewModel;
+        return new ResearchCategorySummaryViewModel(applicationResource.getId(),
+                researchCategoryName,
+                !isCompetitionOpen(applicationResource),
+                isComplete(applicationResource, loggedInUserId),
+                userIsLeadApplicant
+        );
     }
 
     private boolean isCompetitionOpen(ApplicationResource applicationResource) {

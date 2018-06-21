@@ -9,27 +9,25 @@ public abstract class AbstractLeadOnlyViewModel {
     private boolean complete;
     private boolean canMarkAsComplete;
 
-    public boolean isCanMarkAsComplete() {
-        return canMarkAsComplete;
+    protected AbstractLeadOnlyViewModel(boolean closed,
+                                        boolean complete,
+                                        boolean canMarkAsComplete) {
+        this.closed = closed;
+        this.complete = complete;
+        this.canMarkAsComplete = canMarkAsComplete;
     }
 
-    public void setCanMarkAsComplete(boolean canMarkAsComplete) {
-        this.canMarkAsComplete = canMarkAsComplete;
+    public boolean isCanMarkAsComplete() {
+        return canMarkAsComplete;
     }
 
     public boolean isClosed() {
         return closed;
     }
 
-    public void setClosed(boolean closed) {
-        this.closed = closed;
-    }
-
     public boolean isComplete() {
         return complete;
     }
 
-    public void setComplete(boolean complete) {
-        this.complete = complete;
-    }
+    public abstract boolean isSummary();
 }
