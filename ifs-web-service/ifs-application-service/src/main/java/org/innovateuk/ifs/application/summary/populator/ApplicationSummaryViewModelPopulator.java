@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.summary.populator;
 
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryModelPopulator;
+import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -25,7 +25,7 @@ public class ApplicationSummaryViewModelPopulator {
     private UserService userService;
     private SummaryViewModelPopulator summaryViewModelPopulator;
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
-    private ApplicationResearchCategoryModelPopulator researchCategoryModelPopulator;
+    private ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator;
     private ProjectService projectService;
 
     public ApplicationSummaryViewModelPopulator(ApplicationService applicationService,
@@ -33,15 +33,15 @@ public class ApplicationSummaryViewModelPopulator {
                                                 UserService userService,
                                                 SummaryViewModelPopulator summaryViewModelPopulator,
                                                 ApplicationTeamModelPopulator applicationTeamModelPopulator,
-                                                ApplicationResearchCategoryModelPopulator
-                                                        researchCategoryModelPopulator,
+                                                ApplicationResearchCategorySummaryModelPopulator
+                                                        researchCategorySummaryModelPopulator,
                                                 ProjectService projectService) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.userService = userService;
         this.summaryViewModelPopulator = summaryViewModelPopulator;
         this.applicationTeamModelPopulator = applicationTeamModelPopulator;
-        this.researchCategoryModelPopulator = researchCategoryModelPopulator;
+        this.researchCategorySummaryModelPopulator = researchCategorySummaryModelPopulator;
         this.projectService = projectService;
     }
 
@@ -54,14 +54,13 @@ public class ApplicationSummaryViewModelPopulator {
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
 
         boolean applicationReadyForSubmit = applicationService.isApplicationReadyForSubmit(application.getId());
+        boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
 
         SummaryViewModel summaryViewModel = summaryViewModelPopulator.populate(applicationId, user, form);
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateSummaryModel
                 (applicationId, user.getId(), application.getCompetition());
-        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = researchCategoryModelPopulator
-                .populateSummaryViewModel(application);
-
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
+        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = researchCategorySummaryModelPopulator
+                .populate(application, user.getId(), userIsLeadApplicant);
 
         return new ApplicationSummaryViewModel(
                 application,

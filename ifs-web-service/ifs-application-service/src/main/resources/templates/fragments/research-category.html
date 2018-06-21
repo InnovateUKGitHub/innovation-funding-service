@@ -45,4 +45,11 @@
         <dd th:text="${model.researchCategory} ?: 'This field has not been completed'"
         th:classappend="${#strings.isEmpty(model.researchCategory)}? 'TODO IFS-2123 class for not completed'">Experimental development</dd>
     </dl>
+
+    <div class="extra-margin">
+        <!--/* 'Mark as complete' / 'Edit' links */-->
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
+        <!--/* 'Return and edit' link */-->
+        <th:block th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
+    </div>
 </th:block>
