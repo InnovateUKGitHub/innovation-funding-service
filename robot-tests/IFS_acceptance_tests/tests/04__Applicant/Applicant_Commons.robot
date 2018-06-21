@@ -222,8 +222,7 @@ the academic fills in the project costs
 the user enters the project location
     the user clicks the button/link         link = Your project location
     the user enters text to a text field    projectLocation   BS1 4NT
-    the user clicks the button/link         jQuery=button:contains("Mark as complete")
-    the user clicks the button/link         jQuery = button:contains("Save and return to finances")
+    the user clicks the button/link         jQuery = button:contains("Mark as complete")
 
 the user fills the organisation details with Project growth table
     [Arguments]   ${Application}  ${org_size}
