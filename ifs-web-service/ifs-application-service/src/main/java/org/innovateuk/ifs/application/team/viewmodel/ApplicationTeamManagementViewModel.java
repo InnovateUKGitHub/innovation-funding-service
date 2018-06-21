@@ -5,12 +5,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * Holder of model attributes for the Update Organisation view.
  */
 public class ApplicationTeamManagementViewModel {
 
-    private Long applicationId;
+    private long applicationId;
+    private Long questionId;
     private String applicationName;
     private Long organisationId;
     private Long inviteOrganisationId;
@@ -20,7 +23,8 @@ public class ApplicationTeamManagementViewModel {
     private List<ApplicationTeamManagementApplicantRowViewModel> applicants;
     private boolean organisationExists;
 
-    public ApplicationTeamManagementViewModel(Long applicationId,
+    public ApplicationTeamManagementViewModel(long applicationId,
+                                              Long questionId,
                                               String applicationName,
                                               Long organisationId,
                                               Long inviteOrganisationId,
@@ -30,6 +34,7 @@ public class ApplicationTeamManagementViewModel {
                                               List<ApplicationTeamManagementApplicantRowViewModel> applicants,
                                               boolean organisationExists) {
         this.applicationId = applicationId;
+        this.questionId = questionId;
         this.applicationName = applicationName;
         this.organisationId = organisationId;
         this.inviteOrganisationId = inviteOrganisationId;
@@ -80,18 +85,33 @@ public class ApplicationTeamManagementViewModel {
         this.organisationExists = organisationExists;
     }
 
+    public String getBackUrl() {
+        boolean useNewApplicantMenu = questionId != null;
+        if (useNewApplicantMenu) {
+            return format("/application/%s/form/question/%s", applicationId, questionId);
+        } else {
+            return format("/application/%s/team", applicationId);
+        }
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        ApplicationTeamManagementViewModel that = (ApplicationTeamManagementViewModel) o;
+        final ApplicationTeamManagementViewModel that = (ApplicationTeamManagementViewModel) o;
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
+                .append(questionId, that.questionId)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(userLeadApplicant, that.userLeadApplicant)
+                .append(organisationExists, that.organisationExists)
                 .append(applicationName, that.applicationName)
                 .append(organisationId, that.organisationId)
                 .append(inviteOrganisationId, that.inviteOrganisationId)
@@ -104,6 +124,7 @@ public class ApplicationTeamManagementViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(applicationId)
+                .append(questionId)
                 .append(applicationName)
                 .append(organisationId)
                 .append(inviteOrganisationId)
@@ -111,6 +132,7 @@ public class ApplicationTeamManagementViewModel {
                 .append(leadOrganisation)
                 .append(userLeadApplicant)
                 .append(applicants)
+                .append(organisationExists)
                 .toHashCode();
     }
 }

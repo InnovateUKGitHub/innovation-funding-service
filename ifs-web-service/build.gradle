@@ -49,3 +49,7 @@ endpointDocumentation.dependsOn "ifs-competition-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-service:test"
 endpointDocumentation.dependsOn "ifs-front-door-service:test"
+
+ext.ifsDataServiceRestBaseURL="http://data-service:8080"
+ext.serverPort=8080
+

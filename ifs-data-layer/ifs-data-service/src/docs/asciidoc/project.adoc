@@ -671,6 +671,7 @@ include::{snippets}/project/get-team-status/curl-request.adoc[]
 ===== Request
 include::{snippets}/project/get-competition-status/http-request.adoc[]
 include::{snippets}/project/get-competition-status/path-parameters.adoc[]
+include::{snippets}/project/get-competition-status/request-parameters.adoc[]
 
 ===== Response
 include::{snippets}/project/get-competition-status/http-response.adoc[]

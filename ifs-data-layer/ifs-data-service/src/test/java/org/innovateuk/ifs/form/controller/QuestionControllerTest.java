@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -16,6 +17,7 @@ import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestio
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -130,5 +132,23 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
         mockMvc.perform(get("/question/getQuestionsByAssessment/{assessmentId}", assessmentId))
                 .andExpect(content().string(objectMapper.writeValueAsString(questions)))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getQuestionByCompetitionIdAndCompetitionSetupQuestionType() throws Exception {
+        long competitionId = 1L;
+        CompetitionSetupQuestionType type = CompetitionSetupQuestionType.APPLICATION_DETAILS;
+
+        QuestionResource questionResource = newQuestionResource().build();
+
+        when(questionService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, type))
+                .thenReturn(serviceSuccess(questionResource));
+
+        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndCompetitionSetupQuestionType/{competitionId" +
+                "}/{type}", competitionId, type))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(questionResource)));
+
+        verify(questionService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, type);
     }
 }
