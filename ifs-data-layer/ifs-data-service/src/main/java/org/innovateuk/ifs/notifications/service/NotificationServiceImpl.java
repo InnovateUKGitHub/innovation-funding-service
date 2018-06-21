@@ -12,6 +12,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
@@ -37,12 +38,23 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public ServiceResult<Void> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
+        return sendNotification(sender -> sender.sendNotification(notification), notificationMedium, otherNotificationMedia);
+    }
+
+    @Override
+    public ServiceResult<Void> sendNotificationWithFlush(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
+        return sendNotification(sender -> sender.sendNotificationWithFlush(notification), notificationMedium, otherNotificationMedia);
+    }
+
+    private ServiceResult<Void> sendNotification(
+            Function<NotificationSender, ServiceResult<Notification>> sendFn,
+            NotificationMedium notificationMedium,
+            NotificationMedium... otherNotificationMedia) {
 
         Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
 
         List<ServiceResult<Notification>> results = simpleMap(allMediaToSendNotificationBy, medium ->
-                getNotificationSender(medium).andOnSuccess(serviceForMedium ->
-                        serviceForMedium.sendNotification(notification)));
+                getNotificationSender(medium).andOnSuccess(sendFn::apply));
 
         return aggregate(results).andOnSuccessReturnVoid();
     }

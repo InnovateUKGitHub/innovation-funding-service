@@ -10,10 +10,12 @@ import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,9 @@ public class EmailNotificationSender implements NotificationSender {
     @Autowired
     private NotificationTemplateRenderer renderer;
 
+    @Autowired
+    private TransactionalHelper transactionalHelper;
+
     @Override
     public NotificationMedium getNotificationMedium() {
         return EMAIL;
@@ -57,6 +62,18 @@ public class EmailNotificationSender implements NotificationSender {
 
             return processAnyFailuresOrSucceed(results, failures -> serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, findStatusCode(failures))), serviceSuccess(notification));
         });
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.MANDATORY)
+    public ServiceResult<Notification> sendNotificationWithFlush(Notification notification) {
+
+        // flush any pending SQL updates to the database before proceeding to send the Notification, in case any SQL
+        // issues occur
+        transactionalHelper.flushWithNoCommit();
+
+        // then it's safe to go ahead and attempt to send out the Notification
+        return sendNotification(notification);
     }
 
     private ServiceResult<Map<NotificationTarget, EmailContent>> renderTemplates(Notification notification) {

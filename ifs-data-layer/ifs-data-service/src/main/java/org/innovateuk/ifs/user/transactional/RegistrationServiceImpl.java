@@ -13,7 +13,6 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -74,9 +73,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private RegistrationEmailService registrationEmailService;
 
-    @Autowired
-    private TransactionalHelper transactionalHelper;
-
     @Override
     @Transactional
     public ServiceResult<UserResource> createUser(UserRegistrationResource userRegistrationResource) {
@@ -108,14 +104,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 andOnSuccess(newUserWithOrganisation -> addApplicantRoleToUserIfNoRolesAssigned(userResource, newUserWithOrganisation)).
                 andOnSuccess(newUserWithOrganisationAndRole -> markLatestSiteTermsAndConditionsAgreedToIfApplicant(newUserWithOrganisationAndRole)).
                 andOnSuccess(newUserWithOrganisationAndRole -> createUserWithUid(newUserWithOrganisationAndRole, userResource.getPassword(), null)).
-                andOnSuccess(createdUser -> sendUserVerificationEmailSafely(competitionId, createdUser));
+                andOnSuccess(createdUser -> sendUserVerificationEmail(competitionId, createdUser));
     }
 
-    private ServiceResult<UserResource> sendUserVerificationEmailSafely(Optional<Long> competitionId, UserResource createdUser) {
-
-        // ensure that all IFS database updates go ahead without issue before committing to sending out the verification
-        // email.
-        transactionalHelper.flushWithNoCommit();
+    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, UserResource createdUser) {
 
         return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId).
                 andOnSuccessReturn(() -> createdUser);

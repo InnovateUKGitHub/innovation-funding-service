@@ -8,8 +8,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +22,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
-import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -49,13 +45,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
-    private NotificationSender notificationSender;
-
-    @Autowired
     private ApplicationWorkflowHandler applicationWorkflowHandler;
-
-    @Autowired
-    private TransactionalHelper transactionalHelper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -80,8 +70,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).
                 andOnSuccess(application -> markApplicationAsIneligible(application)).
-                andOnSuccess(markedApplication -> sendApplicationIneligibleNotificationSafely(markedApplication, applicationIneligibleSendResource)).
-                andOnSuccessReturnVoid();
+                andOnSuccess(markedApplication -> sendApplicationIneligibleNotification(markedApplication, applicationIneligibleSendResource));
     }
 
     private ServiceResult<Application> markApplicationAsIneligible(Application application) {
@@ -93,18 +82,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         return serviceSuccess(application);
     }
 
-    private ServiceResult<Notification> sendApplicationIneligibleNotificationSafely(
-            Application application,
-            ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+    private ServiceResult<Void> sendApplicationIneligibleNotification(Application application, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
 
-        // flush any pending SQL updates to the database before proceeding to send the email, in case any SQL issues
-        // occur
-        transactionalHelper.flushWithNoCommit();
-
-        return sendApplicationIneligibleNotification(application, applicationIneligibleSendResource);
-    }
-
-    private ServiceResult<Notification> sendApplicationIneligibleNotification(Application application, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
         String bodyPlain = stripHtml(applicationIneligibleSendResource.getMessage());
 
         NotificationTarget recipient = new UserNotificationTarget(
@@ -124,10 +103,10 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                         "bodyHtml", applicationIneligibleSendResource.getMessage())
         );
 
-        return notificationSender.sendNotification(notification);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
-    private ServiceResult<Notification> sendAssessorFeedbackPublishedNotification(ProcessRole processRole) {
+    private ServiceResult<Void> sendAssessorFeedbackPublishedNotification(ProcessRole processRole) {
 
         Application application = applicationRepository.findOne(processRole.getApplicationId());
 
@@ -144,7 +123,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                         "competitionName", application.getCompetition().getName(),
                         "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
-        return notificationSender.sendNotification(notification);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Override
@@ -171,7 +150,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                             Notifications.APPLICATION_SUBMITTED,
                             notificationArguments
                     );
-                    return notificationService.sendNotification(notification, EMAIL);
+                    return notificationService.sendNotificationWithFlush(notification, EMAIL);
         });
     }
 

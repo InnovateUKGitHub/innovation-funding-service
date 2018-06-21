@@ -12,4 +12,6 @@ public interface NotificationSender {
     NotificationMedium getNotificationMedium();
 
     ServiceResult<Notification> sendNotification(Notification notification);
+
+    ServiceResult<Notification> sendNotificationWithFlush(Notification notification);
 }
