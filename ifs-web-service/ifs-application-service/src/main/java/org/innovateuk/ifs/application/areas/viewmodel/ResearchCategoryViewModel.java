@@ -44,7 +44,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         return availableResearchCategories;
     }
 
-    public boolean isHasApplicationFinances() {
+    public boolean hasApplicationFinances() {
         return hasApplicationFinances;
     }
 

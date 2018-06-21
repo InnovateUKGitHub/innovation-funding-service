@@ -34,8 +34,9 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
     @Test
     public void populateWithApplicationFinances() throws Exception {
 
-        Long questionId = 1L;
-        Long applicationId = 2L;
+        long questionId = 1L;
+        long applicationId = 2L;
+        Long loggedInUserId = 3L;
         String competitionName = "COMP_NAME";
 
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).withOrganisationSize(1L).build(3);
@@ -46,20 +47,20 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(financeService.getApplicationFinanceDetails(applicationId)).thenReturn(applicationFinanceResource);
 
-        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId);
+        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId, loggedInUserId);
 
         assertEquals(questionId, researchCategoryViewModel.getQuestionId());
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
         assertEquals(researchCategoryViewModel.getCurrentCompetitionName(), competitionName);
         assertEquals(researchCategoryViewModel.getAvailableResearchCategories().size(), 3L);
-        assertEquals(researchCategoryViewModel.getHasApplicationFinances(), true);
+        assertEquals(researchCategoryViewModel.hasApplicationFinances(), true);
     }
 
     @Test
     public void populateWithoutApplicationFinancesAndResearchCategorySelected() throws Exception {
-
-        Long questionId = 1L;
-        Long applicationId = 2L;
+        long questionId = 1L;
+        long applicationId = 2L;
+        Long loggedInUserId = 3L;
         String competitionName = "COMP_NAME";
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).build(3);
 
@@ -70,20 +71,21 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(financeService.getApplicationFinanceDetails(applicationId)).thenReturn(applicationFinanceResource);
 
-        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId);
+        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId, loggedInUserId);
 
         assertEquals(questionId, researchCategoryViewModel.getQuestionId());
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
         assertEquals(researchCategoryViewModel.getCurrentCompetitionName(), competitionName);
         assertEquals(researchCategoryViewModel.getAvailableResearchCategories().size(), 3L);
-        assertEquals(researchCategoryViewModel.getHasApplicationFinances(), false);
+        assertEquals(researchCategoryViewModel.hasApplicationFinances(), false);
     }
 
     @Test
     public void populateWithoutApplicationFinancesAndNoResearchCategorySelected() throws Exception {
+        long questionId = 1L;
+        long applicationId = 2L;
+        Long loggedInUserId = 3L;
 
-        Long questionId = 1L;
-        Long applicationId = 2L;
         String competitionName = "COMP_NAME";
 
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).build(3);
@@ -95,12 +97,12 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(3)));
         when(financeService.getApplicationFinanceDetails(applicationId)).thenReturn(applicationFinanceResource);
 
-        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId);
+        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId, loggedInUserId);
 
         assertEquals(questionId, researchCategoryViewModel.getQuestionId());
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
         assertEquals(researchCategoryViewModel.getCurrentCompetitionName(), competitionName);
         assertEquals(researchCategoryViewModel.getAvailableResearchCategories().size(), 3L);
-        assertEquals(researchCategoryViewModel.getHasApplicationFinances(), false);
+        assertEquals(researchCategoryViewModel.hasApplicationFinances(), false);
     }
 }
