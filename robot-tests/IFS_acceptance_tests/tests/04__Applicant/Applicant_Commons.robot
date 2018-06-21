@@ -80,7 +80,6 @@ the user selects Research category
 
 the user marks the finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
-    the user enters the project location
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
     Run Keyword if  '${Project_growth_table}'=='no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     Run Keyword if  '${Project_growth_table}'=='yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
