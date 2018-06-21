@@ -276,7 +276,6 @@ the user fills in the funding information
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
-#Need to add postcode entry etc - Remove when done!!
     the user should see the element  css=li:nth-of-type(1) .task-status-complete
     the user should see the element  css=li:nth-of-type(2) .task-status-complete
     the user should see the element  css=li:nth-of-type(3) .task-status-complete
