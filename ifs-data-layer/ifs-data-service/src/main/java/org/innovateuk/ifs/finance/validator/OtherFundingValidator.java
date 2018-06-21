@@ -96,7 +96,7 @@ public class OtherFundingValidator implements Validator {
     }
 
     private boolean userHasSelectedYes(final OtherFunding otherFunding) {
-        FinanceRow cost = financeRowRepository.findOne(otherFunding.getId());
+        FinanceRow cost = financeRowRepository.findById(otherFunding.getId()).get();
         ApplicationFinance applicationFinance = ((ApplicationFinanceRow)cost).getTarget();
         Long competitionId = applicationFinance.getApplication().getCompetition().getId();
         ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FinanceRowType.OTHER_FUNDING.getFormInputType());

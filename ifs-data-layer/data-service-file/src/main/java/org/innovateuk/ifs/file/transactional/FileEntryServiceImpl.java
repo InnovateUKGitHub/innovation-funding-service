@@ -26,7 +26,7 @@ public class FileEntryServiceImpl extends RootTransactionalService implements Fi
 
     @Override
     public ServiceResult<FileEntryResource> findOne(Long id) {
-        return find(repository.findOne(id), notFoundError(FileEntry.class, id)).andOnSuccessReturn(mapper::mapToResource);
+        return find(repository.findById(id), notFoundError(FileEntry.class, id)).andOnSuccessReturn(mapper::mapToResource);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class FileEntryServiceImpl extends RootTransactionalService implements Fi
     @Override
     @Transactional
     public ServiceResult<Void> removeFile(Long fileId) {
-        repository.delete(fileId);
+        repository.deleteById(fileId);
         return serviceSuccess();
     }
 }

@@ -91,7 +91,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
-        ProjectFinance projectFinance = projectFinanceRepository.findOne(projectFinanceId);
+        ProjectFinance projectFinance = projectFinanceRepository.findById(projectFinanceId).get();
         Long applicationId = projectFinance.getProject().getApplication().getId();
         Long organisationId = projectFinance.getOrganisation().getId();
         List<ProjectFinanceRow> projectCosts = getProjectCosts(projectFinanceId);
@@ -366,7 +366,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
             Optional<ApplicationFinanceRow> applicationFinanceRow;
             if(cost.getApplicationRowId() != null) {
-                applicationFinanceRow = Optional.ofNullable(applicationFinanceRowRepository.findOne(cost.getApplicationRowId()));
+                applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getApplicationRowId());
             } else{
                 applicationFinanceRow = Optional.empty();
             }

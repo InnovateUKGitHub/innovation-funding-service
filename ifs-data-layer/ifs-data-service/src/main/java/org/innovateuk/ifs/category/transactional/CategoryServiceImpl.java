@@ -64,7 +64,7 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
 
     @Override
     public ServiceResult<List<InnovationAreaResource>> getInnovationAreasBySector(long sectorId) {
-        return find(innovationSectorRepository.findOne(sectorId), notFoundError(InnovationSector.class, sectorId))
+        return find(innovationSectorRepository.findById(sectorId), notFoundError(InnovationSector.class, sectorId))
                 .andOnSuccess(parent -> getInnovationAreasFromParent(parent));
     }
 

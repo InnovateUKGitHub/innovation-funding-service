@@ -43,12 +43,12 @@ public class InterviewPermissionRules extends BasePermissionRules {
     }
 
     private boolean isAssessorForInterview(InterviewResource interview, UserResource user) {
-        Long assessmentUser = processRoleRepository.findOne(interview.getProcessRole()).getUser().getId();
+        Long assessmentUser = processRoleRepository.findById(interview.getProcessRole()).get().getUser().getId();
         return user.getId().equals(assessmentUser);
     }
 
     private boolean interviewIsInState(InterviewResource interviewResource, Set<InterviewState> allowedStates) {
-        Interview interview = interviewRepository.findOne(interviewResource.getId());
+        Interview interview = interviewRepository.findById(interviewResource.getId()).get();
         return allowedStates.contains(interview.getProcessState());
     }
 }

@@ -20,7 +20,7 @@ public class QueryLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public QueryResource findById(final Long queryId) {
-        return mapper.mapToResource(repository.findOne(queryId));
+        return mapper.mapToResource(repository.findById(queryId).orElse(null));
     }
 
 }

@@ -64,7 +64,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
 
     @Override
     public ServiceResult<AttachmentResource> findOne(Long attachmentId) {
-        return find(attachmentsRepository.findOne(attachmentId), notFoundError(AttachmentResource.class, attachmentId))
+        return find(attachmentsRepository.findById(attachmentId), notFoundError(AttachmentResource.class, attachmentId))
                 .andOnSuccessReturn(mapper::mapToResource);
     }
 
@@ -89,7 +89,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     public ServiceResult<Void> delete(Long attachmentId) {
         return ofNullable(mapper.mapIdToDomain(attachmentId))
                 .map(attachment -> {
-                    attachmentsRepository.delete(attachment.id());
+                    attachmentsRepository.deleteById(attachment.id());
                     return fileService.deleteFileIgnoreNotFound(attachment.fileId()).andOnSuccessReturnVoid();
                 }).orElse(ServiceResult.serviceFailure(notFoundError(AttachmentResource.class, attachmentId)));
     }

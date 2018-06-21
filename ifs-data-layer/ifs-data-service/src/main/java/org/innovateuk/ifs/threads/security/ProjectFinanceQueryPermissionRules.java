@@ -66,7 +66,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
     }
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {
-        return ofNullable(projectFinanceRepository.findOne(id));
+        return projectFinanceRepository.findById(id);
     }
 
     private boolean isProjectInSetup(Long projectFinance) {

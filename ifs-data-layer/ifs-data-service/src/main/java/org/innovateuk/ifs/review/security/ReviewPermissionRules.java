@@ -45,12 +45,12 @@ public class ReviewPermissionRules extends BasePermissionRules {
     }
 
     private boolean isAssessorForAssessmentReview(ReviewResource assessmentReview, UserResource user) {
-        Long assessmentUser = processRoleRepository.findOne(assessmentReview.getProcessRole()).getUser().getId();
+        Long assessmentUser = processRoleRepository.findById(assessmentReview.getProcessRole()).get().getUser().getId();
         return user.getId().equals(assessmentUser);
     }
 
     private boolean assessmentReviewIsInState(ReviewResource reviewResource, Set<ReviewState> allowedStates) {
-        Review review = reviewRepository.findOne(reviewResource.getId());
+        Review review = reviewRepository.findById(reviewResource.getId()).get();
         return allowedStates.contains(review.getProcessState());
     }
 }

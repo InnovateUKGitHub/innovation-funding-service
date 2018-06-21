@@ -143,12 +143,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ServiceResult<ReviewResource> getReview(long assessmentReviewId) {
-        return find(reviewRepository.findOne(assessmentReviewId), notFoundError(ReviewResource.class, assessmentReviewId))
+        return find(reviewRepository.findById(assessmentReviewId), notFoundError(ReviewResource.class, assessmentReviewId))
                 .andOnSuccessReturn(reviewMapper::mapToResource);
     }
 
     private ServiceResult<Review> findAssessmentReview(long assessmentReviewId) {
-        return find(reviewRepository.findOne(assessmentReviewId), notFoundError(Review.class, assessmentReviewId));
+        return find(reviewRepository.findById(assessmentReviewId), notFoundError(Review.class, assessmentReviewId));
     }
 
     private ServiceResult<Void> acceptAssessmentReview(Review review) {
@@ -175,7 +175,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId));
     }
 
     private List<ReviewParticipant> getAllAssessorsOnPanel(long competitionId) {

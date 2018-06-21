@@ -72,12 +72,12 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     }
 
     private boolean isAssessorForAssessment(AssessmentResource assessment, UserResource user) {
-        Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole()).getUser().getId();
+        Long assessmentUser = processRoleRepository.findById(assessment.getProcessRole()).get().getUser().getId();
         return user.getId().equals(assessmentUser);
     }
 
     private boolean assessmentIsInState(AssessmentResource assessmentResource, Set<AssessmentState> allowedStates) {
-        Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
+        Assessment assessment = assessmentRepository.findById(assessmentResource.getId()).get();
         return allowedStates.contains(assessment.getProcessState());
     }
 }

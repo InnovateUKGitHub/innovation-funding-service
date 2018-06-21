@@ -24,6 +24,6 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public ServiceResult<AddressResource> getById(Long id) {
-        return find(addressRepository.findOne(id), notFoundError(Address.class, id)).andOnSuccessReturn(addressMapper::mapToResource);
+        return find(addressRepository.findById(id), notFoundError(Address.class, id)).andOnSuccessReturn(addressMapper::mapToResource);
     }
 }

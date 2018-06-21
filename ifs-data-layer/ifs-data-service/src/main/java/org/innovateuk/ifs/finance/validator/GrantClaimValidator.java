@@ -35,7 +35,7 @@ public class GrantClaimValidator implements Validator {
             return;
         }
 
-        FinanceRow cost = financeRowRepository.findOne(response.getId());
+        FinanceRow cost = financeRowRepository.findById(response.getId()).get();
         ApplicationFinance applicationFinance = ((ApplicationFinanceRow)cost).getTarget();
         Integer max = applicationFinance.getMaximumFundingLevel();
         if (max == null) {
