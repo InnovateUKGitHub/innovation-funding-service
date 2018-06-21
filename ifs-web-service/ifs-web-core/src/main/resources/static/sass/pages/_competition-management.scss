@@ -263,7 +263,12 @@ $wide-page-width: 1400px;
   border-top: 1px solid $border-colour;
   clear:both;
 
-  &:last-child{
+  &:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  &:last-child {
     margin-bottom: 30px;
     border-bottom: 1px solid $border-colour;
   }
