@@ -90,7 +90,7 @@ public class Application implements ProcessActivity {
         this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
     }
 
-    // TODO can hopefully remove the activityState param here and just set to CREATED
+    // TODO: can hopefully remove the activityState param here and just set to CREATED - IFS-3776
     public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationState activityState) {
         requireNonNull(activityState, "activityState cannot be null " + activityState);
         this.competition = competition;
