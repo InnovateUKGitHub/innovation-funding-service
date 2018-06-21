@@ -21,6 +21,5 @@ project.ext['flyway.password']="password"
 
 ext.ifsWebSystemUserId = "c0d02979-e66e-11e7-ac43-0242ac120002"
 
-
 def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
 project.ext['flyway.locations']=flywayPatchesPath + "/migration"

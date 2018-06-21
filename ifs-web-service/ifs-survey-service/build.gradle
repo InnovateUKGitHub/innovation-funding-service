@@ -41,10 +41,6 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
-//jar {
-//    baseName = 'ifs-survey-service'
-//}
-
 jar.dependsOn ":ifs-web-service:gulp_default"
 
 

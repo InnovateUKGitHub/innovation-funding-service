@@ -32,10 +32,5 @@ public enum Satisfaction implements IdentifiableEnum<Satisfaction> {
 
     public static Satisfaction getById (long id) {
         return Stream.of(values()).filter(satisfaction -> satisfaction.getId() == id).findFirst().get();
-//        return Stream.of(values()).filter(satisfaction -> satisfaction.id == id).findFirst().get();
     }
-
-//    public static Satisfaction getById (String id) {
-//        return Stream.of(values()).filter(satisfaction -> satisfaction.id == Long.valueOf(id)).findFirst().get();
-//    }
 }
