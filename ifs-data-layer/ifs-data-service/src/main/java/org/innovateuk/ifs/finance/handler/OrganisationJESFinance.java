@@ -174,7 +174,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public ApplicationFinanceRow updateCost(final ApplicationFinanceRow newCostItem) {
-        return find(applicationFinanceRowRepository.findOne(newCostItem.getId()),  notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
+        return find(applicationFinanceRowRepository.findById(newCostItem.getId()),  notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
                 .andOnSuccess(costItem -> serviceSuccess(applicationFinanceRowRepository.save(newCostItem))).getSuccess();
     }
 

@@ -20,6 +20,6 @@ public class ProjectFinanceRowLookupStrategy {
 
    @PermissionEntityLookupStrategy
    public ProjectFinanceRow getProjectFinanceRow(final Long costId) {
-       return projectFinanceRowRepository.findOne(costId);
+       return projectFinanceRowRepository.findById(costId).orElse(null);
    }
 }

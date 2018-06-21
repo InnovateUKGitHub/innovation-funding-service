@@ -50,12 +50,12 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
     public boolean consortiumCanReadACostItemForTheirApplicationAndOrganisation(final FinanceRowItem costItem, final UserResource user) {
-        return isCollaborator(financeRowRepository.findOne(costItem.getId()), user);
+        return isCollaborator(financeRowRepository.findById(costItem.getId()).get(), user);
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
     public boolean consortiumCanReadACostValueForTheirApplicationAndOrganisation(final FinanceRowMetaValueResource financeRowMetaValueResource, final UserResource user) {
-        final FinanceRow cost = financeRowRepository.findOne(financeRowMetaValueResource.getFinanceRowId());
+        final FinanceRow cost = financeRowRepository.findById(financeRowMetaValueResource.getFinanceRowId()).get();
         return isCollaborator(cost, user);
     }
 

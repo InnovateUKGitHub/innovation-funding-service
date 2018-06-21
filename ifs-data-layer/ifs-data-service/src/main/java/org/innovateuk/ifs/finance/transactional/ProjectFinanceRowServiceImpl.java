@@ -146,7 +146,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
                         andOnSuccess(projectFinanceRow -> {
                             if (costBelongsToProjectFinance(projectFinance, projectFinanceRow)) {
                                 financeRowMetaValueRepository.deleteByFinanceRowId(costId);
-                                projectFinanceRowRepository.delete(costId);
+                                projectFinanceRowRepository.deleteById(costId);
                                 return serviceSuccess();
                             } else {
                                 return serviceFailure(notFoundError(ProjectFinanceRow.class, costId));
@@ -164,7 +164,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
         return getProject(projectFinance.getProject()).andOnSuccess(project ->
                 find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {
                     if (projectFinance.getOrganisationSize() != null) {
-                        dbFinance.setOrganisationSize(organisationSizeRepository.findOne(projectFinance.getOrganisationSize()));
+                        dbFinance.setOrganisationSize(organisationSizeRepository.findById(projectFinance.getOrganisationSize()).orElse(null));
                     }
                     dbFinance = projectFinanceRepository.save(dbFinance);
                     return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
@@ -217,7 +217,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
         ProjectFinanceRow persistedCost = projectFinanceRowRepository.save(cost);
         costValues.forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
         persistedCost.setFinanceRowMetadata(costValues);
-        financeRowMetaValueRepository.save(costValues);
+        financeRowMetaValueRepository.saveAll(costValues);
         return projectFinanceRowRepository.save(persistedCost);
     }
 
@@ -254,7 +254,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
             LOG.error("FinanceRowMetaField is null");
             return;
         }
-        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findOne(costValue.getFinanceRowMetaField().getId());
+        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findById(costValue.getFinanceRowMetaField().getId()).orElse(null);
         costValue.setFinanceRowId(savedCost.getId());
         costValue.setFinanceRowMetaField(financeRowMetaField);
         costValue = financeRowMetaValueRepository.save(costValue);

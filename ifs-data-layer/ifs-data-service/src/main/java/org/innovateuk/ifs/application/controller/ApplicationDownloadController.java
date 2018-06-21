@@ -148,7 +148,7 @@ public class ApplicationDownloadController {
             String fundingSoughtFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(fundingSought);
 
             ProcessRole leadRole = a.getLeadApplicantProcessRole();
-            Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+            Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).get();
 
             // ADD APPLICATION ROW
             cellCount = 0;

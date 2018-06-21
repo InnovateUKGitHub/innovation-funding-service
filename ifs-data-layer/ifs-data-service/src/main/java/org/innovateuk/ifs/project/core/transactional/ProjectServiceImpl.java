@@ -168,7 +168,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
         if (projectUser != null && projectUser.getOrganisation() != null) {
-            return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
+            return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findById(projectUser.getOrganisation().getId()).orElse(null)));
         } else {
             return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
         }
@@ -236,7 +236,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
             List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(allRoles,
                     role -> {
-                        Organisation organisation = organisationRepository.findOne(role.getOrganisationId());
+                        Organisation organisation = organisationRepository.findById(role.getOrganisationId()).orElse(null);
                         return createPartnerProjectUser(project, role.getUser(), organisation);
                     });
 

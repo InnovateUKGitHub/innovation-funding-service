@@ -28,7 +28,7 @@ public class AffiliationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<AffiliationListResource> getUserAffiliations(long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user ->
+        return find(userRepository.findById(userId), notFoundError(User.class, userId)).andOnSuccess(user ->
                             serviceSuccess(new AffiliationListResource(
                                     simpleMap(user.getAffiliations(), affiliationMapper::mapToResource)
                             ))
@@ -38,7 +38,7 @@ public class AffiliationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> updateUserAffiliations(long userId, AffiliationListResource affiliations) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
+        return find(userRepository.findById(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
             List<Affiliation> targetAffiliations = user.getAffiliations();
             targetAffiliations.clear();
             affiliationMapper.mapToDomain(affiliations.getAffiliationResourceList())

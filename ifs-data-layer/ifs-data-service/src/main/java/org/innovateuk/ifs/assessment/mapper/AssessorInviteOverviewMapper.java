@@ -82,7 +82,7 @@ public class AssessorInviteOverviewMapper {
             User user,
             AssessorInviteOverviewResource assessorInviteOverviewResource) {
 
-        Profile profile = profileRepository.findOne(user.getProfileId());
+        Profile profile = profileRepository.findById(user.getProfileId()).get();
 
         assessorInviteOverviewResource.setId(user.getId());
         assessorInviteOverviewResource.setBusinessType(profile.getBusinessType());

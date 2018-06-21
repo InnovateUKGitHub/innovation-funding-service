@@ -33,7 +33,7 @@ public class ContentEventServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> resetAndSaveEvents(Long publicContentId, List<ContentEventResource> eventResources) {
         if(eventResourcesAllHaveIDOrEmpty(publicContentId, eventResources)) {
             contentEventRepository.deleteByPublicContentId(publicContentId);
-            contentEventRepository.save(contentEventMapper.mapToDomain(eventResources));
+            contentEventRepository.saveAll(contentEventMapper.mapToDomain(eventResources));
             return serviceSuccess();
         }
 

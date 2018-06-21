@@ -51,7 +51,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findById(applicationFinanceId).get();
         return getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(app ->
                 fileService.createFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinance, fileResults))
@@ -61,7 +61,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findById(applicationFinanceId).get();
         return getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(app ->
                 fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinance, fileResults))
@@ -71,7 +71,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
-        Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
+        Application application = applicationFinanceRepository.findById(applicationFinanceId).get().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 financeService.getApplicationFinanceById(applicationFinanceId).
                         andOnSuccess(finance -> fileService.deleteFileIgnoreNotFound(finance.getFinanceFileEntry()).
@@ -88,7 +88,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<ApplicationFinanceResource> removeFileEntryFromApplicationFinance(ApplicationFinanceResource applicationFinanceResource) {
-        Application application = applicationFinanceRepository.findOne(applicationFinanceResource.getId()).getApplication();
+        Application application = applicationFinanceRepository.findById(applicationFinanceResource.getId()).get().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app -> {
             applicationFinanceResource.setFinanceFileEntry(null);
             return financeRowCostsService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);

@@ -259,7 +259,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         ApplicationFinanceRow persistedCost = financeHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(),(ApplicationFinanceRow)cost);
         costValues.stream().forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
         persistedCost.setFinanceRowMetadata(costValues);
-        financeRowMetaValueRepository.save(costValues);
+        financeRowMetaValueRepository.saveAll(costValues);
         return financeHandler.updateCost(persistedCost);
     }
 

@@ -26,12 +26,12 @@ public class CompetitionLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public Competition getCompetition(Long competitionId) {
-        return competitionRepository.findOne(competitionId);
+        return competitionRepository.findById(competitionId).orElse(null);
     }
 
     @PermissionEntityLookupStrategy
     public CompetitionResource getCompetititionResource(Long competitionId) {
-        return competitionMapper.mapToResource(competitionRepository.findOne(competitionId));
+        return competitionMapper.mapToResource(competitionRepository.findById(competitionId).orElse(null));
     }
 
     @PermissionEntityLookupStrategy

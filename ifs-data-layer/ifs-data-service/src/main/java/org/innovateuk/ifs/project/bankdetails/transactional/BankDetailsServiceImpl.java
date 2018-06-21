@@ -99,7 +99,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     public ServiceResult<BankDetailsResource> getById(Long id) {
-        return find(bankDetailsRepository.findOne(id), notFoundError(BankDetails.class, id)).
+        return find(bankDetailsRepository.findById(id), notFoundError(BankDetails.class, id)).
                 andOnSuccessReturn(bankDetailsMapper::mapToResource);
     }
 
@@ -131,9 +131,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     public ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
         List<Organisation> sortedOrganisations = new PrioritySorting<>(projectUsersHelper.getPartnerOrganisations(projectId), leadOrganisation, Organisation::getName).unwrap();
         final List<BankDetailsStatusResource> bankDetailsStatusResources = simpleMap(sortedOrganisations, org -> getBankDetailsStatusForOrg(project, org));
 
@@ -185,10 +185,10 @@ public class BankDetailsServiceImpl implements BankDetailsService {
         AddressResource addressResource = organisationAddressResource.getAddress();
 
         if (organisationAddressResource.getId() != null) {
-            OrganisationAddress organisationAddress = organisationAddressRepository.findOne(organisationAddressResource.getId());
+            OrganisationAddress organisationAddress = organisationAddressRepository.findById(organisationAddressResource.getId()).get();
             bankDetails.setOrganisationAddress(organisationAddress);
             if (addressResource.getId() != null) { // Existing address selected.
-                organisationAddress.setAddress(addressRepository.findOne(addressResource.getId()));
+                organisationAddress.setAddress(addressRepository.findById(addressResource.getId()).orElse(null));
             }
         } else {
             updateAddressForExistingBankDetails(organisationAddressResource, addressResource, bankDetailsResource, bankDetails);
@@ -201,7 +201,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private void updateAddressForExistingBankDetails(OrganisationAddressResource organisationAddressResource, AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
         if (organisationAddressResource.getAddressType().getId().equals(BANK_DETAILS.getOrdinal())) {
-            AddressType addressType = addressTypeRepository.findOne(BANK_DETAILS.getOrdinal());
+            AddressType addressType = addressTypeRepository.findById(BANK_DETAILS.getOrdinal()).get();
             List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
 
             OrganisationAddress newOrganisationAddress;

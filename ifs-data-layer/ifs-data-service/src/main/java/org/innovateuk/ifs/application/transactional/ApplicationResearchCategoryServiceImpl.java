@@ -78,7 +78,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
 
     private ServiceResult<Application> saveApplicationWithResearchCategory(Application application, ResearchCategory researchCategory) {
 
-        Application origApplication = applicationRepository.findOne(application.getId());
+        Application origApplication = applicationRepository.findById(application.getId()).get();
 
         if (origApplication.getResearchCategory() == null || !origApplication.getResearchCategory().getId().equals(researchCategory.getId())) {
 

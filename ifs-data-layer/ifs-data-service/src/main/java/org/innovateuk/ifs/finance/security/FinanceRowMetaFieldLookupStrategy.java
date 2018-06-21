@@ -25,6 +25,6 @@ public class FinanceRowMetaFieldLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public FinanceRowMetaFieldResource getCostField(final Long costFieldId) {
-        return mapper.mapToResource(financeRowMetaFieldRepository.findOne(costFieldId));
+        return mapper.mapToResource(financeRowMetaFieldRepository.findById(costFieldId).orElse(null));
     }
 }

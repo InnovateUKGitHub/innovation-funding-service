@@ -51,10 +51,12 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
         }
 
-        Competition competition = competitionRepository.findById(competitionId);
-        if (competition == null || competitionIsNotInSetupState(competition)) {
+        Optional<Competition> competitionOptional = competitionRepository.findById(competitionId);
+        if (!competitionOptional.isPresent() || competitionIsNotInSetupState(competitionOptional.get())) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
+
+        Competition competition = competitionOptional.get();
 
         competition.setCompetitionType(competitionType.get());
         competition = setDefaultAssessorPayAndCount(competition);

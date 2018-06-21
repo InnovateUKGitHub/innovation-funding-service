@@ -230,7 +230,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
@@ -584,7 +584,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
 
         Map<String, Object> notificationArguments = new HashMap<>();

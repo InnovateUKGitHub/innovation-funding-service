@@ -67,7 +67,7 @@ public class QuestionStatusRules extends BasePermissionRules {
     }
 
     private boolean questionHasMultipleStatuses(final Long questionId) {
-        return questionRepository.findOne(questionId).hasMultipleStatuses();
+        return questionRepository.findById(questionId).get().hasMultipleStatuses();
     }
 
     private boolean userIsConnected(Long applicationId, UserResource user){

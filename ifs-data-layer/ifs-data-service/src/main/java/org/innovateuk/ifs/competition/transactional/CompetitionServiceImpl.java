@@ -32,6 +32,7 @@ import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -112,7 +113,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return find(competitionRepository.findById(competitionId),
                     notFoundError(Competition.class, competitionId))
             .andOnSuccessReturnVoid(competition ->
-                find(userRepository.findOne(innovationLeadUserId),
+                find(userRepository.findById(innovationLeadUserId),
                      notFoundError(User.class, innovationLeadUserId))
                 .andOnSuccess(innovationLead -> {
                     innovationLeadRepository.save(new InnovationLead(competition, innovationLead));
@@ -270,7 +271,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> closeAssessment(long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
         competition.closeAssessment(ZonedDateTime.now());
         return serviceSuccess();
     }
@@ -278,7 +279,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> notifyAssessors(long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
         competition.notifyAssessors(ZonedDateTime.now());
         return serviceSuccess();
     }
@@ -290,7 +291,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
-            Competition competition = competitionRepository.findById(competitionId);
+            Competition competition = competitionRepository.findById(competitionId).get();
             competition.releaseFeedback(ZonedDateTime.now());
             return serviceSuccess();
         } else {
@@ -305,7 +306,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
-            Competition competition = competitionRepository.findById(competitionId);
+            Competition competition = competitionRepository.findById(competitionId).get();
             competition.setFundersPanelEndDate(ZonedDateTime.now());
         }
         return serviceSuccess();
@@ -338,11 +339,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
-        GrantTermsAndConditions termsAndConditions = grantTermsAndConditionsRepository.findOne(termsAndConditionsId);
-        if (termsAndConditions != null) {
-            return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+        Optional<GrantTermsAndConditions> termsAndConditions = grantTermsAndConditionsRepository.findById(termsAndConditionsId);
+        if (termsAndConditions.isPresent()) {
+            return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                     .andOnSuccess(competition -> {
-                        competition.setTermsAndConditions(termsAndConditions);
+                        competition.setTermsAndConditions(termsAndConditions.get());
                         competitionRepository.save(competition);
                         return serviceSuccess();
                     });

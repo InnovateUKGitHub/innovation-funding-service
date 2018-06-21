@@ -21,11 +21,11 @@ public class PartnerOrganisationLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public PartnerOrganisation getPartnerOrganisation(Long partnerOrganisationId) {
-        return partnerOrganisationRepository.findOne(partnerOrganisationId);
+        return partnerOrganisationRepository.findById(partnerOrganisationId).orElse(null);
     }
 
     @PermissionEntityLookupStrategy
     public PartnerOrganisationResource getPartnerOrganisationResource(Long partnerOrganisationId) {
-        return partnerOrganisationMapper.mapToResource(partnerOrganisationRepository.findOne(partnerOrganisationId));
+        return partnerOrganisationMapper.mapToResource(partnerOrganisationRepository.findById(partnerOrganisationId).orElse(null));
     }
 }

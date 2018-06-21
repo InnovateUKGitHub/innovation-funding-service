@@ -26,11 +26,11 @@ public class ApplicationLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public Application getApplication(Long applicationId) {
-        return applicationRepository.findOne(applicationId);
+        return applicationRepository.findById(applicationId).orElse(null);
     }
 
     @PermissionEntityLookupStrategy
     public ApplicationResource getApplicationResource(Long applicationId) {
-        return applicationMapper.mapToResource(applicationRepository.findOne(applicationId));
+        return applicationMapper.mapToResource(applicationRepository.findById(applicationId).orElse(null));
     }
 }

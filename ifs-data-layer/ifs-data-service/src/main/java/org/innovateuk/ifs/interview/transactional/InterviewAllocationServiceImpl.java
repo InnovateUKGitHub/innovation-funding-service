@@ -219,7 +219,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     private ServiceResult<User> getUser(long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId));
+        return find(userRepository.findById(userId), notFoundError(User.class, userId));
     }
 
     private String getInvitePreviewContent(Map<String, Object> arguments) {
@@ -233,7 +233,7 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId));
     }
 
     private ServiceResult<InterviewParticipant> getInterviewParticipant(long userId, long competitionId) {

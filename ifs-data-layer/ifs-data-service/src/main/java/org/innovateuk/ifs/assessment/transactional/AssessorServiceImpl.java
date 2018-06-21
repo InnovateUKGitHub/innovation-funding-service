@@ -106,7 +106,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
             userRegistrationResource.setRoles(singletonList(Role.ASSESSOR));
             return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
                 assignCompetitionParticipantsToUser(created);
-                Profile profile = profileRepository.findOne(created.getProfileId());
+                Profile profile = profileRepository.findById(created.getProfileId()).get();
                 // profile is guaranteed to have been created by createUser(...)
                 profile.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
                 profileRepository.save(profile);
@@ -179,7 +179,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private ServiceResult<Profile> getProfile(Long profileId) {
-        return find(profileRepository.findOne(profileId), notFoundError(Profile.class, profileId));
+        return find(profileRepository.findById(profileId), notFoundError(Profile.class, profileId));
     }
 
     private ServiceResult<User> getAssessor(long assessorId) {
@@ -193,13 +193,13 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private void assignCompetitionParticipantsToUser(User user) {
         List<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.getByInviteEmail(user.getEmail());
         competitionParticipants.forEach(competitionParticipant -> competitionParticipant.setUser(user));
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
     }
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {
         return registrationService.createUser(userRegistrationResource).andOnSuccess(
                 created -> registrationService.activateAssessorAndSendDiversitySurvey(created.getId()).andOnSuccessReturn(
-                        result -> userRepository.findOne(created.getId())
+                        result -> userRepository.findById(created.getId()).orElse(null)
                 )
         );
     }

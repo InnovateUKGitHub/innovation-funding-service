@@ -65,8 +65,8 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
             }
         });
 
-        formInputResponseRepository.save(formInputResponses);
-        formInputResponseRepository.delete(unassignableFormInputResponses);
+        formInputResponseRepository.saveAll(formInputResponses);
+        formInputResponseRepository.deleteAll(unassignableFormInputResponses);
     }
 
     private void reassignCollaboratorQuestionStatuses(long applicationId,
@@ -94,8 +94,8 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
             }
         });
 
-        questionStatusRepository.save(questionStatuses);
-        questionStatusRepository.delete(unassignableQuestionStatuses);
+        questionStatusRepository.saveAll(questionStatuses);
+        questionStatusRepository.deleteAll(unassignableQuestionStatuses);
     }
 
     private static QuestionStatus reassignQuestionStatusRoles(QuestionStatus questionStatus, ProcessRole reassignTo, ProcessRole leadApplicantRole) {

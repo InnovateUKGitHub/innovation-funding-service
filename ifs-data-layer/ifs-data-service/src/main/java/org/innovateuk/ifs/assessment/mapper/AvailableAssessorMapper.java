@@ -31,7 +31,7 @@ public class AvailableAssessorMapper {
 
     public AvailableAssessorResource mapToResource(CompetitionParticipant<?> participant) {
         User assessor = participant.getUser();
-        Profile profile = profileRepository.findOne(assessor.getProfileId());
+        Profile profile = profileRepository.findById(assessor.getProfileId()).get();
 
         AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
         availableAssessor.setId(assessor.getId());

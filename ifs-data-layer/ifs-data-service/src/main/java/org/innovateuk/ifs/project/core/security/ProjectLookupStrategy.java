@@ -32,13 +32,13 @@ public class ProjectLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public Project getProject(Long projectId) {
-        return projectRepository.findOne(projectId);
+        return projectRepository.findById(projectId).orElse(null);
     }
 
     @PermissionEntityLookupStrategy
     public ProjectResource getProjectResource(Long projectId) {
 
-        return projectMapper.mapToResource(Optional.ofNullable(projectRepository.findOne(projectId))
+        return projectMapper.mapToResource(projectRepository.findById(projectId)
                 .orElseThrow(() -> new ObjectNotFoundException("Project not found", null)));
 
     }

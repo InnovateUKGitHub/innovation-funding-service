@@ -25,7 +25,7 @@ public class CompetitionFunderServiceImpl extends BaseTransactionalService imple
     @Override
     @Transactional
     public void reinsertFunders(CompetitionResource resource) {
-        Competition competition = competitionRepository.findById(resource.getId());
+        Competition competition = competitionRepository.findById(resource.getId()).orElse(null);
 
         competitionFunderRepository.deleteByCompetitionId(resource.getId());
         resource.getFunders().forEach(funderResource -> {

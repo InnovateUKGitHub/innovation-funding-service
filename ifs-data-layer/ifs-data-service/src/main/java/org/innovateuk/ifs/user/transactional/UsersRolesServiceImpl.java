@@ -39,7 +39,7 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
     @Override
     public ServiceResult<List<ProcessRoleResource>> getProcessRolesByIds(Long[] ids) {
         List<Long> processRoleIds = asList(ids);
-        return serviceSuccess(processRolesToResources(processRoleRepository.findAll(processRoleIds)));
+        return serviceSuccess(processRolesToResources(processRoleRepository.findAllById(processRoleIds)));
     }
 
     @Override

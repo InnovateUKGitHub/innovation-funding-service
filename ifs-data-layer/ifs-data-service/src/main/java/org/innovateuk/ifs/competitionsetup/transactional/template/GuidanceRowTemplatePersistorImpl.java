@@ -46,7 +46,7 @@ public class GuidanceRowTemplatePersistorImpl implements BaseChainedTemplatePers
         List<GuidanceRow> scoreRows = formInput.getGuidanceRows();
         if(!scoreRows.isEmpty()) {
             scoreRows.forEach(scoreRow -> entityManager.detach(scoreRow));
-            guidanceRowRepository.delete(scoreRows);
+            guidanceRowRepository.deleteAll(scoreRows);
         }
     }
 }

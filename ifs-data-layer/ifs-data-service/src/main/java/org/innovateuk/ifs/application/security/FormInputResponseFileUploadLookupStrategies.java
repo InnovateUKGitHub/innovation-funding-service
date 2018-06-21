@@ -31,7 +31,7 @@ public class FormInputResponseFileUploadLookupStrategies {
 
     @PermissionEntityLookupStrategy
     public FormInputResponseFileEntryResource getFormInputResponseFileEntryResource(FormInputResponseFileEntryId id) {
-        FormInput formInput = formInputRepository.findOne(id.getFormInputId());
+        FormInput formInput = formInputRepository.findById(id.getFormInputId()).get();
         Question question = formInput.getQuestion();
 
         FormInputResponse formInputResponse = null;

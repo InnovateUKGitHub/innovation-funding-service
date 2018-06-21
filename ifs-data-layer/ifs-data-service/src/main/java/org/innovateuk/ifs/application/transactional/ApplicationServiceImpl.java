@@ -95,7 +95,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         Application savedApplication = applicationRepository.save(application);
         generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication);
-        savedApplication = applicationRepository.findOne(savedApplication.getId());
+        savedApplication = applicationRepository.findById(savedApplication.getId()).orElse(null);
         return serviceSuccess(applicationMapper.mapToResource(savedApplication));
     }
 
@@ -202,7 +202,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
                                                       Long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccessReturn(User::isInternalUser);
     }
 
@@ -221,7 +221,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
         return getProcessRole(id).andOnSuccessReturn(processRole -> {
             Long appId = processRole.getApplicationId();
-            Application application = applicationRepository.findOne(appId);
+            Application application = applicationRepository.findById(appId).orElse(null);
             return applicationMapper.mapToResource(application);
         });
     }
@@ -236,7 +236,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
             Set<Long> applicationIds = simpleMapSet(roles, ProcessRole::getApplicationId);
-            List<Application> applications = simpleMap(applicationIds, appId -> appId != null ? applicationRepository.findOne(appId) : null);
+            List<Application> applications = simpleMap(applicationIds, appId -> appId != null ? applicationRepository.findById(appId).orElse(null) : null);
             return simpleMap(applications, applicationMapper::mapToResource);
         });
     }
@@ -336,7 +336,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationResource convertToApplicationResource(Application application) {
 
         ApplicationResource applicationResource = applicationMapper.mapToResource(application);
-        Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
         applicationResource.setLeadOrganisationName(leadOrganisation.getName());
         return applicationResource;
     }

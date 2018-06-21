@@ -32,6 +32,6 @@ public class QuestionNumberOrderService {
             questionNumber++;
         }
 
-        questionRepository.save(assessedQuestions);
+        questionRepository.saveAll(assessedQuestions);
     }
 }

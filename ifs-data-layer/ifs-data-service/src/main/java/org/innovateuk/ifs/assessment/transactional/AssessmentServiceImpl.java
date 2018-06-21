@@ -71,12 +71,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
-        return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccessReturn(assessmentMapper::mapToResource);
+        return find(assessmentRepository.findById(id), notFoundError(Assessment.class, id)).andOnSuccessReturn(assessmentMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<AssessmentResource> findAssignableById(long id) {
-        return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
+        return find(assessmentRepository.findById(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
             if (WITHDRAWN == found.getProcessState()) {
                 return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
             }
@@ -86,7 +86,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<AssessmentResource> findRejectableById(long id) {
-        return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
+        return find(assessmentRepository.findById(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
             if (WITHDRAWN == found.getProcessState()) {
                 return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
             }
@@ -130,7 +130,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     @Transactional
     public ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecision))) {
                 return serviceFailure(ASSESSMENT_RECOMMENDATION_FAILED);
             }
@@ -154,7 +154,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Transactional
     public ServiceResult<Void> rejectInvitation(long assessmentId,
                                                 AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
+        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
                 .andOnSuccess(found -> {
                     if (!assessmentWorkflowHandler.rejectInvitation(found,
                             assessmentRejectOutcomeMapper.mapToDomain(assessmentRejectOutcomeResource))) {
@@ -167,7 +167,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     @Transactional
     public ServiceResult<Void> withdrawAssessment(long assessmentId) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.withdraw(found)) {
                 return serviceFailure(ASSESSMENT_WITHDRAW_FAILED);
             }
@@ -178,7 +178,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     @Transactional
     public ServiceResult<Void> acceptInvitation(long assessmentId) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.acceptInvitation(found)) {
                 return serviceFailure(ASSESSMENT_ACCEPT_FAILED);
             }
@@ -189,7 +189,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     @Transactional
     public ServiceResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissionsResource) {
-        List<Assessment> assessments = assessmentRepository.findAll(assessmentSubmissionsResource.getAssessmentIds());
+        Iterable<Assessment> assessments = assessmentRepository.findAllById(assessmentSubmissionsResource.getAssessmentIds());
         List<Error> failures = new ArrayList<>();
         Set<Long> foundAssessmentIds = new HashSet<>();
 

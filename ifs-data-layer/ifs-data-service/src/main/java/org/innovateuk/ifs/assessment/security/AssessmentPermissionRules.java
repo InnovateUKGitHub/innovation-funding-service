@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.security;
 
+import com.google.common.collect.Streams;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -63,7 +64,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "SUBMIT", description = "Only owners can submit Assessments")
     public boolean userCanSubmitAssessments(AssessmentSubmissionsResource submissions, UserResource user) {
-        return assessmentRepository.findAll(submissions.getAssessmentIds()).stream()
+        return Streams.stream(assessmentRepository.findAllById(submissions.getAssessmentIds()))
                 .allMatch(assessment -> assessment.getParticipant().getUser().getId().equals(user.getId()));
     }
 

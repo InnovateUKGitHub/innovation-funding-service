@@ -137,7 +137,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     }
 
     private List<Application> findApplicationsByIds(List<Long> applicationIds) {
-        return (List) applicationRepository.findAll(applicationIds);
+        return (List) applicationRepository.findAllById(applicationIds);
     }
 
     private List<Application> findAllowedApplicationsForCompetition(Long competitionId) {

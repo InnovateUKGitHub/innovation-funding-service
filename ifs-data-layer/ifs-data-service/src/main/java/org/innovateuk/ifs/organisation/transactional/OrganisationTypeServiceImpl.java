@@ -27,7 +27,7 @@ public class OrganisationTypeServiceImpl extends BaseTransactionalService implem
 
     @Override
     public ServiceResult<OrganisationTypeResource> findOne(Long id) {
-        return find(repository.findOne(id), notFoundError(OrganisationType.class)).andOnSuccessReturn(mapper::mapToResource);
+        return find(repository.findById(id), notFoundError(OrganisationType.class)).andOnSuccessReturn(mapper::mapToResource);
     }
 
     @Override

@@ -54,7 +54,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
 
         BigDecimal researchCosts = applicationFinanceResources.stream()
                 .filter(f ->
-                        OrganisationTypeEnum.isResearchParticipationOrganisation(organisationRepository.findOne(f.getOrganisation()).getOrganisationType().getId())
+                        OrganisationTypeEnum.isResearchParticipationOrganisation(organisationRepository.findById(f.getOrganisation()).get().getOrganisationType().getId())
                 )
                 .map(ProjectFinanceResource::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -102,7 +102,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     }
 
     private void setProjectFinanceDetails(ProjectFinanceResource projectFinanceResource, Competition competition) {
-        Organisation organisation = organisationRepository.findOne(projectFinanceResource.getOrganisation());
+        Organisation organisation = organisationRepository.findById(projectFinanceResource.getOrganisation()).get();
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getId());
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId(), competition);
         projectFinanceResource.setFinanceOrganisationDetails(costs);

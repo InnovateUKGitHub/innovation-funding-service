@@ -224,7 +224,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         ApplicationTeamResource result = new ApplicationTeamResource();
         List<ApplicationTeamOrganisationResource> partnerOrganisations = new LinkedList<>();
 
-        return find(applicationRepository.findOne(applicationId), notFoundError(ApplicationTeamResource.class))
+        return find(applicationRepository.findById(applicationId), notFoundError(ApplicationTeamResource.class))
                 .andOnSuccess(application -> {
                     // Order organisations by lead, followed by other partners in alphabetic order
                     result.setLeadOrganisation(getTeamOrganisation(application.getLeadApplicantProcessRole().getOrganisationId(), application));
@@ -234,7 +234,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                             .filter(pr -> pr.getRole() == COLLABORATOR)
                             .map(u -> u.getOrganisationId())
                             .distinct()
-                            .map(oId -> Pair.of(oId, organisationRepository.findOne(oId).getName()))
+                            .map(oId -> Pair.of(oId, organisationRepository.findById(oId).get().getName()))
                             .sorted(Comparator.comparing(Pair::getValue))
                             .map(p -> p.getKey())
                             .collect(toList());
@@ -248,7 +248,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     private ApplicationTeamOrganisationResource getTeamOrganisation(long organisationId, Application application) {
         ApplicationTeamOrganisationResource teamOrg = new ApplicationTeamOrganisationResource();
-        Organisation organisation = organisationRepository.findOne(organisationId);
+        Organisation organisation = organisationRepository.findById(organisationId).get();
 
         teamOrg.setOrganisationName(organisation.getName());
         teamOrg.setOrganisationTypeName(organisation.getOrganisationType().getName());

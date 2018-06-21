@@ -37,7 +37,7 @@ public class FormInputResponseFileUploadRules {
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        Application application = applicationRepository.findOne(fileEntry.getCompoundId().getApplicationId());
+        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).get();
         return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
     }
 

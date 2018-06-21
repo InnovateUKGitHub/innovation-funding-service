@@ -134,7 +134,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
     @Transactional
     public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
 
-        Project project = projectRepository.findOne(monitoringOfficer.getProject());
+        Project project = projectRepository.findById(monitoringOfficer.getProject()).get();
         User projectManager = getExistingProjectManager(project).get().getUser();
 
         NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
@@ -187,7 +187,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         globalArguments.put("competitionName", project.getApplication().getCompetition().getName());
         globalArguments.put("applicationId", project.getApplication().getId());
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).get();
         globalArguments.put("leadOrganisation", leadOrganisation.getName());
         globalArguments.put("projectManagerName", getProjectManagerFullName(projectManager));
         globalArguments.put("projectManagerEmail", projectManager.getEmail());

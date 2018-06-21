@@ -7,7 +7,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface  FinanceRowRepository<T> {
+public interface FinanceRowRepository<T> {
     List<T> findByTargetId(Long targetId);
     T findOneByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
     List<T> findByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);

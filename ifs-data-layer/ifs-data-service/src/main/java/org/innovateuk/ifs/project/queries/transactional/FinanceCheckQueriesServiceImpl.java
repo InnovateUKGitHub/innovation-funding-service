@@ -80,7 +80,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
     @Transactional
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         return findOne(threadId).andOnSuccess(query -> {
-            ProjectFinance projectFinance = projectFinanceRepository.findOne(query.contextClassPk);
+            ProjectFinance projectFinance = projectFinanceRepository.findById(query.contextClassPk).get();
             Optional<ProjectUser> financeContact = getFinanceContact(projectFinance.getProject(), projectFinance.getOrganisation());
             if(financeContact.isPresent()) {
                 ServiceResult<Void> result = service.addPost(post, threadId);
@@ -98,7 +98,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
     @Override
     @Transactional
     public ServiceResult<Long> create(QueryResource query) {
-        return find(projectFinanceRepository.findOne(query.contextClassPk), notFoundError(ProjectFinance.class, query.contextClassPk)).
+        return find(projectFinanceRepository.findById(query.contextClassPk), notFoundError(ProjectFinance.class, query.contextClassPk)).
                 andOnSuccess(projectFinance -> {
                     if (getFinanceContact(projectFinance.getProject(), projectFinance.getOrganisation()).isPresent()) {
                         ServiceResult<Long> result = service.create(query);

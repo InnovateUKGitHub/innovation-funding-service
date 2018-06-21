@@ -24,11 +24,11 @@ public class AssessmentLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public AssessmentResource getAssessmentResource(final Long id) {
-        return assessmentMapper.mapToResource(assessmentRepository.findOne(id));
+        return assessmentMapper.mapToResource(assessmentRepository.findById(id).orElse(null));
     }
 
     @PermissionEntityLookupStrategy
     public Assessment getAssessment(final Long id) {
-        return assessmentRepository.findOne(id);
+        return assessmentRepository.findById(id).orElse(null);
     }
 }

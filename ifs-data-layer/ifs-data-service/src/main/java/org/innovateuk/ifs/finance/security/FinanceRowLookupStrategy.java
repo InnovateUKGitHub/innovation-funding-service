@@ -19,6 +19,6 @@ public class FinanceRowLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public FinanceRow getFinanceRow(final Long costId) {
-        return applicationFinanceRowRepository.findById(costId);
+        return applicationFinanceRowRepository.findById(costId).orElse(null);
     }
 }

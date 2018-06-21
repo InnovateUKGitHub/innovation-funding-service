@@ -71,7 +71,7 @@ public class AssessorCreatedInviteMapper {
             AssessorCreatedInviteResource assessorCreatedInvite
     ) {
         if (competitionInvite.getUser() != null) {
-            Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());
+            Profile profile = profileRepository.findById(competitionInvite.getUser().getProfileId()).orElse(null);
 
             assessorCreatedInvite.setId(competitionInvite.getUser().getId());
             assessorCreatedInvite.setInnovationAreas(mapInnovationAreas(profile));

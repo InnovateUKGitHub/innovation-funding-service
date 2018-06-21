@@ -82,7 +82,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
-        Competition competition = competitionRepository.findOne(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
         List<Project> projects = projectRepository.searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(competitionId, applicationSearchString, singleton(ProjectState.WITHDRAWN));
         List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
         CompetitionProjectsStatusResource competitionProjectsStatusResource
@@ -100,9 +100,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Override
     public ServiceResult<ProjectStatusResource> getProjectStatusByProjectId(Long projectId) {
-        Project project = projectRepository.findOne(projectId);
-        if (null != project) {
-            return getProjectStatusByProject(project);
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (project.isPresent()) {
+            return getProjectStatusByProject(project.get());
         }
         return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
@@ -118,7 +118,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
 
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
 
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
 
@@ -352,9 +352,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Override
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).orElse(null);
 
         Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
                 userId -> simpleFindFirst(project.getProjectUsers(),
@@ -380,7 +380,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).orElse(null);
         Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
         Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());

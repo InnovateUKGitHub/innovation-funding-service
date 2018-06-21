@@ -358,7 +358,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 andOnSuccess((spendProfile, project) -> {
 
                     List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
-                    Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
+                    Organisation organisation = organisationRepository.findById(projectOrganisationCompositeId.getOrganisationId()).get();
                     CostGroup eligibleCosts = spendProfile.getEligibleCosts();
                     CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
@@ -579,7 +579,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             rejectSpendProfileSubmission(projectId);
         }
 
-        spendProfileRepository.save(spendProfiles);
+        spendProfileRepository.saveAll(spendProfiles);
     }
 
     private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {

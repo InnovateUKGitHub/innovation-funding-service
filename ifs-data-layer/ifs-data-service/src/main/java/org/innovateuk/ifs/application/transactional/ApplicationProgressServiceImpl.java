@@ -52,7 +52,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     @Override
     @Transactional
     public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccessReturn(application -> {
                     BigDecimal percentageProgress = calculateApplicationProgress(application);
                     application.setCompletion(percentageProgress);
@@ -63,7 +63,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     @Override
     @Transactional
     public boolean applicationReadyForSubmit(final Long id) {
-        return find(applicationRepository.findOne(id), notFoundError(Application.class, id)).andOnSuccess(application -> {
+        return find(applicationRepository.findById(id), notFoundError(Application.class, id)).andOnSuccess(application -> {
             BigDecimal progressPercentage = calculateApplicationProgress(application);
 
             return sectionStatusService.childSectionsAreCompleteForAllOrganisations(null, id, null)
@@ -99,7 +99,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
                 .filter(p -> p.getRole() == LEADAPPLICANT
                         || p.getRole() == APPLICANT
                         || p.getRole() == COLLABORATOR)
-                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()))
+                .map(processRole -> organisationRepository.findById(processRole.getOrganisationId()).orElse(null))
                 .collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()

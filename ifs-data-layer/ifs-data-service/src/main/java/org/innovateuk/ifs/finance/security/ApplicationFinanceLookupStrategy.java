@@ -30,6 +30,6 @@ public class ApplicationFinanceLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public ApplicationFinanceResource getApplicationFinance(final Long id) {
-        return applicationMapper.mapToResource(applicationFinanceRepository.findOne(id));
+        return applicationMapper.mapToResource(applicationFinanceRepository.findById(id).orElse(null));
     }
 }

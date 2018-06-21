@@ -258,7 +258,7 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
     }
 
     private ServiceResult<FileEntry> findFileEntry(Long fileEntryId) {
-        return find(fileEntryRepository.findOne(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
+        return find(fileEntryRepository.findById(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
     }
 
     private ServiceResult<Pair<File, FileStorageStrategy>> findFileForGet(FileEntry fileEntry) {

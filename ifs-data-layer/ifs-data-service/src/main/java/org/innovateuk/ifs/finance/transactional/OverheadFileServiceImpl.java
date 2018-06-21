@@ -74,13 +74,13 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<FileAndContents> getProjectFileEntryContents(long overheadId) {
-        ProjectFinanceRow financeRow = projectFinanceRowRepository.findOne(overheadId);
+        ProjectFinanceRow financeRow = projectFinanceRowRepository.findById(overheadId).get();
         return getApplicationFileEntryContents(financeRow.getApplicationRowId());
     }
 
     private ServiceResult<FileAndContents> getApplicationFileEntryContents(long overheadId){
         return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue ->
-                find(fileEntryRepository.findOne(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
+                find(fileEntryRepository.findById(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
                         fileService.getFileByFileEntryId(fileEntry.getId()).andOnSuccessReturn(fileContentsResult ->
                                 new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), fileContentsResult))));
     }
@@ -92,13 +92,13 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<FileEntryResource> getProjectFileEntryDetails(long overheadId) {
-        ProjectFinanceRow financeRow = projectFinanceRowRepository.findOne(overheadId);
+        ProjectFinanceRow financeRow = projectFinanceRowRepository.findById(overheadId).get();
         return getApplicationFileEntryDetails(financeRow.getApplicationRowId());
     }
 
     private ServiceResult<FileEntryResource> getApplicationFileEntryDetails(long overheadId){
         return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue ->
-                find(fileEntryRepository.findOne(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
+                find(fileEntryRepository.findById(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
                         serviceSuccess(fileEntryMapper.mapToResource(fileEntry))));
     }
 
@@ -116,7 +116,7 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> deleteMetaValueAndFileByMetaValue(FinanceRowMetaValue metaValue) {
         return fileService.deleteFileIgnoreNotFound(Long.valueOf(metaValue.getValue())).
-                andOnSuccessReturnVoid(() -> financeRowMetaValueRepository.delete(metaValue.getId()));
+                andOnSuccessReturnVoid(() -> financeRowMetaValueRepository.deleteById(metaValue.getId()));
     }
     private ServiceResult<FileEntryResource> createOrUpdateFileByMetaField(FinanceRow overheadFinanceRow, BasicFileAndContents fileAndContents) {
         return findMetaRowField().
@@ -152,7 +152,7 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<FinanceRow> findFinanceRow(long overheadId) {
-        return find(financeRowRepository.findById(overheadId), notFoundError(FinanceRow.class, overheadId));
+        return find(financeRowRepository.findById(overheadId).orElse(null), notFoundError(FinanceRow.class, overheadId));
     }
 
     private ServiceResult<FinanceRowMetaValue> findMetaRowValue(FinanceRow overheadFinanceRow, FinanceRowMetaField metaField) {

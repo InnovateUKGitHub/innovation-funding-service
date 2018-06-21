@@ -63,7 +63,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
                     c.setQuestion(question);
                     c.setTarget(applicationFinance);
                 });
-                return applicationFinanceRowRepository.save(cost);
+                return applicationFinanceRowRepository.saveAll(cost);
             } catch (IllegalArgumentException e){
                 LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }
@@ -379,7 +379,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
         for(ApplicationFinanceRow cost : applicationCosts) {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-            Optional<ApplicationFinanceRow> applicationFinanceRow = Optional.ofNullable(applicationFinanceRowRepository.findOne(cost.getId()));
+            Optional<ApplicationFinanceRow> applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getId());
             Optional<ProjectFinanceRow> projectFinanceRow = projectFinanceRowRepository.findOneByApplicationRowId(cost.getId());
             if(!projectFinanceRow.isPresent()) {
                 removals.add(ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), Optional.empty()) );

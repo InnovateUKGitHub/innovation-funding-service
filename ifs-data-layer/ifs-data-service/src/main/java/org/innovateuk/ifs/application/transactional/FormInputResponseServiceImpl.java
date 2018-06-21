@@ -117,7 +117,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
     }
 
     private ServiceResult<FormInput> findFormInputEntity(long id) {
-        return find(formInputRepository.findOne(id), notFoundError(FormInput.class, id));
+        return find(formInputRepository.findById(id), notFoundError(FormInput.class, id));
     }
 
 }

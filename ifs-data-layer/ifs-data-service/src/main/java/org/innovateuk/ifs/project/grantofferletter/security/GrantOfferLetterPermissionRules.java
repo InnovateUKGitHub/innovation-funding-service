@@ -40,7 +40,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "DOWNLOAD_GRANT_OFFER",
             description = "Innovation lead users can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
     public boolean innovationLeadUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
-        Application application = applicationRepository.findOne(project.getApplication());
+        Application application = applicationRepository.findById(project.getApplication()).get();
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 
@@ -70,7 +70,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "VIEW_GRANT_OFFER",
             description = "Innovation lead users can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
     public boolean innovationLeadUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
-        Application application = applicationRepository.findOne(project.getApplication());
+        Application application = applicationRepository.findById(project.getApplication()).get();
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 
@@ -134,7 +134,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
             description = "Innovation lead users can view the send status of Grant Offer Letter for a project from competition assigned to them")
     public boolean innovationLeadUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        Application application = applicationRepository.findOne(project.getApplication());
+        Application application = applicationRepository.findById(project.getApplication()).get();
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 

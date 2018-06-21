@@ -26,7 +26,7 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
 
     @Transactional
     public void cleanByEntityId(Long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).orElse(null);
         sectionTemplateService.cleanForParentEntity(competition);
     }
 

@@ -45,7 +45,7 @@ public abstract class ApplicationAssessorMapper {
     public ApplicationAssessorResource mapToResource(CompetitionParticipant competitionParticipant, Optional<Assessment> mostRecentAssessment) {
 
         User user = competitionParticipant.getUser();
-        Optional<Profile> profile = ofNullable(profileRepository.findOne(user.getProfileId()));
+        Optional<Profile> profile = profileRepository.findById(user.getProfileId());
 
         Set<InnovationAreaResource> innovationAreas = simpleMapSet(profile.map(Profile::getInnovationAreas)
                 .orElse(emptySet()), innovationAreaMapper::mapToResource);
