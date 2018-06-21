@@ -46,8 +46,7 @@ Non-lead partner cannot upload either document
     [Tags]
     Given Log in as a different user   &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(6)
-    And The user should see the element  jQuery=li:contains("waiting") p:contains("Your Project Manager needs to upload the following")
+    And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
@@ -57,9 +56,8 @@ Lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(6)
-    And The user should see the element  jQuery=li:contains("waiting") p:contains("Your Project Manager needs to upload the following")
-    When the user clicks the button/link    link=Other documents
+    When The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
+    And the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
 
@@ -347,7 +345,6 @@ After rejection, lead partner cannot upload either document
     [Tags]    HappyPath
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(6)
     And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -414,7 +411,6 @@ After rejection, non-lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(6)
     And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
