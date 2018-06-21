@@ -49,7 +49,6 @@ Applicant submits his application
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
-    #Here?
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
     Then the applicant submits the application
 
