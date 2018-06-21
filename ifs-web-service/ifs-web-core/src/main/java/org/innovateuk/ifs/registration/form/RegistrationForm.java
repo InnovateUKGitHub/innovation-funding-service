@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
+
 /**
  * This object is used for the account registration form. When the form is submitted the data is
  * injected into a RegistrationForm instance, so it is easy to use and you don't need to
@@ -18,7 +20,6 @@ import javax.validation.constraints.Size;
  */
 
 public class RegistrationForm extends BaseBindingResultTarget {
-
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @NotBlank(message = "{validation.standard.email.required}")
@@ -59,11 +60,7 @@ public class RegistrationForm extends BaseBindingResultTarget {
     private String disability = Disability.NOT_STATED.name();
 
     @NotBlank(message = "{validation.standard.phonenumber.required}")
-    @Size.List ({
-        @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
-        @Size(max=20, message="{validation.standard.phonenumber.length.max}")
-    })
-    @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     @NotBlank(message = "{validation.account.termsandconditions.required}")

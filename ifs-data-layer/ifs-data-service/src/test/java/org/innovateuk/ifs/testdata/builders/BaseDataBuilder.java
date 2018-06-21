@@ -27,7 +27,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -63,6 +63,7 @@ import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateService;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -111,6 +112,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ResearchCategoryRepository researchCategoryRepository;
     protected CompetitionSetupService competitionSetupService;
     protected QuestionSetupService questionSetupService;
+    protected QuestionSetupTemplateService questionSetupTemplateService;
     protected PublicContentService publicContentService;
     protected PublicContentRepository publicContentRepository;
     protected ContentGroupRepository contentGroupRepository;
@@ -244,6 +246,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         sectionRepository = serviceLocator.getBean(SectionRepository.class);
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
         questionSetupService = serviceLocator.getBean(QuestionSetupService.class);
+        questionSetupTemplateService = serviceLocator.getBean(QuestionSetupTemplateService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
         applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
@@ -383,6 +386,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected S asCompAdmin(Consumer<T> action) {
         return with(data -> doAs(compAdmin(), () -> action.accept(data)));
+    }
+
+    protected S asIfsAdmin(Consumer<T> action) {
+        return with(data -> doAs(ifsAdmin(), () -> action.accept(data)));
     }
 
     protected UserResource retrieveUserByEmailInternal(String email, Role role) {

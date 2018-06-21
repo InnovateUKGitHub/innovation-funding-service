@@ -188,7 +188,6 @@ public class ApplicationModelPopulator {
                                                      ApplicationForm form,
                                                      Long organisationId) {
         model.addAttribute("currentUser", user);
-
         SectionResource financeSection = sectionService.getFinanceSection(competitionId);
         boolean hasFinanceSection = financeSection != null;
 
@@ -216,7 +215,7 @@ public class ApplicationModelPopulator {
     public void addApplicationInputs(ApplicationResource application, Model model) {
         model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
         model.addAttribute("applicationTitle", application.getName());
-        model.addAttribute("applicationDuration", String.valueOf(application.getDurationInMonths()));
+        model.addAttribute("applicationDuration", application.getDurationInMonths());
     }
 
     public void addFeedbackAndScores(Model model, long applicationId) {

@@ -3,13 +3,13 @@ package org.innovateuk.ifs.interview.model;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
+import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteSendRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ public class InterviewApplicationsSendModelPopulator extends InterviewApplicatio
         this.competitionRestService = competitionRestService;
     }
 
-    public InterviewAssignmentApplicationsSendViewModel populateModel(long competitionId, int page, String originQuery) {
+    public InterviewAssignmentApplicationsSendViewModel populateModel(long competitionId, int page, String originQuery, InterviewApplicationSendForm form) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -43,6 +43,10 @@ public class InterviewApplicationsSendModelPopulator extends InterviewApplicatio
 
         String content = interviewAssignmentRestService.getEmailTemplate().getSuccess().getContent();
 
+        if (form.getFeedback().isEmpty()) {
+            pageResource.getContent().forEach((resource) -> form.getFeedback().add(null));
+        }
+
         return new InterviewAssignmentApplicationsSendViewModel(
                 competitionId,
                 competition.getName(),
@@ -50,7 +54,7 @@ public class InterviewApplicationsSendModelPopulator extends InterviewApplicatio
                 competition.getInnovationSectorName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
                 getKeyStatistics(competitionId),
-                new PaginationViewModel(pageResource, originQuery),
+                new Pagination(pageResource, originQuery),
                 originQuery,
                 content
         );

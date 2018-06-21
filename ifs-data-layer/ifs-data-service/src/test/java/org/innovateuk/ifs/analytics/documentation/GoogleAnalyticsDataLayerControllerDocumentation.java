@@ -113,6 +113,19 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
                 ));
     }
 
+    @Test
+    public void getApplicationIdForProject() throws Exception {
+        when(googleAnalyticsDataLayerService.getApplicationIdForProject(PROJECT_ID)).thenReturn(serviceSuccess(APPLICATION_ID));
+
+        mockMvc.perform(get("/analytics/project/{projectId}/application-id", PROJECT_ID))
+                .andExpect(status().isOk())
+                .andDo(document("analytics/{method-name}",
+                                pathParameters(
+                                        parameterWithName("projectId").description("Id of the project")
+                                )
+                ));
+    }
+
     private static String competitionName() {
         return "competition name";
     }

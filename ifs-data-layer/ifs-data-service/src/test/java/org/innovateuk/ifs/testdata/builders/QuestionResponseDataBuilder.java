@@ -133,6 +133,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
     private void doAnswerQuestion(String questionName, String value, UserResource user, ApplicationQuestionResponseData data) {
 
         List<FormInputResource> formInputs = getFormInputsForQuestion(questionName, data);
+
         FormInputResource applicantFormInput = simpleFindFirst(formInputs, fi -> FormInputScope.APPLICATION.equals(fi.getScope())).get();
 
         FormInputResponseCommand updateRequest = new FormInputResponseCommand(

@@ -12,17 +12,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public enum ApplicationState implements ProcessState, IdentifiableEnum<ApplicationState> {
 
-    CREATED(27, State.CREATED), // initial state
-    SUBMITTED(29,State.SUBMITTED),
-    INELIGIBLE(30, State.NOT_APPLICABLE),
-    INELIGIBLE_INFORMED(31, State.NOT_APPLICABLE_INFORMED),
-    APPROVED(32, State.ACCEPTED),
-    REJECTED(33, State.REJECTED),
-    OPEN(28, State.OPEN),
-    WITHDRAWN(49, State.WITHDRAWN);
+    CREATED(27, State.CREATED, "Started"), // initial state
+    SUBMITTED(29,State.SUBMITTED, "Submitted"),
+    INELIGIBLE(30, State.NOT_APPLICABLE, "Ineligible"),
+    INELIGIBLE_INFORMED(31, State.NOT_APPLICABLE_INFORMED, "Ineligible"),
+    APPROVED(32, State.ACCEPTED, "Successful"),
+    REJECTED(33, State.REJECTED, "Unsuccessful"),
+    OPEN(28, State.OPEN, "In progress"),
+    WITHDRAWN(49, State.WITHDRAWN, "Withdrawn");
 
     final long id;
     final State backingState;
+    private String displayName;
 
     public static final ImmutableSet<ApplicationState> submittedAndFinishedStates = Sets.immutableEnumSet(
             SUBMITTED,
@@ -55,9 +56,15 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum<Applicati
             WITHDRAWN
     );
 
-    ApplicationState(final long id, final State backingState) {
+    public static final ImmutableSet<ApplicationState> ineligibleStates = Sets.immutableEnumSet(
+            INELIGIBLE,
+            INELIGIBLE_INFORMED
+    );
+
+    ApplicationState(final long id, final State backingState, String displayName) {
         this.id = id;
         this.backingState = backingState;
+        this.displayName = displayName;
     }
 
     @Override
@@ -68,6 +75,10 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum<Applicati
     @Override
     public State getBackingState() {
         return backingState;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     @Override

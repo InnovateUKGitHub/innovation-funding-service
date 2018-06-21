@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
@@ -89,7 +90,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Application application = new Application(applicationName);
         application.setStartDate(null);
 
-        application.setDurationInMonths(3L);
         application.setCompetition(competition);
         setInnovationArea(application, competition);
 
@@ -288,14 +288,44 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
                                                                                int pageIndex,
                                                                                int pageSize,
-                                                                               String sortField) {
+                                                                               String sortField,
+                                                                               String filter) {
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, ApplicationState.unsuccessfulStates, pageable);
+        Collection<ApplicationState> applicationStates = getApplicationStatesFromFilter(filter);
+
+        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, applicationStates, pageable);
         List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
+
+        Collection<ApplicationState> applicationStates;
+
+        switch (filter.toUpperCase()) {
+            case "INELIGIBLE":
+                applicationStates = ApplicationState.ineligibleStates;
+                break;
+
+            case "REJECTED":
+                applicationStates = Sets.immutableEnumSet(ApplicationState.REJECTED);
+                break;
+
+            case "WITHDRAWN":
+                applicationStates = Sets.immutableEnumSet(ApplicationState.WITHDRAWN);
+                break;
+
+            case "ALL":
+            default:
+                applicationStates = ApplicationState.unsuccessfulStates;
+                break;
+        }
+
+        return applicationStates;
+
     }
 
     private Sort getApplicationSortField(String sortBy) {
