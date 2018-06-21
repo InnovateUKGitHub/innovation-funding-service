@@ -63,6 +63,10 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
     }
 
     /* view model methods */
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
     public String getResearchCategoryText() {
         return selectedResearchCategoryName != null ? "Change your research category" : "Choose your research category";
     }
@@ -86,4 +90,7 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
         return application.getNoInnovationAreaApplicable();
     }
 
+    public boolean isCanMarkAsComplete() {
+        return assignButtonsViewModel != null && assignButtonsViewModel.isAssignedToCurrentUser();
+    }
 }

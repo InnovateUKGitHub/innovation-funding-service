@@ -425,7 +425,7 @@ the lead applicant invites an existing user
     log in as a different user            &{lead_applicant_credentials}
     the user navigates to the page        ${dashboard_url}
     the user clicks the button/link       jquery=.in-progress a:contains("${applicationWithGrowth}")
-    the user fills in the inviting steps  ${EMAIL_INVITED}
+    the user fills in the inviting steps no edit  ${EMAIL_INVITED}
 
 the user navigates to the growth table finances
     the user navigates to the page   ${DASHBOARD_URL}
@@ -434,7 +434,7 @@ the user navigates to the growth table finances
 
 Invite a non-existing collaborator in Application with Growth table
     the user should see the element       jQuery=h1:contains("Application overview")
-    the user fills in the inviting steps  ${newUsersEmail}
+    the user fills in the inviting steps no edit  ${newUsersEmail}
     newly invited collaborator can create account and sign in  ${newUsersEmail}
 
 Newly invited collaborator can create account and sign in
