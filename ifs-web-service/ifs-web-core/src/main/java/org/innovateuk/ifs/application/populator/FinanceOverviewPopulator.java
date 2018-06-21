@@ -39,6 +39,7 @@ public class FinanceOverviewPopulator {
     @Autowired
     private FinanceViewHandlerProvider financeViewHandlerProvider;
 
+    //TODO: remove usages of Model model - IFS-3795
     public void addOverviewDetails(OpenSectionViewModel openSectionViewModel, Model model, ApplicationForm form, ApplicantSectionResource applicantSection) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicantSection.getCompetition().getId());
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
