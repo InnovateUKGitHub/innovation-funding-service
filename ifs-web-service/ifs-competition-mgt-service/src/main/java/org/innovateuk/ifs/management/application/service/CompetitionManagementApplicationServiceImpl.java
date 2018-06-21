@@ -99,10 +99,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
         Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource>) model.asMap().get("organisationFinances");
         Map<Long, Boolean> detailedFinanceLink = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
-                o -> (user.hasRole(SUPPORT) ||
-                      user.hasRole(INNOVATION_LEAD)) ||
-                      user.hasRole(COMP_ADMIN) ||
-                      user.hasRole(IFS_ADMINISTRATOR) &&
+                o -> (user.isInternalUser()) &&
                         ((organisationFinances != null && organisationFinances.containsKey(o.getId()) && organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
                                 isAcademicOrganisation.get(o.getId()))
                         ? Boolean.TRUE : Boolean.FALSE));

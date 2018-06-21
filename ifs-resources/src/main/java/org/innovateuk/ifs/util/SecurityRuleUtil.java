@@ -13,11 +13,7 @@ public final class SecurityRuleUtil {
     }
 
     public static boolean isInternal(UserResource user) {
-        return user.hasRole(COMP_ADMIN) ||
-                user.hasRole(PROJECT_FINANCE) ||
-                user.hasRole(SUPPORT) ||
-                user.hasRole(INNOVATION_LEAD) ||
-                user.hasRole(IFS_ADMINISTRATOR);
+        return user.isInternalUser();
     }
 
     public static boolean isInternalAdmin(UserResource user) {
