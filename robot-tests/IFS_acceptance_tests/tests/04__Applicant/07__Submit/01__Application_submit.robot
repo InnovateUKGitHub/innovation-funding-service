@@ -39,7 +39,7 @@ Submit button disabled when application is incomplete
     And the user clicks the button/link                jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
     When the user clicks the button/link               jQuery= button:contains("Application details")
-    Then the user should see the element               jQuery= div[id="collapsible-0"] button:contains("Mark as complete")+button:contains("Return and edit")
+    Then the user should see the element               jQuery= div[id="collapsible-1"] button:contains("Mark as complete")+button:contains("Return and edit")
     When the user clicks the button/link               jQuery=button:contains("Mark as complete")
     Then the user should see the element               jQuery=h1:contains("Application details")
     And the user should see a field and summary error  Please enter a future date

@@ -29,7 +29,7 @@ public class ApplicationTeamControllerSecurityTest extends BaseApplicationContro
     @Test
     public void testGetApplicationTeam() {
         when(applicationLookupStrategies.getApplicationCompositeId(123L)).thenReturn(ApplicationCompositeId.id(123L));
-        assertSecured(() -> classUnderTest.getApplicationTeam(null, 123L, null),
+        assertSecured(() -> classUnderTest.getApplicationTeam(null, null,123L, null),
                 (ApplicationPermissionRules permissionRules) -> permissionRules.viewApplicationTeamPage(eq(ApplicationCompositeId.id(123L)), isA(UserResource.class)),
                 ApplicationPermissionRules.class);
     }

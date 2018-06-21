@@ -3,6 +3,7 @@ package org.innovateuk.ifs.dashboard.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -26,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -48,6 +50,9 @@ public class ApplicantDashboardPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     public ApplicantDashboardViewModel populate(Long userId, String originQuery) {
@@ -67,13 +72,16 @@ public class ApplicantDashboardPopulator {
                 .filter(this::applicationInProgress)
                 .map(application -> {
             CompetitionResource competition = competitionsById.get(application.getCompetition());
+            Long applicationTeamQuestionId = competition.getUseNewApplicantMenu() ? getApplicationTeamQuestion
+                            (competition.getId()) : null;
             Optional<ProcessRoleResource> role = usersProcessRoles.stream()
                     .filter(processRoleResource -> processRoleResource.getApplicationId().equals(application.getId()))
                     .findFirst();
             boolean invitedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
             return new InProgressDashboardRowViewModel(application.getName(), application.getId(), competition.getName(),
                     isAssigned(application, role), application.getApplicationState(), isLead(role), competition.getEndDate(),
-                    competition.getDaysLeft(), application.getCompletion().intValue(), invitedToInterview);
+                    competition.getDaysLeft(), application.getCompletion().intValue(), invitedToInterview,
+                    applicationTeamQuestionId);
         }).sorted().collect(toList());
 
         List<PreviousDashboardRowViewModel> previousViews =
@@ -182,5 +190,10 @@ public class ApplicantDashboardPopulator {
 
         List<CompetitionResource> competitions =  simpleMap(competitionIdsForUser, id -> competitionRestService.getCompetitionById(id).getSuccess());
         return simpleToMap(competitions, CompetitionResource::getId, Function.identity());
+    }
+
+    private long getApplicationTeamQuestion(long competitionId) {
+        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                APPLICATION_TEAM).getSuccess().getId();
     }
 }

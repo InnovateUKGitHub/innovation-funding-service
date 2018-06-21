@@ -52,7 +52,7 @@ the user changes the application name
     [Arguments]    ${application_name}
     the user navigates to the page          ${DASHBOARD_URL}
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link         jQuery=a:contains("Begin application")
+    the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link         jQuery=a:contains("Application details")
     the user enters text to a text field    css=[id="application.name"]  ${application_name}
     the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
@@ -80,7 +80,7 @@ the user verifies account and starts his application
     the user clicks the button/link               jQuery=.button:contains("Sign in")
     logging in and error checking                 ${email}  ${correct_password}
     the user clicks the button/link               link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link               link=Begin application
+    the user clicks the button/link               jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link               link=Application details
     the user enters text to a text field          css=[id="application.name"]  ${email}'s Application
     the user clicks the button/link               jQuery=button:contains("Save and return to application overview")
@@ -89,7 +89,7 @@ the user navigates to the Application Team Page
     [Arguments]  ${email}
     the user navigates to the page   ${dashboard_url}
     the user clicks the button/link  link=${email}'s Application
-    the user clicks the button/link  link=view and manage contributors and collaborators
+    the user clicks the button/link  link=Application team
 
 the user updates his organisation inviting the user
     [Arguments]  ${name}  ${email}
