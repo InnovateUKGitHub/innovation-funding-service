@@ -10,7 +10,8 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
+            <th:block th:insert="fragments/layout :: header-sub"
+                      th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{${model.backUrl}}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
                 <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to send the invites out.</h2>
@@ -22,6 +23,7 @@
             </th:block>
 
             <p th:if="${model.userLeadApplicant}">You are able to invite and remove contributors. Only the lead organisation and lead applicant cannot be removed.</p>
+            <p th:if="${model.userLeadApplicant and model.leadOrganisation}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
             <p th:unless="${model.userLeadApplicant}">You are able to invite contributors from your own organisation.</p>
 
             <h2 class="heading-medium" th:text="${model.leadOrganisation} ? ${model.organisationName} + ', Lead organisation' : ${model.organisationName}">Empire Ltd, Lead organisation</h2>
@@ -141,7 +143,8 @@
                 <p th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
                 <p class="extra-margin">
-                    <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button-secondary">Return to application team page</a>
+                    <a
+                        th:href="@{${model.backUrl}}" class="button-secondary">Return to application team page</a>
                 </p>
             </form>
 

@@ -16,12 +16,23 @@
     </div>
 
     <h2 class="heading-small">Estimated timescales</h2>
-    <p>Project start date:<br/>
-       [[${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}]]
-    </p>
-    <p>Duration in months:<br/>
-      <th:block th:text="${applicationDuration}" />
-    </p>
+
+    <dl>
+        <dt>Project start date:</dt>
+        <dd th:classappend="${currentApplication.startDate == null} ? 'form-hint'">
+            <span
+                th:classappend="${currentApplication.startDate == null} ? 'font-xsmall'"
+                th:text="${currentApplication.startDate} ? ${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')} : 'This field has not been completed.'"
+            />
+        </dd>
+        <dt>Duration in months:</dt>
+        <dd th:classappend="${applicationDuration == null} ? 'form-hint'">
+            <span
+                th:classappend="${applicationDuration == null} ? 'font-xsmall'"
+                th:text="${applicationDuration} ?: 'This field has not been completed.'"
+            />
+        </dd>
+    </dl>
 
     <h2 class="heading-small">Lead organisation</h2>
     <div th:text="${leadOrganisation.getName()}"></div>

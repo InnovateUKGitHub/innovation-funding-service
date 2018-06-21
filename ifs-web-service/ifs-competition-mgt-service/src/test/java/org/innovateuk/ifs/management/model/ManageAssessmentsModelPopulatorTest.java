@@ -6,7 +6,8 @@ import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsR
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.viewmodel.ManageAssessmentsViewModel;
+import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
+import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

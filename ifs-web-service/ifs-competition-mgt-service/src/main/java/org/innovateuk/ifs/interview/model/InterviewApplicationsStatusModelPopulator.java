@@ -8,7 +8,7 @@ import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationStat
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationStatusViewModel;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentApplicationResource;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +47,7 @@ public class InterviewApplicationsStatusModelPopulator extends InterviewApplicat
                 competition.getInnovationSectorName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
                 getKeyStatistics(competitionId),
-                new PaginationViewModel(pageResource, originQuery),
+                new Pagination(pageResource, originQuery),
                 originQuery
         );
     }

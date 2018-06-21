@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface StatusRestService {
 
-    RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(final Long competitionId);
+    RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(final Long competitionId, String applicationSearchString);
 
     RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
