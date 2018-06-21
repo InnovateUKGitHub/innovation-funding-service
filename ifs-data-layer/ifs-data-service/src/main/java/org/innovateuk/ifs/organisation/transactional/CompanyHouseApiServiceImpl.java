@@ -138,7 +138,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 	private ServiceResult<String> decodeString(String encodedSearchText) {
         try {
             return serviceSuccess(UriUtils.decode(encodedSearchText, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             LOG.error("Unable to decode search string " + encodedSearchText, e);
             return serviceFailure(COMPANIES_HOUSE_UNABLE_TO_DECODE_SEARCH_STRING);
         }
