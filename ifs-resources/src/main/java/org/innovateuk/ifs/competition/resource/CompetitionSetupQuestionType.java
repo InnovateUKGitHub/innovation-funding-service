@@ -10,7 +10,8 @@ public enum CompetitionSetupQuestionType {
     SCOPE("Scope"),
     PROJECT_SUMMARY("Project summary"),
     PUBLIC_DESCRIPTION("Public description"),
-    APPLICATION_DETAILS("Application details");
+    APPLICATION_DETAILS("Application details"),
+    APPLICATION_TEAM("Application team");
 
     private String shortName;
 

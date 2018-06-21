@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.team.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamManagementModelPopulator;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -37,7 +39,6 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
     private long applicationId;
     private long organisationId;
 
-
     @Mock
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
 
@@ -49,6 +50,9 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
 
     @Mock
     private InviteRestService inviteRestServiceMock;
+
+    @Mock
+    private QuestionRestService questionRestService;
 
     protected OrganisationTeamManagementService supplyServiceUnderTest() {
         return new OrganisationTeamManagementService();
@@ -67,6 +71,7 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
         UserResource userResource = newUserResource().build();
 
         ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(1L,
+                1L,
                 null,
                 1L,
                 1L,
@@ -105,7 +110,7 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
 
         InviteResultsResource expectedInviteResultsResource = new InviteResultsResource();
 
-        when(inviteRestServiceMock.createInvitesByOrganisationForApplication(any(), any(), any())).thenReturn(RestResult.restSuccess(expectedInviteResultsResource));
+        when(inviteRestServiceMock.createInvitesByOrganisationForApplication(any(), any(), any())).thenReturn(restSuccess(expectedInviteResultsResource));
 
         InviteResultsResource result = service.executeStagedInvite(applicationId, organisationId, form).getSuccess();
 
@@ -159,7 +164,7 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
 
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResources).build();
 
-        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).thenReturn(RestResult.restSuccess(inviteOrganisationResource));
+        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).thenReturn(restSuccess(inviteOrganisationResource));
 
         List<Long> result = service.getInviteIds(applicationId, organisationId);
 
@@ -170,7 +175,7 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
     public void getInviteIds_noIdsFoundShouldReturnEmptyList() throws Exception {
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
 
-        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).thenReturn(RestResult.restSuccess(inviteOrganisationResource));
+        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).thenReturn(restSuccess(inviteOrganisationResource));
 
         List<Long> result = service.getInviteIds(applicationId, organisationId);
 

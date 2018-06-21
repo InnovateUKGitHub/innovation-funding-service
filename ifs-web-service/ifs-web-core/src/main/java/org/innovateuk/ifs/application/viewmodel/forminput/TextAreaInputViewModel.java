@@ -34,6 +34,10 @@ public class TextAreaInputViewModel extends AbstractFormInputViewModel {
         this.application = application;
     }
 
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
     public String getLastUpdatedText() {
         String userUpdated = isRespondedByCurrentUser() ? "you" : applicantResponse.getResponse().getUpdatedByUserName();
         return " by " + userUpdated;
@@ -41,6 +45,10 @@ public class TextAreaInputViewModel extends AbstractFormInputViewModel {
 
     public boolean isRespondedByCurrentUser() {
         return applicantResponse.getApplicant().isSameUser(currentApplicant);
+    }
+
+    public boolean isCanMarkAsComplete() {
+        return assignButtonsViewModel != null && assignButtonsViewModel.isAssignedToCurrentUser();
     }
 
 }
