@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @RestController
 public class SurveyController {
 
@@ -17,7 +15,7 @@ public class SurveyController {
     private SurveyService surveyService;
 
     @PostMapping("/survey")
-    public RestResult<Void> saveSurvey(@Valid @RequestBody SurveyResource surveyResource) {
+    public RestResult<Void> saveSurvey(@RequestBody SurveyResource surveyResource) {
         return surveyService.save(surveyResource).toPostCreateResponse();
     }
 

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.survey.Controller;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.survey.*;
 import org.innovateuk.ifs.survey.Form.FeedbackForm;
@@ -17,6 +19,8 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 /**
@@ -53,27 +57,28 @@ public class SurveyController {
 
         SurveyResource surveyResource = getSurveyResource(feedbackForm, competitionId);
 
-         RestResult<Void> sendResult = surveyRestService.save(surveyResource);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<Void> sendResult = surveyRestService.save(surveyResource);
 
-        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
-                .failNowOrSucceedWith(failureView, successView);
+            return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors()))).
+                    failNowOrSucceedWith(failureView, successView);
+        });
     }
 
     private SurveyResource getSurveyResource(FeedbackForm feedbackForm, long competitionId) {
-        SurveyResource surveyResource = new SurveyResource();
 
-        surveyResource.setSurveyType(SurveyType.APPLICATION_SUBMISSION);
-        surveyResource.setTargetType(SurveyTargetType.COMPETITION);
-        surveyResource.setTargetId(competitionId);
+        Satisfaction satisfaction = null;
 
         if (feedbackForm.getSatisfaction() != null){
-            surveyResource.setSatisfaction(Satisfaction.getById(Long.valueOf(feedbackForm.getSatisfaction())));
+            satisfaction = Satisfaction.getById(Long.valueOf(feedbackForm.getSatisfaction()));
         }
 
-        surveyResource.setComments(feedbackForm.getComments());
+        SurveyResource surveyResource = new SurveyResource(SurveyType.APPLICATION_SUBMISSION,
+                SurveyTargetType.COMPETITION,
+                competitionId,
+                satisfaction,
+                feedbackForm.getComments());
 
         return surveyResource;
-
     }
-
 }
