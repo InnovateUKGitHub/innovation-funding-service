@@ -411,7 +411,7 @@ After rejection, non-lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
+    And The user should see the element     jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
