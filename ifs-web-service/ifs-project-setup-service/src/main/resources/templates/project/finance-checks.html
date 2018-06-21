@@ -91,7 +91,7 @@
                         </div>
                     </th:block>
                     <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                        <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.Id})}" class="extra-margin-top button">Respond</a>
+                        <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.Id})}" class="extra-margin button">Respond</a>
                     </th:block>
                     <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                         <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
@@ -104,12 +104,12 @@
                                             <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
                                         </th:block>
                                     </label>
-                                    <div class="textarea-wrapped word-count">
+                                    <div class="textarea-wrapped word-count" contenteditable="true">
                                         <textarea data-editor="md"
                                                   required = "required"
                                                   th:field="*{response}"
                                                   class="form-control"
-                                                  th:errorclass="field-group-error"
+                                                  th:errorclass="form-control-error"
                                                   id="response-1"
                                                   name="response"
                                                   th:attr="maxlength=${model.maxQueryCharacters},

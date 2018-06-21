@@ -355,6 +355,15 @@ tr {
     }
   }
 
+  .textarea-wrapped {
+    &[contenteditable="true"] {
+      textarea {
+        @include box-shadow(none);
+        border: 4px solid $error-colour;
+      }
+    }
+  }
+
   select {
     @include box-shadow(none);
     border: 4px solid $error-colour;
