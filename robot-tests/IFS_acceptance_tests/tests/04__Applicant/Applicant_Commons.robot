@@ -80,8 +80,10 @@ the user selects Research category
 
 the user marks the finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
+    #Here?
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
     Run Keyword if  '${Project_growth_table}'=='no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    the user enters the project location
     Run Keyword if  '${Project_growth_table}'=='yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
@@ -216,6 +218,11 @@ the academic fills in the project costs
     the user should see the element       link=testing.pdf (opens in a new window)
     the user selects the checkbox         termsAgreed
     the user clicks the button/link       css=#mark-all-as-complete[type="submit"]
+
+the user enters the project location
+    the user clicks the button/link         link = Your project location
+    the user enters text to a text field    projectLocation   BS1 4NT
+    the user clicks the button/link         jQuery = button:contains("Save and return to finances")
 
 the user fills the organisation details with Project growth table
     [Arguments]   ${Application}  ${org_size}
