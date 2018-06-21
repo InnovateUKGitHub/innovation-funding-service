@@ -114,6 +114,7 @@ Lead partner can view both documents
     Given log in as a different user       &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user opens the link in new window   ${valid_pdf}
+    And close tabs
     And the user goes back to the previous tab
     When the user opens the link in new window   ${valid_pdf}
     Then the user goes back to the previous tab
@@ -136,14 +137,13 @@ Lead partner cannot remove either document
 
 Non-lead partner can view both documents
     [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428
-    [Tags]  FAHAD
+    [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  css=ul li:nth-child(6)
     And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    And close tabs
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
@@ -242,7 +242,6 @@ PM can still view both documents after submitting
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    And close tab
     Then the user goes back to the previous tab
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab

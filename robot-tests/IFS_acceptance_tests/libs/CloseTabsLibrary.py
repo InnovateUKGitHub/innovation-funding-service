@@ -2,13 +2,13 @@ import selenium.webdriver as webdriver
 import selenium.webdriver.support.ui as ui
 from selenium.webdriver.common.keys import Keys
 from robot.libraries.BuiltIn import BuiltIn
-import BuiltIn
 
-s2l = BuiltIn().get_library_instance('Selenium2Library')
+se2lib = BuiltIn().get_library_instance('Selenium2Library')
 
-def open_close_tab():
-    s2l.switch_to.window(s2l.window_handles[1])
-    s2l.close()
-    s2l.switch_to.window(s2l.window_handles[0])
+def get_webdriver_instance():
+    return se2lib._current_browser()
 
-close_tabs = open_close_tab()
+def close_tabs():
+    get_webdriver_instance().switch_to.(get_webdriver_instance().window_handles[0])
+    get_webdriver_instance().close()
+    get_webdriver_instance().switch_to.window(get_webdriver_instance().window_handles[-1])
