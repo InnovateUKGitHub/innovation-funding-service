@@ -1,14 +1,15 @@
 package org.innovateuk.ifs.assessment.feedback.populator;
 
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.resource.SectionType.GENERAL;
 
 /**
@@ -29,7 +30,7 @@ public class AssessmentFeedbackNavigationModelPopulator extends AssessmentModelP
     }
 
     private Optional<QuestionResource> getPreviousQuestion(final long questionId) {
-        return questionService.getPreviousQuestion(questionId);
+        return questionService.getPreviousQuestion(questionId).filter(this::isAssessmentQuestion);
     }
 
     private Optional<QuestionResource> getNextQuestion(final long questionId) {
@@ -37,6 +38,7 @@ public class AssessmentFeedbackNavigationModelPopulator extends AssessmentModelP
     }
 
     private boolean isAssessmentQuestion(QuestionResource question) {
-        return sectionService.getById(question.getSection()).getType() == GENERAL;
+        return sectionService.getById(question.getSection()).getType() == GENERAL
+                && (question.getQuestionSetupType() != APPLICATION_TEAM);
     }
 }

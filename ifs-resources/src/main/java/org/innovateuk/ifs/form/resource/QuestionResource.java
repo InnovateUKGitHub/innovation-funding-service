@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Question defines database relations and a model to use client side and server side.
  */
-public class QuestionResource {
+public class QuestionResource implements Comparable<QuestionResource> {
     private Long id;
     private String name;
     private String shortName;
@@ -168,6 +168,11 @@ public class QuestionResource {
 
     public void setFormInputs(List<Long> formInputs) {
         this.formInputs = formInputs;
+    }
+
+    @Override
+    public int compareTo(QuestionResource o) {
+        return Integer.compare(this.priority, o.priority);
     }
 
     @Override

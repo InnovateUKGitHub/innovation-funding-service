@@ -58,9 +58,10 @@ public class InviteOrganisationTeamManagementServiceTest extends BaseServiceUnit
         UserResource userResource = newUserResource().build();
 
         ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(1L,
+                2L,
                 null,
-                1L,
-                1L,
+                3L,
+                4L,
                 null,
                 false,
                 false,
