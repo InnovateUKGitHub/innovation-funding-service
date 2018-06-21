@@ -226,7 +226,6 @@ Mandatory document submission
     And the user clicks the button/link    jQuery=.button:contains("Submit")
     When the user clicks the button/link    link=Set up your project
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.waiting:nth-child(6)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=View the status of partners
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
@@ -478,7 +477,6 @@ After rejection, mandatory document submission
     And the user clicks the button/link    jQuery=.button:contains("Submit")
     When the user clicks the button/link    link=Set up your project
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.waiting:nth-child(6)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=View the status of partners
 
