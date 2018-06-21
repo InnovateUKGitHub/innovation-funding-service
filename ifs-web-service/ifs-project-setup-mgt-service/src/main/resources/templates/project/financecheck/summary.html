@@ -72,15 +72,15 @@
     <div class="table-overflow  extra-margin-bottom">
         <table class="table-progress">
             <thead>
-            <tr>
-                <th scope="col">Organisation</th>
-                <th scope="col" class="aligncentre">Viability</th>
-                <th scope="col" class="aligncentre cell-border-right">RAG</th>
-                <th scope="col" class="aligncentre">Eligibility</th>
-                <th scope="col" class="aligncentre cell-border-right">RAG</th>
-                <th scope="col" class="aligncentre">Queries raised</th>
-                <th scope="col" class="aligncentre">Notes</th>
-            </tr>
+                <tr>
+                    <th scope="col">Organisation</th>
+                    <th scope="col" class="aligncentre">Viability</th>
+                    <th scope="col" class="aligncentre cell-border-right">RAG</th>
+                    <th scope="col" class="aligncentre">Eligibility</th>
+                    <th scope="col" class="aligncentre cell-border-right">RAG</th>
+                    <th scope="col" class="aligncentre">Queries raised</th>
+                    <th scope="col" class="aligncentre">Notes</th>
+                </tr>
             </thead>
             <tbody>
             <tr th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
