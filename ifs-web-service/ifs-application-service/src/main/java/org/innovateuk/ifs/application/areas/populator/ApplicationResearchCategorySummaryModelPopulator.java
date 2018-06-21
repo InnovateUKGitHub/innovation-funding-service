@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -35,11 +36,17 @@ public class ApplicationResearchCategorySummaryModelPopulator {
                 .map(ResearchCategoryResource::getName).orElse(null);
 
         return new ResearchCategorySummaryViewModel(applicationResource.getId(),
+                getResearchCategoryTeamQuestion(applicationResource.getCompetition()),
                 researchCategoryName,
                 !isCompetitionOpen(applicationResource),
                 isComplete(applicationResource, loggedInUserId),
                 userIsLeadApplicant
         );
+    }
+
+    private Long getResearchCategoryTeamQuestion(long competitionId) {
+        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                RESEARCH_CATEGORY).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
     }
 
     private boolean isCompetitionOpen(ApplicationResource applicationResource) {

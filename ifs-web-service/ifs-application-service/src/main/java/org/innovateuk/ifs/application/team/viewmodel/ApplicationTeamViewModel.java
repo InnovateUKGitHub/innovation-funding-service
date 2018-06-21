@@ -19,6 +19,7 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
     private boolean summary;
 
     public ApplicationTeamViewModel(long applicationId,
+                                    Long questionId,
                                     String applicationName,
                                     List<ApplicationTeamOrganisationRowViewModel> organisations,
                                     boolean userLeadApplicant,
@@ -26,7 +27,7 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
                                     boolean closed,
                                     boolean complete,
                                     boolean canMarkAsComplete) {
-        super(closed, complete, canMarkAsComplete);
+        super(questionId, closed, complete, canMarkAsComplete);
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.organisations = organisations;

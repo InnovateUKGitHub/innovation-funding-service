@@ -8,11 +8,12 @@ public class ResearchCategorySummaryViewModel extends AbstractLeadOnlyViewModel 
     private String researchCategory;
 
     public ResearchCategorySummaryViewModel(long applicationId,
+                                            Long questionId,
                                             String researchCategory,
                                             boolean closed,
                                             boolean complete,
                                             boolean canMarkAsComplete) {
-        super(closed, complete, canMarkAsComplete);
+        super(questionId, closed, complete, canMarkAsComplete);
         this.applicationId = applicationId;
         this.researchCategory = researchCategory;
     }

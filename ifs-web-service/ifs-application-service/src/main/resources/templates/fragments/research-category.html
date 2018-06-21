@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="research_category(model, question)">
+<th:block th:fragment="research_category(model)">
     <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           novalidate="novalidate">
         <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
@@ -39,9 +39,17 @@
             </fieldset>
         </div>
 
+        <!-- Support for old Applicant menu view -->
+        <button class="button" name="save-research-category">Save</button>
+        <a class="button button-clear"
+           th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}">Cancel
+        </a>
+        <!-- End of support for old Applicant menu view -->
+
+        <!-- TODO disable for old Applicant menu -->
         <div class="extra-margin">
             <!--/* 'Mark as complete' / 'Edit' links */-->
-            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
+            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})" />
         </div>
     </form>
 </th:block>
@@ -55,7 +63,7 @@
     </dl>
     <div class="extra-margin">
         <!--/* 'Mark as complete' / 'Edit' links */-->
-        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})"/>
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
         <!--/* 'Return and edit' link */-->
         <th:block th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
     </div>
