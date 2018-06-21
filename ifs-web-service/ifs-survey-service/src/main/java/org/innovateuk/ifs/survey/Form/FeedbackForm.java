@@ -7,11 +7,9 @@ import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.survey.Satisfaction;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Form field model for the Satisfaction survey
