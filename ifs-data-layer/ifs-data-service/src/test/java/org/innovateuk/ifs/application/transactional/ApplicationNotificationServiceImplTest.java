@@ -14,6 +14,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -67,6 +68,10 @@ public class ApplicationNotificationServiceImplTest {
 
     @Mock
     private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
+
+    @Mock
+    @SuppressWarnings("unused")
+    private TransactionalHelper transactionalHelperMock;
 
     @InjectMocks
     private ApplicationNotificationService service = new ApplicationNotificationServiceImpl();
@@ -495,7 +500,6 @@ public class ApplicationNotificationServiceImplTest {
         InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSenderMock);
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
-        inOrder.verify(applicationRepositoryMock).save(application);
         inOrder.verify(notificationSenderMock).sendNotification(notification);
         inOrder.verifyNoMoreInteractions();
     }

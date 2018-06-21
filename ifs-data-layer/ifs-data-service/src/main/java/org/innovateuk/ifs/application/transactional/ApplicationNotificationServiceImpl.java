@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -33,7 +35,7 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 
 /**
- * Service provides notification emails functions to send emails for {@Application}s.
+ * Service provides notification emails functions to send emails for {@link Application}s.
  */
 @Service
 public class ApplicationNotificationServiceImpl implements ApplicationNotificationService {
@@ -52,11 +54,15 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     @Autowired
     private ApplicationWorkflowHandler applicationWorkflowHandler;
 
+    @Autowired
+    private TransactionalHelper transactionalHelper;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
     @Override
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
+
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId,
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
@@ -64,42 +70,64 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)
                 .collect(toList());
 
-        return processAnyFailuresOrSucceed(simpleMap(applicants, this::sendNotification));
+        return processAnyFailuresOrSucceed(simpleMap(applicants, this::sendAssessorFeedbackPublishedNotification));
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> informIneligible(long applicationId,
                                                 ApplicationIneligibleSendResource applicationIneligibleSendResource) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
-                .andOnSuccess(application -> {
-                    if (!applicationWorkflowHandler.informIneligible(application)) {
-                        return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);
-                    }
 
-                    applicationRepository.save(application);
-                    String bodyPlain = stripHtml(applicationIneligibleSendResource.getMessage());
-
-                    NotificationTarget recipient = new UserNotificationTarget(
-                                    application.getLeadApplicant().getName(),
-                                    application.getLeadApplicant().getEmail()
-                    );
-                    Notification notification = new Notification(
-                            systemNotificationSource,
-                            singletonList(recipient),
-                            Notifications.APPLICATION_INELIGIBLE,
-                            asMap("subject", applicationIneligibleSendResource.getSubject(),
-                                    "applicationName", application.getName(),
-                                    "applicationId", application.getId(),
-                                    "competitionName", application.getCompetition().getName(),
-                                    "bodyPlain", bodyPlain,
-                                    "bodyHtml", applicationIneligibleSendResource.getMessage())
-                    );
-                    return notificationSender.sendNotification(notification);
-                }).andOnSuccessReturnVoid();
+        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).
+                andOnSuccess(application -> markApplicationAsIneligible(application)).
+                andOnSuccess(markedApplication -> sendApplicationIneligibleNotificationSafely(markedApplication, applicationIneligibleSendResource)).
+                andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<Notification> sendNotification(ProcessRole processRole) {
+    private ServiceResult<Application> markApplicationAsIneligible(Application application) {
+
+        if (!applicationWorkflowHandler.informIneligible(application)) {
+            return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);
+        }
+
+        return serviceSuccess(application);
+    }
+
+    private ServiceResult<Notification> sendApplicationIneligibleNotificationSafely(
+            Application application,
+            ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+
+        // flush any pending SQL updates to the database before proceeding to send the email, in case any SQL issues
+        // occur
+        transactionalHelper.flushWithNoCommit();
+
+        return sendApplicationIneligibleNotification(application, applicationIneligibleSendResource);
+    }
+
+    private ServiceResult<Notification> sendApplicationIneligibleNotification(Application application, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+        String bodyPlain = stripHtml(applicationIneligibleSendResource.getMessage());
+
+        NotificationTarget recipient = new UserNotificationTarget(
+                application.getLeadApplicant().getName(),
+                application.getLeadApplicant().getEmail()
+        );
+
+        Notification notification = new Notification(
+                systemNotificationSource,
+                singletonList(recipient),
+                Notifications.APPLICATION_INELIGIBLE,
+                asMap("subject", applicationIneligibleSendResource.getSubject(),
+                        "applicationName", application.getName(),
+                        "applicationId", application.getId(),
+                        "competitionName", application.getCompetition().getName(),
+                        "bodyPlain", bodyPlain,
+                        "bodyHtml", applicationIneligibleSendResource.getMessage())
+        );
+
+        return notificationSender.sendNotification(notification);
+    }
+
+    private ServiceResult<Notification> sendAssessorFeedbackPublishedNotification(ProcessRole processRole) {
 
         Application application = applicationRepository.findOne(processRole.getApplicationId());
 
