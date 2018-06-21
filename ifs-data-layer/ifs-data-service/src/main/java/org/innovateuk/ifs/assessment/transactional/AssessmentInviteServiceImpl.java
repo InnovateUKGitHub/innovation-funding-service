@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
@@ -10,25 +14,18 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
-import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -60,13 +57,12 @@ import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
-import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -114,7 +110,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private ProfileRepository profileRepository;
 
     @Autowired
-    private NotificationSender notificationSender;
+    private NotificationService notificationService;
 
     @Autowired
     private NotificationTemplateRenderer renderer;
@@ -459,7 +455,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
             String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
             String customTextHtml = plainTextToHtml(customTextPlain);
 
-            return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+            return processAnyFailuresOrSucceed(simpleMap(
                     assessmentInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         assessmentParticipantRepository.save(
@@ -498,7 +494,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
         String customTextHtml = plainTextToHtml(customTextPlain);
 
-        return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+        // TODO DW - possibility of partial email send-out.  Need to do all MySQL work first then attempt sending out invites
+        return processAnyFailuresOrSucceed(simpleMap(
                 assessmentInviteRepository.getByIdIn(inviteIds),
                 invite -> {
                     updateParticipantStatus(invite);
@@ -515,7 +512,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         ));
     }
 
-    private ServiceResult<Notification> resendInviteNotification(AssessmentInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
+    private ServiceResult<Void> resendInviteNotification(AssessmentInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
         // Strip any HTML that may have been added to the content by the user.
         String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
 
@@ -530,7 +527,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 "bodyHtml", bodyHtml
         ));
 
-        return notificationSender.sendNotification(notification);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private ServiceResult<Void> sendInviteNotification(String subject,
@@ -555,7 +552,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                         "customTextHtml", customTextHtml
                 ));
 
-        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private void addAssessorRoleToUser(User user) {

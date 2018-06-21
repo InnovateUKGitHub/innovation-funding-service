@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.notifications.service.senders;
+package org.innovateuk.ifs.notifications.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -7,7 +7,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 /**
  * Represents a Component that knows how to send a NotificationResponse out as a message via a particular NotificationMedium
  */
-public interface NotificationSender {
+interface NotificationSender {
 
     NotificationMedium getNotificationMedium();
 
