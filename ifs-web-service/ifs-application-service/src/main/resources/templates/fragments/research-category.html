@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="research_category(model, question)">
-    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
+    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+          novalidate="novalidate">
         <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
             <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
                 <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
@@ -18,7 +19,8 @@
                         href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                         target="_blank">Innovate UK funding rules</a>.</span>
                     <th:block th:if="${#fields.hasErrors('researchCategory')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategory')}" th:text="${err}"></span>
+                        <span class="error-message" th:each="err : ${#fields.errors('researchCategory')}"
+                              th:text="${err}"></span>
                     </th:block>
                 </legend>
                 <th:block th:each="item : ${model.availableResearchCategories}">
@@ -27,7 +29,7 @@
                                th:field="*{researchCategory}"
                                required="required"
                                th:value="${item.id}"
-                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}" />
+                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"/>
                         <label th:for="${#ids.prev('researchCategory')}">
                             [[${item.name}]]
                             <span class="form-hint" th:text="${item.description}">description</span>
@@ -48,13 +50,14 @@
     <dl class="font-xsmall">
         <dt>Selected research category</dt>
         <dd th:text="${model.researchCategory} ?: 'This field has not been completed'"
-        th:classappend="${#strings.isEmpty(model.researchCategory)}? 'TODO IFS-2123 class for not completed'">Experimental development</dd>
+            th:classappend="${#strings.isEmpty(model.researchCategory)}? 'form-hint'">Experimental development
+        </dd>
     </dl>
-
     <div class="extra-margin">
         <!--/* 'Mark as complete' / 'Edit' links */-->
-        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})"/>
         <!--/* 'Return and edit' link */-->
-        <th:block th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
+        <th:block th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
     </div>
 </th:block>
+</html>
