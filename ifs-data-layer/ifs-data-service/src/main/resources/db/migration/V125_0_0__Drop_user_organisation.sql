@@ -23,3 +23,8 @@ ALTER TABLE process_role
   DROP FOREIGN KEY FK_gwtw85iv3vxq2914vxbluc8e9,
   MODIFY application_id BIGINT(20) NOT NULL;
 ALTER TABLE process_role ADD CONSTRAINT fk_process_role_application FOREIGN KEY (application_id) REFERENCES application(id);
+
+
+-- users can't have the same role more than once with respect to an application
+-- prod should have been cleaned up so this is true
+CREATE UNIQUE INDEX user_application_role_UNIQUE ON process_role(user_id, application_id, role_id);
