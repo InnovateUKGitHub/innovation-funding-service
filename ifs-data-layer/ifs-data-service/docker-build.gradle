@@ -30,15 +30,12 @@ ext.silRestCrmBaseURL="http://sil-stub:8080/silstub"
 
 ext.idpRestBaseURL="http://registration-svc:8080"
 
-ext.ifsDataServiceRestBaseURL="http://data-service:8080"
-
 ext.postcodeLookupKey=""
 
 ext.ifsFileStorageLocation="/mnt/ifs_storage"
 
 ext.ifsWebBaseURL="https://ifs.local-dev"
 
-ext.serverPort=8080
 ext.activeProfile="local"
 
 // Following is required to override allowed suffix on test environments. See comments on IFS-27.

@@ -138,7 +138,6 @@ include::{snippets}/interview-panel/find-feedback/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/interview-panel/find-feedback/curl-request.adoc[]
 
-
 === Is application assigned
 ==== Request
 include::{snippets}/interview-panel/get-sent-invite/http-request.adoc[]
@@ -150,3 +149,27 @@ include::{snippets}/interview-panel/get-sent-invite/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/get-sent-invite/curl-request.adoc[]
+
+=== Send application invites
+==== Request
+include::{snippets}/interview-panel/send-invites/http-request.adoc[]
+include::{snippets}/interview-panel/send-invites/path-parameters.adoc[]
+include::{snippets}/interview-panel/send-invites/request-fields.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/send-invites/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/send-invites/curl-request.adoc[]
+
+=== Resend application invite
+==== Request
+include::{snippets}/interview-panel/resend-invite/http-request.adoc[]
+include::{snippets}/interview-panel/resend-invite/path-parameters.adoc[]
+include::{snippets}/interview-panel/resend-invite/request-fields.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/resend-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/resend-invite/curl-request.adoc[]

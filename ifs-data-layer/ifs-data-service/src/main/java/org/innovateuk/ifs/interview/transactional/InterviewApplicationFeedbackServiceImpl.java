@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -13,6 +13,7 @@ import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentMessageOutcomeRepository;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,10 +62,16 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
     @Transactional
     public ServiceResult<Void> uploadFeedback(String contentType, String contentLength, String originalFilename, long applicationId, HttpServletRequest request) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
-            fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
+
+        fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                         .andOnSuccessReturnVoid(created -> {
-                            InterviewAssignmentMessageOutcome messageOutcome = new InterviewAssignmentMessageOutcome();
+                            InterviewAssignmentMessageOutcome messageOutcome;
+                            if (interviewAssignment.getProcessState() == InterviewAssignmentState.CREATED) {
+                                messageOutcome = new InterviewAssignmentMessageOutcome();
+                            } else {
+                                messageOutcome = interviewAssignment.getMessage();
+                            }
                             messageOutcome.setAssessmentInterviewPanel(interviewAssignment);
                             messageOutcome.setFeedback(created.getValue());
                             interviewAssignment.setMessage(messageOutcome);
@@ -77,9 +84,13 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment -> {
             long fileId = interviewAssignment.getMessage().getFeedback().getId();
             return fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() -> {
-                InterviewAssignmentMessageOutcome messageOutcome = interviewAssignment.getMessage();
-                interviewAssignment.removeMessage();
-                interviewAssignmentMessageOutcomeRepository.delete(messageOutcome);
+                if (interviewAssignment.getProcessState() == InterviewAssignmentState.CREATED) {
+                    InterviewAssignmentMessageOutcome messageOutcome = interviewAssignment.getMessage();
+                    interviewAssignment.removeMessage();
+                    interviewAssignmentMessageOutcomeRepository.delete(messageOutcome);
+                } else {
+                    interviewAssignment.getMessage().setFeedback(null);
+                }
             });
         });
     }

@@ -281,6 +281,21 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
         verify(interviewApplicationInviteServiceMock, only()).getSentInvite(applicationId);
     }
 
+    @Test
+    public void resendInvite() throws Exception {
+        long applicationId = 1L;
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+
+        when(interviewApplicationInviteServiceMock.resendInvite(applicationId, sendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/resend-invite/{applicationId}", applicationId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(sendResource)))
+                .andExpect(status().isOk());
+
+        verify(interviewApplicationInviteServiceMock, only()).resendInvite(applicationId, sendResource);
+    }
+
     protected HttpHeaders createFileUploadHeader(String contentType, long contentLength) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));
