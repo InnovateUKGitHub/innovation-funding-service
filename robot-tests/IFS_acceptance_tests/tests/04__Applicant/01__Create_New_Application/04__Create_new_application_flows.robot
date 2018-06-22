@@ -23,12 +23,12 @@ Non registered users non companies house route
     Given the user navigates to the page           ${frontDoor}
     And the user clicks the button/link in the paginated list            link=${createApplicationOpenCompetition}
     And the user clicks the button/link            jQuery=a:contains("Start new application")
-    And the user clicks the button/link            jQuery=.button:contains("Create account")
+    And the user clicks the button/link            jQuery=a:contains("Continue without an account")
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     When the user clicks the Not on company house link
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
-    Then The user should see the text in the page  Your details
+    Then The user should see the element           jQuery=h1:contains("Your details")
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -71,11 +71,6 @@ the new application should be visible in the dashboard page
 
 the user clicks the Not on company house link
     the user clicks the button/link    jQuery=summary:contains("Enter details manually")
-    the user clicks the button/link       name=manual-address
-    The user enters text to a text field  id=addressForm.selectedPostcode.addressLine1    street
-    The user enters text to a text field  id=addressForm.selectedPostcode.town    town
-    The user enters text to a text field  id=addressForm.selectedPostcode.county    country
-    The user enters text to a text field  id=addressForm.selectedPostcode.postcode    post code
     The user enters text to a text field  name=organisationName    org2
     the user clicks the button/link       jQuery=.button:contains("Continue")
 

@@ -191,15 +191,13 @@ the user verifies email
 the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
     the user clicks the button/link         jQuery=a:contains("Start new application")
-    the user clicks the button/link         jQuery=a:contains("Create account")
+    the user clicks the button/link         jQuery=a:contains("Continue without an account")
     the user should not see the element     jQuery=h3:contains("Organisation type")
     the user selects the radio button       organisationTypeId  ${org_type_id}
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
     the user enters text to a text field    id=organisationSearchName    Innovate
     the user clicks the button/link         id=org-search
     the user clicks the button/link         link=INNOVATE LTD
-    the user selects the checkbox           address-same
-    the user clicks the button/link         jQuery=.button:contains("Continue")
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account

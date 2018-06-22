@@ -63,7 +63,7 @@ The type of organisation navigates to the correct page
     And the user should see the element            jQuery=.form-hint:contains("A not-for-profit public sector body or charity working on innovation.")
     Given the user selects the radio button        organisationType    4
     And the user clicks the button/link            jQuery=.button:contains("Continue")
-    Then the user should see the text in the page  Public sector, charity or non Je-S registered research organisation
+    #Then the user should see the text in the page  Public sector, charity or non Je-S registered research organisation
     And the user should see the text in the page   Enter your organisation name or registration number.
     And the user goes back to the previous page
 
@@ -82,7 +82,7 @@ Research and technology organisations (RTO) search (empty, invalid & valid input
     And the user should see the text in the page   Please enter a UK postcode
     And the user moves focus to the element        css=[name="manual-address"]
     When the user enters text to a text field      name=addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link            jQuery=.button:contains("Find UK address")
+    And the user clicks the button/link            jQuery=.button:contains("Continue")
     And the user clicks the button/link            jQuery=.button:contains("Use selected address")
     Then the address fields should be filled
 
