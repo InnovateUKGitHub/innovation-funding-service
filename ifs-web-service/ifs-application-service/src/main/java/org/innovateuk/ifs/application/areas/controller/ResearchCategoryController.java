@@ -72,7 +72,7 @@ public class ResearchCategoryController {
         }
 
         model.addAttribute("researchCategoryModel", researchCategoryModelPopulator.populate(
-                applicationResource, loggedInUser.getId(), questionId));
+                applicationResource, loggedInUser.getId(), questionId, false));
         researchCategoryFormPopulator.populate(applicationResource, researchCategoryForm);
 
         return "application/research-categories";

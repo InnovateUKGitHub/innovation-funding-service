@@ -67,7 +67,7 @@
                 </th:block>
                 <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).RESEARCH_CATEGORY}">
                     <th:block
-                        th:insert="fragments/research-category :: research_category(${researchCategoryModel},${question})" />
+                        th:insert="fragments/research-category :: research_category(${researchCategoryModel})" />
                 </th:block>
             </div>
             <th:block th:if="${model.allReadOnly}">

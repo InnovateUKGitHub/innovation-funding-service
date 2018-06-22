@@ -43,7 +43,7 @@
     <div class="extra-margin">
         <!--/* 'Mark as complete' / 'Edit' links */-->
         <th:block
-                  th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
+                  th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})" />
         <!--/* 'Return and edit' link on the Application summary */-->
         <th:block th:if="${model.summary}"
                   th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />

@@ -21,16 +21,23 @@ public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLe
         super(applicantRestService, questionRestService);
     }
 
-    public ResearchCategorySummaryViewModel populate(ApplicationResource applicationResource, long loggedInUserId,
+    public ResearchCategorySummaryViewModel populate(ApplicationResource applicationResource,
+                                                     long loggedInUserId,
                                                      boolean userIsLeadApplicant) {
         String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
                 .map(ResearchCategoryResource::getName).orElse(null);
 
-        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = new ResearchCategorySummaryViewModel(applicationResource.getId(), researchCategoryName);
-        researchCategorySummaryViewModel.setCanMarkAsComplete(userIsLeadApplicant);
-        researchCategorySummaryViewModel.setClosed(!isCompetitionOpen(applicationResource));
-        researchCategorySummaryViewModel.setComplete(isComplete(applicationResource, loggedInUserId));
+        return new ResearchCategorySummaryViewModel(applicationResource.getId(),
+                getResearchCategoryTeamQuestion(applicationResource.getCompetition()),
+                researchCategoryName,
+                !isCompetitionOpen(applicationResource),
+                isComplete(applicationResource, loggedInUserId),
+                userIsLeadApplicant
+        );
+    }
 
-        return researchCategorySummaryViewModel;
+    private long getResearchCategoryTeamQuestion(long competitionId) {
+        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                RESEARCH_CATEGORY).getSuccess().getId();
     }
 }

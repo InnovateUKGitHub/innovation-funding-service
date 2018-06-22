@@ -1,49 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="research_category(model, question)">
-    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-          novalidate="novalidate">
-        <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
-            <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
-                <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
-                <p>The type of research affects the level of funding a business can receive under UK state aid rules.
-                    Changing the research category will reset the funding level for all business participants.
-                </p>
-            </div>
+<th:block th:fragment="research_category(model)">
+    <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
+        <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
+            <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
+            <p>The type of research affects the level of funding a business can receive under UK state aid rules.
+                Changing the research category will reset the funding level for all business participants.
+            </p>
+        </div>
 
-            <fieldset>
-                <legend class="extra-margin-bottom">
-                    <h2 class="heading-medium">Research category</h2>
-                    <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
-                        href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
-                        target="_blank">Innovate UK funding rules</a>.</span>
-                    <th:block th:if="${#fields.hasErrors('researchCategory')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('researchCategory')}"
-                              th:text="${err}"></span>
-                    </th:block>
-                </legend>
-                <th:block th:each="item : ${model.availableResearchCategories}">
-                    <div class="multiple-choice">
-                        <input type="radio"
-                               th:field="*{researchCategory}"
-                               required="required"
-                               th:value="${item.id}"
-                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"/>
-                        <label th:for="${#ids.prev('researchCategory')}">
-                            [[${item.name}]]
-                            <span class="form-hint" th:text="${item.description}">description</span>
-                        </label>
-                    </div>
+        <fieldset>
+            <legend class="extra-margin-bottom">
+                <h2 class="heading-medium">Research category</h2>
+                <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
+                    href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
+                    target="_blank">Innovate UK funding rules</a>.</span>
+                <th:block th:if="${#fields.hasErrors('researchCategory')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('researchCategory')}"
+                          th:text="${err}"></span>
                 </th:block>
-            </fieldset>
-        </div>
+            </legend>
+            <th:block th:each="item : ${model.availableResearchCategories}">
+                <div class="multiple-choice">
+                    <input type="radio"
+                           th:field="*{researchCategory}"
+                           required="required"
+                           th:value="${item.id}"
+                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"/>
+                    <label th:for="${#ids.prev('researchCategory')}">
+                        [[${item.name}]]
+                        <span class="form-hint" th:text="${item.description}">description</span>
+                    </label>
+                </div>
+            </th:block>
+        </fieldset>
+    </div>
 
-        <div class="extra-margin">
-            <!--/* 'Mark as complete' / 'Edit' links */-->
-            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
-        </div>
-    </form>
+    <div class="extra-margin" th:unless="${model.useNewApplicantMenu}">
+        <button class="button" name="save-research-category">Save</button>
+        <a class="button button-clear"
+           th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}">Cancel
+        </a>
+    </div>
+
+    <div class="extra-margin" th:if="${model.useNewApplicantMenu}">
+        <!--/* 'Mark as complete' / 'Edit' links */-->
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})" />
+    </div>
+
 </th:block>
 
 <th:block th:fragment="research_category_summary(model)">
@@ -55,7 +60,7 @@
     </dl>
     <div class="extra-margin">
         <!--/* 'Mark as complete' / 'Edit' links */-->
-        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})"/>
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
         <!--/* 'Return and edit' link */-->
         <th:block th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
     </div>

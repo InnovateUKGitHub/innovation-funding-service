@@ -12,20 +12,25 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     private String currentCompetitionName;
     private long applicationId;
-    private long questionId;
     private List<ResearchCategoryResource> availableResearchCategories;
     private boolean hasApplicationFinances;
+    private boolean useNewApplicantMenu;
 
-    public ResearchCategoryViewModel(final String currentCompetitionName,
-                                     final long applicationId,
-                                     final long questionId,
-                                     final List<ResearchCategoryResource> availableResearchCategories,
-                                     final boolean hasApplicationFinances) {
+    public ResearchCategoryViewModel(String currentCompetitionName,
+                                     long applicationId,
+                                     long questionId,
+                                     List<ResearchCategoryResource> availableResearchCategories,
+                                     boolean hasApplicationFinances,
+                                     boolean useNewApplicantMenu,
+                                     boolean closed,
+                                     boolean complete,
+                                     boolean canMarkAsComplete) {
+        super(questionId, closed, complete, canMarkAsComplete);
         this.currentCompetitionName = currentCompetitionName;
         this.applicationId = applicationId;
-        this.questionId = questionId;
         this.availableResearchCategories = availableResearchCategories;
         this.hasApplicationFinances = hasApplicationFinances;
+        this.useNewApplicantMenu = useNewApplicantMenu;
     }
 
     public String getCurrentCompetitionName() {
@@ -36,10 +41,6 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         return applicationId;
     }
 
-    public long getQuestionId() {
-        return questionId;
-    }
-
     public List<ResearchCategoryResource> getAvailableResearchCategories() {
         return availableResearchCategories;
     }
@@ -48,6 +49,11 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         return hasApplicationFinances;
     }
 
+    public boolean isUseNewApplicantMenu() {
+        return useNewApplicantMenu;
+    }
+
+    @Override
     public boolean isSummary() {
         return false;
     }

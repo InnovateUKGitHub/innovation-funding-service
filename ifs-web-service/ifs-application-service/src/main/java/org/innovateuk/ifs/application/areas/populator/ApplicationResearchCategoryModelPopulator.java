@@ -36,21 +36,20 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
 
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource,
                                               long loggedInUserId,
-                                              long questionId) {
+                                              long questionId,
+                                              boolean useNewApplicantMenu) {
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
 
-        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(applicationResource.getCompetitionName(),
+        return new ResearchCategoryViewModel(applicationResource.getCompetitionName(),
                 applicationResource.getId(),
                 questionId,
                 researchCategories,
-                hasApplicationFinances);
-
-        researchCategoryViewModel.setCanMarkAsComplete(userService.isLeadApplicant(loggedInUserId, applicationResource));
-        researchCategoryViewModel.setClosed(!isCompetitionOpen(applicationResource));
-        researchCategoryViewModel.setComplete(isComplete(applicationResource, loggedInUserId));
-
-        return researchCategoryViewModel;
+                hasApplicationFinances,
+                useNewApplicantMenu,
+                !isCompetitionOpen(applicationResource),
+                isComplete(applicationResource, loggedInUserId),
+                userService.isLeadApplicant(loggedInUserId, applicationResource));
     }
 
     private boolean hasApplicationFinances(ApplicationResource applicationResource) {
