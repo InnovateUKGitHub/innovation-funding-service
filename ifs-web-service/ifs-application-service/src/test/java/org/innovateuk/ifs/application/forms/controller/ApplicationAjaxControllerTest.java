@@ -344,7 +344,6 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
 
     }
 
-    // TODO: Change this to AutosaveElementException - IFS-3755
     @Test
     public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
         String questionId = "application_details-startdate_day";

@@ -25,7 +25,6 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
-//TODO: remove usages of Model model - IFS-3795
 @Component
 public class ApplicationFinanceOverviewModelManager implements FinanceOverviewModelManager {
     private ApplicationFinanceRestService applicationFinanceRestService;
