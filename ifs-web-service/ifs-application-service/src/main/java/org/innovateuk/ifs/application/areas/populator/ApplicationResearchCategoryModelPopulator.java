@@ -36,7 +36,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
 
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource,
                                               long loggedInUserId,
-                                              long questionId,
+                                              Long questionId,
                                               boolean useNewApplicantMenu) {
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();

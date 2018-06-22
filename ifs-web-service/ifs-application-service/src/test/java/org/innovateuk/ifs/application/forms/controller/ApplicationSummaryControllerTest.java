@@ -401,15 +401,17 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     private ApplicationTeamViewModel setupApplicationTeamViewModel() {
-        ApplicationTeamViewModel applicationTeamViewModel = new ApplicationTeamViewModel(1L,
+        ApplicationTeamViewModel applicationTeamViewModel = new ApplicationTeamViewModel(
+                1L,
+                1L,
                 "Application name",
                 emptyList(),
                 false,
+                false,
+                false,
+                false,
                 false);
         applicationTeamViewModel.setSummary(true);
-        applicationTeamViewModel.setClosed(false);
-        applicationTeamViewModel.setComplete(false);
-        applicationTeamViewModel.setCanMarkAsComplete(false);
 
         return applicationTeamViewModel;
     }

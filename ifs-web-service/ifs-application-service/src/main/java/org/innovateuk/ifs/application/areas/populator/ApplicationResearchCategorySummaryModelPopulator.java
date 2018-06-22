@@ -10,15 +10,20 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
+
 /**
  * Populates the research category selection viewmodel.
  */
 @Component
 public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLeadOnlyModelPopulator {
 
+    private QuestionRestService questionRestService;
+
     public ApplicationResearchCategorySummaryModelPopulator(ApplicantRestService applicantRestService,
                                                             QuestionRestService questionRestService) {
         super(applicantRestService, questionRestService);
+        this.questionRestService = questionRestService;
     }
 
     public ResearchCategorySummaryViewModel populate(ApplicationResource applicationResource,

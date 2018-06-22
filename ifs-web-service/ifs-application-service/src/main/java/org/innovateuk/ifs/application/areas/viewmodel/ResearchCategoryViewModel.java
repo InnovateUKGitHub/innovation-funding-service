@@ -11,23 +11,21 @@ import java.util.List;
 public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     private String currentCompetitionName;
-    private long applicationId;
     private List<ResearchCategoryResource> availableResearchCategories;
     private boolean hasApplicationFinances;
     private boolean useNewApplicantMenu;
 
     public ResearchCategoryViewModel(String currentCompetitionName,
-                                     long applicationId,
-                                     long questionId,
+                                     Long applicationId,
+                                     Long questionId,
                                      List<ResearchCategoryResource> availableResearchCategories,
                                      boolean hasApplicationFinances,
                                      boolean useNewApplicantMenu,
                                      boolean closed,
                                      boolean complete,
                                      boolean canMarkAsComplete) {
-        super(questionId, closed, complete, canMarkAsComplete);
+        super(questionId, applicationId, closed, complete, canMarkAsComplete);
         this.currentCompetitionName = currentCompetitionName;
-        this.applicationId = applicationId;
         this.availableResearchCategories = availableResearchCategories;
         this.hasApplicationFinances = hasApplicationFinances;
         this.useNewApplicantMenu = useNewApplicantMenu;
@@ -35,10 +33,6 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public String getCurrentCompetitionName() {
         return currentCompetitionName;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
     }
 
     public List<ResearchCategoryResource> getAvailableResearchCategories() {

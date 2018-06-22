@@ -4,22 +4,16 @@ import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
 
 public class ResearchCategorySummaryViewModel extends AbstractLeadOnlyViewModel {
 
-    private long applicationId;
     private String researchCategory;
 
-    public ResearchCategorySummaryViewModel(long applicationId,
-                                            long questionId,
+    public ResearchCategorySummaryViewModel(Long applicationId,
+                                            Long questionId,
                                             String researchCategory,
                                             boolean closed,
                                             boolean complete,
                                             boolean canMarkAsComplete) {
-        super(questionId, closed, complete, canMarkAsComplete);
-        this.applicationId = applicationId;
+        super(questionId, applicationId, closed, complete, canMarkAsComplete);
         this.researchCategory = researchCategory;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
     }
 
     public String getResearchCategory() {
