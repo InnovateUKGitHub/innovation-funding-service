@@ -35,7 +35,10 @@ Applicant submits his application
     and the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
     #Here? - May need another keyword?
     #And the user clicks the button/link  h3:contains("Project location question")
-    And the user enters the project location
+    #And the user enters the project location
+    And the user clicks the button/link                 jQuery = a:contains("Project location question")
+    the user enters text to a text field                projectLocation   BS1 4NT
+    the user clicks the button/link                     jQuery = button:contains("Mark as complete")
     and the user should not see the element             jQuery=h2:contains("Finances")
     Then the applicant submits the application
 
