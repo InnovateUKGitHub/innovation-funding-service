@@ -38,13 +38,18 @@ Applicant submits his application
     And the lead applicant fills all the questions and marks as complete(EOI comp type)
     #Here? - May need another keyword?
     #And the user clicks the button/link  h3:contains("Project location question")
-    And the user enters the project location
+    #And the user enters the project location
+
+    And the user clicks the button/link                 jQuery = a:contains("Project location question")
+    the user enters text to a text field                projectLocation   BS1 4NT
+    the user clicks the button/link                     jQuery = button:contains("Mark as complete")
+
     Then the user should not see the element            jQuery=h2:contains("Finances")
     And the applicant submits the application
 
 Invite a registered assessor
     [Documentation]  IFS-2376
-    [Tags]  HappyPath
+    [Tags]  HappyPath  pending
     Given log in as a different user                          &{Comp_admin1_credentials}
     When the user clicks the button/link                      link=${comp_name}
     And the user clicks the button/link                       link=Invite assessors to assess the competition
@@ -59,7 +64,7 @@ Invite a registered assessor
 
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
-    [Tags]  HappyPath
+    [Tags]  HappyPath  pending
     [Setup]  Milestones are updated in database to move competition to assessment state
     Given Log in as a different user                        &{assessor_credentials}
     When The user clicks the button/link                    Link=${comp_name}
@@ -69,7 +74,7 @@ Allocated assessor accepts invite to assess the competition
 
 Comp Admin allocates assessor to application
     [Documentation]  IFS-2376
-    [Tags]  HappyPath
+    [Tags]  HappyPath  pending
     Given log in as a different user        &{Comp_admin1_credentials}
     When The user clicks the button/link    link=Dashboard
     And The user clicks the button/link     link=EOI comp
@@ -82,7 +87,7 @@ Comp Admin allocates assessor to application
 
 Allocated assessor assess the application
     [Documentation]  IFS-2376
-    [Tags]  HappyPath
+    [Tags]  HappyPath  pending
     Given Log in as a different user                       &{assessor_credentials}
     When The user clicks the button/link                   link=EOI comp
     And the user clicks the button/link                    jQuery=li:contains("${EOI_application}") a:contains("Accept or reject")
@@ -94,7 +99,7 @@ Allocated assessor assess the application
 
 the comp admin closes the assessment and releases feedback
     [Documentation]  IFS-2376
-    [Tags]  HappyPath
+    [Tags]  HappyPath  pending
     Given log in as a different user                  &{Comp_admin1_credentials}
     When making the application a successful project  ${competitionId}  ${EOI_application}
     And moving competition to Project Setup           ${competitionId}
@@ -102,7 +107,7 @@ the comp admin closes the assessment and releases feedback
 
 the EOI comp moves to Previous tab
     [Documentation]  IFS-2376
-    [Tags]  HappyPath
+    [Tags]  HappyPath  pending
     Given the user clicks the button/link  link=Dashboard
     When the user clicks the button/link   jQuery=a:contains("Previous")
     Then the user clicks the button/link   link=${comp_name}
