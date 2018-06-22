@@ -36,6 +36,9 @@ Applicant submits his application
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${EOI_application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     And the lead applicant fills all the questions and marks as complete(EOI comp type)
+    #Here? - May need another keyword?
+    #And the user clicks the button/link  h3:contains("Project location question")
+    And the user enters the project location
     Then the user should not see the element            jQuery=h2:contains("Finances")
     And the applicant submits the application
 

@@ -33,6 +33,9 @@ Applicant submits his application
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${application_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     and the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
+    #Here? - May need another keyword?
+    #And the user clicks the button/link  h3:contains("Project location question")
+    And the user enters the project location
     and the user should not see the element             jQuery=h2:contains("Finances")
     Then the applicant submits the application
 
