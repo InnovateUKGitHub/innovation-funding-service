@@ -7,9 +7,10 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.management.viewmodel.ManageAssessorsRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.ManageAssessorsViewModel;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
+import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsRowViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -66,7 +67,7 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
                 simpleMap(assessorCountSummaryResources, ManageAssessorsRowViewModel::new),
                 competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT,
                 innovationSectorResources,
-                new PaginationViewModel(assessorCountSummaryPageResource, origin)
+                new Pagination(assessorCountSummaryPageResource, origin)
         );
 
         assertEquals(expectedViewModel, manageAssessmentsViewModel);

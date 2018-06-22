@@ -60,17 +60,18 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void testViewCompetitionStatusPageAllProjectFinance() throws Exception {
         Long competitionId = 123L;
+        String applicationSearchString = "12";
 
         setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.PROJECT_FINANCE)).build());
 
         CompetitionProjectsStatusResource competitionProjectsStatus = newCompetitionProjectsStatusResource().build();
 
-        when(statusRestService.getCompetitionStatus(competitionId)).thenReturn(restSuccess(competitionProjectsStatus));
+        when(statusRestService.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(restSuccess(competitionProjectsStatus));
 
         when(competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId)).thenReturn(restSuccess(1L));
         when(competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId)).thenReturn(restSuccess(4L));
 
-        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all"))
+        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
                 .andReturn();
@@ -83,14 +84,15 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void testViewCompetitionStatusPageAllCompAdmin() throws Exception {
         Long competitionId = 123L;
+        String applicationSearchString = "12";
 
         setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build());
 
         CompetitionProjectsStatusResource competitionProjectsStatus = newCompetitionProjectsStatusResource().build();
 
-        when(statusRestService.getCompetitionStatus(competitionId)).thenReturn(restSuccess(competitionProjectsStatus));
+        when(statusRestService.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(restSuccess(competitionProjectsStatus));
 
-        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all"))
+        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
                 .andReturn();

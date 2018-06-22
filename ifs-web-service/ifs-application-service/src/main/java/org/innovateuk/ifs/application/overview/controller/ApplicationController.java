@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +40,9 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 @Controller
 @RequestMapping("/application")
 @PreAuthorize("hasAuthority('applicant')")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationController.class)
+@SecuredBySpring(value="Controller",
+        description = "Only applicants on an application are allowed to view the corresponding application overview",
+        securedType = ApplicationController.class)
 public class ApplicationController {
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
@@ -67,7 +66,7 @@ public class ApplicationController {
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @GetMapping("/{applicationId}")
-    public String applicationDetails(ApplicationForm form,
+    public String applicationOverview(ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -92,7 +91,7 @@ public class ApplicationController {
         Long userId = user.getId();
         model.addAttribute("form", form);
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
-        return "application-details";
+        return "application-overview";
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
@@ -108,7 +107,7 @@ public class ApplicationController {
     }
 
     @PostMapping(value = "/{applicationId}")
-    public String applicationDetails(@PathVariable("applicationId") long applicationId,
+    public String applicationOverview(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      HttpServletRequest request) {
 
@@ -119,8 +118,8 @@ public class ApplicationController {
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants and Assessors can view question feedback for an application")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
+    @SecuredBySpring(value = "READ", description = "Applicants and Assessors and Comp exec users can view question feedback for an application")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId,
                                                       UserResource user) {
@@ -133,7 +132,7 @@ public class ApplicationController {
                 .map(pr -> pr.getRole())
                 .collect(Collectors.toList());
 
-        boolean isInterviewAssessor = userRoles.contains(INTERVIEW_ASSESSOR);
+        boolean isInterviewAssessor = userRoles.contains(INTERVIEW_ASSESSOR) || userIsInternal(user.getRoles());
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
@@ -143,6 +142,15 @@ public class ApplicationController {
         model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, isInterviewAssessor));
         return "application-assessor-feedback";
 
+    }
+
+    private boolean userIsInternal(List<Role> userroles){
+        for (Role ur : userroles) {
+            if(Role.internalRoles().contains(ur)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @GetMapping("/terms-and-conditions")

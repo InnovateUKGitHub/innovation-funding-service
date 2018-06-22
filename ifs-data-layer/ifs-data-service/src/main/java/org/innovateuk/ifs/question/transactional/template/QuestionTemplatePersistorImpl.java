@@ -2,7 +2,7 @@ package org.innovateuk.ifs.question.transactional.template;
 
 import org.innovateuk.ifs.competition.transactional.template.BaseChainedTemplatePersistor;
 import org.innovateuk.ifs.competition.transactional.template.BaseTemplatePersistor;
-import org.innovateuk.ifs.competition.transactional.template.FormInputTemplatePersistorImpl;
+import org.innovateuk.ifs.competitionsetup.transactional.template.FormInputTemplatePersistorImpl;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;

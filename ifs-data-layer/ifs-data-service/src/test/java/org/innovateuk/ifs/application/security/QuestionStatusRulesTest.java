@@ -47,7 +47,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testUserCanReadQuestionStatus() {
+    public void userCanReadQuestionStatus() {
         ApplicationResource application = newApplicationResource().build();
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource()
                 .withApplication(application).build();
@@ -64,7 +64,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testUserCanUpdateQuestionStatus() {
+    public void userCanUpdateQuestionStatus() {
         ApplicationResource application = newApplicationResource().build();
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource()
                 .withApplication(application).build();
@@ -98,7 +98,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testInternalUserCanReadQuestionStatus() {
+    public void internalUserCanReadQuestionStatus() {
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
 
         UserResource compAdminUser = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
@@ -115,7 +115,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testOnlyMemberOfProjectTeamCanMarkSection() {
+    public void onlyMemberOfProjectTeamCanMarkSection() {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
         UserResource leadApplicant = UserResourceBuilder.newUserResource().build();
         UserResource nonProjectTeamMember = UserResourceBuilder.newUserResource().build();

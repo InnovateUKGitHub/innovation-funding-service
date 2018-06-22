@@ -274,14 +274,14 @@ the user should see all finance subsections complete
     the user should see the element  css=li:nth-of-type(3) .task-status-complete
 
 the user should see all finance subsections incomplete
-    the user should see the element  css=li:nth-of-type(1) .action-required
-    the user should see the element  css=li:nth-of-type(2) .action-required
+    the user should see the element  css=li:nth-of-type(1) .task-status-incomplete
+    the user should see the element  css=li:nth-of-type(2) .task-status-incomplete
     the user should see the element  jQuery=h3:contains("Your funding")
 
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
     the user should see the element        jQuery=h1:contains("Application overview")
-    the user fills in the inviting steps   ${email}
+    the user fills in the inviting steps no edit   ${email}
     logout as user
     newly invited collaborator can create account and sign in   ${email}  ${competition_name}
 
@@ -340,7 +340,7 @@ logged in user applies to competition
     navigate to next page if not found  ${competition}
     the user clicks the button/link  link=${competition}
     the user clicks the button/link  link=Start new application
-    the user clicks the button/link  link=Begin application
+    the user clicks the button/link  id=application-question-save
 
 navigate to next page if not found
     [Arguments]  ${competition}
@@ -352,7 +352,7 @@ Lead Applicant applies to the new created competition
     log in as a different user       &{lead_credentials}
     the user navigates to the eligibility of the competition  ${competition}
     the user clicks the button/link  jQuery=a:contains("Sign in")
-    the user clicks the button/link  jQuery=a:contains("Begin application")
+    the user clicks the button/link  id=application-question-save
 
 the user navigates to the eligibility of the competition
     [Arguments]  ${competition}
@@ -382,3 +382,9 @@ the user selects his organisation in Companies House
     the user selects the checkbox         address-same
     the user clicks the button/link       css=button[name="save-organisation-details"]
     the user clicks the button/link       css=button[name="save-organisation"]
+
+the applicant completes Application Team
+    the user clicks the button/link  link=Application team
+    the user clicks the button/link  id=application-question-complete
+    the user clicks the button/link  link=Application overview
+    the user should see the element  jQuery=li:contains("Application team") > .task-status-complete
