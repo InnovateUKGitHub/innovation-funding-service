@@ -52,7 +52,7 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
         assertEquals(researchCategoryViewModel.getCurrentCompetitionName(), competitionName);
         assertEquals(researchCategoryViewModel.getAvailableResearchCategories().size(), 3L);
-        assertEquals(researchCategoryViewModel.hasApplicationFinances(), true);
+        assertEquals(researchCategoryViewModel.getHasApplicationFinances(), true);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
         assertEquals(researchCategoryViewModel.getCurrentCompetitionName(), competitionName);
         assertEquals(researchCategoryViewModel.getAvailableResearchCategories().size(), 3L);
-        assertEquals(researchCategoryViewModel.hasApplicationFinances(), false);
+        assertEquals(researchCategoryViewModel.getHasApplicationFinances(), false);
     }
 
     @Test
@@ -102,6 +102,6 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
         assertEquals(researchCategoryViewModel.getCurrentCompetitionName(), competitionName);
         assertEquals(researchCategoryViewModel.getAvailableResearchCategories().size(), 3L);
-        assertEquals(researchCategoryViewModel.hasApplicationFinances(), false);
+        assertEquals(researchCategoryViewModel.getHasApplicationFinances(), false);
     }
 }
