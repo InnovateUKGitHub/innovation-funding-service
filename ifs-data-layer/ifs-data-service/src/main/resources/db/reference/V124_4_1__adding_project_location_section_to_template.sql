@@ -7,19 +7,15 @@ UPDATE section SET priority = priority + 1 WHERE section_type in ("ORGANISATION_
 SET @programme_template_id = (SELECT template_competition_id FROM competition_type WHERE name="Programme");
 SET @sector_template_id = (SELECT template_competition_id FROM competition_type WHERE name="Sector");
 SET @generic_template_id = (SELECT template_competition_id FROM competition_type WHERE name="Generic");
-SET @eoi_template_id = (SELECT template_competition_id FROM competition_type WHERE name="Expression of interest");
 SET @apc_template_id = (SELECT template_competition_id FROM competition_type WHERE name="Advanced Propulsion Centre");
 SET @ati_template_id = (SELECT template_competition_id FROM competition_type WHERE name="Aerospace Technology Institute");
-SET @princes_template_id = (SELECT template_competition_id FROM competition_type WHERE name="The Prince's Trust");
 
 -- Find the section ids for the your finances section under each competition
 SET @programme_your_funding_section_id = (SELECT id FROM section WHERE competition_id=@programme_template_id AND section_type="FINANCE");
 SET @sector_your_funding_section_id = (SELECT id FROM section WHERE competition_id=@sector_template_id AND section_type="FINANCE");
 SET @generic_your_funding_section_id = (SELECT id FROM section WHERE competition_id=@generic_template_id AND section_type="FINANCE");
-SET @eoi_your_funding_section_id = (SELECT id FROM section WHERE competition_id=@eoi_template_id AND section_type="FINANCE");
 SET @apc_your_funding_section_id = (SELECT id FROM section WHERE competition_id=@apc_template_id AND section_type="FINANCE");
 SET @ati_your_funding_section_id = (SELECT id FROM section WHERE competition_id=@ati_template_id AND section_type="FINANCE");
-SET @princes_your_funding_section_id = (SELECT id FROM section WHERE competition_id=@princes_template_id AND section_type="FINANCE");
 
 -- Add 'Your project location' section with priority 6 for each of the template competitions
 INSERT INTO section (assessor_guidance_description, description, display_in_assessment_application_summary, name, priority, competition_id, parent_section_id, question_group, section_type)
@@ -27,10 +23,8 @@ INSERT INTO section (assessor_guidance_description, description, display_in_asse
      (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @programme_template_id, @programme_your_funding_section_id, 1, "PROJECT_LOCATION"),
      (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @sector_template_id, @sector_your_funding_section_id, 1, "PROJECT_LOCATION"),
      (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @generic_template_id, @generic_your_funding_section_id, 1, "PROJECT_LOCATION"),
-     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @eoi_template_id, @eoi_your_funding_section_id, 1, "PROJECT_LOCATION"),
      (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @apc_template_id, @apc_your_funding_section_id, 1, "PROJECT_LOCATION"),
-     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @ati_template_id, @ati_your_funding_section_id, 1, "PROJECT_LOCATION"),
-     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @princes_template_id, @princes_your_funding_section_id, 1, "PROJECT_LOCATION");
+     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @ati_template_id, @ati_your_funding_section_id, 1, "PROJECT_LOCATION");
 
 SET @programme_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@programme_template_id AND section_type="PROJECT_LOCATION");
 SET @sector_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@sector_template_id AND section_type="PROJECT_LOCATION");
@@ -38,7 +32,6 @@ SET @generic_your_project_location_section_id = (SELECT id FROM section WHERE co
 SET @eoi_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@eoi_template_id AND section_type="PROJECT_LOCATION");
 SET @apc_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@apc_template_id AND section_type="PROJECT_LOCATION");
 SET @ati_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@ati_template_id AND section_type="PROJECT_LOCATION");
-SET @princes_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@princes_template_id AND section_type="PROJECT_LOCATION");
 
 
 INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, competition_id, section_id, question_type, question_setup_type)
@@ -46,8 +39,6 @@ INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, mu
     (false, 'Description not used', true, true, 'Project location question', 'Project location question', '1', @programme_template_id, @programme_your_project_location_section_id, 'GENERAL', NULL),
     (false, 'Description not used', true, true, 'Project location question', 'Project location question', '1', @sector_template_id, @sector_your_project_location_section_id, 'GENERAL', NULL),
     (false, 'Description not used', true, true, 'Project location question', 'Project location question', '1', @generic_template_id, @generic_your_project_location_section_id, 'GENERAL', NULL),
-    (false, 'Description not used', true, true, 'Project location question', 'Project location question', '1', @eoi_template_id, @eoi_your_project_location_section_id, 'GENERAL', NULL),
     (false, 'Description not used', true, true, 'Project location question', 'Project location question', '1', @apc_template_id, @apc_your_project_location_section_id, 'GENERAL', NULL),
-    (false, 'Description not used', true, true, 'Project location question', 'Project location question', '1', @ati_template_id, @ati_your_project_location_section_id, 'GENERAL', NULL),
-    (false, 'Description not used', true, true, 'Project location question', 'Project location question', '1', @princes_template_id, @princes_your_project_location_section_id, 'GENERAL', NULL);
+    (false, 'Description not used', true, true, 'Project location question', 'Project location question', '1', @ati_template_id, @ati_your_project_location_section_id, 'GENERAL', NULL);
 
