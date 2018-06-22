@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.view.item;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
@@ -32,7 +33,9 @@ public class OtherFundingHandler extends FinanceRowHandler {
                         otherPublicFunding = fieldValue;
                         break;
                     case "fundingAmount":
-                        fundingAmount = NumberUtils.getBigDecimalValue(fieldValue, 0d);
+                        fundingAmount = (StringUtils.isEmpty(fieldValue))?
+                                null :
+                                NumberUtils.getBigDecimalValue(fieldValue, 0d);
                         break;
                     case "fundingSource":
                         fundingSource = fieldValue;
@@ -49,10 +52,6 @@ public class OtherFundingHandler extends FinanceRowHandler {
 
         if(allNull(id, otherPublicFunding, fundingSource, securedDate, fundingAmount)) {
         	return null;
-        }
-        
-        if((id == null || Long.valueOf(0L).equals(id)) && (fundingAmount == null)) {
-        	fundingAmount = BigDecimal.ZERO;
         }
 
         return new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
