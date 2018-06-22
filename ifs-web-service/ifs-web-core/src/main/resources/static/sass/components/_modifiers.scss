@@ -170,6 +170,14 @@ table {
     }
 
     tr{
+
+      &.form-group-row-validated{
+        border-top: 1px solid #bfc1c3;
+        &:first-child{
+          border:none;
+        }
+      }
+
       &.form-group-error {
         margin-right: 0px;
         border-left: none;

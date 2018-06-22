@@ -52,7 +52,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<tr class="form-group-row-validated border-top">' +
+        newRow = jQuery('<tr class="form-group-row-validated">' +
           '<td class="form-group">' +
           '<label><span class="form-label">Relation</span></label>' +
           '<input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field" type="text" ' +
