@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.summary.controller;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.forms.form.InterviewResponseForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -19,8 +18,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URISyntaxException;
 
 /**
  * This controller will handle all requests that are related to the application summary.
@@ -53,13 +50,12 @@ public class ApplicationSummaryController {
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
-                                     @ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
-                                     @RequestParam MultiValueMap<String, String> queryParams) throws URISyntaxException {
+                                     @RequestParam MultiValueMap<String, String> queryParams) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -71,7 +67,7 @@ public class ApplicationSummaryController {
         return "application-summary";
     }
 
-    private String redirectToFeedback(long applicationId, MultiValueMap<String, String> queryParams) throws URISyntaxException {
+    private String redirectToFeedback(long applicationId, MultiValueMap<String, String> queryParams) {
         return UriComponentsBuilder.fromPath(String.format("redirect:/application/%s/feedback", applicationId))
                 .queryParams(queryParams)
                 .build()

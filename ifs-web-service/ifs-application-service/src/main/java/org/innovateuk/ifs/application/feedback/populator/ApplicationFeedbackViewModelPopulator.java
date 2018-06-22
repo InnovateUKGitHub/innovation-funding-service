@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -150,6 +151,10 @@ public class ApplicationFeedbackViewModelPopulator {
 
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
+
+
+        queryParams.put("competitionId", asList(String.valueOf(application.getCompetition())));
+        queryParams.put("applicationId", asList(String.valueOf(application.getId())));
 
         return new ApplicationFeedbackViewModel(
                 application,

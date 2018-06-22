@@ -17,14 +17,14 @@ public class InterviewFeedbackViewModel {
     private final String feedbackFilename;
     private final boolean leadApplicant;
     private final boolean feedbackReleased;
-    private final boolean assessor;
+    private final boolean assessorOrAdmin;
 
-    public InterviewFeedbackViewModel(String responseFilename, String feedbackFilename, boolean leadApplicant,  boolean feedbackReleased, boolean assessor) {
+    public InterviewFeedbackViewModel(String responseFilename, String feedbackFilename, boolean leadApplicant,  boolean feedbackReleased, boolean assessorOrAdmin) {
         this.feedbackFilename = feedbackFilename;
         this.responseFilename = responseFilename;
         this.leadApplicant = leadApplicant;
         this.feedbackReleased = feedbackReleased;
-        this.assessor = assessor;
+        this.assessorOrAdmin = assessorOrAdmin;
     }
 
     public String getResponseFilename() {
@@ -43,8 +43,8 @@ public class InterviewFeedbackViewModel {
         return feedbackReleased;
     }
 
-    public boolean isAssessor() {
-        return assessor;
+    public boolean isAssessorOrAdmin() {
+        return assessorOrAdmin;
     }
 
     /* View logic methods. */
@@ -61,7 +61,7 @@ public class InterviewFeedbackViewModel {
     }
 
     public String getBannerText() {
-        if (isAssessor()) {
+        if (isAssessorOrAdmin()) {
             return getAssessorBannerText();
         } else {
             return getApplicantBannerText();

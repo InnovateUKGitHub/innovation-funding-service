@@ -42,7 +42,7 @@ public class InterviewFeedbackViewModelPopulator {
                 feedbackFilename,
                 role.map(ProcessRoleResource::getRole).map(Role::isLeadApplicant).orElse(false),
                 isFeedbackReleased,
-                userResource.hasRole(Role.ASSESSOR)
+                userResource.hasRole(Role.ASSESSOR) || userResource.hasAnyRoles(Role.internalRoles())
         );
     }
 }

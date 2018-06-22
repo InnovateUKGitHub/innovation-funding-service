@@ -36,6 +36,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
@@ -114,6 +115,8 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application, competition));
         model.addAttribute("showApplicationTeamLink", applicationService.showApplicationTeam(application.getId(), user.getId()));
 
+        queryParams.put("competitionId", asList(String.valueOf(competitionId)));
+        queryParams.put("applicationId", asList(String.valueOf(application.getId())));
         model.addAttribute("backUrl", buildBackUrl(NavigationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId"));
         UriComponentsBuilder builder =  UriComponentsBuilder.newInstance()
                 .queryParam("origin", origin)

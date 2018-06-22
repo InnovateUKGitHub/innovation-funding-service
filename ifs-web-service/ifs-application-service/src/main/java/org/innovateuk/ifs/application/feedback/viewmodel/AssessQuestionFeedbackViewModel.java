@@ -25,21 +25,17 @@ public class AssessQuestionFeedbackViewModel {
 
     private NavigationViewModel navigation;
 
-    private boolean isInterviewAssessor;
-
     public AssessQuestionFeedbackViewModel(ApplicationResource application,
                                            QuestionResource question,
                                            List<FormInputResponseResource> responses,
                                            AssessmentFeedbackAggregateResource aggregateResource,
-                                           NavigationViewModel navigationViewModel,
-                                           boolean isInterviewAssessor
+                                           NavigationViewModel navigationViewModel
     ) {
         this.application = application;
         this.question = question;
         this.responses = responses;
         this.aggregateResource = aggregateResource;
         this.navigation = navigationViewModel;
-        this.isInterviewAssessor = isInterviewAssessor;
     }
 
     public ApplicationResource getApplication() {
@@ -62,10 +58,6 @@ public class AssessQuestionFeedbackViewModel {
         return navigation;
     }
 
-    public boolean isInterviewAssessor() {
-        return isInterviewAssessor;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,7 +72,6 @@ public class AssessQuestionFeedbackViewModel {
                 .append(responses, that.responses)
                 .append(aggregateResource, that.aggregateResource)
                 .append(navigation, that.navigation)
-                .append(isInterviewAssessor, isInterviewAssessor)
                 .isEquals();
     }
 
@@ -92,7 +83,6 @@ public class AssessQuestionFeedbackViewModel {
                 .append(responses)
                 .append(aggregateResource)
                 .append(navigation)
-                .append(isInterviewAssessor)
                 .toHashCode();
     }
 }

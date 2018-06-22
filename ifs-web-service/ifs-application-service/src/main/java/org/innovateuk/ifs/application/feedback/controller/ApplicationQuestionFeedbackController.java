@@ -5,8 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.innovateuk.ifs.user.resource.Role.INTERVIEW_ASSESSOR;
 
 @Controller
 @RequestMapping("/application")
@@ -47,20 +40,12 @@ public class ApplicationQuestionFeedbackController {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
 
-        List<ProcessRoleResource> processRoleResources = processRoleService.findProcessRolesByApplicationId(applicationId);
-        List<Role> userRoles = processRoleResources.stream()
-                .filter(pr -> pr.getUser().equals(user.getId()))
-                .map(pr -> pr.getRole())
-                .collect(Collectors.toList());
-
-        boolean isInterviewAssessor = userRoles.contains(INTERVIEW_ASSESSOR);
-
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
         if (!applicationResource.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             return "redirect:/application/" + applicationId + "/summary";
         }
-        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, isInterviewAssessor));
+        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId));
         return "application-assessor-feedback";
 
     }

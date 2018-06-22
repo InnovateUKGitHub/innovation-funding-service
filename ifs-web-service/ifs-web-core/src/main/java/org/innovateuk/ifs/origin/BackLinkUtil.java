@@ -51,10 +51,13 @@ public final class BackLinkUtil {
     }
 
     private static Map<String, String> handleParameters(MultiValueMap<String, String> queryParams, String... keys) {
-        return Arrays.stream(keys)
+         Map<String, String> params =  Arrays.stream(keys)
                 .filter(queryParams::containsKey)
-                .peek(queryParams::remove)
                 .collect(Collectors.toMap(Function.identity(), key -> getSingleValue(queryParams, key)));
+        Arrays.stream(keys)
+                .filter(queryParams::containsKey)
+                .forEach(queryParams::remove);
+        return params;
     }
 
     private static String getSingleValue(MultiValueMap<String, String> queryParams, String key) {
