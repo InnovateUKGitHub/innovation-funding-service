@@ -100,15 +100,26 @@ Application questions should be scorable
     Then The user should see the element          jQuery=label:contains("Question score")
     [Teardown]  the user clicks the button/link   link=Back to your assessment overview
 
+#Appendix can be opened on the question view
+#    [Documentation]    INFUND-8065
+#    [Tags]
+#    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 7 KB
+#    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7 KB
+#    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 7 KB
+#    When the user clicks the button/link         jQuery=a:contains("6. Innovation")
+#    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7.94 KB
+#    Then the user should not see an error in the page
+#    And switch to last opened tab then close it
+
+
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 7 KB
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7 KB
-    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 7 KB
-    When the user clicks the button/link         jQuery=a:contains("6. Innovation")
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7.94 KB
-    And the user goes back to the previous tab
+    Given the user opens the appendix link    intelligent-water-system-technical-approach.pdf, 7 KB
+    And the user opens the appendix link      intelligent-water-system-innovation.pdf, 7 KB
+    And the user opens the appendix link      intelligent-water-system-project-team.pdf, 7 KB
+    When the user clicks the button/link      jQuery=a:contains("6. Innovation")
+    Then the user opens the appendix link      intelligent-water-system-innovation.pdf, 7.94 KB
 
 Scope: Validations
     [Documentation]  IFS-508
@@ -299,3 +310,9 @@ The academic finances are correct
     The user should see the element       jQuery=.table-overview td:contains("£990")
     The user should see the element       jQuery=.table-overview td:contains("100%")
     The user should see the element       jQuery=.table-overview td:contains("990")
+
+The user opens the appendix link
+    [Arguments]  ${appendixPDFLink}
+    The user opens the link in new window    ${appendixPDFLink}
+    the user should not see an error in the page
+    switch to last opened tab then close it

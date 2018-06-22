@@ -34,7 +34,6 @@ Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
-Library          /Users/fahadahmed/innovation-funding-service/robot-tests/IFS_acceptance_tests/libs/CloseTabsLibrary.py
 
 *** Variables ***
 
@@ -114,10 +113,11 @@ Lead partner can view both documents
     Given log in as a different user       &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user opens the link in new window   ${valid_pdf}
-    And close tabs
-    And the user goes back to the previous tab
+    And the user should not see an error in the page
+    And switch to last opened tab then close it
     When the user opens the link in new window   ${valid_pdf}
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     When the user navigates to the page    ${project_in_setup_page}/team-status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
@@ -144,9 +144,11 @@ Non-lead partner can view both documents
     And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     When the user navigates to the page     ${project_in_setup_page}/team-status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
@@ -242,9 +244,11 @@ PM can still view both documents after submitting
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -265,9 +269,11 @@ Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    When the user should not see an error in the page
+    Then switch to last opened tab then close it
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
@@ -281,9 +287,11 @@ Non-lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=View the status of partners
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
@@ -360,9 +368,11 @@ After rejection, lead partner can view both documents
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=View the status of partners
     When the user clicks the button/link    link=View the status of partners
@@ -385,9 +395,11 @@ After rejection, non-lead partner cannot view both documents
     And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)

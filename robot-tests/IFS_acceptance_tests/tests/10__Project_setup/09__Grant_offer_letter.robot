@@ -314,7 +314,8 @@ PM can view the uploaded Annex file
     [Setup]    log in as a different user        ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page         ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     When the user opens the link in new window   ${valid_pdf}
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And switch to last opened tab then close it
 
 PM can download the annex
     [Documentation]    INFUND-5998

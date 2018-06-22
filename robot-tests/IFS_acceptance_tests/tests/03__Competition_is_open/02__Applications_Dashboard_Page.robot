@@ -127,6 +127,7 @@ Comp admin can open the view mode of the application
     And the user should see the text in the page            Climate science the history of Greenland's ice
     And the user should see the text in the page            ${valid_pdf}
     And the user can view this file without any errors
+    And switch to last opened tab then close it
     #    And the user should see the text in the page    ${quarantine_pdf}
     #    And the user cannot see this file but gets a quarantined message
     # TODO when working on Guarantined files. Variable has been removed
@@ -162,13 +163,14 @@ the user can see the option to upload a file on the page
 
 the user can view this file without any errors
     The user opens the link in new window  ${valid_pdf}, 10 KB
-    the user goes back to the previous tab
+    the user should not see an error in the page
 
 the user cannot see this file but gets a quarantined message
     [Documentation]    Currently not used. It was used in Comp admin can open the view mode of the application
     The user opens the link in new window  test_quarantine.pdf, 7 KB
-    the user goes back to the previous tab
+    the user should not see an error in the page
     the user should see the text in the page    ${quarantine_warning}
+
 
 the finance summary calculations should be correct
     Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
