@@ -152,6 +152,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         competition = newCompetitionResource()
                 .withAssessorAcceptsDate(ZonedDateTime.now().minusDays(2))
                 .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(4))
+                .withName("Super creative competition name")
                 .build();
 
         assessment = newAssessmentResource()
@@ -330,6 +331,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 APPLICATION_ID,
                 "Using natural gas to heat homes",
                 competition.getId(),
+                "Super creative competition name",
                 50L,
                 3L,
                 expectedSections,
