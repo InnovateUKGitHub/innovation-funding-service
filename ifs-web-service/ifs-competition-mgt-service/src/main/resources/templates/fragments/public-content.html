@@ -397,7 +397,12 @@
         <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
             <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
             <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'form-group-error':''">
-                <label class="form-label-bold" th:for="contentGroups[__${index}__].heading">Heading</label>
+                <label class="form-label" th:for="contentGroups[__${index}__].heading">
+                    <span class="form-label-bold">Heading</span>
+                    <th:block th:if="${#fields.hasErrors('contentGroups[__${index}__].heading')}">
+                        <span class="error-message" th:text="#{validation.publiccontent.contentgroup.heading.required}"></span>
+                    </th:block>
+                </label>
                 <input class="form-control"
                        type="text"
                        required="required"
@@ -407,16 +412,21 @@
                        th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.heading.required}" />
             </div>
             <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'form-group-error':''">
-                <label class="form-label-bold" th:for="contentGroups[__${index}__].content">Content</label>
-                    <textarea th:errorclass="form-control-error"
-                              cols="30"
-                              rows="10"
-                              class="width-full form-control"
-                              data-editor="html"
-                              th:id="contentGroups[__${index}__].content"
-                              th:field="*{contentGroups[__${index}__].content}"
-                              required="required"
-                              th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.content.required}"></textarea>
+                <label class="form-label" th:for="contentGroups[__${index}__].content">
+                    <span class="form-label-bold">Content</span>
+                    <th:block th:if="${#fields.hasErrors('contentGroups[__${index}__].content')}">
+                        <span class="error-message" th:text="#{validation.publiccontent.contentgroup.content.required}"></span>
+                    </th:block>
+                </label>
+                <textarea th:errorclass="form-control-error"
+                          cols="30"
+                          rows="10"
+                          class="width-full form-control"
+                          data-editor="html"
+                          th:id="contentGroups[__${index}__].content"
+                          th:field="*{contentGroups[__${index}__].content}"
+                          required="required"
+                          th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.content.required}"></textarea>
             </div>
             <div class="form-group upload-section">
                 <th:block th:with="uploadViewmode='edit',
