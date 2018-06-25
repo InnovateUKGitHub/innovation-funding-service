@@ -109,7 +109,7 @@ Application questions should be scorable
 #    When the user clicks the button/link         jQuery=a:contains("6. Innovation")
 #    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7.94 KB
 #    Then the user should not see an error in the page
-#    And switch to last opened tab then close it
+#    And the user closes the last opened tab
 
 
 Appendix can be opened on the question view
@@ -315,4 +315,4 @@ The user opens the appendix link
     [Arguments]  ${appendixPDFLink}
     The user opens the link in new window    ${appendixPDFLink}
     the user should not see an error in the page
-    switch to last opened tab then close it
+    the user closes the last opened tab

@@ -47,7 +47,7 @@ Assessor agreement
     [Tags]
     When The user opens the link in new window  Download assessor agreement
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
 
 Client-side validations and Submit
     [Documentation]    INFUND-1481

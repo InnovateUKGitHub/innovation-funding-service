@@ -66,10 +66,10 @@ Lead applicant can view a file
     Given The user opens the link in new window  ${valid_pdf}
     And the file has been scanned for viruses
     When the applicant opens the uploaded file
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     Then the user should not see an error in the page
     When The user goes back to the previous page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
 
 Internal users can view uploaded files
     [Documentation]    IFS-1037
@@ -93,7 +93,7 @@ Collaborators can view a file
     And the user should see the text in the page  ${valid_pdf}
     When The user opens the link in new window    ${valid_pdf}
     And the user should not see an error in the page
-    Then switch to last opened tab then close it
+    Then the user closes the last opened tab
 
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
@@ -131,7 +131,7 @@ Collaborators can view a file when the question is assigned
     And the user should see the element         link=${valid_pdf} (opens in a new window)
     When The user opens the link in new window  ${valid_pdf}
     And the user should not see an error in the page
-    Then switch to last opened tab then close it
+    Then the user closes the last opened tab
 
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
@@ -206,4 +206,4 @@ User verifies if uploaded document can be viewed
      the user expands the section              5. Technical approach
      The user opens the link in new window     ${valid_pdf}
      the user should not see an error in the page
-     switch to last opened tab then close it
+     the user closes the last opened tab

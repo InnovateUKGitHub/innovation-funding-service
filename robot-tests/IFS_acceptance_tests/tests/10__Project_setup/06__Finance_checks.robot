@@ -154,7 +154,7 @@ Project Finance user can view academic Jes form
     Then the user should see the text in the page    Download Je-S form
     When the user opens the link in new window   jes-form104.pdf
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 

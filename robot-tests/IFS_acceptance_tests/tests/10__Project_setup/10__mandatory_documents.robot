@@ -114,10 +114,10 @@ Lead partner can view both documents
     When the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user opens the link in new window   ${valid_pdf}
     And the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     When the user opens the link in new window   ${valid_pdf}
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     When the user navigates to the page    ${project_in_setup_page}/team-status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
@@ -145,10 +145,10 @@ Non-lead partner can view both documents
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     When the user navigates to the page     ${project_in_setup_page}/team-status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
@@ -245,10 +245,10 @@ PM can still view both documents after submitting
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -270,10 +270,10 @@ Lead partner can still view both documents after submitting
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     When the user should not see an error in the page
-    Then switch to last opened tab then close it
+    Then the user closes the last opened tab
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
@@ -288,10 +288,10 @@ Non-lead partner can still view both documents after submitting
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=View the status of partners
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
@@ -369,10 +369,10 @@ After rejection, lead partner can view both documents
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=View the status of partners
     When the user clicks the button/link    link=View the status of partners
@@ -396,10 +396,10 @@ After rejection, non-lead partner cannot view both documents
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)

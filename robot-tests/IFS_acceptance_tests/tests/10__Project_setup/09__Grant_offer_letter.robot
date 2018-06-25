@@ -102,6 +102,7 @@ IFS Admin user selects the grant offer letter
     And the user should see the element          jQuery=h2:contains("Grant offer letter")
     And the user opens the link in new window    grant_offer_letter.pdf
     And the user should see the element          jQuery=button:contains("Remove")
+    And the user closes the last opened tab
 
 Project Finance can download GOL
     [Documentation]  INFUND-6377
@@ -315,7 +316,7 @@ PM can view the uploaded Annex file
     Given the user navigates to the page         ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     When the user opens the link in new window   ${valid_pdf}
     Then the user should not see an error in the page
-    And switch to last opened tab then close it
+    And the user closes the last opened tab
 
 PM can download the annex
     [Documentation]    INFUND-5998
