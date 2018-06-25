@@ -44,7 +44,7 @@
                 <div th:if="${model.appendixExists}">
                     <div th:replace="question-type/form-elements :: readonly-file-download
                     (filename=${model.appendixDetails.filename},
-                    filesizeKbytes=${model.appendixDetails.displayFilesizeKbytes},
+                    filesizeKbytes=${model.appendixDetails.filesizeKbytes},
                     fileDescription=${model.appendixFileDescription}+':',
                     downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
                 </div>
