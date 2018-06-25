@@ -100,18 +100,6 @@ Application questions should be scorable
     Then The user should see the element          jQuery=label:contains("Question score")
     [Teardown]  the user clicks the button/link   link=Back to your assessment overview
 
-#Appendix can be opened on the question view
-#    [Documentation]    INFUND-8065
-#    [Tags]
-#    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 7 KB
-#    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7 KB
-#    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 7 KB
-#    When the user clicks the button/link         jQuery=a:contains("6. Innovation")
-#    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7.94 KB
-#    Then the user should not see an error in the page
-#    And the user closes the last opened tab
-
-
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
