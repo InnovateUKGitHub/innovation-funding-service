@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.survey.Controller;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.survey.*;
 import org.innovateuk.ifs.survey.Form.FeedbackForm;
@@ -20,8 +18,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 /**
@@ -38,7 +34,6 @@ public class SurveyController {
     public String viewFeedback(@ModelAttribute("form") FeedbackForm feedbackForm,
                                BindingResult bindingResult,
                                @PathVariable("competitionId") long competitionId,
-                               UserResource user,
                                Model model) {
 
         model.addAttribute("competitionId", competitionId);
@@ -57,7 +52,7 @@ public class SurveyController {
 
         String userUrl = user.getRoles().get(0).getUrl();
 
-        Supplier<String> failureView = () -> viewFeedback(feedbackForm, bindingResult, competitionId, user, model);
+        Supplier<String> failureView = () -> viewFeedback(feedbackForm, bindingResult, competitionId, model);
         Supplier<String> successView = () -> RedirectUtils.redirectToApplicationService(request, userUrl);
 
         SurveyResource surveyResource = getSurveyResource(feedbackForm, competitionId);

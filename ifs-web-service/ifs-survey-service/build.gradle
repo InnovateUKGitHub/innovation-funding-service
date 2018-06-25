@@ -1,6 +1,3 @@
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild + "-build.gradle";
-
 bootRun {
     addResources = false
 }
@@ -21,7 +18,7 @@ osStageLocal.tag = surveyServiceVersion
 createContainer.hostName="survey-svc"
 createContainer.containerName="survey-svc"
 createContainer.containerId="survey-svc"
-createContainer.portBindings = ['2020:8000']
+createContainer.portBindings = ['9007:8000']
 
 ext.serverContext = '/survey'
 
