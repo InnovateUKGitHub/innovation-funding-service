@@ -28,6 +28,8 @@
           <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
                                                     and appIsClosed)
                                              or (question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM
+                                                    and !isApplicant)
+                                             or (question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).RESEARCH_CATEGORY
                                                     and !isApplicant)}">
             <h3>
                 <th:block th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />

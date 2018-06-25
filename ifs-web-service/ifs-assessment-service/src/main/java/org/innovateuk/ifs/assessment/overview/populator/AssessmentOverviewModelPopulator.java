@@ -34,6 +34,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
@@ -99,7 +100,7 @@ public class AssessmentOverviewModelPopulator {
             List<QuestionResource> sectionQuestions = sectionResource.getQuestions()
                     .stream()
                     .map(questionsMap::get)
-                    .filter(question -> question.getQuestionSetupType() != APPLICATION_TEAM)
+                    .filter(this::isAssessmentQuestion)
                     .collect(toList());
 
             return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
@@ -179,6 +180,10 @@ public class AssessmentOverviewModelPopulator {
     private Optional<String> getResponseValue(FormInputResource formInput,
                                               Map<Long, AssessorFormInputResponseResource> responses) {
         return ofNullable(responses.get(formInput.getId())).map(AssessorFormInputResponseResource::getValue);
+    }
+
+    private boolean isAssessmentQuestion(QuestionResource question) {
+        return question.getQuestionSetupType() != APPLICATION_TEAM && question.getQuestionSetupType() != RESEARCH_CATEGORY;
     }
 
     private AssessmentOverviewAppendixViewModel getAppendix(FormInputResponseResource formInputResponse,
