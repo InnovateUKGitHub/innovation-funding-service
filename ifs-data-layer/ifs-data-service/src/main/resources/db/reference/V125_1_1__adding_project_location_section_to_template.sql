@@ -1,3 +1,4 @@
+-- IFS-1497
 -- Bump the priority of all the existing sections to to make space for the 'Project location' section at the top
 UPDATE section SET priority = priority + 1 WHERE section_type in ("ORGANISATION_FINANCES", "FUNDING_FINANCES", "OVERVIEW_FINANCES") AND competition_id IN (
     SELECT template_competition_id FROM competition_type
