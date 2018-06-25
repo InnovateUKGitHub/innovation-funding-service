@@ -8,6 +8,7 @@ bootRepackage.enabled = false
 build.enabled = false
 // End workaround
 
+apply from: rootProject.file("gradle-support/openshift-util.gradle")
 
 if (!isNamedEnv()) {
     apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
@@ -15,21 +16,6 @@ if (!isNamedEnv()) {
     apply from: rootProject.file("gradle-support/named-env-properties.gradle")
     if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
         apply from: openshiftEnv + "-named-env-properties.gradle"
-    }
-}
-
-
-
-
-def getSvcAccountToken() {
-    "oc whoami -t".execute().text.trim()
-}
-
-def getSvcAccountClauseServer(target) {
-    if(target == 'local') {
-        return "https://localhost:8443"
-    } else if (target == 'remote') {
-        return "https://console.prod.ifs-test-clusters.com:443"
     }
 }
 
@@ -259,7 +245,7 @@ task dbAnonymisedDumpLocal(type: Exec, dependsOn: [setDatabaseDefaults, prepareD
 task deleteProjectLocal(type: Exec) {
     doFirst {
         executable 'oc'
-        args 'delete', 'project', openshiftEnv, "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('local')}", "--insecure-skip-tls-verify=true"
+        args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 
     ignoreExitValue true
@@ -272,7 +258,7 @@ task deleteProjectLocal(type: Exec) {
 task createProjectLocal(type: Exec, dependsOn: deleteProjectLocal) {
     doFirst {
         executable 'oc'
-        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('local')}", "--insecure-skip-tls-verify=true"
+        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 }
 
@@ -286,7 +272,7 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 task deleteProject(type: Exec) {
     doFirst {
         executable 'oc'
-        args 'delete', 'project', openshiftEnv, "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
+        args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 
     ignoreExitValue true
@@ -299,7 +285,7 @@ task deleteProject(type: Exec) {
 task createProject(type: Exec, dependsOn: deleteProject) {
     doFirst {
         executable 'oc'
-        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${getSvcAccountToken()}", "--server=${getSvcAccountClauseServer('remote')}", "--insecure-skip-tls-verify=true"
+        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 }
 
