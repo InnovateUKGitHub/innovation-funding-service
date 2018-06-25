@@ -38,6 +38,7 @@ function deploy() {
         if $(isServiceEnabled "ifs.prototypes"); then
             oc create -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
         fi
+
     fi
 
     # The SIL stub is required in all environments, in one form or another, except for production
@@ -48,6 +49,12 @@ function deploy() {
     # Only named environment for Prototypes is SysInt
     if $(isSysIntEnvironment ${TARGET}); then
         oc create -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    # Only named environment for Zipkin is Perf
+    if $(isPerfEnvironment ${TARGET}); then
+        oc create -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     oc create -f $(getBuildLocation)/ ${SVC_ACCOUNT_CLAUSE}

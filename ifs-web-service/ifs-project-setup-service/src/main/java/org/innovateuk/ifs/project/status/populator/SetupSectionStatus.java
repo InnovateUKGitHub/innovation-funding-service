@@ -81,6 +81,8 @@ public class SetupSectionStatus {
             return TICK;
         } else if (isProjectManager && (!project.isPartnerDocumentsSubmitted() || REJECTED.equals(project.getOtherDocumentsApproved()))) {
             return FLAG;
+        } else if (!isProjectManager && !project.isPartnerDocumentsSubmitted()) {
+            return EMPTY;
         } else {
             return HOURGLASS;
         }
