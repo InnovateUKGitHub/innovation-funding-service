@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.populator.AbstractLeadOnlyModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLe
                 .map(ResearchCategoryResource::getName).orElse(null);
 
         return new ResearchCategorySummaryViewModel(applicationResource.getId(),
-                getResearchCategoryTeamQuestion(applicationResource.getCompetition()),
+                getResearchCategoryQuestion(applicationResource.getCompetition()),
                 researchCategoryName,
                 !isCompetitionOpen(applicationResource),
                 isComplete(applicationResource, loggedInUserId),
@@ -41,8 +42,8 @@ public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLe
         );
     }
 
-    private long getResearchCategoryTeamQuestion(long competitionId) {
+    private Long getResearchCategoryQuestion(long competitionId) {
         return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
-                RESEARCH_CATEGORY).getSuccess().getId();
+                RESEARCH_CATEGORY).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
     }
 }
