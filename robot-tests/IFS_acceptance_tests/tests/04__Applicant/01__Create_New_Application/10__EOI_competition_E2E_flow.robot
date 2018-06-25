@@ -41,7 +41,7 @@ Applicant submits his application
 
 Invite a registered assessor
     [Documentation]  IFS-2376
-    [Tags]  HappyPath  pending
+    [Tags]  HappyPath
     Given log in as a different user                          &{Comp_admin1_credentials}
     When the user clicks the button/link                      link=${comp_name}
     And the user clicks the button/link                       link=Invite assessors to assess the competition
