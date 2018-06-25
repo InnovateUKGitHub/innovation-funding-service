@@ -564,7 +564,6 @@ Lead partner can see the status update when all Project details are submitted
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   css=ul li.complete:nth-child(1)
     And the user should see the element    css=ul li.require-action:nth-child(3)
-    And the user should see the element    css=ul li.waiting:nth-child(6)
     When the user clicks the button/link   link=View the status of partners
     Then the user should see the element   id=table-project-status
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)

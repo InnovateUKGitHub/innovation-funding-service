@@ -51,6 +51,12 @@ function deploy() {
         oc create -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
+    # Only named environment for Zipkin is Perf
+    if $(isPerfEnvironment ${TARGET}); then
+        oc create -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
     oc create -f $(getBuildLocation)/ ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
