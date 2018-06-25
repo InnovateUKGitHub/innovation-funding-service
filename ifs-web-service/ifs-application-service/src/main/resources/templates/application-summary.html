@@ -35,7 +35,9 @@
             </p>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview" novalidate="novalidate">
-                <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${model.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false)" />
+                <div class="collapsible-finances-summary">
+                    <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${model.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false)" />
+                </div>
             </form>
 
             <div th:if="${!model.currentCompetition.isOpen() and !model.currentApplication.isSubmitted()}">
@@ -43,9 +45,7 @@
                     Registration is now closed, you are no longer able to submit your application.
                 </div>
             </div>
-            <div th:if="${model.currentCompetition.isOpen() and model.currentApplication.isOpen()}">
-                <hr/>
-
+            <div th:if="${model.currentCompetition.isOpen() and model.currentApplication.isOpen()}" class="extra-large-margin">
                 <th:block th:if="${model.userIsLeadApplicant}">
                     <div class="message-alert">
                         <p>You will not be able to make changes to your application or resubmit after this point.</p>

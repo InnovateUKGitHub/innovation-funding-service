@@ -39,7 +39,6 @@ public class AssignButtonsPopulator {
         viewModel.setPendingAssignableUsers(pendingInvitations(resource.getApplication()));
         viewModel.setHideAssignButtons(hideAssignButtons);
         viewModel.setQuestion(question.getQuestion());
-        viewModel.setCurrentCompetitionIsClosed(!resource.getCompetition().isOpen());
         return viewModel;
     }
 

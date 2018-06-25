@@ -50,6 +50,10 @@ public abstract class AbstractApplicationFormViewModel<R extends AbstractApplica
         return allReadOnly;
     }
 
+    public void setAllReadOnly(boolean allReadOnly) {
+        this.allReadOnly = allReadOnly;
+    }
+
     public Boolean getApplicationIsClosed() {
         return !getCompetition().isOpen() || !getApplication().isOpen();
     }

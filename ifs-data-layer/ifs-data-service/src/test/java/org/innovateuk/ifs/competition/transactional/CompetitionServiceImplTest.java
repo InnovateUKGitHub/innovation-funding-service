@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -734,7 +735,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void getCompetitionOpenQueries() throws Exception {
         List<CompetitionOpenQueryResource> openQueries = singletonList(new CompetitionOpenQueryResource(1L, 1L, "org", 1L, "proj"));
-        when(competitionRepositoryMock.getOpenQueryByCompetition(competitionId)).thenReturn(openQueries);
+        when(competitionRepositoryMock.getOpenQueryByCompetitionAndProjectStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN))).thenReturn(openQueries);
 
         List<CompetitionOpenQueryResource> response = service.findAllOpenQueries(competitionId).getSuccess();
 
@@ -744,7 +745,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void countCompetitionOpenQueries() throws Exception {
         Long countOpenQueries = 4l;
-        when(competitionRepositoryMock.countOpenQueries(competitionId)).thenReturn(countOpenQueries);
+        when(competitionRepositoryMock.countOpenQueriesByCompetitionAndProjectStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN))).thenReturn(countOpenQueries);
 
         Long response = service.countAllOpenQueries(competitionId).getSuccess();
 

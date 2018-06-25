@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.application.summary.populator;
 
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.SummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;

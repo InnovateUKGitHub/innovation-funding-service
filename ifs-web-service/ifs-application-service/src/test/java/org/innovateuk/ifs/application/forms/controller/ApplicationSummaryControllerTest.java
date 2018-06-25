@@ -10,8 +10,10 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryController;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.summary.populator.SummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -32,10 +34,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -46,6 +48,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -72,6 +75,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     @Spy
     @InjectMocks
     private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
+
+    @Mock
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Mock
     private ApplicantRestService applicantRestService;
@@ -113,7 +119,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         this.setupInvites();
 
         questionResources.forEach((id, questionResource) -> when(applicantRestService.getQuestion(any(), any(), eq(questionResource.getId()))).thenReturn(newApplicantQuestionResource().build()));
-        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
+        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(emptyList());
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }
@@ -152,6 +158,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId())).thenReturn(restSuccess(aggregateResource));
         when(assessmentRestService.getByUserAndApplication(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(feedbackSummary));
+        ApplicationTeamViewModel applicationTeamViewModel = mock(ApplicationTeamViewModel.class);
+        when(applicationTeamModelPopulator.populateSummaryModel(app.getId(), loggedInUser.getId(), competitionId)).thenReturn
+                (applicationTeamViewModel);
 
         MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
@@ -164,6 +173,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         assertEquals(model.getCurrentCompetition().getId(), app.getCompetition());
         assertEquals(model.getSummaryViewModel().getFeedbackSummary(), feedbackSummary);
         assertEquals(model.getSummaryViewModel().getResponses(), formInputsToFormInputResponses);
+        assertEquals(model.getSummaryViewModel().getApplicationTeamModel(), applicationTeamViewModel);
         assertEquals(model.isUserIsLeadApplicant(), true);
     }
 }

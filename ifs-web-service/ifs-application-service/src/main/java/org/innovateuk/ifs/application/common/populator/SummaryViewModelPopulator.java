@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.common.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
@@ -11,10 +12,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.SummaryViewModel;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -64,6 +62,7 @@ public class SummaryViewModelPopulator {
     private UserService userService;
     private ApplicantRestService applicantRestService;
     private FormInputViewModelGenerator formInputViewModelGenerator;
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     public SummaryViewModelPopulator(ApplicationService applicationService,
                                      CompetitionService competitionService,
@@ -81,7 +80,8 @@ public class SummaryViewModelPopulator {
                                      ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
                                      UserService userService,
                                      ApplicantRestService applicantRestService,
-                                     FormInputViewModelGenerator formInputViewModelGenerator) {
+                                     FormInputViewModelGenerator formInputViewModelGenerator,
+                                     ApplicationTeamModelPopulator applicationTeamModelPopulator) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.sectionService = sectionService;
@@ -99,6 +99,7 @@ public class SummaryViewModelPopulator {
         this.userService = userService;
         this.applicantRestService = applicantRestService;
         this.formInputViewModelGenerator = formInputViewModelGenerator;
+        this.applicationTeamModelPopulator = applicationTeamModelPopulator;
     }
 
     public SummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
@@ -171,7 +172,7 @@ public class SummaryViewModelPopulator {
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
 
         formInputViewModels.values().forEach(viewModel -> {
-            viewModel.setClosed(true);
+            viewModel.setClosed(!(competition.isOpen() && application.isOpen()));
             viewModel.setReadonly(true);
             viewModel.setSummary(true);
         });
@@ -198,7 +199,8 @@ public class SummaryViewModelPopulator {
                 applicationResearchParticipationViewModel,
                 completedViewModel,
                 formInputViewModels,
-                true
+                true,
+                applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId())
         );
     }
 

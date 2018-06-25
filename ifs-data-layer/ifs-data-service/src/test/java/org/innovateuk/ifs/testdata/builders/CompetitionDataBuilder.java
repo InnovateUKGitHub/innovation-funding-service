@@ -32,6 +32,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -108,7 +109,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 List<OrganisationTypeEnum> leadApplicantTypes,
                                                 Integer researchRatio,
                                                 Boolean resubmission,
-                                                String nonIfsUrl) {
+                                                String nonIfsUrl,
+                                                String includeApplicationTeamQuestion) {
 
         return asCompAdmin(data -> {
 
@@ -154,6 +156,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setHasInterviewStage(hasInterviewStage);
                 competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
+                competition.setUseNewApplicantMenu(includeApplicationTeamQuestion.equals("Yes"));
             });
         });
     }
@@ -177,9 +180,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         updateFn.accept(competition);
 
+        // Copy the value of the useNewApplicantMenu flag so that it can restored in the resource after the
+        // competition is updated. This is eventually used to determine whether the Application Team question should
+        // be updated.
+        boolean useNewApplicantMenu = competition.getUseNewApplicantMenu();
+
         competitionSetupService.save(competition.getId(), competition).getSuccess();
 
         updateCompetitionInCompetitionData(data, competition.getId());
+
+        data.getCompetition().setUseNewApplicantMenu(useNewApplicantMenu);
     }
 
     public CompetitionDataBuilder withApplicationFormFromTemplate() {
@@ -439,6 +449,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             }
 
         }));
+    }
+
+    public void removeApplicationTeamFromCompetition(Long competitionId) {
+        asCompAdmin(data -> questionService
+                .getQuestionByCompetitionIdAndCompetitionSetupQuestionType
+                        (competitionId, APPLICATION_TEAM).andOnSuccess(
+                        question -> questionSetupTemplateService.deleteQuestionInCompetition(question
+                                .getId())));
     }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {

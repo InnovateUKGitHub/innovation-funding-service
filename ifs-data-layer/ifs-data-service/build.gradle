@@ -149,3 +149,6 @@ task syncShib(type:Exec) {
 }
 
 flywayMigrate.dependsOn processResources
+
+ext.ifsDataServiceRestBaseURL="http://data-service:8080"
+ext.serverPort=8080

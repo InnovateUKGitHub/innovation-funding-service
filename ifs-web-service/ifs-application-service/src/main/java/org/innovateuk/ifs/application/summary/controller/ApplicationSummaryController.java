@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -36,15 +37,13 @@ public class ApplicationSummaryController {
     }
 
     @Autowired
-    public ApplicationSummaryController(ApplicationService applicationService,
-                                        CompetitionService competitionService,
-                                        InterviewAssignmentRestService interviewAssignmentRestService,
-                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
+    public ApplicationSummaryController(ApplicationService applicationService, CompetitionService competitionService, InterviewAssignmentRestService interviewAssignmentRestService, ApplicationTeamModelPopulator applicationTeamModelPopulator, ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
     }
+
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead')")
