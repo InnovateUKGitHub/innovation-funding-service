@@ -17,7 +17,7 @@ public abstract class BaseFinanceResource {
     protected Long organisation;
     protected Long target;
     protected Long organisationSize;
-    protected String projectLocation;
+    protected String workPostcode;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
@@ -26,7 +26,7 @@ public abstract class BaseFinanceResource {
             this.organisation = originalFinance.getOrganisation();
             this.target = originalFinance.getTarget();
             this.organisationSize = originalFinance.getOrganisationSize();
-            this.projectLocation = originalFinance.getProjectLocation();
+            this.workPostcode = originalFinance.getWorkPostcode();
         }
     }
 
@@ -34,12 +34,12 @@ public abstract class BaseFinanceResource {
     	// no-arg constructor
     }
 
-    public BaseFinanceResource(long id, long organisation, long target, Long organisationSize, String projectLocation) {
+    public BaseFinanceResource(long id, long organisation, long target, Long organisationSize, String workPostcode) {
         this.id = id;
         this.organisation = organisation;
         this.target = target;
         this.organisationSize = organisationSize;
-        this.projectLocation = projectLocation;
+        this.workPostcode = workPostcode;
     }
 
     public Long getId() {
@@ -74,12 +74,12 @@ public abstract class BaseFinanceResource {
         this.organisationSize = organisationSize;
     }
 
-    public String getProjectLocation() {
-        return projectLocation;
+    public String getWorkPostcode() {
+        return workPostcode;
     }
 
-    public void setProjectLocation(String projectLocation) {
-        this.projectLocation = projectLocation;
+    public void setWorkPostcode(String workPostcode) {
+        this.workPostcode = workPostcode;
     }
 
     public Map<FinanceRowType, FinanceRowCostCategory> getFinanceOrganisationDetails() {

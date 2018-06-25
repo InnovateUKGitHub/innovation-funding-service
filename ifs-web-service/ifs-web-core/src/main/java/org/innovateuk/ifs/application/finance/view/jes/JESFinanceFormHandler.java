@@ -271,7 +271,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
         switch (fieldNameReplaced) {
             case "projectLocation":
-                applicationFinance.setProjectLocation(value);
+                applicationFinance.setWorkPostcode(value);
                 break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));

@@ -146,7 +146,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                 applicationFinance.setOrganisationSize(newValue);
                 break;
             case "projectLocation":
-                applicationFinance.setProjectLocation(value);
+                applicationFinance.setWorkPostcode(value);
                 break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));

@@ -35,7 +35,7 @@ public class YourProjectLocationSectionPopulator extends AbstractSectionPopulato
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
 
-        String projectLocation = applicationFinanceRestService.getApplicationFinance(viewModel.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId()).getSuccess().getProjectLocation();
+        String projectLocation = applicationFinanceRestService.getApplicationFinance(viewModel.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId()).getSuccess().getWorkPostcode();
         viewModel.setProjectLocationValue(projectLocation);
 
         viewModel.setReadonly(viewModel.isComplete() || !section.getCompetition().isOpen() || !section.getApplication().isOpen());

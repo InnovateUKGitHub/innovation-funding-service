@@ -86,7 +86,7 @@ public class YourProjectLocationSectionPopulatorTest {
         when(overviewRow.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.FINANCIAL_OVERVIEW_ROW).build());
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
         when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(formInputViewModels);
-        when(applicationFinanceRestService.getApplicationFinance(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(newApplicationFinanceResource().withProjectLocation("Project Location").build()));
+        when(applicationFinanceRestService.getApplicationFinance(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(newApplicationFinanceResource().withWorkPostcode("Project Location").build()));
 
         YourProjectLocationSectionViewModel viewModel = yourProjectLocationSectionPopulator.populate(section, form, model, bindingResult, false, Optional.of(2L), true);
 
