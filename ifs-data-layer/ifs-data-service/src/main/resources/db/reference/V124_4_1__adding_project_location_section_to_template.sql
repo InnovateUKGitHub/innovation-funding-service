@@ -29,7 +29,6 @@ INSERT INTO section (assessor_guidance_description, description, display_in_asse
 SET @programme_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@programme_template_id AND section_type="PROJECT_LOCATION");
 SET @sector_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@sector_template_id AND section_type="PROJECT_LOCATION");
 SET @generic_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@generic_template_id AND section_type="PROJECT_LOCATION");
-SET @eoi_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@eoi_template_id AND section_type="PROJECT_LOCATION");
 SET @apc_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@apc_template_id AND section_type="PROJECT_LOCATION");
 SET @ati_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@ati_template_id AND section_type="PROJECT_LOCATION");
 
