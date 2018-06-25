@@ -41,13 +41,12 @@ Applicant applies to newly created APC competition
     Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
-    [Documentation]  IFS-2286
+    [Documentation]  IFS-2286  IFS-1497
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)
     When the user navigates to Your-finances page       ${apcApplicationTitle}
-    #Here?
     And the user enters the project location
     And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
     Then the applicant submits the application
