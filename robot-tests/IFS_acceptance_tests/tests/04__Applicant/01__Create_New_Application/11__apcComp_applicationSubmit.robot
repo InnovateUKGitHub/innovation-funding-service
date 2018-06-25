@@ -1,6 +1,9 @@
 *** Settings ***
 Documentation   IFS-2284 Assign new Ts and Cs for APC competition type template
+...
 ...             IFS-2286 APC Competition type template
+...
+...             IFS-1497  As an applicant I am able to confirm the project location for my organisation
 ...
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails

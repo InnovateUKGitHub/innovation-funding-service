@@ -3,6 +3,8 @@ Documentation   IFS-2396  ATI Competition type template
 ...
 ...             IFS-2332  Project Finance user is not able to download the overheads file
 ...
+...             IFS-1497  As an applicant I am able to confirm the project location for my organisation
+...
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
@@ -42,7 +44,7 @@ Applicant applies to newly created ATI competition
     Then Lead Applicant applies to the new created competition   ${ATIcompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
-    [Documentation]  IFS-2286  IFS-2332
+    [Documentation]  IFS-2286  IFS-2332  IFS-1497
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
