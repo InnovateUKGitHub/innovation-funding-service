@@ -101,7 +101,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if(!financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && !inputIsLong(financeFormField.getValue())) {
             return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-cost]",
                     financeFormField, NON_DECIMAL_MESSAGE));
-        } else if(financeFormField.getCostName().equals(NON_DECIMAL_FIELD)) {
+        } else if(financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && inputIsLong(financeFormField.getValue())) {
             return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-item]",
                     financeFormField, BLANK_FIELD_MESSAGE));
         }
@@ -233,7 +233,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                     if (result.isFailure()) {
 
                         List<Error> errors = simpleMap(result.getFailure().getErrors(),
-                                e -> fieldError("formInput[" + formInputJesId + "]", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
+                                e -> fieldError(formInputJesId, e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
 
                         return new ValidationMessages(errors);
                     }
