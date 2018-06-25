@@ -27,22 +27,22 @@ public class AlertPermissionRulesTest extends RootPermissionRulesTest<AlertPermi
     }
 
     @Test
-    public void test_systemMaintenanceUserCanCreateAlerts() throws Exception {
+    public void systemMaintenanceUserCanCreateAlerts() throws Exception {
         assertTrue(rules.systemMaintenanceUserCanCreateAlerts(alertResource, systemMaintenanceUser()));
     }
 
     @Test
-    public void test_systemMaintenanceUserCanCreateAlerts_anonymous() throws Exception {
+    public void systemMaintenanceUserCanCreateAlerts_anonymous() throws Exception {
         assertFalse(rules.systemMaintenanceUserCanCreateAlerts(alertResource, anonymousUser()));
     }
 
     @Test
-    public void test_systemMaintenanceUserCanDeleteAlerts() throws Exception {
+    public void systemMaintenanceUserCanDeleteAlerts() throws Exception {
         assertTrue(rules.systemMaintenanceUserCanDeleteAlerts(alertResource, systemMaintenanceUser()));
     }
 
     @Test
-    public void test_systemMaintenanceUserCanDeleteAlerts_anonymous() throws Exception {
+    public void systemMaintenanceUserCanDeleteAlerts_anonymous() throws Exception {
         assertFalse(rules.systemMaintenanceUserCanDeleteAlerts(alertResource, anonymousUser()));
     }
 

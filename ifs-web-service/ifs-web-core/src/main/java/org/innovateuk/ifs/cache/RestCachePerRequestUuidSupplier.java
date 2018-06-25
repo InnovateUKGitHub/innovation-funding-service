@@ -20,6 +20,10 @@ public class RestCachePerRequestUuidSupplier implements RestCacheUuidSupplier {
 
     @Override
     public String get() {
+
+        if(getRequestAttributes() == null) {
+            return UUID.randomUUID().toString();
+        }
         if (getRequestAttributes().getAttribute(REQUEST_UUID_KEY, SCOPE_REQUEST) == null) {
             String uuid = UUID.randomUUID().toString();
             setUuid(uuid);
