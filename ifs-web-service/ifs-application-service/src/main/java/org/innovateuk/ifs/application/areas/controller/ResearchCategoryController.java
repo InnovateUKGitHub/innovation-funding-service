@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
+import org.innovateuk.ifs.application.forms.validator.QuestionEditableValidator;
+import org.innovateuk.ifs.application.forms.validator.ResearchCategoryEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -30,7 +32,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
  * This controller handles requests by Applicants to change the research category choice for an Application.
  */
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ResearchCategoryController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
@@ -49,6 +51,9 @@ public class ResearchCategoryController {
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
 
     @Autowired
+    private ResearchCategoryEditableValidator researchCategoryEditableValidator;
+
+    @Autowired
     private ApplicationService applicationService;
 
     @Autowired
@@ -56,7 +61,7 @@ public class ResearchCategoryController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @GetMapping
+    @GetMapping("/research-category")
     public String getResearchCategories(Model model,
                                         UserResource loggedInUser,
                                         @ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm researchCategoryForm,
@@ -78,7 +83,7 @@ public class ResearchCategoryController {
         return "application/research-categories";
     }
 
-    @PostMapping
+    @PostMapping(params = {"researchCategory"})
     public String submitResearchCategoryChoice(@ModelAttribute(FORM_ATTR_NAME) @Valid ResearchCategoryForm
                                                        researchCategoryForm,
                                                BindingResult bindingResult,
@@ -99,7 +104,7 @@ public class ResearchCategoryController {
         return validationHandler.addAnyErrors(saveResearchCategoryChoice(applicationId, researchCategoryForm))
                 .failNowOrSucceedWith(failureView, () -> {
                     cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
-                    return "redirect:/application/" + applicationId + "/form/question/" + questionId;
+                    return getRedirectUrl(applicationResource, questionId);
                 });
     }
 
@@ -109,11 +114,28 @@ public class ResearchCategoryController {
                 researchCategoryForm.getResearchCategory()).toServiceResult();
     }
 
-    private void checkIfAllowed(long questionId, ApplicationResource applicationResource) throws
-            ForbiddenActionException {
-        if (!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,
+    private void checkIfAllowed(long questionId, ApplicationResource applicationResource)
+            throws ForbiddenActionException {
+        if (applicationResource.isUseNewApplicantMenu()) {
+            checkIfAllowed(questionId, applicationResource, researchCategoryEditableValidator);
+        } else {
+            checkIfAllowed(questionId, applicationResource, applicationDetailsEditableValidator);
+        }
+    }
+
+    private void checkIfAllowed(long questionId, ApplicationResource applicationResource,
+                                QuestionEditableValidator questionEditableValidator) throws ForbiddenActionException {
+        if (!questionEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)) {
             throw new ForbiddenActionException();
+        }
+    }
+
+    private String getRedirectUrl(ApplicationResource applicationResource, long questionId) {
+        if (applicationResource.isUseNewApplicantMenu()) {
+            return "redirect:" + APPLICATION_BASE_URL + applicationResource.getId();
+        } else {
+            return "redirect:" + APPLICATION_BASE_URL + applicationResource.getId() + "/form/question/" + questionId;
         }
     }
 }
