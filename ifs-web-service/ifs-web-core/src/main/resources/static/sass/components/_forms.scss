@@ -346,12 +346,10 @@ tr {
 }
 
 .form-group-error {
-  .textarea-wrapped {
-    [contenteditable="true"] {
-      &.editor {
-        @include box-shadow(none);
-        border: 4px solid $error-colour;
-      }
+  [contenteditable="true"] {
+    &.editor {
+      @include box-shadow(none);
+      border: 4px solid $error-colour;
     }
   }
 

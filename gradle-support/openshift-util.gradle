@@ -1,0 +1,12 @@
+
+ext.target = 'remote' // TODO pull in from gradle profile.
+if(target == 'local') {
+    ext.svcAccountClauseServer = "https://localhost:8443"
+    //TODO local Internal Registry required
+
+} else {
+    //remote
+    ext.svcAccountClauseServer = "https://console.prod.ifs-test-clusters.com:443"
+    ext.internalRegistry = "172.30.80.28:5000"
+}
+
