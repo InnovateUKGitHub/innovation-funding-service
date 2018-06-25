@@ -269,7 +269,7 @@
                         <th:block th:if="${#fields.hasErrors('familyAffiliations')}">
                             <span class="error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}"></span>
                         </th:block>
-                        <table id="family-table">
+                        <table id="family-table" class="table-stacked-mobile">
                             <thead>
                             <tr>
                                 <th scope="col" id="aria-family-rel">Relation</th>
@@ -284,6 +284,7 @@
                                 th:classappend="((${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')})) ? 'form-group-error'">
                                 <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'form-group-error'">
                                     <label>
+                                        <span class="form-label">Relation</span>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
                                             <span class="error-message"
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
@@ -300,6 +301,7 @@
                                 </td>
                                 <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'form-group-error'">
                                     <label>
+                                        <span class="form-label">Organisation</span>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
                                             <span class="error-message"
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
@@ -316,6 +318,7 @@
                                 </td>
                                 <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'form-group-error'">
                                     <label>
+                                        <span class="form-label">Position</span>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
                                             <span class="error-message"
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
