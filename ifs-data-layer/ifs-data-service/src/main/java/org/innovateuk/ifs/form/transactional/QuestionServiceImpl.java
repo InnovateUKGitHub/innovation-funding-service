@@ -68,23 +68,20 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     public ServiceResult<QuestionResource> getNextQuestion(final Long questionId) {
 
         return find(getQuestionSupplier(questionId)).andOnSuccess(question -> {
+            Question nextQuestion = null;
+            if (question != null) {
+                nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+                        question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
 
-            // retrieve next question within current section
-            Question nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
-                    question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
-
-            // retrieve next question in following section
-            if (nextQuestion == null) {
-                nextQuestion = getNextQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
+                if (nextQuestion == null) {
+                    nextQuestion = getNextQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
+                }
             }
-
-            // retrieve next question in any other section, but with higher priority
             if (nextQuestion == null) {
-                nextQuestion = questionRepository.findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(
-                        question.getCompetition().getId(), question.getPriority());
+                return serviceFailure(notFoundError(QuestionResource.class, "getNextQuestion", questionId));
+            } else {
+                return serviceSuccess(questionMapper.mapToResource(nextQuestion));
             }
-
-            return serviceSuccess(questionMapper.mapToResource(nextQuestion));
         });
     }
 
@@ -145,9 +142,9 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                     previousQuestion = getPreviousQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
                 }
             }
-            if(previousQuestion == null){
+            if (previousQuestion == null) {
                 return serviceFailure(notFoundError(QuestionResource.class, "getPreviousQuestion", questionId));
-            }else{
+            } else {
                 return serviceSuccess(questionMapper.mapToResource(previousQuestion));
             }
         });
