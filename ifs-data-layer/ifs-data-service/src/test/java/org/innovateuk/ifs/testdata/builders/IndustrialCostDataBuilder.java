@@ -123,6 +123,19 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
+    public IndustrialCostDataBuilder withWorkPostcode(String workPostcode) {
+        return with(data -> {
+
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            applicationFinance.setWorkPostcode(workPostcode);
+
+            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
     public IndustrialCostDataBuilder withAdministrationSupportCostsNone() {
         return doSetAdministrativeSupportCosts(OverheadRateType.NONE, OverheadRateType.NONE.getRate());
     }

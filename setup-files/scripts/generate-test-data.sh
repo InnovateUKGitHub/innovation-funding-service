@@ -102,8 +102,8 @@ cat << EOF
 *           You are about to run a webtest baseline.                    *
 *       This will take a while so make sure you are not in a rush       *
 *                                                                       *
-*                   Current version is `get_current_patch_level`                          *
-*                   New version will be ${new_version_or_current}                         *
+*                   Current version is `get_current_patch_level`                           *
+*                   New version will be ${new_version_or_current}                          *
 *                                                                       *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 EOF
