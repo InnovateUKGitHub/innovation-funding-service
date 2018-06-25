@@ -21,14 +21,18 @@ import java.util.Optional;
 @Component
 public class YourProjectLocationSectionPopulator extends AbstractSectionPopulator<YourProjectLocationSectionViewModel> {
 
-    @Autowired
     private SectionService sectionService;
 
-    @Autowired
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
-    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+
+    @Autowired
+    public YourProjectLocationSectionPopulator(SectionService sectionService, FormInputViewModelGenerator formInputViewModelGenerator, ApplicationFinanceRestService applicationFinanceRestService) {
+        this.sectionService = sectionService;
+        this.formInputViewModelGenerator = formInputViewModelGenerator;
+        this.applicationFinanceRestService = applicationFinanceRestService;
+    }
 
     @Override
     protected void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, YourProjectLocationSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId) {

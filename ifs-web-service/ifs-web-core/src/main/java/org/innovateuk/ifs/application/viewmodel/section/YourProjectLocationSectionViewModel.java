@@ -27,7 +27,6 @@ public class YourProjectLocationSectionViewModel extends AbstractSectionViewMode
         this.complete = complete;
     }
 
-
     public boolean isReadonly() {
         return readonly;
     }

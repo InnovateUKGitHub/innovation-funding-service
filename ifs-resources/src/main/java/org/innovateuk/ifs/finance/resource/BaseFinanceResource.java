@@ -34,7 +34,7 @@ public abstract class BaseFinanceResource {
     	// no-arg constructor
     }
 
-    public BaseFinanceResource(Long id, Long organisation, Long target, Long organisationSize, String projectLocation) {
+    public BaseFinanceResource(long id, long organisation, long target, Long organisationSize, String projectLocation) {
         this.id = id;
         this.organisation = organisation;
         this.target = target;

@@ -42,7 +42,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for {@link YourOrganisationSectionPopulator}
+ * Tests for {@link YourProjectLocationSectionPopulator}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class YourProjectLocationSectionPopulatorTest {

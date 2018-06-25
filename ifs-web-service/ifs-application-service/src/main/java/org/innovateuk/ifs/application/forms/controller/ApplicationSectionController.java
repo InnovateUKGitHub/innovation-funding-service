@@ -54,6 +54,8 @@ import static org.jsoup.helper.StringUtil.isBlank;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 public class ApplicationSectionController {
+    private static final int MINIMUM_POSTCODE_LENGTH = 6;
+    private static final int MAXIMUM_POSTCODE_LENGTH = 8;
 
     private static final Log LOG = LogFactory.getLog(ApplicationSectionController.class);
 
@@ -287,7 +289,8 @@ public class ApplicationSectionController {
         List<String> financePositionKeys = simpleFilter(params.keySet(), k -> k.contains("financePosition-"));
         if (!financePositionKeys.isEmpty()) {
             String projectLocation = params.get(financePositionKeys.get(0))[0];
-            if (!isBlank(projectLocation) && projectLocation.length() > 5 && projectLocation.length() < 9) {
+            if (!isBlank(projectLocation) && projectLocation.length() >= MINIMUM_POSTCODE_LENGTH &&
+                    projectLocation.length() <= MAXIMUM_POSTCODE_LENGTH) {
                 return true;
             }
         }
