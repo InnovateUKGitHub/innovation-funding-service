@@ -5,10 +5,12 @@ bootRun {
     addResources = false
 }
 
-def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.property('ifs.survey-service.enabled').toBoolean() : true
+def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.property('ifs.survey-service.enabled').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
+
+ext.ifsSurveyDataServiceRestBaseURL="http://survey-data-service:8080"
 
 project.version = surveyServiceVersion
 tagDocker.tag = surveyServiceVersion

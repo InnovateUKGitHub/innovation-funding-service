@@ -5,6 +5,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class SurveyResource {
 
+    private SurveyType surveyType;
+
+    private SurveyTargetType targetType;
+
+    private Long targetId;
+
+    private Satisfaction satisfaction;
+
+    private String comments;
+
     public SurveyResource() {
     }
 
@@ -19,16 +29,6 @@ public class SurveyResource {
         this.satisfaction = satisfaction;
         this.comments = comments;
     }
-
-    private SurveyType surveyType;
-
-    private SurveyTargetType targetType;
-
-    private Long targetId;
-
-    private Satisfaction satisfaction;
-
-    private String comments;
 
     public SurveyType getSurveyType() {
         return surveyType;
