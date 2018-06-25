@@ -167,7 +167,7 @@
             <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.hasFeedback()}">
                 <h2 class="heading-medium">Additional feedback</h2>
                 <div class="form-group download">
-                    <h3 class="heading-small no-margin">Panel assessment feedback</h3>
+                    <h3 class="heading-small no-margin">Additional Innovate UK feedback</h3>
                     <a target="_blank" href=""
                        th:href="@{/application/{applicationId}/feedback/download-feedback(applicationId=${model.application.id})}"
                        th:text="${model.interviewFeedbackViewModel.feedbackFilename}">panel-assessment-feedback.pdf, 6 KB </a> (opens in a new window)
