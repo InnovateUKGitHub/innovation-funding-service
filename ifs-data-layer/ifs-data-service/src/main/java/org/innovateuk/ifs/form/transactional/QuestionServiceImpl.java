@@ -130,9 +130,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<QuestionResource> getPreviousQuestion(final Long questionId) {
-
         return find(getQuestionSupplier(questionId)).andOnSuccess(question -> {
-
             Question previousQuestion = null;
             if (question != null) {
                 previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
@@ -148,10 +146,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                 return serviceSuccess(questionMapper.mapToResource(previousQuestion));
             }
         });
-
     }
-
-
 
     @Override
     public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
