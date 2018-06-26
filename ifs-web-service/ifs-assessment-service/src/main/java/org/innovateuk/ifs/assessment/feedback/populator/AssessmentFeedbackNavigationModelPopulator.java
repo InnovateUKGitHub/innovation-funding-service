@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.form.resource.SectionType.GENERAL;
 
 /**

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.form.transactional;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
@@ -163,10 +163,10 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<QuestionResource> getQuestionByCompetitionIdAndCompetitionSetupQuestionType(final long competitionId,
-                                                                                                     final CompetitionSetupQuestionType competitionSetupQuestionType) {
+    public ServiceResult<QuestionResource> getQuestionByCompetitionIdAndQuestionSetupType(final long competitionId,
+                                                                                          final QuestionSetupType questionSetupType) {
         return find(questionRepository.findFirstByCompetitionIdAndQuestionSetupType(competitionId,
-                competitionSetupQuestionType), notFoundError(Question.class, competitionId, competitionSetupQuestionType)).andOnSuccessReturn(questionMapper::mapToResource);
+                questionSetupType), notFoundError(Question.class, competitionId, questionSetupType)).andOnSuccessReturn(questionMapper::mapToResource);
     }
 
     @Override

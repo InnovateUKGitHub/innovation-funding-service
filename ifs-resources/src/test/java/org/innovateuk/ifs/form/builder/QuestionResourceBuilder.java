@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.setup.resource.QuestionSection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +82,7 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((type, object) -> setField("type", type, object), types);
     }
 
-    public QuestionResourceBuilder withQuestionSetupType(CompetitionSetupQuestionType... types) {
+    public QuestionResourceBuilder withQuestionSetupType(QuestionSetupType... types) {
         return withArray((type, object) -> setField("questionSetupType", type, object), types);
     }
 
