@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * Populates the research category selection viewmodel.
@@ -43,7 +43,7 @@ public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLe
     }
 
     private Long getResearchCategoryQuestion(long competitionId) {
-        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 RESEARCH_CATEGORY).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
     }
 }

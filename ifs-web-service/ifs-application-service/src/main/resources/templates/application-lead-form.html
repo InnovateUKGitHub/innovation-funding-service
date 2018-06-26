@@ -57,15 +57,15 @@
         <!--/* Application Form for a Question. */-->
         <th:block th:if="${model.isQuestion()}">
             <div class="question" th:with="question=${model.applicantResource.question}">
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
                     <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
                         <th:block th:insert="fragments/application-details :: application_details(${formInputViewModel})" />
                     </th:block>
                 </th:block>
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
                     <th:block th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
                 </th:block>
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).RESEARCH_CATEGORY}">
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
                     <th:block
                         th:insert="fragments/research-category :: research_category(${researchCategoryModel})" />
                 </th:block>

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.forms.validator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.List;
 public abstract class QuestionEditableValidator {
 
     private QuestionService questionService;
-    private CompetitionSetupQuestionType questionType;
+    private QuestionSetupType questionType;
 
     protected QuestionEditableValidator(QuestionService questionService,
-                                        CompetitionSetupQuestionType questionType) {
+                                        QuestionSetupType questionType) {
         this.questionService = questionService;
         this.questionType = questionType;
     }

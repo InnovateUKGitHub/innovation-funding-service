@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -434,7 +434,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         expectedViewModel.setSummary(true);
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competition.getId(), APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), APPLICATION_TEAM))
                 .thenReturn(restSuccess(question));
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), question.getId())).thenReturn(applicantQuestion);
 
@@ -444,7 +444,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
         InOrder inOrder = inOrder(questionRestService, applicationService, userService, applicantRestService, inviteRestService);
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competition.getId(), APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), APPLICATION_TEAM);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());

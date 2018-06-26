@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
@@ -78,11 +78,11 @@ public class QuestionController {
         return questionService.getQuestionsByAssessmentId(assessmentId).toGetResponse();
     }
 
-    @GetMapping("/getQuestionByCompetitionIdAndCompetitionSetupQuestionType/{competitionId}/{type}")
-    public RestResult<QuestionResource> getQuestionByCompetitionIdAndCompetitionSetupQuestionType(
+    @GetMapping("/getQuestionByCompetitionIdAndQuestionSetupType/{competitionId}/{type}")
+    public RestResult<QuestionResource> getQuestionByCompetitionIdQuestionSetupType(
             @PathVariable("competitionId") final long competitionId,
-            @PathVariable("type") final CompetitionSetupQuestionType competitionSetupQuestionType) {
-        return questionService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
-                competitionSetupQuestionType).toGetResponse();
+            @PathVariable("type") final QuestionSetupType questionSetupType) {
+        return questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                questionSetupType).toGetResponse();
     }
 }

@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.competition.resource;
+package org.innovateuk.ifs.question.resource;
 
 import org.innovateuk.ifs.util.CollectionFunctions;
 
 import java.util.Arrays;
 
-public enum CompetitionSetupQuestionType {
+public enum QuestionSetupType {
 
     ASSESSED_QUESTION(""),
     SCOPE("Scope"),
@@ -16,7 +16,7 @@ public enum CompetitionSetupQuestionType {
 
     private String shortName;
 
-    CompetitionSetupQuestionType(String shortName) {
+    QuestionSetupType(String shortName) {
         this.shortName = shortName;
     }
 
@@ -25,8 +25,8 @@ public enum CompetitionSetupQuestionType {
     }
 
     //TODO INFUND-6282 Remove this type and replace with an active, inactive, null checks on UI.
-    public static CompetitionSetupQuestionType typeFromQuestionTitle(String questionTitle) {
+    public static QuestionSetupType typeFromQuestionTitle(String questionTitle) {
         return CollectionFunctions.simpleFindFirst(Arrays.asList(values()), type -> questionTitle != null && questionTitle.equals(type.shortName))
-                .orElse(CompetitionSetupQuestionType.ASSESSED_QUESTION);
+                .orElse(QuestionSetupType.ASSESSED_QUESTION);
     }
 }

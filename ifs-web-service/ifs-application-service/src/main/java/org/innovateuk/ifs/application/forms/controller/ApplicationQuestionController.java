@@ -19,7 +19,7 @@ import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulat
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -44,8 +44,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -281,13 +281,13 @@ public class ApplicationQuestionController {
                 );
     }
 
-    private CompetitionSetupQuestionType getQuestionType(Model model) {
+    private QuestionSetupType getQuestionType(Model model) {
         QuestionViewModel questionViewModel = (QuestionViewModel) model.asMap().get(MODEL_ATTRIBUTE_MODEL);
         return questionViewModel.getApplicantResource().getQuestion().getQuestionSetupType();
     }
 
     private String getQuestionViewForModel(Model model) {
-        CompetitionSetupQuestionType questionType = getQuestionType(model);
+        QuestionSetupType questionType = getQuestionType(model);
         if (questionType == null) {
             return APPLICATION_FORM;
         }

@@ -58,8 +58,8 @@
                 <th:block th:if="${section.name.equals('Project details')}">
                     <ul class="list-overview extra-margin">
                         <th:block th:each="question : ${applicationFeedbackSummaryViewModel.sectionQuestions.get(section.id)}"
-                                  th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
-                                  or question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
+                                  th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS
+                                  or question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
                             <li class="section-status">
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
@@ -69,13 +69,13 @@
                                         </h3>
                                     </div>
                                     <div class="column-third">
-                                        <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                                        <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
                                             <p th:unless="${applicationFeedbackSummaryViewModel.scores.scopeAssessed}" class="form-hint no-margin">No feedback provided</p>
                                             <p th:if="${applicationFeedbackSummaryViewModel.scores.scopeAssessed}">
                                                 In scope? <span th:text="${applicationFeedbackSummaryViewModel.scores.inScope}">4</span>/<span th:text="${applicationFeedbackSummaryViewModel.scores.totalScope}">5</span>
                                             </p>
                                         </th:block>
-                                        <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                                        <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
                                             <p class="form-hint no-margin">No feedback provided</p>
                                         </th:block>
                                     </div>

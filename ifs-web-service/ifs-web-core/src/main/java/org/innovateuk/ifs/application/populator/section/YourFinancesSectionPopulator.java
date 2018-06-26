@@ -4,6 +4,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -14,7 +15,6 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,17 +30,23 @@ import java.util.Optional;
 @Component
 public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourFinancesSectionViewModel> {
 
-    @Autowired
     private SectionService sectionService;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
+    private QuestionRestService questionRestService;
     private FinanceService financeService;
-
-    @Autowired
     private FileEntryRestService fileEntryRestService;
+
+    public YourFinancesSectionPopulator(SectionService sectionService,
+                                        QuestionService questionService,
+                                        QuestionRestService questionRestService,
+                                        FinanceService financeService,
+                                        FileEntryRestService fileEntryRestService) {
+        this.sectionService = sectionService;
+        this.questionService = questionService;
+        this.questionRestService = questionRestService;
+        this.financeService = financeService;
+        this.fileEntryRestService = fileEntryRestService;
+    }
 
     @Override
     protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
@@ -48,22 +54,30 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     }
 
     @Override
-    public void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, YourFinancesSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId) {
-        QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getCompetition().getId(), FormInputType.APPLICATION_DETAILS).getSuccess();
+    public void populateNoReturn(ApplicantSectionResource section,
+                                 ApplicationForm form,
+                                 YourFinancesSectionViewModel viewModel,
+                                 Model model,
+                                 BindingResult bindingResult,
+                                 Boolean readOnly,
+                                 Optional<Long> applicantOrganisationId) {
+        QuestionResource applicationDetailsQuestion = questionRestService.getQuestionByCompetitionIdAndFormInputType(viewModel.getCompetition().getId(), FormInputType.APPLICATION_DETAILS).getSuccess();
         ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
         ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
 
+        Long userOrganisationId = determineUserOrganisationId(viewModel, applicantOrganisationId);
         boolean yourOrganisationComplete = completedSectionIds.contains(yourOrganisation.getSection().getId());
         boolean yourFundingComplete = completedSectionIds.contains(yourFunding.getSection().getId());
-        boolean applicationDetailsComplete = applicationDetailsIsComplete(viewModel, applicationDetailsQuestion, applicantOrganisationId);
+        boolean applicationDetailsComplete = applicationDetailsIsComplete(viewModel.getApplication().getId(), userOrganisationId, applicationDetailsQuestion);
+        boolean isYourFundingUnlocked = isFundingSectionLocked(viewModel, yourFundingComplete, applicationDetailsComplete);
 
         initializeApplicantFinances(section);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
         BaseFinanceResource organisationFinances = organisationFinanceOverview.getFinancesByOrganisation().get(section.getCurrentApplicant().getOrganisation().getId());
 
         viewModel.setNotRequestingFunding(yourFundingComplete && yourOrganisationComplete && organisationFinances.getGrantClaimPercentage() != null && organisationFinances.getGrantClaimPercentage() == 0);
-        viewModel.setFundingSectionLocked(!(yourOrganisationComplete && applicationDetailsComplete));
+        viewModel.setFundingSectionLocked(isYourFundingUnlocked);
         viewModel.setCompletedSectionIds(completedSectionIds);
         viewModel.setYourOrganisationSectionId(yourOrganisation.getSection().getId());
         viewModel.setApplicationDetailsQuestionId(applicationDetailsQuestion.getId());
@@ -77,14 +91,30 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
         }
     }
 
-    private boolean applicationDetailsIsComplete(YourFinancesSectionViewModel viewModel, QuestionResource applicationDetailsQuestion, Optional<Long> applicantOrganisationId) {
-        Map<Long, QuestionStatusResource> questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getId(), applicantOrganisationId.isPresent() ? applicantOrganisationId.get() : viewModel.getApplicantResource().getCurrentApplicant().getOrganisation().getId());
+    private boolean applicationDetailsIsComplete(Long applicationId, Long userOrganisationId, QuestionResource applicationDetailsQuestion) {
+        Map<Long, QuestionStatusResource> questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisationId);
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
         return applicationDetailsStatus != null && applicationDetailsStatus.getMarkedAsComplete();
     }
 
+    private Long determineUserOrganisationId(YourFinancesSectionViewModel viewModel,
+                                             Optional<Long> applicantOrganisationId) {
+        if (applicantOrganisationId.isPresent()) {
+            return applicantOrganisationId.get();
+        }
+        return viewModel.getApplicantResource().getCurrentApplicant().getOrganisation().getId();
+    }
+
     private ApplicantSectionResource findChildSectionByType(ApplicantSectionResource section, SectionType sectionType) {
         return section.getApplicantChildrenSections().stream().filter(child -> child.getSection().getType().equals(sectionType)).findAny().get();
+    }
+
+    private boolean isFundingSectionLocked(YourFinancesSectionViewModel viewModel,
+                                           boolean yourOrganisationComplete,
+                                           boolean applicationDetailsComplete) {
+        if(viewModel.getCompetition().getUseNewApplicantMenu()) {
+        }
+        return !(yourOrganisationComplete && applicationDetailsComplete);
     }
 
     @Override

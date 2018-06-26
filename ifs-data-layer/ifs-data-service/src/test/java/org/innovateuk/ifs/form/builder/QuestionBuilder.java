@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.form.domain.Section;
@@ -49,7 +49,7 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((name, object) -> setField("type", name, object), type);
     }
 
-    public QuestionBuilder withQuestionSetupType(CompetitionSetupQuestionType... type) {
+    public QuestionBuilder withQuestionSetupType(QuestionSetupType... type) {
         return withArray((name, object) -> setField("questionSetupType", name, object), type);
     }
 
