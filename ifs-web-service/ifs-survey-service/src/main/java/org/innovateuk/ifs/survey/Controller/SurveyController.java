@@ -53,7 +53,7 @@ public class SurveyController {
         String userUrl = user.getRoles().get(0).getUrl();
 
         Supplier<String> failureView = () -> viewFeedback(feedbackForm, bindingResult, competitionId, model);
-        Supplier<String> successView = () -> RedirectUtils.redirectToApplicationService(request, userUrl);
+        Supplier<String> successView = () -> RedirectUtils.buildRedirect(request, userUrl);
 
         SurveyResource surveyResource = getSurveyResource(feedbackForm, competitionId);
 

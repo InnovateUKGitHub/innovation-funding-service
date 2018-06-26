@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.survey;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import org.innovateuk.ifs.commons.exception.ServiceUnavailableException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 
 @Service
 public class SurveyRestServiceImpl extends BaseRestService implements SurveyRestService {
@@ -25,7 +27,7 @@ public class SurveyRestServiceImpl extends BaseRestService implements SurveyRest
     }
 
     public RestResult<Void> saveFallback(SurveyResource surveyResource, Throwable e) {
-        LOG.info("Calling Alerts Fallback:",e);
-        return RestResult.restSuccess();
+        LOG.info("Calling Alerts Fallback:", e);
+        throw new ServiceUnavailableException();
     }
 }
