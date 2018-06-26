@@ -212,6 +212,7 @@ function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/finance-data-service-sync/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/prototypes/*.yml
 
+
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/sil-stub/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-reset/*.yml
