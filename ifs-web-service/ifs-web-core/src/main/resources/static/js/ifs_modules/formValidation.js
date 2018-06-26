@@ -271,13 +271,16 @@ IFS.core.formValidation = (function () {
       var numberAttribute = 'number'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, numberAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'number')
+      var value = field.val()
+
       // In modern browsers the number field doesn't allow text input
       // When inserting a string like "test" the browser converts this to an empty string "" (this is the specced behaviour)
       // An empty string is returned as true therefore
       // http://stackoverflow.com/questions/18852244/how-to-get-the-raw-value-an-input-type-number-field
       if (s.html5validationMode) {
         var domField = field[0]
-        if (domField.validity.badInput === true || domField.validity.stepMismatch === true) {
+        var containsExponential = value.indexOf('e') === -1
+        if (domField.validity.badInput === true || domField.validity.stepMismatch === true || !containsExponential) {
           IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
           return false
         } else {
@@ -287,8 +290,7 @@ IFS.core.formValidation = (function () {
       } else {
         // old browser mode
         // https://api.jquery.com/jQuery.isNumeric for what this checks
-        var value = field.val()
-        var wholeNumber = (value.indexOf(',') === -1) && (value.indexOf('.') === -1)
+        var wholeNumber = (value.indexOf(',') === -1) && (value.indexOf('.') === -1) && (value.indexOf('e') === -1)
         if (!jQuery.isNumeric(value) || !wholeNumber) {
           IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
           return false
