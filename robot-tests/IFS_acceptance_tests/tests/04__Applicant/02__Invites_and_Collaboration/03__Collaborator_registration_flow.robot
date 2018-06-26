@@ -57,13 +57,11 @@ The type of organisation navigates to the correct page
     Then the user should see the element           jQuery=.form-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
     Given the user selects the radio button        organisationType    3
     And the user clicks the button/link            jQuery=.button:contains("Continue")
-    Then the user should see the text in the page  Research and technology organisation (RTO)
     And the user should see the text in the page   Enter your organisation name or registration number.
     When the user goes back to the previous page
     And the user should see the element            jQuery=.form-hint:contains("A not-for-profit public sector body or charity working on innovation.")
     Given the user selects the radio button        organisationType    4
     And the user clicks the button/link            jQuery=.button:contains("Continue")
-    #Then the user should see the text in the page  Public sector, charity or non Je-S registered research organisation
     And the user should see the text in the page   Enter your organisation name or registration number.
     And the user goes back to the previous page
 
@@ -75,23 +73,15 @@ Research and technology organisations (RTO) search (empty, invalid & valid input
     And the user selects the radio button          organisationType    3
     And the user clicks the button/link            jQuery=.button:contains("Continue")
     When the user clicks the button/link           jQuery=.button:contains("Search")
-    Then the user should see the text in the page  Please enter an organisation name to search.
+    Then the user should see a field error         Please enter an organisation name to search.
     When the user clicks the button/link           jQuery=summary:contains("Enter details manually")
     And the user enters text to a text field       name=organisationName    Digital Catapult
-    When the user clicks the button/link           jQuery=.button:contains("Find UK address")
-    And the user should see the text in the page   Please enter a UK postcode
-    And the user moves focus to the element        css=[name="manual-address"]
-    When the user enters text to a text field      name=addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link            jQuery=.button:contains("Continue")
-    And the user clicks the button/link            jQuery=.button:contains("Use selected address")
-    Then the address fields should be filled
 
 Research and technology organisations (RTO) search (accept invitation flow)
     [Documentation]    INFUND-1230
     [Tags]    HappyPath
     When the user clicks the button/link           jQuery=.button:contains("Continue")
-    Then the user should see the text in the page  Digital Catapult
-    And the user should see the text in the page   Operating Address
+    Then the user should see the element           jQuery=h3:contains("Registered name")~ p:contains("Digital Catapult")
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     When the user navigates to the page            ${server}/registration/register
     Then the invited user fills the create account form    Thierry    Henry
