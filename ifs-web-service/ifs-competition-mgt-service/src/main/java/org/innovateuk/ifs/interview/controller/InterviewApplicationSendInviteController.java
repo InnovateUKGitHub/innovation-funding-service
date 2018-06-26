@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.interview.form.InterviewApplicationResendForm;
 import org.innovateuk.ifs.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.interview.model.InterviewApplicationSentInviteModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewApplicationsSendModelPopulator;
@@ -27,6 +28,7 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
@@ -150,6 +152,58 @@ public class InterviewApplicationSendInviteController {
         InterviewAssignmentApplicationsSentInviteViewModel viewModel = interviewApplicationSentInviteModelPopulator.populate(competitionId, applicationId, originQuery);
         model.addAttribute("model", viewModel);
         return "assessors/interview/application-view-invite";
+    }
+
+    @GetMapping(value = "/{applicationId}/edit")
+    public String editInvite(Model model,
+                             @ModelAttribute("form") InterviewApplicationResendForm form,
+                             @PathVariable("competitionId") long competitionId,
+                             @PathVariable("applicationId") long applicationId,
+                             @RequestParam MultiValueMap<String, String> queryParams) {
+        queryParams.add("applicationId", String.valueOf(applicationId));
+        String originQuery = buildOriginQueryString(NavigationOrigin.INTERVIEW_PANEL_EDIT_INVITE, queryParams);
+        InterviewAssignmentApplicationsSentInviteViewModel viewModel = interviewApplicationSentInviteModelPopulator.populate(competitionId, applicationId, originQuery);
+        model.addAttribute("model", viewModel);
+        if (form.getSubject() == null) {
+            form.setSubject(viewModel.getSubject());
+            form.setContent(viewModel.getAdditionalText());
+        }
+        return "assessors/interview/application-edit-invite";
+    }
+
+    @PostMapping(value = "/{applicationId}/edit")
+    public String resendInvite(Model model, @Valid @ModelAttribute("form") InterviewApplicationResendForm form,
+                             BindingResult bindingResult,
+                             ValidationHandler validationHandler,
+                             @PathVariable("competitionId") long competitionId,
+                             @PathVariable("applicationId") long applicationId,
+                             @RequestParam MultiValueMap<String, String> queryParams) {
+        Supplier<String> failureView = () -> editInvite(model,  form, competitionId, applicationId, queryParams);
+        Supplier<String> successView = () -> redirectToStatusTab(competitionId);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            final RestResult<Void> fileResult;
+            if (form.getFeedback() != null && !form.getFeedback().isEmpty()) {
+                MultipartFile file = form.getFeedback();
+                interviewAssignmentRestService.deleteFeedback(applicationId);
+                fileResult = interviewAssignmentRestService
+                        .uploadFeedback(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+
+            } else if (form.isRemoveFile()) {
+                fileResult = interviewAssignmentRestService.deleteFeedback(applicationId);
+            } else {
+                fileResult = restSuccess();
+            }
+
+            return validationHandler.addAnyErrors(fileResult, fileUploadField("feedback")).failNowOrSucceedWith(failureView, () -> {
+                RestResult<Void> result = interviewAssignmentRestService
+                        .resendInvite(applicationId, new AssessorInviteSendResource(form.getSubject(), form.getContent()));
+
+                return validationHandler.addAnyErrors(error(removeDuplicates(result.getErrors())))
+                        .failNowOrSucceedWith(failureView, successView);
+                }
+            );
+        });
     }
 
     private String redirectToStatusTab(long competitionId) {

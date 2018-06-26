@@ -20,7 +20,7 @@
         <th:block th:insert="fragments/elements :: error-summary-list(interviewResponseForm)" />
     </div>
 
-    <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
+    <th:block th:insert="fragments/elements :: competition-status-message (app=${interviewFeedbackViewModel.currentApplication}, competition=${interviewFeedbackViewModel.currentCompetition}, projectWithdrawn=${interviewFeedbackViewModel.projectWithdrawn})" />
 
     <div class="grid-row">
         <div class="column-half">

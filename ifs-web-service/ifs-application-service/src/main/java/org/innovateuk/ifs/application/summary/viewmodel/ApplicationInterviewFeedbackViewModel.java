@@ -38,6 +38,7 @@ public class ApplicationInterviewFeedbackViewModel {
     private final boolean feedbackReleased;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
+    private final boolean projectWithdrawn;
 
     public ApplicationInterviewFeedbackViewModel(ApplicationResource currentApplication,
                                                  CompetitionResource currentCompetition,
@@ -54,7 +55,8 @@ public class ApplicationInterviewFeedbackViewModel {
                                                  boolean isLeadApplicant,
                                                  boolean feedbackReleased,
                                                  ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
-                                                 ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+                                                 ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                                 boolean projectWithdrawn) {
         this.currentApplication = currentApplication;
         this.currentCompetition = currentCompetition;
         this.leadOrganisation = leadOrganisation;
@@ -71,6 +73,7 @@ public class ApplicationInterviewFeedbackViewModel {
         this.feedbackReleased = feedbackReleased;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
+        this.projectWithdrawn = projectWithdrawn;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -135,6 +138,10 @@ public class ApplicationInterviewFeedbackViewModel {
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    public boolean isProjectWithdrawn() {
+        return projectWithdrawn;
     }
 
     /* View logic methods. */
