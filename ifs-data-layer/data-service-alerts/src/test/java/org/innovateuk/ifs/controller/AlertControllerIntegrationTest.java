@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.IntegrationTestConfig;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
@@ -12,6 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,8 +26,6 @@ import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUs
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.junit.Assert.*;
-@SpringBootTest(classes= IntegrationTestConfig.class)
-@ActiveProfiles("integration-test")
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 
     private UserResource systemMaintenanceUser;
@@ -45,7 +43,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void test_findAllVisible() throws Exception {
+    public void findAllVisible() throws Exception {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -74,7 +72,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void test_findAllVisibleByType() throws Exception {
+    public void findAllVisibleByType() throws Exception {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -105,7 +103,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
         setLoggedInUser(systemMaintenanceUser);
 
         AlertResource alertResource = AlertResourceBuilder.newAlertResource()
@@ -123,7 +121,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void test_delete() throws Exception {
+    public void delete() throws Exception {
         setLoggedInUser(systemMaintenanceUser);
 
         // save a new alert
@@ -146,7 +144,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void test_deleteAllByType() throws Exception {
+    public void deleteAllByType() throws Exception {
         setLoggedInUser(systemMaintenanceUser);
 
         controller.deleteAllByType(AlertType.MAINTENANCE);
