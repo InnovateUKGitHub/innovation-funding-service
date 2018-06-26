@@ -73,7 +73,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore
+    @Ignore // TODO: For now we will redirect to the team page when the organisation is invalid. To be resolved once the organisation decoupling work starts.
     public void getUpdateOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
 

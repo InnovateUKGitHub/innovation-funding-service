@@ -266,7 +266,7 @@ public class UserResource {
      */
     @JsonIgnore
     public String getRolesString(){
-
+        //TODO: Replace and simplify this once IFS-656 is implemented
         if (hasRole(IFS_ADMINISTRATOR)) {
             return IFS_ADMINISTRATOR.getDisplayName();
         } else {    // Most are not yet hierarchical so in most cases this will also return single role at present.

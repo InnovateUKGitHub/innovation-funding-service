@@ -66,11 +66,6 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         List<ApplicationFinance> applicationFinances = applicationFinanceRepository.findByApplicationId(applicationId);
         List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
 
-        /*
-         * This to me seems like a very messy way of building resource object. You don't only need
-         * to map the domain object using the mapper, but then also do a bunch of things in
-         * setApplicationFinanceDetails. We should find a better way to handle this.
-         */
         for (ApplicationFinance applicationFinance : applicationFinances) {
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
             Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinance.getId(), applicationFinance.getApplication().getCompetition());
