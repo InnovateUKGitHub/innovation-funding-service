@@ -30,7 +30,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
     }
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
         final AlertResource alertResource = AlertResourceBuilder.newAlertResource()
                 .build();
         assertAccessDenied(
@@ -41,7 +41,7 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
     }
 
     @Test
-    public void test_delete() throws Exception {
+    public void delete() throws Exception {
         when(alertLookupStrategy.getAlertResource(9999L)).thenReturn(AlertResourceBuilder.newAlertResource()
                 .withId(9999L)
                 .build());

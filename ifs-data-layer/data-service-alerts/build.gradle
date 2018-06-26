@@ -1,11 +1,88 @@
-def targetBuildFile = project.hasProperty("profile") ? "${project.profile}-build.gradle" : "docker-build.gradle"
-if (file(targetBuildFile).exists()) {
-    apply from: targetBuildFile
-}
-
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
+
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/openshift-util.gradle")
+
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+
+def apply(profiles) {
+    profiles.each { profile ->
+        if (file("${profile}-build.gradle").exists()) {
+            apply from: "${profile}-build.gradle"
+            println "Applying profile ${profile}"
+        }
+    }
+}
+
+task applyProfiles() {
+    doFirst {
+        if (project.hasProperty("profile")) {
+            //Always apply docker, THEN automated and THEN the specific project profile.
+            apply(['docker', 'automated', project.profile])
+        } else {
+            apply(['docker'])
+        }
+    }
+}
+
+processResources.dependsOn applyProfiles
+
+project.version = alertServiceVersion
+tagDocker.tag = alertServiceVersion
+osStageRemote.tag = alertServiceVersion
+tagDockerLocal.tag = alertServiceVersion
+osStageLocal.tag = alertServiceVersion
+
+ext.dockerDir = "$project.parent.projectDir/docker/"
+
+buildDocker.dependsOn prepareDockerInput
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
+
+def enabled = project.hasProperty('ifs.alert-service.enabled') ? project.property('ifs.alert-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
+deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
+
+task prepareDeployment(type: Copy) {
+
+    destinationDir = file('build/os-files')
+
+    from('os-files/') {
+        include '**/*.yml'
+    }
+    filesMatching("**/**.*") {
+        expand project.properties
+    }
+}
+
+task deployAlerts(type: Exec) {
+    dependsOn osStageRemote
+    dependsOn prepareDeployment
+    doFirst {
+        executable 'oc'
+        args 'create', '-f', "${project.buildDir}/os-files/alerts-data-service.yml", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+
+    }
+}
+
+
+task stopAlerts(type: Exec) {
+    doFirst {
+        executable = 'oc'
+        args 'delete', 'dc', 'data-service-alerts', "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+    }
+}
+
+createContainer.networkAliases = ["data-service-alerts"]
+
 
 test.finalizedBy asciidoctor
 
@@ -16,17 +93,20 @@ dependencies {
     compile project(":ifs-commons")
     compile project(":ifs-data-layer:data-service-commons")
 
-
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.httpcomponents:httpasyncclient"
+    compile "mysql:mysql-connector-java"
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
     testCompile "com.h2database:h2:1.4.196"
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "net.sf.opencsv:opencsv:2.3"
 
 }
+
+ext.serverPort = 8080

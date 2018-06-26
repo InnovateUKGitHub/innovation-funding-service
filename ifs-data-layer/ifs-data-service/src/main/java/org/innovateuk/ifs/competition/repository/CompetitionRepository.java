@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -109,11 +111,12 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
-    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.closedDate IS NULL " +
+    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE a.competition.id = :competitionId " +
+            "AND pr.id = pp.target.id AND pp.activityState NOT IN :states " +
+            "AND t.closedDate IS NULL " +
             "AND t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "AND TYPE(t) = Query " +
             "AND NOT EXISTS (SELECT 1 FROM u.roles r WHERE r = org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE) " +
-            "AND a.competition.id = :competitionId " +
             "AND (post.thread.id, post.createdOn) IN ( " +
             "    SELECT p.thread.id, MAX(p.createdOn) " +
             "    FROM Post p " +
@@ -127,7 +130,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "JOIN post.author u " +
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
-            "JOIN pr.application a " +
+            "JOIN pr.application a, ProjectProcess pp " +
             OPEN_QUERIES_WHERE_CLAUSE;
 
     String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
@@ -137,16 +140,18 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
             "JOIN pr.application a " +
-            "JOIN pf.organisation o " +
+            "JOIN pf.organisation o, ProjectProcess pp " +
             OPEN_QUERIES_WHERE_CLAUSE +
             "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 
     String GET_PENDING_SPEND_PROFILES_CRITERIA =
-                    " from project p, application a, competition c " +
+                    " from project p, application a, competition c, process pp " +
                     " where c.id = :competitionId " +
                     " and a.competition = c.id " +
                     " and p.application_id = a.id " +
+                    " and pp.target_id = p.id and pp.process_type = 'ProjectProcess' " +
+                    " and pp.activity_state_id not in (select id from activity_state where activity_type = 'PROJECT_SETUP' and state = 'WITHDRAWN') " +
 
                     // where all Viability is either Approved or Not Required
                     " and not exists (select v.id from process v " +
@@ -282,10 +287,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findByInnovationSectorCategoryId(Long id);
 
     @Query(COUNT_OPEN_QUERIES)
-    Long countOpenQueries(@Param("competitionId") Long competitionId);
+    Long countOpenQueriesByCompetitionAndProjectStateNotIn(@Param("competitionId") Long competitionId, @Param("states") Collection<ProjectState> projectStates);
 
     @Query(GET_OPEN_QUERIES)
-    List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
+    List<CompetitionOpenQueryResource> getOpenQueryByCompetitionAndProjectStateNotIn(@Param("competitionId") long competitionId, @Param("states") Collection<ProjectState> projectStates);
 
     @Query(value = GET_PENDING_SPEND_PROFILES, nativeQuery = true)
     List<Object[]> getPendingSpendProfiles(@Param("competitionId") long competitionId);

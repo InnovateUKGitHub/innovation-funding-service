@@ -40,8 +40,6 @@ import static org.mockito.Mockito.when;
 public class OtherFundingValidatorTest {
 
 	private Validator validator;
-	
-    private ReloadableResourceBundleMessageSource messageSource;
 
     @Mock
     private ApplicationFinanceRowRepository financeRowRepository;
@@ -52,84 +50,89 @@ public class OtherFundingValidatorTest {
 	
 	@Before
 	public void setUp() {
-		messageSource = new ReloadableResourceBundleMessageSource();
         validator = new OtherFundingValidator(financeRowRepository, questionService);
     }
 	
     @Test
-    public void testInvalidSecuredDateYear() {
+    public void invalidSecuredDateYear() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "2342", new BigDecimal(100));
         expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
-    public void testInvalidSecuredDateMonth() {
+    public void invalidSecuredDateMonth() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(2L, "Yes", "Source1", "15-2014", new BigDecimal(100));
         expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
-    public void testInvalidSecuredDateNoMonth() {
+    public void invalidSecuredDateNoMonth() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "2014", new BigDecimal(100));
         expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
-    public void testInvalidMinimum() {
+    public void invalidMinimum() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", new BigDecimal(0));
         expectError(otherFunding, "validation.field.max.value.or.higher", 1);
     }
     @Test
-    public void testInvalidSecuredDate() {
+    public void invalidFundingAmountNull() {
+        mockWithRadio("Yes");
+        OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", null);
+        expectError(otherFunding, "validation.field.must.not.be.blank");
+    }
+    @Test
+    public void invalidSecuredDate() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "12-2014hvhvh", new BigDecimal(100));
         expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
-    public void testInvalidSecuredDateNoSource() {
+    public void invalidSecuredDateNoSource() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(4L, "Yes", null, "12-2014hvhvh", new BigDecimal(100));
         expectError(otherFunding, "validation.finance.secured.date.invalid");
     }
     @Test
-    public void testInvalidOtherPublicFunding() {
+    public void invalidOtherPublicFunding() {
         mockWithRadio("Bobbins");
         OtherFunding otherFunding = new OtherFunding(4L, "Bobbins", OTHER_FUNDING, null, null);
         expectError(otherFunding, "validation.finance.other.funding.required");
     }
     @Test
-    public void testValidFullAmount() {
+    public void validFullAmount() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "10-2014", new BigDecimal(100));
         expectNoErrors(otherFunding);
     }
     @Test
-    public void testValidWithoutDate() {
+    public void validWithoutDate() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(2L, "Yes", OTHER_FUNDING, null, null);
         expectNoErrors(otherFunding);
     }
     @Test
-    public void testValidNoOtherPublicFunding() {
+    public void validNoOtherPublicFunding() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(3L, null, "Source1", "11-1999", new BigDecimal(5));
         expectNoErrors(otherFunding);
     }
     @Test
-    public void testValid() {
+    public void valid() {
         mockWithRadio("Yes");
         OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "09-1999",  new BigDecimal(5));
         expectNoErrors(otherFunding);
     }
     @Test
-    public void testValidNoSource() {
+    public void validNoSource() {
         mockWithRadio("No");
         OtherFunding otherFunding = new OtherFunding(5L, "No", "", "ertt", new BigDecimal(5));
         expectNoErrors(otherFunding);
     }
     @Test
-    public void testValidFullFunding() {
+    public void validFullFunding() {
         mockWithRadio("No");
         OtherFunding otherFunding = new OtherFunding(6L, "Yes", "Source1", "2014", new BigDecimal(100));
         expectNoErrors(otherFunding);

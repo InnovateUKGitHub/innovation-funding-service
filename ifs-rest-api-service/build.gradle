@@ -35,5 +35,6 @@ dependencies {
     compile project(':ifs-resources')
     compile project(':ifs-rest-util')
     compile project(':ifs-commons')
+
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
 }

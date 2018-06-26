@@ -264,7 +264,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     private ApplicationFinanceRow mapCost(ApplicationFinanceRow currentCost, ApplicationFinanceRow newCost) {
-        if (newCost.getCost() != null) {
+        if (newCost.getCost() != null ||  costIsForOtherFunding(newCost)) {
             currentCost.setCost(newCost.getCost());
         }
         if (newCost.getDescription() != null) {
@@ -278,6 +278,12 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         }
 
         return currentCost;
+    }
+
+    private boolean costIsForOtherFunding(ApplicationFinanceRow cost) {
+        // respect null values for other funding costs, in order to produce correct validation messages
+        return cost.getName() != null &&
+                cost.getName().equals("other-funding");
     }
 
     private void updateOrCreateCostValue(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
