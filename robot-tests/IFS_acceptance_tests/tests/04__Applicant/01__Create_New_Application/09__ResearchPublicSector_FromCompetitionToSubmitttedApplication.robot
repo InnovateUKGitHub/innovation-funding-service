@@ -65,6 +65,7 @@ Applicant Applies to Research leading Competition
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link=Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
+    #Here
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012
