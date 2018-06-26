@@ -17,9 +17,6 @@
 
             <th:block th:insert="fragments/elements :: competition-status-message (app=${model.application}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
 
-            <h2 class="heading-medium no-margin-bottom">Application details</h2>
-            <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
-
             <div class="grid-row">
                 <div class="column-half">
                     <h3 class="heading-small">Project title</h3>
@@ -104,7 +101,7 @@
                 </th:block>
             </th:block>
 
-            <h2 class="heading-medium no-margin-bottom">Assessor feedback</h2>
+            <h2 class="heading-medium no-margin-bottom">Application details</h2>
             <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
 
             <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances')}">
