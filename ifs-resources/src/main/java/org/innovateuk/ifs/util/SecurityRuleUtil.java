@@ -44,5 +44,6 @@ public final class SecurityRuleUtil {
         return user.hasRole(INNOVATION_LEAD); }
 
     public static boolean isIFSAdmin(User user) {
-        return user.hasRole(IFS_ADMINISTRATOR); }
+        return user.hasRole(IFS_ADMINISTRATOR);
+    }
 }
