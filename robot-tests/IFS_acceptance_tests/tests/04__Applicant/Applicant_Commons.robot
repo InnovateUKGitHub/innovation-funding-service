@@ -304,16 +304,14 @@ the user completes the new account creation
     [Arguments]    ${email}  ${organisationType}
     the user selects the radio button           organisationType    radio-${organisationType}
     the user clicks the button/link             jQuery=button:contains("Continue")
-    the user should see the element             jQuery=span:contains("Create your account")
+    the user should see the element             jQuery=h1:contains("Enter organisation details")
     the user enters text to a text field        id=organisationSearchName    innovate
-    the user should see the element             jQuery=a:contains("Back to choose your organisation type")
+    the user should see the element             link=Back to choose your organisation type
     the user clicks the button/link             jQuery=button:contains("Search")
     wait for autosave
     the user clicks the button/link             jQuery=a:contains("INNOVATE LTD")
     the user should see the element             jQuery=h3:contains("Organisation type")
-    the user selects the checkbox               address-same
     wait for autosave
-    the user clicks the button/link             jQuery=button:contains("Continue")
     the user should not see an error in the page
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
