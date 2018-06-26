@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
@@ -74,5 +75,12 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     @Override
     public RestResult<List<QuestionResource>> getQuestionsByAssessment(long assessmentId) {
         return getWithRestResult(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, ParameterizedTypeReferences.questionResourceListType());
+    }
+
+    @Override
+    public RestResult<QuestionResource> getQuestionByCompetitionIdAndCompetitionSetupQuestionType(long questionId,
+                                                                                                  CompetitionSetupQuestionType competitionSetupQuestionType) {
+        return getWithRestResult(questionRestURL + "/getQuestionByCompetitionIdAndCompetitionSetupQuestionType/" +
+                questionId + "/" + competitionSetupQuestionType.name(), QuestionResource.class);
     }
 }

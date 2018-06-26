@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.summary.populator.ApplicationFeedbackSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.summary.populator.ApplicationInterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -52,6 +53,7 @@ public class ApplicationSummaryController {
     private ProjectService projectService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewResponseRestService interviewResponseRestService;
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
     private ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator;
     private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
@@ -70,11 +72,13 @@ public class ApplicationSummaryController {
                                         ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator,
                                         ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator,
                                         ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator,
-                                        ProjectService projectService) {
+                                        ProjectService projectService,
+                                        ApplicationTeamModelPopulator applicationTeamModelPopulator) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewResponseRestService = interviewResponseRestService;
+        this.applicationTeamModelPopulator = applicationTeamModelPopulator;
         this.applicationInterviewFeedbackViewModelPopulator = applicationInterviewFeedbackViewModelPopulator;
         this.applicationFeedbackSummaryViewModelPopulator = applicationFeedbackSummaryViewModelPopulator;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
@@ -97,6 +101,7 @@ public class ApplicationSummaryController {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+        model.addAttribute("applicationTeamModel", applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId()));
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
 
