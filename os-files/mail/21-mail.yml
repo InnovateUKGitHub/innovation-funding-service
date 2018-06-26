@@ -49,7 +49,7 @@ items:
       port: 8025
       targetPort: 8025
     - name: 4443-tcp
-      port: 4443
+      port: 443
       targetPort: 4443
     - name: 8143-tcp
       port: 8143
