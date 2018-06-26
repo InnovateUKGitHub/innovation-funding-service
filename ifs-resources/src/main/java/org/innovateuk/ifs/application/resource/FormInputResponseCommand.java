@@ -5,9 +5,6 @@ import java.io.Serializable;
 
 /**
  * A object to permission around.
- * TODO It would be preferable to have a key instead. However the code that this class secures is both a create and
- * TODO an update, and with a key there will be no entity to return on a create. Thus we need to split out the service
- * TODO methods to be separate. - IFS-3758
  */
 public class FormInputResponseCommand implements Serializable {
 
