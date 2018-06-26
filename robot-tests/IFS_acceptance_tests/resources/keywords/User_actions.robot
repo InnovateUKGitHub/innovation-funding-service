@@ -180,10 +180,6 @@ The user opens the link in new window
     [Arguments]   ${link_text}
     the user clicks the button/link   link=${link_text} (opens in a new window)
 
-#The user goes back to the previous tab
-#    the user should not see an error in the page
-#    Select Window    #this goes back to the initial tab
-
 the user expands the section
     [Arguments]  ${section}
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="false"]
