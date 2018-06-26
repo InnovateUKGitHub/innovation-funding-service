@@ -37,18 +37,24 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 @RequestMapping("/application")
 public class ApplicationFeedbackController {
 
-    @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
-    @Autowired
     private InterviewResponseRestService interviewResponseRestService;
-    @Autowired
     private ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator;
-    @Autowired
     private ApplicationService applicationService;
-    @Autowired
     private CompetitionService competitionService;
 
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, and innovation leads have permission to view the application summary page")
+    public ApplicationFeedbackController() {}
+
+    @Autowired
+    public ApplicationFeedbackController(InterviewAssignmentRestService interviewAssignmentRestService, InterviewResponseRestService interviewResponseRestService, ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator, ApplicationService applicationService, CompetitionService competitionService) {
+        this.interviewAssignmentRestService = interviewAssignmentRestService;
+        this.interviewResponseRestService = interviewResponseRestService;
+        this.applicationFeedbackViewModelPopulator = applicationFeedbackViewModelPopulator;
+        this.applicationService = applicationService;
+        this.competitionService = competitionService;
+    }
+
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, comp admins and project finance users have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
     @GetMapping("/{applicationId}/feedback")
     public String feedback(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
@@ -59,8 +65,6 @@ public class ApplicationFeedbackController {
                            UserResource user,
                            @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
                            @RequestParam MultiValueMap<String, String> queryParams) {
-
-
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
@@ -113,7 +117,7 @@ public class ApplicationFeedbackController {
     }
 
     @GetMapping("/{applicationId}/feedback/download-response")
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, comp admins and project finance users have permission to view uploaded interview feedback.")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
@@ -123,7 +127,7 @@ public class ApplicationFeedbackController {
     }
 
     @GetMapping("/{applicationId}/feedback/download-feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants have permission to view uploaded interview feedback.")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, comp admins and project finance users have permission to view uploaded interview feedback.")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadFeedback(Model model,

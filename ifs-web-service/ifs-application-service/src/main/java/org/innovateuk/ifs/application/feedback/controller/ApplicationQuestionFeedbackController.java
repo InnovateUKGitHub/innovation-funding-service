@@ -19,17 +19,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/application")
 public class ApplicationQuestionFeedbackController {
 
-    @Autowired
     private ApplicationRestService applicationRestService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
+    private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
+
+    public ApplicationQuestionFeedbackController() {
+    }
 
     @Autowired
-    private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
+    public ApplicationQuestionFeedbackController(ApplicationRestService applicationRestService, ProcessRoleService processRoleService, InterviewAssignmentRestService interviewAssignmentRestService, AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator) {
+        this.applicationRestService = applicationRestService;
+        this.processRoleService = processRoleService;
+        this.interviewAssignmentRestService = interviewAssignmentRestService;
+        this.assessorQuestionFeedbackPopulator = assessorQuestionFeedbackPopulator;
+    }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
     @SecuredBySpring(value = "READ", description = "Applicants and Assessors and Comp exec users can view question feedback for an application")

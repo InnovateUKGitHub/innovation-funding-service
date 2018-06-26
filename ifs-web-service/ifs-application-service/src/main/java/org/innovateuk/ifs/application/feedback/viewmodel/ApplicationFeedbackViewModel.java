@@ -33,8 +33,6 @@ public class ApplicationFeedbackViewModel {
     private final ApplicationSummaryOrigin origin;
     private final String backUrl;
 
-
-
     public ApplicationFeedbackViewModel(ApplicationResource application,
                                         CompetitionResource competition,
                                         OrganisationResource leadOrganisation,

@@ -115,12 +115,7 @@ public class ApplicationFeedbackViewModelPopulator {
         List<String> feedback = assessmentRestService.getApplicationFeedback(applicationId).getSuccess().getFeedback();
 
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-        final boolean hasFinanceSection;
-        if (financeSection == null) {
-            hasFinanceSection = false;
-        } else {
-            hasFinanceSection = true;
-        }
+        final boolean hasFinanceSection = financeSection != null;
 
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
@@ -142,7 +137,7 @@ public class ApplicationFeedbackViewModelPopulator {
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId);
 
-        InterviewFeedbackViewModel interviewFeedbackViewModel;
+        final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess()) {
             interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, competition.getCompetitionStatus().isFeedbackReleased());
         } else {
