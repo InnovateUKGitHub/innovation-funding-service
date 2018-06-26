@@ -20,36 +20,34 @@
             <h2 class="heading-medium no-margin-bottom">Application details</h2>
             <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
 
-            <div class="boxed">
-                <div class="grid-row">
-                    <div class="column-half">
-                        <h3 class="heading-small">Project title</h3>
-                        <p th:text="${model.application.name}">Machine learning in robots</p>
+            <div class="grid-row">
+                <div class="column-half">
+                    <h3 class="heading-small">Project title</h3>
+                    <p th:text="${model.application.name}">Machine learning in robots</p>
 
-                        <h3 class="heading-small">Application number</h3>
-                        <p th:text="${model.application.id}">Machine learning in robots</p>
+                    <h3 class="heading-small">Application number</h3>
+                    <p th:text="${model.application.id}">Machine learning in robots</p>
 
-                        <h3 class="heading-small">Lead organisation</h3>
-                        <p th:text="${model.leadOrganisation.name}">Aptrans Ltd</p>
+                    <h3 class="heading-small">Lead organisation</h3>
+                    <p th:text="${model.leadOrganisation.name}">Aptrans Ltd</p>
 
-                        <h3 class="heading-small">Partners</h3>
-                        <ul class="list">
-                            <li th:each="organisation : ${model.applicationOrganisations}" th:unless="${organisation.equals(model.leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
-                        </ul>
-                    </div>
+                    <h3 class="heading-small">Partners</h3>
+                    <ul class="list">
+                        <li th:each="organisation : ${model.applicationOrganisations}" th:unless="${organisation.equals(model.leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
+                    </ul>
+                </div>
 
-                    <div class="column-half">
-                        <h3 class="heading-small">Project timescales</h3>
-                        <p>Project start date: <br />
-                            <th:block
-                                th:if="${model.application.startDate}"
-                                th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}" />
-                        </p>
-                        <p>Duration: <br /><th:block th:text="${model.application.durationInMonths}" /> months</p>
+                <div class="column-half">
+                    <h3 class="heading-small">Project timescales</h3>
+                    <p>Project start date: <br />
+                        <th:block
+                            th:if="${model.application.startDate}"
+                            th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}" />
+                    </p>
+                    <p>Duration: <br /><th:block th:text="${model.application.durationInMonths}" /> months</p>
 
-                        <h3 class="heading-small extra-margin">Total project cost</h3>
-                        <p>&pound;<th:block th:text="${model.totalFundingSought} ? ${#numbers.formatInteger(model.totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
-                    </div>
+                    <h3 class="heading-small extra-margin">Total project cost</h3>
+                    <p>&pound;<th:block th:text="${model.totalFundingSought} ? ${#numbers.formatInteger(model.totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
                 </div>
             </div>
 
@@ -105,6 +103,9 @@
                     </th:block>
                 </th:block>
             </th:block>
+
+            <h2 class="heading-medium no-margin-bottom">Assessor feedback</h2>
+            <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
 
             <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances')}">
                 <th:block th:if="${section.name.equals('Project details')}">
