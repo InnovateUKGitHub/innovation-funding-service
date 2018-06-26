@@ -10,7 +10,7 @@
       <!--/* (In e.g. internal view) show the 'report' version of the application details above the collapsible sections */-->
       <th:block th:if="${section.name.equals('Project details')}">
           <th:block th:each="question : ${sectionQuestions.get(section.id)}"
-                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS and appIsClosed and !hideDetails}">
+                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.QuestionSetupType).APPLICATION_DETAILS and appIsClosed and !hideDetails}">
 <div class="extra-margin">
                       <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
                            th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
@@ -25,11 +25,11 @@
 
       <!--/* Show the collapsible sections */-->
       <th:block th:each="question : ${sectionQuestions.get(section.id)}">
-          <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS
+          <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.competition.resource.QuestionSetupType).APPLICATION_DETAILS
                                                     and appIsClosed)
-                                             or (question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM
+                                             or (question.questionSetupType == T(org.innovateuk.ifs.competition.resource.QuestionSetupType).APPLICATION_TEAM
                                                     and !isApplicant)
-                                             or (question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).RESEARCH_CATEGORY
+                                             or (question.questionSetupType == T(org.innovateuk.ifs.competition.resource.QuestionSetupType).RESEARCH_CATEGORY
                                                     and !isApplicant)}">
             <h3>
                 <th:block th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
@@ -44,13 +44,13 @@
                 </th:block>
             </h3>
 
-            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
+            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.QuestionSetupType).APPLICATION_TEAM}">
                 <th:block
                     th:insert="fragments/application-team :: application_team(${applicationSummaryViewModel.applicationTeamViewModel},${question})" />
             </th:block>
 
             <th:block
-              th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).RESEARCH_CATEGORY}">
+              th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.QuestionSetupType).RESEARCH_CATEGORY}">
               <th:block
                   th:insert="fragments/research-category :: research_category_summary(${applicationSummaryViewModel.researchCategorySummaryViewModel})" />
             </th:block>
