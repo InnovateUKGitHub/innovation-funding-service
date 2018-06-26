@@ -114,7 +114,8 @@ IFS.core.editor = (function () {
       jQuery(sourceEl).get(0).value = markdown
     },
     htmlToMarkdown: function (content) {
-      var html = jQuery.trim(content.replace(/(\r\n|\n|\r)/gm, ''))
+      var formattedHtml = IFS.core.editor.formatContent(content)
+      var html = jQuery.trim(formattedHtml.replace(/(\r\n|\n|\r)/gm, ''))
       html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
       return md(html)
     },
@@ -126,7 +127,6 @@ IFS.core.editor = (function () {
         html = converter.makeHtml(content)
         html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
       }
-
       return html
     },
     textToHtml: function (content) {
@@ -137,6 +137,25 @@ IFS.core.editor = (function () {
         html = '<p>' + content.replace(/\n/g, '<br />') + '</p>'
       }
       return html
+    },
+    formatContent: function (content) {
+      var unorderedListRegex = /<\/ul>(.*?)<\/div>/g
+      var orderedListRegex = /<\/ol>(.*?)<\/div>/g
+      var unorderedListRegexTwo = /<\/ul>(.*?)<br>/g
+      var orderedListRegexTwo = /<\/ol>(.*?)<br>/g
+      var unorderedListRegexThree = /<\/ul>(.*?)<br type="_moz">/g
+      var orderedListRegexThree = /<\/ol>(.*?)<br type="_moz">/g
+      var unorderedListRegexFour = /<\/ul>(.*?)$/g
+      var orderedListRegexFour = /<\/ol>(.*?)$/g
+      return content
+        .replace(unorderedListRegex, '</ul><div>$1</div></div>')
+        .replace(orderedListRegex, '</ol><div>$1</div></div>')
+        .replace(unorderedListRegexTwo, '</ul><div>$1</div>')
+        .replace(orderedListRegexTwo, '</ol><div>$1</div>')
+        .replace(unorderedListRegexThree, '</ul><div>$1</div>')
+        .replace(orderedListRegexThree, '</ol><div>$1</div>')
+        .replace(unorderedListRegexFour, '</ul><div>$1</div>')
+        .replace(orderedListRegexFour, '</ol><div>$1</div>')
     }
   }
 })()
