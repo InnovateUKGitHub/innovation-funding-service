@@ -161,7 +161,7 @@ Guest user can apply to a competition
     Given the user clicks the button/link in the paginated list    link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
     Then the user should see the element    jQuery=.button:contains("Sign in")
-    And the user should see the element     jQuery=a:contains("Continue without an account")
+    And the user should see the element     link=Continue without an account
 
 *** Keywords ***
 Close survey window

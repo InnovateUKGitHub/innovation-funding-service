@@ -13,7 +13,7 @@ Not in Companies House: Enter details manually link
     [Documentation]    INFUND-888
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
-    Then the user should see the element    jQuery=div span:contains("Organisation name")
+    Then the user should see the element    jQuery=.form-label span:contains("Organisation name")
 
 Companies House: Valid company name
     [Documentation]    INFUND-887
