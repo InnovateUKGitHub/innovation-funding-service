@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 /**
  * A object to permission around.
+ * TODO: We are currently using this object for both create and update actions. IFS-3830 exists to tidy this up.
  */
 public class FormInputResponseCommand implements Serializable {
 
