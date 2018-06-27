@@ -34,7 +34,7 @@ Applicant submits his application
     [Documentation]  IFS-2196
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
-    When the user fills in the Application details      ${EOI_application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    When the user fills in the Application details new     ${EOI_application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     And the lead applicant fills all the questions and marks as complete(EOI comp type)
     Then the user should not see the element            jQuery=h2:contains("Finances")
     And the applicant submits the application
@@ -134,6 +134,7 @@ the lead applicant fills all the questions and marks as complete(EOI comp type)
     the lead applicant marks every question as complete   Project summary
     the lead applicant marks every question as complete   Scope
     the applicant completes application team
+    the user selects Research category new  Feasibility studies
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 

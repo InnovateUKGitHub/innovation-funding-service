@@ -45,7 +45,7 @@ Applicant submits his application
     [Documentation]  IFS-2286  IFS-2332
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
-    When the user fills in the Application details      ${ATIapplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    When the user fills in the Application details new      ${ATIapplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${ATIapplicationTitle}

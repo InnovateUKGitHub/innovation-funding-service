@@ -40,6 +40,14 @@ the user marks every section but one as complete
     the applicant completes Application Team
     the lead applicant fills all the questions and marks as complete(programme)
 
+the user marks every section but one as complete new
+    [Arguments]  ${application_name}  ${rescat}
+    the user navigates to the page    ${server}
+    the user clicks the button/link    link=${application_name}
+    the applicant completes Application Team
+    the user selects Research category  ${rescat}
+    the lead applicant fills all the questions and marks as complete(programme)
+
 the lead applicant fills all the questions and marks as complete(programme)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{programme_questions}
