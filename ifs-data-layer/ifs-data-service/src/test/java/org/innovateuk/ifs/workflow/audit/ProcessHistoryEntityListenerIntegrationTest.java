@@ -20,7 +20,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 
-@Rollback
 public class ProcessHistoryEntityListenerIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationRepository> {
 
     @Autowired

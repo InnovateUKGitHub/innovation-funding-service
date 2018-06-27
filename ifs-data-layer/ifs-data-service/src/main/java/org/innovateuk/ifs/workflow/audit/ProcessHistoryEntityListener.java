@@ -21,7 +21,7 @@ public class ProcessHistoryEntityListener {
         return ProcessHistoryEntityListener.entityManager;
     }
 
-    @Autowired
+    @PersistenceContext
     private void setEntityManager(EntityManager entityManager) {
         ProcessHistoryEntityListener.entityManager = entityManager;
     }
