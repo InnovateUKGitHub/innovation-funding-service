@@ -5,6 +5,8 @@ ENV FQDN localhost
 ENV USER_NAME smtp
 ENV USER_ID 10001
 ENV USER_PASSWORD PcdO6g4gV662A
+ENV APACHE_RUN_USER smtp
+ENV APACHE_RUN_GROUP smtp
 
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
 
@@ -22,7 +24,6 @@ RUN a2enmod cgi && \
 # configure redirection on apache
 ADD 000-default.conf /etc/apache2/sites-enabled/
 RUN mv /var/www/sqwebmail /var/www/html/sqwebmail
-# Generate script to run at startup
 
 # Expose the ports
 EXPOSE 8080
@@ -31,8 +32,7 @@ EXPOSE 8143
 EXPOSE 4443
 
 WORKDIR /home/smtp
-RUN maildirmake Maildir && \
-    echo "Listen 8080" | tee /etc/apache2/ports.conf && \
+RUN echo "Listen 8080" | tee /etc/apache2/ports.conf && \
     echo "Listen 4443" | tee -a /etc/apache2/ports.conf
 
 ADD generate-certs.sh /home/smtp/

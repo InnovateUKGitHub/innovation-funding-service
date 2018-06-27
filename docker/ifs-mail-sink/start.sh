@@ -6,6 +6,7 @@ if ! whoami &> /dev/null; then
   fi
 fi
 
+maildirmake Maildir
 ./webmail-start.sh &
 ./imap-start.sh &
 smtp-sink -c -d /home/smtp/Maildir/new/%M. 0.0.0.0:8025 10
