@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
+/**
+ * {@code EntityListener} to create new {@link ProcessHistory}s whenever a {@link Process} is updated.
+ */
 @Component
 public class ProcessEntityListener {
 
@@ -24,6 +27,6 @@ public class ProcessEntityListener {
 
     @PreUpdate
     public void preUpdate(Process process) {
-        getEntityManager().persist(new ProcessHistory(process, process.getProcessState()));
+        getEntityManager().persist(new ProcessHistory(process));
     }
 }

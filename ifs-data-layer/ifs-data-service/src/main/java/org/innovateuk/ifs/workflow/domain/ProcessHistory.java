@@ -3,10 +3,15 @@ package org.innovateuk.ifs.workflow.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
-import org.innovateuk.ifs.workflow.resource.ProcessState;
 
 import javax.persistence.*;
 
+/**
+ * A record {@link Process} state change.
+ *
+ * @see AuditableEntity
+ * @see Process
+ */
 @Entity
 public class ProcessHistory extends AuditableEntity {
 
@@ -25,7 +30,9 @@ public class ProcessHistory extends AuditableEntity {
         this.processStateName = null;
     }
 
-    public ProcessHistory(Process process, ProcessState processStateName) {
+    public ProcessHistory(Process process) {
+        if (process == null) throw new NullPointerException("process cannot be null");
+
         this.process = process;
         this.processStateName = process.getProcessState().getStateName();
     }
