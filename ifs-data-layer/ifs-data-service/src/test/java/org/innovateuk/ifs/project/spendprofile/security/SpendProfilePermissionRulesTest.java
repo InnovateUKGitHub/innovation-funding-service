@@ -23,6 +23,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
@@ -70,7 +72,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
         projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcess);
-        when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
+        when(applicationRepositoryMock.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
     }
 

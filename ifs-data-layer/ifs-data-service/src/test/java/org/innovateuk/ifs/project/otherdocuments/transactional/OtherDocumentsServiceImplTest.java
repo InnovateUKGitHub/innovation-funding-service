@@ -38,6 +38,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -143,8 +144,8 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 withPartnerOrganisations(asList(leadPartnerOrganisation, partnerPartnerOrganisation)).
                 build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
     }
 
@@ -153,7 +154,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         Long projectId = 1L;
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
 
@@ -170,7 +171,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         Project projectInDB = newProject().withId(projectId).build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, null);
 
@@ -188,7 +189,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         Project projectInDB = newProject().withId(projectId)
                 .withOtherDocumentsApproved(ApprovalType.APPROVED).build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, null);
 
@@ -205,7 +206,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         Project projectInDB = newProject().withId(projectId).build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
         when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
@@ -224,7 +225,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         Project projectInDB = newProject().withId(projectId).withOtherDocumentsSubmittedDate(ZonedDateTime.now()).build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
         when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, false);
@@ -244,7 +245,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         Project projectInDB = newProject().withId(projectId).build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
         when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
@@ -267,7 +268,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         FileEntryResource entryResource = newFileEntryResource().build();
         Supplier<InputStream> input = () -> null;
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
         when(projectWorkflowHandlerMock.getState(projectInDB)).thenReturn(ProjectState.SETUP);
 
         ServiceResult<Pair<File, FileEntry>> successfulFileUpdateResult = serviceSuccess(Pair.of(new File("updatedfile"), entry));
@@ -297,7 +298,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         FileEntryResource entryResource = newFileEntryResource().build();
         Supplier<InputStream> input = () -> null;
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
 
         ServiceResult<FileEntryResource> result = service.createCollaborationAgreementFileEntry(projectId, entryResource, input);
 
@@ -337,7 +338,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         FileEntryResource entryResource = newFileEntryResource().build();
         Supplier<InputStream> input = () -> null;
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
         when(projectWorkflowHandlerMock.getState(projectInDB)).thenReturn(ProjectState.SETUP);
 
         ServiceResult<Void> result = service.updateCollaborationAgreementFileEntry(projectId, entryResource, input);
@@ -363,7 +364,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 withPartnerOrganisations(asList(leadPartnerOrganisation)).
                 build();
 
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
 
         ServiceResult<FileEntryResource> result =  service.getCollaborationAgreementFileEntryDetails(123L);
         assertTrue(result.isFailure());
@@ -385,7 +386,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 withPartnerOrganisations(asList(leadPartnerOrganisation)).
                 build();
 
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
 
         ServiceResult<FileAndContents> result =  service.getCollaborationAgreementFileContents(123L);
         assertTrue(result.isFailure());
@@ -504,7 +505,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 withPartnerOrganisations(asList(leadPartnerOrganisation)).
                 build();
 
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
 
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
 
@@ -674,7 +675,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
                 withPartnerOrganisations(asList(leadPartnerOrganisation)).
                 build();
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
         ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(123L, 1L);
         assertTrue(result.isSuccess());
@@ -698,7 +699,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         project.addProjectUser(projectUserToSet);
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
         assertFilesCanBeSubmittedByProjectManagerAndFileExists(
                 project::setExploitationPlan,
@@ -745,7 +746,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         project.setProjectUsers(projectUsers);
 
         when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
 
         assertSetDocumentsDateTimeIfProjectManagerAndFilesExist(
                 project::setCollaborationAgreement,
@@ -804,7 +805,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         project.setProjectUsers(projectUsers);
 
         when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
 
         ServiceResult<Void> result = service.saveDocumentsSubmitDateTime(project.getId(), ZonedDateTime.now());
 
@@ -881,7 +882,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         project.setProjectUsers(projectUsers);
 
         when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
 
         assertSetDocumentDateTimeIfProjectManagerAndFilesExist(
                 project::setExploitationPlan,
@@ -920,7 +921,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         project.setProjectUsers(projectUsers);
 
         when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
 
         ServiceResult<Void> result = service.saveDocumentsSubmitDateTime(project.getId(), ZonedDateTime.now());
 

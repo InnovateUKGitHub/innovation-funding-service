@@ -26,6 +26,7 @@ import org.springframework.data.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -250,7 +251,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
             UserResource loggedInUser = newUserResource().build();
             user = newUser().withId(loggedInUser.getId()).build();
             setLoggedInUser(loggedInUser);
-            when(userRepositoryMock.findOne(loggedInUser.getId())).thenReturn(user);
+            when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
 
             organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
             organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.RTO).build();
@@ -265,9 +266,9 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
                     build();
 
             // set basic repository lookup expectations
-            when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-            when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
-            when(organisationRepositoryMock.findOne(organisation2.getId())).thenReturn(organisation2);
+            when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+            when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+            when(organisationRepositoryMock.findById(organisation2.getId())).thenReturn(Optional.of(organisation2));
             return this;
         }
     }

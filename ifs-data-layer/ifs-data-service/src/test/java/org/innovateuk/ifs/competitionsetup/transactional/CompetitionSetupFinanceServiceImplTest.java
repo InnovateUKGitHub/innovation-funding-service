@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -56,7 +57,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         // them to so that we can check they've been altered. Note that isIncludeGrowthTable being true should result in
         // deactivated turn over and count form inputs and activated financial inputs.
         Competition c = newCompetition().with(id(competitionId)).withFullApplicationFinance(!isFullFinance).build();
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(c));
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(isIncludeGrowthTable).build();
         FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(isIncludeGrowthTable).build();
@@ -92,7 +93,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
 
         // Set up a competition with consistent active form inputs
         Competition c = newCompetition().with(id(competitionId)).withFullApplicationFinance(isFullFinance).build();
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(c));
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
         FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).build();

@@ -50,7 +50,7 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        CostGroup retrieved = repository.findOne(saved.getId());
+        CostGroup retrieved = repository.findById(saved.getId()).get();
         assertNotSame(saved, retrieved);
         assertEquals("My collection of costs", retrieved.getDescription());
 
@@ -65,7 +65,7 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         // now individually retrieve the costs and assert that they are as expected when retrieved individually as well
         retrieved.getCosts().forEach(c -> {
-            Cost individual = costRepository.findOne(c.getId());
+            Cost individual = costRepository.findById(c.getId()).get();
             assertEquals(c.getValue(), individual.getValue());
             assertEquals(c.getCostGroup(), individual.getCostGroup());
         });
@@ -90,7 +90,7 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
         flushAndClearSession();
 
         // and update the set of costs
-        CostGroup retrieved = repository.findOne(saved.getId());
+        CostGroup retrieved = repository.findById(saved.getId()).get();
         List<Cost> updatedCosts = new ArrayList<>();
         updatedCosts.add(retrieved.getCosts().get(0));
         updatedCosts.get(0).setValue(new BigDecimal("1"));
@@ -103,7 +103,7 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
         // clear the Hibernate cache
         flushAndClearSession();
 
-        CostGroup retrievedAgain = repository.findOne(saved.getId());
+        CostGroup retrievedAgain = repository.findById(saved.getId()).get();
 
         List<BigDecimal> expectedCosts = asList(
                 new BigDecimal("1.00"),
@@ -134,9 +134,9 @@ public class CostGroupRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         // delete the CostGroup
         List<Long> costIds = simpleMap(saved.getCosts(), Cost::getId);
-        repository.delete(saved.getId());
+        repository.deleteById(saved.getId());
 
         // and assert that the individual costs were deleted as a part of the delete
-        costIds.forEach(id -> assertNull(costRepository.findOne(id)));
+        costIds.forEach(id -> assertFalse(costRepository.findById(id).isPresent()));
     }
 }

@@ -41,7 +41,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        Cost retrieved = repository.findOne(saved.getId());
+        Cost retrieved = repository.findById(saved.getId()).get();
         assertNotSame(saved, retrieved);
         assertEquals(new BigDecimal("12.60"), retrieved.getValue());
 
@@ -64,7 +64,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        Cost retrieved = repository.findOne(saved.getId());
+        Cost retrieved = repository.findById(saved.getId()).get();
         assertNotSame(saved, retrieved);
         assertEquals(new BigDecimal("12.66"), retrieved.getValue());
     }
@@ -81,7 +81,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        Cost retrieved = repository.findOne(saved.getId());
+        Cost retrieved = repository.findById(saved.getId()).get();
         assertEquals(new BigDecimal("12.60"), retrieved.getValue());
 
         // ensure the temporal aspect is as expected
@@ -113,7 +113,7 @@ public class CostRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        Cost retrieved = repository.findOne(saved.getId());
+        Cost retrieved = repository.findById(saved.getId()).get();
         assertEquals(new BigDecimal("12.60"), retrieved.getValue());
 
         // ensure the categorization aspect is as expected

@@ -40,6 +40,7 @@ import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
@@ -118,10 +119,10 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
-        when(organisationAddressRepositoryMock.findOne(organisationAddressResource.getId())).thenReturn(organisationAddress);
-        when(addressRepositoryMock.findOne(addressResource.getId())).thenReturn(address);
+        when(organisationAddressRepositoryMock.findById(organisationAddressResource.getId())).thenReturn(Optional.of(organisationAddress));
+        when(addressRepositoryMock.findById(addressResource.getId())).thenReturn(Optional.of(address));
         when(bankDetailsRepositoryMock.save(bankDetails)).thenReturn(bankDetails);
-        when(projectRepositoryMock.findOne(bankDetailsResource.getProject())).thenReturn(project);
+        when(projectRepositoryMock.findById(bankDetailsResource.getProject())).thenReturn(Optional.of(project));
     }
 
     @Test
@@ -253,12 +254,12 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ProcessRole leadApplicantRole = newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).withApplication(application).build();
         Project project = newProject().withId(projectId).withApplication(application).build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisation.getId())).thenReturn(bankDetails);
         when(bankDetailsMapperMock.mapToResource(bankDetails)).thenReturn(bankDetailsResource);
         when(projectUsersHelperMock.getPartnerOrganisations(projectId)).thenReturn(singletonList(organisation));
         when(financeServiceMock.organisationSeeksFunding(project.getId(), project.getApplication().getId(), organisation.getId())).thenReturn(serviceSuccess(true));
-        when(organisationRepositoryMock.findOne(leadApplicantRole.getOrganisationId())).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(leadApplicantRole.getOrganisationId())).thenReturn(Optional.of(organisation));
 
         List<BankDetailsStatusResource> bankDetailsStatusResource = newBankDetailsStatusResource().withOrganisationId(organisation.getId()).withOrganisationName(organisation.getName()).withBankDetailsStatus(ProjectActivityStates.ACTION_REQUIRED).build(1);
 

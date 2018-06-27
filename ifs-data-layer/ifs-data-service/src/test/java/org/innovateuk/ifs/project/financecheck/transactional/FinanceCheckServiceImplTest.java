@@ -221,7 +221,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
         when(projectFinanceRowServiceMock.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
@@ -338,8 +338,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 build();
 
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
         when(financeServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(applicationFinanceResource));
 
@@ -365,8 +365,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
@@ -511,8 +511,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
         when(financeServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
@@ -570,7 +570,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 build(2);
 
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
         when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
 
@@ -637,7 +637,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 build(2);
 
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
         when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
@@ -704,7 +704,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 build(2);
 
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
         when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
@@ -850,7 +850,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Application app = new Application();
         app.setId(applicationId);
         app.setCompetition(comp);
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(app));
 
         ProcessRole updatedBy = newProcessRole().withApplication(app).withOrganisationId(organisationId).build();
         FormInputResponse headcount = newFormInputResponse().withValue("1").withUpdatedBy(updatedBy).build();
@@ -986,7 +986,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         return projectFinanceInDB;
 
@@ -1005,7 +1005,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long userId = 7L;
         User user = newUser().withId(userId).build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.APPROVED);
@@ -1029,7 +1029,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long userId = 7L;
         User user = newUser().withId(userId).build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
@@ -1055,7 +1055,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         User user = newUser().withId(userId).build();
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
@@ -1079,7 +1079,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         User user = newUser().withId(userId).build();
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
@@ -1104,7 +1104,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         User user = newUser().withId(userId).build();
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);

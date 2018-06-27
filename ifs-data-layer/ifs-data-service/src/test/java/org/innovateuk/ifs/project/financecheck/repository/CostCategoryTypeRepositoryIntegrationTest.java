@@ -49,7 +49,7 @@ public class CostCategoryTypeRepositoryIntegrationTest extends BaseRepositoryInt
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        CostCategoryType retrieved = repository.findOne(saved.getId());
+        CostCategoryType retrieved = repository.findById(saved.getId()).get();
         assertNotSame(saved, retrieved);
         assertEquals("CR&D Industrial Cost Categories", retrieved.getName());
 
@@ -75,18 +75,18 @@ public class CostCategoryTypeRepositoryIntegrationTest extends BaseRepositoryInt
         flushAndClearSession();
 
         // and retrieve from the db again
-        CostCategoryType retrieved = repository.findOne(saved.getId());
+        CostCategoryType retrieved = repository.findById(saved.getId()).get();
         Long costCategoryGroupId = retrieved.getCostCategoryGroup().getId();
         List<Long> costCategoryIds = simpleMap(retrieved.getCostCategoryGroup().getCostCategories(), CostCategory::getId);
 
-        assertNotNull(costCategoryGroupRepository.findOne(costCategoryGroupId));
-        costCategoryIds.forEach(id -> assertNotNull(costCategoryRepository.findOne(id)));
+        assertTrue(costCategoryGroupRepository.findById(costCategoryGroupId).isPresent());
+        costCategoryIds.forEach(id -> assertTrue(costCategoryRepository.findById(id).isPresent()));
 
         // delete it and ensure the delete cascades
-        repository.delete(retrieved.getId());
+        repository.deleteById(retrieved.getId());
         flushAndClearSession();
 
-        assertNull(costCategoryGroupRepository.findOne(costCategoryGroupId));
-        costCategoryIds.forEach(id -> assertNull(costCategoryRepository.findOne(id)));
+        assertFalse(costCategoryGroupRepository.findById(costCategoryGroupId).isPresent());
+        costCategoryIds.forEach(id -> assertFalse(costCategoryRepository.findById(id).isPresent()));
     }
 }

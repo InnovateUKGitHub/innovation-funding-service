@@ -28,6 +28,7 @@ import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -118,7 +119,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                 withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
                 build();
 
-        when(projectRepositoryMock.findOne(newProject.getId())).thenReturn(newProject);
+        when(projectRepositoryMock.findById(newProject.getId())).thenReturn(Optional.of(newProject));
     }
 
     @Test

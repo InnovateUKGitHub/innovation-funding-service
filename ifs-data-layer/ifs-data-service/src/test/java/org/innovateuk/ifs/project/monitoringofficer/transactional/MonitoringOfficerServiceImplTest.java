@@ -79,7 +79,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         Project projectInDB = newProject().withId(1L).build();
 
-        when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectid)).thenReturn(Optional.of(projectInDB));
 
         ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
@@ -102,7 +102,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         Project projectInDB = newProject().withId(1L).build();
 
-        when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectid)).thenReturn(Optional.of(projectInDB));
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 
@@ -136,7 +136,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         Project projectInDB = newProject().withId(1L).build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 
@@ -155,7 +155,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         Project projectInDB = newProject().withId(1L).build();
 
-        when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectid)).thenReturn(Optional.of(projectInDB));
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 

@@ -49,8 +49,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
 
-        when(competitionTypeRepositoryMock.findOne(competitionType.getId())).thenReturn(null);
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.empty());
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
@@ -67,8 +67,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
 
-        when(competitionTypeRepositoryMock.findOne(competitionType.getId())).thenReturn(competitionType);
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(null);
+        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.empty());
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
@@ -85,8 +85,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).withId(3L).build();
 
-        when(competitionTypeRepositoryMock.findOne(competitionType.getId())).thenReturn(competitionType);
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
@@ -102,8 +102,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         CompetitionType competitionType = newCompetitionType().withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
 
-        when(competitionTypeRepositoryMock.findOne(competitionType.getId())).thenReturn(competitionType);
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
@@ -130,8 +130,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .build();
         Competition expectedResult = newCompetition().withId(4L).build();
 
-        when(competitionTypeRepositoryMock.findOne(competitionType.getId())).thenReturn(competitionType);
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(competitionTemplatePersistorMock.persistByEntity(competition)).thenReturn(expectedResult);
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
                 .thenReturn(Optional.empty());
@@ -169,8 +169,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
-        when(competitionTypeRepositoryMock.findOne(competitionType.getId())).thenReturn(competitionType);
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(competitionTemplatePersistorMock.persistByEntity(competition))
                 .thenReturn(newCompetition().withId(4L).build());
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))

@@ -19,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -60,7 +62,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         projectResource1 = newProjectResource().withApplication(applicationResource1).build();
         projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
-        when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
+        when(applicationRepositoryMock.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
     }
 

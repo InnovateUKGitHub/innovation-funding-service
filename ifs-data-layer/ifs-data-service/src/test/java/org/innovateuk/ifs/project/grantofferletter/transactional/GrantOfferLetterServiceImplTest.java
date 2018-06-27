@@ -54,10 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -215,10 +212,10 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
                 build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisations.get(0).getId())).thenReturn(organisations.get(0));
-        when(organisationRepositoryMock.findOne(organisations.get(1).getId())).thenReturn(organisations.get(1));
-        when(organisationRepositoryMock.findOne(organisations.get(2).getId())).thenReturn(organisations.get(2));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisations.get(0).getId())).thenReturn(Optional.of(organisations.get(0)));
+        when(organisationRepositoryMock.findById(organisations.get(1).getId())).thenReturn(Optional.of(organisations.get(1)));
+        when(organisationRepositoryMock.findById(organisations.get(2).getId())).thenReturn(Optional.of(organisations.get(2)));
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
@@ -378,7 +375,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         FileEntry existingGOLFile = newFileEntry().build();
         project.setGrantOfferLetter(existingGOLFile);
 
-        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(userRepositoryMock.findById(internalUserResource.getId())).thenReturn(Optional.of(internalUser));
         when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(true);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(fileServiceMock.deleteFileIgnoreNotFound(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
@@ -402,7 +399,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         FileEntry existingGOLFile = newFileEntry().build();
         project.setGrantOfferLetter(existingGOLFile);
 
-        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(userRepositoryMock.findById(internalUserResource.getId())).thenReturn(Optional.of(internalUser));
         when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(true);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
         when(fileServiceMock.deleteFileIgnoreNotFound(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
@@ -423,7 +420,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         FileEntry existingGOLFile = newFileEntry().build();
         project.setGrantOfferLetter(existingGOLFile);
 
-        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(userRepositoryMock.findById(internalUserResource.getId())).thenReturn(Optional.of(internalUser));
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(false);
 
@@ -446,7 +443,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         FileEntry existingSignedGOLFile = newFileEntry().build();
         project.setSignedGrantOfferLetter(existingSignedGOLFile);
 
-        when(userRepositoryMock.findOne(externalUser.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(externalUser.getId())).thenReturn(Optional.of(user));
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(fileServiceMock.deleteFileIgnoreNotFound(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
         when(golWorkflowHandlerMock.removeSignedGrantOfferLetter(project, user)).thenReturn(true);
@@ -469,7 +466,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         FileEntry existingSignedGOLFile = newFileEntry().build();
         project.setSignedGrantOfferLetter(existingSignedGOLFile);
 
-        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(userRepositoryMock.findById(internalUserResource.getId())).thenReturn(Optional.of(internalUser));
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
         when(fileServiceMock.deleteFileIgnoreNotFound(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
 
@@ -519,7 +516,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Test
     public void testGenerateGrantOfferLetterFailureSpendProfilesNotApproved() {
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.REJECTED));
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
@@ -539,7 +536,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project project = newProject().withOtherDocumentsApproved(ApprovalType.REJECTED).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
 
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
         assertTrue(result.isSuccess());
@@ -549,7 +546,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     public void testGenerateGrantOfferLetterNoProject() {
 
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(projectRepositoryMock.findOne(123L)).thenReturn(null);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
         assertTrue(result.isSuccess());
@@ -694,11 +691,11 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withTargetStartDate(LocalDate.now())
                 .build();
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
 
-        when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
-        when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
-        when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
+        when(organisationRepositoryMock.findById(o1.getId())).thenReturn(Optional.of(o1));
+        when(organisationRepositoryMock.findById(o2.getId())).thenReturn(Optional.of(o2));
+        when(organisationRepositoryMock.findById(o3.getId())).thenReturn(Optional.of(o3));
 
     }
 
@@ -714,7 +711,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withGrantOfferLetter(null)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(p));
         when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
@@ -755,7 +752,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
@@ -775,7 +772,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     @Test
     public void testSendGrantOfferLetterNoProject() {
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
@@ -806,7 +803,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(p));
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
@@ -820,7 +817,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         User user = UserBuilder.newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(Boolean.TRUE);
 
@@ -852,7 +849,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
@@ -866,7 +863,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         User user = UserBuilder.newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         when(golWorkflowHandlerMock.grantOfferLetterSent(project, user)).thenReturn(Boolean.FALSE);
 
@@ -882,9 +879,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
-        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
         when(golWorkflowHandlerMock.grantOfferLetterRejected(project, u)).thenReturn(Boolean.TRUE);
 
         String rejectionReason = "No signature";
@@ -896,7 +893,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 "applicationId", project.getApplication().getId()
         );
 
-        verify(projectRepositoryMock).findOne(projectId);
+        verify(projectRepositoryMock).findById(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterRejected(project, u);
         verify(golWorkflowHandlerMock, never()).grantOfferLetterApproved(project, u);
@@ -915,15 +912,15 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
-        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
         when(golWorkflowHandlerMock.grantOfferLetterRejected(project, u)).thenReturn(Boolean.FALSE);
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.REJECTED, "No signature");
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
 
-        verify(projectRepositoryMock).findOne(projectId);
+        verify(projectRepositoryMock).findById(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterRejected(project, u);
         verify(golWorkflowHandlerMock, never()).grantOfferLetterApproved(project, u);
@@ -979,9 +976,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 "applicationId", project.getApplication().getId()
         );
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(golWorkflowHandlerMock.grantOfferLetterApproved(project, user)).thenReturn(Boolean.TRUE);
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
         when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
@@ -989,7 +986,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
 
-        verify(projectRepositoryMock, atLeast(2)).findOne(projectId);
+        verify(projectRepositoryMock, atLeast(2)).findById(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, user);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
@@ -1053,9 +1050,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 "applicationId", project.getApplication().getId()
         );
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(golWorkflowHandlerMock.grantOfferLetterApproved(project, user)).thenReturn(Boolean.TRUE);
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
         when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
@@ -1063,7 +1060,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
 
-        verify(projectRepositoryMock, atLeast(2)).findOne(projectId);
+        verify(projectRepositoryMock, atLeast(2)).findById(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, user);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
@@ -1084,16 +1081,16 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
-        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
         when(golWorkflowHandlerMock.grantOfferLetterApproved(project, u)).thenReturn(Boolean.TRUE);
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.FALSE);
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
 
-        verify(projectRepositoryMock).findOne(projectId);
+        verify(projectRepositoryMock).findById(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, u);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
@@ -1113,15 +1110,15 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
-        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
         when(golWorkflowHandlerMock.grantOfferLetterApproved(project, u)).thenReturn(Boolean.FALSE);
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
 
-        verify(projectRepositoryMock).findOne(projectId);
+        verify(projectRepositoryMock).findById(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, u);
         verify(projectWorkflowHandlerMock, never()).grantOfferLetterApproved(any(), any());
@@ -1137,13 +1134,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.FALSE);
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
 
-        verify(projectRepositoryMock).findOne(projectId);
+        verify(projectRepositoryMock).findById(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
 
         assertTrue(result.isFailure());
@@ -1193,7 +1190,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     @Test
     public void testGetGrantOfferLetterStateWhenProjectDoesNotExist() {
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
 
         ServiceResult<GrantOfferLetterStateResource> result = service.getGrantOfferLetterState(projectId);
 

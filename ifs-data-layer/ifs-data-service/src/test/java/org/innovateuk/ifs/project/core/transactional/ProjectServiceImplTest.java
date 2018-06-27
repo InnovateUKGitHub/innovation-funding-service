@@ -46,6 +46,7 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
@@ -206,8 +207,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withSpendProfileSubmittedDate(ZonedDateTime.now()).
                 build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
     }
 
@@ -305,15 +306,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withId(userId)
                 .build();
         setLoggedInUser(loggedInUser);
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(true);
 
         ServiceResult<Void> result = service.withdrawProject(projectId);
         assertTrue(result.isSuccess());
 
-        verify(projectRepositoryMock).findOne(projectId);
-        verify(userRepositoryMock).findOne(userId);
+        verify(projectRepositoryMock).findById(projectId);
+        verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
     }
 
@@ -329,16 +330,16 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         User user = newUser()
                 .withId(userId)
                 .build();
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
         setLoggedInUser(loggedInUser);
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(false);
 
         ServiceResult<Void> result = service.withdrawProject(projectId);
         assertTrue(result.isFailure());
         assertEquals(PROJECT_CANNOT_BE_WITHDRAWN.getErrorKey(), result.getErrors().get(0).getErrorKey());
-        verify(projectRepositoryMock).findOne(projectId);
-        verify(userRepositoryMock).findOne(userId);
+        verify(projectRepositoryMock).findById(projectId);
+        verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
     }
 
@@ -350,12 +351,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
                 .build();
         setLoggedInUser(user);
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(false);
 
         ServiceResult<Void> result = service.withdrawProject(projectId);
         assertTrue(result.isFailure());
-        verify(projectRepositoryMock).findOne(projectId);
+        verify(projectRepositoryMock).findById(projectId);
         verifyZeroInteractions(projectWorkflowHandlerMock);
     }
 
@@ -387,10 +388,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testAddPartnerOrganisationNotOnProject(){
         Organisation organisationNotOnProject = newOrganisation().build();
-        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
-        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
-        when(organisationRepositoryMock.findOne(organisationNotOnProject.getId())).thenReturn(organisationNotOnProject);
-        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
+        when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
+        when(organisationRepositoryMock.findById(organisationNotOnProject.getId())).thenReturn(Optional.of(organisationNotOnProject));
+        when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
         // Method under test
         ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), u.getId(), organisationNotOnProject.getId());
         // Expectations
@@ -401,9 +402,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testAddPartnerPartnerAlreadyExists(){
-        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
-        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
-        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
+        when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
+        when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
 
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
@@ -417,10 +418,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testAddPartner(){
         User newUser = newUser().build();
-        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
-        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
-        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
-        when(userRepositoryMock.findOne(newUser.getId())).thenReturn(u);
+        when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
+        when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
+        when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
+        when(userRepositoryMock.findById(newUser.getId())).thenReturn(Optional.of(u));
         List<ProjectInvite> projectInvites = newProjectInvite().withUser(user).build(1);
         projectInvites.get(0).open();
         when(projectInviteRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
