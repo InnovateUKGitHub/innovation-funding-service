@@ -38,6 +38,17 @@ function isSysIntEnvironment() {
     fi
 }
 
+function isPerfEnvironment() {
+
+    TARGET=$1
+
+    if [[ ${TARGET} != "perf" ]]; then
+        exit 1
+    else
+        exit 0
+    fi
+}
+
 function isServiceEnabled() {
 
     SERVICE=$1
@@ -200,6 +211,7 @@ function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/mysql/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/finance-data-service-sync/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/prototypes/*.yml
+
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/sil-stub/*.yml

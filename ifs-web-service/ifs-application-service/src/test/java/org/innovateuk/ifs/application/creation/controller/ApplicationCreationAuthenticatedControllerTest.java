@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,15 +20,20 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.validation.Validator;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RTO;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,7 +46,6 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     @Mock
     private Validator validator;
 
-    private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
     private OrganisationResource organisationResource;
     private ApplicationResource applicationResource;
@@ -62,6 +68,9 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private QuestionRestService questionRestService;
 
     @Override
     protected ApplicationCreationAuthenticatedController supplyControllerUnderTest() {
@@ -93,19 +102,43 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Test
     public void testGetRequestWithoutExistingApplication() throws Exception {
-        ApplicationResource application = new ApplicationResource();
-        application.setId(99L);
+        long competitionId = 1L;
+        ApplicationResource application = newApplicationResource().build();
+        QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        when(applicationService.createApplication(anyLong(), anyLong(), eq(""))).thenReturn(application);
+        when(applicationService.createApplication(competitionId, loggedInUser.getId(), "")).thenReturn(application);
+        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM))
+                .thenReturn(restSuccess(applicationTeamQuestion));
         when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
 
-        mockMvc.perform(get("/application/create-authenticated/1"))
+        mockMvc.perform(get("/application/create-authenticated/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/application/99/team"));
+                .andExpect(redirectedUrl(format("/application/%s/form/question/%s", application.getId(),
+                        applicationTeamQuestion.getId())));
 
-        // application needs to be created.
-        verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), eq(""));
-        verify(userService).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
+        verify(applicationService, only()).createApplication(competitionId, loggedInUser.getId(), "");
+        verify(questionRestService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM);
+        verify(userService, only()).userHasApplicationForCompetition(loggedInUser.getId(), competitionId);
+    }
+
+    @Test
+    public void testGetRequestWithoutExistingApplicationAndWithOldApplicantMenu() throws Exception {
+        long competitionId = 1L;
+        ApplicationResource application = newApplicationResource().build();
+
+        when(applicationService.createApplication(competitionId, loggedInUser.getId(), "")).thenReturn(application);
+        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                APPLICATION_TEAM))
+                .thenReturn(restFailure(notFoundError(QuestionResource.class, competitionId, APPLICATION_TEAM)));
+        when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
+
+        mockMvc.perform(get("/application/create-authenticated/{competitionId}", competitionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/application/%s/team", application.getId())));
+
+        verify(applicationService, only()).createApplication(competitionId, loggedInUser.getId(), "");
+        verify(questionRestService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM);
+        verify(userService, only()).userHasApplicationForCompetition(loggedInUser.getId(), competitionId);
     }
 
     @Test
@@ -119,16 +152,41 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Test
     public void testPostCreateNewApplication() throws Exception {
-        ApplicationResource application = new ApplicationResource();
-        application.setId(99L);
-        when(applicationService.createApplication(anyLong(), anyLong(), eq(""))).thenReturn(application);
+        long competitionId = 1L;
+        ApplicationResource application = newApplicationResource().build();
+        QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        mockMvc.perform(post("/application/create-authenticated/1").param("createNewApplication", "1"))
+        when(applicationService.createApplication(competitionId, loggedInUser.getId(), "")).thenReturn(application);
+        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM))
+                .thenReturn(restSuccess(applicationTeamQuestion));
+
+        mockMvc.perform(post("/application/create-authenticated/{competitionId}", competitionId)
+                .param("createNewApplication", "1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/application/99/team"));
+                .andExpect(redirectedUrl(format("/application/%s/form/question/%s", application.getId(),
+                        applicationTeamQuestion.getId())));
 
-        // application needs to be created.
-        verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), eq(""));
+        verify(applicationService, only()).createApplication(competitionId, loggedInUser.getId(), "");
+        verify(questionRestService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM);
+    }
+
+    @Test
+    public void testPostCreateNewApplicationAndWithOldApplicantMenu() throws Exception {
+        long competitionId = 1L;
+        ApplicationResource application = newApplicationResource().build();
+
+        when(applicationService.createApplication(competitionId, loggedInUser.getId(), "")).thenReturn(application);
+        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                APPLICATION_TEAM))
+                .thenReturn(restFailure(notFoundError(QuestionResource.class, competitionId, APPLICATION_TEAM)));
+
+        mockMvc.perform(post("/application/create-authenticated/{competitionId}", competitionId)
+                .param("createNewApplication", "1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/application/%s/team", application.getId())));
+
+        verify(applicationService, only()).createApplication(competitionId, loggedInUser.getId(), "");
+        verify(questionRestService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM);
     }
 
     @Test

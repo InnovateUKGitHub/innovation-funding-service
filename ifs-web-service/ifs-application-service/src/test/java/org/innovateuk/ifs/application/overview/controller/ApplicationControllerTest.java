@@ -165,7 +165,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         LOG.debug("Show dashboard for application: " + app.getId());
         Map<String, Object> model = mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-details"))
+                .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
@@ -219,7 +219,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         LOG.debug("Show dashboard for application: " + app.getId());
         Map<String, Object> model = mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-details"))
+                .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
@@ -261,7 +261,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         LOG.debug("Show dashboard for application: " + app.getId());
         Map<String, Object> model = mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-details"))
+                .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
@@ -301,7 +301,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         LOG.debug("Show dashboard for application: " + app.getId());
         Map<String, Object> model = mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-details"))
+                .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
@@ -409,7 +409,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-details"))
+                .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
         verify(applicationRestService, times(1)).updateApplicationState(app.getId(), ApplicationState.OPEN);
@@ -428,7 +428,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-details"))
+                .andExpect(view().name("application-overview"))
                 .andReturn().getModelAndView().getModel();
 
         verify(applicationRestService, times(0)).updateApplicationState(app.getId(), ApplicationState.OPEN);

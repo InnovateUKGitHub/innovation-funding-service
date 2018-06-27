@@ -52,6 +52,11 @@ public class QuestionStatusRules extends BasePermissionRules {
         return userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsConnected(ids.applicationId, user));
     }
 
+    @PermissionRule(value = "MARK_TEAM_INCOMPLETE", description = "Any users that are connected can mark the application team as incomplete")
+    public boolean userCanMarkApplicationTeamAsIncomplete(QuestionApplicationCompositeId ids, UserResource user) {
+        return userIsConnected(ids.applicationId, user);
+    }
+
     @PermissionRule(value = "MARK_SECTION", description = "Only member of project team can mark a section as complete")
     public boolean onlyMemberOfProjectTeamCanMarkSection(ApplicationResource applicationResource, UserResource user) {
         return isMemberOfProjectTeam(applicationResource.getId(), user);

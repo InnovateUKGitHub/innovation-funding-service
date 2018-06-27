@@ -9,11 +9,13 @@ import org.mockito.Mock;
 import static java.util.Collections.emptyList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class InviteOrganisationTeamManagementControllerTest extends BaseControllerMockMVCTest<InviteOrganisationTeamManagementController> {
+public class InviteOrganisationTeamManagementControllerTest extends
+        BaseControllerMockMVCTest<InviteOrganisationTeamManagementController> {
     @Mock
     private InviteOrganisationTeamManagementService inviteOrganisationTeamManagementService;
 
@@ -31,11 +33,20 @@ public class InviteOrganisationTeamManagementControllerTest extends BaseControll
                 .andExpect(view().name("application-team/edit-org"))
                 .andExpect(model().attribute("model", createAViewModel())).andReturn();
 
-        verify(inviteOrganisationTeamManagementService, times(1)).createViewModel(anyLong(),anyLong(),any());
-        verify(inviteOrganisationTeamManagementService, times(1)).applicationAndOrganisationIdCombinationIsValid(any(),any());
+        verify(inviteOrganisationTeamManagementService).createViewModel(anyLong(), anyLong(), any());
+        verify(inviteOrganisationTeamManagementService).applicationAndOrganisationIdCombinationIsValid(any(), any());
     }
 
     private static ApplicationTeamManagementViewModel createAViewModel() {
-        return new ApplicationTeamManagementViewModel(1L,"application name", 2L, 3L, "organisation name", true, true, emptyList(), true);
+        return new ApplicationTeamManagementViewModel(1L,
+                2L,
+                "application name",
+                3L,
+                4L,
+                "organisation name",
+                true,
+                true,
+                emptyList(),
+                true);
     }
 }

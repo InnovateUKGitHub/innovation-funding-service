@@ -29,7 +29,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void test_findAllVisible() throws Exception {
+    public void findAllVisible() throws Exception {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -52,7 +52,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void test_findAllVisibleByType() throws Exception {
+    public void findAllVisibleByType() throws Exception {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -82,7 +82,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void test_save() throws Exception {
+    public void save() throws Exception {
         Alert alertResource = new Alert("Sample message for save", MAINTENANCE, LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()));
         Alert saved = repository.save(alertResource);
 
@@ -92,7 +92,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void test_delete() throws Exception {
+    public void delete() throws Exception {
         // save a new alert
         Alert alertResource = new Alert("Sample message for delete", MAINTENANCE, LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()));
         Alert saved = repository.save(alertResource);
@@ -111,7 +111,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void test_deleteByType() throws Exception {
+    public void deleteByType() throws Exception {
         repository.deleteByType(MAINTENANCE);
 
         List<Alert> alerts = repository.findAll();
