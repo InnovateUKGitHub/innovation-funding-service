@@ -166,7 +166,7 @@
                     <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
                     <p>
                         <!-- TODO: IFS-3753 remove old message -->
-                        <th:block th:if="${model.competition.useNewApplicantMenu}">
+                        <th:block th:if="${!model.competition.useNewApplicantMenu}">
                             <th:block th:if="${model.userIsLeadApplicant}">
                                 You must select a research category in
                                 <th:block th:unless="${model.allReadOnly}">
@@ -192,7 +192,6 @@
                                     organisation</a> section.
                             </th:block>
                         </th:block>
-
 
                         <th:block th:if="${model.competition.useNewApplicantMenu}">
                             <th:block th:if="${model.userIsLeadApplicant}">
