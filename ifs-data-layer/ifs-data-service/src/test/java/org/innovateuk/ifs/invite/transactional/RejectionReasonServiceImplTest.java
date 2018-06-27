@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
@@ -57,14 +58,14 @@ public class RejectionReasonServiceImplTest extends BaseUnitTestMocksTest {
 
         RejectionReason rejectionReason = newRejectionReason().build();
 
-        when(rejectionReasonRepositoryMock.findOne(rejectionReasonId)).thenReturn(rejectionReason);
+        when(rejectionReasonRepositoryMock.findById(rejectionReasonId)).thenReturn(Optional.of(rejectionReason));
         when(rejectionReasonMapperMock.mapToResource(same(rejectionReason))).thenReturn(rejectionReasonResource);
 
         RejectionReasonResource found = rejectionReasonService.findById(rejectionReasonId).getSuccess();
         assertEquals(rejectionReasonResource, found);
 
         InOrder inOrder = inOrder(rejectionReasonRepositoryMock, rejectionReasonMapperMock);
-        inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findOne(rejectionReasonId);
+        inOrder.verify(rejectionReasonRepositoryMock, calls(1)).findById(rejectionReasonId);
         inOrder.verify(rejectionReasonMapperMock, calls(1)).mapToResource(rejectionReason);
         inOrder.verifyNoMoreInteractions();
     }

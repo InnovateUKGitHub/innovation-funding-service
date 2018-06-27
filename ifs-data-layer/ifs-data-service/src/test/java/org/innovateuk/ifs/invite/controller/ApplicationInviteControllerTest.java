@@ -62,8 +62,8 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
     public void setUp() {
         when(inviteOrganisationRepositoryMock.save(isA(InviteOrganisation.class))).thenReturn(null);
         when(applicationInviteRepositoryMock.save(isA(ApplicationInvite.class))).thenReturn(null);
-        when(organisationRepositoryMock.findOne(1L)).thenReturn(newOrganisation().build());
-        when(applicationRepositoryMock.findOne(1L)).thenReturn(newApplication().build());
+        when(organisationRepositoryMock.findById(1L)).thenReturn(Optional.of(newOrganisation().build()));
+        when(applicationRepositoryMock.findById(1L)).thenReturn(Optional.of(newApplication().build()));
     }
 
     @Test

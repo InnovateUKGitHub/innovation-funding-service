@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.junit.Assert.assertEquals;
@@ -34,14 +36,14 @@ public class InviteOrganisationServiceImplTest extends BaseServiceUnitTest<Invit
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
 
-        when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
+        when(inviteOrganisationRepositoryMock.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
         when(inviteOrganisationMapperMock.mapToResource(inviteOrganisation)).thenReturn(inviteOrganisationResource);
 
         ServiceResult<InviteOrganisationResource> result = service.getById(inviteOrganisation.getId());
         assertEquals(inviteOrganisationResource, result.getSuccess());
 
         InOrder inOrder = inOrder(inviteOrganisationRepositoryMock, inviteOrganisationMapperMock);
-        inOrder.verify(inviteOrganisationRepositoryMock).findOne(inviteOrganisation.getId());
+        inOrder.verify(inviteOrganisationRepositoryMock).findById(inviteOrganisation.getId());
         inOrder.verify(inviteOrganisationMapperMock).mapToResource(inviteOrganisation);
         inOrder.verifyNoMoreInteractions();
     }

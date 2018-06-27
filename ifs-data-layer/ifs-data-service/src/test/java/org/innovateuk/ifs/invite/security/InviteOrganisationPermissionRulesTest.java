@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
@@ -120,8 +121,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         Application application = ApplicationBuilder.newApplication()
                 .withApplicationState(ApplicationState.CREATED).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -135,8 +136,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         Application application = ApplicationBuilder.newApplication()
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -155,8 +156,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         Application application = ApplicationBuilder.newApplication()
                 .withApplicationState(ApplicationState.CREATED).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -175,8 +176,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         Application application = ApplicationBuilder.newApplication()
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -190,8 +191,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         Application application = ApplicationBuilder.newApplication()
                 .withApplicationState(ApplicationState.SUBMITTED).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));

@@ -33,7 +33,7 @@ public class ProfileRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     @Rollback
     public void saveWithInnovationArea() {
         loginPaulPlum();
-        User user = userRepository.findOne(getPaulPlum().getId());
+        User user = userRepository.findById(getPaulPlum().getId()).get();
 
         InnovationArea innovationArea = innovationAreaRepository.findByName("Emerging technology");
         Profile profile = newProfile()
@@ -48,7 +48,7 @@ public class ProfileRepositoryIntegrationTest extends BaseRepositoryIntegrationT
 
         flushAndClearSession();
 
-        Profile retrievedProfile = repository.findOne(savedProfile.getId());
+        Profile retrievedProfile = repository.findById(savedProfile.getId()).get();
 
         assertTrue(retrievedProfile.getInnovationAreas().contains(innovationArea));
     }

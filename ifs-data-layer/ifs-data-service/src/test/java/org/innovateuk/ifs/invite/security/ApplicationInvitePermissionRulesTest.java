@@ -18,6 +18,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
@@ -70,11 +72,11 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             inviteResource.setApplication(application.getId());
             inviteResource.setInviteOrganisation(inviteOrganisation.getId());
             inviteResourceLead = newApplicationInviteResource().withApplication(application.getId()).withUsers(leadApplicant.getId()).build();
-            when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
+            when(inviteOrganisationRepositoryMock.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT)).thenReturn(true);
             when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(collaborator.getId(), applicantProcessRoles(), application.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, application.getId(), organisation.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(applicationRepository.findOne(invite.getTarget().getId())).thenReturn(application);
+            when(applicationRepository.findById(invite.getTarget().getId())).thenReturn(Optional.of(application));
         }
 
         otherLeadApplicant = newUserResource().build();
@@ -148,7 +150,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         invite = newApplicationInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
         inviteResource.setApplication(application.getId());
         inviteResource.setInviteOrganisation(inviteOrganisation.getId());
-        when(applicationRepository.findOne(invite.getTarget().getId())).thenReturn(application);
+        when(applicationRepository.findById(invite.getTarget().getId())).thenReturn(Optional.of(application));
 
         assertFalse(rules.leadApplicantAndNotDeleteOwnInviteToTheApplication(inviteResource, leadApplicant));
         assertFalse(rules.leadApplicantAndNotDeleteOwnInviteToTheApplication(inviteResource, collaborator));

@@ -106,19 +106,19 @@ public class QuestionReassignmentServiceImplTest {
 
         InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock);
 
-        inOrder.verify(formInputResponseRepositoryMock).save(
+        inOrder.verify(formInputResponseRepositoryMock).saveAll(
                 createLambdaMatcher((List<FormInputResponse> actual) ->
                         actual.stream().allMatch(fir -> fir.getUpdatedBy().equals(leadApplicantProcessRole))
                 )
         );
-        inOrder.verify(questionStatusRepositoryMock).save(
+        inOrder.verify(questionStatusRepositoryMock).saveAll(
                 createLambdaMatcher((List<QuestionStatus> actual) ->
                         actual.stream().allMatch(qs -> qs.getMarkedAsCompleteBy().equals(leadApplicantProcessRole) &&
                                 qs.getAssignedBy().equals(leadApplicantProcessRole) &&
                                 qs.getAssignee().equals(leadApplicantProcessRole))
                 )
         );
-        inOrder.verify(questionStatusRepositoryMock).delete(anyCollectionOf(QuestionStatus.class));
+        inOrder.verify(questionStatusRepositoryMock).deleteAll(anyCollectionOf(QuestionStatus.class));
 
         inOrder.verifyNoMoreInteractions();
     }
@@ -180,12 +180,12 @@ public class QuestionReassignmentServiceImplTest {
 
         InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock);
 
-        inOrder.verify(formInputResponseRepositoryMock).save(
+        inOrder.verify(formInputResponseRepositoryMock).saveAll(
                 createLambdaMatcher((List<FormInputResponse> actual) ->
                         actual.stream().allMatch(fir -> fir.getUpdatedBy().equals(organisationProcessRoles.get(0)))
                 )
         );
-        inOrder.verify(questionStatusRepositoryMock).save(
+        inOrder.verify(questionStatusRepositoryMock).saveAll(
                 createLambdaMatcher((List<QuestionStatus> actual) ->
                         actual.stream().allMatch(qs -> qs.getMarkedAsCompleteBy().equals(organisationProcessRoles.get(0)) &&
                                 qs.getAssignedBy().equals(organisationProcessRoles.get(0)) &&
@@ -193,7 +193,7 @@ public class QuestionReassignmentServiceImplTest {
                         )
                 )
         );
-        inOrder.verify(questionStatusRepositoryMock).delete(anyCollectionOf(QuestionStatus.class));
+        inOrder.verify(questionStatusRepositoryMock).deleteAll(anyCollectionOf(QuestionStatus.class));
 
         inOrder.verifyNoMoreInteractions();
     }
