@@ -10,6 +10,7 @@ import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -81,31 +83,25 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     public ApplicationDataBuilder markApplicationDetailsComplete(boolean markAsComplete) {
-        return asLeadApplicant(data -> {
-            if (markAsComplete) {
-                QuestionResource questionResource = simpleFindFirst(questionService.findByCompetition(data
-                                .getCompetition()
-                                .getId())
-                                .getSuccess(),
-                        x -> APPLICATION_DETAILS.equals(x.getQuestionSetupType())).get();
-
-                questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
-                                .getApplication()
-                                .getId()),
-                        retrieveLeadApplicant(data.getApplication().getId()).getId())
-                        .getSuccess();
-            }
-        });
+        return markQuestionComplete(markAsComplete, APPLICATION_DETAILS);
     }
 
     public ApplicationDataBuilder markApplicationTeamComplete(boolean markAsComplete) {
+        return markQuestionComplete(markAsComplete, APPLICATION_TEAM);
+    }
+
+    public ApplicationDataBuilder markResearchCategoryComplete(boolean markAsComplete) {
+        return markQuestionComplete(markAsComplete, RESEARCH_CATEGORY);
+    }
+
+    private ApplicationDataBuilder markQuestionComplete(boolean markAsComplete, QuestionSetupType type) {
         return asLeadApplicant(data -> {
             if (markAsComplete) {
                 QuestionResource questionResource = simpleFindFirst(questionService.findByCompetition(data
                                 .getCompetition()
                                 .getId())
                                 .getSuccess(),
-                        x -> APPLICATION_TEAM.equals(x.getQuestionSetupType())).get();
+                        x -> type.equals(x.getQuestionSetupType())).get();
 
                 questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
