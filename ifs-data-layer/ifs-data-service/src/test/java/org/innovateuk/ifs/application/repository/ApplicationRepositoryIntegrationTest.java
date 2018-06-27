@@ -13,6 +13,8 @@ import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.workflow.domain.ProcessHistory;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -54,9 +58,42 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     private ProjectRepository projectRepository;
 
     @Autowired
+    private EntityManager entityManager; // avoiding having a ProcessHistoryRepository as we don't want it in application code
+
+    @Autowired
     @Override
     protected void setRepository(ApplicationRepository repository) {
         this.repository = repository;
+    }
+
+    @Before
+    public void loginForAuditFields() {
+        loginSteveSmith();
+    }
+
+    @Test
+    public void processHistory() {
+        Competition competition = newCompetition().with(id(null)).build();
+        competitionRepository.save(competition);
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .withActivityState(CREATED, SUBMITTED)
+                .with(id(null))
+                .build();
+
+        applicationRepository.save(application);
+        flushAndClearSession();
+
+        assertEquals(1, repository.countByCompetitionId(competition.getId()));
+
+        ProcessHistory processHistory =
+                entityManager.createQuery(
+                        "select h from ProcessHistory h join fetch h.process p join fetch p.target t",
+                        ProcessHistory.class
+                ).getSingleResult();
+
+        assertEquals(application.getApplicationProcess().getId(), processHistory.getProcess().getId());
     }
 
     @Test
