@@ -19,7 +19,7 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(10)
+@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -30,6 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         super(true);
     }
 
+    @Value("${management.contextPath}")
+    private String monitoringEndpoint;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -37,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .anonymous().and()
             .authorizeRequests()
+                .antMatchers(monitoringEndpoint+"/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling().and()

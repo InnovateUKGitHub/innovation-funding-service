@@ -27,6 +27,8 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
  * This controller handles requests by Applicants to change the research category choice for an Application.
@@ -36,7 +38,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ResearchCategoryController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
-    private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
+    static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
     private ApplicationResearchCategoryModelPopulator researchCategoryModelPopulator;
@@ -71,11 +73,6 @@ public class ResearchCategoryController {
 
         checkIfAllowed(questionId, applicationResource);
 
-        if (!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,
-                applicationResource)) {
-            throw new ForbiddenActionException();
-        }
-
         model.addAttribute("researchCategoryModel", researchCategoryModelPopulator.populate(
                 applicationResource, loggedInUser.getId(), questionId, false));
         researchCategoryFormPopulator.populate(applicationResource, researchCategoryForm);
@@ -86,26 +83,30 @@ public class ResearchCategoryController {
     @PostMapping(params = {"researchCategory"})
     public String submitResearchCategoryChoice(@ModelAttribute(FORM_ATTR_NAME) @Valid ResearchCategoryForm
                                                        researchCategoryForm,
-                                               BindingResult bindingResult,
-                                               HttpServletResponse response,
+                                               @SuppressWarnings("unused") BindingResult bindingResult,
                                                ValidationHandler validationHandler,
+                                               HttpServletResponse response,
                                                Model model,
                                                UserResource loggedInUser,
                                                @PathVariable long applicationId,
                                                @PathVariable long questionId) {
-
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
-
-        checkIfAllowed(questionId, applicationResource);
-
         Supplier<String> failureView = () -> getResearchCategories(model, loggedInUser, researchCategoryForm,
                 applicationId, questionId);
 
-        return validationHandler.addAnyErrors(saveResearchCategoryChoice(applicationId, researchCategoryForm))
-                .failNowOrSucceedWith(failureView, () -> {
-                    cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
-                    return getRedirectUrl(applicationResource, questionId);
-                });
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ApplicationResource applicationResource = applicationService.getById(applicationId);
+
+            checkIfAllowed(questionId, applicationResource);
+
+            ServiceResult<ApplicationResource> updateResult = saveResearchCategoryChoice(applicationId,
+                    researchCategoryForm);
+
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> {
+                        cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
+                        return getRedirectUrl(applicationResource, questionId);
+                    });
+        });
     }
 
     private ServiceResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm
