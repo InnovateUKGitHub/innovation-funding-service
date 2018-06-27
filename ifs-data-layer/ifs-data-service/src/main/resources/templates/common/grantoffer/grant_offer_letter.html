@@ -12,7 +12,6 @@
       <div class="textcenter">
           <#-- todo; figure out how we can make this a local url, relative paths don't work so would maybe sending the current environemnt url would work? -->
           <img width="200" src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png" alt="Innovate UK" />
-
       </div>
       <p>
           <#if LeadContact?has_content>${LeadContact}<br/></#if>
@@ -23,34 +22,22 @@
           <#if TownCity?has_content>${TownCity}<br/></#if>
           <#if PostCode?has_content>${PostCode}<br/></#if>
       </p>
-      <p class="bold">
-          Application number: ${ApplicationNumber}<br/>
-
-          <#assign sendDate = .now>
-              Date: ${sendDate?string["d MMMM yyyy"]}
+      <p>
+          <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
+          <span class="bold">Project title:</span> ${ProjectTitle}<br/>
+          <span class="bold">Competition:</span> ${CompetitionName}
       </p>
-      <p class="bold">
-          Dear ${LeadContact},
+      <p><#assign sendDate = .now>
+          <span class="bold">Date:</span> ${sendDate?string["d MMMM yyyy"]}
       </p>
-
       <p class="bold">Grant Offer Letter</p>
-      <p class="bold">
-          Competition: ${CompetitionName}<br/>
-          Project Title: ${ProjectTitle}
-      </p>
-      <p>We are pleased to confirm your grant, subject to our terms and conditions.</p>
-      <p>Your individual grant allocations are detailed in the Annexes. These allocations are final and not subject to further negotiation or amendment.</p>
-      <p>Any additional terms or conditions of this award are included with this grant offer letter. </p>
-
-      <p class="bold">Acceptance: Start and end dates</p>
-      <p>
-          You must now notify Innovate UK of the project’s start and end dates by completing, signing and returning the Annex to
-          grants@innovateuk.ukri.org.
-      </p>
-      <p>
-          Your award will be withdrawn if you do not confirm your start date within 31 calendar days of this letter. Any costs incurred prior to that start date will be ineligible for grant.
-      </p>
-      <p>Your approved project start and end dates can only be changed by submitting a request through your Monitoring Officer.</p>
+      <p>Dear ${LeadContact},</p>
+      <p>We are pleased to confirm your grant award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service. This includes any additional terms and conditions attached to this notice.</p>
+      <p>Your individual grant allocations are detailed in the attached annexes. These allocations are final and not subject to further negotiation or amendment.</p>
+      <p class="bold">Accepting your award</p>
+      <p>To confirm you want to accept, please complete and sign annex 1 attached to this notice. You should return this through the Innovation Funding Service.</p>
+      <p>Acceptance includes confirming your project start and end dates. Once your acceptance is approved, these can only be changed by submitting a request through your Monitoring Officer. </p>
+      <p>Your award will be withdrawn if you do not confirm your start date within one calendar month of this letter. Any costs incurred before that start date will be ineligible for grant unless you have made other arrangements.</p>
       <p>We wish you every success with your project.</p>
       <p>Yours sincerely</p>
       <p><br/>
@@ -58,48 +45,44 @@
           Delivery and Insight Manager
       </p>
       <p class="textcenter"><br/>
-          Innovate UK is the trading name of the Technology Strategy Board <br/>
+          Innovate UK is part of UK Research and Innovation <br/>
           Innovate UK, Polaris House, North Star Avenue, Swindon SN2 1FL <br/>
           Tel:+44 (0)1793 442 700 <br/>
           Email: support@innovateuk.ukri.org <br/>
-          www.innovateuk.gov.uk <br/>
+          www.innovateuk.gov.uk
       </p>
-
   </div>
   <div class="page">
       <h2>ANNEX</h2>
       <h2 class="bold">ACCEPTANCE OF AWARD</h2>
-      <p class="bold">
-          Application number: ${ApplicationNumber}<br/>
-          Date: ${sendDate?string["d MMMM yyyy"]}<br/>
-          Innovate UK: ${CompetitionName}<br/>
-          Project Title: ${ProjectTitle}
-      </p>
       <p>
-          I accept the offer on behalf of the project, set out in the grant offer letter and in the schedules attached. I make the following declarations:
+          <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
+          <span class="bold">Project title:</span> ${ProjectTitle}<br/>
+          <span class="bold">Competition:</span> ${CompetitionName}
       </p>
-      <ol>
-          <li>For the purposes of the offer:
-              <ol>
-                  <li>Project Start Date ${ProjectStartDate}</li>
-                  <li>Project Length  ${ProjectLength} months</li>
-              </ol>
-          </li>
-      </ol>
+      <p><span class="bold">Date:</span> ${sendDate?string["d MMMM yyyy"]}</p>
       <p>
-          For ease of administration, the project start date should always lie on the start of a calendar month, and the project end date at the end of the last calendar month as defined by the project length.
+          I accept, on behalf of the project, the offer as set out in the grant offer letter and in the schedules attached. I declare for the purposes of the offer:
       </p>
+      <ul>
+          <li>project start date: ${ProjectStartDate}</li>
+          <li>project length: ${ProjectLength} months</li>
+      </ul>
       <p class="signature">Signed: ………………………………………………………….</p>
-      <p>Director for and on behalf of ${LeadOrgName}</p>
+      <p>Project Manager for and on behalf of Empire Ltd</p>
+      <p><br/></p>
       <p class="signature">* Print name:.……………………………………......................... </p>
       <p>Date: …………………………………………………………….</p>
   </div>
   <div class="page">
         <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
-        <p>Application number: 121</p>
-        <p>Date: 8 May 2018</p>
-        <p>Competition: Rolling stock future developments</p>
-        <p>Project Title: High-speed rail and its effects on air quality</p>
+        <p><span class="bold">Project finances:</span> Breakdown by organisation</p>
+        <p>
+          <span class="bold">Application number:</span> 121<br/>
+          <span class="bold">Project title:</span>High-speed rail and its effects on air quality<br/>
+          <span class="bold">Competition:</span> Rolling stock future developments
+        </p>
+        <p><span class="bold">Date:</span> 8 May 2018</p>
         <table class="table-overview extra-margin-bottom">
             <col style="width:40%"/>
             <col style="width:20%"/>
@@ -162,7 +145,6 @@
             </tr>
             </tbody>
         </table>
-
         <table class="table-overview extra-margin-bottom">
             <col style="width:40%"/>
             <col style="width:20%"/>
@@ -177,9 +159,17 @@
             </tr>
             </tbody>
         </table>
-    </div>
+  </div>
   <div class="page landscape">
-        <table class="table-overview" style="width: 100%">
+        <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS #1</h2>
+        <p><span class="bold">Project finances:</span> Breakdown by organisation</p>
+        <p>
+          <span class="bold">Application number:</span> 121<br/>
+          <span class="bold">Project title:</span>High-speed rail and its effects on air quality<br/>
+          <span class="bold">Competition:</span> Rolling stock future developments
+        </p>
+        <p><span class="bold">Date:</span> 8 May 2018</p>
+        <table class="table-overview">
             <thead>
             <tr>
                 <th scope="col" class="bold">Industry costs</th>
@@ -295,8 +285,16 @@
             </tr>
             </tbody>
         </table>
-    </div>
+  </div>
   <div class="page landscape">
+        <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS #2</h2>
+        <p><span class="bold">Project finances:</span> Breakdown by organisation</p>
+        <p>
+          <span class="bold">Application number:</span> 121<br/>
+          <span class="bold">Project title:</span>High-speed rail and its effects on air quality<br/>
+          <span class="bold">Competition:</span> Rolling stock future developments
+        </p>
+        <p><span class="bold">Date:</span> 8 May 2018</p>
         <table class="table-overview">
             <thead>
             <tr>
@@ -355,6 +353,6 @@
             </tr>
             </tbody>
         </table>
-    </div>
+  </div>
 </body>
 </html>
