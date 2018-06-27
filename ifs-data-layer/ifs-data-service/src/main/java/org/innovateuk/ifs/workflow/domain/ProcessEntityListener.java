@@ -24,6 +24,6 @@ public class ProcessEntityListener {
 
     @PreUpdate
     public void preUpdate(Process process) {
-        getEntityManager().persist(new ProcessHistory(process));
+        getEntityManager().persist(new ProcessHistory(process, process.getProcessState()));
     }
 }

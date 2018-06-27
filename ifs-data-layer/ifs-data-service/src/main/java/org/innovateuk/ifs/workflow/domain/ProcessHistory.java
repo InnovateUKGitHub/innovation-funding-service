@@ -3,6 +3,7 @@ package org.innovateuk.ifs.workflow.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.workflow.resource.ProcessState;
 
 import javax.persistence.*;
 
@@ -15,22 +16,26 @@ public class ProcessHistory extends AuditableEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name="process_id", referencedColumnName = "id")
-    private Process process;
+    private final Process process;
+
+    private final String processStateName;
 
     public ProcessHistory() {
         this.process = null;
+        this.processStateName = null;
     }
 
-    public ProcessHistory(Process process) {
+    public ProcessHistory(Process process, ProcessState processStateName) {
         this.process = process;
-    }
-
-    public Long getId() {
-        return id;
+        this.processStateName = process.getProcessState().getStateName();
     }
 
     public Process getProcess() {
         return process;
+    }
+
+    public String getProcessStateName() {
+        return processStateName;
     }
 
     @Override

@@ -2,6 +2,7 @@ CREATE TABLE process_history (
 
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
   process_id BIGINT(20) NOT NULL,
+  process_state_name VARCHAR(255), -- todo fk constraint?, not null
 
   -- auditable fields
   created_by BIGINT(20) NOT NULL,

@@ -94,6 +94,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 ).getSingleResult();
 
         assertEquals(application.getApplicationProcess().getId(), processHistory.getProcess().getId());
+        assertEquals(ApplicationState.CREATED.getStateName(), processHistory.getProcessStateName());
     }
 
     @Test
