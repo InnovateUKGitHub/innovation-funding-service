@@ -20,6 +20,11 @@ items:
         - image: openzipkin/zipkin
           name: zipkin
           imagePullPolicy: IfNotPresent
+          env:
+          - name: STORAGE_TYPE
+            value: mysql
+          - name: MYSQL_HOST
+            value: zipkin-database
           ports:
           - containerPort: 9410
           - containerPort: 9411
@@ -43,6 +48,9 @@ items:
     - name: 9411-tcp
       port: 9411
       targetPort: 9411
+    - name: 443-tcp
+      port: 443
+      targetPort: 9411
     selector:
       deploymentconfig: zipkin
   status:
@@ -52,9 +60,11 @@ items:
   metadata:
     name: zipkin
   spec:
-    host: <<ZIPKIN-ADDRESS>>
+    host: ${ZIPKIN_ADDRESS}
     port:
-      targetPort: 9411-tcp
+      targetPort: 443-tcp
+    tls:
+      termination: edge
     to:
       kind: Service
       name: zipkin
