@@ -250,6 +250,17 @@ IFS.core.formValidation = (function () {
       if (email) {
         var validEmail = emailRegex.test(email)
 
+        // If server response finds email already invited then cancel error msg on change of email details
+        // Get value of error msg
+        // If email is changed then remove error msg
+
+        var currentServerError = field.closest('tr').find('.error-message').text()
+        var currentServerMsgCheck = 'An invite has already been created for this email address.'
+
+        if (currentServerError === currentServerMsgCheck) {
+          IFS.core.formValidation.setValid(field, currentServerMsgCheck, displayValidationMessages)
+        }
+
         // check if email address is invalid
         if (!validEmail) {
           IFS.core.formValidation.setInvalid(field, invalidErrorMessage, displayValidationMessages)
