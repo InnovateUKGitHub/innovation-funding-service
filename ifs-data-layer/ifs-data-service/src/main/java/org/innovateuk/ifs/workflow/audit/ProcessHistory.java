@@ -8,7 +8,7 @@ import org.innovateuk.ifs.workflow.domain.Process;
 import javax.persistence.*;
 
 /**
- * A record {@link Process} state change.
+ * Records a {@link Process} state change.
  *
  * @see AuditableEntity
  * @see Process
