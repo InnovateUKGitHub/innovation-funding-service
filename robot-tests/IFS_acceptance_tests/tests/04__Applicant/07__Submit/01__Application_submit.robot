@@ -18,6 +18,8 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-942 Information message when application has reached 100% complete
 ...
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
+...
+...               IFS-3603 GDS - Satisfaction survey
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
                   #TODO IFS-3416 This ticket is in the testing backlog and covers the ${openDate} not found issue
@@ -81,6 +83,22 @@ Submit flow business lead (complete application)
     And the user should see the text in the page            Application submitted
     And The user should see the element                     link=Finished
     # TODO add check here once IFS-270 done
+
+Satisfaction survey:validations
+    [Documentation]  IFS-3603
+    [Tags]
+    When the user clicks the button/link     link=Finished
+    And the user clicks the button/link     css=.button[type="submit"]  #Send feedback
+    Then the user should see a field and summary error    Please select a level of satisfaction.
+    And the user should see a field and summary error     This field can not be left blank.
+
+Applicant submit satisfaction survey after submitting application
+    [Documentation]  IFS-3603
+    [Tags]
+    When the user selects the radio button      satisfaction  5
+    And the user enters text to a text field    name=comments  Very satisfied
+    Then the user clicks the button/link        css=.button[type="submit"]  #Send feedback
+    And the user navigates to the page          ${DASHBOARD_URL}
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
