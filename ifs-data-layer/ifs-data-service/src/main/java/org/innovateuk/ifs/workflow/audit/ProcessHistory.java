@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.workflow.domain;
+package org.innovateuk.ifs.workflow.audit;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
 
@@ -13,7 +14,7 @@ import javax.persistence.*;
  * @see Process
  */
 @Entity
-public class ProcessHistory extends AuditableEntity {
+class ProcessHistory extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,23 +26,23 @@ public class ProcessHistory extends AuditableEntity {
 
     private final String processStateName;
 
-    public ProcessHistory() {
+    ProcessHistory() {
         this.process = null;
         this.processStateName = null;
     }
 
-    public ProcessHistory(Process process) {
+    ProcessHistory(Process process) {
         if (process == null) throw new NullPointerException("process cannot be null");
 
         this.process = process;
         this.processStateName = process.getProcessState().getStateName();
     }
 
-    public Process getProcess() {
+    Process getProcess() {
         return process;
     }
 
-    public String getProcessStateName() {
+    String getProcessStateName() {
         return processStateName;
     }
 
@@ -56,6 +57,7 @@ public class ProcessHistory extends AuditableEntity {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(process, that.process)
+                .append(processStateName, that.processStateName)
                 .isEquals();
     }
 
@@ -64,6 +66,7 @@ public class ProcessHistory extends AuditableEntity {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(process)
+                .append(processStateName)
                 .toHashCode();
     }
 }

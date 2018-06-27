@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.workflow.domain;
+package org.innovateuk.ifs.workflow.audit;
 
+import org.innovateuk.ifs.workflow.domain.Process;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,20 +10,20 @@ import javax.persistence.*;
  * {@code EntityListener} to create new {@link ProcessHistory}s whenever a {@link Process} is updated.
  */
 @Component
-public class ProcessEntityListener {
+public class ProcessHistoryEntityListener {
 
     private static EntityManager entityManager;
 
     private static EntityManager getEntityManager() {
-        if (ProcessEntityListener.entityManager == null) {
+        if (ProcessHistoryEntityListener.entityManager == null) {
             throw new IllegalStateException("entityManager not autowired in ProcessEntityListener");
         }
-        return ProcessEntityListener.entityManager;
+        return ProcessHistoryEntityListener.entityManager;
     }
 
     @Autowired
     private void setEntityManager(EntityManager entityManager) {
-        ProcessEntityListener.entityManager = entityManager;
+        ProcessHistoryEntityListener.entityManager = entityManager;
     }
 
     @PreUpdate

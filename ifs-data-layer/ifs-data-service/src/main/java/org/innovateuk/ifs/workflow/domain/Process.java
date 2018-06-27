@@ -3,14 +3,13 @@ package org.innovateuk.ifs.workflow.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.workflow.audit.ProcessHistoryEntityListener;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Process defines database relations and a model to use client side and server side.
@@ -19,7 +18,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
-@EntityListeners(ProcessEntityListener.class)
+@EntityListeners(ProcessHistoryEntityListener.class)
 public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessState> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
