@@ -91,7 +91,8 @@ Applicant fills in the Application Details
     [Documentation]  INFUND-6895  INFUND-9151
     [Tags]
     When the user clicks the button/link  link=Application details
-    Then The user fills in the Application details  ${applicationWithoutGrowth}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    Then The user fills in the Application details new  ${applicationWithoutGrowth}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    And the user selects Research category new  Feasibility studies
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -284,7 +285,7 @@ The Lead Applicant fills in the Application Details for App with Growth
     [Tags]
     Given the user clicks the button/link           link=Application overview
     When the user clicks the button/link            link=Application details
-    Then the user fills in the Application details  ${applicationWithGrowth}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user fills in the Application details new  ${applicationWithGrowth}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
 
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426

@@ -40,7 +40,7 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Setup]  Log in as a different user             becky.mason@gmail.com  ${short_password}
     Given logged in user applies to competition     ${competitionName}
     When the user clicks the button/link            link=Application details
-    Then the user fills in the Application details  Application Ts&Cs  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user fills in the Application details new  Application Ts&Cs  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link            link=view the grant terms and conditions
     Then the user should see the element            jQuery=h1:contains("Terms and conditions of an Innovate UK grant award")
 
