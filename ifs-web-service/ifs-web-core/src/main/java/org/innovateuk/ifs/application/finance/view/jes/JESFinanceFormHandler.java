@@ -218,8 +218,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccess();
         } else if(params.containsKey(UPLOAD_FINANCE_DOCUMENT)) {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
-            final String formInputJesId = getJesFormInputId(fileMap.keySet());
-            final MultipartFile file = fileMap.get(formInputJesId);
+            final MultipartFile file = fileMap.get("jesFileUpload");
 
             if (file != null && !file.isEmpty()) {
             	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
@@ -233,7 +232,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                     if (result.isFailure()) {
 
                         List<Error> errors = simpleMap(result.getFailure().getErrors(),
-                                e -> fieldError(formInputJesId, e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
+                                e -> fieldError("jesFileUpload", e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
 
                         return new ValidationMessages(errors);
                     }
@@ -245,14 +244,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         return noErrors();
-    }
-
-    private String getJesFormInputId(Set<String> keys) {
-        if(keys.size() == 1) {
-            return keys.iterator().next();
-        }
-
-        return null;
     }
 
     @Override
