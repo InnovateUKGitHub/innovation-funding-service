@@ -5,6 +5,8 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -14,6 +16,7 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,6 +32,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -36,6 +40,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertThat;
@@ -58,6 +63,9 @@ public class YourFinancesSectionPopulatorTest {
     private QuestionService questionService;
 
     @Mock
+    private QuestionRestService questionRestService;
+
+    @Mock
     private FinanceService financeService;
 
     @Mock
@@ -71,7 +79,7 @@ public class YourFinancesSectionPopulatorTest {
         ApplicantSectionResource yourProjectCosts = newApplicantSectionResource().withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build();
         ApplicantSectionResource yourOrganisation = newApplicantSectionResource().withSection(newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build()).build();
         ApplicantSectionResource yourFunding = newApplicantSectionResource().withSection(newSectionResource().withType(SectionType.FUNDING_FINANCES).build()).build();
-        QuestionResource applicationDetails = newQuestionResource().build();
+        QuestionResource researchCategory = newQuestionResource().build();
         ApplicantSectionResource section = newApplicantSectionResource()
                 .withCurrentApplicant(newApplicantResource().withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build())
                 .withCurrentUser(newUserResource().build())
@@ -87,9 +95,9 @@ public class YourFinancesSectionPopulatorTest {
                 .withGrantClaimPercentage(0)
                 .build();
 
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(section.getCompetition().getId(), FormInputType.APPLICATION_DETAILS)).thenReturn(serviceSuccess(applicationDetails));
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(section.getCompetition().getId(), RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategory));
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourFunding.getSection().getId(), yourOrganisation.getSection().getId(), yourProjectCosts.getSection().getId()));
-        when(questionService.getQuestionStatusesForApplicationAndOrganisation(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asMap(applicationDetails.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build()));
+        when(questionService.getQuestionStatusesForApplicationAndOrganisation(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asMap(researchCategory.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build()));
         when(financeService.getApplicationFinanceDetails(section.getCurrentUser().getId(), section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(financeResource);
         when(financeService.getApplicationFinanceTotals(section.getApplication().getId())).thenReturn(asList(financeResource));
 
@@ -98,7 +106,7 @@ public class YourFinancesSectionPopulatorTest {
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isNotRequestingFunding(), equalTo(true));
         assertThat(viewModel.isFundingSectionLocked(), equalTo(false));
-        assertThat(viewModel.getApplicationDetailsQuestionId(), equalTo(applicationDetails.getId()));
+        assertThat(viewModel.getResearchCategoryQuestionId(), equalTo(researchCategory.getId()));
         assertThat(viewModel.getOrganisationFinance(), equalTo(financeResource));
         assertThat(viewModel.getYourOrganisationSectionId(), equalTo(yourOrganisation.getSection().getId()));
 
