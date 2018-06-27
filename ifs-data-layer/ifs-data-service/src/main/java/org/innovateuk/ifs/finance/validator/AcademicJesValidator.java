@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 
 
 /**
@@ -38,7 +38,7 @@ public class AcademicJesValidator implements Validator {
         final Application application = (Application) target;
 
         if (financeFileIsEmpty(application)) {
-            reject(errors, "validation.application.jes.upload.required");
+            rejectValue(errors, "jesFileUpload","validation.application.jes.upload.required");
         }
     }
 

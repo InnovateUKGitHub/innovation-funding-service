@@ -29,6 +29,7 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
     }
 
     @Value("${ifs.alert.service.rest.baseURL}")
+    @Override
     public void setServiceUrl(String serviceUrl) {
         this.serviceUrl = serviceUrl;
     }
