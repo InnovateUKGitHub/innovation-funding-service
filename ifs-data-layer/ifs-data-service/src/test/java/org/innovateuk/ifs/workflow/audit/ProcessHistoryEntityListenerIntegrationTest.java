@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
@@ -28,7 +29,7 @@ public class ProcessHistoryEntityListenerIntegrationTest extends BaseRepositoryI
     @Autowired
     private ApplicationRepository applicationRepository;
 
-    @Autowired
+    @PersistenceContext
     private EntityManager entityManager; // avoiding having a ProcessHistoryRepository as we don't want it in application code
 
     @Autowired
