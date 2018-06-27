@@ -75,7 +75,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
     @Before
     public void setUp() throws Exception {
         when(assessorFormInputResponseMapperMock.mapToDomain(any(AssessorFormInputResponseResource.class))).thenAnswer(invocation -> {
-            AssessorFormInputResponseResource assessorFormInputResponseResource = invocation.getArgumentAt(0, AssessorFormInputResponseResource.class);
+            AssessorFormInputResponseResource assessorFormInputResponseResource = invocation.getArgument(0);
             return newAssessorFormInputResponse()
                     .with(id(assessorFormInputResponseResource.getId()))
                     .withAssessment(newAssessment().with(id(assessorFormInputResponseResource.getAssessment())).build())

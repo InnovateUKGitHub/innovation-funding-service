@@ -14,6 +14,7 @@ import org.mockito.Mock;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
@@ -90,7 +91,7 @@ public class QuestionTemplatePersistorImplTest extends BaseServiceUnitTest<Quest
     public void deleteEntityById_questionIsDeletedAndFormInputCleanIsCalledInCorrectOrder() throws Exception {
         Question question = newQuestion().withId(1L).build();
 
-        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findById(question.getId())).thenReturn(Optional.of(question));
 
         service.deleteEntityById(question.getId());
 
@@ -98,7 +99,7 @@ public class QuestionTemplatePersistorImplTest extends BaseServiceUnitTest<Quest
         inOrder.verify(formInputTemplatePersistorMock).cleanForParentEntity(question);
         inOrder.verify(entityManagerMock).detach(question);
         inOrder.verify(setupStatusRepository).deleteByClassNameAndClassPk(Question.class.getName(), question.getId());
-        inOrder.verify(questionRepositoryMock).delete(question.getId());
+        inOrder.verify(questionRepositoryMock).deleteById(question.getId());
     }
 
     @Test
@@ -112,11 +113,11 @@ public class QuestionTemplatePersistorImplTest extends BaseServiceUnitTest<Quest
         inOrder.verify(formInputTemplatePersistorMock).cleanForParentEntity(questions.get(0));
         inOrder.verify(entityManagerMock).detach(questions.get(0));
         inOrder.verify(setupStatusRepository).deleteByClassNameAndClassPk(Question.class.getName(), questions.get(0).getId());
-        inOrder.verify(questionRepositoryMock).delete(questions.get(0).getId());
+        inOrder.verify(questionRepositoryMock).deleteById(questions.get(0).getId());
 
         inOrder.verify(formInputTemplatePersistorMock).cleanForParentEntity(questions.get(1));
         inOrder.verify(entityManagerMock).detach(questions.get(1));
         inOrder.verify(setupStatusRepository).deleteByClassNameAndClassPk(Question.class.getName(), questions.get(1).getId());
-        inOrder.verify(questionRepositoryMock).delete(questions.get(1).getId());
+        inOrder.verify(questionRepositoryMock).deleteById(questions.get(1).getId());
     }
 }
