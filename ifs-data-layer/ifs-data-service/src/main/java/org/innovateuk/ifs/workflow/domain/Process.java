@@ -19,6 +19,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
+@EntityListeners(ProcessEntityListener.class)
 public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessState> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
