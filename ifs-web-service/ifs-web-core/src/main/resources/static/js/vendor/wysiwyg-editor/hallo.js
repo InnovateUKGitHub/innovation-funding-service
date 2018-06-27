@@ -206,7 +206,12 @@
         if (!this.previousContent) {
           this.previousContent = this.originalContent;
         }
-        return this.previousContent !== this.getContents();
+        if (this.previousContent !== this.getContents()) {
+	        this.previousContent = this.getContents()
+          return true;
+        } else {
+          return false;
+        }
       },
       setUnmodified: function() {
         jQuery(this.element).removeClass('isModified');

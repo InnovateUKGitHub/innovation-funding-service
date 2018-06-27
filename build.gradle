@@ -54,7 +54,6 @@ buildscript {
 
     ext {
         springBootVersion = '1.5.11.RELEASE'
-        springCloudVersion = 'Dalston.RELEASE'
     }
 
     repositories {
