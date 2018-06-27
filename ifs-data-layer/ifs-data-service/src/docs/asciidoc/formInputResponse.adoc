@@ -1,15 +1,3 @@
-=== Find all FormInputResponse by application
-==== Request
-include::{snippets}/forminputresponse/find-by-application-id-and-question-id/http-request.adoc[]
-include::{snippets}/forminputresponse/find-by-application-id-and-question-id/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/forminputresponse/find-by-application-id-and-question-id/http-response.adoc[]
-include::{snippets}/forminputresponse/find-by-application-id-and-question-id/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/forminputresponse/find-by-application-id-and-question-id/curl-request.adoc[]
-
 === Find FormInputResponse by application and question setup type
 ==== Request
 include::{snippets}/forminputresponse/find-by-application-id-and-question-setup-type/http-request.adoc[]
