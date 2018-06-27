@@ -77,7 +77,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void findFilteredItems_findByKeywords() throws Exception {
-        Competition competition = competitionRepository.findById(COMPETITION_ID);
+        Competition competition = competitionRepository.findById(COMPETITION_ID).get();
         long innovationId = 5L;
 
         flushAndClearSession();
@@ -128,7 +128,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void findFilteredItems_findAllPublicContent() throws Exception {
-        Competition competition = competitionRepository.findById(COMPETITION_ID);
+        Competition competition = competitionRepository.findById(COMPETITION_ID).get();
         flushAndClearSession();
 
         addOpenDateToCompetition(competition, TOMORROW);
@@ -146,9 +146,9 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void findFilteredItems_findByInnovationAreaId() throws Exception {
-        Competition competition = competitionRepository.findById(COMPETITION_ID);
+        Competition competition = competitionRepository.findById(COMPETITION_ID).get();
         long innovationId = 5L;
-        Category category = categoryRepository.findOne(innovationId);
+        Category category = categoryRepository.findById(innovationId).get();
 
         flushAndClearSession();
         addOpenDateToCompetition(competition, YESTERDAY);
@@ -164,7 +164,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void findFilteredItems_findByKeywordsAndInnovationAreaId() throws Exception {
-        Competition competition = competitionRepository.findById(COMPETITION_ID);
+        Competition competition = competitionRepository.findById(COMPETITION_ID).get();
         long innovationId = 5L;
 
         flushAndClearSession();
@@ -181,7 +181,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void findFilteredItems_openCompetitionsAreFilteredFromResultListAndTotalFound() throws Exception {
-        addOpenDateToCompetition(competitionRepository.findById(COMPETITION_ID), YESTERDAY);
+        addOpenDateToCompetition(competitionRepository.findById(COMPETITION_ID).get(), YESTERDAY);
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
@@ -313,10 +313,10 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         Keyword keywordTwo = newKeyword().withKeyword("word").withPublicContent(publicContentResult).build();
         Keyword keywordThree = newKeyword().withKeyword("unique").withPublicContent(publicContentResult).build();
 
-        keywordRepository.save(asList(keywordOne, keywordTwo, keywordThree));
+        keywordRepository.saveAll(asList(keywordOne, keywordTwo, keywordThree));
 
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
-        Competition competition = competitionRepository.findOne(COMPETITION_ID);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
+        Competition competition = competitionRepository.findById(COMPETITION_ID).get();
 
         competition.setInnovationSector(innovationArea.getSector());
 
@@ -324,7 +324,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     private void createPrivateCompetition() {
-        InnovationArea innovationArea = innovationAreaRepository.findOne(6L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(6L).get();
 
         Competition privateCompetition = competitionRepository.save(newCompetition()
                 .with(id(null))
@@ -350,7 +350,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
                 .build());
 
         Keyword keywordOne = newKeyword().withKeyword("keywordoninviteonly").withPublicContent(publicContentResult).build();
-        keywordRepository.save(asList(keywordOne));
+        keywordRepository.saveAll(asList(keywordOne));
     }
 
     private void setPrivateCompetitionToPublic(){

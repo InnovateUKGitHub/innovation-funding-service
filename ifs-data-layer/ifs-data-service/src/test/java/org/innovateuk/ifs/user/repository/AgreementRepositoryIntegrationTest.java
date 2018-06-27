@@ -28,7 +28,7 @@ public class AgreementRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withText("foo", "bar")
                 .withCurrent(true, false)
                 .build(2);
-        repository.save(agreements);
+        repository.saveAll(agreements);
 
         Agreement expectedAgreement = agreements.get(0);
         Agreement agreement = repository.findByCurrentTrue();

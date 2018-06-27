@@ -50,7 +50,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
                 .with(id(null))
                 .build());
 
-        milestoneRepository.save(newMilestone()
+        milestoneRepository.saveAll(newMilestone()
                 .with(id(null))
                 .withCompetition(competition)
                 .withType(OPEN_DATE, SUBMISSION_DATE, NOTIFICATIONS)

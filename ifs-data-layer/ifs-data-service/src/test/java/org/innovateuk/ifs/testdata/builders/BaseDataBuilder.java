@@ -353,7 +353,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
             Application application = applicationRepository.findByName(applicationName).get(0);
 
-            return processRoleRepository.findByUserAndApplicationId(userRepository.findOne(user.getId()),
+            return processRoleRepository.findByUserAndApplicationId(userRepository.findById(user.getId()).get(),
                     application.getId())
                     .stream()
                     .filter(x -> x.getRole() == ASSESSOR)

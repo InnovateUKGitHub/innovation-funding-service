@@ -65,7 +65,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, SENT, PENDING);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        assessmentParticipantRepository.save(asList(
+        assessmentParticipantRepository.saveAll(asList(
                 expectedParticipant1,
                 expectedParticipant2
         ));
@@ -106,7 +106,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
     @Test
     public void getParticipants_accepted() throws Exception {
-        Competition competition1 = competitionRepository.findById(1L);
+        Competition competition1 = competitionRepository.findById(1L).get();
         competition1.setStartDate(now().minusDays(10L));
         competition1.setEndDate(now().minusDays(5L));
         competition1.notifyAssessors(now().minusSeconds(1L));
@@ -116,7 +116,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        assessmentParticipantRepository.save(asList(
+        assessmentParticipantRepository.saveAll(asList(
                 expectedParticipant1,
                 expectedParticipant2
         ));
@@ -147,7 +147,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         Competition competition1 = buildInAssessmentCompetition();
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, REJECTED);
 
-        assessmentParticipantRepository.save(singletonList(expectedParticipant1));
+        assessmentParticipantRepository.saveAll(singletonList(expectedParticipant1));
 
         flushAndClearSession();
 
@@ -168,7 +168,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        assessmentParticipantRepository.save(asList(
+        assessmentParticipantRepository.saveAll(asList(
                 expectedParticipant1,
                 expectedParticipant2
         ));

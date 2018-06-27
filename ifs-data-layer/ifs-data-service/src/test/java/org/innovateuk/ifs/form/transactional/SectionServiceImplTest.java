@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -40,7 +41,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
         Section nextSection = newSection().build();
         SectionResource nextSectionResource = newSectionResource().build();
-        when(sectionRepositoryMock.findOne(anyLong())).thenReturn(section);
+        when(sectionRepositoryMock.findById(anyLong())).thenReturn(Optional.of(section));
         when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(
                 anyLong(), anyInt()
         )).thenReturn(nextSection);
@@ -55,7 +56,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
         Section previousSection = newSection().build();
         SectionResource previousSectionResource = newSectionResource().build();
-        when(sectionRepositoryMock.findOne(anyLong())).thenReturn(section);
+        when(sectionRepositoryMock.findById(anyLong())).thenReturn(Optional.of(section));
         when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullOrderByPriorityDesc(
                 anyLong(), anyInt()
         )).thenReturn(previousSection);
@@ -71,7 +72,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         Section section = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 1, parentSection).build();
         Section siblingSection = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 2, parentSection).build();
         SectionResource siblingSectionResource = newSectionResource().withCompetitionAndPriorityAndParent(newCompetition().build().getId(), 2, parentSection.getId()).build();
-        when(sectionRepositoryMock.findOne(section.getId())).thenReturn(section);
+        when(sectionRepositoryMock.findById(section.getId())).thenReturn(Optional.of(section));
         when(sectionRepositoryMock.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(
                 anyLong(), anyLong(), anyInt()
         )).thenReturn(siblingSection);
@@ -87,7 +88,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         Section section = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 1, parentSection).build();
         Section siblingSection = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 2, parentSection).build();
         SectionResource siblingSectionResource = newSectionResource().withCompetitionAndPriorityAndParent(newCompetition().build().getId(), 2, parentSection.getId()).build();
-        when(sectionRepositoryMock.findOne(section.getId())).thenReturn(section);
+        when(sectionRepositoryMock.findById(section.getId())).thenReturn(Optional.of(section));
         when(sectionRepositoryMock.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(
                 anyLong(), anyLong(), anyInt()
         )).thenReturn(siblingSection);

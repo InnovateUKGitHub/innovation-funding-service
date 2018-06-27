@@ -100,7 +100,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withCompetition(competition)
                 .build(3);
 
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         User paulPlum = userRepository.findByEmail("paul.plum@gmail.com").orElse(null);
         User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
@@ -110,7 +110,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withName("Metallurgy", "Alchemy", "Forgemastery")
                 .build(3);
         
-        innovationAreaRepository.save(innovationAreas);
+        innovationAreaRepository.saveAll(innovationAreas);
 
         Profile profile = newProfile()
                 .withId()
@@ -137,7 +137,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                 .withName("Test Org 1", "Test Org 2", "Test 3")
                 .build(3);
 
-        organisationRepository.save(organisations);
+        organisationRepository.saveAll(organisations);
 
         processRoles.addAll(
                 newProcessRole()
@@ -148,7 +148,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
                         .build(3)
         );
 
-        processRoleRepository.save(processRoles);
+        processRoleRepository.saveAll(processRoles);
 
         AssessmentRejectOutcome rejectOutcome = newAssessmentRejectOutcome()
                 .withRejectReason(CONFLICT_OF_INTEREST)
@@ -167,7 +167,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         assessorFormInputResponseRepository.deleteAll();
         assessmentRepository.deleteAll();
-        assessmentRepository.save(assessments);
+        assessmentRepository.saveAll(assessments);
 
         flushAndClearSession();
 

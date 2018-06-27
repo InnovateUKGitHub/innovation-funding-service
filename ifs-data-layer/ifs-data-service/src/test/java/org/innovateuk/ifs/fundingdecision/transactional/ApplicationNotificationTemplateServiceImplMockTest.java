@@ -15,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -58,7 +59,7 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
         arguments.put("dashboardUrl", webBaseUrl);
         arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
 
-        when(competitionRepository.findOne(competitionId)).thenReturn(competition);
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(renderer.renderTemplate(eq(systemNotificationSource), any(),
                 eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "successful_funding_decision.html"), eq(arguments)))
                 .thenReturn(serviceSuccess("MessageBody"));
@@ -79,7 +80,7 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
         arguments.put("dashboardUrl", webBaseUrl);
         arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
 
-        when(competitionRepository.findOne(competitionId)).thenReturn(competition);
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(renderer.renderTemplate(eq(systemNotificationSource), any(),
                 eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "unsuccessful_funding_decision.html"), eq(arguments)))
                 .thenReturn(serviceSuccess("MessageBody"));
@@ -97,7 +98,7 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
 
-        when(competitionRepository.findOne(competitionId)).thenReturn(competition);
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(renderer.renderTemplate(eq(systemNotificationSource), any(),
                 eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "ineligible_application.html"), eq(arguments)))
                 .thenReturn(serviceSuccess("MessageBody"));

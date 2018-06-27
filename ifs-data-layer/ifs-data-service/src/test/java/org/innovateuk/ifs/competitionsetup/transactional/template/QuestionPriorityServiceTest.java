@@ -86,7 +86,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 .withCompetition(competition)
                 .build(3);
 
-        verify(questionRepositoryMock).save(refEq(expectedQuestions));
+        verify(questionRepositoryMock).saveAll(refEq(expectedQuestions));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 .withCompetition(competition)
                 .build(3);
 
-        verify(questionRepositoryMock).save(refEq(expectedQuestions));
+        verify(questionRepositoryMock).saveAll(refEq(expectedQuestions));
     }
 
     @Test
@@ -152,6 +152,6 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
                 .withCompetition(competition)
                 .build(3);
 
-        verify(questionRepositoryMock).save(refEq(expectedQuestions));
+        verify(questionRepositoryMock).saveAll(refEq(expectedQuestions));
     }
 }

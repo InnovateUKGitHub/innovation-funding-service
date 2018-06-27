@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupBuilder.newContentGroup;
 import static org.innovateuk.ifs.publiccontent.builder.ContentSectionBuilder.newContentSection;
@@ -38,15 +39,15 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
     @Test
     public void testExternalUsersCanViewPublishedContentGroupFiles(){
         ContentGroupCompositeId unpublishedContentGroupId = ContentGroupCompositeId.id(1L);
-        when(contentGroupRepository.findOne(unpublishedContentGroupId.id())).thenReturn(
-                newContentGroup().withContentSection(newContentSection()
-                        .withPublicContent(newPublicContent().build()).build()).build());
+        when(contentGroupRepository.findById(unpublishedContentGroupId.id())).thenReturn(
+                Optional.of(newContentGroup().withContentSection(newContentSection()
+                        .withPublicContent(newPublicContent().build()).build()).build()));
 
 
         ContentGroupCompositeId publishedContentGroupId = ContentGroupCompositeId.id(2L);;
-        when(contentGroupRepository.findOne(publishedContentGroupId.id())).thenReturn(
-                newContentGroup().withContentSection(newContentSection()
-                        .withPublicContent(newPublicContent().withPublishDate(ZonedDateTime.now()).build()).build()).build());
+        when(contentGroupRepository.findById(publishedContentGroupId.id())).thenReturn(
+                Optional.of(newContentGroup().withContentSection(newContentSection()
+                        .withPublicContent(newPublicContent().withPublishDate(ZonedDateTime.now()).build()).build()).build()));
 
 
         assertFalse(rules.externalUsersCanViewPublishedContentGroupFiles(unpublishedContentGroupId, systemRegistrationUser()));

@@ -46,7 +46,7 @@ public class FileEntryRepositoryIntegrationTest  {
         //
         // Read
         //
-        FileEntry retrieved = repository.findOne(fileEntry.getId());
+        FileEntry retrieved = repository.findById(fileEntry.getId()).get();
         assertFalse(saved == retrieved);
         assertEquals(saved.getId(), retrieved.getId());
         assertEquals(saved.getMediaType(), retrieved.getMediaType());
@@ -62,7 +62,7 @@ public class FileEntryRepositoryIntegrationTest  {
         repository.save(retrieved);
         flushAndClearSession();
 
-        FileEntry retrievedAgain = repository.findOne(fileEntry.getId());
+        FileEntry retrievedAgain = repository.findById(fileEntry.getId()).get();
         assertEquals(retrieved.getId(), retrievedAgain.getId());
         assertEquals(retrieved.getMediaType(), retrievedAgain.getMediaType());
         assertEquals(retrieved.getName(), retrievedAgain.getName());
@@ -74,7 +74,7 @@ public class FileEntryRepositoryIntegrationTest  {
         repository.delete(retrievedAgain);
         flushAndClearSession();
 
-        assertNull(repository.findOne(fileEntry.getId()));
+        assertFalse(repository.findById(fileEntry.getId()).isPresent());
     }
 
     private  void flushAndClearSession() {

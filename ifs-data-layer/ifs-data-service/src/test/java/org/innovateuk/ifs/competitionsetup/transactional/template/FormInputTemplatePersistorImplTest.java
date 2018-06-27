@@ -180,7 +180,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
         inOrder.verify(entityManagerMock).detach(formInputsList.get(0));
         inOrder.verify(entityManagerMock).detach(formInputsList.get(1));
 
-        inOrder.verify(formInputRepositoryMock).delete(formInputsList);
+        inOrder.verify(formInputRepositoryMock).deleteAll(formInputsList);
     }
 
 }

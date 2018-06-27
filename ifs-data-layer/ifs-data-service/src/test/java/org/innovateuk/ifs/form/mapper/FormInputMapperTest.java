@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static java.util.Collections.emptySet;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
@@ -41,7 +43,7 @@ public class FormInputMapperTest {
         FormInput formInput = newFormInput()
                 .withId(1L)
                 .build();
-        when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
+        when(formInputRepositoryMock.findById(any())).thenReturn(Optional.of(formInput));
 
         FormInputResource formInputResource = newFormInputResource()
                 .withAllowedFileTypes(asSet(PDF, SPREADSHEET))

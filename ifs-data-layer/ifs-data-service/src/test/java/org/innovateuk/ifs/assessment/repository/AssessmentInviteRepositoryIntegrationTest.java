@@ -147,7 +147,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     public void getByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newAssessmentInvite()
+        repository.saveAll(newAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -176,7 +176,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     public void getByCompetitionIdAndStatus_asList() throws Exception {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newAssessmentInvite()
+        repository.saveAll(newAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -201,7 +201,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     public void countByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newAssessmentInvite()
+        repository.saveAll(newAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -224,7 +224,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         long id = invite.getId();
 
-        AssessmentInvite retrievedInvite = repository.findOne(id);
+        AssessmentInvite retrievedInvite = repository.findById(id).get();
 
         assertEquals("name", retrievedInvite.getName());
         assertEquals("tom@poly.io", retrievedInvite.getEmail());
@@ -245,7 +245,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         HashSet<InviteStatus> inviteStatuses = newHashSet(CREATED);
 
-        repository.save(asList(invite1, invite2));
+        repository.saveAll(asList(invite1, invite2));
         flushAndClearSession();
 
         assertEquals(2, repository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
@@ -337,14 +337,14 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     private void addTestAssessors() {
         loginSteveSmith();
 
-        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+        InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
 
         List<Profile> profiles = newProfile()
                 .withId()
                 .withInnovationArea(innovationArea)
                 .build(4);
 
-        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.saveAll(profiles));
 
         Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
 
@@ -357,7 +357,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
         flushAndClearSession();
     }
     private void saveInvite(Competition competition, User user) {

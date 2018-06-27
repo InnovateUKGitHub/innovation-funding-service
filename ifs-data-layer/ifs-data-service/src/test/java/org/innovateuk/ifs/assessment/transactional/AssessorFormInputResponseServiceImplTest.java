@@ -30,6 +30,7 @@ import org.springframework.validation.FieldError;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
@@ -146,7 +147,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(assessmentId)
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.hasErrors()).thenReturn(false);
@@ -171,8 +172,8 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         updatedAssessorFormInputResponsesResource.getResponses().forEach(response -> {
             inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, response.getFormInput());
             inOrder.verify(assessorFormInputResponseMapperMock).mapToResource(isA(AssessorFormInputResponse.class));
-            inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-            inOrder.verify(formInputRepositoryMock).findOne(response.getFormInput());
+            inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+            inOrder.verify(formInputRepositoryMock).findById(response.getFormInput());
             inOrder.verify(validationUtilMock).validateResponse(isA(FormInputResponse.class), eq(true));
             inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
             inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
@@ -202,7 +203,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(assessmentId)
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.hasErrors()).thenReturn(false);
@@ -218,8 +219,8 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         updatedAssessorFormInputResponsesResource.getResponses().forEach(response -> {
             inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, response.getFormInput());
-            inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-            inOrder.verify(formInputRepositoryMock).findOne(response.getFormInput());
+            inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+            inOrder.verify(formInputRepositoryMock).findById(response.getFormInput());
             inOrder.verify(validationUtilMock).validateResponse(isA(FormInputResponse.class), eq(true));
             inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
             inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
@@ -249,7 +250,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(assessmentId)
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.hasErrors()).thenReturn(false);
@@ -265,8 +266,8 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         updatedAssessorFormInputResponsesResource.getResponses().forEach(response -> {
             inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, response.getFormInput());
-            inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-            inOrder.verify(formInputRepositoryMock).findOne(response.getFormInput());
+            inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+            inOrder.verify(formInputRepositoryMock).findById(response.getFormInput());
             inOrder.verify(validationUtilMock).validateResponse(isA(FormInputResponse.class), eq(true));
             inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
             inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
@@ -301,7 +302,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(assessmentId)
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.hasErrors()).thenReturn(true);
@@ -326,8 +327,8 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         updatedAssessorFormInputResponsesResource.getResponses().forEach(response -> {
             inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, response.getFormInput());
-            inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-            inOrder.verify(formInputRepositoryMock).findOne(response.getFormInput());
+            inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+            inOrder.verify(formInputRepositoryMock).findById(response.getFormInput());
             inOrder.verify(validationUtilMock).validateResponse(isA(FormInputResponse.class), eq(true));
         });
         inOrder.verifyNoMoreInteractions();
@@ -357,7 +358,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(assessmentId)
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.hasErrors()).thenReturn(false);
@@ -382,8 +383,8 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         updatedAssessorFormInputResponsesResource.getResponses().forEach(response -> {
             inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, response.getFormInput());
             inOrder.verify(assessorFormInputResponseMapperMock).mapToResource(isA(AssessorFormInputResponse.class));
-            inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-            inOrder.verify(formInputRepositoryMock).findOne(response.getFormInput());
+            inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+            inOrder.verify(formInputRepositoryMock).findById(response.getFormInput());
             inOrder.verify(validationUtilMock).validateResponse(isA(FormInputResponse.class), eq(true));
             inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
             inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
@@ -415,7 +416,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(assessmentId)
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.hasErrors()).thenReturn(false);
@@ -431,8 +432,8 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         updatedAssessorFormInputResponsesResource.getResponses().forEach(response -> {
             inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, response.getFormInput());
-            inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-            inOrder.verify(formInputRepositoryMock).findOne(response.getFormInput());
+            inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+            inOrder.verify(formInputRepositoryMock).findById(response.getFormInput());
             inOrder.verify(validationUtilMock).validateResponse(isA(FormInputResponse.class), eq(true));
             inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
             inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);

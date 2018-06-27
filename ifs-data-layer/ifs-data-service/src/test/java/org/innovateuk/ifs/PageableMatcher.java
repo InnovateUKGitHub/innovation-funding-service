@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Matcher for pageable objects in a repository call
  */
-public class PageableMatcher extends ArgumentMatcher<Pageable> {
+public class PageableMatcher implements ArgumentMatcher<Pageable> {
     public static Sort srt(String field, Direction dir) {
         Sort sort = new Sort();
         sort.setField(field);
@@ -31,8 +31,7 @@ public class PageableMatcher extends ArgumentMatcher<Pageable> {
     }
 
     @Override
-    public boolean matches(Object argument) {
-        Pageable arg = (Pageable) argument;
+    public boolean matches(Pageable arg) {
 
         if (!(expectedPage == arg.getPageNumber())) {
             return false;

@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -98,7 +99,7 @@ public class AssessorInviteOverviewMapperTest {
                 .withInnovationArea(innovationArea)
                 .build();
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
 
         AssessmentParticipant assessmentParticipant =
@@ -114,7 +115,7 @@ public class AssessorInviteOverviewMapperTest {
                 assessorInviteOverviewMapper.mapToResource(assessmentParticipant);
 
         verify(participantStatusMapperMock).mapToResource(ParticipantStatus.PENDING);
-        verify(profileRepositoryMock).findOne(profile.getId());
+        verify(profileRepositoryMock).findById(profile.getId());
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
 
         assertThat(assessorInviteOverviewResource).isEqualToComparingFieldByField(
@@ -153,7 +154,7 @@ public class AssessorInviteOverviewMapperTest {
                 .withInnovationArea(innovationArea)
                 .build();
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
 
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource().build();
 
@@ -181,7 +182,7 @@ public class AssessorInviteOverviewMapperTest {
                 assessorInviteOverviewMapper.mapToResource(competitionParticipant);
 
         verify(participantStatusMapperMock).mapToResource(ParticipantStatus.PENDING);
-        verify(profileRepositoryMock).findOne(profile.getId());
+        verify(profileRepositoryMock).findById(profile.getId());
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
 
         assertThat(assessorInviteOverviewResource).isEqualToComparingFieldByField(
@@ -204,7 +205,7 @@ public class AssessorInviteOverviewMapperTest {
                 .withInnovationArea(innovationArea)
                 .build();
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
 
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(newInnovationAreaResource().build());
 

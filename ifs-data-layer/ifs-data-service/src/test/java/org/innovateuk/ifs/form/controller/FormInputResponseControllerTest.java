@@ -121,8 +121,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         when(formInputResponseServiceMock.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
             @Override
-            public boolean matches(Object argument) {
-                FormInputResponseCommand firArgument = (FormInputResponseCommand) argument;
+            public boolean matches(FormInputResponseCommand firArgument) {
                 assertEquals(appId, firArgument.getApplicationId());
                 assertEquals(userId, firArgument.getUserId());
                 assertEquals(formInputId, firArgument.getFormInputId());

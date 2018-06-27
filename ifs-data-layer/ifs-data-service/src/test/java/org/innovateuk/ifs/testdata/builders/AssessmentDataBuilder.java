@@ -42,7 +42,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
 
             testService.doWithinTransaction(() -> {
 
-                Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
+                Assessment assessment = assessmentRepository.findById(assessmentResource.getId()).get();
                 doAs(compAdmin(), () -> assessmentWorkflowHandler.notify(assessment));
             });
 
@@ -66,7 +66,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
 
             if (EnumSet.of(OPEN).contains(state)) {
                 testService.doWithinTransaction(() -> {
-                    Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
+                    Assessment assessment = assessmentRepository.findById(assessmentResource.getId()).get();
                     assessment.setProcessState(state);
                 });
             }

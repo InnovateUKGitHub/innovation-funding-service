@@ -51,7 +51,7 @@ public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<Question
                 .withCompetition(competition)
                 .build(4);
 
-        verify(questionRepositoryMock, times(1)).save(refEq(updatedAssessedQuestions));
+        verify(questionRepositoryMock, times(1)).saveAll(refEq(updatedAssessedQuestions));
     }
 
 }

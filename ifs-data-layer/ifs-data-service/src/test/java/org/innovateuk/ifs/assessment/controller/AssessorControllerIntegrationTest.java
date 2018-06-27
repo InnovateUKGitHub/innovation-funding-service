@@ -53,7 +53,7 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
     public void getAssessorProfile() throws Exception {
         loginCompAdmin();
 
-        User user = userRepository.findOne(3L);
+        User user = userRepository.findById(3L).get();
 
         Profile profile = newProfile()
                 .with(id(null))

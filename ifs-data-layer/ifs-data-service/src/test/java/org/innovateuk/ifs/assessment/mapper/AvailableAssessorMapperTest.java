@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static freemarker.template.utility.Collections12.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -58,7 +60,7 @@ public class AvailableAssessorMapperTest {
                 )
                 .build();
 
-        when(profileRepository.findOne(profile.getId())).thenReturn(profile);
+        when(profileRepository.findById(profile.getId())).thenReturn(Optional.of(profile));
 
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource().build();
         when(innovationAreaMapper.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
@@ -77,7 +79,7 @@ public class AvailableAssessorMapperTest {
                         .build()
         );
 
-        verify(profileRepository).findOne(profile.getId());
+        verify(profileRepository).findById(profile.getId());
         verify(innovationAreaMapper).mapToResource(innovationArea);
     }
 }

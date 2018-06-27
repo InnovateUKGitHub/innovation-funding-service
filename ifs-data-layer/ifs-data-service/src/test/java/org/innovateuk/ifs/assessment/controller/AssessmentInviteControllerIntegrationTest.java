@@ -111,13 +111,13 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void setup() {
         loginSystemRegistrationUser();
 
-        competition = competitionRepository.findOne(1L);
+        competition = competitionRepository.findById(1L).get();
 
         List<Profile> profiles = newProfile()
                 .withId()
                 .build(2);
 
-        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.saveAll(profiles));
 
         paulPlum = userRepository.findByEmail("paul.plum@gmail.com").orElse(null);
         felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
@@ -125,13 +125,13 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         paulPlum.setProfileId(savedProfiles.get(0).getId());
         felixWilson.setProfileId(savedProfiles.get(1).getId());
 
-        userRepository.save(asList(paulPlum, felixWilson));
+        userRepository.saveAll(asList(paulPlum, felixWilson));
     }
 
     @Test
     public void getAllInvitesToSend() {
         InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
-        assessmentInviteRepository.save(
+        assessmentInviteRepository.saveAll(
                 newAssessmentInvite()
                         .with(id(null))
                         .withName("James Smith", "Peter Mason")
@@ -162,7 +162,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void getAllInvitesToResend() {
         InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
 
-        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(assessmentInviteRepository.save(
+        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(assessmentInviteRepository.saveAll(
                 newAssessmentInvite()
                         .with(id(null))
                         .withName("James Smith", "Peter Mason")
@@ -421,7 +421,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
     @Test
     public void acceptInvite_newAssessor() throws Exception {
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
         assessmentParticipantRepository.save(newAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
@@ -444,7 +444,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isSuccess());
 
-        Profile profile = profileRepository.findOne(getPaulPlum().getProfileId());
+        Profile profile = profileRepository.findById(getPaulPlum().getProfileId()).get();
 
         assertEquals(singleton(innovationArea), profile.getInnovationAreas());
     }
@@ -647,7 +647,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
     @Test
     public void inviteNewUser() throws Exception {
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
 
         NewUserStagedInviteResource newUserStagedInvite = newNewUserStagedInviteResource()
                 .withName("new user name")
@@ -669,7 +669,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
     @Test
     public void inviteNewUsers() throws Exception {
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
 
         NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
 
@@ -692,9 +692,9 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     @Test
     public void inviteNewUsers_competitionNotFound() throws Exception {
         long competitionId = 10000L;
-        assertNull(competitionRepository.findOne(competitionId));
+        assertFalse(competitionRepository.findById(competitionId).isPresent());
 
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
 
         loginCompAdmin();
         NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competitionId, innovationArea.getId());
@@ -707,7 +707,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     @Test
     public void inviteNewUsers_innovationAreaNotFound() throws Exception {
         long innovationAreaId = 10000L;
-        assertNull(innovationAreaRepository.findOne(innovationAreaId));
+        assertFalse(innovationAreaRepository.findById(innovationAreaId).isPresent());
 
         loginCompAdmin();
         NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), innovationAreaId);
@@ -723,7 +723,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
     @Test
     public void inviteNewUsers_userExists() throws Exception {
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
 
         assessmentInviteRepository.save(new AssessmentInvite("Test Name 1", "testname1@for-this.address", "hash", competition, innovationArea));
 
@@ -767,7 +767,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withCompetition(competition, competition)
                 .withStatus(CREATED, CREATED)
                 .build(2);
-        assessmentInviteRepository.save(invitesToSend);
+        assessmentInviteRepository.saveAll(invitesToSend);
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -793,7 +793,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withStatus(SENT, SENT)
                 .withSentOn(initialInviteDate)
                 .build(2);
-        assessmentInviteRepository.save(invitesToResend);
+        assessmentInviteRepository.saveAll(invitesToResend);
 
         List<AssessmentParticipant> assessmentParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -804,9 +804,9 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withUser()
                 .build(2);
 
-        assessmentParticipantRepository.save(assessmentParticipants);
+        assessmentParticipantRepository.saveAll(assessmentParticipants);
 
-        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(assessmentInviteRepository.save(invitesToResend)
+        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(assessmentInviteRepository.saveAll(invitesToResend)
                 .iterator()), AssessmentInvite::getId);
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
@@ -819,9 +819,9 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         RestResult<Void> serviceResult = controller.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        AssessmentInvite inviteOne = assessmentInviteRepository.findOne(inviteIds.get(0));
+        AssessmentInvite inviteOne = assessmentInviteRepository.findById(inviteIds.get(0)).get();
         ZonedDateTime inviteOneResendDate = inviteOne.getSentOn();
-        AssessmentInvite inviteTwo = assessmentInviteRepository.findOne(inviteIds.get(1));
+        AssessmentInvite inviteTwo = assessmentInviteRepository.findById(inviteIds.get(1)).get();
         ZonedDateTime inviteTwoResendDate = inviteTwo.getSentOn();
 
         assertTrue(inviteOneResendDate.isAfter(initialInviteDate));
@@ -841,7 +841,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                         .withHash("hash")
                         .withCompetition(competition)
                         .withStatus(CREATED)
-                        .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
+                        .withInnovationArea(innovationAreaRepository.findById(INNOVATION_AREA_ID).get()) // 'new invite'
                         .build()
         );
 
@@ -861,7 +861,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     @Test
     public void getInviteStatistics() throws Exception {
         loginCompAdmin();
-        assessmentInviteRepository.save(newAssessmentInvite()
+        assessmentInviteRepository.saveAll(newAssessmentInvite()
                 .with(id(null))
                 .withStatus(CREATED, SENT, OPENED)
                 .withCompetition(competition)
@@ -869,7 +869,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withEmail("created@competition.com", "sent@competition.com", "opened@competition.com")
                 .withHash("created", "sent", "opened")
                 .build(3));
-        assessmentParticipantRepository.save(newAssessmentParticipant()
+        assessmentParticipantRepository.saveAll(newAssessmentParticipant()
                 .with(id(null))
                 .withCompetition(competition)
                 .withRole(ASSESSOR)
@@ -966,14 +966,14 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void getAvailableAssessors_sortsFirstAndLastName() throws Exception {
         loginCompAdmin();
 
-        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+        InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
 
         List<Profile> profiles = newProfile()
                 .withId()
                 .withInnovationArea(innovationArea)
                 .build(4);
 
-        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.saveAll(profiles));
 
         Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
 
@@ -986,7 +986,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withProfileId(profileIds)
                 .build(4);
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
         flushAndClearSession();
 
         Pageable pageable = new PageRequest(0, 10, new Sort(ASC, "firstName", "lastName"));
@@ -1024,14 +1024,14 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     }
 
     private void addTestAssessors() {
-        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+        InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
 
         List<Profile> profiles = newProfile()
                 .withId()
                 .withInnovationArea(innovationArea)
                 .build(4);
 
-        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.saveAll(profiles));
 
         Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
 
@@ -1044,7 +1044,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
         flushAndClearSession();
     }
 
@@ -1099,7 +1099,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     }
 
     private void addTestCreatedInvites() {
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
 
         List<AssessmentInvite> createdInvites = newAssessmentInvite()
                 .withId()
@@ -1122,7 +1122,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         createdInvites.addAll(existingUserInvites);
 
-        assessmentInviteRepository.save(createdInvites);
+        assessmentInviteRepository.saveAll(createdInvites);
         flushAndClearSession();
     }
 
@@ -1130,17 +1130,17 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void getAssessorsNotAcceptedInviteIds() throws Exception {
         loginCompAdmin();
 
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
-        InnovationArea otherInnovationArea = innovationAreaRepository.findOne(10L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
+        InnovationArea otherInnovationArea = innovationAreaRepository.findById(10L).get();
 
         Optional<Long> innovationAreaId = of(innovationArea.getId());
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
 
-        Agreement agreement = agreementRepository.findOne(1L);
+        Agreement agreement = agreementRepository.findById(1L).get();
 
-        Profile profile1 = profileRepository.findOne(paulPlum.getProfileId());
-        Profile profile2 = profileRepository.findOne(felixWilson.getProfileId());
+        Profile profile1 = profileRepository.findById(paulPlum.getProfileId()).get();
+        Profile profile2 = profileRepository.findById(felixWilson.getProfileId()).get();
 
         profile1.setBusinessType(ACADEMIC);
         profile1.setSkillsAreas("Skill area 1");
@@ -1163,7 +1163,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         assertTrue(inviteIds.isEmpty());
 
-        profileRepository.save(asList(profile1, profile2));
+        profileRepository.saveAll(asList(profile1, profile2));
 
         paulPlum.setAffiliations(
                 newAffiliation()
@@ -1185,7 +1185,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                         .build(2)
         );
 
-        userRepository.save(asList(paulPlum, felixWilson));
+        userRepository.saveAll(asList(paulPlum, felixWilson));
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .withId()
@@ -1206,7 +1206,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withRole(ASSESSOR)
                 .build(6);
 
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
         flushAndClearSession();
 
         inviteIds = controller.getAssessorsNotAcceptedInviteIds(
@@ -1223,13 +1223,13 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void getInvitationOverview() throws Exception {
         loginCompAdmin();
 
-        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
-        InnovationArea otherInnovationArea = innovationAreaRepository.findOne(10L);
+        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
+        InnovationArea otherInnovationArea = innovationAreaRepository.findById(10L).get();
 
-        Agreement agreement = agreementRepository.findOne(1L);
+        Agreement agreement = agreementRepository.findById(1L).get();
 
-        Profile profile1 = profileRepository.findOne(paulPlum.getProfileId());
-        Profile profile2 = profileRepository.findOne(felixWilson.getProfileId());
+        Profile profile1 = profileRepository.findById(paulPlum.getProfileId()).get();
+        Profile profile2 = profileRepository.findById(felixWilson.getProfileId()).get();
 
         profile1.setBusinessType(ACADEMIC);
         profile1.setSkillsAreas("Skill area 1");
@@ -1243,7 +1243,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         profile2.setAgreementSignedDate(now().minusDays(10));
         profile2.addInnovationArea(innovationArea);
 
-        profileRepository.save(asList(profile1, profile2));
+        profileRepository.saveAll(asList(profile1, profile2));
 
         paulPlum.setAffiliations(
                 newAffiliation()
@@ -1265,7 +1265,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                         .build(2)
         );
 
-        userRepository.save(asList(paulPlum, felixWilson));
+        userRepository.saveAll(asList(paulPlum, felixWilson));
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .withId()
@@ -1286,7 +1286,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withRole(ASSESSOR)
                 .build(6);
 
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
         flushAndClearSession();
 
         Optional<Long> innovationAreaId = of(innovationArea.getId());
@@ -1317,7 +1317,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
     @Test
     public void deleteInvite() throws Exception {
-        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+        InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
 
         AssessmentInvite savedCompetition = assessmentInviteRepository.save(
                 new AssessmentInvite("Test Tester", "test@test.com", "hash1", competition, innovationArea)
@@ -1332,7 +1332,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         flushAndClearSession();
 
-        assertNull(assessmentInviteRepository.findOne(savedCompetition.getId()));
+        assertFalse(assessmentInviteRepository.findById(savedCompetition.getId()).isPresent());
     }
 
 
@@ -1340,9 +1340,9 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void deleteAllInvites() throws Exception {
         HashSet<InviteStatus> inviteStatuses = newHashSet(CREATED);
 
-        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+        InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
 
-        assessmentInviteRepository.save(asList(
+        assessmentInviteRepository.saveAll(asList(
                 new AssessmentInvite("Test Tester 1", "test1@test.com", "hash1", competition, innovationArea),
                 new AssessmentInvite("Test Tester 2", "test2@test.com", "hash2", competition, innovationArea)
         ));

@@ -46,7 +46,7 @@ public class InnovationSectorRepositoryIntegrationTest extends BaseRepositoryInt
                 )
                 .build(3);
 
-        repository.save(innovationSectors);
+        repository.saveAll(innovationSectors);
         flushAndClearSession();
 
         List<InnovationSector> actual = repository.findAllByOrderByPriorityAsc();
@@ -65,7 +65,7 @@ public class InnovationSectorRepositoryIntegrationTest extends BaseRepositoryInt
                 )
                 .build(3);
 
-        repository.save(innovationSectors);
+        repository.saveAll(innovationSectors);
         flushAndClearSession();
 
         List<InnovationSector> actual = repository.findAll();

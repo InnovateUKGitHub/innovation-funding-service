@@ -251,7 +251,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         outcome1.setFeedback("Feedback 1");
         outcome1.setFundingConfirmation(FALSE);
 
-        Assessment assessment1 = assessmentRepository.findOne(2L);
+        Assessment assessment1 = assessmentRepository.findById(2L).get();
         assessment1.setFundingDecision(outcome1);
 
         AssessmentFundingDecisionOutcome outcome2 = new AssessmentFundingDecisionOutcome();
@@ -259,10 +259,10 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         outcome2.setFeedback("Feedback 2");
         outcome2.setFundingConfirmation(FALSE);
 
-        Assessment assessment2 = assessmentRepository.findOne(6L);
+        Assessment assessment2 = assessmentRepository.findById(6L).get();
         assessment2.setFundingDecision(outcome2);
 
-        assessmentRepository.save(asList(assessment1, assessment2));
+        assessmentRepository.saveAll(asList(assessment1, assessment2));
         flushAndClearSession();
 
         loginSteveSmith();
@@ -367,7 +367,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     private Assessment setUpAssessment(UserResource userResource, AssessmentState state) {
-        User user = userRepository.findOne(userResource.getId());
+        User user = userRepository.findById(userResource.getId()).get();
 
         ProcessRole processRole = processRoleRepository.save(newProcessRole()
                 .withUser(user)

@@ -86,9 +86,6 @@ createContainer.networkAliases = ["data-service-alerts"]
 
 test.finalizedBy asciidoctor
 
-bootJar.enabled=false
-jar.enabled=true
-
 dependencies {
     compile project(":ifs-commons")
     compile project(":ifs-data-layer:data-service-commons")

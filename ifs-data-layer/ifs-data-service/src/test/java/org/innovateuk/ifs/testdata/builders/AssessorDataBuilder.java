@@ -123,8 +123,8 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
             testService.doWithinTransaction(() -> {
 
-                User user = userRepository.findOne(data.getUser().getId());
-                Profile profile = profileRepository.findOne(user.getProfileId());
+                User user = userRepository.findById(data.getUser().getId()).get();
+                Profile profile = profileRepository.findById(user.getProfileId()).get();
 
                 Set<String> userInnovationAreaNames = profile.getInnovationAreas().stream()
                         .map(InnovationArea::getName)

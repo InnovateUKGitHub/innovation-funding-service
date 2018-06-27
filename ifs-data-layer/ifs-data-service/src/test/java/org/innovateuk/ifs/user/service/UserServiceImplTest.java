@@ -120,7 +120,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
-        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userRepositoryMock.findById(123L)).thenReturn(Optional.of(user));
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(serviceSuccess());
         when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(serviceSuccess("mypassword"));
@@ -138,7 +138,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
-        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userRepositoryMock.findById(123L)).thenReturn(Optional.of(user));
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
@@ -156,7 +156,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
-        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userRepositoryMock.findById(123L)).thenReturn(Optional.of(user));
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
 
         when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(serviceSuccess());
@@ -639,7 +639,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(
                 serviceSuccess(siteTermsAndConditions.get(2)));
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         User userToSave = createUserExpectations(existingUser.getId(), expectedTermsAndConditionsIds);
 
@@ -649,7 +649,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         InOrder inOrder = inOrder(termsAndConditionsServiceMock, userRepositoryMock);
         inOrder.verify(termsAndConditionsServiceMock).getLatestSiteTermsAndConditions();
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(userRepositoryMock).save(createUserExpectations(existingUser.getId(),
                 expectedTermsAndConditionsIds));
         inOrder.verifyNoMoreInteractions();

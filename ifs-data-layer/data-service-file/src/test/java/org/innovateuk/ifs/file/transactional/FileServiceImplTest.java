@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.nio.charset.Charset.defaultCharset;
@@ -137,7 +138,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileToUpdate));
         when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
         when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(false);
         when(finalFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceSuccess(fileItselfToUpdate));
@@ -154,7 +155,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(fileEntryRepository).save(fileToUpdate);
         verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
         verify(finalFileStorageStrategy).getFile(updatedFile);
@@ -177,7 +178,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileToUpdate));
         when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
         when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(false);
         when(finalFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceSuccess(fileItselfToUpdate));
@@ -189,7 +190,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError()));
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(fileEntryRepository).save(fileToUpdate);
         verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
         verify(finalFileStorageStrategy).getFile(updatedFile);
@@ -211,7 +212,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileToUpdate));
         when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
         when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(true);
         when(temporaryHoldingFileStorageStrategy.createFile(eq(updatedFile), isA(File.class))).thenReturn(serviceSuccess(fileItselfToUpdate));
@@ -227,7 +228,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(fileEntryRepository).save(fileToUpdate);
         verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
         verify(temporaryHoldingFileStorageStrategy).createFile(eq(updatedFile), isA(File.class));
@@ -249,7 +250,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileToUpdate));
         when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
         when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(false);
 
@@ -271,7 +272,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(fileEntryRepository).save(fileToUpdate);
         verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
         verify(finalFileStorageStrategy).getFile(updatedFile);
@@ -297,7 +298,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileToUpdate));
         when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
         when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(false);
 
@@ -318,7 +319,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(fileEntryRepository).save(fileToUpdate);
         verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
         verify(finalFileStorageStrategy).getFile(updatedFile);
@@ -340,7 +341,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
                 withFilesizeBytes(17).
                 build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileToUpdate));
         when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFileEntry);
         when(temporaryHoldingFileStorageStrategy.exists(updatedFileEntry)).thenReturn(false);
         when(finalFileStorageStrategy.getFile(updatedFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
@@ -354,7 +355,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(fileEntryRepository).save(fileToUpdate);
         verify(temporaryHoldingFileStorageStrategy).exists(updatedFileEntry);
         verify(finalFileStorageStrategy).getFile(updatedFileEntry);
@@ -368,7 +369,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         FileEntryResource expectedFileResourceForUpdate = newFileEntryResource().with(id(456L)).build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(null);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.empty());
 
         ServiceResult<Pair<File, FileEntry>> result = service.updateFile(expectedFileResourceForUpdate, fakeInputStreamSupplier());
 
@@ -376,7 +377,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
     }
 
     @Test
@@ -392,13 +393,13 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().with(id(456L)).withFilesizeBytes(incorrectFilesize);
         FileEntry fileToUpdate = fileBuilder.build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileToUpdate));
 
         ServiceResult<Pair<File, FileEntry>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_INCORRECTLY_REPORTED_FILESIZE, 17));
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
     }
 
     @Test
@@ -414,13 +415,13 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileToUpdate));
 
         ServiceResult<Pair<File, FileEntry>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE, "text/plain"));
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
     }
 
     @Test
@@ -429,7 +430,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileEntryToDelete));
         when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("foundme")));
         when(finalFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceSuccess());
 
@@ -437,7 +438,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
         verify(finalFileStorageStrategy).deleteFile(fileEntryToDelete);
         verify(fileEntryRepository).delete(fileEntryToDelete);
@@ -449,7 +450,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileEntryToDelete));
         when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("cantdeleteme")));
         when(finalFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE)));
 
@@ -458,7 +459,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(FILES_UNABLE_TO_DELETE_FILE)));
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(fileEntryRepository).delete(fileEntryToDelete);
         verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
         verify(finalFileStorageStrategy).deleteFile(fileEntryToDelete);
@@ -470,7 +471,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileEntryToDelete));
         when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
         when(temporaryHoldingFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
         when(scannedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
@@ -481,7 +482,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
         verify(temporaryHoldingFileStorageStrategy).getFile(fileEntryToDelete);
         verify(scannedFileStorageStrategy).getFile(fileEntryToDelete);
@@ -494,7 +495,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileEntryToDelete));
         when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
         when(temporaryHoldingFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
         when(scannedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
@@ -504,7 +505,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         ServiceResult<FileEntry> result = service.deleteFile(456L);
         assertTrue(result.isSuccess());
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(fileEntryRepository).delete(fileEntryToDelete);
         verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
         verify(temporaryHoldingFileStorageStrategy).getFile(fileEntryToDelete);
@@ -516,14 +517,14 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
     @Test
     public void testDeleteFileButNoFileEntryExistsInDatabase() throws IOException {
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(null);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.empty());
 
         ServiceResult<FileEntry> result = service.deleteFile(456L);
         assertNotNull(result);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
     }
 
     @Test
@@ -531,7 +532,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
 
-        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileEntryRepository.findById(123L)).thenReturn(Optional.of(existingFileEntry));
         when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(finalFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 123L)));
@@ -540,7 +541,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         ServiceResult<Supplier<InputStream>> inputStreamResult = service.getFileByFileEntryId(123L);
         assertTrue(inputStreamResult.isSuccess());
 
-        verify(fileEntryRepository).findOne(123L);
+        verify(fileEntryRepository).findById(123L);
         verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
         verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
         verify(finalFileStorageStrategy).getFile(existingFileEntry);
@@ -552,14 +553,14 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
 
-        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileEntryRepository.findById(123L)).thenReturn(Optional.of(existingFileEntry));
         when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(true);
 
         ServiceResult<Supplier<InputStream>> inputStreamResult = service.getFileByFileEntryId(123L);
         assertTrue(inputStreamResult.isFailure());
         assertTrue(inputStreamResult.getFailure().is(forbiddenError(FILES_FILE_QUARANTINED)));
 
-        verify(fileEntryRepository).findOne(123L);
+        verify(fileEntryRepository).findById(123L);
         verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
         verifyNoMoreFileServiceInteractions();
     }
@@ -569,7 +570,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
 
-        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileEntryRepository.findById(123L)).thenReturn(Optional.of(existingFileEntry));
         when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(true);
 
@@ -577,7 +578,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertTrue(inputStreamResult.isFailure());
         assertTrue(inputStreamResult.getFailure().is(forbiddenError(FILES_FILE_AWAITING_VIRUS_SCAN)));
 
-        verify(fileEntryRepository).findOne(123L);
+        verify(fileEntryRepository).findById(123L);
         verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
         verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
     }
@@ -587,7 +588,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
 
-        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileEntryRepository.findById(123L)).thenReturn(Optional.of(existingFileEntry));
         when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(finalFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 123L)));
@@ -596,7 +597,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         ServiceResult<Supplier<InputStream>> inputStreamResult = service.getFileByFileEntryId(123L);
         assertTrue(inputStreamResult.isSuccess());
 
-        verify(fileEntryRepository).findOne(123L);
+        verify(fileEntryRepository).findById(123L);
         verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
         verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
         verify(finalFileStorageStrategy).getFile(existingFileEntry);
@@ -606,20 +607,20 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
     @Test
     public void testGetFileByFileEntryIdButFileEntryEntityDoesntExist() throws IOException {
 
-        when(fileEntryRepository.findOne(123L)).thenReturn(null);
+        when(fileEntryRepository.findById(123L)).thenReturn(Optional.empty());
 
         ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 123L)));
 
-        verify(fileEntryRepository).findOne(123L);
+        verify(fileEntryRepository).findById(123L);
     }
 
     @Test
     public void testGetFileByFileEntryIdAndFileIsInFinalStorageLocation() throws IOException {
 
         FileEntry existingFileEntry = newFileEntry().with(id(123L)).withFilesizeBytes(10).build();
-        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileEntryRepository.findById(123L)).thenReturn(Optional.of(existingFileEntry));
         when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(finalFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceSuccess(new File("foundme")));
@@ -627,7 +628,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
         assertTrue(result.isSuccess());
 
-        verify(fileEntryRepository).findOne(123L);
+        verify(fileEntryRepository).findById(123L);
         verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
         verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
         verify(finalFileStorageStrategy).getFile(existingFileEntry);
@@ -637,7 +638,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
     public void testGetFileByFileEntryIdButFileDoesntExist() throws IOException {
 
         FileEntry existingFileEntry = newFileEntry().with(id(123L)).withFilesizeBytes(10).build();
-        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(fileEntryRepository.findById(123L)).thenReturn(Optional.of(existingFileEntry));
         when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
         when(finalFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 123L)));
@@ -647,7 +648,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 123L)));
 
-        verify(fileEntryRepository).findOne(123L);
+        verify(fileEntryRepository).findById(123L);
         verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
         verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
         verify(finalFileStorageStrategy).getFile(existingFileEntry);
@@ -701,7 +702,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileEntryToDelete));
         when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
         when(temporaryHoldingFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
         when(scannedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
@@ -711,7 +712,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
 
-        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).findById(456L);
         verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
         verify(temporaryHoldingFileStorageStrategy).getFile(fileEntryToDelete);
         verify(scannedFileStorageStrategy).getFile(fileEntryToDelete);

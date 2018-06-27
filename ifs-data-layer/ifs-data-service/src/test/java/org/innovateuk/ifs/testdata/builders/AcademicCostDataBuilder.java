@@ -80,7 +80,7 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
             FileEntry fileEntry = fileEntryRepository.save(
                     new FileEntry(null, "jes-form" + data.getApplicationFinance().getId() + ".pdf", "application/pdf", 7945));
 
-            ApplicationFinance finance = applicationFinanceRepository.findOne(data.getApplicationFinance().getId());
+            ApplicationFinance finance = applicationFinanceRepository.findById(data.getApplicationFinance().getId()).get();
             finance.setFinanceFileEntry(fileEntry);
             applicationFinanceRepository.save(finance);
         });

@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static java.util.Arrays.asList;
@@ -91,11 +92,11 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         final Alert alert = new Alert();
-        when(alertRepositoryMock.findOne(9999L)).thenReturn(alert);
+        when(alertRepositoryMock.findById(9999L)).thenReturn(Optional.of(alert));
         when(alertMapperMock.mapToResource(same(alert))).thenReturn(expected);
 
         assertSame(expected, alertService.findById(9999L).getSuccess());
-        verify(alertRepositoryMock, only()).findOne(9999L);
+        verify(alertRepositoryMock, only()).findById(9999L);
     }
 
     @Test
@@ -119,7 +120,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void delete() throws Exception {
         assertTrue(alertService.delete(9999L).isSuccess());
-        verify(alertRepositoryMock, only()).delete(9999L);
+        verify(alertRepositoryMock, only()).deleteById(9999L);
     }
 
     @Test

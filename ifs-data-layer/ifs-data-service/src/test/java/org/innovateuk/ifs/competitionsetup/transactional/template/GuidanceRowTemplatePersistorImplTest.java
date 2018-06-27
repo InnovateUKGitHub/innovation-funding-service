@@ -108,7 +108,7 @@ public class GuidanceRowTemplatePersistorImplTest extends BaseServiceUnitTest<Gu
 
         Mockito.verify(entityManagerMock).detach(guidanceRows.get(0));
         Mockito.verify(entityManagerMock).detach(guidanceRows.get(1));
-        Mockito.verify(guidanceRowRepositoryMock).delete(guidanceRows);
+        Mockito.verify(guidanceRowRepositoryMock).deleteAll(guidanceRows);
     }
 
 }

@@ -63,7 +63,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
     }
 
     private User getDefaultAdminUser() {
-        return userRepository.findOne(16L);
+        return userRepository.findById(16L).get();
     }
 
     public AssessorInviteDataBuilder acceptInvite(String hash, String assessorEmail) {

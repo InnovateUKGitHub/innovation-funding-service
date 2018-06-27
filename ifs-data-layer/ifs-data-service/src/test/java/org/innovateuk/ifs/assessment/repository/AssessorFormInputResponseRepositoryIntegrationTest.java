@@ -58,8 +58,8 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     public void testFindAll() {
         repository.deleteAll();
 
-        ProcessRole processRole = processRoleRepository.findOne(1L);
-        Application application = applicationRepository.findOne(1L);
+        ProcessRole processRole = processRoleRepository.findById(1L).get();
+        Application application = applicationRepository.findById(1L).get();
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
@@ -95,8 +95,8 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
     @Test
     public void testFindByAssessmentId() {
-        ProcessRole processRole = processRoleRepository.findOne(1L);
-        Application application = applicationRepository.findOne(1L);
+        ProcessRole processRole = processRoleRepository.findById(1L).get();
+        Application application = applicationRepository.findById(1L).get();
 
         List<Assessment> assessments =
                 newAssessment().
@@ -142,8 +142,8 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     @Test
     public void testFindByAssessmentIdAndFormInputQuestionId() {
 
-        ProcessRole processRole = processRoleRepository.findOne(1L);
-        Application application = applicationRepository.findOne(1L);
+        ProcessRole processRole = processRoleRepository.findById(1L).get();
+        Application application = applicationRepository.findById(1L).get();
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
@@ -186,8 +186,8 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     @Test
     public void testFindByAssessmentIdAndFormInputId() {
 
-        ProcessRole processRole = processRoleRepository.findOne(1L);
-        Application application = applicationRepository.findOne(1L);
+        ProcessRole processRole = processRoleRepository.findById(1L).get();
+        Application application = applicationRepository.findById(1L).get();
 
         List<Assessment> assessments =
                 newAssessment().
@@ -232,8 +232,8 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
     @Test
     public void findByAssessmentTargetId() {
-        ProcessRole processRole = processRoleRepository.findOne(1L);
-        Application application = applicationRepository.findOne(1L);
+        ProcessRole processRole = processRoleRepository.findById(1L).get();
+        Application application = applicationRepository.findById(1L).get();
 
         List<Assessment> assessments =
                 newAssessment().
@@ -275,8 +275,8 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     @Test
     public void findByAssessmentTargetIdAndFormInputQuestionId() {
 
-        ProcessRole processRole = processRoleRepository.findOne(1L);
-        Application application = applicationRepository.findOne(1L);
+        ProcessRole processRole = processRoleRepository.findById(1L).get();
+        Application application = applicationRepository.findById(1L).get();
 
         List<Assessment> assessments =
                 newAssessment().

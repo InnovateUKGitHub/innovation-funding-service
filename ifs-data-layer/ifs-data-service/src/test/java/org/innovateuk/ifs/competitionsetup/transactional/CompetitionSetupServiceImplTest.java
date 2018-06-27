@@ -231,7 +231,7 @@ public class CompetitionSetupServiceImplTest {
 	public void testMarkAsSetup() {
 		Long competitionId = 1L;
 		Competition comp = new Competition();
-		when(competitionRepository.findById(competitionId)).thenReturn(comp);
+		when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(comp));
 
 		service.markAsSetup(competitionId);
 
@@ -242,7 +242,7 @@ public class CompetitionSetupServiceImplTest {
 	public void testReturnToSetup() {
 		Long competitionId = 1L;
 		Competition comp = new Competition();
-		when(competitionRepository.findById(competitionId)).thenReturn(comp);
+		when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(comp));
 
 		service.returnToSetup(competitionId);
 
@@ -422,7 +422,7 @@ public class CompetitionSetupServiceImplTest {
 
         PublicContent publicContent = newPublicContent().build();
 
-        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
@@ -430,7 +430,7 @@ public class CompetitionSetupServiceImplTest {
 
         InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository,
                 setupStatusRepository, milestoneRepository);
-        inOrder.verify(competitionRepository).findOne(competition.getId());
+        inOrder.verify(competitionRepository).findById(competition.getId());
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
         // Test that the competition is saved without the form validators, deleting them
@@ -458,14 +458,14 @@ public class CompetitionSetupServiceImplTest {
     public void deleteCompetition_competitionNotFound() throws Exception {
         Competition competition = newCompetition().build();
 
-        when(competitionRepository.findOne(competition.getId())).thenReturn(null);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Competition.class, competition.getId())));
 
-        verify(competitionRepository).findOne(competition.getId());
+        verify(competitionRepository).findById(competition.getId());
         verifyNoMoreInteractions(competitionRepository);
     }
 }

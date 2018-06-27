@@ -39,7 +39,7 @@ public class ResearchCategoryRepositoryIntegrationTest
                 .build());
         flushAndClearSession();
 
-        ResearchCategory actual = repository.findById(researchCategory.getId());
+        ResearchCategory actual = repository.findById(researchCategory.getId()).get();
         assertEquals(researchCategory, actual);
     }
 
@@ -63,7 +63,7 @@ public class ResearchCategoryRepositoryIntegrationTest
                 .withName("bbb", "aaa", "ccc")
                 .build(3);
 
-        repository.save(researchCategories);
+        repository.saveAll(researchCategories);
         flushAndClearSession();
 
         List<ResearchCategory> actual = repository.findAll();
@@ -79,7 +79,7 @@ public class ResearchCategoryRepositoryIntegrationTest
                 .withPriority(2, 1, 3)
                 .build(3);
 
-        repository.save(innovationAreas);
+        repository.saveAll(innovationAreas);
         flushAndClearSession();
 
         List<ResearchCategory> expectedInnovationAreas = newResearchCategory()

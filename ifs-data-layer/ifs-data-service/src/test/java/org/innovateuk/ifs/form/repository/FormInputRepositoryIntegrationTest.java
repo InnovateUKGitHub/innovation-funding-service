@@ -55,7 +55,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     @Test
     public void test_findOne() {
 
-        FormInput input = repository.findOne(1L);
+        FormInput input = repository.findById(1L).get();
         assertEquals(Long.valueOf(1), input.getId());
         assertEquals(Integer.valueOf(400), input.getWordCount());
         assertEquals(FormInputType.TEXTAREA, input.getType());
@@ -66,7 +66,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Test
     public void test_findOne_nonExistentInput() {
-        assertEquals(null, repository.findOne(Long.MAX_VALUE));
+        assertFalse(repository.findById(Long.MAX_VALUE).isPresent());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         assertEquals(Long.valueOf(186), last.getId());
 
         //Assert that inactive form input is not returned.
-        FormInput inactive = repository.findOne(INACTIVE_FORM_INPUT_ID);
+        FormInput inactive = repository.findById(INACTIVE_FORM_INPUT_ID).get();
         assertThat(inactive, notNullValue());
         assertThat(competitionInputs.contains(inactive), is(false));
         //Assert that inactive form input is linked to the competition
@@ -106,7 +106,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         assertEquals(Long.valueOf(18), last.getId());
 
         //Assert that inactive form input is not returned.
-        FormInput inactive = repository.findOne(INACTIVE_FORM_INPUT_ID);
+        FormInput inactive = repository.findById(INACTIVE_FORM_INPUT_ID).get();
         assertThat(inactive, notNullValue());
         assertThat(competitionInputs.contains(inactive), is(false));
         //Assert that inactive form input is linked to the competition and has correct scope.
@@ -129,7 +129,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         assertEquals(Long.valueOf(169), questionInputs.get(2).getId());
 
         //Assert that inactive form input is not returned.
-        FormInput inactive = repository.findOne(INACTIVE_FORM_INPUT_ID);
+        FormInput inactive = repository.findById(INACTIVE_FORM_INPUT_ID).get();
         assertThat(inactive, notNullValue());
         assertThat(questionInputs.contains(inactive), is(false));
         //Assert it is actually linked to the question we are querying for.
@@ -149,7 +149,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         assertEquals(Long.valueOf(1), first.getId());
 
         //Assert that inactive form input is not returned.
-        FormInput inactive = repository.findOne(INACTIVE_FORM_INPUT_ID);
+        FormInput inactive = repository.findById(INACTIVE_FORM_INPUT_ID).get();
         assertThat(inactive, notNullValue());
         assertThat(questionInputs.contains(inactive), is(false));
         //Assert it is actually linked to the question and has correct scope.
@@ -200,7 +200,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         repository.save(formInput);
 
-        FormInput savedFormInput = repository.findOne(formInput.getId());
+        FormInput savedFormInput = repository.findById(formInput.getId()).get();
 
         assertEquals(savedFormInput.getWordCount(), wordCount);
         assertEquals(savedFormInput.getType(), formInputType);

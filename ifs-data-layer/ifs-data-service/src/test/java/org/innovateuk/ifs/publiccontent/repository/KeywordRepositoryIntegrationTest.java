@@ -34,7 +34,7 @@ public class KeywordRepositoryIntegrationTest extends BaseRepositoryIntegrationT
                 .withCompetitionId(1L)
                 .build());
 
-        repository.save(newKeyword()
+        repository.saveAll(newKeyword()
                 .with(id(null))
                 .withKeyword("keyword1", "keyword 2")
                 .withPublicContent(publicContent)

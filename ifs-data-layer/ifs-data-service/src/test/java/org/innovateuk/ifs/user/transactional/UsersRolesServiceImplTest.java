@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -40,7 +41,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ProcessRole processRole = newProcessRole().build();
         ProcessRoleResource processRoleResource = newProcessRoleResource().build();
 
-        when(processRoleRepositoryMock.findOne(1L)).thenReturn(processRole);
+        when(processRoleRepositoryMock.findById(1L)).thenReturn(Optional.of(processRole));
         when(processRoleMapperMock.mapToResource(same(processRole))).thenReturn(processRoleResource);
 
         ServiceResult<ProcessRoleResource> result = service.getProcessRoleById(1L);
@@ -48,7 +49,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         assertTrue(result.isSuccess());
         assertEquals(processRoleResource, result.getSuccess());
 
-        verify(processRoleRepositoryMock, only()).findOne(1L);
+        verify(processRoleRepositoryMock, only()).findById(1L);
     }
 
     @Test
@@ -58,7 +59,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource().build(2);
         List<Long> processRoleIds = asList(new Long[]{1L, 2L});
 
-        when(processRoleRepositoryMock.findAll(processRoleIds)).thenReturn(processRoles);
+        when(processRoleRepositoryMock.findAllById(processRoleIds)).thenReturn(processRoles);
 
         zip(processRoles, processRoleResources, (pr, prr) -> when(processRoleMapperMock.mapToResource(same(pr))).thenReturn(prr));
 
@@ -67,7 +68,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         assertTrue(result.isSuccess());
         assertEquals(processRoleResources, result.getSuccess());
 
-        verify(processRoleRepositoryMock, only()).findAll(processRoleIds);
+        verify(processRoleRepositoryMock, only()).findAllById(processRoleIds);
     }
 
     @Test
