@@ -87,18 +87,18 @@ Submit flow business lead (complete application)
 Satisfaction survey:validations
     [Documentation]  IFS-3603
     [Tags]
-    When the user clicks the button/link     link=Finished
-    And the user clicks the button/link     css=.button[type="submit"]  #Send feedback
+    When the user clicks the button/link                  link=Finished
+    And the user clicks the button/link                   css=.button[type="submit"]  #Send feedback
     Then the user should see a field and summary error    Please select a level of satisfaction.
     And the user should see a field and summary error     This field can not be left blank.
 
 Applicant submit satisfaction survey after submitting application
     [Documentation]  IFS-3603
     [Tags]
-    When the user selects the radio button      satisfaction  5
-    And the user enters text to a text field    name=comments  Very satisfied
-    Then the user clicks the button/link        css=.button[type="submit"]  #Send feedback
-    And the user navigates to the page          ${DASHBOARD_URL}
+    Given the user selects the radio button      satisfaction  5
+    When the user enters text to a text field    name=comments  Very satisfied
+    Then the user clicks the button/link         css=.button[type="submit"]  #Send feedback
+    And the user navigates to the page           ${DASHBOARD_URL}
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
