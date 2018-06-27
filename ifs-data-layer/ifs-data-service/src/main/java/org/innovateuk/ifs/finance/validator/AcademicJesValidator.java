@@ -2,9 +2,9 @@ package org.innovateuk.ifs.finance.validator;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
 
 
 /**
@@ -38,7 +38,7 @@ public class AcademicJesValidator implements Validator {
         final Application application = (Application) target;
 
         if (financeFileIsEmpty(application)) {
-            rejectValue(errors, "jesFileUpload","validation.application.jes.upload.required");
+            reject(errors, "validation.application.jes.upload.required");
         }
     }
 
