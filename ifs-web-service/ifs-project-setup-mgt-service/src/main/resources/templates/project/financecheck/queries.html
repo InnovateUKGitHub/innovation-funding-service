@@ -95,7 +95,7 @@
                 </th:block>
                 <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
                     <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="extra-margin button">Respond</a>
-                    <a class="button button-clear width-full no-padding-left extra-margin"
+                    <a class="button button-clear width-full no-padding-left"
                        data-js-modal="modal-confirm-mark-resolved"
                        th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
                        th:attr="data-modal-form-action=@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}">
