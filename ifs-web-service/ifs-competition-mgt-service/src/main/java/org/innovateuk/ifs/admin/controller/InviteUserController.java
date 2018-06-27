@@ -73,10 +73,7 @@ public class InviteUserController {
     }
 
     private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {
-
-        validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(USER_ROLE_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
-
-        return validationHandler;
+        return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(USER_ROLE_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
     }
 
     private InviteUserResource constructInviteUserResource(InviteUserForm form) {
