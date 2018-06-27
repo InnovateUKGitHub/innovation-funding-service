@@ -53,7 +53,7 @@ IFS.application.progressiveSelect = (function () {
     },
     initDropDownHTML: function (el) {
       var inst = jQuery(el)
-      var id = 'dropdown-' + index   // create unique id for a11y relationship
+      var id = 'dropdown-' + index // create unique id for a11y relationship
       // wrap the content and make it focusable
       inst.next().wrapAll('<div id="' + id + '" aria-hidden="true">')
       // Add the button inside the <h2> so both the heading and button semanics are read
