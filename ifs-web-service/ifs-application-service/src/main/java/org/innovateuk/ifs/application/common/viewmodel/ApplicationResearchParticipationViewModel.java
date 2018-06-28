@@ -1,7 +1,10 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.common.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
+/**
+ * View model for finance/finance-summary :: research_participation_alert.
+ */
 public class ApplicationResearchParticipationViewModel {
 
     private final double researchParticipationPercentage;

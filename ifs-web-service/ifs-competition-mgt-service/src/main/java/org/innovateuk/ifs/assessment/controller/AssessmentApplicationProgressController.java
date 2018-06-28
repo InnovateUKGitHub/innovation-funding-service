@@ -16,7 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.

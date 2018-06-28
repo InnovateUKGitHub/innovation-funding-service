@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
