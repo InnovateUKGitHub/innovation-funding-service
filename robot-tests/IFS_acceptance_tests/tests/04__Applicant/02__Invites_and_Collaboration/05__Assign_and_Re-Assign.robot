@@ -197,7 +197,6 @@ Lead marks finances as complete
     Then the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the funding information        Assign test
     When the user navigates to Your-finances page        Assign test
-    #here
     Then the user should see all finance subsections complete
 
 Collaborator from another organisation should be able to mark Finances as complete
