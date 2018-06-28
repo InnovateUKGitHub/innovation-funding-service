@@ -365,4 +365,13 @@ public class Application implements ProcessActivity {
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.inAssessmentReviewPanel = inAssessmentReviewPanel;
     }
+
+    /** Placeholder function for mapping errors to field in Thymeleaf */
+    public String getJesFileUpload() {
+        return "";
+    }
+    
+    /** Placeholder function for mapping errors to field in Thymeleaf */
+    public void setJesFileUpload(String jesFileUpload) {
+    }
 }
