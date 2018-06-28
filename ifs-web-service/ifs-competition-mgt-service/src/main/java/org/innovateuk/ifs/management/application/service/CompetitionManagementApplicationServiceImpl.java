@@ -2,10 +2,7 @@ package org.innovateuk.ifs.management.application.service;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.resource.AppendixResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -98,13 +95,28 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         Map<Long, Boolean> isAcademicOrganisation = (Map<Long, Boolean>) model.asMap().get("applicantOrganisationIsAcademic");
         List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
         Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource>) model.asMap().get("organisationFinances");
-        Map<Long, Boolean> detailedFinanceLink = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
-                o -> (user.isInternalUser()) &&
-                        ((organisationFinances != null && organisationFinances.containsKey(o.getId()) && organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
+        Map<Long, Boolean> detailedFinanceLinkForAllApplicationStates = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
+                o -> (user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT)) &&
+                        ((organisationFinances != null &&
+                                organisationFinances.containsKey(o.getId()) &&
+                                organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
                                 isAcademicOrganisation.get(o.getId()))
                         ? Boolean.TRUE : Boolean.FALSE));
-        model.addAttribute("showDetailedFinanceLink", detailedFinanceLink);
 
+        Map<Long, Boolean> detailedFinanceLinkForAllStatesExcludingOpenAndCreated = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
+                o -> (user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN)) || user.hasRole(INNOVATION_LEAD) &&
+                        ((organisationFinances != null &&
+                                organisationFinances.containsKey(o.getId()) &&
+                                organisationFinances.get(o.getId()).getOrganisationSize() != null) &&
+                                    application.getApplicationState() != ApplicationState.OPEN &&
+                                    application.getApplicationState() != ApplicationState.CREATED ||
+                                isAcademicOrganisation.get(o.getId())) &&
+                                    application.getApplicationState() != ApplicationState.OPEN &&
+                                    application.getApplicationState() != ApplicationState.CREATED
+                        ? Boolean.TRUE : Boolean.FALSE));
+
+        model.addAttribute("showDetailedFinanceLinkForAllApplicationStates", detailedFinanceLinkForAllApplicationStates);
+        model.addAttribute("showDetailedFinanceLinkForAllStatesExcludingOpenAndCreated", detailedFinanceLinkForAllStatesExcludingOpenAndCreated);
         model.addAttribute("readOnly", user.hasRole(SUPPORT));
         model.addAttribute("canReinstate", !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD)));
         model.addAttribute("form", form);
