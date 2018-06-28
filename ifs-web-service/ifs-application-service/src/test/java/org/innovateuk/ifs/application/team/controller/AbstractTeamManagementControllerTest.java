@@ -73,7 +73,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore // TODO: this test is ignored due to the bug described in IFS-2598. The offending code is likely to be rewritten/removed as part of the person-to-org decoupling work IFS-3513, but if it is not then this bug should be fixed and test reinstated.
+    @Ignore("This test is ignored due to the bug described in IFS-2598. The offending code is likely to be rewritten/removed as part of the person-to-org decoupling work IFS-3513, but if it is not then this bug should be fixed and test reinstated.")
     public void getUpdateOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
 
