@@ -5,15 +5,29 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
 
+import static java.lang.String.format;
+
 /**
  * Service implements methods for setting an Applications research category and retrieving available choices.
  */
 @Service
-public class ApplicationResearchCategoryRestServiceImpl extends BaseRestService implements ApplicationResearchCategoryRestService {
+public class ApplicationResearchCategoryRestServiceImpl extends BaseRestService implements
+        ApplicationResearchCategoryRestService {
+
     private String applicationResearchCategoryRestURL = "/applicationResearchCategory/";
 
     @Override
-    public RestResult<ApplicationResource> saveApplicationResearchCategoryChoice(Long applicationId, Long researchCategoryId) {
-        return postWithRestResult(applicationResearchCategoryRestURL + "researchCategory/" + applicationId, researchCategoryId, ApplicationResource.class);
+    public RestResult<ApplicationResource> setResearchCategory(long applicationId,
+                                                               long researchCategoryId) {
+        return postWithRestResult(format(applicationResearchCategoryRestURL + "researchCategory/%s", applicationId),
+                researchCategoryId, ApplicationResource.class);
+    }
+
+    @Override
+    public RestResult<ApplicationResource> setResearchCategoryAndMarkAsComplete(long applicationId,
+                                                                                long markedAsCompleteById,
+                                                                                long researchCategoryId) {
+        return postWithRestResult(format(applicationResearchCategoryRestURL + "markResearchCategoryComplete/%s/%s",
+                applicationId, markedAsCompleteById), researchCategoryId, ApplicationResource.class);
     }
 }
