@@ -31,7 +31,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller handles the Overview tab for inviting assessors to a Competition.
