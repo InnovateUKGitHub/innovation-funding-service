@@ -185,6 +185,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withMinProjectDuraction(1)
                 .withMaxProjectDuraction(36)
+                .withUseNewApplicantMenu(true)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());

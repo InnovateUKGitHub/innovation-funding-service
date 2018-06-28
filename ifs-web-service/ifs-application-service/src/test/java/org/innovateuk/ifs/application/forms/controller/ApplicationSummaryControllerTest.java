@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.forms.controller;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.forms.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
@@ -63,6 +65,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -150,6 +153,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     @Mock
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
+    @Mock
+    private ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator;
+
     @Override
     protected ApplicationSummaryController supplyControllerUnderTest() {
         return new ApplicationSummaryController();
@@ -204,10 +210,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
         when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
 
-        MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
+        mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-feedback-summary"))
-                .andReturn();
+                .andExpect(view().name("application-feedback-summary"));
     }
 
     @Test
@@ -221,6 +226,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         ApplicationTeamViewModel applicationTeamViewModel = setupApplicationTeamViewModel();
         when(applicationTeamModelPopulator.populateSummaryModel(app.getId(), loggedInUser.getId(), competitionId)).thenReturn
                 (applicationTeamViewModel);
+        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = setupResearchCategorySummaryViewModel();
+        when(researchCategorySummaryModelPopulator.populate(app, loggedInUser.getId(), true)).thenReturn
+                (researchCategorySummaryViewModel);
 
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
@@ -233,16 +241,18 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
-                .andExpect(model().attribute("applicationTeamModel", applicationTeamViewModel))
+                .andExpect(model().attributeExists("applicationSummaryViewModel"))
                 .andReturn();
 
         ApplicationSummaryViewModel model = (ApplicationSummaryViewModel) result.getModelAndView().getModel().get("applicationSummaryViewModel");
 
-        assertEquals(model.getCurrentApplication(), app);
-        assertEquals(model.getCurrentCompetition().getId(), app.getCompetition());
-        assertEquals(model.getSummaryViewModel().getFeedbackSummary(), feedbackSummary);
-        assertEquals(model.getSummaryViewModel().getResponses(), formInputsToFormInputResponses);
-        assertEquals(model.isUserIsLeadApplicant(), true);
+        assertEquals(app, model.getCurrentApplication());
+        assertEquals(app.getCompetition(), model.getCurrentCompetition().getId());
+        assertEquals(feedbackSummary, model.getSummaryViewModel().getFeedbackSummary());
+        assertEquals(formInputsToFormInputResponses, model.getSummaryViewModel().getResponses());
+        assertEquals(applicationTeamViewModel, model.getApplicationTeamViewModel());
+        assertEquals(researchCategorySummaryViewModel, model.getResearchCategorySummaryViewModel());
+        assertTrue(model.isUserIsLeadApplicant());
     }
 
     @Test
@@ -413,5 +423,14 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         applicationTeamViewModel.setSummary(true);
 
         return applicationTeamViewModel;
+    }
+
+    private ResearchCategorySummaryViewModel setupResearchCategorySummaryViewModel() {
+        return new ResearchCategorySummaryViewModel(1L,
+                1L,
+                "Research category",
+                false,
+                false,
+                false);
     }
 }
