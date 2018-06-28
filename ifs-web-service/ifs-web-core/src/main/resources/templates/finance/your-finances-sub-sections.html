@@ -218,12 +218,10 @@
                                 Before you can tell us your funding information:
                                 You must state your organisation size in the
                                 <th:block th:unless="${model.allReadOnly}">
-                                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your
-                                        organisation</a> section.
+                                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
                                 </th:block>
                                 <th:block th:if="${model.allReadOnly}">
-                                    <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId},applicantOrganisationId=${model.applicantOrganisationId})}">your
-                                        organisation</a> section.
+                                    <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId},applicantOrganisationId=${model.applicantOrganisationId})}">your organisation</a> section.
                                 </th:block>
                                 The lead applicant must select a research category
                             </th:block>
