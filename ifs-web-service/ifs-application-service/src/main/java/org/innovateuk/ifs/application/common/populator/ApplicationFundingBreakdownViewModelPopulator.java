@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.common.populator;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;

@@ -1,7 +1,5 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.common.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -12,8 +10,10 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+/**
+ * View model for finance/finance-summary :: financial_summary_table.
+ */
 public class ApplicationFundingBreakdownViewModel {
 
     private final Map<FinanceRowType, BigDecimal> financeTotalPerType;
