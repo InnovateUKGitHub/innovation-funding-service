@@ -197,8 +197,7 @@
                             <th:block th:if="${model.userIsLeadApplicant}">
                                 You must select a
                                 <th:block th:unless="${model.allReadOnly}">
-                                    <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}">research
-                                        category</a>
+                                    <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}">research category</a>
                                 </th:block>
                                 <th:block th:if="${model.allReadOnly}">
                                     research category
