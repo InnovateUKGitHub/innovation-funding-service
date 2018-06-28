@@ -317,7 +317,3 @@ the user resends the invite
     the user clicks the button/link    css=.button-secondary[type="submit"]     #Resend invite
     the user clicks the button/link    jQuery=button:contains("Resend")
     the user reads his email           ${localEmailInvtedUser}  Invitation to Innovation Funding  Your Innovation Funding Service
-
-the user enters an email that does not belong to Innovate UK
-    the user enters text to a text field             id = emailAddress  ${invalidEmail}
-    the user should see a field and summary error    Users cannot be registered without an Innovate UK email address.
