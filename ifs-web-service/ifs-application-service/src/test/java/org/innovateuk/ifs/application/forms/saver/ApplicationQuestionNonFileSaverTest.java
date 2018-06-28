@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests {@link ApplicationQuestionNonFileSaver}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationQuestionNonFileSaverTest {
 
     @InjectMocks

@@ -44,7 +44,7 @@ import static org.mockito.Mockito.*;
 /**
  * Testing populator {@link ApplicantDashboardPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @InjectMocks

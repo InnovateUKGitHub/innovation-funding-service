@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResou
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PublicContentMenuPopulatorTest {
 
     private static final Long COMPETITION_ID = 1L;

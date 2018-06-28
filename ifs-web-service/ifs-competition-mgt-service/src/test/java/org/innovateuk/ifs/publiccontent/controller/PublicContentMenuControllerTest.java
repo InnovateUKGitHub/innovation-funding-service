@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Class for testing public functions of {@link PublicContentMenuController}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<PublicContentMenuController> {
 
     private static final Long COMPETITION_ID = Long.valueOf(12);

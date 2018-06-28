@@ -107,11 +107,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private FinanceCheckService financeCheckServiceMock;
 
-    @Spy
-    @InjectMocks
-    @SuppressWarnings("unused")
-    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
-
     @Before
     public void setup() {
         super.setUp();

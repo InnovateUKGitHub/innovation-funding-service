@@ -130,12 +130,6 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Mock
     private FinanceUtil financeUtil;
 
-    @Spy
-    @InjectMocks
-    @SuppressWarnings("unused")
-    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
-
-
     @Before
     public void setup() {
         super.setUp();

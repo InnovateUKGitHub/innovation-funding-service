@@ -129,11 +129,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
-    @Spy
-    @InjectMocks
-    @SuppressWarnings("unused")
-    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
-
     @Before
     public void setUp() {
         super.setUp();
