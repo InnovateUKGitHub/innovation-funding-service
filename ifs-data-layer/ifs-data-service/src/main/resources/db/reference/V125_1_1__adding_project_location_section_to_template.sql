@@ -21,11 +21,11 @@ SET @ati_your_funding_section_id = (SELECT id FROM section WHERE competition_id=
 -- Add 'Your project location' section with priority 6 for each of the template competitions
 INSERT INTO section (assessor_guidance_description, description, display_in_assessment_application_summary, name, priority, competition_id, parent_section_id, question_group, section_type)
      VALUES
-     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @programme_template_id, @programme_your_funding_section_id, 1, "PROJECT_LOCATION"),
-     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @sector_template_id, @sector_your_funding_section_id, 1, "PROJECT_LOCATION"),
-     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @generic_template_id, @generic_your_funding_section_id, 1, "PROJECT_LOCATION"),
-     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @apc_template_id, @apc_your_funding_section_id, 1, "PROJECT_LOCATION"),
-     (NULL, 'Where will most of the project work take place?', 0, 'Your project location', 6, @ati_template_id, @ati_your_funding_section_id, 1, "PROJECT_LOCATION");
+     (NULL, NULL, 0, 'Your project location', 6, @programme_template_id, @programme_your_funding_section_id, 1, "PROJECT_LOCATION"),
+     (NULL, NULL, 0, 'Your project location', 6, @sector_template_id, @sector_your_funding_section_id, 1, "PROJECT_LOCATION"),
+     (NULL, NULL, 0, 'Your project location', 6, @generic_template_id, @generic_your_funding_section_id, 1, "PROJECT_LOCATION"),
+     (NULL, NULL, 0, 'Your project location', 6, @apc_template_id, @apc_your_funding_section_id, 1, "PROJECT_LOCATION"),
+     (NULL, NULL, 0, 'Your project location', 6, @ati_template_id, @ati_your_funding_section_id, 1, "PROJECT_LOCATION");
 
 SET @programme_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@programme_template_id AND section_type="PROJECT_LOCATION");
 SET @sector_your_project_location_section_id = (SELECT id FROM section WHERE competition_id=@sector_template_id AND section_type="PROJECT_LOCATION");
