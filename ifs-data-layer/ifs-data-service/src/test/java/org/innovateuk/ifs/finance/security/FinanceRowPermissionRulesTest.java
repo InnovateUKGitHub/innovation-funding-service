@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.math.BigDecimal.ZERO;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -76,7 +77,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
-            when(applicationFinanceRowRepositoryMock.findOne(cost.getId())).thenReturn(cost);
+            when(applicationFinanceRowRepositoryMock.findById(cost.getId())).thenReturn(Optional.of(cost));
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).thenReturn(newProcessRole().build());
         }

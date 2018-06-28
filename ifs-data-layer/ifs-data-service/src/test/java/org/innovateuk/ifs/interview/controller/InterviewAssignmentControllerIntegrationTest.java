@@ -107,7 +107,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
                 .withInAssessmentReviewPanel(false)
                 .withActivityState(ApplicationState.SUBMITTED)
                 .build(2);
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
 
@@ -116,7 +116,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
                 .withName("Metallurgy", "Alchemy", "Forgemastery")
                 .build(3);
 
-        innovationAreaRepository.save(innovationAreas);
+        innovationAreaRepository.saveAll(innovationAreas);
 
         Profile profile = newProfile()
                 .withId()
@@ -141,7 +141,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
                 .withName("Test Org 1", "Test Org 2", "Test Org 3")
                 .build(3);
 
-        organisationRepository.save(organisations);
+        organisationRepository.saveAll(organisations);
 
         processRoles.addAll(
                 newProcessRole()
@@ -152,7 +152,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
                         .build(2)
         );
 
-        processRoleRepository.save(processRoles);
+        processRoleRepository.saveAll(processRoles);
     }
 
     @After
@@ -303,7 +303,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
                 .withTarget(applications.get(0), applications.get(1))
                 .build(2);
 
-        interviewAssignmentRepository.save(interviewPanels);
+        interviewAssignmentRepository.saveAll(interviewPanels);
 
         RestResult<Void> result = controller.unstageApplications(applications.get(0).getCompetition().getId());
         assertTrue(result.isSuccess());

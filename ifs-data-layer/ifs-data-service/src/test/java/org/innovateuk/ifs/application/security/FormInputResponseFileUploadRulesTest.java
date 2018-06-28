@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -65,7 +66,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
         List<Role> expectedRoles = asList(LEADAPPLICANT, COLLABORATOR);
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(singletonList(applicantProcessRole));
         
         assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, userResource));

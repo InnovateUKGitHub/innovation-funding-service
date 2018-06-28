@@ -82,7 +82,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Before
     public void prepare(){
         loginSteveSmith();
-        grandClaimCost = applicationFinanceRowRepository.findOne(48L);
+        grandClaimCost = applicationFinanceRowRepository.findById(48L).get();
         applicationFinance = ((ApplicationFinanceRow) grandClaimCost).getTarget();
 
         grantClaim = (GrantClaim) controller.get(48L).getSuccess();
@@ -117,9 +117,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         proccessRoles.get(0).setUser(user);
         swapOutForUser(userMapper.mapToResource(user));
 
-        small = organisationSizeRepository.findOne(1L);
-        medium = organisationSizeRepository.findOne(2L);
-        large = organisationSizeRepository.findOne(3L);
+        small = organisationSizeRepository.findById(1L).get();
+        medium = organisationSizeRepository.findById(2L).get();
+        large = organisationSizeRepository.findById(3L).get();
     }
 
     /* Labour Section Tests */

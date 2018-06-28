@@ -104,7 +104,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
         applicationRepository.save(application);
         RestResult<Void> result = controller.assignApplication(application.getId());
         assertTrue(result.isSuccess());
-        application = applicationRepository.findOne(applicationId);
+        application = applicationRepository.findById(applicationId).get();
         assertTrue(application.isInAssessmentReviewPanel());
     }
 
@@ -117,7 +117,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
         applicationRepository.save(application);
         RestResult<Void> result = controller.unAssignApplication(application.getId());
         assertTrue(result.isSuccess());
-        application = applicationRepository.findOne(applicationId);
+        application = applicationRepository.findById(applicationId).get();
         assertFalse(application.isInAssessmentReviewPanel());
     }
 
@@ -484,7 +484,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         controller.acceptInvitation(review.getId()).getSuccess();
 
-        assertEquals(ReviewState.ACCEPTED, reviewRepository.findOne(review.getId()).getProcessState());
+        assertEquals(ReviewState.ACCEPTED, reviewRepository.findById(review.getId()).get().getProcessState());
     }
 
     @Test
@@ -524,7 +524,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         controller.acceptInvitation(review.getId()).getSuccess();
 
-        assertEquals(ReviewState.ACCEPTED, reviewRepository.findOne(review.getId()).getProcessState());
+        assertEquals(ReviewState.ACCEPTED, reviewRepository.findById(review.getId()).get().getProcessState());
     }
 
     @Test
@@ -568,6 +568,6 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         controller.rejectInvitation(review.getId(), rejectOutcomeResource).getSuccess();
 
-        assertEquals(ReviewState.REJECTED, reviewRepository.findOne(review.getId()).getProcessState());
+        assertEquals(ReviewState.REJECTED, reviewRepository.findById(review.getId()).get().getProcessState());
     }
 }

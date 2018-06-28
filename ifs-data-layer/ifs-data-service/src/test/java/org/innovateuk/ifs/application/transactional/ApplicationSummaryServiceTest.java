@@ -634,10 +634,10 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 .withAddress(singletonList(leadOrgOperatingAddress))
                 .build();
 
-        when(applicationRepositoryMock.findOne(123L)).thenReturn(app);
-        when(organisationRepositoryMock.findOne(234L)).thenReturn(leadOrg);
-        when(organisationRepositoryMock.findOne(345L)).thenReturn(partnerOrgB);
-        when(organisationRepositoryMock.findOne(456L)).thenReturn(partnerOrgA);
+        when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(app));
+        when(organisationRepositoryMock.findById(234L)).thenReturn(Optional.of(leadOrg));
+        when(organisationRepositoryMock.findById(345L)).thenReturn(Optional.of(partnerOrgB));
+        when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(partnerOrgA));
 
         AddressTypeResource registeredAddressTypeResource = newAddressTypeResource().withName("REGISTERED").build();
         AddressTypeResource operatingAddressTypeResource = newAddressTypeResource().withName("OPERATING").build();
@@ -696,7 +696,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getApplicationTeamFailsNoApplication() {
-        when(applicationRepositoryMock.findOne(123L)).thenReturn(null);
+        when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.empty());
 
         ServiceResult<ApplicationTeamResource> result = applicationSummaryService.getApplicationTeamByApplicationId(123L);
         assertTrue(result.isFailure());

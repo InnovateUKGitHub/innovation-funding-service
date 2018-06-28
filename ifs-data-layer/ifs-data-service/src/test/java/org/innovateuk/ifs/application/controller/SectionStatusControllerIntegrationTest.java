@@ -64,8 +64,8 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
         sectionId = 1L;
         excludedSectionId = 2L;
         applicationId = 1L;
-        section = sectionRepository.findOne(sectionId);
-        excludedSections = section = sectionRepository.findOne(excludedSectionId);
+        section = sectionRepository.findById(sectionId).get();
+        excludedSections = section = sectionRepository.findById(excludedSectionId).get();
 
         leadApplicantProcessRole = 1L;
         leadApplicantOrganisationId = 3L;
@@ -91,7 +91,7 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     public void testChildSectionsAreCompleteForAllOrganisations() throws Exception {
         excludedSections = null;
 
-        section = sectionRepository.findOne(sectionIdYourProjectCostsFinances);
+        section = sectionRepository.findById(sectionIdYourProjectCostsFinances).get();
         assertEquals("Your project costs", section.getName());
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
@@ -110,7 +110,7 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
         SecuritySetter.swapOutForUser(collaborator);
         assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccess().size());
 
-        section = sectionRepository.findOne(11L);
+        section = sectionRepository.findById(11L).get();
         assertEquals("Materials", section.getName());
         assertFalse(section.hasChildSections());
     }

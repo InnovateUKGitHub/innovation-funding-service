@@ -15,6 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -84,8 +86,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(compAdmin.getId(), applicantProcessRoles(), applicationId)).thenReturn(compAdminProcessRole);
 
-            when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-            when(competitionRepositoryMock.findById(application.getCompetition().getId())).thenReturn(competition);
+            when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
+            when(competitionRepositoryMock.findById(application.getCompetition().getId())).thenReturn(Optional.of(competition));
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions

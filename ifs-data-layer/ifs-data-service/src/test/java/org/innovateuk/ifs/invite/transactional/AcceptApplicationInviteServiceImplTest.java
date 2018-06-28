@@ -64,7 +64,7 @@ public class AcceptApplicationInviteServiceImplTest {
                 .build();
 
         when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
 
@@ -184,7 +184,7 @@ public class AcceptApplicationInviteServiceImplTest {
                 .withEmailAddress("james@test.com")
                 .build();
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         return user;
     }

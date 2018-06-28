@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
@@ -76,8 +77,8 @@ public class ApplicationSummaryMapperTest {
 
         Organisation org1 = newOrganisation().withId(1L).withName("leadorg").build();
         Organisation org2 = newOrganisation().withId(2L).withName("otherorg1").build();
-        when(organisationRepository.findOne(1L)).thenReturn(org1);
-        when(organisationRepository.findOne(2L)).thenReturn(org2);
+        when(organisationRepository.findById(1L)).thenReturn(Optional.of(org1));
+        when(organisationRepository.findById(2L)).thenReturn(Optional.of(org2));
 
         ProcessRole leadProcessRole = leadProcessRole(org1);
         source.addUserApplicationRole(leadProcessRole);

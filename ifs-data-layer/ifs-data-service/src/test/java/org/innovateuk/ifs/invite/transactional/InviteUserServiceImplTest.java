@@ -505,7 +505,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
                 withHash("hashhashhash").
                 build();
 
-        when(roleInviteRepositoryMock.findOne(123L)).thenReturn(existingInvite);
+        when(roleInviteRepositoryMock.findById(123L)).thenReturn(Optional.of(existingInvite));
 
         Role roleResource = Role.PROJECT_FINANCE;
 
@@ -537,7 +537,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void resendInternalUserInviteButInviteNotFound() {
 
-        when(roleInviteRepositoryMock.findOne(123L)).thenReturn(null);
+        when(roleInviteRepositoryMock.findById(123L)).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.resendInternalUserInvite(123L);
 
@@ -546,7 +546,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
         // in this case to explicitly save, but is reused code with creating invites also)
-        verify(roleInviteRepositoryMock).findOne(123L);
+        verify(roleInviteRepositoryMock).findById(123L);
         verifyNoMoreInteractions(roleInviteRepositoryMock, emailService);
     }
 

@@ -19,6 +19,7 @@ import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -95,8 +96,8 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
                 .withOrganisation(businessOrg)
                 .build();
 
-        when(organisationRepositoryMock.findOne(researchOrgId)).thenReturn(researchOrg);
-        when(organisationRepositoryMock.findOne(businessOrgId)).thenReturn(businessOrg);
+        when(organisationRepositoryMock.findById(researchOrgId)).thenReturn(Optional.of(researchOrg));
+        when(organisationRepositoryMock.findById(businessOrgId)).thenReturn(Optional.of(businessOrg));
 
         when(applicationFinanceRepositoryMock.findByApplicationId(applicationId)).thenReturn(asList(appFinanceResearchOrg, appFinanceBusinessOrg));
 

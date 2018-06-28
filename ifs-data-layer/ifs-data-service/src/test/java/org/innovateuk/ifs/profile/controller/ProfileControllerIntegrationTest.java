@@ -64,7 +64,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
     public void testGetProfileSkills() {
         loginPaulPlum();
 
-        User user = userRepository.findOne(getPaulPlum().getId());
+        User user = userRepository.findById(getPaulPlum().getId()).get();
         Long userId = user.getId();
 
         InnovationArea innovationArea = innovationAreaRepository.save(newInnovationArea()
@@ -92,7 +92,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
     @Test
     public void testUpdateProfileSkills() {
         loginCompAdmin();
-        UserResource userOne = userMapper.mapToResource(userRepository.findOne(1L));
+        UserResource userOne = userMapper.mapToResource(userRepository.findById(1L).get());
         setLoggedInUser(userOne);
 
         ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
@@ -108,7 +108,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
     public void testUpdateProfileAgreement() {
         loginPaulPlum();
 
-        User user = userRepository.findOne(getPaulPlum().getId());
+        User user = userRepository.findById(getPaulPlum().getId()).get();
         Long userId = user.getId();
 
         // Save an agreement as the current agreement
@@ -122,8 +122,8 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         RestResult<Void> restResult = controller.updateProfileAgreement(userId);
         assertTrue(restResult.isSuccess());
 
-        User userAfterUpdate = userRepository.findOne(userId);
-        Profile profile = profileRepository.findOne(userAfterUpdate.getProfileId());
+        User userAfterUpdate = userRepository.findById(userId).get();
+        Profile profile = profileRepository.findById(userAfterUpdate.getProfileId()).get();
 
         assertEquals(agreement, profile.getAgreement());
     }
@@ -134,7 +134,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         loginPaulPlum();
 
         Long userId = getPaulPlum().getId();
-        User user = userRepository.findOne(userId);
+        User user = userRepository.findById(userId).get();
 
         Address address = newAddress()
                 .withAddressLine1("10 Test St")
@@ -159,7 +159,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
     @Test
     public void testUpdateProfileDetails() {
         loginPaulPlum();
-        User user = userRepository.findOne(getPaulPlum().getId());
+        User user = userRepository.findById(getPaulPlum().getId()).get();
         Long userId = user.getId();
 
         user.setPhoneNumber("12345678");
@@ -189,7 +189,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
     public void testGetUserProfileStatus() {
         loginPaulPlum();
 
-        User user = userRepository.findOne(getPaulPlum().getId());
+        User user = userRepository.findById(getPaulPlum().getId()).get();
 
         Long userId = user.getId();
         Profile profile = newProfile()

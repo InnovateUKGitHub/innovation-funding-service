@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -67,7 +68,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
                 .withId(1L)
                 .withCompetition(competition).build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(innovationAreaMapperMock.mapToResource(asList( innovationAreas.get(2), innovationAreas.get(0)))).thenReturn(expectedInnovationAreas);
 
         ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(applicationId);
@@ -80,7 +81,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
     public void getAvailableInnovationAreas_applicationDoesNotExistShouldResultInError() throws Exception {
         Long applicationId = 1L;
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(null);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.empty());
 
         ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(1L);
 
@@ -95,7 +96,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         Application application = newApplication()
                 .withId(1L).build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
 
         ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(1L);
 
@@ -113,7 +114,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
                 .withId(1L)
                 .withCompetition(competition).build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
 
         ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(1L);
 
@@ -132,7 +133,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
                 .withId(1L)
                 .withCompetition(competition).build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
 
         ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(1L);
 
@@ -156,7 +157,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withInnovationArea(innovationAreas.get(1)).build();
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
 
         ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId, innovationAreas.get(0).getId());
@@ -174,7 +175,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         InnovationArea innovationArea = newInnovationArea().withId(innovationAreaId).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withInnovationArea(innovationArea).build();
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(null);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.empty());
 
         ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId ,innovationAreaId);
 
@@ -193,8 +194,8 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         Application application = newApplication().withId(applicationId).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withInnovationArea(innovationArea).build();
-        when(innovationAreaRepository.findOne(innovationAreaId)).thenReturn(null);
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(innovationAreaRepository.findById(innovationAreaId)).thenReturn(Optional.empty());
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
 
         ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId ,innovationAreaId);
@@ -219,7 +220,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withInnovationArea(innovationAreas.get(1)).build();
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
 
         ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId, disallowedInnovationAreaId);
@@ -239,7 +240,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         Application expectedApplication = newApplication().withId(applicationId).withNoInnovationAreaApplicable(true).build();
         ApplicationResource expectedApplicationResource = newApplicationResource().withId(applicationId).withNoInnovationAreaApplicable(true).build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(expectedApplication);
         when(applicationMapperMock.mapToResource(expectedApplication)).thenReturn(expectedApplicationResource);
 

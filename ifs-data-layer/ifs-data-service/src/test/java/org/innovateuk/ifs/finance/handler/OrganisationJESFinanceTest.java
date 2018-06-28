@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
@@ -28,7 +29,7 @@ public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
     public void updateCost_shouldReturnFailureWhenCostItemCannotBeFoundById() throws Exception {
         ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().build();
 
-        when(applicationFinanceRowRepository.findOne(any())).thenReturn(null);
+        when(applicationFinanceRowRepository.findById(any())).thenReturn(Optional.empty());
 
         ApplicationFinanceRow result = organisationJESFinance.updateCost(applicationFinanceRow);
 
@@ -40,7 +41,7 @@ public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
     public void updateCost_shouldSaveEntityWhenCostItemCanBeFoundById() throws Exception {
         ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withId(1L).build();
 
-        when(applicationFinanceRowRepository.findOne(any())).thenReturn(applicationFinanceRow);
+        when(applicationFinanceRowRepository.findById(any())).thenReturn(Optional.of(applicationFinanceRow));
         when(applicationFinanceRowRepository.save(any(ApplicationFinanceRow.class))).thenReturn(applicationFinanceRow);
 
         ApplicationFinanceRow result = organisationJESFinance.updateCost(applicationFinanceRow);
@@ -72,7 +73,7 @@ public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
 
         ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withName(financeRowName).withTarget(newApplicationFinance().build()).withQuestion(newQuestion().build()).withId(1L).build();
 
-        when(applicationFinanceRowRepository.findOne(any())).thenReturn(null);
+        when(applicationFinanceRowRepository.findById(any())).thenReturn(Optional.empty());
         when(applicationFinanceRowRepository.save(any(ApplicationFinanceRow.class))).thenReturn(applicationFinanceRow);
 
         ApplicationFinanceRow result = organisationJESFinance.addCost(applicationFinanceRow.getTarget().getId(), applicationFinanceRow.getQuestion().getId(), applicationFinanceRow);

@@ -90,8 +90,8 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withName("Warp Drive")
                 .withNoInnovationAreaApplicable(false)
-                .withCompetition(competitionRepository.findById(competitionId))
-                .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
+                .withCompetition(competitionRepository.findById(competitionId).get())
+                .withInnovationArea(innovationAreaRepository.findById(innovationAreaId).get())
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 

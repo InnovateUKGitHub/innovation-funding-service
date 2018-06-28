@@ -69,10 +69,10 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
         long competitionId = 1L;
         loginCompAdmin();
 
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .with(id(null))
@@ -81,7 +81,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -90,7 +90,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);

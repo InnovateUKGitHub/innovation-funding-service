@@ -68,7 +68,7 @@ public class OrganisationFinanceHandlerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        when(financeRowRepositoryMock.save(anyList())).then(returnsFirstArg());
+        when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
 
         competition = newCompetition().build();
         application = newApplication().withCompetition(competition).build();

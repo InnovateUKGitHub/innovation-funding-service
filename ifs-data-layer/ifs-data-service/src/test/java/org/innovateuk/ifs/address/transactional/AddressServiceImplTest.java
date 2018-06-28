@@ -9,6 +9,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.junit.Assert.assertEquals;
@@ -34,7 +36,7 @@ public class AddressServiceImplTest extends BaseServiceUnitTest<AddressServiceIm
         Address address = newAddress().build();
         AddressResource addressResource = newAddressResource().withId(address.getId()).build();
 
-        when(addressRepositoryMock.findOne(address.getId())).thenReturn(address);
+        when(addressRepositoryMock.findById(address.getId())).thenReturn(Optional.of(address));
         when(addressMapperMock.mapToResource(address)).thenReturn(addressResource);
 
         ServiceResult<AddressResource> serviceResult = service.getById(addressResource.getId());

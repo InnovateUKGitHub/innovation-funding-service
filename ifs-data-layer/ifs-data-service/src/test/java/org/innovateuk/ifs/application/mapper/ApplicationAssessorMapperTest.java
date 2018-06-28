@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.EnumSet;
+import java.util.Optional;
 
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
@@ -94,11 +95,11 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
         long assignedCount = 3L;
         long submittedCount = 4L;
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
 
         when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class)))
                 .then(invocation -> {
-                    InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
+                    InnovationArea argument = invocation.getArgument(0);
                     return newInnovationAreaResource()
                             .withId(argument.getId())
                             .withName(argument.getName())
@@ -155,7 +156,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
 
         Long userId = competitionParticipant.getUser().getId();
         Long profileId = competitionParticipant.getUser().getProfileId();
-        inOrder.verify(profileRepositoryMock).findOne(profileId);
+        inOrder.verify(profileRepositoryMock).findById(profileId);
         profile.getInnovationAreas().forEach(
                 innovationArea -> inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea));
         inOrder.verify(assessmentRepositoryMock)

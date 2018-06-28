@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -128,7 +129,7 @@ public class ApplicationProgressServiceImplTest {
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
 
-        when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
+        when(applicationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(openApplication));
 
         multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
         leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
@@ -143,10 +144,10 @@ public class ApplicationProgressServiceImplTest {
         comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
         app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
 
-        when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
-        when(organisationRepositoryMock.findOne(234L)).thenReturn(org1);
-        when(organisationRepositoryMock.findOne(345L)).thenReturn(org2);
-        when(organisationRepositoryMock.findOne(456L)).thenReturn(org3);
+        when(applicationRepositoryMock.findById(app.getId())).thenReturn(Optional.of(app));
+        when(organisationRepositoryMock.findById(234L)).thenReturn(Optional.of(org1));
+        when(organisationRepositoryMock.findById(345L)).thenReturn(Optional.of(org2));
+        when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(org3));
     }
     @Test
     public void updateApplicationProgress_notCompletedAllSingleStatusQuestions() {
@@ -164,7 +165,7 @@ public class ApplicationProgressServiceImplTest {
 
         ServiceResult<BigDecimal> result = service.updateApplicationProgress(app.getId());
 
-        verify(applicationRepositoryMock).findOne(app.getId());
+        verify(applicationRepositoryMock).findById(app.getId());
 
         assertTrue(result.isSuccess());
         assertEquals(BigDecimal.valueOf(50).setScale(2, RoundingMode.UNNECESSARY), result.getSuccess());
@@ -244,7 +245,7 @@ public class ApplicationProgressServiceImplTest {
 
         ServiceResult<BigDecimal> result = service.updateApplicationProgress(app.getId());
 
-        verify(applicationRepositoryMock).findOne(app.getId());
+        verify(applicationRepositoryMock).findById(app.getId());
 
         assertTrue(result.isSuccess());
         assertEquals(BigDecimal.valueOf(100).setScale(2, RoundingMode.UNNECESSARY), result.getSuccess());

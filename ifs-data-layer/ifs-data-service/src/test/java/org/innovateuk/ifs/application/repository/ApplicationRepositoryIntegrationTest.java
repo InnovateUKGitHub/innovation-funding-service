@@ -65,7 +65,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         long initial = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates).count();
 
-        repository.save(applicationList);
+        repository.saveAll(applicationList);
 
         Stream<Application> applications = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates);
 
@@ -83,7 +83,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .build(2);
 
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         Pageable pageable = new PageRequest(0, 20);
 
@@ -118,7 +118,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .build(2);
 
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         InterviewAssignment interviewPanel = newInterviewAssignment()
                 .with(id(null))
@@ -147,7 +147,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withActivityState(SUBMITTED)
                 .build(2);
 
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         InterviewAssignment interviewAssignment = newInterviewAssignment()
                 .with(id(null))

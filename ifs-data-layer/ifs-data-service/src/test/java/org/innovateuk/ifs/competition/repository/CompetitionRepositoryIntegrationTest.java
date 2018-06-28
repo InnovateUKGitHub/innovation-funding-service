@@ -628,7 +628,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application application = applicationRepository.save(newApplication().withId(11L).withCompetition
                 (competition).build());
 
-        Competition retrieved = repository.findById(application.getCompetition().getId());
+        Competition retrieved = repository.findById(application.getCompetition().getId()).get();
 
         assertEquals(competition, retrieved);
     }
@@ -649,7 +649,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         flushAndClearSession();
 
-        Competition retrievedCompetition = repository.findById(savedCompetition.getId());
+        Competition retrievedCompetition = repository.findById(savedCompetition.getId()).get();
         assertTrue(expectedDateTime.isEqual(retrievedCompetition.getStartDate()));
     }
 
@@ -664,7 +664,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Long projectId = results.get(0).getProjectId();
         Long organisationId = results.get(0).getOrganisationId();
 
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         PartnerOrganisation otherPartnerOrganisation = simpleFindFirst(project.getPartnerOrganisations(), org -> !org
                 .getOrganisation().getId().equals(organisationId)).get();
 

@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -55,7 +56,7 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         Long attachmentId = 1L;
         Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), newFileEntry().build(), null);
         AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes(), null);
-        when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(attachment);
+        when(attachmentRepositoryMock.findById(attachmentId)).thenReturn(Optional.of(attachment));
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
 
         AttachmentResource response = service.findOne(attachmentId).getSuccess();
@@ -71,10 +72,10 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         final Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), attachmentsFileEntry, null);
         final AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes(), null);
 
-        when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(attachment);
+        when(attachmentRepositoryMock.findById(attachmentId)).thenReturn(Optional.of(attachment));
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(attachment);
-        when(fileEntryRepositoryMock.findOne(attachmentsFileEntryId)).thenReturn(attachmentsFileEntry);
+        when(fileEntryRepositoryMock.findById(attachmentsFileEntryId)).thenReturn(Optional.of(attachmentsFileEntry));
         final FileEntryResource fileEntryResource = new FileEntryResource(attachment.fileId(), attachment.fileName(),
                 attachment.mediaType(), attachment.sizeInBytes());
 
@@ -97,7 +98,7 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
     public void test_downloadUnsuccessfulIfAttachmentDoesNotExist() throws Exception {
         final Long attachmentId = 1L;
 
-        when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(null);
+        when(attachmentRepositoryMock.findById(attachmentId)).thenReturn(Optional.empty());
         ServiceResult<FileAndContents> response = service.attachmentFileAndContents(attachmentId);
 
         assertTrue(response.isFailure());
@@ -109,7 +110,7 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         Long attachmentId = 1L;
         Attachment attachment = new Attachment(attachmentId, newUser().withId(89L).build(), newFileEntry().build(), null);
         AttachmentResource attachmentResource = new AttachmentResource(attachmentId, attachment.fileName(), attachment.mediaType(), attachment.sizeInBytes(), null);
-        when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(attachment);
+        when(attachmentRepositoryMock.findById(attachmentId)).thenReturn(Optional.of(attachment));
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
 
         AttachmentResource response = service.findOne(attachmentId).getSuccess();

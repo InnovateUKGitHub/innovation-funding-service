@@ -55,13 +55,13 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     public void testOrganisationType() throws Exception {
 
         OrganisationResource org = controller.findById(2L).getSuccess();
-        OrganisationType organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
+        OrganisationType organisationType = organisationTypeRepository.findById(org.getOrganisationType()).get();
 
         assertEquals("Business", organisationType.getName());
 
         loginPeteTom();
         org = controller.findById(6L).getSuccess();
-        organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
+        organisationType = organisationTypeRepository.findById(org.getOrganisationType()).get();
         assertEquals("Research", organisationType.getName());
     }
 

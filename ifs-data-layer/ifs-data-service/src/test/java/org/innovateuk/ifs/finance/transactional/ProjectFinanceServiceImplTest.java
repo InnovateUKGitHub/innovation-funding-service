@@ -37,6 +37,7 @@ import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
@@ -148,19 +149,19 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         materialCost = newProjectFinanceRow().withId(costItemId).withQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS)).withTarget(newFinance).build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
 
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
-        when(projectFinanceRowRepositoryMock.findOne(costItemId)).thenReturn(materialCost);
+        when(projectFinanceRowRepositoryMock.findById(costItemId)).thenReturn(Optional.of(materialCost));
 
         when(organisationFinanceDefaultHandlerMock.costItemToProjectCost(material)).thenReturn(materialCost);
 
-        when(questionRepositoryMock.findOne(questionId)).thenReturn(question);
+        when(questionRepositoryMock.findById(questionId)).thenReturn(Optional.of(question));
 
-        when(projectFinanceRepositoryMock.findOne(projectFinanceId)).thenReturn(newFinance);
+        when(projectFinanceRepositoryMock.findById(projectFinanceId)).thenReturn(Optional.of(newFinance));
 
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newFinance);
     }

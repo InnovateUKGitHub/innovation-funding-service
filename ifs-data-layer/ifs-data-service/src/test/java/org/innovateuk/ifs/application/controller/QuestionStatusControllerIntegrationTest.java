@@ -57,7 +57,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
 
     @Before
     public void setup(){
-        question = questionRepository.findOne(questionId);
+        question = questionRepository.findById(questionId).get();
         questionResource = questionMapper.mapToResource(question);
 
         addBasicSecurityUser();
@@ -157,7 +157,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
 
     @Test
     public void testIsMarkedAsCompleteMultiple() throws Exception {
-        question = questionRepository.findOne(QUESTION_ID_WITH_MULTIPLE);
+        question = questionRepository.findById(QUESTION_ID_WITH_MULTIPLE).get();
 
         assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
 

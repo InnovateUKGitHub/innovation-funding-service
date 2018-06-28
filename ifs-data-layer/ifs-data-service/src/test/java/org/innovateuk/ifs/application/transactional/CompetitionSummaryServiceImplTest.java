@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.CompletedPercentageResourceBuilder.newCompletedPercentageResource;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.*;
@@ -57,7 +58,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 .withEndDate(ZonedDateTime.of(2016, 5, 23, 8, 30, 0, 0, ZoneId.systemDefault()))
                 .build();
 
-        when(competitionRepositoryMock.findById(COMP_ID)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(COMP_ID)).thenReturn(Optional.of(competition));
         when(applicationRepositoryMock.countByCompetitionId(COMP_ID)).thenReturn(83);
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(
                 COMP_ID, CREATED_AND_OPEN_STATUSES, new BigDecimal(50L))

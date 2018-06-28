@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -62,7 +63,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
-            when(applicationFinanceRowRepositoryMock.findOne(overheads.getId())).thenReturn((ApplicationFinanceRow) overheads);
+            when(applicationFinanceRowRepositoryMock.findById(overheads.getId())).thenReturn(Optional.of((ApplicationFinanceRow) overheads));
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).

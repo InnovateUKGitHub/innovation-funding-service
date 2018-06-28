@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static freemarker.template.utility.Collections12.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -82,7 +83,7 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
 
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId())).thenReturn(projectFinance);
         when(projectFinanceMapperMock.mapToResource(projectFinance)).thenReturn(projectFinanceResource);
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(anyLong())).thenReturn(organisationFinanceDefaultHandlerMock);
         when(projectFinanceRepositoryMock.findByProjectId(projectId)).thenReturn(singletonList(projectFinance));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(any(Long.class))).thenReturn(organisationFinanceDefaultHandlerMock);

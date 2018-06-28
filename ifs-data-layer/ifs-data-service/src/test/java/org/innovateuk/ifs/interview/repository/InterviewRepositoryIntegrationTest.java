@@ -112,7 +112,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withCompetition(competition)
                 .build();
 
-        applicationRepository.save(asList(application1, application2, application3, unassignedApplication));
+        applicationRepository.saveAll(asList(application1, application2, application3, unassignedApplication));
 
         ProcessRole assessorRole1 = newProcessRole()
                 .with(id(null))
@@ -157,7 +157,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withOrganisationId(organisation.getId())
                 .build();
 
-        processRoleRepository.save(asList(assessorRole1, assessorRole2, assessorRole3, otherAssessorRole1, otherAssessorRole2, lead1, lead2));
+        processRoleRepository.saveAll(asList(assessorRole1, assessorRole2, assessorRole3, otherAssessorRole1, otherAssessorRole2, lead1, lead2));
 
         InterviewAssignment created = newInterviewAssignment()
                 .with(id(null))
@@ -177,7 +177,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withTarget(application2)
                 .build();
 
-        interviewAssignmentRepository.save(asList(created, submitted, responded));
+        interviewAssignmentRepository.saveAll(asList(created, submitted, responded));
 
         Interview assignedInterview = newInterview()
                 .with(id(null))
@@ -200,7 +200,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withTarget(application1)
                 .build();
 
-        repository.save(asList(assignedInterview, notAssignedInterview, assignedInterview2));
+        repository.saveAll(asList(assignedInterview, notAssignedInterview, assignedInterview2));
 
         flushAndClearSession();
     }

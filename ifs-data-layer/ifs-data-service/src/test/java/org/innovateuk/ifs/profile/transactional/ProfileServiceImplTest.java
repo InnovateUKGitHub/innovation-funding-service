@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -103,8 +104,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .build();
         existingUser.setProfileId(profile.getId());
 
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
-        when(profileRepositoryMock.findOne(existingUser.getProfileId())).thenReturn(profile);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
+        when(profileRepositoryMock.findById(existingUser.getProfileId())).thenReturn(Optional.of(profile));
         when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
         when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
 
@@ -116,8 +117,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertEquals("Skills", response.getSkillsAreas());
 
         InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock, innovationAreaMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(profileRepositoryMock).findOne(existingUser.getProfileId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
+        inOrder.verify(profileRepositoryMock).findById(existingUser.getProfileId());
         inOrder.verify(innovationAreaMapperMock, times(2)).mapToResource(isA(InnovationArea.class));
         inOrder.verifyNoMoreInteractions();
     }
@@ -129,7 +130,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         ServiceResult<ProfileSkillsResource> response = service.getProfileSkills(userIdNotExists);
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
-        verify(userRepositoryMock, only()).findOne(userIdNotExists);
+        verify(userRepositoryMock, only()).findById(userIdNotExists);
     }
 
     @Test
@@ -138,7 +139,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withProfileId(1L)
                 .build();
 
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         ProfileSkillsResource expected = newProfileSkillsResource()
                 .withUser(existingUser.getId())
@@ -147,7 +148,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         ProfileSkillsResource response = service.getProfileSkills(existingUser.getId()).getSuccess();
         assertEquals(expected, response);
 
-        verify(userRepositoryMock).findOne(existingUser.getId());
+        verify(userRepositoryMock).findById(existingUser.getId());
         verifyNoMoreInteractions(userRepositoryMock);
     }
 
@@ -156,7 +157,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         User existingUser = newUser()
                 .build();
 
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         ProfileSkillsResource expected = newProfileSkillsResource()
                 .withUser(existingUser.getId())
@@ -165,7 +166,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         ProfileSkillsResource response = service.getProfileSkills(existingUser.getId()).getSuccess();
         assertEquals(expected, response);
 
-        verify(userRepositoryMock).findOne(existingUser.getId());
+        verify(userRepositoryMock).findById(existingUser.getId());
         verifyNoMoreInteractions(userRepositoryMock);
     }
 
@@ -184,8 +185,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withProfileId(existingProfile.getId())
                 .build();
 
-        when(profileRepositoryMock.findOne(existingProfile.getId())).thenReturn(existingProfile);
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(profileRepositoryMock.findById(existingProfile.getId())).thenReturn(Optional.of(existingProfile));
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         Profile updatedProfile = newProfile()
                 .with(id(existingUser.getProfileId()))
@@ -205,7 +206,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(userRepositoryMock).findById(userId);
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
         inOrder.verifyNoMoreInteractions();
     }
@@ -218,7 +219,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(User.class, userId)));
 
-        verify(userRepositoryMock).findOne(userId);
+        verify(userRepositoryMock).findById(userId);
         verifyNoMoreInteractions(userRepositoryMock);
     }
 
@@ -236,8 +237,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withProfileId(profile.getId())
                 .build();
 
-        when(userRepositoryMock.findOne(userId)).thenReturn(existingUser);
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build(), profile);
 
         ServiceResult<Void> result = service.updateProfileSkills(existingUser.getId(), newProfileSkillsEditResource()
@@ -249,8 +250,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(userId);
-        inOrder.verify(profileRepositoryMock).findOne(profile.getId());
+        inOrder.verify(userRepositoryMock).findById(userId);
+        inOrder.verify(profileRepositoryMock).findById(profile.getId());
         inOrder.verify(profileRepositoryMock).save(profile);
         inOrder.verifyNoMoreInteractions();
     }
@@ -275,8 +276,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
         when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
         when(agreementMapperMock.mapToResource(currentAgreement)).thenReturn(currentAgreementResource);
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         ProfileAgreementResource expected = newProfileAgreementResource()
                 .withUser(existingUser.getId())
@@ -289,7 +290,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertEquals(expected, response);
 
         InOrder inOrder = inOrder(agreementRepositoryMock, userRepositoryMock, agreementMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(agreementMapperMock).mapToResource(currentAgreement);
         inOrder.verifyNoMoreInteractions();
@@ -302,7 +303,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         ServiceResult<ProfileAgreementResource> response = service.getProfileAgreement(userIdNotExists);
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
-        verify(userRepositoryMock, only()).findOne(userIdNotExists);
+        verify(userRepositoryMock, only()).findById(userIdNotExists);
         verifyZeroInteractions(agreementRepositoryMock);
         verifyZeroInteractions(agreementMapperMock);
     }
@@ -321,7 +322,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
         when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
         when(agreementMapperMock.mapToResource(currentAgreement)).thenReturn(currentAgreementResource);
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         ProfileAgreementResource expected = newProfileAgreementResource()
                 .withUser(existingUser.getId())
@@ -334,7 +335,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertEquals(expected, response);
 
         InOrder inOrder = inOrder(agreementRepositoryMock, userRepositoryMock, agreementMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(agreementMapperMock).mapToResource(currentAgreement);
         inOrder.verifyNoMoreInteractions();
@@ -354,7 +355,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
         when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
         when(agreementMapperMock.mapToResource(currentAgreement)).thenReturn(currentAgreementResource);
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         ProfileAgreementResource expected = newProfileAgreementResource()
                 .withUser(existingUser.getId())
@@ -367,7 +368,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertEquals(expected, response);
 
         InOrder inOrder = inOrder(agreementRepositoryMock, userRepositoryMock, agreementMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(agreementMapperMock).mapToResource(currentAgreement);
         inOrder.verifyNoMoreInteractions();
@@ -385,7 +386,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
         when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
         when(agreementMapperMock.mapToResource(currentAgreement)).thenReturn(currentAgreementResource);
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         ProfileAgreementResource expected = newProfileAgreementResource()
                 .withUser(existingUser.getId())
@@ -398,7 +399,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertEquals(expected, response);
 
         InOrder inOrder = inOrder(agreementRepositoryMock, userRepositoryMock, agreementMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(agreementMapperMock).mapToResource(currentAgreement);
         inOrder.verifyNoMoreInteractions();
@@ -415,8 +416,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         User existingUser = newUser()
                 .withProfileId(profile.getId())
                 .build();
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
 
         Agreement currentAgreement = newAgreement()
                 .build();
@@ -433,9 +434,9 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, profileRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
-        inOrder.verify(profileRepositoryMock, times(2)).findOne(profile.getId());
+        inOrder.verify(profileRepositoryMock, times(2)).findById(profile.getId());
         inOrder.verify(profileRepositoryMock).save(profile);
         inOrder.verifyNoMoreInteractions();
     }
@@ -448,7 +449,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
-        verify(userRepositoryMock, only()).findOne(userIdNotExists);
+        verify(userRepositoryMock, only()).findById(userIdNotExists);
         verifyZeroInteractions(agreementRepositoryMock);
         verifyZeroInteractions(agreementMapperMock);
     }
@@ -463,7 +464,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         User existingUser = newUser()
                 .withProfileId(initialProfile.getId())
                 .build();
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         Agreement currentAgreement = newAgreement()
                 .build();
@@ -475,16 +476,16 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withAgreementSignedDate(expectedAgreementSignedDate)
                 .build();
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
-        when(profileRepositoryMock.findOne(initialProfile.getId()))
-                .thenReturn(initialProfile, initialProfile, updatedProfile);
+        when(profileRepositoryMock.findById(initialProfile.getId()))
+                .thenReturn(Optional.of(initialProfile), Optional.of(initialProfile), Optional.of(updatedProfile));
 
         ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, profileRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
-        inOrder.verify(profileRepositoryMock, times(2)).findOne(updatedProfile.getId());
+        inOrder.verify(profileRepositoryMock, times(2)).findById(updatedProfile.getId());
         inOrder.verify(profileRepositoryMock).save(any(Profile.class));
         inOrder.verifyNoMoreInteractions();
     }
@@ -501,7 +502,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         User existingUser = newUser()
                 .withProfileId(initialProfile.getId())
                 .build();
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         Agreement currentAgreement = newAgreement()
                 .withId(2L)
@@ -514,16 +515,16 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withAgreementSignedDate(expectedAgreementSignedDate)
                 .build();
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
-        when(profileRepositoryMock.findOne(initialProfile.getId()))
-                .thenReturn(initialProfile, initialProfile, updatedProfile);
+        when(profileRepositoryMock.findById(initialProfile.getId()))
+                .thenReturn(Optional.of(initialProfile), Optional.of(initialProfile), Optional.of(updatedProfile));
 
         ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, profileRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
-        inOrder.verify(profileRepositoryMock, times(2)).findOne(updatedProfile.getId());
+        inOrder.verify(profileRepositoryMock, times(2)).findById(updatedProfile.getId());
         inOrder.verify(profileRepositoryMock).save(any(Profile.class));
         inOrder.verifyNoMoreInteractions();
     }
@@ -540,15 +541,15 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withProfileId(profile.getId())
                 .build();
         when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
-        when(profileRepositoryMock.findOne(existingUser.getProfileId())).thenReturn(profile);
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(profileRepositoryMock.findById(existingUser.getProfileId())).thenReturn(Optional.of(profile));
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(badRequestError("validation.assessorprofileagreementform.terms.alreadysigned")));
 
         InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, userRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verifyNoMoreInteractions();
     }
@@ -560,7 +561,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         User existingUser = newUser()
                 .withId(1L)
                 .build();
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         Agreement currentAgreement = newAgreement()
                 .build();
@@ -579,15 +580,15 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withAgreementSignedDate(expectedAgreementSignedDate)
                 .build();
         when(profileRepositoryMock.save(newProfile)).thenReturn(savedProfile);
-        when(profileRepositoryMock.findOne(profileId)).thenReturn(savedProfile, profileWithAgreement);
+        when(profileRepositoryMock.findById(profileId)).thenReturn(Optional.of(savedProfile), Optional.of(profileWithAgreement));
 
         ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, profileRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
-        inOrder.verify(profileRepositoryMock).findOne(profileId);
+        inOrder.verify(profileRepositoryMock).findById(profileId);
         inOrder.verify(profileRepositoryMock).save(any(Profile.class));
         inOrder.verifyNoMoreInteractions();
     }
@@ -595,7 +596,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     @Test
     public void getUserProfileStatus() throws Exception {
         User user = newUser().build();
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
 
@@ -603,7 +604,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
         assertEquals(newUserProfileStatusResource().withUser(user.getId()).build(), result.getSuccess());
 
-        verify(userRepositoryMock, only()).findOne(user.getId());
+        verify(userRepositoryMock, only()).findById(user.getId());
     }
 
     @Test
@@ -617,8 +618,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withProfileId(profile.getId())
                 .build();
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
 
@@ -634,7 +635,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 result.getSuccess()
         );
 
-        verify(userRepositoryMock, only()).findOne(user.getId());
+        verify(userRepositoryMock, only()).findById(user.getId());
     }
 
     @Test
@@ -646,8 +647,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withProfileId(profile.getId())
                 .build();
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
 
@@ -663,7 +664,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 result.getSuccess()
         );
 
-        verify(userRepositoryMock, only()).findOne(user.getId());
+        verify(userRepositoryMock, only()).findById(user.getId());
     }
 
     @Test
@@ -672,7 +673,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withAffiliations(asList(newAffiliation().build()))
                 .build();
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
 
@@ -688,7 +689,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 result.getSuccess()
         );
 
-        verify(userRepositoryMock, only()).findOne(user.getId());
+        verify(userRepositoryMock, only()).findById(user.getId());
     }
 
     @Test
@@ -700,8 +701,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withProfileId(profile.getId())
                 .build();
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<UserProfileStatusResource> result = service.getUserProfileStatus(user.getId());
 
@@ -717,7 +718,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 result.getSuccess()
         );
 
-        verify(userRepositoryMock, only()).findOne(user.getId());
+        verify(userRepositoryMock, only()).findById(user.getId());
     }
 
     @Test
@@ -742,8 +743,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         AddressResource addressResource = newAddressResource().withId(1L).build();
         EthnicityResource ethnicityResource = newEthnicityResource().build();
 
-        when(profileRepositoryMock.findOne(existingProfile.getId())).thenReturn(existingProfile);
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(profileRepositoryMock.findById(existingProfile.getId())).thenReturn(Optional.of(existingProfile));
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
         when(addressMapperMock.mapToResource(existingProfile.getAddress())).thenReturn(addressResource);
         when(ethnicityMapperMock.mapToResource(existingUser.getEthnicity())).thenReturn(ethnicityResource);
 
@@ -764,7 +765,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertEquals(expected, response);
 
         InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock, addressMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(ethnicityMapperMock).mapToResource(existingUser.getEthnicity());
         inOrder.verify(addressMapperMock).mapToResource(existingProfile.getAddress());
         inOrder.verifyNoMoreInteractions();
@@ -776,7 +777,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withEthnicity(newEthnicity().build())
                 .build();
 
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         UserProfileResource expected = newUserProfileResource()
                 .withUser(existingUser.getId())
@@ -789,7 +790,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertEquals(expected, response);
 
         InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(ethnicityMapperMock).mapToResource(existingUser.getEthnicity());
         inOrder.verifyNoMoreInteractions();
 
@@ -808,8 +809,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withEthnicity(newEthnicity().build())
                 .build();
 
-        when(profileRepositoryMock.findOne(originalProfile.getId())).thenReturn(originalProfile);
-        when(userRepositoryMock.findOne(userId)).thenReturn(existingUser);
+        when(profileRepositoryMock.findById(originalProfile.getId())).thenReturn(Optional.of(originalProfile));
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(existingUser));
 
         EthnicityResource ethnicityResource = newEthnicityResource().build();
         Ethnicity ethnicity = newEthnicity().build();
@@ -833,9 +834,9 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock, addressMapperMock, profileRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(userRepositoryMock).findById(userId);
         inOrder.verify(ethnicityMapperMock).mapIdToDomain(ethnicityResource.getId());
-        inOrder.verify(profileRepositoryMock).findOne(originalProfile.getId());
+        inOrder.verify(profileRepositoryMock).findById(originalProfile.getId());
         inOrder.verify(addressMapperMock).mapToDomain(addressResource);
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
 

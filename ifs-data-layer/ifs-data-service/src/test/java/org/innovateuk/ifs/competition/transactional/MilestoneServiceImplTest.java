@@ -44,15 +44,15 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Before
     public void setUp() {
         when(competitionRepository.findById(1L))
-                .thenReturn(newCompetition()
+                .thenReturn(Optional.of(newCompetition()
                     .withId(1L)
                     .withNonIfs(false)
-                    .build());
+                    .build()));
 
         when(milestoneMapper.mapToDomain(any(MilestoneResource.class))).thenAnswer(new Answer<Milestone>() {
             @Override
             public Milestone answer(InvocationOnMock invocation) throws Throwable {
-                MilestoneResource arg = invocation.getArgumentAt(0, MilestoneResource.class);
+                MilestoneResource arg = invocation.getArgument(0);
                 Milestone milestone = newMilestone().withType(arg.getType()).withDate(arg.getDate()).build();
                 return milestone;
             }
@@ -62,7 +62,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void testUpdateMilestones() {
         Competition competition = newCompetition().build();
-        when(competitionRepository.findById(1L)).thenReturn(competition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         List<MilestoneResource> milestones = newMilestoneResource()
                 .withCompetitionId(1L, 1L)
@@ -81,13 +81,13 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         ServiceResult<Void> result = service.updateMilestones(milestones);
 
         assertTrue(result.isSuccess());
-        verify(milestoneRepository, times(1)).save(milestonesToSave);
+        verify(milestoneRepository, times(1)).saveAll(milestonesToSave);
     }
 
     @Test
     public void testUpdateNotSequential() {
         Competition competition = newCompetition().build();
-        when(competitionRepository.findById(1L)).thenReturn(competition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         List<MilestoneResource> milestones = newMilestoneResource()
                 .withCompetitionId(1L, 1L)
@@ -106,7 +106,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void testUpdateMilestonesNullDate() {
         Competition competition = newCompetition().build();
-        when(competitionRepository.findById(1L)).thenReturn(competition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         List<MilestoneResource> milestones = newMilestoneResource()
                 .withCompetitionId(1L, 1L)
@@ -125,7 +125,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void testUpdateMilestonesDateInPast() {
         Competition competition = newCompetition().build();
-        when(competitionRepository.findById(1L)).thenReturn(competition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         List<MilestoneResource> milestones = newMilestoneResource()
                 .withCompetitionId(1L, 1L)
@@ -144,7 +144,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void testUpdateMilestonesErrorsNotRepeated() {
         Competition competition = newCompetition().build();
-        when(competitionRepository.findById(1L)).thenReturn(competition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         List<MilestoneResource> milestones = newMilestoneResource()
                 .withCompetitionId(1L, 1L)
@@ -208,10 +208,10 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void allPublicDatesCompleteSuccessForNonIfs() {
         when(competitionRepository.findById(1L))
-                .thenReturn(newCompetition()
+                .thenReturn(Optional.of(newCompetition()
                         .withId(1L)
                         .withNonIfs(true)
-                        .build());
+                        .build()));
 
         List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE).withDate(ZonedDateTime.now()).build(4);
         when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE)))
@@ -260,7 +260,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void testUpdateMilestones_milestonesForNonIfsCompetitionDoNotHaveToBeInFuture() {
         Competition nonIfsCompetition = newCompetition().withNonIfs(true).build();
-        when(competitionRepository.findById(1L)).thenReturn(nonIfsCompetition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(nonIfsCompetition));
 
         ZonedDateTime lastYearSomewhere = ZonedDateTime.now()
                 .minusYears(1);
@@ -282,7 +282,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void testUpdateMilestones_milestonesForIfsCompetitionHaveToBeInFuture() {
         Competition ifsCompetition = newCompetition().withNonIfs(false).build();
-        when(competitionRepository.findById(1L)).thenReturn(ifsCompetition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(ifsCompetition));
 
         ZonedDateTime lastYearSomewhere = ZonedDateTime.now()
                 .minusYears(1);
@@ -305,7 +305,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void testUpdateMilestones_whenMilestonesAreReferencingDifferentCompetitionsShouldReturnError() {
         Competition competition = newCompetition().build();
-        when(competitionRepository.findById(1L)).thenReturn(competition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         List<MilestoneResource> milestones = newMilestoneResource()
                 .withCompetitionId(1L, 2L)

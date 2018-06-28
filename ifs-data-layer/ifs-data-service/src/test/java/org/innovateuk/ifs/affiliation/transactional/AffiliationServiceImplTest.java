@@ -16,6 +16,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -59,13 +60,13 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
                 .withAffiliations(affiliations)
                 .build();
 
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
 
         List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess().getAffiliationResourceList();
         assertEquals(affiliationResources, response);
 
         InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(userRepositoryMock).findById(userId);
         inOrder.verify(affiliationMapperMock, times(2)).mapToResource(isA(Affiliation.class));
         inOrder.verifyNoMoreInteractions();
     }
@@ -77,7 +78,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         ServiceResult<AffiliationListResource> response = service.getUserAffiliations(userIdNotExists);
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
-        verify(userRepositoryMock, only()).findOne(userIdNotExists);
+        verify(userRepositoryMock, only()).findById(userIdNotExists);
         verifyZeroInteractions(affiliationMapperMock);
     }
 
@@ -91,12 +92,12 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
                 .withAffiliations(affiliations)
                 .build();
 
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
 
         List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess().getAffiliationResourceList();
         assertTrue(response.isEmpty());
 
-        verify(userRepositoryMock, only()).findOne(userId);
+        verify(userRepositoryMock, only()).findById(userId);
         verifyZeroInteractions(affiliationMapperMock);
     }
 
@@ -113,7 +114,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
                 .withAffiliations(new ArrayList<>())
                 .build();
 
-        when(userRepositoryMock.findOne(userId)).thenReturn(existingUser);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(existingUser));
         when(affiliationMapperMock.mapToDomain(affiliationResources)).thenReturn(affiliations);
 
 
@@ -123,7 +124,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         assertTrue(response.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
-        inOrder.verify(userRepositoryMock).findOne(userId);
+        inOrder.verify(userRepositoryMock).findById(userId);
         inOrder.verify(affiliationMapperMock).mapToDomain(affiliationResources);
         inOrder.verify(userRepositoryMock).save(createUserExpectations(existingUser.getId(), affiliations));
         inOrder.verifyNoMoreInteractions();
@@ -136,7 +137,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         ServiceResult<Void> result = service.updateUserAffiliations(userIdNotExists, new AffiliationListResource());
         assertTrue(result.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
-        verify(userRepositoryMock, only()).findOne(userIdNotExists);
+        verify(userRepositoryMock, only()).findById(userIdNotExists);
         verifyZeroInteractions(affiliationMapperMock);
     }
 

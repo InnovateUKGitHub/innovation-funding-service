@@ -23,10 +23,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -129,7 +126,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
 
         Organisation organisation = newOrganisation().withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
 
         ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).build();
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(applicationFinance);

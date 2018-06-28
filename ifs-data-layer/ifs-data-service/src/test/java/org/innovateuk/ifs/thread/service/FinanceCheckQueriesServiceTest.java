@@ -41,6 +41,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -107,7 +108,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Query query = new Query(queryId, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, null, null, null, null, false, null, null, null);
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(query);
+        when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.of(query));
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
 
         QueryResource response = service.findOne(queryId).getSuccess();
@@ -208,7 +209,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
         Long result = service.create(queryToCreate).getSuccess();
@@ -268,7 +269,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 .withOrganisation(organisation)
                 .build();
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
 
         ServiceResult<Long> result = service.create(queryToCreate);
 
@@ -346,7 +347,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
 
         assertEquals(false, service.create(queryToCreate).isSuccess());
@@ -365,7 +366,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(null);
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.empty());
 
         ServiceResult<Long> result = service.create(queryToCreate);
 
@@ -400,7 +401,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 .withLastName("Bowman")
                 .build();
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(queryInDB);
+        when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.of(queryInDB));
         when(authenticationHelperMock.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
 
         setLoggedInUser(newUserResource()
@@ -429,7 +430,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+        when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.of(targetedQuery));
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
         when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
 
@@ -492,7 +493,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
         assertTrue(service.addPost(post, queryId).isSuccess());
@@ -517,13 +518,13 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+        when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.of(targetedQuery));
 
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
 
         when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(pf));
 
         assertTrue(service.addPost(post, queryId).isSuccess());
 
@@ -534,7 +535,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Long queryId = 1L;
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(null);
+        when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.empty());
 
         assertTrue(service.addPost(post, queryId).isFailure());
     }
@@ -544,7 +545,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Long queryId = 1L;
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(null);
+        when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.empty());
 
         assertTrue(service.addPost(post, queryId).isFailure());
     }
@@ -558,7 +559,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+        when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.of(targetedQuery));
 
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
 
@@ -586,7 +587,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(pf));
 
         ServiceResult<Void> result = service.addPost(post, queryId);
 
@@ -613,7 +614,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
-        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+        when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.of(targetedQuery));
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
         when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
 
@@ -675,7 +676,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
-        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(projectFinance);
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
 
         assertTrue(service.addPost(post, queryId).isFailure());

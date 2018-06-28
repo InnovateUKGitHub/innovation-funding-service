@@ -197,9 +197,9 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         when(reviewInviteRepositoryMock.save(isA(ReviewInvite.class))).thenReturn(reviewInvite);
         when(reviewInviteMapperMock.mapToResource(same(reviewInvite))).thenReturn(expected);
         when(reviewParticipantRepositoryMock.getByInviteHash(INVITE_HASH)).thenReturn(reviewParticipant);
-        when(rejectionReasonRepositoryMock.findOne(rejectionReason.getId())).thenReturn(rejectionReason);
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
-        when(profileRepositoryMock.findOne(user.getProfileId())).thenReturn(profile);
+        when(rejectionReasonRepositoryMock.findById(rejectionReason.getId())).thenReturn(Optional.of(rejectionReason));
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
+        when(profileRepositoryMock.findById(user.getProfileId())).thenReturn(Optional.of(profile));
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
 
         ReflectionTestUtils.setField(service, "webBaseUrl", "https://ifs-local-dev");
@@ -477,20 +477,20 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withCompetitionId(competition.getId())
                 .build(2);
 
-        when(userRepositoryMock.findOne(existingUsers.get(0).getId())).thenReturn(existingUsers.get(0));
-        when(userRepositoryMock.findOne(existingUsers.get(1).getId())).thenReturn(existingUsers.get(1));
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(userRepositoryMock.findById(existingUsers.get(0).getId())).thenReturn(Optional.of(existingUsers.get(0)));
+        when(userRepositoryMock.findById(existingUsers.get(1).getId())).thenReturn(Optional.of(existingUsers.get(1)));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(reviewInviteRepositoryMock.save(isA(ReviewInvite.class))).thenReturn(new ReviewInvite());
 
         ServiceResult<Void> serviceResult = service.inviteUsers(existingAssessors);
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock, reviewInviteRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(existingAssessors.get(0).getUserId());
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(userRepositoryMock).findById(existingAssessors.get(0).getUserId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(reviewInviteRepositoryMock).save(createInviteExpectations(existingUsers.get(0).getName(), existingUsers.get(0).getEmail(), CREATED, competition));
-        inOrder.verify(userRepositoryMock).findOne(existingAssessors.get(1).getUserId());
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(userRepositoryMock).findById(existingAssessors.get(1).getUserId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(reviewInviteRepositoryMock).save(createInviteExpectations(existingUsers.get(1).getName(), existingUsers.get(1).getEmail(), CREATED, competition));
         inOrder.verifyNoMoreInteractions();
     }
@@ -545,7 +545,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
                 .build(2);
 
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(reviewInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(userRepositoryMock.findByEmail(emails.get(0))).thenReturn(Optional.empty());
         when(userRepositoryMock.findByEmail(emails.get(1))).thenReturn(Optional.empty());
@@ -556,7 +556,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepositoryMock, reviewInviteRepositoryMock, userRepositoryMock, reviewParticipantRepositoryMock, notificationSenderMock);
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(reviewInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
         inOrder.verify(reviewParticipantRepositoryMock).save(createAssessmentPanelParticipantExpectations(invites.get(0)));
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
@@ -597,7 +597,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_assessors_panel_text.txt";
 
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(reviewInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
                 expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
@@ -613,7 +613,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         assertEquals(expectedAssessorInviteToSendResource, result);
 
         InOrder inOrder = inOrder(competitionRepositoryMock, reviewInviteRepositoryMock, notificationTemplateRendererMock);
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(reviewInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
         inOrder.verify(notificationTemplateRendererMock).renderTemplate(systemNotificationSourceMock, notificationTarget,
                 templatePath, expectedNotificationArguments);
@@ -652,7 +652,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_assessors_panel_text.txt";
 
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(reviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
                 expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
@@ -668,7 +668,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         assertEquals(expectedAssessorInviteToSendResource, result);
 
         InOrder inOrder = inOrder(competitionRepositoryMock, reviewInviteRepositoryMock, notificationTemplateRendererMock);
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(reviewInviteRepositoryMock).getByIdIn(inviteIds);
         inOrder.verify(notificationTemplateRendererMock).renderTemplate(systemNotificationSourceMock, notificationTarget,
                 templatePath, expectedNotificationArguments);
@@ -950,22 +950,22 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     public void deleteAllInvites() {
         long competitionId = 1L;
 
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(newCompetition().build());
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(newCompetition().build()));
 
         assertTrue(service.deleteAllInvites(competitionId).isSuccess());
 
-        verify(competitionRepositoryMock).findOne(competitionId);
+        verify(competitionRepositoryMock).findById(competitionId);
     }
 
     @Test
     public void deleteAllInvites_noCompetition() {
         long competitionId = 1L;
 
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.empty());
 
         assertFalse(service.deleteAllInvites(competitionId).isSuccess());
 
-        verify(competitionRepositoryMock).findOne(competitionId);
+        verify(competitionRepositoryMock).findById(competitionId);
     }
 
     @Test

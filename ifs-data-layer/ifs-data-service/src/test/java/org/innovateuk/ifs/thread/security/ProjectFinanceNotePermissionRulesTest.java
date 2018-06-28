@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -59,7 +60,7 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
         projectProcessInLive = newProjectProcess().withActivityState(ProjectState.LIVE).build();
         projectProcessInWithdrawn = newProjectProcess().withActivityState(ProjectState.WITHDRAWN).build();
 
-        when(projectFinanceRepositoryMock.findOne(anyLong())).thenReturn(projectFinance);
+        when(projectFinanceRepositoryMock.findById(anyLong())).thenReturn(Optional.of(projectFinance));
     }
 
     private NoteResource sampleNote() {

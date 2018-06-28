@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
+import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competitionsetup.transactional.template.FormInputTemplatePersistorImpl;
@@ -83,8 +84,8 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withActive(true)
                 .build(2);
 
-        assertThat(result.get(0), new ReflectionEquals(expectedFormInputs.get(0)));
-        assertThat(result.get(1), new ReflectionEquals(expectedFormInputs.get(1)));
+        assertThat(result.get(0), (Matcher<Object>) new ReflectionEquals(expectedFormInputs.get(0)));
+        assertThat(result.get(1), (Matcher<Object>) new ReflectionEquals(expectedFormInputs.get(1)));
     }
 
     @Test
@@ -125,7 +126,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withActive(false)
                 .build(2);
 
-        assertThat(result.get(0), new ReflectionEquals(expectedFormInputs.get(0)));
+        assertThat(result.get(0), (Matcher<Object>) new ReflectionEquals(expectedFormInputs.get(0)));
     }
 
     @Test

@@ -153,8 +153,8 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withName("Warp Drive")
                 .withNoInnovationAreaApplicable(false)
-                .withCompetition(competitionRepository.findById(competitionId))
-                .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
+                .withCompetition(competitionRepository.findById(competitionId).get())
+                .withInnovationArea(innovationAreaRepository.findById(innovationAreaId).get())
                 .withProcessRoles(processRole)
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
@@ -192,8 +192,8 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withName("Nuclear pulse propulsion")
                 .withNoInnovationAreaApplicable(false)
-                .withCompetition(competitionRepository.findById(competitionId))
-                .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
+                .withCompetition(competitionRepository.findById(competitionId).get())
+                .withInnovationArea(innovationAreaRepository.findById(innovationAreaId).get())
                 .withProcessRoles(processRole)
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
@@ -215,10 +215,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
 
         loginCompAdmin();
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .with(id(null))
@@ -227,7 +227,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -236,7 +236,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -287,10 +287,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
 
         loginCompAdmin();
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .with(id(null))
@@ -299,7 +299,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -308,7 +308,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -359,7 +359,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
 
         loginCompAdmin();
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
 
         InnovationSector innovationSector = newInnovationSector()
                 .with(id(null))
@@ -372,7 +372,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withName("Machine learning")
                 .withSector(innovationSector)
                 .build(2);
-        innovationAreaRepository.save(innovationAreas);
+        innovationAreaRepository.saveAll(innovationAreas);
 
         assertNotNull(innovationSector.getId());
 
@@ -382,7 +382,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withInnovationAreas(innovationAreas, emptyList())
                 .build(2);
 
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .with(id(null))
@@ -391,7 +391,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -400,7 +400,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -451,13 +451,13 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
 
         loginCompAdmin();
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
 
         List<Profile> profiles = newProfile()
                 .with(id(null))
                 .withSkillsAreas("Java Development")
                 .withBusinessType(BusinessType.BUSINESS, BusinessType.ACADEMIC).build(2);
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .with(id(null))
@@ -466,7 +466,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8", "f6b9ddeb-f169-4ac4-b606-90cb877ce8c9")
                 .build(2);
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -475,7 +475,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -526,10 +526,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
 
         loginCompAdmin();
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .with(id(null))
@@ -538,7 +538,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -547,7 +547,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);
@@ -597,12 +597,12 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
 
         loginCompAdmin();
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
         final Competition otherCompetition = newCompetition().with(id(null)).build();
         competitionRepository.save(otherCompetition);
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .with(id(null))
@@ -611,7 +611,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -620,7 +620,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
 
         List<AssessmentParticipant> otherCompetitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -629,7 +629,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(otherCompetitionParticipants);
+        assessmentParticipantRepository.saveAll(otherCompetitionParticipants);
 
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
@@ -681,10 +681,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
 
         loginCompAdmin();
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .with(id(null))
@@ -693,7 +693,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -702,7 +702,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withStatus(ParticipantStatus.ACCEPTED)
                 .withRole(CompetitionParticipantRole.ASSESSOR)
                 .build(2);
-        assessmentParticipantRepository.save(competitionParticipants);
+        assessmentParticipantRepository.saveAll(competitionParticipants);
 
         Application application = newApplication().withCompetition(competition).with(id(null)).build();
         applicationRepository.save(application);

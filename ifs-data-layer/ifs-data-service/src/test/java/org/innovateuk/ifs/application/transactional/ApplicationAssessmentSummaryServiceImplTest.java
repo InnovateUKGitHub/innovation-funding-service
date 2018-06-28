@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -95,7 +96,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(1L, application.getId())).thenReturn(ofNullable(assessments.get(0)));
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(2L, application.getId())).thenReturn(ofNullable(assessments.get(1)));
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(assessmentParticipantRepositoryMock.findParticipantsWithAssessments(
                 eq(competition.getId()),
                 eq(CompetitionParticipantRole.ASSESSOR),
@@ -121,7 +122,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
 
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(assessmentParticipantRepositoryMock.findParticipantsWithoutAssessments(
                 eq(competition.getId()),
                 eq(CompetitionParticipantRole.ASSESSOR),
@@ -168,19 +169,19 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
                 .build();
 
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         Stream.of(organisations)
-                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+                .forEach(organisation -> when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation)));
 
         ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccess();
 
         assertEquals(expected, found);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
+        inOrder.verify(applicationRepositoryMock).findById(application.getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[2].getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[1].getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -216,19 +217,19 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems", "Liquid Dynamics"))
                 .build();
 
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         Stream.of(organisations)
-                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+                .forEach(organisation -> when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation)));
 
         ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccess();
 
         assertEquals(expected, found);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
+        inOrder.verify(applicationRepositoryMock).findById(application.getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[1].getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[2].getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -264,19 +265,19 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
                 .build();
 
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         Stream.of(organisations)
-                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+                .forEach(organisation -> when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation)));
 
         ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccess();
 
         assertEquals(expected, found);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
+        inOrder.verify(applicationRepositoryMock).findById(application.getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[2].getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[1].getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -314,18 +315,18 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withPartnerOrganisations(asList("Liquid Dynamics", "Piezo Electrics"))
                 .build();
 
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         Stream.of(organisations)
-                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+                .forEach(organisation -> when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation)));
 
         ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccess();
 
         assertEquals(expected, found);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
-        inOrder.verify(organisationRepositoryMock).findOne(organisations[3].getId());
+        inOrder.verify(applicationRepositoryMock).findById(application.getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[2].getId());
+        inOrder.verify(organisationRepositoryMock).findById(organisations[3].getId());
         inOrder.verifyNoMoreInteractions();
     }
 }

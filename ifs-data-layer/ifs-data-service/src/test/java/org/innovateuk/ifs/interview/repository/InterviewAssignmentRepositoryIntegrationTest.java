@@ -118,7 +118,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
                 .withCompetition(competition)
                 .build(3);
 
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         List<InterviewAssignment> assignments = newInterviewAssignment()
                 .with(id(null))
@@ -126,7 +126,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
                 .withTarget(applications.toArray(new Application[3]))
                 .build(3);
 
-        repository.save(assignments);
+        repository.saveAll(assignments);
 
         flushAndClearSession();
 

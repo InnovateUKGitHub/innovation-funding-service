@@ -132,7 +132,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         long id = savedParticipant.getId();
 
-        InterviewParticipant retrievedParticipant = repository.findOne(id);
+        InterviewParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -153,7 +153,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         long id = savedParticipant.getId();
 
-        InterviewParticipant retrievedParticipant = repository.findOne(id);
+        InterviewParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -174,7 +174,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         long id = savedParticipant.getId();
 
-        InterviewParticipant retrievedParticipant = repository.findOne(id);
+        InterviewParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -200,12 +200,12 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
                 .withStatus(SENT)
                 .build(4);
 
-        List<InterviewParticipant> InterviewParticipants = saveNewInterviewParticipants(newAssessorInvites);
+        List<InterviewParticipant> interviewParticipants = saveNewInterviewParticipants(newAssessorInvites);
 
-        InterviewParticipants.get(3).getInvite().open();
-        InterviewParticipants.get(3).acceptAndAssignUser(acceptedUser);
+        interviewParticipants.get(3).getInvite().open();
+        interviewParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
-        repository.save(InterviewParticipants);
+        repository.saveAll(interviewParticipants);
         flushAndClearSession();
 
         assertEquals(12, repository.count()); // Including 8 pre-existing participants added via patch
@@ -233,7 +233,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         loginSteveSmith();
 
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         User user = newUser()
                 .withId()
@@ -266,13 +266,13 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         interviewRepository.save(interview);
 
-        List<InterviewParticipant> InterviewParticipants = saveNewInterviewParticipants(newAssessorInvites);
+        List<InterviewParticipant> interviewParticipants = saveNewInterviewParticipants(newAssessorInvites);
 
-        InterviewParticipants.get(0).getInvite().open();
-        CompetitionParticipantRole role = InterviewParticipants.get(0).getRole();
-        InterviewParticipants.get(0).acceptAndAssignUser(user);
+        interviewParticipants.get(0).getInvite().open();
+        CompetitionParticipantRole role = interviewParticipants.get(0).getRole();
+        interviewParticipants.get(0).acceptAndAssignUser(user);
 
-        repository.save(InterviewParticipants);
+        repository.saveAll(interviewParticipants);
         flushAndClearSession();
 
         assertEquals(9, repository.count()); // Including 8 pre-existing participants added via patch

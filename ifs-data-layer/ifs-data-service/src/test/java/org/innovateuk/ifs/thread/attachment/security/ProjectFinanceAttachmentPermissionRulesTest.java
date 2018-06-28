@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -113,7 +114,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query));
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
-        when(projectFinanceRepositoryMock.findOne(query.contextClassPk())).thenReturn(projectFinanceWithUserAsFinanceContact(projectPartnerUser));
+        when(projectFinanceRepositoryMock.findById(query.contextClassPk())).thenReturn(Optional.of(projectFinanceWithUserAsFinanceContact(projectPartnerUser)));
         when(queryPermissionRulesMock.projectFinanceUsersCanViewQueries(queryResource, projectPartnerUser)).thenReturn(true);
         assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, projectPartnerUser));
     }
@@ -126,7 +127,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         final UserResource unrelatedFinanceContactUser = newUserResource().withId(projectPartnerUser.getId() * 7).build();
-        when(projectFinanceRepositoryMock.findOne(query.contextClassPk())).thenReturn(projectFinanceWithUserAsFinanceContact(projectPartnerUser));
+        when(projectFinanceRepositoryMock.findById(query.contextClassPk())).thenReturn(Optional.of(projectFinanceWithUserAsFinanceContact(projectPartnerUser)));
         when(queryPermissionRulesMock.projectFinanceUsersCanViewQueries(queryResource, unrelatedFinanceContactUser)).thenReturn(false);
         assertFalse(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, unrelatedFinanceContactUser));
     }

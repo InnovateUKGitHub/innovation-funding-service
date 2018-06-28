@@ -27,6 +27,7 @@ import org.springframework.validation.Validator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -167,7 +168,7 @@ public class OtherFundingValidatorTest {
         ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().withApplication(application).build();
         ApplicationFinanceRow cost = ApplicationFinanceRowBuilder.newApplicationFinanceRow().withOwningFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
-        when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
+        when(financeRowRepository.findById(any(Long.class))).thenReturn(Optional.of(cost));
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FinanceRowType.OTHER_FUNDING.getFormInputType())).thenReturn(ServiceResult.serviceSuccess(question));
         List<ApplicationFinanceRow> listOfCostWithYes = new ArrayList<>();
         listOfCostWithYes.add(cost);

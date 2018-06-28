@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
+import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competitionsetup.transactional.template.GuidanceRowTemplatePersistorImpl;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
@@ -87,7 +88,7 @@ public class GuidanceRowTemplatePersistorImplTest extends BaseServiceUnitTest<Gu
 
         List<GuidanceRow> result = service.persistByParentEntity(formInput);
 
-        assertThat(result, new ReflectionEquals(expectedGuidanceRows));
+        assertThat(result, (Matcher<Object>) new ReflectionEquals(expectedGuidanceRows));
     }
 
     @Test

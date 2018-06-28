@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
@@ -131,7 +132,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
 
-        when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
+        when(applicationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(openApplication));
 
         multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
         leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
@@ -146,10 +147,10 @@ public class ApplicationFormInputUploadServiceImplTest {
         comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
         app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
 
-        when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
-        when(organisationRepositoryMock.findOne(234L)).thenReturn(org1);
-        when(organisationRepositoryMock.findOne(345L)).thenReturn(org2);
-        when(organisationRepositoryMock.findOne(456L)).thenReturn(org3);
+        when(applicationRepositoryMock.findById(app.getId())).thenReturn(Optional.of(app));
+        when(organisationRepositoryMock.findById(234L)).thenReturn(Optional.of(org1));
+        when(organisationRepositoryMock.findById(345L)).thenReturn(Optional.of(org2));
+        when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(org3));
     }
 
 
@@ -167,9 +168,9 @@ public class ApplicationFormInputUploadServiceImplTest {
                 thenReturn(serviceSuccess(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
-        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
-        when(applicationRepositoryMock.findOne(456L)).thenReturn(openApplication);
+        when(processRoleRepositoryMock.findById(789L)).thenReturn(Optional.of(newProcessRole().build()));
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(newFormInput().build()));
+        when(applicationRepositoryMock.findById(456L)).thenReturn(Optional.of(openApplication));
 
         ServiceResult<FormInputResponseFileEntryResource> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
@@ -206,9 +207,9 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
         when(formInputResponseRepositoryMock.save(existingFormInputResponseWithLinkedFileEntry)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
-        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
-        when(applicationRepositoryMock.findOne(456L)).thenReturn(openApplication);
+        when(processRoleRepositoryMock.findById(789L)).thenReturn(Optional.of(newProcessRole().build()));
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(formInputLocal));
+        when(applicationRepositoryMock.findById(456L)).thenReturn(Optional.of(openApplication));
 
         when(fileServiceMock.getFileByFileEntryId(987L)).thenReturn(serviceSuccess(inputStreamSupplier));
 
@@ -275,7 +276,7 @@ public class ApplicationFormInputUploadServiceImplTest {
                 thenReturn(serviceSuccess(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
-        when(processRoleRepositoryMock.findOne(789L)).thenReturn(null);
+        when(processRoleRepositoryMock.findById(789L)).thenReturn(Optional.empty());
 
         ServiceResult<FormInputResponseFileEntryResource> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
@@ -298,8 +299,8 @@ public class ApplicationFormInputUploadServiceImplTest {
                 thenReturn(serviceSuccess(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
-        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(null);
+        when(processRoleRepositoryMock.findById(789L)).thenReturn(Optional.of(newProcessRole().build()));
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.empty());
 
         ServiceResult<FormInputResponseFileEntryResource> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
@@ -322,9 +323,9 @@ public class ApplicationFormInputUploadServiceImplTest {
                 thenReturn(serviceSuccess(Pair.of(fileFound, newFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
-        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
-        when(applicationRepositoryMock.findOne(456L)).thenReturn(null);
+        when(processRoleRepositoryMock.findById(789L)).thenReturn(Optional.of(newProcessRole().build()));
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(newFormInput().build()));
+        when(applicationRepositoryMock.findById(456L)).thenReturn(Optional.empty());
 
         ServiceResult<FormInputResponseFileEntryResource> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
@@ -352,7 +353,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(formInputLocal));
 
         when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
                 thenReturn(serviceSuccess(Pair.of(fileFound, existingFileEntry)));
@@ -386,7 +387,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
 
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(formInputLocal));
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
 
@@ -410,8 +411,8 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
         when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenReturn(unlinkedFormInputFileEntry);
         when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceSuccess(existingFileEntry));
-        when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn
-                (newFormInput().withQuestion(question).build());
+        when(formInputRepositoryMock.findById(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn
+                (Optional.of(newFormInput().withQuestion(question).build()));
 
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
@@ -431,10 +432,10 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(singletonList(existingFormInputResponse));
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
         when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn
-                (newFormInput().withQuestion(question).withType(FormInputType.FILEUPLOAD).build());
-        when(applicationRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getApplicationId())).thenReturn
-                (newApplication().withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).build());
+        when(formInputRepositoryMock.findById(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(
+                Optional.of(newFormInput().withQuestion(question).withType(FormInputType.FILEUPLOAD).build()));
+        when(applicationRepositoryMock.findById(formInputResponseFileEntryResource.getCompoundId().getApplicationId())).thenReturn(
+                Optional.of(newApplication().withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).build()));
 
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
@@ -447,7 +448,7 @@ public class ApplicationFormInputUploadServiceImplTest {
     public void deleteFormInputResponseFileUploadButUnableToFindFormInputResponse() {
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(singletonList
                 (existingFormInputResponse));
-        when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(null);
+        when(formInputRepositoryMock.findById(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(null);
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
 
@@ -472,7 +473,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         question.setFormInputs(singletonList(formInputLocal));
 
         when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 999L)));
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(formInputLocal));
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceFailure(notFoundError(File.class, 999L)));
 
@@ -495,7 +496,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(formInputLocal));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
@@ -527,7 +528,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(formInputLocal));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceFailure(internalServerErrorError()));
@@ -547,7 +548,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(formInputLocal));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
 

@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -74,7 +75,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         Page<Application> expectedPage = new PageImpl<>(EXPECTED_AVAILABLE_APPLICATIONS, PAGE_REQUEST, TOTAL_APPLICATIONS);
 
         when(applicationRepositoryMock.findSubmittedApplicationsNotOnInterviewPanel(COMPETITION_ID, PAGE_REQUEST)).thenReturn(expectedPage);
-        when(organisationRepositoryMock.findOne(LEAD_ORGANISATION.getId())).thenReturn(LEAD_ORGANISATION);
+        when(organisationRepositoryMock.findById(LEAD_ORGANISATION.getId())).thenReturn(Optional.of(LEAD_ORGANISATION));
 
         AvailableApplicationPageResource availableApplicationPageResource = service.getAvailableApplications(COMPETITION_ID, PAGE_REQUEST).getSuccess();
 
@@ -86,7 +87,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findSubmittedApplicationsNotOnInterviewPanel(COMPETITION_ID, PAGE_REQUEST);
-        inOrder.verify(organisationRepositoryMock, times(TOTAL_APPLICATIONS)).findOne(LEAD_ORGANISATION.getId());
+        inOrder.verify(organisationRepositoryMock, times(TOTAL_APPLICATIONS)).findById(LEAD_ORGANISATION.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -111,7 +112,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         when(interviewAssignmentRepositoryMock.findByTargetCompetitionIdAndActivityState(
                 COMPETITION_ID, InterviewAssignmentState.CREATED, PAGE_REQUEST)).thenReturn(expectedPage);
 
-        when(organisationRepositoryMock.findOne(LEAD_ORGANISATION.getId())).thenReturn(LEAD_ORGANISATION);
+        when(organisationRepositoryMock.findById(LEAD_ORGANISATION.getId())).thenReturn(Optional.of(LEAD_ORGANISATION));
 
         InterviewAssignmentStagedApplicationPageResource stagedApplicationPageResource = service.getStagedApplications(COMPETITION_ID, PAGE_REQUEST).getSuccess();
 
@@ -125,7 +126,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         InOrder inOrder = inOrder(interviewAssignmentRepositoryMock, organisationRepositoryMock);
         inOrder.verify(interviewAssignmentRepositoryMock)
                 .findByTargetCompetitionIdAndActivityState(COMPETITION_ID, InterviewAssignmentState.CREATED, PAGE_REQUEST);
-        inOrder.verify(organisationRepositoryMock, times(TOTAL_APPLICATIONS)).findOne(LEAD_ORGANISATION.getId());
+        inOrder.verify(organisationRepositoryMock, times(TOTAL_APPLICATIONS)).findById(LEAD_ORGANISATION.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -149,8 +150,8 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
                 .build(TOTAL_APPLICATIONS);
 
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
-            when(applicationRepositoryMock.findOne(expectedApplication.getId()))
-                    .thenReturn(expectedApplication);
+            when(applicationRepositoryMock.findById(expectedApplication.getId()))
+                    .thenReturn(Optional.of(expectedApplication));
 
             when(interviewAssignmentRepositoryMock.save(interviewPanelLambdaMatcher(expectedApplication)))
                     .thenReturn(newInterviewAssignment().build()
@@ -163,7 +164,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
                 interviewAssignmentRepositoryMock);
 
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
-            inOrder.verify(applicationRepositoryMock).findOne(expectedApplication.getId());
+            inOrder.verify(applicationRepositoryMock).findById(expectedApplication.getId());
             inOrder.verify(interviewAssignmentRepositoryMock).save(interviewPanelLambdaMatcher(expectedApplication));
         });
     }

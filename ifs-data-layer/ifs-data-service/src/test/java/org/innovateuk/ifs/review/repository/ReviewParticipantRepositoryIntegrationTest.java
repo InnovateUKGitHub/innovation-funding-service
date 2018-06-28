@@ -106,7 +106,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
 
         long id = savedParticipant.getId();
 
-        ReviewParticipant retrievedParticipant = repository.findOne(id);
+        ReviewParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -127,7 +127,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
 
         long id = savedParticipant.getId();
 
-        ReviewParticipant retrievedParticipant = repository.findOne(id);
+        ReviewParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -148,7 +148,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
 
         long id = savedParticipant.getId();
 
-        ReviewParticipant retrievedParticipant = repository.findOne(id);
+        ReviewParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -179,7 +179,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
         reviewParticipants.get(3).getInvite().open();
         reviewParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
-        repository.save(reviewParticipants);
+        repository.saveAll(reviewParticipants);
         flushAndClearSession();
 
         assertEquals(12, repository.count()); // Including 8 pre-existing paricipants added via patch

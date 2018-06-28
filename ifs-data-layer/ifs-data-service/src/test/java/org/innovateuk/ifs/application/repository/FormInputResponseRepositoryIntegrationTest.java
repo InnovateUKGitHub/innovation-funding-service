@@ -27,7 +27,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void findOne() {
-        FormInputResponse response = repository.findOne(1L);
+        FormInputResponse response = repository.findById(1L).get();
         assertEquals(Long.valueOf(1), response.getId());
         assertTrue(response.getValue().startsWith("Within the Industry"));
         assertEquals(Integer.valueOf(49), response.getWordCount());
@@ -118,7 +118,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void findOne_nonExistentInput() {
-        assertEquals(null, repository.findOne(Long.MAX_VALUE));
+        assertFalse(repository.findById(Long.MAX_VALUE).isPresent());
     }
 
     @Test
