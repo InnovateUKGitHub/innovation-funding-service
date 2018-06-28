@@ -50,7 +50,6 @@ Applicant submits his application
     When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)
     When the user navigates to Your-finances page       ${apcApplicationTitle}
-    #And the user enters the project location
     And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
     Then the applicant submits the application
 
