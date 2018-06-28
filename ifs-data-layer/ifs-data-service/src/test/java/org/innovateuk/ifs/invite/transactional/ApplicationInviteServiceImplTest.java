@@ -118,7 +118,7 @@ public class ApplicationInviteServiceImplTest {
     public void setup() {
         when(applicationInviteRepositoryMock.save(any(ApplicationInvite.class))).thenReturn(new ApplicationInvite());
         ServiceResult<Void> result = serviceSuccess();
-        when(notificationService.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
+        when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
 
         localValidatorFactory = new LocalValidatorFactoryBean();
         localValidatorFactory.setProviderClass(HibernateValidator.class);

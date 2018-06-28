@@ -53,13 +53,13 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
+        when(mockEmailNotificationSender.sendNotificationWithFlush(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
-        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL);
+        ServiceResult<Void> result = service.sendNotificationWithFlush(notificationToSend, EMAIL);
         assertTrue(result.isSuccess());
 
-        verify(mockEmailNotificationSender).sendNotification(notificationToSend);
-        verify(mockLoggingNotificationSender, never()).sendNotification(notificationToSend);
+        verify(mockEmailNotificationSender).sendNotificationWithFlush(notificationToSend);
+        verify(mockLoggingNotificationSender, never()).sendNotificationWithFlush(notificationToSend);
     }
 
     @Test
@@ -67,14 +67,14 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
-        when(mockLoggingNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
+        when(mockEmailNotificationSender.sendNotificationWithFlush(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
+        when(mockLoggingNotificationSender.sendNotificationWithFlush(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
-        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL, LOGGING);
+        ServiceResult<Void> result = service.sendNotificationWithFlush(notificationToSend, EMAIL, LOGGING);
         assertTrue(result.isSuccess());
 
-        verify(mockEmailNotificationSender).sendNotification(notificationToSend);
-        verify(mockLoggingNotificationSender).sendNotification(notificationToSend);
+        verify(mockEmailNotificationSender).sendNotificationWithFlush(notificationToSend);
+        verify(mockLoggingNotificationSender).sendNotificationWithFlush(notificationToSend);
     }
 
     @Test
@@ -82,13 +82,13 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
+        when(mockEmailNotificationSender.sendNotificationWithFlush(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
-        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL, EMAIL);
+        ServiceResult<Void> result = service.sendNotificationWithFlush(notificationToSend, EMAIL, EMAIL);
         assertTrue(result.isSuccess());
 
-        verify(mockEmailNotificationSender, times(1)).sendNotification(notificationToSend);
-        verify(mockLoggingNotificationSender, never()).sendNotification(notificationToSend);
+        verify(mockEmailNotificationSender, times(1)).sendNotificationWithFlush(notificationToSend);
+        verify(mockLoggingNotificationSender, never()).sendNotificationWithFlush(notificationToSend);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         service.constructServicesByMediaMap();
 
         Notification notificationToSend = newNotification().build();
-        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL);
+        ServiceResult<Void> result = service.sendNotificationWithFlush(notificationToSend, EMAIL);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(NotificationMedium.class, EMAIL)));
     }
@@ -112,9 +112,9 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Error errorResponse = new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR);
 
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceFailure(errorResponse));
+        when(mockEmailNotificationSender.sendNotificationWithFlush(notificationToSend)).thenReturn(serviceFailure(errorResponse));
 
-        ServiceResult<Void> result = service.sendNotification(notificationToSend, EMAIL);
+        ServiceResult<Void> result = service.sendNotificationWithFlush(notificationToSend, EMAIL);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(errorResponse));
     }

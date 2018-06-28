@@ -145,10 +145,13 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         final Notification notification = new Notification(from, singletonList(to), RegistrationNotificationService.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(of(existingToken));
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         final ServiceResult<Void> result = service.resendUserVerificationEmail(userResource);
         assertTrue(result.isSuccess());
+
+        verify(tokenRepositoryMock).save(isA(Token.class));
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Override

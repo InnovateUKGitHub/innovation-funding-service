@@ -64,7 +64,7 @@ class RegistrationNotificationService {
     ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
         final Token token = refreshEmailVerificationToken(user);
         final Notification notification = getEmailVerificationNotification(user, token);
-        return notificationService.sendNotification(notification, EMAIL);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private Token refreshEmailVerificationToken(final UserResource user) {

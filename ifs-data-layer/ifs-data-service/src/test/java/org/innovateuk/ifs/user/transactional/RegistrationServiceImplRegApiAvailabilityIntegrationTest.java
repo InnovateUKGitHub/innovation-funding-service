@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.hibernate.Hibernate;
-import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -9,6 +8,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.sil.AbstractSilAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnic
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
-public class RegistrationServiceImplRegApiAvailabilityIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
+public class RegistrationServiceImplRegApiAvailabilityIntegrationTest extends AbstractSilAvailabilityIntegrationTest {
 
     @Autowired
     private RegistrationServiceImpl registrationService;

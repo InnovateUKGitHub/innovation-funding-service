@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.hibernate.Hibernate;
-import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.sil.AbstractSilAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -15,17 +15,13 @@ import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
-@TestPropertySource(properties = {"sil.available=true"})
-@DirtiesContext
-public class RegistrationServiceImplSilAvailabilityIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
+public class RegistrationServiceImplSilAvailabilityIntegrationTest extends AbstractSilAvailabilityIntegrationTest {
 
     @Autowired
     private RegistrationServiceImpl registrationService;
@@ -40,9 +36,6 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends BaseA
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private SilAvailabilityHelper silHelper;
-
-    @Autowired
     private RegistrationApiAvailabilityHelper regApiHelper;
 
     @Autowired
@@ -53,7 +46,7 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends BaseA
 
         regApiHelper.doWithMockIdpRestTemplate(mockIdpRestTemplate -> {
 
-            silHelper.doWithMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
+            doWithMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
 
                 Organisation organisation = getOrganisationForTest();
                 int originalUserCount = organisation.getUsers().size();
@@ -61,7 +54,7 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends BaseA
 
                 regApiHelper.setupSuccessfulResponseExpectationsFromCreateUserCall(mockIdpRestTemplate);
 
-                silHelper.setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+                setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
 
                 testService.doWithinTransaction(this::loginSystemRegistrationUser);
 
@@ -98,7 +91,7 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends BaseA
 
         regApiHelper.doWithMockIdpRestTemplate(mockIdpRestTemplate -> {
 
-            silHelper.doWithMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
+            doWithMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
 
                 Competition competition = competitionRepository.findByName("Connected digital additive manufacturing").get(0);
 
@@ -108,7 +101,7 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends BaseA
 
                 regApiHelper.setupSuccessfulResponseExpectationsFromCreateUserCall(mockIdpRestTemplate);
 
-                silHelper.setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+                setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
 
                 testService.doWithinTransaction(this::loginSystemRegistrationUser);
 

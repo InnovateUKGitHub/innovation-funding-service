@@ -203,7 +203,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         }
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
-        return notificationService.sendNotification(notification, EMAIL);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Override
