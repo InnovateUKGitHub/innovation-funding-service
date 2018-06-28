@@ -135,17 +135,18 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void applicationControllerCanCreateApplication() throws Exception {
-        Long competitionId = 1L;
-        Long userId = 1L;
+        long competitionId = 1L;
+        long userId = 1L;
+        long organisationId = 1L;
         String applicationName = "testApplication";
 
         ApplicationResource applicationResource = newApplicationResource().withName(applicationName).build();
 
         ObjectNode applicationNameNode = objectMapper.createObjectNode().put("name", applicationName);
 
-        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId, organisationId)).thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
+        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}/{organisationId}", competitionId, userId, organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())

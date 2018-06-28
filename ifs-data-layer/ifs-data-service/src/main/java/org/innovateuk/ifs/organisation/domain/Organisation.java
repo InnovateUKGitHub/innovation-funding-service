@@ -30,9 +30,9 @@ public class Organisation {
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "user_organisation",
-            joinColumns = @JoinColumn(name = "organisation_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @JoinTable(name = "process_role",
+            joinColumns = @JoinColumn(name = "organisationId", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"))
     private List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisation",

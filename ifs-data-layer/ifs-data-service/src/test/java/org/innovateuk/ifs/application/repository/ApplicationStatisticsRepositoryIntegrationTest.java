@@ -140,14 +140,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long innovationAreaId = 54L;
         long assessorId = 20L;
 
-        ProcessRole processRole = newProcessRole()
-                .with(id(null))
-                .withRole(APPLICANT)
-                .withUser(userMapper.mapToDomain(getSteveSmith()))
-                .build();
-
-        processRoleRepository.save(processRole);
-
         Application application = newApplication()
                 .with(id(null))
                 .withApplicationState(ApplicationState.SUBMITTED)
@@ -155,11 +147,19 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withNoInnovationAreaApplicable(false)
                 .withCompetition(competitionRepository.findById(competitionId))
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
-                .withProcessRoles(processRole)
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withRole(APPLICANT)
+                .withUser(userMapper.mapToDomain(getSteveSmith()))
+                .withApplication(application)
+                .build();
+
+        processRoleRepository.save(processRole);
 
         flushAndClearSession();
 
@@ -176,16 +176,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         long competitionId = 1L;
         long innovationAreaId = 12L;
         long assessorId = 20L;
-        String filter = "54";
-
-
-        ProcessRole processRole = newProcessRole()
-                .with(id(null))
-                .withRole(APPLICANT)
-                .withUser(userMapper.mapToDomain(getSteveSmith()))
-                .build();
-
-        processRoleRepository.save(processRole);
 
         Application application = newApplication()
                 .with(id(null))
@@ -194,11 +184,19 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withNoInnovationAreaApplicable(false)
                 .withCompetition(competitionRepository.findById(competitionId))
                 .withInnovationArea(innovationAreaRepository.findOne(innovationAreaId))
-                .withProcessRoles(processRole)
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
         applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withRole(APPLICANT)
+                .withUser(userMapper.mapToDomain(getSteveSmith()))
+                .withApplication(application)
+                .build();
+
+        processRoleRepository.save(processRole);
 
         flushAndClearSession();
 

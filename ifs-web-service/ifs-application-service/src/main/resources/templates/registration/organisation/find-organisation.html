@@ -14,14 +14,13 @@
     <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkClass='link-back',linkUrl='/organisation/create/lead-organisation-type'" />
 
     <th:block th:with="orgTitle=${organisationType.name}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter organisation details',subTitle='Start new application',size='heading-xlarge'" />
     </th:block>
 
     <th:block th:unless="${organisationForm.research}">
         <div class="message-alert">
             <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
-        <p>You can identify your organisation through Companies House or enter your details manually.</p>
         <h2 class="heading-medium">Search on Companies House</h2>
     </th:block>
     <th:block th:if="${organisationForm.research}">
@@ -34,7 +33,7 @@
 
         <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group-error'">
             <label class="form-label" th:for="*{organisationSearchName}">
-                <span class="form-label-bold" th:text="${searchLabel}">Find your ? organisation</span>
+                <span class="form-label" th:text="${searchLabel}">Find your ? organisation</span>
                 <span class="form-hint" th:text="${searchHint}">Enter your organisation name</span>
                 <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
                       <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />

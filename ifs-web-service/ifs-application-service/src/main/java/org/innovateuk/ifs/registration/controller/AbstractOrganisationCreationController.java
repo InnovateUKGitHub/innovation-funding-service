@@ -39,7 +39,6 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String ORGANISATION_FORM = "organisationForm";
 
     protected static final String SELECTED_POSTCODE = "selectedPostcode";
-    protected static final String USE_SEARCH_RESULT_ADDRESS = "useSearchResultAddress";
 
     protected static final String TEMPLATE_PATH = "registration/organisation";
 
@@ -101,12 +100,10 @@ public abstract class AbstractOrganisationCreationController {
     }
 
     protected void organisationFormAddressFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
-        if (organisationForm.isTriedToSave() && !organisationForm.isUseSearchResultAddress()) {
+        if (organisationForm.isTriedToSave()) {
             AddressForm addressForm = organisationForm.getAddressForm();
             if (addressForm.getSelectedPostcode() != null) {
                 validator.validate(addressForm.getSelectedPostcode(), addressBindingResult);
-            } else if (!addressForm.isManualAddress()) {
-                bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "NotEmpty", "You should either fill in your address, or use the registered address as your operating address.");
             }
         }
     }

@@ -88,9 +88,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
-    private BaseUserService baseUserService;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -128,17 +125,17 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createUser(UserResource userResource) {
         User newUser = assembleUserFromResource(userResource);
-        return validateUser(userResource).
-                andOnSuccess(
-                        () -> addUserToOrganisation(newUser, organisationId)).
-                andOnSuccess(
-                        user -> userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user)).
-                andOnSuccess(
+        return validateUser(userResource)
+                .andOnSuccess(
+                        () -> userResource.getRoles().isEmpty() ? addRoleToUser(newUser, APPLICANT) : serviceSuccess(newUser)
+                )
+                .andOnSuccess(
                         userWithRole -> userWithRole.hasRole(Role.APPLICANT) ?
-                                agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole)).
-                andOnSuccess(
+                                agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole)
+                )
+                .andOnSuccess(
                         () -> createUserWithUid(newUser, userResource.getPassword(), null)
                 );
     }
@@ -234,13 +231,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess(user);
     }
 
-    private ServiceResult<User> addUserToOrganisation(User user, Long organisationId) {
-        return find(organisation(organisationId)).andOnSuccessReturn(org -> {
-            org.addUser(user);
-            return user;
-        });
-    }
-
     private User assembleUserFromResource(UserResource userResource) {
         User newUser = new User();
         newUser.setFirstName(userResource.getFirstName());
@@ -269,8 +259,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
-        final Token token = createEmailVerificationToken(user, competitionId);
+    public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId) {
+        final Token token = createEmailVerificationToken(user, competitionId, organisationId);
         final Notification notification = getEmailVerificationNotification(user, token);
         return notificationService.sendNotification(notification, EMAIL);
     }
@@ -288,11 +278,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
     }
 
-    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId) {
+    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId) {
         final String emailVerificationHash = getEmailVerificationHash(user);
 
         final ObjectNode extraInfo = factory.objectNode();
         competitionId.ifPresent(aLong -> extraInfo.put("competitionId", aLong));
+        organisationId.ifPresent(aLong -> extraInfo.put("organisationId", aLong));
         final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
         return tokenRepository.save(token);
     }

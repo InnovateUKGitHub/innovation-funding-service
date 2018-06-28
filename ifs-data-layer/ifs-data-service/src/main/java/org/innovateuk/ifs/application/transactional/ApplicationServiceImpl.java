@@ -63,20 +63,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
-                                                                                                          Long competitionId,
-                                                                                                          Long userId) {
+                                                                                                          long competitionId,
+                                                                                                          long userId,
+                                                                                                          long organisationId
+    ) {
         return find(user(userId), competition(competitionId))
                 .andOnSuccess((user, competition) ->
-                        createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
+                        createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition, organisationId));
     }
 
-    private void generateProcessRolesForApplication(User user, Role role, Application application) {
-        List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
-        List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-        Long userOrganisationId = !usersProcessRoles.isEmpty()
-                ? usersProcessRoles.get(0).getOrganisationId()
-                : usersOrganisations.get(0).getId();
-        ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisationId);
+    private void generateProcessRolesForApplication(User user, Role role, Application application, long organisationId) {
+        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisationId);
         processRoleRepository.save(processRole);
         List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);
@@ -86,7 +83,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
                                                                                                            User user,
-                                                                                                           Competition competition) {
+                                                                                                           Competition competition,
+                                                                                                           long organisationId
+    ) {
         Application application = new Application(applicationName);
         application.setStartDate(null);
 
@@ -94,7 +93,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         setInnovationArea(application, competition);
 
         Application savedApplication = applicationRepository.save(application);
-        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication);
+        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication, organisationId);
         savedApplication = applicationRepository.findOne(savedApplication.getId());
         return serviceSuccess(applicationMapper.mapToResource(savedApplication));
     }

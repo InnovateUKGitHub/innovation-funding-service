@@ -166,7 +166,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
         return applicationDataBuilder.
                 withCompetition(competitionData.getCompetition()).
-                withBasicDetails(applicant, "APC Application", "Feasibility studies", false).
+                withBasicDetails(applicant, "APC Application", "Feasibility studies", false, applicantOrganisation.getId()).
                 beginApplication().
                 withFinances(financeBuilder -> {
 

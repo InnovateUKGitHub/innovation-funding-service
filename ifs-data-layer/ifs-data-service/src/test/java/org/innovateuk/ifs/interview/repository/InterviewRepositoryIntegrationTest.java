@@ -64,6 +64,8 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     private User assessor;
     private User otherAssessor;
+    private User applicant;
+    private User otherApplicant;
     private Organisation organisation;
     private Competition competition;
     private Application application1;
@@ -82,6 +84,11 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
         otherAssessor = userRepository.findByEmail("felix.wilson@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email felix.wilson@gmail.com"));
+
+        applicant = userRepository.findByEmail("steve.smith@empire.com")
+                .orElseThrow(() -> new IllegalStateException("Expected to find test user for emailsteve.smith@empire.com"));
+        otherApplicant = userRepository.findByEmail("pete.tom@egg.com")
+                .orElseThrow(() -> new IllegalStateException("Expected to find test user for email pete.tom@egg.com"));
 
         organisation = newOrganisation()
                 .withName("orgName")
@@ -149,12 +156,14 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withRole(Role.LEADAPPLICANT)
                 .withApplication(application1)
                 .withOrganisationId(organisation.getId())
+                .withUser(applicant)
                 .build();
         ProcessRole lead2 = newProcessRole()
                 .with(id(null))
                 .withRole(Role.LEADAPPLICANT)
                 .withApplication(application2)
                 .withOrganisationId(organisation.getId())
+                .withUser(otherApplicant)
                 .build();
 
         processRoleRepository.save(asList(assessorRole1, assessorRole2, assessorRole3, otherAssessorRole1, otherAssessorRole2, lead1, lead2));

@@ -89,7 +89,6 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         organisationForm.setSearchOrganisationId(COMPANY_ID);
         organisationForm.setOrganisationSearching(false);
         organisationForm.setManualEntry(false);
-        organisationForm.setUseSearchResultAddress(false);
         organisationForm.setOrganisationSearchResults(Collections.emptyList());
         organisationForm.setOrganisationName("NOMENSA LTD");
     }

@@ -22,7 +22,7 @@ public interface ApplicationRestService {
     RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId);
     RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, Role role);
     RestResult<Void> saveApplication(ApplicationResource application);
-    RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName);
+    RestResult<ApplicationResource> createApplication(long competitionId, long userId, long organisationId, String applicationName);
     RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state);
     Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);

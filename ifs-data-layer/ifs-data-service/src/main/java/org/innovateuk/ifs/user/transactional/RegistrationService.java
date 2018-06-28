@@ -19,11 +19,12 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userResource);
 
+    // TODO rename
     @PreAuthorize("hasPermission(#user, 'CREATE')")
-    ServiceResult<UserResource> createOrganisationUser(long organisationId, @P("user") UserResource userResource);
+    ServiceResult<UserResource> createUser(UserResource user);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
-    ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId);
+    ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
     ServiceResult<Void> resendUserVerificationEmail(@P("user") final UserResource user);

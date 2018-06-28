@@ -13,7 +13,7 @@ public interface ApplicationService {
 
     Boolean isApplicationReadyForSubmit(Long applicationId);
 
-    ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
+    ApplicationResource createApplication(long competitionId, long userId, long organisationId, String applicationName);
 
     ServiceResult<Void> save(ApplicationResource application);
 

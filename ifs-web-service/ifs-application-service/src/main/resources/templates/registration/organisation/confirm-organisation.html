@@ -10,13 +10,12 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle='Create your account',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle='Start new application',size='heading-xlarge'" />
 
     <div class="message-alert">
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
-    <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
     <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
 
     <form method="post" th:action="@{/organisation/create/save-organisation}">

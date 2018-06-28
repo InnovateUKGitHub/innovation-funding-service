@@ -19,14 +19,9 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create your account',size='heading-xlarge'" />
 
-    <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}" novalidate="novalidate">
-        <div class="panel">
-            <p>
-                The profile that you are creating will be linked to the following organisation <br/>
-                <strong><th:block th:text="${organisationName}"/></strong>
-            </p>
-        </div>
+    <p>To continue with your application, you need to create an account with the Innovation Funding Service.</p>
 
+    <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}" novalidate="novalidate">
         <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
             <label class="form-label" for="firstName">
                 <span class="form-label-bold">First name</span>

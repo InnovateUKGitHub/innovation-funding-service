@@ -38,8 +38,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
-        return applicationRestService.createApplication(competitionId, userId, applicationName).getSuccess();
+    public ApplicationResource createApplication(long competitionId, long userId, long organisationId, String applicationName) {
+        return applicationRestService.createApplication(competitionId, userId, organisationId, applicationName).getSuccess();
     }
 
     @Override

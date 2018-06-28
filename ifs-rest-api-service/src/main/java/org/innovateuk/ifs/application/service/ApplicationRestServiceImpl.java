@@ -18,6 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 
 /**
@@ -88,12 +89,12 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName) {
+    public RestResult<ApplicationResource> createApplication(long competitionId, long userId, long organisationId, String applicationName) {
 
         // TODO DW - INFUND-1555 - heavy way to send just a single string...
         ApplicationResource application = new ApplicationResource();
         application.setName(applicationName);
-        String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
+        String url = format(applicationRestURL + "/createApplicationByName/%d/%d/%d", competitionId, userId, organisationId);
 
         return postWithRestResult(url, application, ApplicationResource.class);
     }
