@@ -44,7 +44,7 @@ Applicant applies to newly created APC competition
     Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
-    [Documentation]  IFS-2286  IFS-1497
+    [Documentation]  IFS-2286
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
