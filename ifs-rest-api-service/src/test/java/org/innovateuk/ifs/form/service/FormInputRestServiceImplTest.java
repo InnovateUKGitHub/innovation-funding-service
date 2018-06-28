@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
 
-import static java.lang.String.format;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
