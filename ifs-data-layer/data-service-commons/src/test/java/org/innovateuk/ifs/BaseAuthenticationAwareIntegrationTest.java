@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
 
     @Autowired
     private UserMapper userMapper;
-    @Autowired
+    @PersistenceContext
     private EntityManager em;
 
     protected UserResource getSteveSmith() {
