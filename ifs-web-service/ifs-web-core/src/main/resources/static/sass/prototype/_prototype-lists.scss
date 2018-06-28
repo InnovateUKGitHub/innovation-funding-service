@@ -11,10 +11,10 @@ ol.list-style-type-roman{
   list-style-type: none;
 
   /*li{
-  	border-bottom: 1px solid $border-colour;
+  	border-bottom: 1px solid $govuk-border-colour;
 
       &:first-child{
-         border-top: 1px solid $border-colour;
+         border-top: 1px solid $govuk-border-colour;
       }
   }*/
 
@@ -151,7 +151,7 @@ dl{
 
 dl.standard-definition-list{
   overflow: auto;
-  @include core-19;
+  @include govuk-font(19);
 
   dt{
     display: block;
@@ -173,7 +173,7 @@ dl.standard-definition-list{
     margin-bottom: 0.5em;
 
     &.warning{
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     & + dt{
@@ -217,17 +217,17 @@ dl.standard-definition-list{
 /*----- Eligibility criteria for finances ----*/
 
 .eligibility{
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   padding: 20px 20px 10px 20px;
 
   &-warning{
-    border: 1px solid $red;
+    border: 1px solid $govuk-error-colour;
   }
 }
 
 .list-eligibility{
   overflow: auto;
-  @include core-24;
+  @include govuk-font(24);
 
   dt{
     display: block;
@@ -247,7 +247,7 @@ dl.standard-definition-list{
     margin-bottom: 0.5em;
 
     &.warning{
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     & + dt{
@@ -410,7 +410,7 @@ dl.standard-definition-list{
 %tabular-row{
   display: block;
   clear: both;
-  border-bottom: 1px solid $border-colour;
+  border-bottom: 1px solid $govuk-border-colour;
   @extend .cf;
 }
 

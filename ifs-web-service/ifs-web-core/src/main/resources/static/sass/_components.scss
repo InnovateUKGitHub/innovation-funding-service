@@ -1,6 +1,3 @@
-//temp file for all the worth styles
-//will be cut up in smaller pieces later
-
 //variables
 
 $is-ie: false !default;
@@ -21,48 +18,43 @@ $is-ie: false !default;
   }
 }
 
-@import 'compass/css3/transition';
-@import 'layout/gdsUpgrade';
-@import 'layout/layout';
-@import 'layout/grid';
-@import 'layout/small';
+//@import 'compass/css3/transition';
+//@import 'layout/gdsUpgrade';
+//@import 'layout/layout';
+//@import 'layout/grid';
+//@import 'layout/small';
 
-/*
-#Nomensa/Worth Elements
+//IFS components
 
-## List elements
-*/
-
+//List elements
 @import 'components/boxed-list';
 @import 'components/list-overview';
 @import 'components/progress-list';
-@import 'components/task-list';
-@import 'components/link-list';
+//@import 'components/task-list';
+//@import 'components/link-list';
 
-/*
-## Modals
-*/
-@import 'components/modal';
+//Modals
+//@import 'components/modal';
 
 //Modifiers
-@import 'layout/a11y';
-@import 'components/modifiers';
-@import 'components/forms';
+//@import 'layout/a11y';
+//@import 'components/modifiers';
+//@import 'components/forms';
 
 //Custom components
-@import 'components/collapsible-sections';
-@import 'components/highlight-panel';
-@import 'components/submitted-panel';
-@import 'components/progress-indicator';
-@import 'components/event-alert';
-@import 'components/message-alerts';
-@import 'components/pagination';
-@import 'components/assign-team';
-@import 'components/statusses';
-@import 'components/search-filters';
-@import 'components/timeline-status';
-@import "components/tabs";
-@import "components/password-toggle";
-@import 'components/wysiwyg';
-@import 'components/user-feedback';
-@import 'components/invites';
+//@import 'components/collapsible-sections';
+//@import 'components/highlight-panel';
+//@import 'components/submitted-panel';
+//@import 'components/progress-indicator';
+//@import 'components/event-alert';
+//@import 'components/message-alerts';
+//@import 'components/pagination';
+//@import 'components/assign-team';
+//@import 'components/statusses';
+//@import 'components/search-filters';
+//@import 'components/timeline-status';
+//@import "components/tabs";
+//@import "components/password-toggle";
+//@import 'components/wysiwyg';
+//@import 'components/user-feedback';
+//@import 'components/invites';

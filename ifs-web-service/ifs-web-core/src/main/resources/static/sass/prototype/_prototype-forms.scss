@@ -25,7 +25,7 @@ textarea {
     height: 35px;
     border: 1px solid $link-colour;
     border-width: 0 0 0 1px;
-    border-left-color: $border-colour;
+    border-left-color: $govuk-border-colour;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
@@ -80,7 +80,7 @@ textarea {
     padding-top: 6px;
   }
 
-  //border-bottom: 1px solid $border-colour;
+  //border-bottom: 1px solid $govuk-border-colour;
   padding-bottom: 3em;
   margin-bottom: 1.2em;
 }
@@ -132,7 +132,7 @@ select.form-control{
     }
 
     &.totals{
-      border: 1px solid $border-colour;
+      border: 1px solid $govuk-border-colour;
       background: $panel-colour;
       padding: 10px 5px;
 
@@ -159,7 +159,7 @@ select.form-control{
 /*----- File upload / download styling ----*/
 
 /*.upload-section{
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   background: $grey-4;
   padding: 16px 16px 8px 16px;
   margin-top: 16px;

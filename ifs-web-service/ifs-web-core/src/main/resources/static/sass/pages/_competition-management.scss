@@ -180,7 +180,7 @@ $wide-page-width: 1400px;
 
           &.selected {
             a {
-              border-bottom: 1px solid $border-colour;
+              border-bottom: 1px solid $govuk-border-colour;
             }
           }
         }
@@ -241,7 +241,7 @@ $wide-page-width: 1400px;
   select {
     &[disabled] {
       background:  $grey-4;
-      border: 1px solid $border-colour;
+      border: 1px solid $govuk-border-colour;
       color: $black;
     }
   }
@@ -260,7 +260,7 @@ $wide-page-width: 1400px;
 .contentGroup {
   @extend %contain-floats;
   padding: 30px 0;
-  border-top: 1px solid $border-colour;
+  border-top: 1px solid $govuk-border-colour;
   clear:both;
 
   &:first-child {
@@ -270,7 +270,7 @@ $wide-page-width: 1400px;
 
   &:last-child {
     margin-bottom: 30px;
-    border-bottom: 1px solid $border-colour;
+    border-bottom: 1px solid $govuk-border-colour;
   }
 }
 

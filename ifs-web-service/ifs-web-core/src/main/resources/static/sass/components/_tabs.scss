@@ -15,7 +15,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      border-bottom: 1px solid $border-colour;
+      border-bottom: 1px solid $govuk-border-colour;
       content: "";
     }
 
@@ -35,13 +35,13 @@
         white-space: nowrap;
 
         &:hover {
-          background-color: $border-colour;
+          background-color: $govuk-border-colour;
         }
 
         &[aria-selected='true'] {
           height: 1.2em;
           background-color: $white;
-          border: 1px solid $border-colour;
+          border: 1px solid $govuk-border-colour;
           border-bottom: 1px solid $white;
           transition: none 0s ease 0s;
           z-index: 2;
@@ -65,11 +65,11 @@
         display: block;
         margin-top: 0.5em;
         position: relative;
-        border-top: 1px solid $border-colour;
+        border-top: 1px solid $govuk-border-colour;
         clear:both;
 
         &:last-child {
-          border-top: 1px solid $border-colour;
+          border-top: 1px solid $govuk-border-colour;
         }
 
         &[aria-expanded] {
@@ -166,10 +166,10 @@ ol {
         a,
         .buttonlink {
           @include media-down(mobile) {
-            border-bottom: 1px solid $border-colour;
+            border-bottom: 1px solid $govuk-border-colour;
           }
 
-          border: 1px solid $border-colour;
+          border: 1px solid $govuk-border-colour;
           border-bottom: 1px solid $white;
           z-index:1;
           margin: 0;
@@ -192,7 +192,7 @@ ol {
       content: "";
       position: absolute;
       bottom:0px;
-      background-color: $border-colour;
+      background-color: $govuk-border-colour;
       width:100%;
       height: 1px;
       left:0;

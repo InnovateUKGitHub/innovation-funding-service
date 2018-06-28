@@ -52,7 +52,7 @@
   }
 
   .year {
-    border-right: 1px solid $border-colour;
+    border-right: 1px solid $govuk-border-colour;
   }
 
   .flex-table-wrap {
@@ -152,13 +152,13 @@
           + th {
             &[scope="row"] {
               left:175px;
-              border-right: 1px solid $border-colour;
+              border-right: 1px solid $govuk-border-colour;
             }
           }
 
           &[colspan="2"]{
             width:350px;
-            border-right:1px solid $border-colour;
+            border-right:1px solid $govuk-border-colour;
           }
         }
       }

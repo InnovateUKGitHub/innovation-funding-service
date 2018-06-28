@@ -31,7 +31,7 @@
   }
 
   circle {
-    fill:$red;
+    fill:$govuk-error-colour;
     stroke: $grey-3;
     stroke-width: 32;
     transform: rotate(-90deg);
@@ -52,7 +52,7 @@
   position: absolute;
   background:#fff;
   z-index:8;
-  color: $red;
+  color: $govuk-error-colour;
   text-align: center;
   line-height: 1;
   font-size:15px;

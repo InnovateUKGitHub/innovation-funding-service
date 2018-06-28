@@ -49,7 +49,7 @@ small {
 }
 
 .bordered {
-  border:1px solid $border-colour;
+  border:1px solid $govuk-border-colour;
 }
 
 .no-border {
@@ -71,17 +71,17 @@ table {
 }
 
 .border-top {
-  border-top: 1px solid $border-colour;
+  border-top: 1px solid $govuk-border-colour;
 }
 
 .border-right {
-  border-right: 1px solid $border-colour;
+  border-right: 1px solid $govuk-border-colour;
 }
 
 .cell-border-right {
   td,
   th {
-    border-right: 1px solid $border-colour;
+    border-right: 1px solid $govuk-border-colour;
   }
 }
 
@@ -109,7 +109,7 @@ th {
   td,
   th {
     padding:0.5em;
-    border: 1px solid $border-colour;
+    border: 1px solid $govuk-border-colour;
     vertical-align: top;
 
     &.fixed-half {
@@ -252,7 +252,7 @@ p {
 
 col {
   &.border {
-    border-right: 1px solid $border-colour;
+    border-right: 1px solid $govuk-border-colour;
   }
 }
 
@@ -310,13 +310,13 @@ col {
 }
 
 .boxed {
-  border:1px solid $border-colour;
+  border:1px solid $govuk-border-colour;
   padding:20px;
 }
 
 td {
   &.cell-error {
-    background: $red;
+    background: $govuk-error-colour;
     color: #fff;
   }
 }

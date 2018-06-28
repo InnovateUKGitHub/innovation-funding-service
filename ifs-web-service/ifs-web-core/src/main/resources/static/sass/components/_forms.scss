@@ -1,7 +1,7 @@
 %read-only {
   color: $black;
   background: $grey-4;
-  border-color: $border-colour;
+  border-color: $govuk-border-colour;
   cursor: default;
 }
 
@@ -136,7 +136,7 @@ table {
   }
 
   .cell-border-right {
-    border-right:1px solid $border-colour;
+    border-right:1px solid $govuk-border-colour;
   }
 }
 
@@ -252,9 +252,9 @@ tr {
           padding-left: 40px;
           margin: auto;
           white-space: nowrap;
-          border-left: 5px solid $red;
-          border-bottom: 1px solid $border-colour;
-          color: $red;
+          border-left: 5px solid $govuk-error-colour;
+          border-bottom: 1px solid $govuk-border-colour;
+          color: $govuk-error-colour;
           border-right:none;
         }
       }
@@ -296,7 +296,7 @@ tr {
 
   .textarea-header {
     font-size: 14px;
-    border: 2px solid $border-colour;
+    border: 2px solid $govuk-border-colour;
     border-bottom: none;
     background: $grey-4 0 0 no-repeat;
     min-height:60px;
@@ -394,7 +394,7 @@ td {
 .feedback {
   .textarea-wrapped {
     textarea{
-      border: 1px solid $border-colour;
+      border: 1px solid $govuk-border-colour;
     }
   }
 }

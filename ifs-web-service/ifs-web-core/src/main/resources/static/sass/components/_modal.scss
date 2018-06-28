@@ -46,7 +46,7 @@
   }
 
   &.warning-modal {
-    border-top: 10px solid $red;
+    border-top: 10px solid $govuk-error-colour;
 
     .modal-content {
       padding-left: 60px;

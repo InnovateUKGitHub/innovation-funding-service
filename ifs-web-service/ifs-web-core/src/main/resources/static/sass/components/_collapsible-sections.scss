@@ -14,11 +14,11 @@
   > h2,
   > h3 {
     position: relative;
-    border-top: 1px solid $border-colour;
+    border-top: 1px solid $govuk-border-colour;
     clear:both;
 
     &:last-child {
-      border-top: 1px solid $border-colour;
+      border-top: 1px solid $govuk-border-colour;
     }
 
     button {
@@ -85,7 +85,7 @@
       margin: 0;
 
       button{
-        @include core-24;
+        @include govuk-font(24);
         font-weight: bold;
       }
     }
@@ -146,7 +146,7 @@
       padding-right:2px;
 
       &.heading-medium{
-        @include core-24;
+        @include govuk-font(24);
         font-weight: bold;
       }
     }

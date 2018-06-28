@@ -1,4 +1,5 @@
 /*--- Progress list ---*/
+@import "govuk-frontend/settings/all";
 
 .progress-list{
   background-color: $panel-colour;
@@ -23,7 +24,7 @@
     margin-top: 10px;
     padding: 15px 0 15px 30px;
     background-color: $white;
-    border: 1px solid $border-colour;
+    border: 1px solid $govuk-border-colour;
     overflow: auto;
     display: flex; // Using flex as a progressive enhancement for vertical alignment of dashboard elements. Container heights are varaiable depending on length of application titles.
     flex-wrap: wrap;
@@ -110,7 +111,7 @@
       font-weight: bold;
 
       &-today{
-        color: $red;
+        color: $govuk-error-colour;
       }
 
       &-waiting{
@@ -145,7 +146,7 @@
   }
 
   .negative-text {
-    color: $red;
+    color: $govuk-error-colour;
   }
 
   .assessment-period {
@@ -211,7 +212,7 @@
 
   .negative {
     .score > strong {
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     .percent{
@@ -219,7 +220,7 @@
     }
 
     .msg-progress{
-      color: $red;
+      color: $govuk-error-colour;
     }
 
   }
@@ -270,7 +271,7 @@
       width: 50%;
 
       &:first-child{
-        border-right: 1px dashed $border-colour;
+        border-right: 1px dashed $govuk-border-colour;
       }
     }
   }

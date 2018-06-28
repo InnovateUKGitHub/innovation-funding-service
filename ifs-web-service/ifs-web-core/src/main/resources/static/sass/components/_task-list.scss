@@ -4,7 +4,7 @@
 
   > li {
     position: relative;
-    border-top: 1px solid $border-colour;
+    border-top: 1px solid $govuk-border-colour;
     padding: 10px;
 
     .task {
@@ -149,7 +149,7 @@
     }
 
     &:last-child {
-      border-bottom: 1px solid $border-colour;
+      border-bottom: 1px solid $govuk-border-colour;
     }
   }
 }

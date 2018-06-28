@@ -29,7 +29,7 @@
 %icon-incomplete {
   background-image: url('../images/ifs-images/icons/icon-alert.png');
   background-repeat: no-repeat;
-  color: $red;
+  color: $govuk-error-colour;
 }
 
 .collapsible,
@@ -71,7 +71,7 @@
 
   .section-incomplete {
     @extend %icon-incomplete;
-    color: $red;
+    color: $govuk-error-colour;
   }
 
   .section-awaiting {
@@ -199,7 +199,7 @@ span {
       &.rejected {
         a {
           &:link {
-            color: $red;
+            color: $govuk-error-colour;
           }
         }
       }

@@ -67,7 +67,7 @@
 /*--- Borders ---*/
 
 .section-divide{
-  border-top: 1px solid $border-colour;
+  border-top: 1px solid $govuk-border-colour;
   padding-top: $gutter-half;
 }
 
@@ -288,7 +288,7 @@ table{
 /*--- Boxed content ---*/
 
 .boxed{
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   padding: 20px;
   clear: both;
   overflow: auto;
@@ -448,14 +448,14 @@ ul.underline{
 
 /*---Example code areas = taken from style guide---*/
 .result{
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   margin-bottom: 15px;
   margin-top: 15px;
   padding: 45px 30px 30px;
   position: relative;
 
   &:before{
-    background: $border-colour;
+    background: $govuk-border-colour;
     color: white;
     content: "EXAMPLE";
     font-size: 15px;
@@ -473,7 +473,7 @@ ul.underline{
 [role="dialog"]{
  &.warning-alert{
   border-left: none;
-  border-top: 10px solid $red;
+  border-top: 10px solid $govuk-error-colour;
   background-position: 20px 2.2em;
   color: $text-colour;
   padding-left: 60px;

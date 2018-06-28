@@ -3,7 +3,7 @@
   [data-repeatable-container] {
     .labour-costs-table {
       td {
-        border-top: 1px solid $border-colour;
+        border-top: 1px solid $govuk-border-colour;
         border-bottom: none;
 
         &.rowspan {
@@ -30,14 +30,14 @@
       tr {
         &:last-child {
           td {
-            border-bottom: 1px solid $border-colour;
+            border-bottom: 1px solid $govuk-border-colour;
           }
         }
 
         &:nth-last-child(2) {
           td {
             &.rowspan {
-              border-bottom: 1px solid $border-colour;
+              border-bottom: 1px solid $govuk-border-colour;
             }
           }
         }
@@ -103,11 +103,11 @@
 
 .form-row {
   @extend %contain-floats;
-  border-bottom: 1px solid $border-colour;
+  border-bottom: 1px solid $govuk-border-colour;
   padding: 20px 0;
 
   &:first-child {
-    border-top: 1px solid $border-colour;
+    border-top: 1px solid $govuk-border-colour;
   }
 
   + .alignright {
@@ -123,7 +123,7 @@
 //finances
 .total-cost {
   padding: 15px 0;
-  border-top: 1px solid $border-colour;
+  border-top: 1px solid $govuk-border-colour;
   margin: 25px 0 0;
 
   .column-half {

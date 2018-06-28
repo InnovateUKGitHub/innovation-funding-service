@@ -25,7 +25,7 @@
 .marked-complete-alert{
   background: $grey-4;
   padding: 20px 20px 10px 30px;
-  border-left: 5px solid $border-colour;
+  border-left: 5px solid $govuk-border-colour;
   margin: 10px 0 30px 0;
   clear: both;
 }
@@ -46,7 +46,7 @@
 
 .status-project-warning{
   @extend %status-marker;
-  background: $red
+  background: $govuk-error-colour
 }
 
 .status-project-progress{
@@ -177,7 +177,7 @@ table.project-changes{
     }
 
     &.action{
-      //background: $red;
+      //background: $govuk-error-colour;
       background-image: url('../images/flag-icon.png');
       background-repeat: no-repeat;
       background-position: 50% 50%;
@@ -417,7 +417,7 @@ table.project-changes{
         background: $highlight-colour;
 
         &.total{
-          background: $red;
+          background: $govuk-error-colour;
           color: $white;
 
           &.eligible{
@@ -478,7 +478,7 @@ table.project-changes{
       &:first-child{
         h3,
         p{
-          border-top: 1px solid $border-colour;
+          border-top: 1px solid $govuk-border-colour;
         }
       }
     }
@@ -487,7 +487,7 @@ table.project-changes{
     li p{
       display: table-cell;
       padding: 0.5em 0;
-      border-bottom: 1px solid $border-colour;
+      border-bottom: 1px solid $govuk-border-colour;
     }
 
     li h3{

@@ -1,13 +1,17 @@
+@import "govuk-frontend/settings/all";
+@import "govuk-frontend/tools/all";
+@import "govuk-frontend/helpers/all";
+
 .list-overview {
   margin-left: 0;
   padding: 0;
   list-style-type: none;
 
   > li {
-    border-top: 1px solid $border-colour;
+    border-top: 1px solid $govuk-border-colour;
 
     &:last-child {
-      border-bottom: 1px solid $border-colour;
+      border-bottom: 1px solid $govuk-border-colour;
     }
 
     &.grid-row {
@@ -45,18 +49,18 @@
 }
 
 .eligibility {
-  border: 1px solid $border-colour;
+  border: 1px solid $govuk-border-colour;
   padding: 20px 20px 10px 20px;
   margin-top: 20px;
 
   &.warning {
-    border: 1px solid $red;
+    border: 1px solid $govuk-error-colour;
   }
 }
 
 
 .list-eligibility {
-  @include core-24;
+  @include govuk-font(24);
   overflow: auto;
 
   dt {
@@ -78,7 +82,7 @@
     margin-bottom: 0.5em;
 
     &.warning {
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     & + dt {
@@ -236,7 +240,7 @@ ol {
 }
 
 %definition-list {
-  @include core-19;
+  @include govuk-font(19);
   overflow: auto;
 
   dt {
@@ -259,7 +263,7 @@ ol {
     margin-bottom: 0.5em;
 
     &.warning {
-      color: $red;
+      color: $govuk-error-colour;
     }
 
     & + dt {
@@ -302,13 +306,13 @@ ol {
 
 .comp-list {
   li {
-    border-top:1px solid $border-colour;
+    border-top:1px solid $govuk-border-colour;
     overflow: hidden;
   }
 
   li {
     &:last-child {
-      border-bottom:1px solid $border-colour;
+      border-bottom:1px solid $govuk-border-colour;
     }
   }
 

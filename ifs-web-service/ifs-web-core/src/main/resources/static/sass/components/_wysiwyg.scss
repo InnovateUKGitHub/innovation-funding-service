@@ -142,7 +142,7 @@ button {
 .hallotoolbar {
   @include border-radius(10px);
   background:#fff;
-  border:1px solid $border-colour;
+  border:1px solid $govuk-border-colour;
   width:auto!important;
   margin:50px 10px 0 10px;
 
