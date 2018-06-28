@@ -58,7 +58,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class RegistrationControllerTest extends AbstractInviteMockMVCTest<RegistrationController> {
 
@@ -351,7 +351,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(serviceFailure(error));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), nullable(String.class), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong(), nullable(Boolean.class))).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -411,14 +411,14 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
                 eq(userResource.getEmail()),
-                anyString(),
+                nullable(String.class),
                 eq(userResource.getPhoneNumber()),
                 anyString(),
                 anyLong(),
                 anyString(),
                 eq(1L),
                 eq(1L),
-                anyBoolean())).thenReturn(serviceSuccess(userResource));
+                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -463,14 +463,14 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
                 eq(userResource.getEmail()),
-                anyString(),
+                nullable(String.class),
                 eq(userResource.getPhoneNumber()),
                 anyString(),
                 anyLong(),
                 anyString(),
                 eq(1L),
                 eq(1L),
-                anyBoolean())).thenReturn(serviceSuccess(userResource));
+                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
 

@@ -49,13 +49,14 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         OrganisationResource expected = newOrganisationResource().withName("Name One").build();
 
         UserResource userOne = new UserResource();
+        userOne.setId(123L);
         userOne.setEmail("email@testOne.com");
 
         ApplicationInviteResource inviteResource = newApplicationInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
 
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
+        when(organisationService.getOrganisationForUser(123L)).thenReturn(expected);
         when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
 
         assertTrue(service.isInviteForDifferentOrganisationThanUsersAndDifferentName(inviteResource, inviteOrganisationResource));
@@ -65,13 +66,14 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     public void acceptInviteDifferentOrganisationSameName() throws Exception {
         OrganisationResource expected = newOrganisationResource().withName("Name Two").build();
         UserResource userOne = new UserResource();
+        userOne.setId(123L);
         userOne.setEmail("email@testOne.com");
 
         ApplicationInviteResource inviteResource = newApplicationInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
 
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
+        when(organisationService.getOrganisationForUser(123L)).thenReturn(expected);
         when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
 
         assertTrue(service.isInviteForDifferentOrganisationThanUsersButSameName(inviteResource, inviteOrganisationResource));

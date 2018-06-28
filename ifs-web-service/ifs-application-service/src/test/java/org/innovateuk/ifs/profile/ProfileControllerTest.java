@@ -252,7 +252,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     public void whenSubmittingAValidFormTheUserProfileDetailsViewIsReturned() throws Exception {
 
 
-        when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), anyString(),
+        when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), nullable(String.class),
                 eq(user.getPhoneNumber()),
                 anyString(),
                 anyLong(),
@@ -293,7 +293,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     public void userServiceResponseErrorsAreAddedTheModel() throws Exception {
 
         Error error = new Error("objectName", singletonList("fieldName"), BAD_REQUEST);
-        when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), anyString(),
+        when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), nullable(String.class),
                 eq(user.getPhoneNumber()), anyString(), anyLong(), anyString(), anyBoolean()))
                 .thenReturn(ServiceResult.serviceFailure(error));
 

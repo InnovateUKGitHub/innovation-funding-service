@@ -76,7 +76,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationSectionControllerTest extends AbstractApplicationMockMVCTest<ApplicationSectionController> {
 
@@ -540,7 +540,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         Long currentSectionId = sectionResources.get(2).getId();
         ApplicationResource application = newApplicationResource().build();
         Role role = Role.COLLABORATOR;
-        ProcessRoleResource processRole = newProcessRoleResource().withOrganisation(2L).withRole(role).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withOrganisation(2L).withRole(role).withUserId(4L).build();
 
         when(applicationService.getById(1L)).thenReturn(application);
         when(processRoleService.getByApplicationId(application.getId())).thenReturn(asList(processRole));

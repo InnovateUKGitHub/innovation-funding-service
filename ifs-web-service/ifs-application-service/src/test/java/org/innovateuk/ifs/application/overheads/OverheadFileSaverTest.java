@@ -71,7 +71,7 @@ public class OverheadFileSaverTest {
         ValidationMessages result = saver.handleOverheadFileRequest(request);
 
         assertEquals(0, result.getErrors().size());
-        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), anyString(), anyLong(), anyString(), any(byte[].class));
+        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class OverheadFileSaverTest {
         assertEquals(1, result.getErrors().size());
         assertEquals("GENERAL_NOT_FOUND", result.getErrors().get(0).getErrorKey());
         assertEquals(NOT_ACCEPTABLE, result.getErrors().get(0).getStatusCode());
-        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), anyString(), anyLong(), anyString(), any(byte[].class));
+        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class OverheadFileSaverTest {
 
         assertEquals(1, result.getErrors().size());
         assertEquals("validation.finance.overhead.file.type", result.getErrors().get(0).getErrorKey());
-        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), anyString(), anyLong(), anyString(), any(byte[].class));
+        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class));
     }
 
 
