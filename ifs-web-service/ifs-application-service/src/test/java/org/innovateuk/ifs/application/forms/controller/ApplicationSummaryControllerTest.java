@@ -210,7 +210,6 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 .andReturn();
     }
 
-
     @Test
     public void testApplicationSummary() throws Exception {
         ApplicationResource app = applications.get(0);
