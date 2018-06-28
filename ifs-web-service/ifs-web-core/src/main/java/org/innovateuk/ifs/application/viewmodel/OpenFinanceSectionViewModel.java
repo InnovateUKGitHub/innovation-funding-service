@@ -15,7 +15,9 @@ import static java.util.Arrays.asList;
 public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     private static final List<SectionType> ACADEMIC_FINANCE_SUB_SECTIONS = asList(SectionType.PROJECT_COST_FINANCES);
     private boolean fundingSectionLocked;
+    // TODO: IFS-3753 remove all things related to applicationDetailsQuestionId
     private Long applicationDetailsQuestionId;
+    private Long researchCategoryQuestionId;
     private Long yourOrganisationSectionId;
     private boolean notRequestingFunding;
 
@@ -47,6 +49,14 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
     public void setApplicationDetailsQuestionId(Long applicationDetailsQuestionId) {
         this.applicationDetailsQuestionId = applicationDetailsQuestionId;
+    }
+
+    public Long getResearchCategoryQuestionId() {
+        return researchCategoryQuestionId;
+    }
+
+    public void setResearchCategoryQuestionId(Long researchCategoryQuestionId) {
+        this.researchCategoryQuestionId = researchCategoryQuestionId;
     }
 
     public Long getYourOrganisationSectionId() {
