@@ -15,6 +15,7 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,23 +33,20 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CA
 @Component
 public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourFinancesSectionViewModel> {
 
+    @Autowired
     private SectionService sectionService;
-    private QuestionService questionService;
-    private QuestionRestService questionRestService;
-    private FinanceService financeService;
-    private FileEntryRestService fileEntryRestService;
 
-    public YourFinancesSectionPopulator(SectionService sectionService,
-                                        QuestionService questionService,
-                                        QuestionRestService questionRestService,
-                                        FinanceService financeService,
-                                        FileEntryRestService fileEntryRestService) {
-        this.sectionService = sectionService;
-        this.questionService = questionService;
-        this.questionRestService = questionRestService;
-        this.financeService = financeService;
-        this.fileEntryRestService = fileEntryRestService;
-    }
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
+    private FinanceService financeService;
+
+    @Autowired
+    private FileEntryRestService fileEntryRestService;
 
     @Override
     protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {

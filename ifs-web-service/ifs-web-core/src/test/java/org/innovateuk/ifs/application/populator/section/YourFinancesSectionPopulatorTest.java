@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -14,9 +13,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,7 +33,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -57,6 +53,9 @@ public class YourFinancesSectionPopulatorTest {
     private YourFinancesSectionPopulator yourFinancesSectionPopulator;
 
     @Mock
+    private ApplicationNavigationPopulator navigationPopulator;
+
+    @Mock
     private SectionService sectionService;
 
     @Mock
@@ -71,9 +70,6 @@ public class YourFinancesSectionPopulatorTest {
     @Mock
     private FileEntryRestService fileEntryRestService;
 
-    @Mock
-    private ApplicationNavigationPopulator navigationPopulator;
-
     @Test
     public void testPopulate() {
         ApplicantSectionResource yourProjectCosts = newApplicantSectionResource().withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build();
@@ -83,7 +79,7 @@ public class YourFinancesSectionPopulatorTest {
         ApplicantSectionResource section = newApplicantSectionResource()
                 .withCurrentApplicant(newApplicantResource().withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build())
                 .withCurrentUser(newUserResource().build())
-                .withCompetition(newCompetitionResource().build())
+                .withCompetition(newCompetitionResource().withUseNewApplicantMenu(true).build())
                 .withApplication(newApplicationResource().build())
                 .withApplicantChildrenSections(asList(yourProjectCosts, yourOrganisation, yourFunding))
                 .build();

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.commons.rest.RestSuccess;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -30,6 +31,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
@@ -61,6 +63,7 @@ import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Matchers.*;
@@ -79,6 +82,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     protected CompetitionService competitionService;
     @Mock
     protected QuestionService questionService;
+    @Mock
+    protected QuestionRestService questionRestService;
     @Mock
     protected FormInputResponseRestService formInputResponseRestService;
     @Mock
@@ -201,6 +206,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 withType(SectionType.GENERAL).
                 build();
 
+        QuestionResource q02Resource = setupQuestionResource(1L, "Research category", questionResourceBuilder);
+
         QuestionResource q10Resource = setupQuestionResource(10L, "How does your project align with the scope of this competition?", questionResourceBuilder);
 
         SectionResource sectionResource2 = sectionResourceBuilder.
@@ -265,6 +272,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList(q21Resource, q22Resource, q23Resource));
         when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS)).thenReturn(ServiceResult.serviceSuccess(q01Resource));
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(1L, RESEARCH_CATEGORY)).thenReturn(restSuccess(q02Resource));
 
         ArrayList<QuestionResource> questionList = new ArrayList<>();
         for (SectionResource section : sectionResources) {
