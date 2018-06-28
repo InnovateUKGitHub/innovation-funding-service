@@ -191,7 +191,7 @@ the user verifies email
 the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
     the user clicks the button/link         jQuery=a:contains("Start new application")
-    the user clicks the button/link         jQuery=a:contains("Continue without an account")
+    the user clicks the button/link         link=Continue without an account
     the user should not see the element     jQuery=h3:contains("Organisation type")
     the user selects the radio button       organisationTypeId  ${org_type_id}
     the user clicks the button/link         jQuery=.button:contains("Save and continue")

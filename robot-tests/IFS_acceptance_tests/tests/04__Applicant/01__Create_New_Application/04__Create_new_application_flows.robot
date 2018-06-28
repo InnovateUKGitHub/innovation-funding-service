@@ -23,7 +23,7 @@ Non registered users non companies house route
     Given the user navigates to the page           ${frontDoor}
     And the user clicks the button/link in the paginated list            link=${createApplicationOpenCompetition}
     And the user clicks the button/link            jQuery=a:contains("Start new application")
-    And the user clicks the button/link            jQuery=a:contains("Continue without an account")
+    And the user clicks the button/link            link=Continue without an account
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     When the user clicks the Not on company house link
