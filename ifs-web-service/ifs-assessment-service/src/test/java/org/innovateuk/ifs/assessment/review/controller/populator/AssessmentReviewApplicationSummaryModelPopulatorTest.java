@@ -131,8 +131,8 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
         when(processRoleService.findProcessRolesByApplicationId(applicationResource.getId())).thenReturn(userApplicationRoles);
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(applicationResource.getId())).thenReturn(restSuccess(assessorFormInputResponseResources));
         when(assessmentRestService.getByUserAndApplication(userResource.getId(), applicationResource.getId())).thenReturn(restSuccess(assessmentResources));
-        when(formInputRestService.getById(anyLong())).thenReturn(restSuccess(formInputResources.get(0)));
-        when(formInputRestService.getById(anyLong())).thenReturn(restSuccess(formInputResources.get(1)));
+        when(formInputRestService.getById(nullable(Long.class))).thenReturn(restSuccess(formInputResources.get(0)));
+        when(formInputRestService.getById(nullable(Long.class))).thenReturn(restSuccess(formInputResources.get(1)));
 
         populator.populateModel(model, applicationForm, userResource, applicationResource.getId());
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -22,7 +23,6 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -160,7 +160,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
         mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)));
+                .andExpect(model().attribute("exception", new IsInstanceOf(ObjectNotFoundException.class)));
 
         InOrder inOrder = inOrder(competitionService);
         inOrder.verify(competitionService).getById(competitionId);
@@ -182,7 +182,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(model().attribute("exception", new InstanceOf(IncorrectStateForPageException.class)))
+                .andExpect(model().attribute("exception", new IsInstanceOf(IncorrectStateForPageException.class)))
                 .andReturn();
 
         IncorrectStateForPageException exception = (IncorrectStateForPageException) result.getModelAndView().getModel().get("exception");
