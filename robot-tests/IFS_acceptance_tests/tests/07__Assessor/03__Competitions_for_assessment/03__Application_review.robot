@@ -52,7 +52,7 @@ Project details sections should not be scorable
     And the user should see the element        jQuery=p:contains("This is the applicant response for public description.")
     Then the user should not see the element   jQuery=label:contains("Question score")
     And the user clicks the button/link        jQuery=span:contains("Next")
-    And the user should see the element        jQuery=p:contains("This is the applicant response for how does your project align with the scope of this competition?")
+    And the user should see the element        jQuery=p:contains("This is the applicant response for how does your project align with the scope of this competition?.")
     Then the user should not see the element   jQuery=label:contains("Question score")
 
 Application questions should be scorable
