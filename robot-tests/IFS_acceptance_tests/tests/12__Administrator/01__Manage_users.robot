@@ -8,6 +8,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-983: Manage users: Pending registration tab
 ...               IFS-2412: Internal users resend invites
 ...               IFS-2842: Add modals to the resending of invites to internal users
+...               IFS-1944: Internal - Invite internal user - error field is missing
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
