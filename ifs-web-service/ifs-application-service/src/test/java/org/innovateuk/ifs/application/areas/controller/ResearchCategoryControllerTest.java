@@ -119,6 +119,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(redirectedUrl(format("/application/%s/form/question/%s", applicationResource.getId(),
                         questionId)))
@@ -170,6 +171,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}", applicationResource
                 .getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
@@ -215,7 +217,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
-                .param("researchCategory", ""))
+                .param("save-research-category", ""))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().isOk())
@@ -246,6 +248,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", "1"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is4xxClientError());
@@ -277,6 +280,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())))
                 .andExpect(status().is3xxRedirection());
@@ -329,6 +333,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}", applicationResource
                 .getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
@@ -376,7 +381,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
-                .param("researchCategory", ""))
+                .param("save-research-category", ""))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().isOk())
@@ -409,6 +414,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", "1"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is4xxClientError());
