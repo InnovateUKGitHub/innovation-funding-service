@@ -1,0 +1,19 @@
+def apply(profiles) {
+    profiles.each { profile ->
+        if (file("${profile}-build.gradle").exists()) {
+            apply from: "${profile}-build.gradle"
+            println "Applying profile ${profile}"
+        }
+    }
+}
+
+task applyProfiles() {
+    doFirst {
+        if (project.hasProperty("profile")) {
+            //Always apply docker, THEN automated and THEN the specific project profile.
+            apply(['docker', 'automated', project.profile])
+        } else {
+            apply(['docker'])
+        }
+    }
+}

@@ -6,26 +6,8 @@ apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
 
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/profile-handler.gradle")
 
-def apply(profiles) {
-    profiles.each { profile ->
-        if (file("${profile}-build.gradle").exists()) {
-            apply from: "${profile}-build.gradle"
-            println "Applying profile ${profile}"
-        }
-    }
-}
-
-task applyProfiles() {
-    doFirst {
-        if (project.hasProperty("profile")) {
-            //Always apply docker, THEN automated and THEN the specific project profile.
-            apply(['docker', 'automated', project.profile])
-        } else {
-            apply(['docker'])
-        }
-    }
-}
 
 processResources.dependsOn applyProfiles
 
@@ -107,3 +89,7 @@ dependencies {
 }
 
 ext.serverPort = 8080
+ext.ifsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs"
+ext.ifsDatasourceUsername="root"
+ext.ifsDatasourcePassword="password"
+ext.activeProfile="local"
