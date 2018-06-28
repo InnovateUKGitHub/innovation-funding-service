@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Handles the Competition Management Funding decision views and submission of funding decision.

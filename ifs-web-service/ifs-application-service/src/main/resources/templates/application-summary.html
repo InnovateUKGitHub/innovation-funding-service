@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:if="${applicationSummaryViewModel.currentApplication.isOpen()}" th:insert="fragments/layout :: head" th:with="pageTitle='Application summary'" />
-        <th:block th:unless="${applicationSummaryViewModel.currentApplication.isOpen()}" th:insert="fragments/layout :: head" th:with="pageTitle='Application overview'" />
+        <th:block th:if="${model.currentApplication.isOpen()}" th:insert="fragments/layout :: head" th:with="pageTitle='Application summary'" />
+        <th:block th:unless="${model.currentApplication.isOpen()}" th:insert="fragments/layout :: head" th:with="pageTitle='Application overview'" />
     </head>
 
-    <body class="app-summary" th:classappend="${applicationSummaryViewModel.currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+    <body class="app-summary" th:classappend="${model.currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
         <th:block th:insert="fragments/modals :: modal-overlay" />
-        <th:block th:if="${applicationSummaryViewModel.currentApplication.isOpen() and applicationSummaryViewModel.applicationReadyForSubmit}" th:include="fragments/modals ::modal-confirm-submit-application
+        <th:block th:if="${model.currentApplication.isOpen() and model.applicationReadyForSubmit}" th:include="fragments/modals ::modal-confirm-submit-application
             (messageTitle='This is your final chance to make changes to the application.',
              message='You will not be able to access the application after this point. Are you sure you want to submit?',
-             submitLink='/application/'+${applicationSummaryViewModel.currentApplication.getId()}+'/submit',
+             submitLink='/application/'+${model.currentApplication.getId()}+'/submit',
              submitText='Yes, I want to submit my application',
              submittedText='Submitting application, please wait...',
              cancelText='Cancel')" />
@@ -18,45 +18,44 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:unless="${applicationSummaryViewModel.currentApplication.isOpen() and applicationSummaryViewModel.currentCompetition.isOpen()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
+            <th:block th:unless="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
 
-            <th:block th:if="${applicationSummaryViewModel.currentApplication.isOpen() and applicationSummaryViewModel.currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${applicationSummaryViewModel.currentApplication},linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${applicationSummaryViewModel.currentApplication.id})}"/>
+            <th:block th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${model.currentApplication},linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${model.currentApplication.id})}"/>
 
-            <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${applicationSummaryViewModel.currentCompetition})" />
+            <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
 
-            <th:block th:with="applicationName=${#strings.isEmpty(applicationSummaryViewModel.currentApplication.name)} ? #{ifs.application.no_title} : ${applicationSummaryViewModel.currentApplication.name}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${applicationSummaryViewModel.currentApplication.isOpen()} ? 'Application summary' : 'Application overview',subTitle=${applicationSummaryViewModel.currentApplication.name},size='heading-xlarge'" />
+            <th:block th:with="applicationName=${#strings.isEmpty(model.currentApplication.name)} ? #{ifs.application.no_title} : ${model.currentApplication.name}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.currentApplication.isOpen()} ? 'Application summary' : 'Application overview',subTitle=${model.currentApplication.name},size='heading-xlarge'" />
             </th:block>
 
-            <th:block th:insert="fragments/elements :: competition-status-message (app=${applicationSummaryViewModel.currentApplication}, competition=${applicationSummaryViewModel.currentCompetition}, projectWithdrawn=${applicationSummaryViewModel.projectWithdrawn})" />
+            <th:block th:insert="fragments/elements :: competition-status-message (app=${model.currentApplication}, competition=${model.currentCompetition}, projectWithdrawn=${model.projectWithdrawn})" />
 
-            <p class="subtitle extra-margin" th:if="${applicationSummaryViewModel.currentApplication.isOpen() and applicationSummaryViewModel.currentCompetition.isOpen()}">
+            <p class="subtitle extra-margin" th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}">
                 Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
             </p>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview" novalidate="novalidate">
                 <div class="collapsible-finances-summary">
-                    <th:block ifs:global="${applicationSummaryViewModel.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${applicationSummaryViewModel.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false)" />
+                    <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${model.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false)" />
                 </div>
             </form>
 
-            <div th:if="${!applicationSummaryViewModel.currentCompetition.isOpen() and !applicationSummaryViewModel.currentApplication.isSubmitted()}">
+            <div th:if="${!model.currentCompetition.isOpen() and !model.currentApplication.isSubmitted()}">
                 <div class="warning-alert">
                     Registration is now closed, you are no longer able to submit your application.
                 </div>
             </div>
-            <div th:if="${applicationSummaryViewModel.currentCompetition.isOpen() and applicationSummaryViewModel.currentApplication.isOpen()}" class="extra-large-margin">
-
-                <th:block th:if="${applicationSummaryViewModel.userIsLeadApplicant}">
+            <div th:if="${model.currentCompetition.isOpen() and model.currentApplication.isOpen()}" class="extra-large-margin">
+                <th:block th:if="${model.userIsLeadApplicant}">
                     <div class="message-alert">
                         <p>You will not be able to make changes to your application or resubmit after this point.</p>
                     </div>
-                    <a th:if="${applicationSummaryViewModel.applicationReadyForSubmit}" id="submit-application-button" class="button extra-margin" data-js-modal="modal-confirm-submit-application"
-                       th:href="@{/application/{id}/confirm-submit(id=${applicationSummaryViewModel.currentApplication.getId()})}">Submit application</a>
-                    <button disabled="disabled" class="button extra-margin" th:unless="${applicationSummaryViewModel.applicationReadyForSubmit}">Submit application</button>
+                    <a th:if="${model.applicationReadyForSubmit}" id="submit-application-button" class="button extra-margin" data-js-modal="modal-confirm-submit-application"
+                       th:href="@{/application/{id}/confirm-submit(id=${model.currentApplication.getId()})}">Submit application</a>
+                    <button disabled="disabled" class="button extra-margin" th:unless="${model.applicationReadyForSubmit}">Submit application</button>
                 </th:block>
 
-                <th:block th:unless="${userIsLeadApplicant}">
+                <th:block th:unless="${model.userIsLeadApplicant}">
                     <div class="message-alert">
                         <p>All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.</p>
                     </div>

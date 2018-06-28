@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.common.viewmodel;
 
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -14,6 +15,9 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * View model for fragments/application :: application-summary
+ */
 public class SummaryViewModel {
 
     private final ApplicationResource currentApplication;
@@ -32,6 +36,7 @@ public class SummaryViewModel {
     private final ApplicationOverviewCompletedViewModel completedViewModel;
     private final Map<Long, AbstractFormInputViewModel> formInputViewModels;
     private final boolean fromApplicationService;
+    private final ApplicationTeamViewModel applicationTeamModel;
 
     public SummaryViewModel(ApplicationResource currentApplication,
                             Map<Long, SectionResource> sections,
@@ -48,7 +53,8 @@ public class SummaryViewModel {
                             ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                             ApplicationOverviewCompletedViewModel completedViewModel,
                             Map<Long, AbstractFormInputViewModel> formInputViewModels,
-                            boolean fromApplicationService) {
+                            boolean fromApplicationService,
+                            ApplicationTeamViewModel applicationTeamModel) {
         this.currentApplication = currentApplication;
         this.sections = sections;
         this.sectionQuestions = sectionQuestions;
@@ -65,6 +71,7 @@ public class SummaryViewModel {
         this.completedViewModel = completedViewModel;
         this.formInputViewModels = formInputViewModels;
         this.fromApplicationService = fromApplicationService;
+        this.applicationTeamModel = applicationTeamModel;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -129,5 +136,9 @@ public class SummaryViewModel {
 
     public boolean isFromApplicationService() {
         return fromApplicationService;
+    }
+
+    public ApplicationTeamViewModel getApplicationTeamModel() {
+        return applicationTeamModel;
     }
 }
