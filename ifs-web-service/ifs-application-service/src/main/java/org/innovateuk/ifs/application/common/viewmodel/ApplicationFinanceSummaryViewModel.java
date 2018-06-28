@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.common.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * View model for finance/finance-summary :: application_finances_summary.
+ */
 public class ApplicationFinanceSummaryViewModel {
 
     private final ApplicationResource currentApplication;
