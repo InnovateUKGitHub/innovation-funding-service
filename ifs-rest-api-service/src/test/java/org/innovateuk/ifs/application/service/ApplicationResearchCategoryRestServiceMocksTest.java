@@ -3,35 +3,56 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-/**
- * Tests to check the ResearchCategoryRestService's interaction with the RestTemplate and the processing of its results
- */
-public class ApplicationResearchCategoryRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationResearchCategoryRestServiceImpl> {
+public class ApplicationResearchCategoryRestServiceMocksTest extends
+        BaseRestServiceUnitTest<ApplicationResearchCategoryRestServiceImpl> {
+
     private static final String applicationResearchCategoryRestUrl = "/applicationResearchCategory";
 
     @Override
     protected ApplicationResearchCategoryRestServiceImpl registerRestServiceUnderTest() {
-        ApplicationResearchCategoryRestServiceImpl applicationResearchCategoryRestServiceImpl = new ApplicationResearchCategoryRestServiceImpl();
-        return applicationResearchCategoryRestServiceImpl;
+        return new ApplicationResearchCategoryRestServiceImpl();
     }
 
     @Test
-    public void testSaveApplicationInnovationAreaChoice() {
-        Long researchCategoryd = 123L;
-        Long applicationId = 321L;
-        String expectedUrl = applicationResearchCategoryRestUrl + "/researchCategory/" + 321;
+    public void setResearchCategory() {
+        long researchCategoryId = 1L;
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        setupPostWithRestResultExpectations(expectedUrl, ApplicationResource.class, researchCategoryd, applicationResource, HttpStatus.OK);
+        setupPostWithRestResultExpectations(format("%s/researchCategory/%s", applicationResearchCategoryRestUrl,
+                applicationResource.getId()),
+                ApplicationResource.class, researchCategoryId, applicationResource, HttpStatus.OK);
 
-        RestResult<ApplicationResource> result = service.saveApplicationResearchCategoryChoice(applicationId, researchCategoryd);
-        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
+        RestResult<ApplicationResource> result = service.setResearchCategory(applicationResource.getId(),
+                researchCategoryId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(applicationResource, result.getSuccess());
+    }
+
+    @Test
+    public void setResearchCategoryAndMarkAsComplete() {
+        long researchCategoryId = 1L;
+        long markedAsCompleteId = 2L;
+
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        setupPostWithRestResultExpectations(format("%s/markResearchCategoryComplete/%s/%s",
+                applicationResearchCategoryRestUrl, applicationResource.getId(), markedAsCompleteId),
+                ApplicationResource.class, researchCategoryId, applicationResource, HttpStatus.OK);
+
+        RestResult<ApplicationResource> result = service.setResearchCategoryAndMarkAsComplete(applicationResource
+                .getId(), markedAsCompleteId, researchCategoryId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(applicationResource, result.getSuccess());
     }
 }

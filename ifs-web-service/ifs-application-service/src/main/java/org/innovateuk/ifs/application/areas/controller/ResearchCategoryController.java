@@ -10,11 +10,13 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,11 +24,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.isMarkQuestionAsCompleteRequest;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
@@ -59,6 +63,9 @@ public class ResearchCategoryController {
     private ApplicationService applicationService;
 
     @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     private static final String FORM_ATTR_NAME = "form";
@@ -85,6 +92,7 @@ public class ResearchCategoryController {
                                                        researchCategoryForm,
                                                @SuppressWarnings("unused") BindingResult bindingResult,
                                                ValidationHandler validationHandler,
+                                               HttpServletRequest request,
                                                HttpServletResponse response,
                                                Model model,
                                                UserResource loggedInUser,
@@ -99,7 +107,7 @@ public class ResearchCategoryController {
             checkIfAllowed(questionId, applicationResource);
 
             ServiceResult<ApplicationResource> updateResult = saveResearchCategoryChoice(applicationId,
-                    researchCategoryForm);
+                    loggedInUser.getId(), researchCategoryForm, request);
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
@@ -109,10 +117,20 @@ public class ResearchCategoryController {
         });
     }
 
-    private ServiceResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm
-            researchCategoryForm) {
-        return applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId,
-                researchCategoryForm.getResearchCategory()).toServiceResult();
+    private ServiceResult<ApplicationResource> saveResearchCategoryChoice(long applicationId,
+                                                                          long loggedInUserId,
+                                                                          ResearchCategoryForm researchCategoryForm,
+                                                                          HttpServletRequest request) {
+        boolean isMarkQuestionAsCompleteRequest = isMarkQuestionAsCompleteRequest(request.getParameterMap());
+        long researchCategory = researchCategoryForm.getResearchCategory();
+
+        RestResult<ApplicationResource> result = isMarkQuestionAsCompleteRequest ?
+                applicationResearchCategoryRestService.setResearchCategoryAndMarkAsComplete(applicationId,
+                        getProcessRoleId(loggedInUserId, applicationId), researchCategory) :
+                applicationResearchCategoryRestService.setResearchCategory(applicationId,
+                researchCategory);
+
+        return result.toServiceResult();
     }
 
     private void checkIfAllowed(long questionId, ApplicationResource applicationResource)
@@ -130,6 +148,10 @@ public class ResearchCategoryController {
                 applicationResource)) {
             throw new ForbiddenActionException();
         }
+    }
+
+    private long getProcessRoleId(long userId, long applicationId) {
+        return processRoleService.findProcessRole(userId, applicationId).getId();
     }
 
     private String getRedirectUrl(ApplicationResource applicationResource, long questionId) {
