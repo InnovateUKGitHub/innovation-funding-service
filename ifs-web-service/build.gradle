@@ -1,5 +1,11 @@
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild + "-build.gradle";
+if(hasProperty('profile')) {
+    def targetBuild = profile
+    if (targetBuild != 'automated' && targetBuild != 'docker') {
+        //temp workaround before we remove the automated profile completely
+        apply from: targetBuild + "-build.gradle";
+    }
+}
+
 apply from: "fractal.gradle";
 apply from: "front-end.gradle"
 
@@ -35,9 +41,9 @@ subprojects {
 
         buildDocker.dependsOn ":docker:app-base-image:buildDocker"
         buildDocker.dependsOn prepareDockerInput
-        buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+        buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
         buildDocker.inputDir = project.file("$project.buildDir/docker")
-        tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+        tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
     }
 }
 apply from: "documentation.gradle"
@@ -49,6 +55,10 @@ endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-service:test"
 endpointDocumentation.dependsOn "ifs-front-door-service:test"
 
-ext.ifsDataServiceRestBaseURL="http://data-service:8080"
-ext.serverPort=8080
+ext.ifsDataServiceRestBaseURL = "http://data-service:8080"
+ext.serverPort = 8080
+ext.activeProfile="local"
+ext.ifsIdpLogoutUrl="https://ifs.local-dev/Logout"
+ext.ifsWebGoogleanalyticsTrackingid=""
+ext.ifsSystemUserUUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 
