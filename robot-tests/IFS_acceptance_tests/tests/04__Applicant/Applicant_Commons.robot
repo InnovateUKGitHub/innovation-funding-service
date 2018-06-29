@@ -73,8 +73,8 @@ the user fills in the Application details
 
 the user selects Research category
     [Arguments]  ${res_category}
-    the user clicks the button/link   jQuery=a:contains("research")
-    then the user selects the radio button  researchCategory  researchCategory1
+    the user clicks the button/link   link=Research category
+    then the user clicks the button/link  jQuery=label:contains("${res_category}")
     the user clicks the button/link   id=application-question-complete
 
 the user marks the finances as complete
